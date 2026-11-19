@@ -1,0 +1,37 @@
+rf: grid per net Metal5 0.15, Metal4 0.15; strap budget 15.0 mV; decap plan 5.4 nF; digital 55.21 / 62.64 mA (area-scaled), 81.79 unscaled in the last column
+tap           island     mA(worst)  drop opt / nom / pess / pess-81.8 (mV)   pess split: to-switch / switch / strap / vss   case, Metal5 strap width for 15 mV over the packed distance
+lo_mmd        lod          34.8     53.5 /   61.9 /   94.3 /   96.0    34.0 /  21.9 /  15.0 /  23.5   DXa    154 um 
+lo_mmd_qdum   lod          10.0     52.9 /   61.2 /   92.0 /   93.8    34.0 /  21.9 /  15.0 /  21.1   DXa     49 um 
+lo_ext        lod          13.7     52.4 /   61.2 /   91.6 /   94.0    34.0 /  21.9 /  15.0 /  20.7   DXa    123 um 
+qvco_pre      lod           4.0     51.0 /   58.6 /   88.7 /   90.1    34.0 /  21.9 /  15.0 /  17.9   DXa     15 um 
+lo_obs        lod           8.0      nan /    nan /   79.9 /   81.0    34.0 /  21.9 /  15.0 /   9.0   DXa     18 um 
+qvco          lo           25.0     51.3 /   58.5 /   77.4 /   78.6    28.0 /  16.5 /  15.0 /  17.9   DXa     60 um 
+lo_pfdcp      lo            1.5     45.8 /   53.2 /   76.3 /   78.3    28.0 /  16.5 /  15.0 /  16.8   DXa     11 um 
+lo_vreg       lo            1.0     38.9 /   44.8 /   67.7 /   68.8    28.0 /  16.5 /  15.0 /   8.2   DXa      5 um 
+rfdriver      rf_tx        61.7     45.1 /   50.9 /   62.2 /   64.1    14.9 /  12.7 /  15.0 /  19.6   DXa     29 um 
+txsum         rf_tx         2.0     41.7 /   46.9 /   56.9 /   59.1    14.9 /  12.7 /  15.0 /  14.2   DXa      3 um 
+lna           rf_rx        21.4     38.6 /   43.4 /   55.3 /   56.5    12.4 /  14.4 /  15.0 /  13.5   RXa     92 um 
+rxmix_i       rf_rx         3.1     39.3 /   44.1 /   54.7 /   55.9    12.4 /  14.4 /  15.0 /  12.9   RXa     21 um 
+bbfilter_q    rf_rx         5.3     39.1 /   44.0 /   54.4 /   56.1    12.4 /  14.4 /  15.0 /  12.6   RXa     25 um 
+adc_q         conv          6.3     38.0 /   42.6 /   54.4 /   55.6    13.2 /  11.2 /  15.0 /  15.0   DXa     63 um 
+rxmix_q       rf_rx         3.1     37.9 /   42.4 /   52.2 /   53.5    12.4 /  14.4 /  15.0 /  10.3   RXa      4 um 
+bbfilter_i    rf_rx         5.3     38.0 /   42.5 /   52.1 /   53.1    12.4 /  14.4 /  15.0 /  10.2   RXa     46 um 
+pll_tx        pll          10.2     29.8 /   33.1 /   50.6 /   52.3    14.4 /  13.4 /  15.0 /   7.9   DXa     29 um 
+prescale      pll           2.4     32.3 /   35.6 /   50.5 /   52.4    14.4 /  13.4 /  15.0 /   7.7   DXa      5 um 
+pll_misc      pll           2.0     26.7 /   30.0 /   50.1 /   51.7    14.4 /  13.4 /  15.0 /   7.3   DXa     10 um 
+wordclk       pll           2.4     27.9 /   31.0 /   49.1 /   50.8    14.4 /  13.4 /  15.0 /   6.4   DXa      4 um 
+clockmux      pll           0.4     27.9 /   31.0 /   49.1 /   50.8    14.4 /  13.4 /  15.0 /   6.4   DXa      4 um 
+adc_i         conv          6.3     35.0 /   38.9 /   49.0 /   49.8    13.2 /  11.2 /  15.0 /   9.6   DXa     52 um 
+refbuf        conv          1.6     35.7 /   39.5 /   47.8 /   48.6    13.2 /  11.2 /  15.0 /   8.4   DXa      9 um 
+dac_q         conv          2.3     34.2 /   38.0 /   47.4 /   48.6    13.2 /  11.2 /  15.0 /   8.0   DXa     25 um 
+pll_cdr       pll          10.2     26.9 /   29.6 /   45.5 /   46.8    14.4 /  13.4 /  15.0 /   2.7   DXa     25 um 
+dac_i         conv          2.3     31.2 /   34.2 /   42.4 /   43.2    13.2 /  11.2 /  15.0 /   3.0   DXa     23 um 
+digital       None         62.6     23.1 /   28.8 /   41.6 /   46.0     0.0 /   0.0 /   0.0 /  19.5   DXa   
+rx_ref_in     None          4.6     20.7 /   24.4 /   35.1 /   37.4    21.7 /   0.0 /   0.0 /  13.4   DXa   
+bias          None          0.5     14.1 /   16.0 /   22.3 /   23.1    16.3 /   0.0 /   0.0 /   6.0   DXa   
+aosc          None          0.5     11.1 /   12.5 /   16.3 /   17.2    13.0 /   0.0 /   0.0 /   3.2   DXa   
+ring drop max (mV) opt / nom / pess / pess-81.8: 17.2 / 19.4 / 25.2 / 28.1
+worst supply bond (mA, of 125 per cell): 30.5 (dvdd_pads[2].pad, DXa) / 30.1 (dvdd_pads[2].pad, DXa) / 38.6 (dvdd_pads[1].pad, DXa) / 41.8 (dvdd_pads[2].pad, DXa)
+worst ground bond (mA, of 125 per cell): 38.7 (dvss_pads[4].pad, DXa) / 34.4 (dvss_pads[4].pad, DXa) / 36.4 (dvss_pads[4].pad, DXa) / 41.2 (dvss_pads[4].pad, DXa)
+bond currents at pess-81.8 (mA): dvdd_pads[2].pad VDD 42, dvss_pads[4].pad VSS 41, dvdd_pads[1].pad VDD 40, vdd_pads[0].pad VDD 37, bidir[19].pad VDD 36, dvdd_pads[3].pad VDD 35, dvdd_pads[0].pad VDD 35, dvss_pads[5].pad VSS 35, dvss_pads[0].pad VSS 34, dvdd_pads[4].pad VDD 33, dvdd_pads[5].pad VDD 30, inputs[3].pad VDD 29, vdd_pads[1].pad VDD 29, inputs[2].pad VSS 24, dvss_pads[3].pad VSS 23, dvss_pads[7].pad VSS 21, vss_pads[0].pad VSS 20, vss_pads[1].pad VSS 19, bidir[22].pad VSS 19, dvss_pads[2].pad VSS 18, bidir[25].pad VSS 18, dvss_pads[6].pad VSS 17, dvss_pads[1].pad VSS 15, inputs[5].pad VSS 15, inputs[4].pad VSS 15, bidir[18].pad VSS 15, bidir[17].pad VSS 13, bidir[14].pad VSS 12, bidir[15].pad VSS 11
+E7 rf PASS: every tap <= 117 mV at the pessimistic bound (also with the macro at 81.8 mA) (worst 94.3 / 96.0 mV); bonds PASS <= 125 mA per cell

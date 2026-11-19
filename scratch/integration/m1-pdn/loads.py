@@ -1,54 +1,14 @@
-"""Block currents (DC per mode) and aggressor spectra for the M1 PDN model. Every number cites its evidence."""
+"""Aggressor spectra of the chip PDN model (DC loads per case come from chipcfg.dc_loads). Every number cites its evidence."""
 import sys, json, numpy as np
 sys.path.insert(0, '/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/budgets')
-import power_budget as pb          # read-only use of mode_totals / apply_rf_recipe (main() is not called)
-import model as M
-AA = json.load(open(pb.AA))
-CASES = {'rf_external_clock': ('external_rf_clock', 'rf_rx'), 'rf_autonomous': (None, 'rf_rx'),
-         'wired_onchip_pll': (None, 'wired'), 'wired_external_clock': ('external_wired_clock', 'wired'),
-         'wired_tmds': ('wired_tmds', 'wired'), 'usb': (None, 'usb'), 'stopped': (None, 'stopped'),
-         'rf_tx_external_clock': ('external_rf_clock', 'rf_tx'), 'rf_tx_autonomous': (None, 'rf_tx'),
-         'rf_duplex_external_clock': ('external_rf_clock', 'rf_rx')}
-# budget block -> (floorplan tap, island or None = raw ring)
-MAP = dict(adc_i=('adc_i', 'conv'), adc_q=('adc_q', 'conv'), aosc=('aosc', None), bias=('core_bias', None),
-           cdr=('pll_cdr', 'pll'), clockmux=('clockmux', 'pll'), clocktree=('wordclk', 'pll'), ctle=('ctle', 'wired'),
-           dac_i=('dac_i', 'conv'), dac_q=('dac_q', 'conv'), detect=('detect', 'wired'), lna=('lna', 'rf'),
-           monitor=('core_bias', None), quadrature=('qvco', 'pll'), refbuf=('refbuf', 'conv'), refinput=('pad_ref', 'pll'),
-           rfdriver=('rfdriver', 'rf'), rfpll=('lo_mmd', 'pll'), rxfilter_i=('bbfilter_i', 'rf'), rxfilter_q=('bbfilter_q', 'rf'),
-           rxmix_i=('rxmix_i', 'rf'), rxmix_q=('rxmix_q', 'rf'), rxselect=('rxselect', 'wired'), slicer=('slicer', 'wired'),
-           termination=('termination', 'wired'), txmix_i=('txmix_i', 'rf'), txmix_q=('txmix_q', 'rf'),
-           txpad=('pad_wire_tx', 'wired'), txsum=('txsum', 'rf'), usbdrive=('pad_usb', 'wired'), usbfs=('pad_usb', None),
-           usbhs=('pad_usb', 'wired'), wiredtx=('wiredtx', 'wired'), wirepad=('pad_hs_rx', 'wired'), rxlevel=('rxlevel', 'wired'))
+import power_budget as pb          # read-only (MEASURED, dig_meas, switch masters); main() is not called
+MAP = {}     # budget block -> (floorplan tap, island or None = raw ring); filled per chip by chipcfg.apply
 
 def dc_loads(case, level):
-    """level: 'alloc' (analog-architecture allocations + RF recipe), 'evid' (power_budget evidence bound: digital 81.79 mA
-    vectorless, hostio 116.82 mA 8 pF, rfdriver 61.7 mA), 'evid+' (evid plus currents that exist in block evidence but in
-    no budget: wrx_cap 46.64 mA extracted (wrx_cap-evidence ext_q625), LO chain qvco 25 + lo_mmd 34 + lo_ext 16 +
-    polyphase 2.8 mA in place of rfpll 12 + quadrature 18.83 (timing README, lo_ext/polyphase evidence))."""
-    if level.startswith('pd2'):          # PD2 reconciled currents (pd2cfg.py); same return shape
-        import pd2cfg
-        return pd2cfg.dc_loads(case, level)
-    branch, m = CASES[case]
-    per = pb.mode_totals(AA, branch)[m]
-    rdir = pb.rf_direction(case, m)
-    if rdir: per = pb.apply_rf_recipe(per, rdir)
-    per = dict(per)
-    if rdir in ('rf_tx', 'rf_duplex'): per['rfdriver'] = 61.7
-    if level != 'alloc' and m != 'stopped':
-        per['digital'] = 81.79
-        per['hostio'] = 116.82*(0.5 if rdir else 1.0)
-    out = []   # (name, tap, island, mA)
-    for b, ma in per.items():
-        if ma <= 0 or b in ('digital', 'hostio'): continue
-        if b not in MAP: continue
-        t, isl = MAP[b]; out.append((b, t, isl, ma))
-    if level == 'evid+':
-        if m == 'wired': out.append(('wrx_cap', 'wrx_cap', 'wired', 46.64))
-        if case in ('rf_autonomous', 'rf_tx_autonomous'):
-            out = [o for o in out if o[0] not in ('rfpll', 'quadrature')]
-            out += [('qvco', 'qvco', 'pll', 25.0), ('lo_mmd', 'lo_mmd', 'pll', 34.0), ('lo_ext', 'lo_ext', 'pll', 16.0),
-                    ('polyphase', 'polyphase', 'pll', 2.8)]
-    return out, per.get('digital', 0.0), per.get('hostio', 0.0), m, rdir
+    import chipcfg
+    return chipcfg.dc_loads(case, level)
+
+WTX_MA = (53.0, 84.0, 105.0)   # opt / nom / pess wired_tx island current (set by chipcfg.apply)
 
 def env(x):
     """Upper envelope of the triangular-pulse spectrum sinc^2(x): 1 below the corner, 1/(pi x)^2 above."""
@@ -82,7 +42,7 @@ def lines(case, per_dig, per_host, m, rdir, bound):
         i = pk(46.64, 46.64, 19.78)*1e-3
         for k, fr in ((1, pk(1.0, 0.5, 0.2)), (2, pk(0.5, 0.25, 0.1)), (4, pk(0.5, 0.25, 0.1))):
             L.append(('wrx_cap', 'wrx', k*625e6, fr*i))
-        i = pk(37.5, 35.0, 33.2)*1e-3      # pt_wiredtx switching CMOS serializer (scratch/wired_tx/sim-results.json)
+        i = pk(WTX_MA[2], WTX_MA[1], WTX_MA[0])*1e-3   # pt_wiredtx8 + POST + pad tail (chipcfg.WTX_MA from power_budget MEASURED)
         for k, fr in ((1, pk(0.5, 0.25, 0.1)), (2, pk(0.5, 0.25, 0.1)), (4, pk(0.3, 0.15, 0.05))):
             L.append(('wiredtx', 'wtx', k*625e6, fr*i))
     if m == 'rf_rx':

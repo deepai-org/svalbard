@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """PD2: per-line ripple spectrum at a victim tap (differential rail, and VSS vs board ground), opt/nom/pess.
-pess = pessimistic source x worst of the three network sets per line (as e3). Used for the PSRR demand rows and the
-QVCO regulator mask. Usage: pd2_lines.py <victim> <mode> [plan] ; importable: spectrum(victim, mode, decap, **build_kw)."""
+pess = pessimistic source x worst of the three network sets per line . Used for the PSRR demand rows and the
+QVCO regulator mask. Usage: pd2_lines.py chip=rf|wired <victim> <case> ; importable: spectrum(victim, mode, decap, **build_kw)."""
 import sys, json, numpy as np
 import model as M, core as C, loads as LD
 
@@ -28,9 +28,9 @@ def spectrum(victims, mode, decap, level='evid+', sets=('opt', 'nom', 'pess'), p
     return res
 
 if __name__ == '__main__':
-    v = sys.argv[1]; mode = sys.argv[2]; plan = sys.argv[3] if len(sys.argv) > 3 else '3nF_spread'
-    d = {'none': C.decap_plan('none'), '3nF_spread': C.decap_plan('uniform', 3.0), '8nF_macro': C.decap_plan('digital', 8.0)}[plan]
-    r = spectrum([v], mode, d)[v]
-    print(f'{v} {mode} {plan}: aggressor, f MHz, rail ripple mV peak opt/nom/pess, VSS-vs-board uV peak (envelope) opt/nom/pess')
+    import chipcfg as P2
+    P2.apply(); a = [x for x in sys.argv[1:] if '=' not in x]; v, mode = a[0], a[1]
+    r = spectrum([v], mode, P2.plan(), level='pd2w', psets={s: P2.pset(s) for s in ('opt', 'nom', 'pess')}, x_feed=P2.X_FEED)[v]
+    print(f'{P2.CHIP} {v} {mode} plan: aggressor, f MHz, rail ripple mV peak opt/nom/pess, VSS-vs-board uV peak (envelope) opt/nom/pess')
     for (ag, f), x in sorted(r.items(), key=lambda kv: -kv[1]['pess'][0])[:25]:
         print(f"  {ag:10s} {f/1e6:9.3f}  {x['opt'][0]*1e3:8.3f} / {x['nom'][0]*1e3:8.3f} / {x['pess'][0]*1e3:8.3f}    {x['opt'][1]*1e6:9.1f} / {x['nom'][1]*1e6:9.1f} / {x['pess'][1]*1e6:9.1f}")

@@ -1,10 +1,9 @@
-"""Shared machinery for the M1 runs: full netlist with taps, ports, transfer impedances, DC and decap plans."""
+"""Shared machinery of the chip PDN runs: full netlist with taps, ports, transfer impedances, DC and decap plans."""
 import numpy as np, json
 import model as M, loads as LD
-VICT = {'core_bias': ('core_bias', None), 'por': ('por', None), 'adc_i': ('adc_i', 'conv'), 'refbuf': ('refbuf', 'conv'),
-        'qvco': ('qvco', 'pll'), 'pll_vreg2': ('pll_vreg2', 'pll'), 'lna': ('lna', 'rf'), 'slicer': ('slicer', 'wired')}
-EXTRA_TAPS = [('wrx_cap', 'wired'), ('lo_ext', 'pll'), ('polyphase', 'pll'), ('qvco', 'pll'), ('pll_vreg2', 'pll'), ('por', None)]   # PD2: was inline in full()
-PORTS = ['dig', 'd2h0', 'd2h1', 'wrx', 'wtx', 'adc', 'rfd', 'lo']
+VICT = {}          # victim name -> (tap, island); set per chip by chipcfg.apply
+EXTRA_TAPS = []    # (tap, island) created besides the load taps
+PORTS = []         # aggressor ports present on the chip (chipcfg.apply): dig, d2h0, d2h1 and wrx, wtx | adc, rfd, lo
 TAU_MOS = 42.0*3.63e-12      # s: pt_decap_tile ESR x C at 100 MHz (analog/decap/generated/sim-results.json)
 FILL_DENS = 0.541e-15        # F/um2 measured library fillcap (verification/digital_hardening/decap check-summary.json)
 
@@ -20,14 +19,6 @@ def decap_plan(kind, total_nF=0.0, tau_mim=5e-12, dig_fill_nF=0.45, frac=0.30):
         d += [(*xy(a), c, tau/c) for a in ana]
     if kind == 'digital' and total_nF > 0:
         c = total_nF*1e-9/len(dig); d += [(*xy(a), c, TAU_MOS/c) for a in dig]
-    if kind == 'ap49':
-        excl = ('qvco', 'lc_load_rsv', 'adc_i', 'adc_q', 'bbfilter_i', 'bbfilter_q')
-        blk = {k: v for k, v in M.FP['placed'].items() if k not in excl and not k.startswith('leaf')}
-        area = {k: v['w']*v['h'] for k, v in blk.items()}; tot = sum(area.values())
-        cm = 5.7e-9*frac/0.999   # 2.86 mm2 x 2 fF/um2 = 5.7 nF at 100 %; AP4-9 counts >= 30 % usable
-        for k, a in area.items():
-            c = cm*a/tot; r = blk[k]['rect']; d.append(((r[0]+r[2])/2, (r[1]+r[3])/2, c, tau_mim/c))
-        c = dig_fill_nF*1e-9/len(dig); d += [(*xy(a), c, TAU_MOS/c) for a in dig]
     return d
 
 def full(p, decap=None, x_feed=0.0, **kw):
@@ -57,14 +48,14 @@ def full(p, decap=None, x_feed=0.0, **kw):
         # capacitance to VSS); falling edges half a period later return the 70 % into VSS. even n: +1.0, odd n: 0.3-0.7.
         'd2h0': col([(hv(a), -1/len(south)) for a in south]+[(hg(a), 1.0/len(south)) for a in south]),
         'd2h1': col([(hv(a), -1/len(south)) for a in south]+[(hg(a), -0.4/len(south)) for a in south]),
-        'wrx': col(load('wrx_cap')), 'wtx': col(load('wiredtx')),
-        'adc': col(load('adc_i', 0.5)+load('adc_q', 0.5)),
-        # rfdriver: fraction x_feed of the current arrives from the board through the RF_TX pad chokes (not through the
-        # die VDD) and returns through die VSS; the rest is drawn from the rf island.
-        'rfd': col([(taps['rfdriver'][0], -(1-x_feed)), (taps['rfdriver'][1], 1.0)]),
-        'lo': col(load('lo_mmd')),
     }
-    vict = {k: taps[t] for k, (t, isl) in VICT.items()}
+    if 'wrx' in PORTS: ports.update(wrx=col(load('wrx_cap')), wtx=col(load('wtx_mux8')))
+    if 'adc' in PORTS:
+        # rfdriver: fraction x_feed of the current arrives from the board through the RF_TX pad chokes (not through the
+        # die VDD) and returns through die VSS; the rest is drawn from the rf_tx island.
+        ports.update(adc=col(load('adc_i', 0.5)+load('adc_q', 0.5)), rfd=col([(taps['rfdriver'][0], -(1-x_feed)), (taps['rfdriver'][1], 1.0)]),
+                     lo=col(load('lo_mmd')))
+    vict = {k: taps[(t, isl)] for k, (t, isl) in VICT.items()}
     info['south'] = south; info['hv'] = hv; info['hg'] = hg
     return n, info, ports, vict
 
@@ -110,8 +101,9 @@ def dc(n, info, case, level, vsrc=3.267, x_feed=0.0):
     res['digital'] = dict(tap='digital', island=None, mA=idig,
                           rail=float(min(V[n.idx[M.vn(*a)]]-V[n.idx[M.gn(*a)]] for a in dg)), vss_mV=float(max(V[n.idx[M.gn(*a)]] for a in dg)*1e3))
     for k, (t, isl) in VICT.items():
-        if k not in res and (t in taps):
-            res['tap:'+k] = dict(tap=t, island=isl, mA=0, rail=float(V[n.idx[taps[t][0]]]-V[n.idx[taps[t][1]]]), vss_mV=float(V[n.idx[taps[t][1]]]*1e3))
+        if k not in res and ((t, isl) in taps):
+            q = taps[(t, isl)]
+            res['tap:'+k] = dict(tap=t, island=isl, mA=0, rail=float(V[n.idx[q[0]]]-V[n.idx[q[1]]]), vss_mV=float(V[n.idx[q[1]]]*1e3))
     # bond currents
     ib = {}
     for (a, b), r, pos in zip(info['bond_pairs'], info['bond_R'], info['bond_pos']):

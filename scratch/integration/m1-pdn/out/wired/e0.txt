@@ -1,0 +1,7 @@
+wired: 10 supply / 17 ground bonds; hand: L_loop 0.3507 nH, f0 190.0 MHz, Z0 0.419 ohm, Q ~ 10.0, Zpk ~ 4.17 ohm
+model: f(|Z|max) 190.5 MHz, |Z|max 4.03 ohm
+dc rail: model 3.25586 V, hand 3.25586 V
+NEG: no decap, 1 supply bond             worst static rail 2.992 V, macro self-ripple (78 MHz comb, 8 harmonics) 2682 mV pk-pk, max bond 427 mA -> FAIL
+ref: 8 nF MOS at the macro (pess set)    worst static rail 3.158 V, macro self-ripple (78 MHz comb, 8 harmonics) 146 mV pk-pk, max bond 97 mA -> pass
+PASS ref: opt set, nominal loads, 4 nF macro worst static rail 3.193 V, macro self-ripple (78 MHz comb, 8 harmonics) 60 mV pk-pk, max bond 83 mA -> pass
+E0 wired PASS

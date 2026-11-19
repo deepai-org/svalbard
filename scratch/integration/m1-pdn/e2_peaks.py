@@ -1,4 +1,4 @@
-"""Anti-resonance finder (copied from e2_impedance.py so PD2 scripts can import it without running E2)."""
+"""Anti-resonance finder (local maxima of |Z| with their half-power Q)."""
 import numpy as np
 def peaks(f, z):
     out = []

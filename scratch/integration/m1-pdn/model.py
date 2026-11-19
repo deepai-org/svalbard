@@ -1,22 +1,24 @@
-"""M1 (+M4) chip-level PDN model: geometry, parameter sets and netlist builder.
+"""Chip-level PDN model of one chip (pt_rf or pt_wired): geometry, parameter sets and netlist builder.
 
-Geometry source: scratch/chip-assembly-v6/run/floorplan-v6.json (block rects; unplaced blocks at their v6 seeds),
-spec/package-channel.json (bond pad order, bond lengths, board nets), v5 pdn-shapes.json (core ring 2 x 25 um M3/M4,
-necked to 3-22 um on the west/east edges by the pad families), gf180mcu_fd_io fill10 LEF (ring rails: DVDD 124 um,
-DVSS 101.4 um on each of Metal3/4/5), tech LEF sheet resistance (Metal1-4 0.076/0.090/0.104, Metal5 0.050/0.060/0.070
-ohm/sq min/nom/max).  v6 has NO top-level strap plan: the interior grid is a parameter (top-metal coverage per net).
+Geometry is set per chip by chipcfg.apply(chip): block rectangles, digital macro outline, switches and decap from the
+chip's die-fit packing (scratch/reviews/die-fit/run/<chip>/fit-s.json, as-built scenario), bonds from
+integration/chips/<chip>/bond_map.txt at the bond centres of analog/pads/generated/provider-sites.json. Core ring
+2 x 25 um Metal3/Metal4, provider rails DVDD 124 um / DVSS 101.4 um on Metal3/4/5 (gf180mcu_fd_io), tech LEF sheet
+resistance (Metal1-4 0.076/0.090/0.104, Metal5 0.050/0.060/0.070 ohm/sq min/nom/max). The interior grid is the
+requirement of spec/power-delivery.md (coverage per net), not an extraction.
 """
-import json, math, numpy as np, os, sys
+import math, numpy as np, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from mna import Net
 ROOT = '/home/ubuntu/svalbard'
 PRJ = f'{ROOT}/projects/programmable_transceiver_platform'
-FP = json.load(open(f'{ROOT}/scratch/chip-assembly-v6/run/floorplan-v6.json'))
-PKG = json.load(open(f'{PRJ}/spec/package-channel.json'))
 CORE = (452.0, 452.0, 3480.0, 4670.0)
 NX, NY = 13, 18
 PX = (CORE[2]-CORE[0])/(NX-1); PY = (CORE[3]-CORE[1])/(NY-1)
-DIG = [1262.0, 3030.0, 2978.0, 4670.0]
+DIG = [0.0, 0.0, 0.0, 0.0]          # digital macro outline (chipcfg.apply)
+RECTS = {}                          # name -> rect (um) of every placed block, switch, decap cell, custom pad
+BONDS = []                          # dicts: site, x, y, net ('VDD'/'VSS'), side, ring (1..74 around the die), cap (COB 1 uF on the finger)
+CUSTOM = {'west': [], 'east': []}   # y spans of the custom pad families (the core ring may neck there)
 
 # ---- parameter sets: every uncertain value has a low and a high end (MANDATE "bounded in both directions") ----------
 P = {
@@ -48,19 +50,6 @@ def pset(sel):
         for k, v in sel.items(): d[k] = P[k][v] if isinstance(v, int) else v
     return d
 
-# ---- pads (ring order, package-channel.json bond_pad 1..74: south W->E 1-17, east S->N 18-37, north E->W 38-54, west N->S 55-74)
-def pad_xy(n):
-    if n <= 17: return (500+(n-1)*183.0, CORE[1])
-    if n <= 37: return (CORE[2], 566+(n-18)*211.0)
-    if n <= 54: return (3432-(n-38)*183.0, CORE[3])
-    return (CORE[0], 4575-(n-55)*211.0)
-SUP = sorted(((v['bond_pad'], k, v['net'], v['f_mm']) for k, v in PKG['supplies_grounds'].items()))
-VDD_PADS = [(n, net, f) for n, k, net, f in SUP if net != 'GND']
-VSS_PADS = [n for n, k, net, f in SUP if net == 'GND']
-# custom pad family spans (floorplan-v6 fixed rects): the provider cells are replaced there
-CUSTOM = {'west': [(r['rect'][1], r['rect'][3]) for r in FP['fixed'] if r['kind'] == 'pad' and r['rect'][0] < 500],
-          'east': [(r['rect'][1], r['rect'][3]) for r in FP['fixed'] if r['kind'] == 'pad' and r['rect'][2] > 3400]}
-
 def vn(i, j): return f'v_{i}_{j}'
 def gn(i, j): return f'g_{i}_{j}'
 def near(x, y):
@@ -71,17 +60,10 @@ def in_dig(i, j):
     return DIG[0]-1 <= x <= DIG[2]+1 and DIG[1]-1 <= y <= DIG[3]+1
 
 # ---- block taps ------------------------------------------------------------------------------------------------------
-SEED = dict(qvco=(1400, 2400), wrx_cap=(2050, 2700), wiredtx=(2900, 2800), cdr=(2900, 1900), slicer=(2700, 1500),
-            refbuf=(2300, 2000), lo_lf=(1150, 3200), lo_ext=(1150, 3300), isw_conv=(1700, 600), isw_debug=(3250, 3600))
 def centre(name):
-    if name in FP['placed']:
-        r = FP['placed'][name]['rect']; return ((r[0]+r[2])/2, (r[1]+r[3])/2)
-    for r in FP['fixed']:
-        if r['name'] == name: return ((r['rect'][0]+r['rect'][2])/2, (r['rect'][1]+r['rect'][3])/2)
-    return SEED[name]
-ISW = dict(wired=0.2484, rf=0.3007, pll=0.2877, conv=0.4807, debug=0.3878)   # ohm = extracted full-RC drop / design current
-ISL_C = dict(wired=150e-12, rf=200e-12, pll=250e-12, conv=250e-12, debug=100e-12)   # island_support evidence island_decap_f
-
+    r = RECTS[name]; return ((r[0]+r[2])/2, (r[1]+r[3])/2)
+ISW = {}     # island -> switch on-resistance (ohm, full-RC worst corner / number of masters in parallel)
+ISL_C = {}   # island -> island-rail capacitance (F) in the model
 
 def build(p, decap=None, n_vdd_bonds=None, strip_caps=True, split=None, host_split=None):
     """Return (net, info). decap: list of (x, y, C, ESR) lumps placed VDD-VSS at the nearest mesh node (raw rail).
@@ -138,33 +120,32 @@ def build(p, decap=None, n_vdd_bonds=None, strip_caps=True, split=None, host_spl
         n.add_rc(f'isl_{isl}', gn(i, j), 0.3, ISL_C[isl]*p['Cint_ana_scale'])
         info['isl'][isl] = (x, y)
     # bonds (one coupled group) and board
-    pairs = []; R = []; L = []; pos = []
-    vp = VDD_PADS if n_vdd_bonds is None else VDD_PADS[:n_vdd_bonds]
-    for pad, net_, f in vp:
-        x, y = pad_xy(pad); i, j = near(x, y)
+    pairs = []; R = []; L = []; pos = []; side = []
+    vb = [b for b in BONDS if b['net'] == 'VDD']; vb = vb if n_vdd_bonds is None else vb[:n_vdd_bonds]
+    for b in vb:
+        i, j = near(b['x'], b['y']); pad = b['ring']
         die = vn(i, j)
         for isl, sp in split.items():
             if sp == pad: die = f'isl_{isl}'
         if host_split and pad in host_split: die = 'hv'
         pairs.append((die, f'F_{pad}')); R.append(p['bond_R'])
-        # die-side bond length: package-channel gives the finger trace f_mm, not the supply bond length; use the
-        # neighbouring signal bonds (2.2-2.9 mm) via the same range as the ground bonds
-        L.append(p['gnd_bond_mm']*p['bond_nH_per_mm']*1e-9); pos.append(pad)
-        if strip_caps:
+        L.append(p['gnd_bond_mm']*p['bond_nH_per_mm']*1e-9); pos.append(pad); side.append(b['side'])
+        # COB 1 uF on the provider supply fingers only; a supply bond on a signal site has none (bond_map.txt header)
+        if strip_caps and (b['cap'] or p.get('xcap')):
             n.add_rl(f'F_{pad}', f'C_{pad}', 0.03, p['cap0201_L_nH']*1e-9); n.add_rc(f'C_{pad}', 'gnd', 0.015, 1e-6)
         n.add_rl(f'F_{pad}', 'car', 0.055, p['conn_L_nH']*1e-9)
-    for pad in VSS_PADS:
-        x, y = pad_xy(pad); i, j = near(x, y)
+    for b in BONDS:
+        if b['net'] != 'VSS': continue
+        i, j = near(b['x'], b['y']); pad = b['ring']
         die = 'hg' if (host_split and pad in host_split) else gn(i, j)
-        pairs.append((die, 'gnd')); R.append(p['bond_R']); L.append(p['gnd_bond_mm']*p['bond_nH_per_mm']*1e-9); pos.append(pad)
+        pairs.append((die, 'gnd')); R.append(p['bond_R']); L.append(p['gnd_bond_mm']*p['bond_nH_per_mm']*1e-9); pos.append(pad); side.append(b['side'])
     m = len(pairs); Lm = np.zeros((m, m))
-    edge_of = lambda q: 0 if q <= 17 else 1 if q <= 37 else 2 if q <= 54 else 3
     for a in range(m):
-        for b in range(m):
-            if a == b: Lm[a, b] = L[a]; continue
-            d = abs(pos[a]-pos[b])
-            if d <= 3 and edge_of(pos[a]) == edge_of(pos[b]) or (d <= 3 and {pos[a], pos[b]} & {17, 18, 37, 38, 54, 55}):
-                Lm[a, b] = p['bond_k1']*d**-0.6*math.sqrt(L[a]*L[b])
+        for c in range(m):
+            if a == c: Lm[a, c] = L[a]; continue
+            d = min(abs(pos[a]-pos[c]), 74-abs(pos[a]-pos[c]))     # neighbours along the ring, also across a corner
+            if d <= 3:
+                Lm[a, c] = p['bond_k1']*d**-0.6*math.sqrt(L[a]*L[c])
     n.add_coupled(pairs, R, Lm)
     info['bond_pairs'] = pairs; info['bond_pos'] = pos; info['bond_R'] = R
     if host_split:   # separate host (D2H) rail: half of the ring intrinsic C, no on-die tie to the core rails
@@ -184,8 +165,7 @@ def tap(n, p, name, island=None, pos=None):
     if nm not in n.idx:
         sx, sy = centre(f'isw_{island}')
         d = abs(x-sx)+abs(y-sy)
-        # PD2: p['strap_R'][name] (ohm) fixes the switch->block strap at its REQUIREMENT limit instead of deriving it
-        # from the v6 distance and an assumed width (the M1 behaviour, kept when strap_R is absent).
-        r = p.get('strap_R', {}).get(name, max(1e-3, p['Rs_m5']*d/p['isl_strap_w']))
+        # p['strap_R']['tap|island'] (ohm) fixes the switch->tap strap at its requirement limit; absent: Metal5 of isl_strap_w over the distance
+        r = p.get('strap_R', {}).get(f'{name}|{island}', max(1e-3, p['Rs_m5']*d/p['isl_strap_w']))
         n.add_rl(f'isl_{island}', nm, r, 0.4e-12*d)
     return nm, gn(i, j)

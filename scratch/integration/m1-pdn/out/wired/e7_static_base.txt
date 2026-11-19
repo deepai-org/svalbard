@@ -1,0 +1,30 @@
+wired: grid per net Metal5 0.15, Metal4 0.15; strap budget 15.0 mV; decap plan 5.41 nF; digital 68.11 / 77.27 mA (area-scaled), 81.79 unscaled in the last column
+tap           island     mA(worst)  drop opt / nom / pess / pess-81.8 (mV)   pess split: to-switch / switch / strap / vss   case, Metal5 strap width for 15 mV over the packed distance
+wrx_cap       wired_cap    46.6     73.7 /   85.5 /  109.0 /  109.2    41.2 /  21.0 /  15.0 /  31.8   W      323 um 
+ptrim         wired_cap    21.0     68.1 /   79.1 /  103.7 /  103.9    41.2 /  21.0 /  15.0 /  26.5   W       96 um 
+wtx_post      wired_tx     24.0     62.9 /   73.2 /   98.6 /   99.0    27.6 /  16.3 /  15.0 /  39.7   W      290 um 
+wiredtx8      wired_tx     60.0     62.9 /   73.2 /   98.6 /   99.0    27.6 /  16.3 /  15.0 /  39.7   W      290 um 
+ctle_follower wired_rx      6.9     54.9 /   62.9 /   82.2 /   82.5    28.5 /  13.9 /  15.0 /  24.9   W       39 um 
+slicer        wired_rx      9.8     49.4 /   56.8 /   78.1 /   78.3    28.5 /  13.9 /  15.0 /  20.7   W       34 um 
+termination   wired_rx      1.6     50.2 /   57.6 /   77.7 /   77.8    28.5 /  13.9 /  15.0 /  20.3   W        7 um 
+vthdac        wired_rx      0.7     48.7 /   55.9 /   76.4 /   76.6    28.5 /  13.9 /  15.0 /  19.0   W        3 um 
+ctle          wired_rx      5.3     50.7 /   57.7 /   75.4 /   75.6    28.5 /  13.9 /  15.0 /  18.0   W       12 um 
+detect        wired_rx      2.4     51.0 /   58.0 /   74.6 /   74.8    28.5 /  13.9 /  15.0 /  17.2   W       25 um 
+rxselect      wired_rx      2.0     50.2 /   56.9 /   72.9 /   73.0    28.5 /  13.9 /  15.0 /  15.5   W        3 um 
+clockmux      pll           1.6     45.7 /   52.0 /   71.3 /   71.6    17.7 /  12.8 /  15.0 /  25.8   W       19 um 
+pll_tx        pll          10.2     42.6 /   48.9 /   71.2 /   71.5    17.7 /  12.8 /  15.0 /  25.7   W      109 um 
+wordclk       pll           2.4     46.9 /   53.0 /   70.4 /   70.6    17.7 /  12.8 /  15.0 /  24.9   W       41 um 
+pll_cdr       pll          10.2     41.5 /   47.6 /   69.5 /   69.9    17.7 /  12.8 /  15.0 /  24.0   W      161 um 
+usbhs         wired_tx     20.0     46.9 /   53.4 /   68.2 /   68.5    23.7 /  12.4 /  15.0 /  17.1   U       47 um 
+wtx_padtail   wired_tx     21.0     36.1 /   41.7 /   66.1 /   66.3    27.6 /  16.3 /  15.0 /   7.2   W       42 um 
+pll_misc      pll           2.0     36.5 /   41.9 /   64.9 /   65.2    17.7 /  12.8 /  15.0 /  19.4   W       37 um 
+digital       None         77.3     28.0 /   35.3 /   50.2 /   51.1     0.0 /   0.0 /   0.0 /  24.3   W     
+bias          None          0.5     25.4 /   30.7 /   42.4 /   43.1    23.7 /   0.0 /   0.0 /  18.7   W     
+aosc          None          0.5     23.8 /   28.1 /   38.3 /   38.7    22.5 /   0.0 /   0.0 /  15.8   W     
+usbfs         None          8.0     20.9 /   24.4 /   32.2 /   32.4    22.7 /   0.0 /   0.0 /   9.5   U     
+rx_ref_in     None          4.6     11.0 /   11.9 /   15.1 /   15.4    12.9 /   0.0 /   0.0 /   2.2   W     
+ring drop max (mV) opt / nom / pess / pess-81.8: 29.7 / 35.0 / 47.6 / 47.8
+worst supply bond (mA, of 125 per cell): 82.5 (dvdd_pads[0].pad, W) / 82.8 (dvdd_pads[0].pad, W) / 97.2 (dvdd_pads[0].pad, W) / 97.5 (dvdd_pads[0].pad, W)
+worst ground bond (mA, of 125 per cell): 67.8 (dvss_pads[0].pad, W) / 66.5 (dvss_pads[0].pad, W) / 77.7 (dvss_pads[0].pad, W) / 77.8 (dvss_pads[0].pad, W)
+bond currents at pess-81.8 (mA): dvdd_pads[0].pad VDD 97, dvdd_pads[1].pad VDD 81, dvss_pads[0].pad VSS 78, dvss_pads[1].pad VSS 65, dvss_pads[2].pad VSS 47, bidir[25].pad VDD 45, dvdd_pads[5].pad VDD 45, bidir[22].pad VSS 36, vdd_pads[1].pad VDD 34, vdd_pads[0].pad VDD 32, dvss_pads[7].pad VSS 30, dvdd_pads[2].pad VDD 29, dvss_pads[4].pad VSS 28, dvdd_pads[4].pad VDD 24, inputs[0].pad VDD 23, vss_pads[0].pad VSS 23, dvdd_pads[3].pad VDD 22, dvss_pads[3].pad VSS 20, vss_pads[1].pad VSS 16, inputs[1].pad VSS 13, dvss_pads[5].pad VSS 13, inputs[11].pad VSS 12, inputs[4].pad VSS 11, dvss_pads[6].pad VSS 10, inputs[10].pad VSS 10, inputs[6].pad VSS 10, inputs[8].pad VSS 9
+E7 wired PASS: every tap <= 117 mV at the pessimistic bound (also with the macro at 81.8 mA) (worst 109.0 / 109.2 mV); bonds PASS <= 125 mA per cell

@@ -135,3 +135,88 @@ The current a 250 V CDM event drives into this bare die is not established in th
   of the switch gates (leg redesign), and the receiver input in the bench.
 - Or: rulings that (a) pad-to-pad is judged at the devices, (b) CDM is judged with die capacitance, (c) the required CDM current, and (d) a C budget
   above published for option A (wired RX).
+
+# CANDIDATE a5: local secondary clamp (coordinator rulings on PC-36), 2026-11-19. NOT published, NOT committed.
+Work folder `sec/`. Rulings (binding): (a) pad-to-pad HBM judged at the DEVICES incl. the receiver input RX_P/N, bond pad = information;
+(b) CDM judged with 1 nF on the ring (`--cdie 1n`), requirement 2 A, 1 A / 3 A reported; (c) core diode array NOT restored, small local
+secondary at the termination switches (and RX if needed) to DVDD / VSS; C budget +0.15 pF per leg over the published cell like for like.
+
+## Declared before the a5 queue (limits; not to be moved)
+- Layout: Magic DRC 0; composer LVS match + device audit; read-back LVS "match uniquely" vs simulated netlist and composer schematic, with
+  failing controls (RX swap; one site diode missing; one SECONDARY diode missing); KLayout precheck main 0 / antenna 0 with a failing control
+  (copy + 0.1 um Metal1 sliver); latch-up 0 um2 uncovered at 15 um with a failing control (copy + isolated NMOS); `rail_site_check.py` PASS
+  and its `--selftest`; pad-on-rail precheck 0 / 0, railconn clean; floating lines <= 1 (the shell piece).
+- Default paths: no-flag build XOR 0 vs published; the a4 command rebuilds build/a4 byte-identical except GDS timestamps (normalised sha);
+  default leg (`--lb=4.2`, no `--sec`) identical to build/leg5 the same way. Outline (-0.055, 0)-(492, 912.91) and pins as a4 (port DVDD as a4).
+- ESD, `sec/esd2.py` = ../esd.py + receiver input gate on RX_P/N (nfet_06v0 16/0.7 x 6, gate RX, D/S/B local VSS; the CTLE input pair of
+  analog/wired_rx/netlists.py is pfet_03v3 16 um x 6, so 3.3 V is the REAL oxide there) and read-out RX - local VSS / RX - core VDD.
+  HBM 2 kV and 1 kV, all 10 cases, typical and high metal; CDM 1 / 2 / 3 A with 1 nF (typ, high), CDM without 1 nF reported:
+  E1 no MOS gate over 8.0 V (6 V) / 5.0 V (3.3 V) transient; E2 receiver RX - VSS and RX - VDD <= 8.0 V (6 V oxide; 5.0 V reported as the
+  3.3 V sensitivity); E3 junction reverse below the model bv (nd2ps_06v0 11 V, pd2nw_06v0 10.5 V); E4 MIM <= 6.0 V; E5 bond pad <= 8.0 V
+  for the VSS / VDD cases at HBM (pad-to-pad and CDM bond pad = information). Requirement points: HBM 2 kV, CDM 2 A with 1 nF.
+  Controls: toy 2 ohm known answer; site diodes stripped (must fail); SECONDARY diodes stripped at CDM 2 A 1 nF high metal (must fail E1).
+- C: per-leg c_leg of the `_rail` model (typ metal, every AC corner) <= f6rt_rail c_leg of the same corner + 0.150 pF; P/N <= 20 fF;
+  read-out control ctest (+100 fF on P). High / low metal `_rail` reported.
+- Termination T-A..T-D (cbench / ctab, low / typ / high), return loss and receive loss as declared above (like for like: `_rail` vs f6rt_rail,
+  no-rail vs f6rt); receive loss with high metal vs f6rh (now run) reported.
+Sizing (model level, a4 high model + diodes at the 50 switch drains, lumped DVDD route, `sec/mkcand.py`, `sec/size.sh`, `sec/esd/sz_*.json`):
+  base a4 + rx gate: CDM 2 A 1 nF high P+VSS switch gate 10.07 V (25 over 8.0); RX - VSS max 4.72 V (HBM P+N high), RX fine without diodes;
+  negative zaps fine (the switch's own drain junction). pd2nw at each drain: 4 um2 / 2 ohm: 5.54 / 5.79 V (P+VSS / P+N); 2 um2 / 5 ohm 6.29 / 6.54;
+  1 um2 / 2 ohm 6.53 / 6.78. Chosen 2 um2 (w 1 x l 2), no nd2ps, no RX diodes. Trial build on extracted R (DVDD route + in-leg trunk:
+  land -> all cathodes 5.5 / 9.3 ohm typ / high): CDM 2 A 1 nF high P+N worst gate 7.27 V; termination typ T-A..T-D PASS (code 8: 81.0-113.0).
+Generator changes (all behind options, defaults unchanged): `hs_leg_layout.py --sec=JSON` (diode row between switch and resistor rows,
+port DVDD outermost in the bank, Via2 / Via3 / jumper reinforcement of the split TU nets), `hs_pad_compose.py --sec` (legs' DVDD joined
+across the channel, DVDD route down the left of the P leg and the N-site column to the site DVDD bar, VSS strap moved to y 406.5 below the
+taller leg). Command: `sec/q_s.sh a5 leg6 '{"up": [1, 2]}'` (leg, build, R, ESD, checks, benches; progress `sec/q.progress`).
+- 2026-11-19 ~20:10 UTC FIRST a5 BUILD SUPERSEDED (results kept in `sec/r1/`, GDS deleted; queue stopped after the ESD matrix): CDM 2 A with 1 nF,
+  HIGH metal, P-N: 11 termination switches of the N leg at up to 8.05 V (E1 MISS); typ 7.20 V; all HBM cases PASS (worst gate 5.41 V high).
+  Cause: the N leg's diodes were fed through both legs' 2 um DVDD trunks and 2 Via3 cuts per leg (land -> N cathodes up to 59.7 ohm high);
+  the trial had been checked on P-leg cases only. Change (before the re-run, limits unchanged): leg `"dvdd_w": 3.0`; composer DVDD
+  reinforcement beside the legs (Metal4 x 311.5 .. trunk, Metal5 y 419-735.5 with Via4 array, Metal3 stubs + Via3 arrays at both
+  track / trunk junctions). Trial on the extracted model (land -> all cathodes 4.68 ohm high, per cathode 28-40): CDM 2 A 1 nF high
+  P-N 6.92 / N+VSS 6.67 / P+VSS 6.52 / P+N 6.77 V. Re-run: `sec/q_s.sh a5 leg6 '{"up": [1, 2], "dvdd_w": 3.0}'`.
+
+## CANDIDATE a5 RESULTS (2026-11-19, queue 20:10-21:54 UTC, all on the exact GDS). NOT published, NOT committed.
+GDS `sec/build/a5/pad_hspad.gds` sha256 3e23359ee382e468a0ed7e896c86a95f1022dcef1e5ce13a76765c31284902b0 (timestamp-normalised a96449539cfbc64f);
+physical.spice 1ada18f7; leg `sec/build/leg6/pt_hs_leg.gds` 123fd946; models a5_r_{typ,high,low} 595ca861 / c3b5bdf0 / 1427b22c,
+_rail a5bb205c / 9ac436c1 / f81163a1, ctest 51121f71. Generators: hs_pad_compose.py d00f1f37, hs_leg_layout.py d85fda3f, pad_site_primary.py 5ff82d2a
+(unchanged), protection_device_audit.py 2b6745db (unchanged).
+Commands: `sec/q_s.sh a5 leg6 '{"up": [1, 2], "dvdd_w": 3.0}'` = leg `hs_leg_layout.py --lb=4.2 --sec=...`, `sec/build.sh leg6 a5 --site-primary
+--no-core-array '--esd-opt={"neck_m1": true}' --sec`, `sec/rflow_s.sh`, `sec/esd2.py` (matrix), `sec/checks_s.sh`, `sec/q2_s.sh`. Table: `sec/a5tab.py a5`.
+
+| Limit | a5 number | Result |
+|---|---|---|
+| Magic DRC / composer LVS / device audit | 0 / match / match | PASS |
+| Read-back LVS pos / sch, 554 devices | match / match | PASS |
+| Controls: RX swap / site diode missing / secondary diode missing | mismatch / mismatch / mismatch | PASS (fail as required) |
+| KLayout precheck cell / on rail cells | 0/0 / 0/0; control (sliver) M1.1 + DF.14_LV reported | PASS |
+| Latch-up uncovered at 15 um | 0.0 um2; control (isolated nmos) 6.4 um2 | PASS |
+| rail_site_check.py / --selftest / railconn | PASS / OK (clean, V3.1 FAIL, REFUSED) / clean | PASS |
+| Floating lines <= 1 | 51 (shell piece + 50 Metal1 rings of the new diodes: gencell outer p-sub ring drawn with glc/grc 0 = no contacts) | **MISS** (fix: glc 1 grc 1 in hs_leg_layout _gen6, not re-run) |
+| Default no-flag XOR vs published / a4 rebuild / default leg | 0.0 / normalised == build/a4 / normalised == leg5 (`sec/repro.txt`) | PASS |
+| Outline / pins | (-0.055,0)-(492,912.91), pins as a4 (port DVDD) | PASS |
+| E1 MOS gate, HBM 2 kV all cases typ / high | 5.05 / 5.19 V, 0 over 8.0 (a4: 5.78 / 6.63) | PASS |
+| E1 HBM 1 kV typ / high | 4.43 / 4.52 V | PASS |
+| E1 CDM 2 A with 1 nF typ / high (requirement) | 6.34 / 6.92 V, 0 over (a4: 25 over, 8.9 / 10.3 V) | PASS |
+| E1 CDM 1 A / 3 A with 1 nF typ, high | 4.03 / 7.88; 4.43 / 8.04 (6 over, P-N) | 1 A PASS, 3 A high MISS (report) |
+| E2 receiver RX-VSS / RX-VDD, HBM 2 kV and CDM 2 A 1 nF (6 V oxide 8.0) | 4.69 V (HBM P+N high) / 4.11 V | PASS |
+| E2 3.3 V sensitivity (5.0 V; the real CTLE input is pfet_03v3) | HBM 4.69, CDM 2 A 1 nF 4.11, CDM 3 A 1 nF 4.84; without 1 nF CDM 1 A 6.26 | PASS at the requirement points (0.31 V margin) |
+| E3 junction reverse < bv (nd2ps 11 / pd2nw 10.5) | HBM 6.87; CDM 2 A 1 nF high 10.69 (site nd2ps, P-N) | PASS (0.31 V margin); 3 A 12.7 MISS (report) |
+| E4 MIM <= 6 V | HBM 3.84, CDM 2 A 1 nF 5.06 | PASS |
+| E5 bond pad vs VSS/VDD HBM 2 kV | 5.88 typ / 6.77 high | PASS |
+| Bond pad pad-to-pad HBM 2 kV (info) | 9.42 / 10.86 V | info |
+| CDM bond pad 2 A 1 nF (info) | 9.25 / 10.54 V vs rail; 14.1 / 16.2 pad-to-pad | info |
+| CDM without die C (info) | 2 A: 25 switches at up to 9.3 V | info (ring rises without decap) |
+| ESD controls: toy 2 ohm / site stripped / secondary stripped | 2.781 V / 29.3 kV / 10.07 & 10.32 V, 25 over (fails) | PASS |
+| C per leg, _rail typ, <= f6rt_rail + 0.150 pF per corner | 1.332-1.356 pF, max +0.093 pF (high +0.044, low +0.126) | PASS |
+| P/N imbalance <= 20 fF; ctest +100 fF reads | 5.3 fF (high 6.2); 105 fF | PASS |
+| Termination T-A..T-D low / typ / high | all PASS; T-D low code 7 80.2-114.7, typ code 8 81.1-113.0, high code 9 85.0-114.8 | PASS (a4 low miss cleared) |
+| Die RL 2.4 GHz not worse than f6 by > 0.3 dB (per corner, like for like) | _rail: worse by up to 0.67 dB (6.91-7.22 vs 7.36-7.65); no rail: 0.49 dB | **MISS** |
+| COB RL same rule | _rail worse by up to 0.31 dB; no rail 0.15 dB | **MISS** by 0.01 (rail) |
+| Receive loss not worse than f6 + 0.1 dB | typ 1.23-1.32 vs 1.59-1.68 dB; high 1.75-1.88 vs f6rh 2.06-2.15 | PASS |
+
+Notes: first a5 build superseded (N leg 8.05 V at CDM 2 A 1 nF high, `sec/r1/`). The site-diode-stripped control also strips the 50
+secondaries (the strip rule matches any cathode on a DVDD node): still fails as required. Not run: ss/ff device corners and hot in ESD;
+DVDD route resistance beyond the cell (ring assumed as esd.py); per-finger current density; f6 through the new ESD bench; a rebuild
+with the floating-ring fix; low-metal ESD. Review blockers: floating rings (hygiene, one-line fix + full re-run), RL miss (needs a ruling or
+a lower-C diode/route: the in-leg diode row, jumpers and DVDD trunk cost ~0.4 dB die RL vs a4).

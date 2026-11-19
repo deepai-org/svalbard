@@ -7,7 +7,7 @@ Reports: (1) control pins with no register field, (2) width mismatches, (3) bus 
 nor a cell pin, (4) fields shared by I and Q instances that need per-channel values.
 --selftest: shrinks one field by a bit and deletes one mapped field; both must be reported."""
 import json,re,sys,os,glob
-P='/home/ubuntu/svalbard/projects/programmable_transceiver_platform'
+P=os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'../../../projects/programmable_transceiver_platform'))
 HERE=os.path.dirname(os.path.abspath(__file__))
 def R(prefix,n,start=0): return [f'{prefix}{i}' for i in range(start,start+n)]
 # cell -> list of (pins, field or None, note)
@@ -106,7 +106,8 @@ def run(fields,pins):
     return rep
 if __name__=='__main__':
     reg=json.load(open(P+'/spec/register-map.json')); fields={f['name']:f for f in reg['fields']}
-    pins=json.load(open(HERE+'/pins.json'))
+    sys.path.insert(0,HERE); import pins as _pins
+    pins=json.loads(json.dumps(_pins.collect()))   # always fresh from the tree (no generated file to go stale)
     # twin cells share the i-map
     for a,b in (('pt_rxmix_q','pt_rxmix_i'),('pt_bbfilter_q','pt_bbfilter_i'),('pt_adc_q','pt_adc_i'),('pt_dac_q','pt_dac_i'),('pt_txmix_q','pt_txmix_i')):
         MAP.setdefault(a,[(p,(f.replace('_i.','_q.').replace('.i_code','.q_code') if f else f),n) for p,f,n in MAP[b]])

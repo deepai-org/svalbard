@@ -5,7 +5,7 @@ consumer (integration/core_bias.py TRUNKS, either chip) and (b) terminate inside
 classification, and whether core_bias has an output for it.  --selftest injects (1) a PMOS-diode consumer
 and (2) a consumer missing from CONSUMERS and requires both to be flagged."""
 import re,sys,json,os
-P='/home/ubuntu/svalbard/projects/programmable_transceiver_platform'
+P=os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'../../../projects/programmable_transceiver_platform'))
 CELLS={ # instance -> (file, subckt, core_bias consumer name or None)
  'lna':('analog/rf_rx/lna.spice','pt_lna','lna'),'rxmix_i':('analog/rf_rx/rxmix_i.spice','pt_rxmix_i','rxmix_i'),
  'rxmix_q':('analog/rf_rx/rxmix_q.spice','pt_rxmix_q','rxmix_q'),

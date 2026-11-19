@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Collect .subckt pin lists (with file:line) from every spice file under analog/ (source + generated LVS)."""
 import re,sys,os,json
-ROOT='/home/ubuntu/svalbard/projects/programmable_transceiver_platform'
+ROOT=os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)),'../../../projects/programmable_transceiver_platform'))
 def subckts(path):
     out={}
     try: lines=open(path,errors='replace').read().split('\n')

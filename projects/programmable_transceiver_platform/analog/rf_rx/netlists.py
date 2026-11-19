@@ -180,8 +180,9 @@ def ota_lownoise():
 # RF RX round 3 (2026-11-19): TIA x2 is the default, in the no-hib form (pair 2400, tail 480 = 2.4 mA always on, one state for
 # RX and duplex, no new pin; rf_rx helper, scratch/rf-rx-tia/).  TIA_X = 1 restores the fork V cell (pair 1200, tail 240).
 TIA_X = 2
-OTAN = dict(tail=240. * TIA_X, win=1200. * TIA_X, lin=1., wl=20., ll=2., w6=13.3, w7=80., cc=48., rz=1., fw=20.)
-OTAN_XTAIL = 0.                  # > 0: hib-switched extra tail; adds the rxmix pin hib and the OTA pin pdx
+TIA_HIB = True                   # coordinator ruling 2026-11-19: the extra tail is switched by pin hib (on in RX, off in duplex)
+OTAN = dict(tail=240. * (1 if TIA_HIB else TIA_X), win=1200. * TIA_X, lin=1., wl=20., ll=2., w6=13.3, w7=80., cc=48., rz=1., fw=20.)
+OTAN_XTAIL = 240. * (TIA_X - 1) if TIA_HIB else 0.   # > 0: hib-switched extra tail; adds the rxmix pin hib and the OTA pin pdx
 OTAF = dict(tail=16., win=30., wl=8., w6=36., w7=72., cc=12.2, rz=3., l2=.5)
 # PGA stage-1 OTA: OTAF with every device doubled and the same Miller cap (~2x GBW, +~0.45 mA per OTA)
 OTAG = dict(tail=32., win=60., wl=16., w6=72., w7=144., cc=12.2, rz=1.5, l2=.5)

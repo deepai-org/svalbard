@@ -1,0 +1,21 @@
+{
+ "antenna_diodes_removed": 88,
+ "gds": "/home/ubuntu/svalbard/scratch/timing/drc12/slicer_taps.gds",
+ "gds_sha256": "2c96ac2d70fcfe6a6599760362953b0f41c196bb72f6960625ce0dcb825a7265",
+ "ref": "/home/ubuntu/svalbard/scratch/timing/drc12/ref/slicer.spice",
+ "ref_sha256": "b6e133079395329c475846200b178039f32f6729d87099d1c3e9daa09f5bd172",
+ "lvs": {
+  "unique_match": true,
+  "property_errors": false,
+  "summary": "Final result: Circuits match uniquely.\n.",
+  "log": "lvs.txt"
+ },
+ "negative_control": {
+  "edits": 1,
+  "unique_match": false,
+  "property_errors": true,
+  "summary": "Final result: Circuits match uniquely.\nProperty errors were found.\n\nThe following cells had property errors:\n pt_slicer",
+  "log": "lvs_neg.txt"
+ },
+ "clean": true
+}

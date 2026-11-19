@@ -1,0 +1,20 @@
+{
+ "gds": "/home/ubuntu/svalbard/scratch/timing/drc12/vco_replica_taps.gds",
+ "gds_sha256": "49f38c27f454b8abc4fcd78e4f90ef13d65d5568529470f813af2cebb1005f3d",
+ "ref": "/home/ubuntu/svalbard/scratch/timing/drc12/ref/vco_replica.spice",
+ "ref_sha256": "d40a5e83ba8e79e8b16074fff5afc2a38f7b2941829937f98cabaf6444f13af7",
+ "lvs": {
+  "unique_match": true,
+  "property_errors": false,
+  "summary": "Final result: Circuits match uniquely.\n.",
+  "log": "lvs.txt"
+ },
+ "negative_control": {
+  "edits": 1,
+  "unique_match": false,
+  "property_errors": true,
+  "summary": "Final result: Circuits match uniquely.\nProperty errors were found.\n\nThe following cells had property errors:\n pt_vco_replica",
+  "log": "lvs_neg.txt"
+ },
+ "clean": true
+}

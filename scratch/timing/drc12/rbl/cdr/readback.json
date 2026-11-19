@@ -1,0 +1,21 @@
+{
+ "antenna_diodes_removed": 14,
+ "gds": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/wired_rx/generated/cdr.gds",
+ "gds_sha256": "2f03773bd7bbbdd91ea92346c4be6b16aa8eda33395c860fe3855b4db5cde1d9",
+ "ref": "/home/ubuntu/svalbard/scratch/timing/drc12/ref/cdr.spice",
+ "ref_sha256": "bb80f2a7d7c829f4ca7357595af135ba4773ec7084657178959f798b6188ff49",
+ "lvs": {
+  "unique_match": true,
+  "property_errors": false,
+  "summary": "Final result: Circuits match uniquely.\n.",
+  "log": "lvs.txt"
+ },
+ "negative_control": {
+  "edits": 1,
+  "unique_match": false,
+  "property_errors": true,
+  "summary": "Final result: Circuits match uniquely.\nProperty errors were found.\n\nThe following cells had property errors:\n pt_cdr",
+  "log": "lvs_neg.txt"
+ },
+ "clean": true
+}

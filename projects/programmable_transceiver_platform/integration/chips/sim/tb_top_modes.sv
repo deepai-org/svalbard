@@ -240,7 +240,7 @@ module tb_top_modes;
   setf(`F_RFPLL_CONFIG__LO_MODE, 2); setf(`F_RFPLL_STATE__STATE, 2); setf(`F_RFPLL_CONFIG__LO_N, 10); commit(0, "rule: lo_n < 16 with the synthesizer active must be rejected");
   setf(`F_RFPLL_CONFIG__LO_N, 24); setf(`F_RFPLL_CONFIG__VCO_COARSE, 9); setf(`F_RFPLL_CONFIG__LO_ICP, 2); setf(`F_RFPLL_CONFIG__LO_PRESET, 1); commit(1, "on-chip LO");
   chk(lo_pins === 3'b010, "on-chip LO: INT only"); chk(analog.p_qvco__EN && analog.p_lo_mmd__EN && analog.p_lo_mmd_qdum__EN && analog.p_lo_pfdcp__EN, "on-chip LO: QVCO / divider / PFD enables");
-  chk(analog.p_bias_ext__EN_qvco && analog.p_lo_vreg__EN, "on-chip LO: bias / regulator enables");
+  chk(analog.p_core_bias__EN_qvco && analog.p_lo_vreg__EN, "on-chip LO: bias / regulator enables");
   chk(lo_n === 6'd24 && qvco_band === 4'd9 && {analog.p_lo_pfdcp__ICP1, analog.p_lo_pfdcp__ICP0} === 2'd2 && analog.p_lo_pfdcp__PRE === 1'b1 && analog.p_qvco__CMLSEL === 1'b0,
       "on-chip LO: N / band / Icp / preset pins");
   setf(`F_RFPLL_STATE__STATE, 1); commit(1, "rfpll warm");

@@ -26,7 +26,9 @@ def main():
         i, _ports, _waive, perr = check_top.parse(check_top.read_conn(str(P / f'integration/chips/{chip}/chip.conn')))
         err += [f'{chip} conn: {e}' for e in perr]
         for n, v in i.items():
-            if n in inst and inst[n]['master'] != v['master']: err.append(f'{n}: master {v["master"]} on pt_{chip}, {inst[n]["master"]} on the other chip')
+            # one generator, one master per chip (D8): pt_core_bias_<chip>
+            per_chip = {inst[n]['master'], v['master']} == {'pt_core_bias_rf', 'pt_core_bias_wired'} if n in inst else False
+            if n in inst and inst[n]['master'] != v['master'] and not per_chip: err.append(f'{n}: master {v["master"]} on pt_{chip}, {inst[n]["master"]} on the other chip')
             inst.setdefault(n, v)
     claims = {}
     for kind in ('blocks', 'infrastructure'):

@@ -228,6 +228,7 @@ python3 hbm_core_screen.py <case> ...                                     # cons
 
 # checks
 python3 ../../verification/check_block_kldrc.py                           # precheck records against GDS sha
+python3 rail_site_check.py --family all                                # family ON the provider rail cell at its mask-snapped site: precheck main + antenna (--selftest must pass)
 python3 -m unittest discover -s . -p test_design.py
 ```
 
@@ -277,7 +278,11 @@ budget-sized ideal capacitors on top of extracted capacitance.
     the ESD-row and debug-pad area items; back-drive checks of consumer pins with the pad's island off.
 13. **`pad_rf_pair` area.** `rf-pair/pad-layout.json` records `fits_assigned_area: false` against a
     130,000 µm² ceiling.
-14. **Flow.** The pads layout image `sha256:9253a51f…` is absent from the build machine, so
+14. **Pad on the provider rail cell (SO-1).** `rail_site_check.py`: every published family except `pad_tlp` fails the
+    precheck main deck on the rail cell, 66 Via3 / Via4 items per bond site (V3.1, V3.2a, V4.1, V4.2a), all at the shell's
+    own VSS ring stacks; the families' bond openings sit exactly on the template frame (no offset at site level). The
+    pad-site-diode rebuilds delete those stacks and pass (antenna 0 everywhere).
+15. **Flow.** The pads layout image `sha256:9253a51f…` is absent from the build machine, so
     `run_first_pass.py` LVS cannot run there; `packaging-audit.json` predates the current bond map;
     `termination_buffer_array_layout.py` has an uncommitted edit of unknown origin. Buffer electromigration
     ratios have no published evidence file. (MOD-05)

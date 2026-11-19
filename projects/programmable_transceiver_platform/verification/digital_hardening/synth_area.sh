@@ -2,7 +2,8 @@
 # Cell area of the digital macro per chip configuration (split phase 2): yosys synthesis of pt_digital_macro with
 # PT_CHIP = 1 (pt_rf), 2 (pt_wired) or 3 (both halves, the calibration against the hardened r8 macro), mapped to the
 # in-window ss_032C_3v15 Liberty the hardening flow uses. No place-and-route: this sizes the outlines of
-# {rf,wired}/config.json. Results: scratch/digital_hardening-synth/<PT_CHIP>/ (stat.txt, synth.log).
+# {rf,wired}/config.json. Results: scratch/digital_hardening-synth/<PT_CHIP>/ (stat.txt, synth.log, netlist; the
+# netlist of a chip configuration passes clamp_check.py --chip <chip>).
 #   synth_area.sh <PT_CHIP>
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/../../../.." && pwd)
@@ -23,5 +24,6 @@ docker run --rm --network none --cpus 2 --memory 12g --entrypoint bash -v "$PROJ
     abc -liberty \$LIB
     opt_clean -purge
     tee -o /out/stat.txt stat -liberty \$LIB
+    write_verilog -noattr /out/pt_digital_macro.syn.v
   \""
 grep -E "Chip area|Number of cells" "$OUT/stat.txt" | tail -2

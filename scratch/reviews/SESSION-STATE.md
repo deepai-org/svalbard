@@ -205,3 +205,16 @@ User chose option A: primary ESD diodes inside the pad site tied straight to the
 User decided: `pt_rf` and `pt_wired`, each self-sufficient, two Run 3 slots. Reason: the single die was 2.8-3.5 mm2 over as built (1.5-2.0 at targets) with the macro at 2.81-3.65 mm2; split estimate about 9.4 mm2 (rf) and 8.8 mm2 (wired) against 12.77 mm2 core each, before area work. Also removes RF/digital ground-bounce coupling and the decap-vs-area conflict. Plan and rules: `SPLIT-PLAN.md`. All block work is frozen against the single top until phase 3 of the plan is committed (no agents running at the time of the decision).
 
 Disk 2026-11-19: freed 15 GB (old waveforms, superseded hardening runs pC6/run14, docker build cache); 41 GB free. Most of the disk belongs to other projects on the machine.
+
+### Phase 4 started 2026-11-19 (split complete; user: "keep work organized and remove historical junk")
+
+| Role | Agent ID | Scope |
+|---|---|---|
+| Pads (option A rollout, per-chip pad gen, rail check, AUX site on pt_wired) | a0b585bf24a7dee4f | analog/pads, bond maps for the AUX swap |
+| Wired RX + timing (pt_cdr / pt_diff_clk_rx DRC, ring version, ring duty/spacing, RX candidates) | ae237ae42062df4de | analog/wired_rx, analog/timing |
+| RF RX (new-map ground model, stability, R+C, TIA x2, fallback) | a6e1dd7a8217d3b6f | analog/rf_rx |
+| Digital (D2H ping-pong, pipeline stages, harden both macros) | aa4a00476697338c3 | rtl, sim, SDC, verification/digital_hardening |
+| Wired TX (block top, interlock, real-chain table, publish) | ad4984d8f6a49e79c | analog/wired_tx |
+| Bias and power per chip (D8, D9, stale checks) | a19eb0e38a50aaf24 | bias/power files, integration/core_bias.py, power-delivery spec |
+
+Every brief requires current-state docs and deletion of superseded files and runs (no archive folders).

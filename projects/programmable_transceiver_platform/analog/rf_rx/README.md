@@ -12,7 +12,7 @@ sources: `chip-top-pins.md`. Risks: IDs refer to `spec/risk-register.md`.
 | `bbfilter_i`, `bbfilter_q` | `pt_bbfilter_i/q` | published, committed | 341,901 (586.3 × 583.15) | 0 / 0, unique | current: matches netlist and GDS |
 | `bb_tap` | `pt_bb_tap` | published on disk | 19,511 (99.08 × 196.92) | 0 / 0, unique | current: matches netlist and GDS (20 corners) |
 | `rxmix_i`, `rxmix_q` | `pt_rxmix_i/q` | candidate, not published | 35,442 (192.73 × 183.9) | 0 / 0, unique | current (reduced 10-corner set); chain NF / IIP3 rows open |
-| `lna` | `pt_lna` | candidate, not published (reviews 4 and 5: NO-GO as recorded; stable in every physical case tried, margins miss above 5 GHz; noise figure, IIP3 and one S11 row miss) | 64,712 (266.04 × 243.24), plus two 57.2k tank and two 14.0k degeneration spirals | 0 / 0, unique; read-back from GDS unique | `generated/lna-evidence.json` (current, `lna_close.py`) |
+| `lna` | `pt_lna` | candidate, NOT publishable: layout round 3 fixes the current-carrying routes only in part; metal-aware results miss NF, S11, chain NF and common-mode stability (5a) | 129,592 (round 3; was 64,712), plus two 57.2k tank and two 14.0k degeneration spirals | 0 / 0, unique | section 5a (`scratch/rf_rx/close_rext/`, `scratch/rf_rx/r3/`); `generated/lna-evidence.json` is the previous layout's and is stale |
 
 Areas and DRC/LVS are from `generated/<block>-layout.json`. `integration/chips/{rf,wired}/chip.conn` binds the cells in
 `generated/` (masters `generated/<block>.ext.spice`), including the candidate LNA and mixer pin lists. The
@@ -193,34 +193,30 @@ tt/ss/ff × 22/32 °C × 3.15/3.35 V. Only blocks with current evidence are list
 
 <!-- RESULTS:END -->
 
-## 5a. LNA candidate: results against the limits (`generated/lna-evidence.json`, written by `lna_close.py`)
+## 5a. LNA candidate (round 3 layout, 2026-11-19): results against the limits
 
-Extracted (capacitance only), 20 corners = tt / ss / ff / sf / fs × 22 / 32 °C × 3.15 / 3.35 V unless stated. Bond map: RF_RX
-on bonds 67/68 (site option B). Limits were fixed before the runs. Rows marked **miss** are misses; nothing here is published.
+Views: `ext` = C-only extraction; `rext` = `generated/lna.rext.spice`: C-only plus the solved metal networks of the current-carrying
+nets (`lna_netres.py`, pads owner's mesh solver), cross-checked by Magic `extresist simplify off` on all nets (15.4 vs 15.2 mA).
+`rext` is the evidence view. Bond / ground model: pt_rf map (`pkg_rf.py`, `generated/pkg-rf-bond-model.spice`). Limits unchanged.
 
 | Row | Limit | Result | State |
 | --- | --- | --- | --- |
-| Area; Magic / KLayout DRC; LVS; read-back LVS from the GDS | 0 / 0, unique | 64,712 µm² (266.04 × 243.24); 0 / 0; unique; unique (1060 devices, GDS 34c8dcd1; census flags 8.667 vs 8.67 µm on three resistor segments), negative control fails as required; spirals DRC 0 | pass |
-| Supply current, RX bias / `lobias` | ≤ 19.0 / ≤ 11.8 mA at every corner | 17.75–18.62 / 10.80–11.45 mA; off 1–8 nA | pass |
-| Stability on the pads owner's coupled bond model, site B × min / nom / max, 38 rows (supply cases incl. 0.9–5.4 nF die decap and 500 pF on the island, RX and duplex bias, five processes, attenuator 63, bypass, tank codes), 5 MHz–30 GHz; control, bias and LO sources referenced to die VSS | μ > 1, K > 1, Re(Zin) ≥ 1.0 Ω, Re(Zcm) ≥ 1.0 Ω | μ ≥ 1.007, K ≥ 3.0, differential ≥ 1.33 Ω (≥ 3.0 Ω below 8 GHz); common mode ≥ 2.1 Ω from 5 MHz to 1 GHz, positive everywhere, but below 1.0 Ω from about 5 GHz up: 0.78–0.99 Ω at 5–8 GHz in 37 of 38 rows (disabled LNA 1.07 Ω at 8 GHz), 0.53 Ω at 30 GHz | **miss** above about 5 GHz |
-| Same limits on lossless lumped rails (no wire resistance), 61 rows 0.1–30 GHz + 11 rows from 5 MHz | same | μ ≥ 1.007, K ≥ 2.96; differential 0.81–1.04 Ω and common mode 0.37–0.55 Ω at 30 GHz (disabled LNA 0.70 / 0.35 Ω); 3 nF / 0.03 Ω die decap with 1 / 2 nH per rail at ff: −0.85 / −6.4 Ω at 67 / 47 MHz; 0.9 nF + 500 pF island: −14.9 Ω at 97 MHz; undamped island decap alone: −9 to −41 Ω; passes with 0.5 nH per rail or 0.1 Ω of decap loss | **miss** (RQ-3, RQ-3a stand as supply requirements) |
-| Start-up transients (enable step at ff, island power-up at ss; coupled model, low-loss supply, real mixers), 16 µs | no oscillation: detrended residual ≤ 1 mV pp over 12–16 µs | residuals ≤ 5 µV, raw ≤ 56 µV pp, differential ≤ 0.2 µV pp; bias settles with τ ≈ 1.6 µs (about 8 µs to 1 %); duplex-enable and ff power-up cases: see the evidence file | pass (two cases) |
-| Negative controls | bench must fail | broken LNA (tail shorted, feed on VDD, CM network shorted): −38 Ω; bench self-tests all as required | pass |
-| 2 kV HBM on RF_RX_P, LNA unpowered (pads owner's bench), with the secondary clamps | ≤ 5.0 V on every 3.3 V oxide | CS gates ≤ 1.0 V, no device over the limit (without the clamps: 5.3–5.8 V gate-to-bulk, 5.9–6.4 V on the bypass switches: that run is the failing control; the MIM-shorted control no longer fails with the clamps) | pass |
-| S11 on the real channel, carrier parts at connector + 2 mm, fitted per chip | ≤ −10 dB, 2.395–2.4885 GHz | −10.4 to −11.1 dB; ff −9.94 dB; at 10 mm −10.0 dB | **miss** at ff by 0.06 dB |
-| LNA gain, source EMF to mixer feeds (50 Ω per leg model), real channel | — | tt 0.9–1.2 dB (ideal lossless match 4.4 dB); ss −1.0…−0.1; ff 1.8–2.6; pessimistic end −6.2…−5.9 dB | information |
-| LNA NF including the real channel (3.0–3.5 dB of loss before the LNA; pad resistance 5–7 Ω) | ≤ 6.0 dB; pessimistic end derated +1.5 dB | tt 3.7–4.0; ss 4.1–4.6; ff 3.3–3.7; sf 3.8–4.2; fs 3.5–3.9 dB; pessimistic end 5.5–5.8 dB (7.3 derated) | pass / **miss** at the pessimistic end |
-| Chain NF, DSB, real channel, LO as delivered, small TIA | ≤ 4.1 dB | tt (LO ±0.37 V) 6.02 dB, gain 31.2 dB; ss 32 °C 3.15 V (±0.26 V) 7.97 dB, 26.1 dB; pessimistic end (±0.11 V) 14.9 dB, 13.5 dB | **miss** |
-| Chain IIP3 at maximum gain (tt, ideal lossless match, tones at LO + 20 / + 37 MHz, −30 dBm) | ≥ −10 dBm | −11.0 dBm | **miss** by 1.0 dB (not run on the real channel or over corners) |
-| Die-VSS bounce to differential input at 2421.875 MHz (bond coupling; information) | — | site B: −38.9 dB with die decap (−43.0…−35.8 over the bounds), −33 dB without; site A −17 dB | information |
-| RF pad capacitance | — | per +0.1 pF per leg: NF +0.15 dB, gain −0.27 dB; the ff S11 row has no margin left | information |
+| Layout | DRC 0 / 0, LVS unique | 129,592 µm²; 0 / 0; unique (read-back LVS not redone) | pass (area +64.9k) |
+| Supply current, RX / `lobias`, 20 corners, rext | ≤ 19.0 / ≤ 11.8 mA | 14.5–15.5 / 9.9–10.3 mA (C-only 18.2: metal drops on VSS / tail cost 16 %) | pass, below design point |
+| Electromigration of the stage-current routes (85 °C, 2.09 mA/µm, 0.58 mA/cut) | pass | tracks ≤ 2.07 mA/µm, ≤ 0.46 mA per cut (mesh solver) | pass (old layout ~30× over) |
+| Stability, pt_rf bond model × 3 bounds, 38 rows + references, 5 MHz–30 GHz, rext | μ, K > 1; Re ≥ 1.0 Ω | μ ≥ 1.008, K ≥ 2.95, differential ≥ 1.17 Ω; common mode 0.74–1.34 Ω at 5–8 GHz (LNA off 0.90), 0.45 Ω at 30 GHz; ≥ 1.07 Ω below 1 GHz | **miss** (common mode) |
+| Same, old map vs pt_rf map (same bench) | — | identical within 0.01 Ω: the ground inductance is not the lever | information |
+| S11, real channel, per-chip carrier fit, rext | ≤ −10 dB | tt −9.69, ff −9.07, ss −10.10, pessimistic −10.43 dB | **miss** |
+| LNA NF incl. channel, rext | ≤ 6.0 dB (pessimistic +1.5) | tt 4.8–5.1, ff 4.3–4.6, ss 5.5–5.8, pessimistic 7.2–7.4 (8.9 derated) dB; gain tt −3.3…−2.6 dB | pass / **miss** pessimistic |
+| Chain NF DSB, real channel, LO as delivered, small TIA, rext | ≤ 4.1 dB | tt 6.26 (31.0 dB), ss 7.80 (26.1 dB), pessimistic 15.2 dB (11.6 dB) | **miss** |
+| Fallback: external LNA (15 dB, NF 1 dB, 2.5 dB before, 0.8 dB balun) in front of the active LNA; Friis on the chain rows | system 8 dB | tt 3.9, ss 4.1, pessimistic 6.5 dB (20 dB gain: 3.6 / 3.7 / 4.7) | pass (cascade, not a joint simulation) |
+| Die-VSS bounce → differential input at 2421.875 MHz, through the LNA, 5.4 nF decap | — | pt_rf map −38.4 / −44.1 / −59.7 dB (min / nom / max; old map −47.2 nom); with the D2H-dominated bounce rescaled to the pt_rf ground (0.25 / 2.5 / 12.5 mV rms): about −91 / −83 / −90 dBm against −100 dBm | **miss** (PD2-15) |
+| IIP3, Monte Carlo | ≥ −10 dBm | not run on this layout (last: −11.0 dBm, tt, ideal match, previous layout) | open |
 
-Chain numbers published before 19 Nov (6.15 / 8.11 / 14.7 dB and earlier) came from a bench with a node-name collision
-(the bond node of the channel ladder was the Q mixer's baseband output); they are withdrawn. Levers on the chain figure,
-from the tt noise-factor terms (source 2.56, image 3.04, TIA 3.08): TIA ×2 (pair 2400 / tail 480, +16.7k µm² per mixer)
-about −0.8 dB; ×3 (+36.0k µm² per mixer) about −1.1 dB, i.e. 0.024 and 0.016 dB per 1000 µm² (estimates from the
-measured OTA noise, not rerun); LO drive at the ideal-square level instead of the delivered one: about −0.6 dB at tt
-(mixer conversion 22.5 dB ideal, 20.6 dB as delivered at tt, 18.6 dB at ss).
+Remaining metal resistance (mesh solver, typ): source 7.1 / 8.2 Ω, tank 8.7–13.6 Ω, cascode node 7–12 Ω, tailx 4.7 Ω, VDD / VSS 1.8 /
+1.6 Ω. The generic row router puts the trunks outside the device rows; a placement-level LNA layout (heavy devices adjacent,
+local trunks, Kelvin bias reference) is the next step and is expected to recover most of the 0.8 dB NF / 2.9 dB gain that `rext`
+loses against `ext`.
 
 ## 6. Open items
 
@@ -237,8 +233,11 @@ measured OTA noise, not rerun); LO drive at the ideal-square level instead of th
    below 1 GHz. Supply rules RQ-3 / RQ-3a are requirements on power delivery.
 3. **S11 at ff is −9.94 dB**, IIP3 −11.0 dBm (tt, ideal match), pessimistic-end LNA NF 5.5–5.8 dB: see 5a. The match is
    fitted per chip (per-board tuned carrier parts, B18/B25); one fixed BOM over tolerance is not shown.
-4. **Extraction is capacitance-only.** A Magic `extresist` netlist of the LNA GDS was produced (1,372 resistors, same ports
-   and devices) but its DC point is wrong (4.95 mA): not used. No Monte Carlo.
+4. **LNA layout: metal resistance of the stage-current routes** (5a). The earlier DC-point error of the R+C netlist was a real
+   layout defect (stage current through 0.3 µm Metal2 and single PCell escapes; 4.2 mA instead of 18.3 on the old GDS with all nets
+   extracted). Round 3 widened the routes (EM now passes) but source / tank / cascode routes still have 5–14 Ω: a placement-level
+   layout is needed. Use `extresist simplify off` (the default writes resistance on a subset of nets) and only its resistors.
+   No Monte Carlo; IIP3 not rerun.
 5. **External-LO leak into the RX pair at site B** (fallback LO only; computed from the pads owner's mutuals, 1 Vpp
    differential drive): −60.5 dBm in the pads owner's convention, −55.2 dBm into the matched port against −57 dBm
    (−65.8 / −47.8 at the bounds); 17 / 58 / 135 mV of static offset at the TIA output against a ±144 mV offset DAC.

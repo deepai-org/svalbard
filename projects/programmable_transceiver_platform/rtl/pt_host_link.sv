@@ -25,7 +25,8 @@
 //
 // Word order on the pins is chronological; quad word 0 (earliest) is [9:0].
 //
-// D2H. The core hands one quad per hcore clock. A hcore register stores the
+// D2H. The core hands one quad per hcore clock. Two hcore ping-pong entries
+// (pt_d2h_pingpong, written on alternate edges, DG8-6) store the
 // running XOR prefix P_k = w_0 ^ ... ^ w_k of the word stream (P0..P3 of each
 // quad, carried across quads). The pad pin is q_r ^ q_f where q_r (hddr
 // rising) and q_f (hddr falling) hold consecutive prefixes, so each pin
@@ -87,24 +88,18 @@ module pt_host_link(
     always @(posedge core_clk or negedge rst_n) if (!rst_n) crs <= 2'b00; else crs <= {crs[0], 1'b1};
     assign core_rst_n = crs[1];
 
-    // ---------------- D2H, core domain: enable gate and XOR prefix
+    // ---------------- D2H, core domain: enable gate, XOR prefix and ping-pong hand-over (DG8-6)
     wire en_c;
     pt_sync_vec #(1) sen(.clk(core_clk), .rst_n(core_rst_n), .d(d2h_enable), .q(en_c));
     wire [39:0] w = en_c ? d2h_quad : 40'd0;
-    reg  [39:0] prefix;
-    wire [9:0]  carry = prefix[39:30];
-    wire [9:0]  p0 = carry ^ w[9:0];
-    wire [9:0]  p1 = carry ^ (w[9:0] ^ w[19:10]);
-    wire [9:0]  p2 = (carry ^ w[9:0]) ^ (w[19:10] ^ w[29:20]);
-    wire [9:0]  p3 = (carry ^ w[9:0]) ^ (w[19:10] ^ (w[29:20] ^ w[39:30]));
-    always @(posedge core_clk or negedge core_rst_n)
-        if (!core_rst_n) prefix <= 40'd0; else prefix <= {p3, p2, p1, p0};
+    wire [39:0] pp0, pp1;
+    pt_d2h_pingpong pingpong(.core_clk(core_clk), .wrst_n(drs_c), .rst_n(core_rst_n), .w(w), .pp0(pp0), .pp1(pp1));
 
     // ---------------- D2H, hddr domain: 4:1 gearbox, DDR launch, forwarded clock
     wire [1:0] mode_d; wire en_d;
     pt_sync_vec #(3) smd(.clk(link_clk), .rst_n(dr_n), .d({mode, d2h_enable}), .q({mode_d, en_d}));
     wire ddr_fwd; wire [9:0] d2h_launch;
-    pt_d2h_gearbox gearbox(.ddr_clk(link_clk), .rst_n(drs_g), .nrst_n(drs_ng), .prefix(prefix), .clk_en(en_d && mode_d == 2'd0),
+    pt_d2h_gearbox gearbox(.ddr_clk(link_clk), .rst_n(drs_g), .nrst_n(drs_ng), .pp0(pp0), .pp1(pp1), .clk_en(en_d && mode_d == 2'd0),
         .d2h_pin(d2h_launch), .clk_pin(ddr_fwd));
     // HB-1: two-group launch stagger (SSN). Odd lanes go through a fixed ~0.4-0.8 ns delay when
     // d2h_stagger=1; the even lanes and the forwarded clock are the early group. The FPGA per-bit
@@ -153,9 +148,35 @@ endmodule
 `ifndef FORMAL
 (* keep_hierarchy = "yes" *)
 `endif
-module pt_ddr_phase(input wire clk, rst_n, output reg load);
+// rsel (D2H ping-pong read select, DG8-6) toggles on every load edge: before load edge m (hcore edge m)
+// it is m mod 2, the entry pt_d2h_pingpong overwrites at that same edge (written two hcore edges earlier).
+module pt_ddr_phase(input wire clk, rst_n, output reg load, output reg rsel);
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) load <= 1'b1; else load <= ~load;
+        if (!rst_n) begin load <= 1'b1; rsel <= 1'b0; end else begin load <= ~load; rsel <= rsel ^ load; end
+endmodule
+
+// D2H ping-pong hand-over (DG8-6, hcore domain). The running XOR prefix P_k = w_0 ^ ... ^ w_k of the
+// word stream is written into two 40-bit entries on alternate hcore edges: at hcore edge m (counted
+// from the first edge after the divider leaves reset) entry m mod 2 takes the quad. The gearbox
+// (hddr) loads entry m mod 2 at the hddr edge that coincides with hcore edge m, i.e. the value written
+// at edge m - 2, while this same edge overwrites it only after the hcore insertion delay. The
+// hand-over window is two hcore periods (25.6 ns at the full rate) minus the hcore-to-hddr skew, for
+// any skew between 0 and about 20 ns (hold: the overwrite comes after the read edge for skew >= 0).
+// SDC: multicycle 4 (hddr) from hcore to host.gearbox.x / lq*.hr. One hcore period more D2H latency.
+// wt has the divider's reset (released while hcore is stopped), so the write index does not depend on
+// the core_rst_n release edge; the entries stay 0 until core_rst_n releases.
+// Proof: verification/formal/pt_d2h_gearbox_fv.sv.
+module pt_d2h_pingpong(input wire core_clk, wrst_n, rst_n, input wire [39:0] w, output reg [39:0] pp0, pp1);
+    reg wt;   // entry written at the next hcore edge
+    always @(posedge core_clk or negedge wrst_n) if (!wrst_n) wt <= 1'b0; else wt <= ~wt;
+    wire [9:0] carry = wt ? pp0[39:30] : pp1[39:30];   // P3 of the entry written at the previous edge
+    wire [9:0] p0 = carry ^ w[9:0];
+    wire [9:0] p1 = carry ^ (w[9:0] ^ w[19:10]);
+    wire [9:0] p2 = (carry ^ w[9:0]) ^ (w[19:10] ^ w[29:20]);
+    wire [9:0] p3 = (carry ^ w[9:0]) ^ (w[19:10] ^ (w[29:20] ^ w[39:30]));
+    always @(posedge core_clk or negedge rst_n)
+        if (!rst_n) begin pp0 <= 40'd0; pp1 <= 40'd0; end
+        else if (wt) pp1 <= {p3, p2, p1, p0}; else pp0 <= {p3, p2, p1, p0};
 endmodule
 
 // Falling-edge phase copy: lp (rising, no reset, no logic before it except the reset gate) is
@@ -183,8 +204,8 @@ endmodule
 
 // D2H 4:1 gearbox + DDR launch (hddr domain). After reset the first hddr edge is an hcore edge
 // (pt_host_divider) and `load` is 1 exactly before hcore edges (edge k below):
-//   rise k   (load): x <= prefix quad P0..P3 (hcore register, unchanged for two hddr periods:
-//                    2-period multicycle); q_r <= x.P2 of the previous quad
+//   rise k   (load): x <= prefix quad P0..P3 (the ping-pong entry written at hcore edge k-2,
+//                    unchanged for four hddr periods: 4-period multicycle); q_r <= x.P2 of the previous quad
 //   fall k+.5      : q_f <= f3   (P3 of the previous quad, held since rise k-1: 1.5 periods)
 //   rise k+1       : q_r <= x.P0; f3 <= x.P3
 //   fall k+1.5     : q_f <= x.P1 (x held since rise k: 1.5 periods)
@@ -193,17 +214,23 @@ endmodule
 // input changed half a period before, but is not selected): SDC multicycle 2 from x/f3 to q_f.
 // Forwarded clock: c_r toggles on rising edges while enabled, c_f takes c_r on the falling edge
 // (a direct phase copy, as pt_ddr_nphase), clk_pin = c_r ^ c_f: 1 after rising, 0 after falling.
-module pt_d2h_gearbox(input wire ddr_clk, rst_n, nrst_n, input wire [39:0] prefix, input wire clk_en,
+module pt_d2h_gearbox(input wire ddr_clk, rst_n, nrst_n, input wire [39:0] pp0, pp1, input wire clk_en,
     output wire [9:0] d2h_pin, output wire clk_pin);
     // One load / nsel phase-flop pair per pin bit (timing 2026-11-11: per-2-bit groups had fanout 12
     // on `load`, TC4 hddr +0.004 ns against a 0.64 ns target).
-    wire [9:0] load, nsel, lpq;
+    wire [9:0] load, rsel, nsel, lpq;
     reg run;   // 0 until the first hddr edge after reset
     always @(posedge ddr_clk or negedge rst_n) if (!rst_n) run <= 1'b0; else run <= 1'b1;
     genvar g;
     generate for (g = 0; g < 10; g = g + 1) begin : phases
-        pt_ddr_phase phase(.clk(ddr_clk), .rst_n(rst_n), .load(load[g]));
+        pt_ddr_phase phase(.clk(ddr_clk), .rst_n(rst_n), .load(load[g]), .rsel(rsel[g]));
         pt_ddr_nphase nphase(.clk(ddr_clk), .rst_n(nrst_n), .run(run), .phase(load[g]), .nsel(nsel[g]), .lp(lpq[g]));
+    end endgenerate
+    // prefix: the ping-pong entry read at this load edge (rsel per bit group, from the bit's own phase cell)
+    wire [39:0] prefix;
+    generate for (g = 0; g < 10; g = g + 1) begin : rd
+        assign {prefix[g+30], prefix[g+20], prefix[g+10], prefix[g]} = rsel[g] ?
+            {pp1[g+30], pp1[g+20], pp1[g+10], pp1[g]} : {pp0[g+30], pp0[g+20], pp0[g+10], pp0[g]};
     end endgenerate
     reg [39:0] x;
     reg [9:0]  f3;
@@ -251,8 +278,11 @@ module pt_d2h_gearbox(input wire ddr_clk, rst_n, nrst_n, input wire [39:0] prefi
         //    lp -> nsel).
         wire s_r = lpq[gq] & run;
         wire lr_d = qr_d[gq] ^ (s_r ? x[gq+10] : f3[gq]);
-        wire hr_d = (load[gq] ? prefix[gq] : x[gq+20]) ^
-                    (s_r ? (load[gq] ? prefix[gq+10] : x[gq+10]) : (load[gq] ? f3[gq] : x[gq+30]));
+        // load selects last (r9: load -> hr was the hddr worst path behind the ping-pong read mux): both
+        // alternatives are computed from registers, the late-arriving phase only picks one.
+        wire hr_ld = prefix[gq] ^ (s_r ? prefix[gq+10] : f3[gq]);
+        wire hr_hd = x[gq+20] ^ (s_r ? x[gq+10] : x[gq+30]);
+        wire hr_d = load[gq] ? hr_ld : hr_hd;
         reg hr;
         always @(posedge hio_s or negedge rst_n) if (!rst_n) hr <= 1'b0; else hr <= hr_d;
         pt_hio_launch l(.clk(hio_s), .sel(hio_ms), .rst_n(rst_n), .nrst_n(nrst_n), .dr(lr_d), .df(hr), .z(d2h_pin[gq]));
@@ -266,6 +296,13 @@ module pt_d2h_gearbox(input wire ddr_clk, rst_n, nrst_n, input wire [39:0] prefi
     always @(negedge ddr_clk) if (rst_n && nrst_n && f_rises >= 3'd2) begin
         assert(nsel == {10{nsel[0]}});
         if (nsel[0]) assert(x[19:10] == f_xd[19:10]); else assert(f3 == f_f3d);
+    end
+    // ping-pong read select: on every load edge rsel did not change on the rising edge before (SDC
+    // multicycle 2 rsel -> x / hr)
+    reg [9:0] f_rseld;
+    always @(posedge ddr_clk) f_rseld <= rsel;
+    always @(posedge ddr_clk) if (rst_n && f_rises >= 3'd2 && load[0]) begin
+        assert(load == {10{load[0]}}); assert(rsel == f_rseld);
     end
 `endif
     // Forwarded clock (TC13 r4): the same ODDR lane fed a fixed pattern: the rising flop shows 0 during

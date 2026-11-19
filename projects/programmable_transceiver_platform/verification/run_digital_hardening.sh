@@ -43,7 +43,7 @@ RUN="$OUT/design/runs/$TAG"
 # before the final global placement, see its header and config.json meta.substituting_steps).
 dk() { # dk <image> <cpus> <mem> <command>
   docker run --rm --network none --cpus "$2" --memory "$3" --memory-swap "$3" --pids-limit 4096 \
-    --user "$(id -u):$(id -g)" -e HOME=/out/home -e TMPDIR=/out/tmp -e OMP_NUM_THREADS=1 \
+    --user "$(id -u):$(id -g)" -e HOME=/out/home -e TMPDIR=/out/tmp -e OMP_NUM_THREADS=1 -e PT_CHIP="$CHIP" \
     -v "$PROJ:/src:ro" -v "$OUT:/out" \
     -v "$OUT/repair_design_pt.tcl:/usr/local/lib/python3.12/dist-packages/librelane/scripts/openroad/repair_design.tcl:ro" \
     --entrypoint /bin/bash "$1" -lc "$4"
@@ -57,7 +57,9 @@ pnr)
   sha256sum "$OUT/repair_design_pt.tcl" > "$OUT/repair_design_pt.sha256"
   cp "$PROJ"/rtl/*.sv "$PROJ"/rtl/*.svh "$PROJ"/rtl/*.vh "$OUT/design/rtl/"
   cp "$PROJ/integration/pt_digital_macro.sdc" "$PROJ/verification/digital_hardening/config.json" "$PROJ/verification/digital_hardening/pin_order.cfg" \
-     "$PROJ/verification/digital_hardening/hio_placement.cfg" "$PROJ/integration/pt_cts_h2d.tcl" "$OUT/design/"
+     "$PROJ/integration/pt_cts_h2d.tcl" "$OUT/design/"
+  # FIRM placements (host-link blocks, clock roots) for this chip's outline
+  python3 "$PROJ/verification/digital_hardening/hio_shift.py" "$CHIP" "$OUT/design/hio_placement.cfg"
   # In-window characterized Liberty (libchar.py): synthesis, placement, CTS and resizer optimize setup
   # against ss_032C_3v15 (and hold against ff) directly, not a derated tt library.
   mkdir -p "$OUT/design/lib"; cp "$PROJ"/verification/digital_hardening/liberty/*.lib "$OUT/design/lib/"

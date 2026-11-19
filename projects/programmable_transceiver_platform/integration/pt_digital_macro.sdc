@@ -31,6 +31,13 @@
 #   fc0..fc5  frequency-counter sources (pt_freq_count, P3-7): ring FBCKs (VCO/16 <= ~69 MHz), ring_osc,
 #             vco_replica, aosc (~35-56 MHz), LC prescale; all constrained at 156.25 MHz. They reach the
 #             counters through a stopped-only select mux, so they are logically exclusive with each other.
+# Chip configuration (split, SPL-7): PT_CHIP in the environment (rf | wired; unset = both halves, module benches).
+# Only the checks that require a block of one chip depend on it; constraints on absent logic match nothing.
+# Every tool that reads this SDC on a chip netlist must set PT_CHIP (run_digital_hardening.sh passes it to its
+# containers); with it unset an rf netlist stops at the wrx synchronizer check.
+set PT_CHIP_NAME both
+if {[info exists ::env(PT_CHIP)]} { set PT_CHIP_NAME $::env(PT_CHIP) }
+if {[lsearch -exact {rf wired both} $PT_CHIP_NAME] < 0} {error "PT_CHIP must be rf, wired or unset"}
 # Experiment hook: PT_SCLK_PERIOD in the environment overrides the SCLK constraint (area/closure studies).
 if {[info exists ::env(PT_SCLK_PERIOD)]} { set SCLK_PERIOD $::env(PT_SCLK_PERIOD) }
 foreach {v d} {SCLK_PERIOD 200.0 REF_PERIOD 10.0 HWORD_PERIOD 6.4 WTX_PERIOD 12.3 WRX_PERIOD 12.3
@@ -144,21 +151,29 @@ if {[llength $core_root] != 1} {error "Expected one hcore divider root"}
 create_generated_clock -name hcore -source $rate_mux -divide_by 2 $core_root
 set host_clks {hddr hcore}
 if {[llength [get_clocks -quiet hsdr]]} { lappend host_clks hsdr }
-# D2H 4:1 gearbox: the hold register x (hddr) loads the hcore prefix register only on the hddr
-# edges that coincide with hcore rising edges, i.e. two hddr periods after the prefix changed
+# D2H 4:1 gearbox and ping-pong hand-over (DG8-6): the hold register x (hddr) loads one of the two
+# hcore ping-pong entries (host.pingpong.pp0 / pp1) only on the hddr edges that coincide with hcore
+# rising edges, and only the entry written two hcore edges earlier, which that same edge overwrites:
+# setup four hddr periods (25.6 ns at the full rate), hold against the overwrite at the read edge
 # (proof: verification/formal/pt_d2h_gearbox_fv.sv, `make transceiver-pair-word-formal`).
 set gearbox_regs [get_cells -of_objects [get_pins -hierarchical *host.gearbox.x*/Q]]
 if {[llength $gearbox_regs] != 40} {error "Expected 40 D2H gearbox hold registers ([llength $gearbox_regs])"}
-set_multicycle_path 2 -setup -end -from [get_clocks hcore] -to $gearbox_regs
-set_multicycle_path 1 -hold -end -from [get_clocks hcore] -to $gearbox_regs
+set_multicycle_path 4 -setup -end -from [get_clocks hcore] -to $gearbox_regs
+set_multicycle_path 3 -hold -end -from [get_clocks hcore] -to $gearbox_regs
 # ODDR launch (TC13 r4): the falling launch flop lf takes the per-lane register hr directly (no x / f3
 # path into lf any more: the former 1.5-period multicycle is gone). hr (rising, on the hio_s clock net)
-# loads from the hcore prefix on exactly the edges where x does (same load[] condition), so it takes
-# the same two-period crossing; its other terms (x, f3, lp) are full-period hddr paths.
+# loads from the ping-pong entry on exactly the edges where x does (same load[] / rsel[] condition), so
+# it takes the same four-period crossing; its other terms (x, f3, lp, rsel) are full-period hddr paths.
 set hr_regs [get_cells -of_objects [get_pins -hierarchical *host.gearbox.lq*.hr*/Q]]
 if {[llength $hr_regs] != 10} {error "Expected 10 D2H ODDR hr registers ([llength $hr_regs])"}
-set_multicycle_path 2 -setup -end -from [get_clocks hcore] -to $hr_regs
-set_multicycle_path 1 -hold -end -from [get_clocks hcore] -to $hr_regs
+set_multicycle_path 4 -setup -end -from [get_clocks hcore] -to $hr_regs
+set_multicycle_path 3 -hold -end -from [get_clocks hcore] -to $hr_regs
+# Ping-pong read select (pt_ddr_phase rsel): it changes only on load edges and is used only on the next load
+# edge, two hddr periods later (proof: the rsel assertion in pt_d2h_gearbox, `ifdef FORMAL).
+set rsel_regs [get_cells -of_objects [get_pins -hierarchical *host.gearbox.phases*.phase.rsel*/Q]]
+if {[llength $rsel_regs] != 10} {error "Expected 10 D2H ping-pong read-select flops ([llength $rsel_regs])"}
+set_multicycle_path 2 -setup -from $rsel_regs -to [concat $gearbox_regs $hr_regs]
+set_multicycle_path 1 -hold -from $rsel_regs -to [concat $gearbox_regs $hr_regs]
 # H2D: the falling-word hold register fh is written into the quad FIFO memory on the rising edge
 # 1.5 periods after it was written (proof: verification/formal/pt_h2d_gearbox_fv.sv).
 set fh_regs [get_cells -of_objects [get_pins -hierarchical *host.h2d.fh*/Q]]
@@ -548,7 +563,7 @@ set sync_first [concat \
 # (independent review of 9211b44, F2: the former patterns *wrx.al_sy* ... also cut the stage-to-stage paths, which
 # then got no hold fixing; a hold failure on al_sy[1] -> al_sy[2] keeps the word domain in reset).
 set wrx_first {}
-foreach n {al_sy lk_sy fk_sy} {
+foreach n [expr {$PT_CHIP_NAME eq "rf" ? {} : {al_sy lk_sy fk_sy}}] {   ;# pt_wrx_ctl is pt_wired only
     set c {}
     foreach x [pt_cells "*wrx.${n}*"] { if {[string match "*wrx.${n}\\\[0\\\]*" [get_full_name $x]]} { lappend c $x } }
     if {[llength $c] != 1} {
@@ -560,12 +575,14 @@ foreach n {al_sy lk_sy fk_sy} {
 set sync_first [concat $sync_first $wrx_first]
 if {[llength $sync_first]} { set_false_path -to $sync_first }
 # 1b. Reset synchronizers (pt_async_fifo wr_reset/rd_reset, pt_enable_release release_state,
-#     pt_host_link drs/crs, pt_h2d_gearbox hrs). Their asynchronous reset is
+#     pt_host_link drs/crs, pt_h2d_gearbox hrs; pt_d2h_pingpong wt, whose reset is the hddr-domain divider
+#     release drs_c: the divider is held by the same net, so hcore has no edge until one hddr period after
+#     the release). Their asynchronous reset is
 #     driven from other domains (ENABLE release, rate-switch hold, rst_n); assertion is
 #     asynchronous by design and release is re-timed by the two-flop chain itself. Only the
 #     async RN/SN pins of these flops are cut; their D paths stay timed in their own domain.
 set rst_sync_pins {}
-foreach pat {*.wr_reset* *.rd_reset* *.wr_active* *.rd_active* *.release_state* *.e?.active* *host.h2d.hrs* *host.drs* *host.crs*} {
+foreach pat {*.wr_reset* *.rd_reset* *.wr_active* *.rd_active* *.release_state* *.e?.active* *host.h2d.hrs* *host.drs* *host.crs* *host.pingpong.wt*} {
     foreach c [pt_cells $pat] {
         foreach pin [get_pins -quiet -of_objects $c -filter "direction == input"] {
             if {[lsearch -exact {RN SETN SN} [get_property $pin lib_pin_name]] >= 0} { lappend rst_sync_pins $pin }

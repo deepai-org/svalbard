@@ -259,7 +259,8 @@ module pt_quad_link_tx #(parameter CW=5)(input wire clk,rst_n,payload_iq,
    eng_rn<=running||(started&&training==2'd1);
   end
  // Registered output (AC-1 ss32 timing): the framer's beat/count decode no longer feeds the host
- // link's XOR prefix in the same hcore cycle (one hcore of D2H latency, +40 FF).
+ // link's XOR prefix in the same hcore cycle (one hcore of D2H latency, +40 FF; the host link's ping-pong
+ // hand-over, DG8-6, adds one more).
  reg[39:0]oq;
  always @(posedge clk or negedge rst_n)
   if(!rst_n)oq<=40'd0;

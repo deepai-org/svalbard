@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""hio_shift.py <rows>: outline height and FIRM hand placements for a macro that is <rows> x 7.84 um taller (or, negative, shorter) than
-the 1716 x 1640 um base floorplan. Rewrites hio_placement.cfg (MACRO_PLACEMENT_CFG) and DIE_AREA in config.json.
+"""hio_shift.py <chip> <out.cfg>: FIRM hand placements (MACRO_PLACEMENT_CFG) for the outline of <chip>/config.json
+(rf or wired). run_digital_hardening.sh calls it for every run, so the placement always follows the chip's DIE_AREA.
+The height must be 1640 um plus a whole number of 7.84 um steps (two cell rows; negative = shorter).
 
 1. Host-link I/O block (hio_placement_1640.cfg, generated for the base floorplan): the D2H block sits on the
    south edge and does not move; every entry above y = 1000 um (the H2D capture block under the north pins)
@@ -36,8 +37,15 @@ def legal_x(row, x, width):
         k += 1
 
 def main():
-    rows = int(sys.argv[1]); assert rows >= -40
-    dy = round(rows * 7.84, 2); height = round(1640 + dy, 2)
+    chip, dst = sys.argv[1], Path(sys.argv[2])
+    c = json.loads((H / chip / 'config.json').read_text())
+    x0, y0, width, height = c['DIE_AREA']
+    assert (x0, y0, width) == (0, 0, 1716), 'the host-link blocks are generated for a 1716 um wide macro'
+    rows = round((height - 1640) / 7.84)
+    dy = round(rows * 7.84, 2)
+    assert abs(1640 + dy - height) < 0.01, f'height {height} is not 1640 + n x 7.84 um'
+    # the H2D block (north edge, y > 1000 in the base) must stay clear of the D2H block and the hcore root
+    assert 1591.52 + dy > 0.554 * height + 40 and height >= 900, f'outline height {height} too small for the host-link blocks'
     out = []
     for line in (H / 'hio_placement_1640.cfg').read_text().splitlines():
         p = line.split()
@@ -49,11 +57,8 @@ def main():
         for n, (inst, cell) in enumerate(cells):
             row = r + n
             out.append(f'{inst} {legal_x(row, x, WIDTH[cell]):.2f} {Y0 + row * ROW:.2f} {"N" if row % 2 == 0 else "FS"}')
-    (H / 'hio_placement.cfg').write_text('\n'.join(out) + '\n')
-    c = json.loads((H / 'config.json').read_text())
-    c['DIE_AREA'] = [0, 0, 1716, height]
-    (H / 'config.json').write_text(json.dumps(c, indent=2) + '\n')
-    print('outline 1716 x', height, 'um =', round(1716 * height / 1e6, 4), 'mm2;', len(out), 'fixed cells')
+    dst.write_text('\n'.join(out) + '\n')
+    print(f'{chip}: outline 1716 x {height} um = {round(1716 * height / 1e6, 4)} mm2; {len(out)} fixed cells -> {dst}')
 
 if __name__ == '__main__':
     main()

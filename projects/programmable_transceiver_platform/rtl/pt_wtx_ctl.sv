@@ -162,22 +162,30 @@ module pt_wtx_ctl #(
     // branch == detect does not request MAIN (interlock conflict DETECT/MAIN, DETECT/TERM).
     wire w_main = f_act & f_bser & ~f_idle & (f_ext | pad_go) & on_ok;
     wire [4:0] want = {f_term & ~f_bdet & on_ok, f_bdet & on_ok, 1'b0, w_main & f_pnz, w_main};   // TERM DETECT TMDS POST MAIN
-    reg  [4:0] want_r, committed;
+    // r9 (ref timing: want_r -> want_r != committed -> commit -> pad_seq left / last, and -> pad_live -> ser_q,
+    // were the ref worst paths): one more request stage want_q, and the compare is a register,
+    // neq_q == (want_q != committed) at every edge. One REF_CLK more request latency.
+    reg  [4:0] want_r, want_q, committed;
+    reg        neq_q;
     wire [4:0] seq_active;
     wire seq_cmd_ready, seq_traffic_ready, seq_fault, seq_qualified, seq_buffer_request;
-    wire commit = seq_cmd_ready && !hold && want_r != committed;
+    wire commit = seq_cmd_ready && !hold && neq_q;
     always @(posedge ref_clk or negedge rst_n)
-        if (!rst_n) begin want_r <= 5'd0; committed <= 5'd0; end
-        else begin want_r <= want; if (commit) committed <= want_r; end
+        if (!rst_n) begin want_r <= 5'd0; want_q <= 5'd0; committed <= 5'd0; neq_q <= 1'b0; end
+        else begin
+            want_r <= want; want_q <= want_r;
+            if (commit) committed <= want_q;
+            neq_q <= want_r != (commit ? want_q : committed);
+        end
     pt_tx_pad_sequence #(.PRE_CYCLES(PAD_PRE_CYCLES), .POST_CYCLES(PAD_POST_CYCLES), .LOAD_CYCLES(PAD_LOAD_CYCLES),
         .CLK_PS(REF_PS), .READY_TIMEOUT_CYCLES(PAD_TIMEOUT_CYCLES)) pad_seq(
-        .clk(ref_clk), .rst_n(rst_n), .supply_ok(1'b1), .commit(commit), .request(want_r),
+        .clk(ref_clk), .rst_n(rst_n), .supply_ok(1'b1), .commit(commit), .request(want_q),
         .analog_ready(seq_active[4] ? f_rdy : 1'b1),   // as the pads replay (transmit_sequence_connected.py)
         .command_ready(seq_cmd_ready), .active_request(seq_active), .qualified(seq_qualified),
         .traffic_ready(seq_traffic_ready), .buffer_request(seq_buffer_request), .fault(seq_fault));
     assign st_seq_fault = seq_fault;
-    wire pad_live = seq_traffic_ready && seq_active[0] && committed[0] && want_r == committed;
-    wire pad_down = seq_cmd_ready && !seq_active[0] && !committed[0] && !want_r[0];
+    wire pad_live = seq_traffic_ready && seq_active[0] && committed[0] && !neq_q;
+    wire pad_down = seq_cmd_ready && !seq_active[0] && !committed[0] && !want_q[0];
 
     // ------------------------------------------------------------------ launch state machine
     wire go    = f_act & ~f_ext & on_ok & ring_rdy;

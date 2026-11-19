@@ -67,6 +67,9 @@ Requirements with their IDs are in [`spec/interface-requirements.md`](spec/inter
 - The control plane exists in RTL: the macro presents one decoded port per analog control pin group, and every
   mode family closes in a chip-level simulation of each chip against its stub analog top.
 - Nothing is hardened, routed or signed off at chip level. The digital macro does not yet meet setup timing.
+- Each chip fits its die with the full decap plan in a packer placement (no wiring): margin after routing about
+  +0.8 mm2 on `pt_rf` and +2.2 mm2 on `pt_wired` as built (`scratch/reviews/die-fit.md`). Sign-off skeletons per chip in
+  `integration/signoff/` (`SIGNOFF_CHIP`).
 - Several blocks are not built or not closed (the chip-top regression counts them as demand and staged
   instances); block state is in each `analog/<family>/README.md`.
 - Open risks: [`spec/risk-register.md`](spec/risk-register.md). Open chip-top items:

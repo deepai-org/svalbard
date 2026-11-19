@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Skeleton chip plan: which cell goes where, real GDS or placeholder.
 
-Inputs : skeleton/floorplan-skel.json (die-fit packer result), integration/chips/<chip>/chip.conn + masters.txt (instances,
+Inputs : skeleton/floorplan-<chip>.json (the chip's die-fit packer result), integration/chips/<chip>/chip.conn + masters.txt (instances,
          masters, pin lists), GDS candidates per master.
 Output : <run>/skel/plan.json for skeleton/build.py (KLayout).  Light, host python, no tools.
 
@@ -12,15 +12,15 @@ import hashlib, json, os, re, sys
 import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__)); SO = os.path.dirname(HERE)
 P = os.path.dirname(os.path.dirname(SO)); ROOT = os.path.dirname(os.path.dirname(P))
-RUN = os.environ.get('SIGNOFF_RUN', ROOT+'/scratch/integration/signoff-run')
+CHIP = os.environ['SIGNOFF_CHIP']        # rf | wired
+RUN = os.environ.get('SIGNOFF_RUN', ROOT+f'/scratch/integration/signoff-run-{CHIP}')
 sys.path.insert(0, P+'/integration/chips')
 import check_top as ct
 
 A = 'projects/programmable_transceiver_platform/analog/'
 IS = 'scratch/island-support-20261108-075605/'
-fp = json.load(open(HERE+'/floorplan-skel.json'))
+fp = json.load(open(HERE+f'/floorplan-{CHIP}.json'))
 staged = json.load(open(ROOT+'/scratch/reviews/die-fit/m45free_staged.json'))
-CHIP = os.environ['SIGNOFF_CHIP']        # rf | wired
 inst, ports, _w, err = ct.parse(ct.read_conn(f'{P}/integration/chips/{CHIP}/chip.conn'))
 masters = ct.load_masters(open(P+'/integration/chips/masters.txt').read())
 assert not err, err
@@ -95,7 +95,7 @@ for n, rs in fp['pads'].items():
     for r in rs: mark(r, True, 10.0)
 for n, r in fp['fixed'].items(): mark(r, True, 4.0)
 for n, v in rects.items():
-    if not n.startswith('decap_bank'): mark(v['rect'], True, 4.0)
+    if not n.startswith(('decap_bank', 'decap_tile')): mark(v['rect'], True, 4.0)
 bbv6 = {k.split(':')[1]: (v[2]-v[0], v[3]-v[1]) for k, v in json.load(open(ROOT+'/scratch/chip-assembly-v6/bbox.json')).items()}
 ledger_area = {k: v[1] for k, v in fp['items'].items()}
 def want_size(n):
@@ -124,14 +124,14 @@ for n in sorted(unplaced, key=lambda n: (PRIO.index(n) if n in PRIO else 99, n n
                 mark(overflow[n]['rect'], True, 4.0); done = True; break
     if not done: left_out.append(n)
 def hit(a, b): return a[0] < b[2] and b[0] < a[2] and a[1] < b[3] and b[1] < a[3]
-dropped_decap = [n for n, v in rects.items() if n.startswith('decap_bank') and any(hit(v['rect'], o['rect']) for o in overflow.values())]
+dropped_decap = [n for n, v in rects.items() if n.startswith(('decap_bank', 'decap_tile')) and any(hit(v['rect'], o['rect']) for o in overflow.values())]
 for n in dropped_decap: del rects[n]
 rects.update(overflow)
 
 plan = dict(die=[0, 0, 3932.0, 5122.0], core=list(CORE), blocks=[], pads=[], left_out=left_out, dropped_decap=dropped_decap,
             overflow=sorted(overflow), ports=sorted(ports))
 for n, v in rects.items():
-    m = 'decap' if n.startswith('decap_bank') else item_master.get(n, n)
+    m = 'decap' if n.startswith(('decap_bank', 'decap_tile')) else item_master.get(n, n)
     if m == '(booked)': m = n
     plan['blocks'].append(dict(name=n, master=m, rect=v['rect'], rot=v.get('rot', False), in_conn=n in inst,
                                cands=candidates(m), pins=pins_of(m)))

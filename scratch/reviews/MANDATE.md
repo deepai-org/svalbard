@@ -6,6 +6,10 @@ Current work status is in `SESSION-STATE.md`, not here.
 
 ## 1. Scope and priorities
 
+- **Two chips (user, 2026-11-19).** The design is split into two independent, self-sufficient chips on two
+  shuttle slots: `pt_rf` (radio, LO, converters) and `pt_wired` (wired RX/TX, USB, Ethernet). Each has its own
+  power-up, reset, SPI, host link, bias and debug; neither depends on the other. One block library and one RTL
+  source serve both; no forked copies. Plan: `SPLIT-PLAN.md`. Full scope still holds across the pair.
 - **Full scope, no cuts.** Every capability, mode and rate stays, including the 2.7–3.24 Gb/s wired paths
   (DisplayPort HBR 2.7, SATA Gen2 3.0, XAUI/2500BASE-X 3.125). Something missing on chip was forgotten, not
   descoped: build it.

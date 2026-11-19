@@ -196,3 +196,9 @@ User chose option A: primary ESD diodes inside the pad site tied straight to the
 - Real neighbours on the republished pad, settled ring, 120 mVppd: 1.25 and 2.5 Gb/s pass at ss/3.15 V (2.5 also at tt and ss-pessimistic for the eye); 3.24 Gb/s passes at tt and FAILS at ss/3.15 V (36 of 110 decisions wrong) and at ss/3.50 V (1 of 112): cause is the RX ring's 0.60-0.63 duty at 810 MHz (0 errors with ideal clocks on the same eye). 0.48 and 2.7 Gb/s, ff, sf/fs not run.
 - Found on the way: the ring needs more than 60 ns to settle (a first 30 ns calibration was wrong and withdrawn); LVS wrappers accepted property errors (wired RX one fixed, `layout_engine.netgen_lvs` open); thin supply trunks in the generic wired RX layouts.
 - Decisions wanted: ring duty / spacing fix versus sampler requalification at 0.63 duty; equaliser bias scheme; capture r7e now as known-limited or after its revision; 0.48 Gb/s through quarter mode with digital phase picking; deep n-well for the equaliser followers.
+
+### Decision 2026-11-19: split into two chips
+
+User decided: `pt_rf` and `pt_wired`, each self-sufficient, two Run 3 slots. Reason: the single die was 2.8-3.5 mm2 over as built (1.5-2.0 at targets) with the macro at 2.81-3.65 mm2; split estimate about 9.4 mm2 (rf) and 8.8 mm2 (wired) against 12.77 mm2 core each, before area work. Also removes RF/digital ground-bounce coupling and the decap-vs-area conflict. Plan and rules: `SPLIT-PLAN.md`. All block work is frozen against the single top until phase 3 of the plan is committed (no agents running at the time of the decision).
+
+Disk 2026-11-19: freed 15 GB (old waveforms, superseded hardening runs pC6/run14, docker build cache); 41 GB free. Most of the disk belongs to other projects on the machine.

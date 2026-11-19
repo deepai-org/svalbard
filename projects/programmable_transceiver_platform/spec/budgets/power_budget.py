@@ -11,7 +11,7 @@ over its ceiling.
 Envelope (MANDATE.md, tapeout-plan.md): Tj 22-32 C, die rail 3.15-3.35 V,
 board source 3.3 V +-1 %. Wide-temperature corners do not gate performance.
 
-Usage: python3 spec/budgets/power_budget.py [--check]
+Usage: python3 spec/budgets/power_budget.py [--check]   |   --reconcile [rf|wired]  (per-chip PD tables, spec/power-delivery.md)
 """
 import hashlib, json, math, pathlib, sys
 
@@ -262,7 +262,7 @@ def main(check=False):
         'evidence_substitutions': evidence,
         'cases': out_cases, 'island_switch': island, 'supply_drop': drop, 'thermal': thermal,
     }
-    res['pd2_reconciliation'] = pd2_reconcile(aa)   # PD2: measured-evidence reconciliation, island partition, restated ceilings
+    res['pd2_reconciliation'] = {c: pd2_reconcile(c, aa) for c in CHIP_CASES}   # per chip: measured-evidence reconciliation, islands, switches, ceilings
     OUT.write_text(json.dumps(res, indent=1) + '\n')
     fails = [n for n, c in out_cases.items() if c['allocation_margin_ma'] < 0 and n not in ('rf_autonomous', 'rf_tx_autonomous')]
     print(json.dumps({k: {kk: c[kk] for kk in ('ceiling_ma', 'allocation_ma', 'evidence_bound_ma', 'with_digital_requirement_ma')} for k, c in out_cases.items()}, indent=1))
@@ -321,8 +321,9 @@ MEASURED = [
  # ---- pll island (ring PLLs behind pt_pll_vreg2, clock mux / word clock, reference receiver)
  ('pll_cdr', 'pll', {'WU': (6.94, 10.2), 'RF': (6.85, 10.2)}, ('cdr',), 'ext',
   'timing/generated/pll_ring-evidence.json i_on_ma 6.94 at 625 MHz, host_follow 6.85; no corners on the r9v cell: worst = older supply sweep 10.2 (pll_vreg/evidence/pll_ring-f-vs-supply.json)'),
- ('pll_tx', 'pll', {'W': (6.94, 10.2), 'U': (6.94, 10.2), 'T': (5.0, 8.0)}, ('rfpll',), 'est', 'pt_pll_ring_core has NO current evidence: taken equal to pll_cdr'),
- ('pll_misc', 'pll', {'WU': (1.0, 2.0)}, (), 'est', 'pt_cdr analog cell + pt_pll_vreg2 quiescent: not in any evidence file'),
+ ('pll_tx', 'pll', {'W': (6.94, 10.2), 'U': (6.94, 10.2), 'T': (5.0, 8.0), 'RF': (6.94, 10.2)}, ('rfpll',), 'est',
+  'pt_pll_ring_core has NO current evidence: taken equal to pll_cdr; on pt_rf it makes the host word and converter clocks (split D1), so it runs in the RF cases too'),
+ ('pll_misc', 'pll', {'WU': (1.0, 2.0), 'RF': (1.0, 2.0)}, (), 'est', 'pt_cdr analog cell + pt_pll_vreg2 quiescent: not in any evidence file (pt_rf: split D2)'),
  ('clockmux', 'pll', {'WUT': (1.35, 1.55), 'RF': (0.32, 0.40)}, ('clockmux',), 'ext', 'timing/generated/clockmux-evidence.json (9.67 mA budget is not in the current file)'),
  ('wordclk', 'pll', {'WUT': (2.30, 2.42), 'RF': (1.36, 2.42)}, ('clocktree',), 'ext', 'timing/generated/wordclk-evidence.json 1.18-2.30, 2.42 ff/32/3.35 (no clocktree evidence exists)'),
  ('rx_ref_in', None, {'WUT': (3.49, 4.63), 'A': (3.49, 4.63)}, ('refinput',), 'ext',
@@ -344,8 +345,13 @@ MEASURED = [
  ('wrx_cap', 'wired_cap', {'W': (44.78, 46.64), 'U': (34.87, 36.5)}, (), 'ext',
   'staged r7 scratch/wired_rx/r7cap/stage/results.json 44.78 at 625 MHz (45.15 ff), 34.87 at 480; worst = published r5h wrx_cap-evidence.json ext_q625 46.64 (corner not recorded; schematic 19.78); USB worst assumed 1.05 x'),
  # ---- wired_tx island
- ('wiredtx', 'wired_tx', {'W': (35.3, 37.46), 'T': (29.9, 32.0)}, ('wiredtx',), 'ext',
-  'scratch/wired_tx/sim-results.json cornerq2.5 33.21 ss - 37.46 ff/22/3.35 (no tt run: nominal = mid), int_tmds_q1g485 29.90'),
+ ('wiredtx8', 'wired_tx', {'W': (53.0, 60.0), 'U': (53.0, 60.0), 'T': (45.0, 51.0)}, ('wiredtx',), 'est',
+  'pt_wiredtx8 (WT40, analog/wired_tx/README.md): 53 mA at ss pessimistic 3.125 Gb/s, MAIN only, real chain with the schematic mux; '
+  'not published, no ff run: worst = 1.13 x (ff / ss of the previous pt_wiredtx, 37.46 / 33.21); U not run at 480 Mb/s (taken as W); '
+  'T = 0.85 x W (TMDS / 2.5 Gb/s of the previous block)'),
+ ('wtx_post', 'wired_tx', {'W': (22.0, 24.0)}, (), 'est', 'pt_wiredtx8 with the POST tap on: +20-24 mA (README, WT40)'),
+ ('wtx_padtail', 'wired_tx', {'W': (9.05, 21.0), 'T': (10.4, 10.4)}, ('txpad',), 'lim',
+  'TX pad MAIN tail on the island rail (WT40): DAC reset code 109 = 9.05 mA, code 255 = 21 mA (wired_tx/INTEGRATION.md); TMDS code 125 = 10.4 mA'),
  ('usbhs', 'wired_tx', {'U': (18.2, 20.0)}, ('usbhs',), 'ext', 'analog/pads/README.md 16.9-18.2 mA after trim; worst assumed 1.1 x'),
  # ---- raw ring (never switched)
  ('bias', None, {'ACT': (0.40, 0.52), 'stopped': (0.40, 0.52)}, ('bias', 'monitor'), 'sch', 'core_support/README.md 0.30-0.52 over the function window'),
@@ -361,12 +367,25 @@ DEBUG_MEASURED = [('bb_tap x3', 3.04, 3.09, 'bb_tap-evidence.json'), ('clk_obs x
 DIG_MEAS = {'nominal': 72.09, 'worst': 81.79, 'req_wired_usb': DIG_REQ_MA['wired_usb'], 'req_rf': DIG_REQ_MA['rf'],
             'src': 'AC1_R4 post-route vectorless 0.23791 W (scratch/digital-hardening-ac1-r4 .../power.rpt); CLOSE_R2 0.26992 W (evidence/digital-hardening-evidence.json)'}
 HOST_MEAS = {'nominal': 95.24, 'worst': 116.82, 'src': 'evidence/host-power-allocation-screen.json / artix-load-power-screen.json (x 0.5 in RF modes, PWR-HOST-RF)'}
-# Island partition (PD2-1) and the switch master each island instantiates. The masters are the five verified cells
-# (analog/island_support, design current / full-RC worst-corner on-resistance from evidence.json).
+# Two chips (spec/chips.json). The macro current per chip is the measured both-halves figure scaled by the synthesized cell
+# area of that chip's configuration against the both-halves build (yosys, verification/digital_hardening/{rf,wired}):
+# pt_rf 1.053 / 1.375, pt_wired 1.299 / 1.375. Same RTL, same clocks, same density: current ~ cell count. The unscaled
+# 81.79 mA stays as the pessimistic bound ('worst_unscaled') until a per-chip power run exists.
+DIG_AREA_MM2 = {'both': 1.375, 'rf': 1.053, 'wired': 1.299}
+CHIPS = json.loads((ROOT / 'spec/chips.json').read_text())['chips']
+CHIP_CASES = {'rf': ['RXe', 'RXa', 'TXe', 'TXa', 'DXe', 'DXa', 'stopped'], 'wired': ['W', 'U', 'T', 'stopped']}
+def dig_meas(chip):
+    k = DIG_AREA_MM2[chip]/DIG_AREA_MM2['both']
+    return dict(DIG_MEAS, nominal=round(DIG_MEAS['nominal']*k, 2), worst=round(DIG_MEAS['worst']*k, 2), worst_unscaled=DIG_MEAS['worst'], area_scale=round(k, 4))
+# Island switch masters: the verified cells of analog/island_support (design current / full-RC worst-corner on-resistance /
+# area). isw_pll is verified but not published. An island may use n masters in parallel (Ron / n, n x current, n x area).
 SWITCH_MASTER = {'isw_wired': (80, 0.2484, 0.0641), 'isw_pll': (60, 0.2877, 0.0530), 'isw_rf': (55, 0.3007, 0.0500),
                  'isw_debug': (40, 0.3878, 0.0370), 'isw_conv': (30, 0.4807, 0.0320)}   # (mA, ohm, mm2)
-ISLAND_SWITCH = {'wired_rx': 'isw_debug', 'wired_cap': 'isw_wired', 'wired_tx': 'isw_debug', 'rf_rx': 'isw_rf', 'rf_tx': 'isw_debug', 'lod': 'isw_wired',
-                 'lo': 'isw_conv', 'pll': 'isw_debug', 'conv': 'isw_conv', 'debug': 'isw_debug'}
+ISLAND_SWITCH = {
+    'rf': {'rf_rx': ('isw_rf', 1), 'rf_tx': ('isw_debug', 1), 'lod': ('isw_wired', 1), 'lo': ('isw_conv', 1), 'pll': ('isw_debug', 1),
+           'conv': ('isw_conv', 1), 'debug': ('isw_debug', 1)},
+    'wired': {'wired_rx': ('isw_debug', 1), 'wired_cap': ('isw_wired', 1), 'wired_tx': ('isw_wired', 2), 'pll': ('isw_debug', 1),
+              'debug': ('isw_debug', 1)}}
 # Loads that are on only for debug but sit on a functional island rail: counted for the switch, not in the mode sums.
 ISLAND_EXTRA_WORST_MA = {'lod': 8.03}   # lo_obs (VDD_LOD, LO-INTEGRATION.md), scratch/timing/lo_obs/results.json ff/22/3.35
 SWITCH_DROP_LIMIT_MV = 20.0
@@ -385,14 +404,16 @@ def pd2_expand(row):
     return out
 
 
-def pd2_reconcile(aa=None):
-    """Per-case and per-island sums. dig: 'req' = PWR-DIG requirement, 'meas' = nominal 72.09 / worst 81.79."""
-    aa = aa or json.loads(AA.read_text())
-    res = {'cases': {}, 'islands': {}, 'rows': []}
-    for c in PD2_CASES:
+def pd2_reconcile(chip, aa=None):
+    """Per-case and per-island sums of one chip. dig: 'req' = PWR-DIG requirement, 'meas' = nominal / worst scaled to the
+    chip (dig_meas), and the unscaled 81.79 mA as the pessimistic bound."""
+    aa = aa or json.loads(AA.read_text()); D = dig_meas(chip); isls = CHIPS[chip]['islands']
+    res = {'chip': chip, 'digital': D, 'cases': {}, 'islands': {}, 'rows': []}
+    rows = [r for r in MEASURED if r[1] is None or r[1] in isls]
+    for c in CHIP_CASES[chip]:
         rf = c not in ('W', 'U', 'T', 'stopped'); hf = RF_HOSTIO_FACTOR if rf else 1.0
         isl = {}; nom = worst = 0.0
-        for r in MEASURED:
+        for r in rows:
             v = pd2_expand(r).get(c)
             if not v: continue
             nom += v[0]; worst += v[1]
@@ -401,66 +422,79 @@ def pd2_reconcile(aa=None):
                 k = EST_MARGIN if (r[4] in ('est', 'lim') or r[0] == 'rfdriver') else 1.0
                 a = isl.setdefault(r[1], [0.0, 0.0, 0.0]); a[0] += v[0]*f; a[1] += v[1]*f; a[2] += v[1]*f*k
         if c == 'stopped':
-            dig = (2.0, 2.0, 2.0); host = (1.0, 1.0)
+            dig = (2.0, 2.0, 2.0, 2.0); host = (1.0, 1.0)
         else:
-            dig = (DIG_MEAS['req_rf' if rf else 'req_wired_usb'], DIG_MEAS['nominal'], DIG_MEAS['worst'])
+            dig = (D['req_rf' if rf else 'req_wired_usb'], D['nominal'], D['worst'], D['worst_unscaled'])
             host = (HOST_MEAS['nominal']*hf, HOST_MEAS['worst']*hf)
-        board = sum(pd2_expand(r).get(c, (0, 0))[1] for r in MEASURED if r[0] == 'rfdriver')*(1-RFDRV_DIE_FRACTION)
+        board = sum(pd2_expand(r).get(c, (0, 0))[1] for r in rows if r[0] == 'rfdriver')*(1-RFDRV_DIE_FRACTION)
         ceil = PD2_CEILING_MA['wired_usb' if not rf else 'rf_autonomous_lo' if c.endswith('a') else 'rf_external_lo']
         res['cases'][c] = {
             'analog_nominal_ma': round(nom, 2), 'analog_worst_ma': round(worst, 2),
             'total_nominal_dig_meas_ma': round(nom+dig[1]+host[0], 2), 'total_worst_dig_meas_ma': round(worst+dig[2]+host[1], 2),
+            'total_worst_dig_unscaled_ma': round(worst+dig[3]+host[1], 2),
             'total_worst_dig_req_ma': round(worst+dig[0]+host[1], 2), 'rfdriver_board_feed_worst_ma': round(board, 2),
-            'through_die_supply_bonds_worst_dig_req_ma': round(worst+dig[0]+host[1]-board, 2),
-            'old_ceiling_ma': aa['resource_policy']['current_ceiling_ma'][PD2_BUDGET_MODE[c]], 'pd2_ceiling_ma': ceil,
+            'through_die_supply_bonds_worst_dig_req_ma': round(worst+dig[0]+host[1]-board, 2), 'pd2_ceiling_ma': ceil,
             'margin_to_pd2_ceiling_ma': round(ceil-(worst+dig[0]+host[1]), 2),
             'margin_to_pd2_ceiling_dig_meas_ma': round(ceil-(worst+dig[2]+host[1]), 2),
+            'margin_to_pd2_ceiling_dig_unscaled_ma': round(ceil-(worst+dig[3]+host[1]), 2),
             'islands_nominal_worst_design_ma': {k: [round(x, 2) for x in v] for k, v in isl.items()}}
         for k, v in isl.items():
             a = res['islands'].setdefault(k, {'worst_ma': 0.0, 'design_ma': 0.0, 'case': None})
             if v[2] > a['design_ma']: a.update(worst_ma=round(v[1], 2), design_ma=round(v[2], 2), case=c)
-    res['islands']['debug'] = {'worst_ma': 40.0, 'design_ma': 40.0, 'case': 'debug rule: at most 40 mA of debug loads enabled at once (all on = %.0f / %.0f mA)'
-                               % (sum(d[1] for d in DEBUG_MEASURED), sum(d[2] for d in DEBUG_MEASURED))}
+    res['islands']['debug'] = {'worst_ma': 40.0, 'design_ma': 40.0, 'case': 'debug rule: at most 40 mA of debug loads enabled at once'}
     for k, a in res['islands'].items():
         a['worst_ma'] = round(a['worst_ma']+ISLAND_EXTRA_WORST_MA.get(k, 0.0), 2)
         a['design_ma'] = round(a['design_ma']+ISLAND_EXTRA_WORST_MA.get(k, 0.0), 2)
-        m = ISLAND_SWITCH[k]; des, ron, area = SWITCH_MASTER[m]
-        a.update(switch_master=m, master_design_ma=des, ron_full_rc_worst_ohm=ron, area_mm2=area,
+        m, cnt = ISLAND_SWITCH[chip][k]; des, ron, area = SWITCH_MASTER[m]; des *= cnt; ron /= cnt; area *= cnt
+        a.update(switch_master=m, count=cnt, master_design_ma=des, ron_full_rc_worst_ohm=round(ron, 4), area_mm2=round(area, 4),
                  drop_at_worst_mv=round(ron*a['worst_ma'], 2), drop_at_design_mv=round(ron*a['design_ma'], 2),
                  drop_limit_mv=SWITCH_DROP_LIMIT_MV,
                  ok=bool(ron*a['design_ma'] <= SWITCH_DROP_LIMIT_MV and a['design_ma'] <= des))
+        # smallest single published master that would also pass (area lever); isw_pll is verified but not published
+        ok1 = [(SWITCH_MASTER[x][2], x) for x in SWITCH_MASTER if x != 'isw_pll'
+               and SWITCH_MASTER[x][1]*a['design_ma'] <= SWITCH_DROP_LIMIT_MV and a['design_ma'] <= SWITCH_MASTER[x][0]]
+        a['smallest_single_master'] = min(ok1)[1] if ok1 else None
     res['switch_area_mm2'] = round(sum(a['area_mm2'] for a in res['islands'].values()), 4)
     blocks = aa['blocks']
-    for r in MEASURED:
-        ex = pd2_expand(r); c = max(ex, key=lambda k: ex[k][1])
-        bud = sum(blocks[b]['resource_allocation']['current_budget_ma'].get(PD2_BUDGET_MODE[c], 0) for b in r[3]) if r[3] else None
+    for r in rows:
+        ex = {c: v for c, v in pd2_expand(r).items() if c in CHIP_CASES[chip]}
+        if not ex: continue
+        c = max(ex, key=lambda k: ex[k][1])
+        bud = sum(blocks[b]['resource_allocation']['current_budget_ma'].get(PD2_BUDGET_MODE[c], 0) for b in r[3] if b in blocks) if r[3] else None
         res['rows'].append({'block': r[0], 'island': r[1] or 'raw ring', 'case': c, 'budget_ma': bud, 'budget_blocks': list(r[3]),
                             'measured_nominal_ma': ex[c][0], 'measured_worst_ma': ex[c][1], 'view': r[4], 'source': r[5]})
     return res
 
 
 def pd2_markdown(res):
-    L = ['| Block | Island | Case | Budget (mA) | Measured nominal | Worst in-envelope | View | Source |', '| --- | --- | --- | ---: | ---: | ---: | --- | --- |']
+    D = res['digital']
+    L = [f"### {CHIPS[res['chip']]['name']}", '', '| Block | Island | Case | Budget (mA) | Measured nominal | Worst in-envelope | View | Source |', '| --- | --- | --- | ---: | ---: | ---: | --- | --- |']
     for r in res['rows']:
         b = 'none' if r['budget_ma'] is None else ('%.2f' % r['budget_ma'])
         L.append(f"| {r['block']} | {r['island']} | {r['case']} | {b} | {r['measured_nominal_ma']:.2f} | {r['measured_worst_ma']:.2f} | {r['view']} | {r['source']} |")
-    L += ['', '| Case | Analog nominal | Analog worst | Total nominal (digital 72.1) | Total worst (digital 81.8) | Total worst, digital at PWR-DIG | of which board feed | Old ceiling | New ceiling | Margin at PWR-DIG | Margin at 81.8 mA |',
-          '| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |']
+    L += ['', f"| Case | Analog nominal | Analog worst | Total nominal (digital {D['nominal']:.1f}) | Total worst (digital {D['worst']:.1f}) | Total worst (digital 81.8 unscaled) | Total worst, digital at PWR-DIG | of which board feed | Ceiling | Margin at PWR-DIG | Margin at {D['worst']:.1f} | Margin at 81.8 |",
+          '| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |']
     for c, v in res['cases'].items():
-        L.append(f"| {c} | {v['analog_nominal_ma']:.1f} | {v['analog_worst_ma']:.1f} | {v['total_nominal_dig_meas_ma']:.1f} | {v['total_worst_dig_meas_ma']:.1f} | "
-                 f"{v['total_worst_dig_req_ma']:.1f} | {v['rfdriver_board_feed_worst_ma']:.1f} | {v['old_ceiling_ma']} | {v['pd2_ceiling_ma']} | {v['margin_to_pd2_ceiling_ma']:+.1f} | {v['margin_to_pd2_ceiling_dig_meas_ma']:+.1f} |")
-    L += ['', '| Island | Worst current (mA) | Design current, 1.25 x on estimates (mA) | Case | Switch master | Master design (mA) | Drop at worst (mV) | Drop at design (mV) | Area (mm2) |',
-          '| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | ---: |']
+        L.append(f"| {c} | {v['analog_nominal_ma']:.1f} | {v['analog_worst_ma']:.1f} | {v['total_nominal_dig_meas_ma']:.1f} | {v['total_worst_dig_meas_ma']:.1f} | {v['total_worst_dig_unscaled_ma']:.1f} | "
+                 f"{v['total_worst_dig_req_ma']:.1f} | {v['rfdriver_board_feed_worst_ma']:.1f} | {v['pd2_ceiling_ma']} | {v['margin_to_pd2_ceiling_ma']:+.1f} | {v['margin_to_pd2_ceiling_dig_meas_ma']:+.1f} | {v['margin_to_pd2_ceiling_dig_unscaled_ma']:+.1f} |")
+    L += ['', '| Island | Worst current (mA) | Design current, 1.25 x on estimates (mA) | Case | Switch master | n | Design (mA) | Drop at worst (mV) | Drop at design (mV) | Area (mm2) | Smallest single master that passes |',
+          '| --- | ---: | ---: | --- | --- | ---: | ---: | ---: | ---: | ---: | --- |']
     for k, a in res['islands'].items():
-        L.append(f"| {k} | {a['worst_ma']:.1f} | {a['design_ma']:.1f} | {a['case']} | {a['switch_master']} | {a['master_design_ma']} | {a['drop_at_worst_mv']:.1f} | {a['drop_at_design_mv']:.1f} | {a['area_mm2']:.4f} |")
+        L.append(f"| {k} | {a['worst_ma']:.1f} | {a['design_ma']:.1f} | {a['case']} | {a['switch_master']} | {a['count']} | {a['master_design_ma']} | {a['drop_at_worst_mv']:.1f} | {a['drop_at_design_mv']:.1f} | {a['area_mm2']:.4f} | {a['smallest_single_master'] or 'none'} |")
+    L.append(f"\nSwitch area {res['switch_area_mm2']:.3f} mm2.")
     return '\n'.join(L)
 
 
 if __name__ == '__main__':
-    if '--reconcile' in sys.argv:      # PD2: print the reconciliation tables (markdown) and exit; writes nothing
-        _r = pd2_reconcile(); print(pd2_markdown(_r))
-        _bad = [k for k, a in _r['islands'].items() if not a['ok']] + [c for c, v in _r['cases'].items() if v['margin_to_pd2_ceiling_ma'] < 0]
-        _ev = [c for c, v in _r['cases'].items() if v['margin_to_pd2_ceiling_dig_meas_ma'] < 0]
-        print('\nPD2 CHECK', 'FAIL ' + str(_bad) if _bad else 'PASS (islands at their design current; ceilings with the digital macro at PWR-DIG)')
-        print('over the ceiling with the digital macro at its measured 81.8 mA (PWR-DIG not yet met):', _ev or 'none'); sys.exit(1 if _bad else 0)
+    if '--reconcile' in sys.argv:      # per-chip reconciliation tables (markdown); writes nothing. Optional chip: rf | wired
+        _bad = []
+        for _c in [a for a in sys.argv[1:] if a in CHIP_CASES] or list(CHIP_CASES):
+            _r = pd2_reconcile(_c); print(pd2_markdown(_r)); print()
+            _b = [k for k, a in _r['islands'].items() if not a['ok']] + [c for c, v in _r['cases'].items() if v['margin_to_pd2_ceiling_ma'] < 0]
+            _ev = [c for c, v in _r['cases'].items() if v['margin_to_pd2_ceiling_dig_meas_ma'] < 0]
+            _ev8 = [c for c, v in _r['cases'].items() if v['margin_to_pd2_ceiling_dig_unscaled_ma'] < 0]
+            print(f"{_c}: CHECK", 'FAIL ' + str(_b) if _b else 'PASS (islands at their design current; ceilings with the digital macro at PWR-DIG)')
+            print(f"{_c}: over the ceiling at the area-scaled macro current {_r['digital']['worst']} mA:", _ev or 'none', '; at 81.8 mA unscaled:', _ev8 or 'none'); print()
+            _bad += [f'{_c}:{x}' for x in _b]
+        sys.exit(1 if _bad else 0)
     sys.exit(main('--check' in sys.argv))

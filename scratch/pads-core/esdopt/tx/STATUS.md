@@ -439,3 +439,52 @@ goes away. Needs a ruling (or PC-57 from wired TX: TERM_VCM >= 1.0 V when off) b
 Power-down / unpowered: VDD 0 -> TERM_ENABLE_LOCAL 0 -> disconnect off -> same as the off case (bus floats). Without the disconnect, an unpowered pad behaves like
 TERM_VCM at 0 (the review's 1.5-10 mA path through the discharge resistor and the TERM_VCM pin).
 Cleaned: a8 build / r8 / models / benches; review-a8 left untouched.
+
+# CANDIDATE a10 (2026-11-20): a9 + series disconnect (decision relayed by agent a0b585bf, pads owner: draw it regardless of PC-57). NOT published, NOT committed.
+## Limits declared BEFORE the a10 runs (a9 list otherwise unchanged)
+- Off leak per pad with the termination off (TERM_ENABLE 0, trims 0), pads 0.5..3.3 V, TERM_VCM = 0 V and = 1.65 V, corners tt / ff 22+32 / fs / ss: <= 1 uA; and pads 1 V
+  apart <= 1 uA. Termination +-10 % at a code in 2..13, 23 corners rt / rh, with code 12 in window at ss/3.15 (as a9); ff/22/3.35 single-code edge reported.
+- Pad C <= 3.223 pF; gate C <= published; drop <= 60 mV simulated; HBM 1 kV 6 cases (tier) + 2 kV (report); CDM 2 A 6 cases (requirement), 1 / 3 A (report); PULSE
+  edges, TB2_CDMSMOOTH (tanh edges) only where PULSE stops at the corner (stated per case); every MOS <= 5.0 / 8.0 V and junctions < bv (10 / 10.5 / 11 V).
+- Disconnect nfet_03v3 (3.3 V): <= 5.0 V in every case. Layout: DRC 0, netgen unique, rb LVS + control, KLayout precheck 0/0, latch-up 0, rail_site PASS, ASM-2 pins top.
+## a10 results (2026-11-20). NOT published, NOT committed. a9 build / netres / models / benches deleted (a9 numbers stay in its section).
+Design: a9 + `"disc": [12.5, 0.28, 8]` in --nvt (generator sha 2046bd98, function `disconnect()`): nfet_03v3 8 x 12.5/0.28 (100 um) at x 8.8-17.2, y 354.4-370,
+between TERM_VCM_BUS (native sources' Metal3/4 bus, now internal) and the TERM_VCM pin = the control cell's Metal4 trunk (x 4.8, top edge; TERM_DISCHARGE in the control
+cell = pin side). Gate TERM_ENABLE_LOCAL from its Metal3 line. The east TERM_VCM riser is gone. Build:
+`python3 $P/analog/pads/tx_pad_layout.py sec/b/a10 --nvt '{"wb": 23.5, "wt": 23.5, "lb": 2.2, "lt": 1.0, "merged": true, "disc": [12.5, 0.28, 8]}' --upx '{"x": [63, 69], "yu": 107}' --top-pins`.
+GDS b9fa12a6..., netres `sec/r10/res.json` ee222cd9 (`sec/rflow10.sh`: TERM_VCM_BUS replaces TERM_VCM), models `sec/models/a10_rh` 94c7eb4e / `a10_rt` 1567699c / `a10_c`,
+tb2.py d0f52dc6, offleak.py 4a3b79a3 (OFF_VCM env). Queue `sec/q10.sh`.
+
+| Limit | a10 | Result |
+|---|---|---|
+| Off leak per pad, TERM_VCM 0 V, pads equal 0.5-3.3 V (tt / ff32 / ff22 / fs / ss) | < 0.01 uA all | PASS (a9: 1.7-10.8 mA) |
+| Off leak, TERM_VCM 1.65 V | < 0.01 uA all | PASS |
+| Off leak, pads 1 V apart, TERM_VCM 0 / 1.65 V | <= 0.16 uA (ff 32) | PASS |
+| TERM_VCM 1.65 V off control (term bench) | >= 1.27e10 ohm | PASS |
+| Termination +-10 %, 23 corners, rt / rh | worst 4.2 / 4.2 %; ss/32/3.15 rh codes 12-15 (107.8 / 102.2 / 97.4 / 92.8); ss/22/3.15 rh 12-15 | PASS (code 12 in window at ss) |
+| ff/22/3.35 edge (reported) | rt: code 3 only (97.3; code 2 above 110); rh codes 3-4 | single-code edge at typ metal, 1 code inside the 2..13 window |
+| a4 +-5 % (report) | rt and rh pass at 23 corners | PASS |
+| P-N | rt -0.16..-0.09, rh -0.17..-0.12 ohm (sign flipped vs a9: the bus is now referenced only through the disconnect) | PASS |
+| Pad C per leg 100 MHz <= 3.223 pF | rt 3.072, c 2.982 | PASS |
+| Return loss (info) | 26.5 / 14.3 / 7.6 / 4.6 dB at 0.1 / 0.5 / 1.25 / 2.5 GHz | info |
+| Gate C MAIN/POST/TMDS | max 0.298 pF (published 0.32-0.61) | PASS |
+| Drop at 21 mA (simulated) | 37.6 typ / 53.9 high mV at 20.2 / 20.1 mA delivered; DC screen 0 over | PASS |
+| O1 bond -> cascodes (effective, shorted drains) | 1.370 / 1.755 ohm | PASS |
+| CDM 2 A vss+ / pp+ / pp- / vdd- (PULSE) | nvt 6.92 / 7.25 / 7.29 / 0.91; n06 6.91 / 7.27 / 7.26 / 0.99; disconnect (n03) 0.89 / 0.84 / 0.84 / 0.79 V | PASS (0.71 V margin) |
+| CDM 2 A vss- (TB2_CDMSMOOTH, tanh edges; PULSE stops at 2.205 ns at the provider dvss diode) | all MOS <= 0.99 V, complete to 3.6 ns; smooth vs PULSE on vss+ 6.920 / 6.915 V | PASS |
+| CDM 2 A vdd+ | INCOMPLETE: PULSE stops at 2.251 ns (provider cell diode `d.xdvssn.d20#internal`, after the rise; pad-vdd 4.71 V reached, MOS <= 3.92 V); smooth edges stop at 1.86 ns; cshunt 1e-15 no help. a9 (same cell without the disconnect, which is not in this path) completed: MOS <= 3.92 V | not complete on a10 (a9 stand-in PASS) |
+| HBM 1 kV, 6 cases | nvt 4.16, n06 4.36, n03 0.78 V | PASS |
+| HBM 2 kV vss+ / pp+ (report) | 4.99 / 5.73 V | PASS |
+| CDM 1 A vss+ / pp+ (report) | 4.56 / 5.04 V | PASS |
+| CDM 3 A vss+ / pp+ (report) | 9.28 / 9.61 V (23 nvt + 17 n06 over 8.0) | MISS (report) |
+| Junctions vs bv (10 / 10.5 / 11 V) | worst 7.05 V at CDM 2 A, 9.48 V at CDM 3 A, 0 over | PASS |
+| Primary fingers | CDM 2 A 5.0 mA/um 1.1 nJ; 3 A 7.5 mA/um; HBM 2 kV 3.3 mA/um 18.6 nJ | PASS |
+| ESD known answer | 6.747 V | PASS |
+| Magic DRC / netgen LVS | 0 / unique | PASS |
+| KLayout precheck main / antenna (NAT rules) | 0 / 0 | PASS |
+| Read-back LVS pos / failing control | match unique / mismatch (rbverdict >= 2 labels) | PASS |
+| Latch-up at 15 um | 0.0 um2 | PASS |
+| rail_site_check txpad_a10 / railconn | PASS / clean | PASS |
+| Default path | normalised GDS 3a706943 == b/a4, schematic identical | PASS |
+| ASM-2 | all core pins on the top edge; TERM_VCM now on the control-cell trunk (x 4.4-5.2, 0.4 um Metal4 trunk) | PASS (stated) |
+Not run: low-metal termination (no netres variant), ss/ff ESD corners, idle bench.

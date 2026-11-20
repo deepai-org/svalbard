@@ -24,6 +24,7 @@ DROP = set(filter(None, os.environ.get('DROP', '').split(',')))   # lever experi
 MACROS = [tuple(float(v) for v in m.split(':')) for m in os.environ.get('MACRO', '1716:1108,1716:1262').split(',')]
 GROW = float(os.environ.get('GROW', '0'))          # information only: die/core made taller by GROW um (north edge moves)
 NOPAD = set(filter(None, os.environ.get('NOPAD', '').split(',')))   # lever experiments: custom pads with zero core intrusion
+ISLW = float(os.environ.get('ISLAND_W', '0.05'))   # pull of an island block to its switch per mA (assembly raises it to group islands)
 TRIES = int(os.environ.get('TRIES', '1')); SEED = int(os.environ.get('SEED', '1'))
 RING = float(os.environ.get('RING', '0'))          # AP4-10b: core ring narrowed, core edge moves out by RING um on every side
 DIE = (0.0, 0.0, 3932.0, 5122.0+GROW); CORE = (452.0-RING, 452.0-RING, 3480.0+RING, 4670.0+GROW+RING)
@@ -172,6 +173,12 @@ def run(mw, mx0, rng=None, strat=0):
     if CHIP == 'wired': rsv['wtx_tcoil_rsv'] = (2900.0, 2922.0, 3470.0, 3042.0)
     if CHIP == 'rf' and 'pad_ref' in P_:      # external-LO legs from the east REF / AUX pads to lo_ext
         rsv['lo_legs_rsv'] = (P_['pad_ref'][0][0]-49.0, P_['pad_ref'][0][1], P_['pad_ref'][0][0], P_['pad_aux_clk'][0][3])
+    # assembly routing channels (CHANNEL um, 0 = none): a strip under the macro's south edge and east of it, kept free of
+    # blocks and decap so the macro's pins reach the core
+    CH = float(os.environ.get('CHANNEL', '0'))
+    if CH > 0:
+        rsv['chan_macro_s'] = (dig[0], dig[1]-HALO-CH, dig[2], dig[1]-HALO)
+        rsv['chan_macro_e'] = (dig[2]+HALO, dig[1]-HALO-CH, min(dig[2]+HALO+CH, CORE[2]), CORE[3])
     if CORRIDOR:
         cx = min(max(2281.2, dig[0]+100), dig[2]-150)
         rsv['corridor_s_rsv'] = (cx, CORE[1]+34.0, cx+46.5, dig[1]-HALO)
@@ -209,7 +216,7 @@ def run(mw, mx0, rng=None, strat=0):
         elif n.startswith(('char', 'decap_tile')) or n in ('por', 'aosc', 'ring_osc', 'vco_replica') or n.startswith('obs_pre4'):
             aw = 0.02                           # no flow partner: take any hole (pure compaction)
         if b['mA'] > 0 and f'isw_{g}' in blocks and not n.startswith('isw_'):
-            tg.append((f'isw_{g}', 0.05*b['mA']))    # supply flow: every island block is pulled to its switch in proportion to its current (G5/G6 strap)
+            tg.append((f'isw_{g}', ISLW*b['mA']))    # supply flow: every island block is pulled to its switch in proportion to its current (G5/G6 strap)
         if b['mA'] > 20.0 and f'isw_{g}' in blocks:
             mg.append((f'isw_{g}', 500.0))      # power-delivery.md G6: blocks above 20 mA within ~500 um of their switch
         p.place(n, b['w'], b['h'], halo=b['halo'], rot=b['rot'], targets=tg, anchor=(anchor[0], anchor[1], aw),

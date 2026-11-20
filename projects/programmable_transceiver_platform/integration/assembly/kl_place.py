@@ -334,12 +334,16 @@ D += ['END COMPONENTS', f'NETS {len(NETS)} ;']
 for net, v in NETS.items():
     D.append(f'- {net} '+' '.join(f'( {i} {p} )' for i, p in v['ends'])+' + USE SIGNAL ;')
 D += ['END NETS']
-blk = [(n, r) for n, r in list(booked.items())+list(FP['reserves'].items()) if n != 'd2h_strip']
-if blk:
-    D.append(f'BLOCKAGES {3*len(blk)} ;')
-    for n, r in blk:
-        for ln in ('Metal1', 'Metal2', 'Metal3'): D.append(f'- LAYER {ln} RECT ( {um(r[0])} {um(r[1])} ) ( {um(r[2])} {um(r[3])} ) ;')
-    D.append('END BLOCKAGES')
+# routing channels and corridors of the floorplan stay open; booked items are Metal1-3 blockages; nothing is routed in the
+# provider-ring band outside the IO cells' inner edge (5 um short of it, so the IO pins stay reachable) or over the seal ring
+blk = [(n, r, ('Metal1', 'Metal2', 'Metal3')) for n, r in list(booked.items())+list(FP['reserves'].items())
+       if n != 'd2h_strip' and not n.startswith(('chan_', 'corridor'))]
+e = C.IO_INNER-5; W_, H_ = C.DIE[2], C.DIE[3]; ML = tuple(n for n, *_ in C.METALS)
+for r in ((0, 0, W_, e), (0, H_-e, W_, H_), (0, 0, e, H_), (W_-e, 0, W_, H_)): blk.append(('ring_band', r, ML))
+D.append(f'BLOCKAGES {sum(len(l) for n, r, l in blk)} ;')
+for n, r, lays in blk:
+    for ln in lays: D.append(f'- LAYER {ln} RECT ( {um(r[0])} {um(r[1])} ) ( {um(r[2])} {um(r[3])} ) ;')
+D.append('END BLOCKAGES')
 D += ['END DESIGN', '']
 man['booked'] = booked
 open('/run/design.def', 'w').write('\n'.join(D))

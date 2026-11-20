@@ -23,7 +23,7 @@ sizes = {m: [round(v['w'], 2), round(v['h'], 2)] for m, v in MJ.items() if v.get
 json.dump(pj, open(RUN+'/fp_pads.json', 'w')); json.dump(sizes, open(RUN+'/fp_sizes.json', 'w'))
 macro = {'rf': '1716:1108', 'wired': '1716:1108,1716:1262'}[chip]
 env = dict(os.environ, CHIP=chip, SCEN='S', TAG='s', TRIES=os.environ.get('TRIES', '6'), PADS_JSON=RUN+'/fp_pads.json',
-           SIZES_JSON=RUN+'/fp_sizes.json', RUNDIR=RUN+'/fit', OMP_NUM_THREADS='1', MACRO=os.environ.get('MACRO', macro))
+           SIZES_JSON=RUN+'/fp_sizes.json', RUNDIR=RUN+'/fit', CHANNEL=os.environ.get('CHANNEL', '40'), ISLAND_W=os.environ.get('ISLAND_W', '0.3'), OMP_NUM_THREADS='1', MACRO=os.environ.get('MACRO', macro))
 fit = C.ROOT+'/scratch/reviews/die-fit'
 r = subprocess.run(['true'] if os.environ.get('REUSE_FIT') else ['nice', '-n', '10', 'python3', 'fit.py'], cwd=fit, env=env, capture_output=True, text=True)
 if not os.environ.get('REUSE_FIT'): open(RUN+'/fit/fit.log', 'w').write(r.stdout+r.stderr)

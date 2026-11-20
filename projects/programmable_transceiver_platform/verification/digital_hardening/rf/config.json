@@ -1,5 +1,5 @@
 {
-  "about": "Hardening configuration of the digital macro for pt_rf (split phase 2, decision D10): overrides of ../config.json; run_digital_hardening.sh with CHIP=rf merges them. One RTL, chip selected by the parameter PT_CHIP. Outline sized from synthesis (synth_area.sh, yosys, ss_032C_3v15 cells, no place and route): cell area 1.053 mm2 = 0.766 x the both-halves build (1.375 mm2), applied to the routed r8d macro (1716 x 1640 = 2.814 mm2 at 79.5 % utilisation): 1716 x 1255.84 um = 2.155 mm2. The FIRM host-link and clock-root placements are generated for this outline by hio_shift.py at every run. The ports of the other chip's blocks stay on the macro and are tied off at the chip top.",
+  "about": "Hardening configuration of the digital macro for pt_rf (split phase 2, decision D10): overrides of ../config.json; run_digital_hardening.sh with CHIP=rf merges them. One RTL, chip selected by the parameter PT_CHIP. Outline sized from synthesis (synth_area.sh, yosys, ss_032C_3v15 cells, no place and route): cell area 1.053 mm2 = 0.766 x the both-halves build (1.375 mm2), applied to the routed r8d macro (1716 x 1640 = 2.814 mm2 at 79.5 % utilisation): 1716 x 1365.6 um = 2.343 mm2 (raised +8.7 % on 2026-11-20: the 2.155 mm2 outline did not converge in detailed routing on the r9 RTL, ~1,200 violations after 5 h). The FIRM host-link and clock-root placements are generated for this outline by hio_shift.py at every run. The ports of the other chip's blocks stay on the macro and are tied off at the chip top.",
   "SYNTH_PARAMETERS": [
     "PT_CHIP=1"
   ],
@@ -7,6 +7,6 @@
     0,
     0,
     1716,
-    1255.84
+    1365.6
   ]
 }

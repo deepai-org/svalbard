@@ -281,3 +281,118 @@ sec/b/a7/pad_txpad.ext.spice sec/r7 typ|high sec/models/a7_rt|rh.spice 1`; `. se
 Needs a ruling: no tried combination meets 3.3 V switches <= 5.0 V at CDM 2 A AND pad C <= 3.193 pF. Choices: CDM 2 A for WIRE_TX judged against
 1 A (a7 1 A not run; a4 1 A with near decap was <= 4.73 V); native switches with a C allowance of ~+0.03 pF (or drop the extra up-diodes and recheck
 cascodes); or a VSS-referenced clamp at TU (PC-44 option b).
+
+# CANDIDATE a8 (2026-11-20): native nfet_06v0_nvt termination switches (ruling PC-49 (a)), ASM-2 top-edge pins. NOT published, NOT committed. Work folder `sec/`.
+## Rulings applied (coordinator PC-49 / PC-54, binding)
+(a) termination switches nfet_06v0_nvt; pad-node C allowance +0.03 pF: limit 3.223 pF per leg at 100 MHz (R+C model). a7's extra up-diodes kept only if they
+still help. CDM judged with the east-edge 1 nF at the site, 0.7 ohm per rail (`sec/env7.sh`), ring at the extracted bound. ASM-2: core-side pins on the top edge.
+## Limits declared BEFORE the a8 runs (sizing what-ifs on a7 models were run before this; listed in the results)
+- T1w 100 ohm +-10 % incl. metal at some trim code in 2..13 (>= 2 codes margin to both ends), all 23 corners, typ (rt) and high (rh) metal; low metal not
+  available (netres has typ / high only: reported as not run). P-N <= 1.0 ohm. a4's +-5 % reported. Term known answer 91.58 +-0.01; TERM_ENABLE 0 > 10 kohm (pub + a8).
+- WT39: O1 bond -> cascode drains <= 2.0 ohm (typ, high); O2 P/N <= 0.5 ohm; O3 leg-path drop <= 60 mV at 21 mA (netres arithmetic AND the simulated
+  drive bench if it can be made to run); gate C MAIN/POST/TMDS <= published (0 / 3.3 V); pad-node C per leg 100 MHz <= 3.223 pF (rt; c-only reported).
+- E1 every MOS max(|Vg-x|, |Vds|) <= 5.0 V (3.3 V) / 8.0 V (6 V incl. nfet_06v0_nvt); DC screen 3.63 / 6.0 V reported. HBM 1 kV all 6 cases (tier),
+  CDM 2 A all 6 cases (requirement); HBM 2 kV, CDM 1 / 3 A reported. Exact a8 high-metal model (rh); any stand-in named. E3 non-primary junctions < bv;
+  E3p primary fingers 10 mA/um fwd / 1 mA/um avalanche / 78 nJ; E4 MIM <= 6 V. ESD known answer 6.764 V +- 0.15 on the bound ring.
+- Layout: Magic DRC 0; netgen LVS unique; read-back LVS unique + failing control (MAIN_P/MAIN_BIAS swap -> mismatch); KLayout precheck main 0 / antenna 0;
+  latch-up 0 um2; rail_site_check PASS; railconn clean; A1 KLayout bbox inside 2.78..484 x 0..1226.72; ASM-2: every port except PAD_x / DVDD_x has a
+  Metal3/4 pin shape touching y = top edge. Default path (no new option) rebuilds b/a4 identically except timestamps.
+
+## a8 results (2026-11-20). NOT published, NOT committed. Verdict: **NOT a valid candidate. The GDS has no NAT layer (5/0), so the switches would be built as ordinary nfet_06v0. With NAT added, 23 native switches per leg at the 3.56 um pitch cannot meet the NAT rules.** Stopped there.
+Files: generator `$P/analog/pads/tx_pad_layout.py` sha e41508e0 (new options `--nvt`, `--top-pins`; the default path was not rebuilt or compared this
+round), build `sec/b/a8` GDS 43c91e1d..., netres `sec/r8`, models `sec/models/a8_rt|rh|c|zero`, bench `tb2.py` 7d5a2bef (MOSM + nfet_06v0_nvt: 8.0 V
+transient, 6.0 V DC), `mkmodel.py` 0fa71755 (nvt matched). Build: `python3 $P/analog/pads/tx_pad_layout.py sec/b/a8 --nvt '{"wb": 14, "wt": 21, "lb": 1.0, "lt": 1.0}'
+--upx '{"x": [63, 69], "yu": 107}' --top-pins`; `bash sec/rflow6.sh a8 r8`; `python3 mkmodel.py sec/b/a8/pad_txpad.ext.spice sec/r8 typ|high sec/models/a8_rt|rh.spice 1`;
+`sec/q8.sh` (ka, gatec, trim gatec, esdka, ESD with env7); `bash sec/checks6.sh a8 kl rb lu rail`; `rail_site_check.py ... --name txpad_a8`.
+Sizing (what-ifs on a7 models, `sec/sz6/optnvt.py`, `swnvt2.py`; corners `corners_nvt.json`): C sensitivity about 0.86 fF per um of nvt width, mostly the TU-side
+junction (as = 0 removes 0.17 pF). The 3 up-diodes are still needed: CDM 2 A pp, nvt what-if: 0 up -> cascodes 8.24 V (16 over 8.0), 3 up -> 7.02 V. Using 2 up-diodes
+(x 63/69, -21 fF) frees width for the trim. nf=2 would save about 0.11 pF, but the nvt ring (4.06 um) does not fit the 3.56 um pitch, so the switches are drawn
+with guard 0, a shared p-tap strip under the switch row, and Metal1 columns on the unit boundaries.
+
+| Limit | a8 | Result |
+|---|---|---|
+| Magic DRC / netgen LVS (generator) | 0 / unique | PASS |
+| **NAT layer in GDS** | absent: the Magic export (like HRES, `gds_markers.py`) does not write NAT 5/0 | **BLOCKER** |
+| Read-back LVS pos / failing control | census differs: GDS reads back nfet_06v0 14/1.8 x16, 21/1.8 x30 instead of nvt (no NAT) + pin matching | **FAIL** |
+| KLayout precheck main / antenna | 0 / 0, but only because there is no NAT (NAT rules not exercised) | not valid |
+| NAT rules if NAT is added (nat.rb) | NAT.1 needs >= 2 um of NAT around each COMP; NAT.6 does not allow COMPs at different potential under one NAT; NAT.7 needs >= 0.74 um between NATs: each switch needs >= 7.4 um of pitch vs 3.56; NAT also reaches the tap strip and the resistor row (NAT.2 / NAT.12) | **MISS by construction** |
+| Latch-up at 15 um | 0.0 um2 | PASS |
+| rail_site_check txpad_a8 / railconn | PASS main 0 antenna 0 / clean | PASS |
+| ASM-2 top pins | gate lines Metal3, VDD/VSS/TERM_ENABLE/DETECT_* Metal4 on the control-cell trunks, TERM_TRIM0..3 Metal4 (Metal5 risers), TERM_VCM Metal4 4 um riser (about 7 ohm in series, common mode only), all at y 692.26 | drawn, not reviewed |
+| O1 bond -> cascodes <= 2.0 ohm | typ 1.364, high 1.749 | PASS |
+| O3 drop at 21 mA <= 60 mV | typ 38.9, high 56.3 (arithmetic; drive bench not fixed this round) | PASS (arithmetic) |
+| Pad-node C per leg 100 MHz <= 3.223 pF | a8_rt 3.204, a8_c 3.115, zero-R 3.205 | PASS (19 fF) |
+| T1w +-10 % at a code in 2..13, 23 corners | rt worst 5.5 % (ss/32/3.15 code 13 = 105.5; ff/22/3.35 code 2 = 101.5); rh worst 7.2 % (ss/32/3.15 code 13 = 107.2) | PASS with no spare margin (ss needs code 13, ff needs code 2) |
+| a4 +-5 % (report) | rt fails ss_32_3.15 / ff_22_3.15, rh fails ss 22/32 3.15 | MISS (report) |
+| P-N | rt +0.22..+0.42, rh +0.25..+0.48 ohm | PASS |
+| Term known answer / off | 91.58 / pub 674.8 kohm; a8 off >= 1.47e10 ohm | PASS |
+| Gate C MAIN/POST/TMDS | 0.18-0.30 pF (= a4) | PASS |
+| Trim gate C (info) | TRIM3 0.36 / 1.58 pF, TRIM0 0.12 / 0.27 pF (0 / 3.3 V) | info |
+| ESD known answer | 6.747 V (hand 6.763) | PASS |
+| CDM 2 A (exact a8_rh, site 1 nF / 0.7 ohm) | vss+ nvt 6.91, n06 6.91; pp+ 7.32 / 7.28; pp- 7.37 / 7.28; vdd- <= 1.0 V; vss- / vdd+ INCOMPLETE (values reached <= 3.9 V) | PASS on 4 complete cases; 2 incomplete |
+| HBM 1 kV vss+ | nvt 3.73, n06 3.73 V | PASS (other 5 cases, HBM 2 kV, CDM 1/3 A not run: queue stopped after the NAT finding) |
+| Primary fingers | CDM 2 A 5.0 mA/um 1.1 nJ; HBM 1 kV 1.65 mA/um 6.5 nJ | PASS |
+| Junction / MIM | no non-primary diodes; no MIM | n/a |
+| Drive bench (21 mA simulated) | not fixed: the earlier failure is a missing .dat (ngspice aborted); its log was not captured this round | not run |
+| Low-metal termination | netres has typ / high only | not run |
+What it would take: one native switch per trim bit instead of per unit (the units of a bit share a gate, so TU nodes can be joined: base x8, bits 8/4/2/1 ->
+5 multi-finger devices per leg, each in its own NAT with >= 2 um enclosure and 0.74 um between NATs, gate poly joined in metal outside NAT, DUALGATE over NAT
+(NAT.8)). Shared drains lower the TU junction C (about -0.1 pF), which frees width for trim margin. Rough fit: about 23 fingers x 2.7 um + 5 x 4.7 um ~ 86-90 um
+per leg against about 85 um available (west neck at x 52.5), and the resistor row has to move up about 2.5 um. NAT also has to be written into the GDS (a post-step like
+gds_markers.repair). This is a leg rewrite: every result above is rerun on it.
+Cleaned: a7 build / netres / models, sizing what-if models, the stopped ESD run.
+
+## a8 FINAL (2026-11-20, supersedes the per-unit a8 above): merged native devices per trim bit. NOT published, NOT committed.
+Ruling relayed by agent a0b585bf (coordinator): try one native multi-finger device per trim bit, each in its own NAT with DUALGATE, NAT written by a post-step,
+time-boxed; PC-49 (c) is the fallback. **It fits, so this is the full-a8 path.** The per-unit a8 build / netres / models / benches are deleted.
+Design (`--nvt` key "merged": true; `leg_nat()` + `nat_post()` in the generator): per leg 5 nfet_06v0_nvt devices: base 8 x 21/1.8 (gate TERM_ENABLE_LOCAL),
+trim bits 1/2/4/8 x 23.5/1.8. Each device sits in its own NAT (COMP + 2.0 um, >= 0.74 um between NATs); NAT 5/0 is written after the GDS export (the installed
+Magic writes none), plus one DUALGATE 55/0 box per leg over the NAT row, overlapping the tap strip's own DUALGATE (DV.2). The resistor units of a bit share one TU
+node (TU_<leg>_B / T0..T3) on two alternating Metal3 tracks above the devices. There is a p-tap strip under the row (COMP 2.32 um below, NAT.2 0.3 um), and tap ties
+to the resistor rings run in the NAT gaps on the ring columns. Resistors: base poly 2 x 2.4, trim 2 x 1.0. The resistor row is 7.5 um higher than a4 (ytop 394.1),
+the PAD buses follow it, nothing else moves; the outer NAT edge is at x 58.3 vs the west neck at 52.5. a7's up-diodes: 2 of 3 kept (x 63 / 69). Without them the
+cascodes reach 8.24 V at CDM 2 A (what-if); 2 diodes save 21 fF. ASM-2 top-edge pins as in the per-unit a8 (`--top-pins`).
+Files: generator sha fea82f43, GDS sha256 07721a33..., netres `sec/r8/res.json` 08f4e86e, models `sec/models/a8_rh` 92e4d04b / `a8_rt` d75fc386 / `a8_c` /
+`a8_zero`, `tb2.py` 15619da0, `mkmodel.py` 0fa71755. Bench results in `bench/a8*`.
+
+| Limit | a8 | Result |
+|---|---|---|
+| Magic DRC / netgen LVS | 0 / unique match | PASS |
+| KLayout precheck main / antenna (with NAT + DUALGATE) | 0 / 0 | PASS |
+| Read-back LVS pos | match, unique, census equal (nvt read back as nvt) | PASS |
+| Read-back failing control (MAIN_P / MAIN_BIAS swap) | mismatch (pin matching). swap.log says "swapped 3": with --top-pins MAIN_BIAS has 2 pins, so rbverdict.py (expects 2) prints FAIL | PASS (real mismatch; the verdict script's count rule doesn't fit 3 labels) |
+| Latch-up uncovered at 15 um | 0.0 um2 (wt 24 left 0.91 um2 and wt 26 left 58.6 um2: hence wt 23.5) | PASS |
+| rail_site_check txpad_a8 / railconn PAD, VSS, DVDD | PASS main 0 antenna 0 / clean | PASS |
+| Default path (no new option) | normalised GDS 3a706943 == b/a4; schematic identical | PASS |
+| O1 bond -> 16 cascode drains <= 2.0 ohm; O2 P/N | typ 1.370, high 1.756; P = N | PASS |
+| O3 drop at 21 mA <= 60 mV: arithmetic | typ 39.0, high 56.3 mV | PASS |
+| O3 drop: SIMULATED drive bench (fixed, see below) | 20.2 / 20.1 mA delivered (21 set): typ 37.6, high 53.9 mV (56.3 scaled to 21 mA); bond->cascodes 28.3 / 35.7 mV | PASS |
+| Pad-node C per leg 100 MHz <= 3.223 pF | rt 3.062, c 2.973, zero-R 3.063 | PASS (0.16 pF margin; also below the published 3.193) |
+| Return loss (info) | 25.0 / 14.1 / 7.5 / 4.5 dB at 0.1 / 0.5 / 1.25 / 2.5 GHz (a4 rt 8.0 at 1.25) | info |
+| T1w +-10 % at a code in 2..13, 23 corners, typ / high | rt worst 5.4 % (ss/32/3.15 in-window codes 12-15; ff/22/3.35 codes 3-4); rh worst 5.2 % (ss/32/3.15 codes 13-15, ff 4-5) | PASS (rh ss at exactly the 2-code margin) |
+| a4 +-5 % (report) | rt fails ff_22_3.15 only; rh fails ss 22/32 3.15 | MISS (report) |
+| P-N <= 1.0 ohm | rt +0.21..+0.41, rh +0.30..+0.47 | PASS |
+| Term known answer / off controls | 91.58; pub TERM_ENABLE 0 674.8 kohm; a8 off >= 1.47e10 ohm | PASS |
+| Gate C MAIN/POST/TMDS vs published | 0.18-0.30 pF (= a4) vs 0.32-0.61 | PASS |
+| Trim gate C (info) | TRIM3 0.39 / 1.76 pF, TRIM0 0.12 / 0.29 pF (0 / 3.3 V) | info: TRIM3 about 5x a4 at 3.3 V |
+| ESD known answer | 6.747 V (hand 6.763) | PASS |
+| E1 CDM 2 A, exact a8_rh, 1 nF at the site / 0.7 ohm per rail | vss+ nvt 6.91 / n06 6.91; pp+ 7.22 / 7.28; pp- 7.28 / 7.27; vdd+ 3.92; vdd- 0.99; n03 <= 0.84 | PASS (0.72 V margin) |
+| CDM 2 A vss- | INCOMPLETE (stops after the peak, values <= 0.91 V) | not judged (as a4 / a5) |
+| E1 HBM 1 kV, 6 cases | nvt max 4.12 V, n06 4.36 V, n03 0.69 V | PASS |
+| HBM 2 kV (report) | vss+ 4.98, pp+ 5.41 (nvt) / 5.74 (n06) V | PASS |
+| CDM 1 A (report) | 4.83 / 5.05 V | PASS |
+| CDM 3 A (report) | vss+ 9.27, pp+ 9.59 V (23 nvt + 17 n06 over) | MISS (report) |
+| DC screen 6.0 / 3.63 V (drive bench) | nvt / n06 max 3.30 V, 0 over | PASS |
+| E3 non-primary junctions / E3p primary fingers | no non-primary diodes; CDM 2 A 5.0 mA/um 1.1 nJ, 3 A 7.5 mA/um, HBM 2 kV 3.3 mA/um 18.6 nJ, reverse 0 | PASS |
+| E4 MIM | none | n/a |
+| A1 outline | generator bbox 0..286 x 0..692.26 (unchanged); KLayout bbox not re-measured | not re-measured |
+Bench fixes: (1) drive bench "vector syntax error" = `v()`: the 2-letter mapped ports (rs, sp, sn, dp, dn) were stripped to '' by `v[2:]`; now only a `c_` prefix is
+stripped. (2) The metal-drop audit dropped the pin node itself (no `__` suffix: tail mean NaN), and pin nodes are top-level vectors, not `xpad.`; both fixed.
+tb2.py also audits nfet_06v0_nvt (8.0 / 6.0 V). mkmodel.py matches nvt devices.
+Not run: low-metal termination (no netres variant), ss/ff ESD corners, idle bench. TERM_VCM top pin: a 4 um x 320 um Metal4 riser (about 7 ohm, common mode
+only; the models put TERM_VCM at the bus end).
+Commands: `python3 $P/analog/pads/tx_pad_layout.py sec/b/a8 --nvt '{"wb": 21, "wt": 23.5, "lb": 2.4, "lt": 1.0, "merged": true}' --upx '{"x": [63, 69], "yu": 107}' --top-pins`;
+`bash sec/rflow8.sh a8 r8`; `python3 mkmodel.py sec/b/a8/pad_txpad.ext.spice sec/r8 typ|high sec/models/a8_rt|rh.spice 1` (0.01 -> a8_zero); `tb2.py ac` rt/c/zero;
+`sec/q8.sh` (term rt/rh/off, ka, gatec, trim gatec, esdka, 18 ESD cases with sec/env7.sh); `bash sec/checks6.sh a8 kl rb lu rail`; `rail_site_check.py --gds sec/b/a8/pad_txpad.gds
+--top pad_txpad --name txpad_a8 --out sec/checks/a8/railsite`; `tb2.py out sec/models/a8_rt|rh.spice a8rtd|a8rhd 21`; `python3 sec/gdsnorm.py b/a4/pad_txpad.gds <default rebuild>`;
+`python3 termtab.py a8rt a8rh`; `python3 paths.py sec/r8/res.json`. Sizing: `sec/sz6/optnvt.py` (analytic; simulated ss needs about one code more than predicted).

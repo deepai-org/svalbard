@@ -202,12 +202,16 @@ def abstract(key, path, cellname, full_all, kind, want_pins):
 
 MJ = {}
 used = sorted({i['master'] for i in inst.values() if not i['master'].startswith(C.PROVIDER)} | {'gf180mcu_fd_io__'+x for x in ('bi_24t', 'in_c', 'asig_5p0')})
+for v in C.STAGED.get(CHIP, {}).values(): used.append(v['master'])
 for m in used:
     if m.startswith('gf180mcu_fd_io__'):
         cand = [dict(gds=C.BASE_RING, cell=None, kind='provider', sha256='')]
         tmp = db.Layout(); tmp.read(R+C.BASE_RING)
         nm = next(tmp.cell(i).name for i in tmp.each_cell_top_down() if tmp.cell(i).name.split('$')[0] == m)
         cand[0]['cell'] = nm
+    elif any(v['master'] == m for v in C.STAGED.get(CHIP, {}).values()):
+        v = next(v for v in C.STAGED[CHIP].values() if v['master'] == m)
+        cand = [dict(gds=v['gds'], cell=v['cell'], kind='staged', sha256='')]
     else:
         cand = C.gds_candidates(masters, m)
     if not cand:

@@ -56,6 +56,8 @@ for r in L['rows']:
     small = a < 2500
     blocks[n] = dict(w=w, h=h, grp=r['group'], master=m, halo=(4.0 if small else 25.0 if n.startswith(SPIRAL) else HALO),
                      rot=True, mA=mA.get(n, 0.0), nets=nc['ctl_per_inst'].get(n, 0)+nc['direct_per_inst'].get(n, 0))
+for n in filter(None, os.environ.get('NOROT', '').split(',')):     # assembly: blocks that must stay unrotated (grid phase)
+    if n in blocks: blocks[n]['rot'] = False
 # side-pin channels: compact ptrim has PH/CKP/T pins (56) on one edge -> 32 um pin channel is part of its footprint
 if 'ptrim' in blocks: blocks['ptrim']['w'] += 32.0
 if BANK and ROW['decap_macro_edge_bank'][KEY] > 0:
@@ -105,7 +107,8 @@ else:                # HS RX, USB, WIRE_TX, WTX_EXT on the east (bidir[14..24]);
     ANCH = {'wired_rx': (2700, 1000), 'wired_cap': (2400, 1000), 'wired_tx': (2600, 2600), 'pll': (2200, 1500), 'debug': (1200, 3000),
             'core': (1800, 2300)}
     ANCH_B = {'core_bias': (1800, 2300), 'wrx_cap': (2400, 700), 'r8arch_capture_b': (2300, 1000), 'pll_cdr': (2100, 1300)}
-    G4 = {'wired_cap': ('E', 556.5), 'wired_rx': ('E', 556.5), 'wired_tx': ('E', 2244.5), 'pll': ('E', 4143.5), 'debug': ('W', 2666.5)}
+    G4 = {'wired_cap': ('E', 556.5), 'wired_rx': ('E', 2260.0),   # wired_rx switch beside dvdd_pads[1] (PDS-9)
+           'wired_tx': ('E', 2244.5), 'pll': ('E', 4143.5), 'debug': ('W', 2666.5)}
 # keep-away rules (v6 list, unchanged): aggressor, victim, um
 RULES = [('digital', 'adc_i', 210), ('digital', 'adc_q', 210), ('digital', 'core_bias', 100), ('digital', 'bbfilter_i', 100), ('digital', 'bbfilter_q', 100),
          ('digital', 'lna', 1000), ('digital', 'qvco', 300), ('wrx_cap', 'adc_i', 200), ('wrx_cap', 'adc_q', 200), ('r8arch_capture_b', 'adc_i', 200),

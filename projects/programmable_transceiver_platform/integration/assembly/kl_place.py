@@ -174,8 +174,8 @@ SW = float(SWJ.get('default', SW))
 def cells3():
     for i, cx in enumerate('WCE'):
         for j, ry in enumerate('SMN'):
-            x0 = core[0]+(core[2]-core[0])*i/3; x1 = core[0]+(core[2]-core[0])*(i+1)/3
-            y0 = core[1]+(core[3]-core[1])*j/3; y1 = core[1]+(core[3]-core[1])*(j+1)/3
+            x0 = round(core[0]+(core[2]-core[0])*i/3); x1 = round(core[0]+(core[2]-core[0])*(i+1)/3)      # 1 um grid
+            y0 = round(core[1]+(core[3]-core[1])*j/3); y1 = round(core[1]+(core[3]-core[1])*(j+1)/3)
             # outer cells reach the die edge so the straps still meet the core ring
             yield ry+cx, (0 if i == 0 else x0, 0 if j == 0 else y0, C.DIE[2] if i == 2 else x1, C.DIE[3] if j == 2 else y1)
 for key, (x0, y0, x1, y1) in cells3():
@@ -193,10 +193,24 @@ for key, (x0, y0, x1, y1) in cells3():
             if c+w/2 <= core[2]: straps[(net, 'Metal5')] += db.Region(db.Box(um(c-w/2), 0, um(c+w/2), um(C.DIE[3]))) & cell
         x += PITCH
 man['strap_widths'] = dict(SWJ, default=SW)
+raw_straps = {k: v.dup() for k, v in straps.items()}
 for (net, ln), reg in straps.items():
     reg = (reg & reach[net]) - avoid[ln] - (ring['VSS' if net == 'VDD' else 'VDD'] if net == 'VSS' else db.Region())
     keep = db.Region([p for p in reg.merged().each() if p.area() >= um(10.5)*um(20)])
     straps[(net, ln)] = keep
+# staged blocks with declared grid ties (owner report: ties.VSS chan*): the VSS Metal5 strap in each Metal5-free channel is
+# carried onto its tab (the 2.5 um cut is closed there); grid VDD never ties to a block (its VDD is an island rail)
+man['tab_ties'] = []
+for n, v in C.STAGED.get(CHIP, {}).items():
+    if n not in man['blocks'] or not os.path.exists(R+v['report']): continue
+    rep = json.load(open(R+v['report'])); x0, y0 = man['blocks'][n]['bbox'][:2]
+    for tn, t in rep.get('ties', {}).get('VSS', {}).items():
+        if not tn.startswith(('chan', 'grid_tie')): continue      # channel tabs and top-edge landings (WT47)
+        tab = db.Region(db.Box(um(x0+t[0]), um(y0+t[2]-3.0), um(x0+t[1]), um(y0+t[3]+3.0)))
+        hit = raw_straps[('VSS', 'Metal5')] & tab
+        if not hit.is_empty():
+            straps[('VSS', 'Metal5')] = (straps[('VSS', 'Metal5')] + hit).merged()
+        man['tab_ties'].append(dict(inst=n, tab=tn, tied=not hit.is_empty(), at=[round(x0+t[0], 2), round(y0+t[2], 2)]))
 # the VSS ring gives way where a VDD strap crosses it on the same layer (the other layer stays continuous)
 metal = {}
 for net in ('VDD', 'VSS'):

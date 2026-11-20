@@ -43,6 +43,10 @@ SPECIAL = {
 }
 for _n in ('isw_wired', 'isw_rf', 'isw_pll', 'isw_conv', 'isw_debug', 'atb_leaf_s', 'atb_leaf_f', 'atb_grp', 'atb_pad'):
     SPECIAL[_n] = [(IS+f'layout/{_n}.gds', _n)]
+# staged blocks that replace a conn instance's master in the layout before the conn changes (coordinator, 2026-11-20):
+# instance -> master, GDS, cell, placement rule (R0; x origin = x_mod[0] modulo x_mod[1] um), owner report with the grid ties
+STAGED = {'wired': {'wiredtx': dict(master='pt_wiredtx8', gds=AN+'wired_tx/generated/fast/pt_wiredtx8.gds', cell='pt_wiredtx8',
+                                    x_mod=(20.75, 35.0), report='scratch/wired_tx/s13/top/out/report.json')}}
 TWIN = {'pt_adc_q': 'pt_adc_i', 'pt_dac_q': 'pt_dac_i'}
 # provider-ring instances of the conn (not core blocks): their pins are on the template's IO cells
 PROVIDER = ('pt_host_physical', 'pt_debug_physical', 'atb_provider_pad', 'pad_strap', 'prov_supply', 'prov_supply_sig')

@@ -71,3 +71,35 @@ Gates hold everywhere (0 over 8.0 V). The nd2ps miss is 0.05-0.06 V over the mod
 model's breakdown is clamping). Files: `esd/bound_cdm2.json`, `esd/bound_hbm2.json`, `esd/bound16_cdm2.json`, `esd/ctl_esd2default.json`, `runs.log`.
 
 (DVDD typ rows of the long-window run were not kept in the log; only high is listed.)
+
+## Primary diodes judged by current density and energy (coordinator ruling, 2026-11-20)
+For the PRIMARY site diodes the criterion is peak current density and energy per finger against a stated rating; bv stays the criterion
+for every other junction. `cur.py` = esd3 deck on the bound ring (0.155/0.189/0.46/0.57 ohm, far 5+7), a6 high model, --rxgate,
+CDM with 1 nF; + savecurrents on all 20 site diodes (5 nd2ps + 5 pd2nw per pad, pj 51.8 um, area 22.5 um2 each). Energy = integral |V_d * I_d| dt over the run.
+Files: `esd/cur_cdm2_PN.json`, `esd/cur_cdm2_PpN.json`, `esd/cur_hbm2_PN.json`, `esd/cur_hbm2_PpN.json`. Each run repeats the bound numbers (CDM P-N 11.061 V, P+N 11.052 V).
+
+Limit: no foundry ESD diode rating was found locally (searched the GF180MCU PDK in the tool image (libs.ref/gf180mcu_fd_io, libs.tech),
+scratch/transceiver-pad-pdk, spec/design-assumptions.md, scratch/reviews/pads-core). Literature: 100 ns TLP failure current of STI-bounded
+junction diodes in forward conduction is typically 20-50 mA/um of perimeter (Amerasekera & Duvvury, "ESD in Silicon Integrated Circuits", 2nd ed.;
+Voldman, "ESD: Physics and Devices"). Limit used: **10 mA/um forward** (bottom of that range / 2), **1 mA/um in avalanche** (reverse-mode It2 is several
+times lower), both at 100 ns with **no credit** for the shorter 1 ns CDM pulse (Wunsch-Bell would allow roughly 3-10x more). Energy reference:
+10 mA/um x 51.8 um x ~1.5 V x 100 ns = about 78 nJ per finger; the HBM 2 kV case (known good) is the comparison.
+
+Per finger (all five fingers of a group carry the same value to 0.1 mA):
+| Event | Fingers | Mode | Peak mA | mA/um | mA/um2 | Energy nJ | vs limit |
+|---|---|---|---|---|---|---|---|
+| CDM 2 A P-N | pd2nw N pad (D4,23,38,45,68) | forward | 375.1 | 7.24 | 16.7 | 2.02 | 72 % of 10 mA/um, PASS |
+| CDM 2 A P-N | nd2ps P pad (D3,22,25,56,66) | forward | 362.7 | 7.00 | 16.1 | 1.92 | 70 %, PASS |
+| CDM 2 A P-N | nd2ps N pad (D2,9,35,55,64), at 11.06 V | avalanche | 2.7 | 0.05 | 0.12 | 0.002 | 5 % of 1 mA/um, PASS |
+| CDM 2 A P-N | pd2nw P pad, at 9.58 V | reverse | 2.6 | 0.05 | 0.12 | 0.002 | PASS |
+| CDM 2 A P+N | pd2nw P pad | forward | 374.4 | 7.23 | 16.6 | 2.01 | 72 %, PASS |
+| CDM 2 A P+N | nd2ps N pad | forward | 362.2 | 6.99 | 16.1 | 1.91 | 70 %, PASS |
+| CDM 2 A P+N | nd2ps P pad, at 11.05 V | avalanche | 2.7 | 0.05 | 0.12 | 0.002 | 5 %, PASS |
+| HBM 2 kV P-N (reference) | pd2nw N pad / nd2ps P pad | forward | 248.3 / 240.0 | 4.79 / 4.63 | 11.0 / 10.7 | 77.3 / 73.5 | 48 %, PASS |
+| HBM 2 kV P+N (reference) | pd2nw P pad / nd2ps N pad | forward | 247.8 / 239.7 | 4.78 / 4.63 | 11.0 / 10.7 | 77.0 / 73.3 | 48 %, PASS |
+| HBM 2 kV (both) | reverse-biased fingers, 6.2-7.2 V | reverse | 0.5 | 0.01 | 0.02 | 0.001 | PASS |
+
+Reading: the 11.05-11.06 V reverse drop sits on fingers that carry only 2.7 mA (0.05 mA/um, 2 pJ); the event current passes in forward conduction
+through the other polarity's fingers at 7.0-7.2 mA/um, 1.5x the HBM reference density but with 1/38 of its energy. Under the ruling, the two CDM
+pad-to-pad cases change from MISS to **PASS (forward 72 % of a conservative 10 mA/um, avalanche 5 % of 1 mA/um)**. The limit is a literature
+figure, not a foundry rating; the CDM peak density is above the known-good HBM density, so a TLP measurement of the site diode (planned TLP site) is the real check.

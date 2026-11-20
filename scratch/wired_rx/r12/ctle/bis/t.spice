@@ -1,0 +1,33 @@
+.subckt tA VDD_WIRE_SW VSS a b
+XM1 VDD_WIRE_SW a b b nfet_03v3 w=5u l=0.28u m=2
+XM2 b a VSS VSS nfet_03v3 w=1u l=0.28u
+.ends tA
+.subckt tB VDD_WIRE_SW VSS a b
+XR1 a VSS VSS ppolyf_u_1k r_width=1u r_length=3.6u
+XR2 a b VSS ppolyf_u_1k r_width=1u r_length=10u
+XM2 b a VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=4u l=0.28u
+.ends tB
+.subckt tC VDD_WIRE_SW VSS a b
+XM1 VDD_WIRE_SW a b b nfet_03v3 w=10u l=0.28u m=6
+XM2 b a VSS VSS nfet_03v3 w=1u l=0.28u
+.ends tC
+.subckt tD VDD_WIRE_SW VSS a b
+XM1 VDD_WIRE_SW a b b nfet_03v3 w=10u l=0.28u m=1
+XM2 b a VSS VSS nfet_03v3 w=1u l=0.28u
+.ends tD
+.subckt tE VDD_WIRE_SW VSS a b
+XM1 VDD_WIRE_SW a b b nfet_03v3 w=10u l=0.28u m=2
+XM2 b a VSS VSS nfet_03v3 w=1u l=0.28u
+.ends tE
+.subckt tF VDD_WIRE_SW VSS a b
+XM1 VDD_WIRE_SW a b b nfet_03v3 w=8u l=0.28u m=2
+XM2 b a VSS VSS nfet_03v3 w=1u l=0.28u
+.ends tF
+.subckt tG VDD_WIRE_SW VSS a b
+XM1 VDD_WIRE_SW a b b nfet_03v3 w=10u l=0.28u m=3
+XM2 b a VSS VSS nfet_03v3 w=1u l=0.28u
+.ends tG
+.subckt tH VDD_WIRE_SW VSS a b
+XM1 VDD_WIRE_SW a b b nfet_03v3 w=3.34u l=0.28u m=3
+XM2 b a VSS VSS nfet_03v3 w=1u l=0.28u
+.ends tH

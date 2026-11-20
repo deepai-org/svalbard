@@ -255,7 +255,12 @@ r3 (IX-13): lf_zero[2:0] (binary, reset 0 = r2 response) switches a low-frequenc
 nodes: per side, groups of 1/2/4 NMOS gate capacitors (80 x 6.2 um, channel at VSS, ~2.1 pF each) through PMOS
 switches 8/16/32 um (68 ohm per side with all on = 136 ohm floating equivalent) (gate = !(lf_zero[k] & ena)); an off group's gates are pulled to VSS.  Per-side shunt C is the
 differential equivalent of a floating 1.2/2.4/4.9 pF across the sources: at peak code 7 (Rs 4.1 k) the zero moves
-from the GHz range to ~31 MHz (code 1) ... ~4.5 MHz (code 7) with the same boost.""")
+from the GHz range to ~31 MHz (code 1) ... ~4.5 MHz (code 7) with the same boost.
+r5 (WR11-3, 2026-11-20): replica-bias loop.  The tails are no longer a fixed mirror of IBIAS: an error amplifier (biased
+from IBIAS) drives the tail bias so that a 1/6-scale replica half circuit (7 tail fingers, one input finger with its gate
+at 0.30 VDD, one load strip, one follower finger in its own isolated well, two sink fingers) holds its follower output at
+0.15 VDD (ratio of poly units).  I_tail x R_load and the SL common mode no longer depend on the poly sheet or on IBIAS.
+Loads are 6 x (1 x 3.6 um) = 600 ohm straight to VSS (no enable switch).  ~16 uA divider and ~0.9 mA replica extra.""")
     c.vdd = 'VDD_WIRE_SW'
     V = 'VDD_WIRE_SW'
     # r3 low-frequency zero bank (IX-13).  Emitted first so the generic placer puts it in the bottom rows: port
@@ -286,14 +291,41 @@ from the GHz range to ~31 MHz (code 1) ... ~4.5 MHz (code 7) with the same boost
     c.nand([b2, b1, b0], 'on6')
     for k in range(7):                                 # PMOS switch gate: low = leg on (and enabled)
         c.nand([f'on{k}', 'ena'], f'lg{k}_n')
-    # bias: IBIAS -> switch -> nmos diode; nmos mirror x2.5 -> pmos diode (atb_ctle_pbias)
+    # r5 bias (WR11-3 F1): replica-bias loop.  IBIAS (10 uA) only biases the error amplifier; the tail current is
+    # whatever makes a 1/6-scale replica half circuit (same tail / input / load-strip / follower / sink units) put
+    # its follower output `slr` on vref = 0.15 x VDD (poly ratio).  So I_tail x R_load tracks the poly sheet and the
+    # MOS corner, and the SL common mode is regulated instead of following IBIAS x R.
     c.n('nbias', 'ena', 'IBIAS', w=4)
     c.n('nbias', 'nbias', 'VSS', w=2, l=1)
     c.n('nbias', 'ena_b', 'VSS', w=1)
-    c.n('atb_ctle_pbias', 'nbias', 'VSS', w=5, l=1)
+    c.n('pref', 'nbias', 'VSS', w=2, l=1)               # 10 uA into the amplifier's PMOS reference diode
+    c.p('pref', 'pref', V, w=8, l=1)
+    c.p('pref', 'ena', V, w=2)                          # off: pref at VDD
+    ow, ol, om = CTLE_EA_PAIR
+    c.p('otail', 'pref', V, w=16, l=1)                  # 20 uA tail
+    c.p('na', 'slr', 'otail', w=ow, l=ol, m=om)         # replica side
+    c.p('nb', 'vref', 'otail', w=ow, l=ol, m=om)        # reference side
+    c.n('na', 'na', 'VSS', w=2, l=1)
+    c.n('nb', 'nb', 'VSS', w=2, l=1)
+    c.n('na', 'ena_b', 'VSS', w=1)
+    c.n('atb_ctle_pbias', 'na', 'VSS', w=5, l=1)        # x2.5 of the replica-side current into the PMOS diode
     tw, tl, tm, dw = CTLE_TAIL
     c.p('atb_ctle_pbias', 'atb_ctle_pbias', V, w=dw, l=tl)
     c.p('atb_ctle_pbias', 'ena', V, w=2)               # pull bias gate to VDD when off
+    # reference divider (one poly unit type): VDD -[switch]- 14 U - vgr (0.30 VDD, replica input gate ~ HS_VBIAS)
+    # - 3 U - vref (0.15 VDD) - 3 U - VSS ; U = 1 x 10 um (10 kohm), 16.5 uA
+    c.p('dtop', 'ena_b', V, w=4)
+    chain = ['dtop'] + [f'dv{i}' for i in range(13)] + ['vgr', 'dv13', 'dv14', 'vref', 'dv15', 'dv16', 'VSS']
+    for a_, b_ in zip(chain[:-1], chain[1:]):
+        c.r(a_, b_, 1, CTLE_DIV_L, seg=CTLE_DIV_L + 1)
+    # replica half circuit (1/CTLE_REP of one side): tails, one input finger, one load strip, follower, sinks
+    for _ in range(tm // CTLE_REP // 2):
+        c.p('spr', 'atb_ctle_pbias', V, w=tw, l=tl, m=2)
+    if (tm // CTLE_REP) % 2:
+        c.p('spr', 'atb_ctle_pbias', V, w=tw, l=tl)
+    c.p('cpr', 'vgr', 'spr', b='spr', w=16, m=CTLE_PAIR_M // CTLE_REP)
+    c.r('cpr', 'VSS', CTLE_RL_W, CTLE_RL_L, m=CTLE_RL_M // CTLE_REP, seg=CTLE_RL_L + 1)
+    c.n('cpr', 'ena_b', 'VSS', w=1)
     # tails (ratio 100 to the diode -> 2.5 mA per side).  r2: L 0.5 -> 1 um and W/L x2: the tail output
     # resistance shunts Rs/2 in the differential half circuit and the r1 tail (0.43 V Vsd at ss/3.15 V, Vsg of
     # the input pair 1.65 V) was near triode, which is why r1 peaked only 1.6 dB at ss (8.1 dB at ff)
@@ -313,11 +345,10 @@ from the GHz range to ~31 MHz (code 1) ... ~4.5 MHz (code 7) with the same boost
     for out in ('cp', 'cn'):
         # r4: load poly and its switch are split into CTLE_RL_M parallel strips / fingers so that no single
         # terminal escape carries more than ~0.5 mA (85 C EM, single-cut vias)
-        c.r(out, f'{out}_rl', CTLE_RL_W, CTLE_RL_L, m=CTLE_RL_M)
+        # r5: no enable switch: the strips return straight to VSS (r4: 21-23 ohm of return wiring and a Via4 group over
+        # the per-cut limit; off = no tail current, cp/cn still clamped by ena_b)
+        c.r(out, 'VSS', CTLE_RL_W, CTLE_RL_L, m=CTLE_RL_M, seg=CTLE_RL_L + 1)
         c.n(out, 'ena_b', 'VSS', w=2)
-    for _ in range(CTLE_RL_M):          # switch fingers of the two sides alternate
-        for out in ('cp', 'cn'):
-            c.n(f'{out}_rl', 'ena', 'VSS', w=CTLE_RL_SW / CTLE_RL_M)
     # input pair, body tied to source (r3: emitted last with the bypass gates = top rows, next to the pins)
     c.p('cn', 'RX_P', 'sp', b='sp', w=16, m=CTLE_PAIR_M)
     c.p('cp', 'RX_N', 'atb_ctle_src', b='atb_ctle_src', w=16, m=CTLE_PAIR_M)
@@ -333,6 +364,9 @@ from the GHz range to ~31 MHz (code 1) ... ~4.5 MHz (code 7) with the same boost
     for leg, g in (('P', 'cp'), ('N', 'cn')):
         for _ in range(CTLE_SF_N):      # one isolated-well island per follower unit
             c.n(V, g, f'CTLE_{leg}', w=fw, m=fm, b=f'CTLE_{leg}')
+    # r5 replica follower (one finger = 1/CTLE_REP of a side, own isolated well) and its sinks
+    c.n(V, 'cpr', 'slr', w=3.34, m=3, b='slr')   # 3 x 3.34 um (~1/6 of 60 um): wrx_flow's isolated-well primitive shorts VDD-VSS below 3 fingers (r12 bis/)
+    c.n('slr', 'fbias', 'VSS', w=kw, l=kl, m=km // CTLE_REP)
     for _ in range(km * CTLE_SF_N // 2):   # sink fingers of the two sides alternate in pairs
         for leg in 'PN':
             c.n(f'CTLE_{leg}', 'fbias', 'VSS', w=kw, l=kl, m=2)
@@ -349,6 +383,10 @@ from the GHz range to ~31 MHz (code 1) ... ~4.5 MHz (code 7) with the same boost
         lz = any(n.startswith('lz') for n in nodes)
         if 'byp_q' in nodes[1:2] or 'byp_bb' in nodes[1:2]:
             return 8 if any(n in ('RX_P', 'RX_N') for n in nodes) else 0
+        if 'slr' in nodes[:3] and 'fbias' in nodes or (len(nodes) > 3 and nodes[3] == 'slr'):
+            return 0.6                                      # r5 replica follower island + its sinks: a row of their own
+        if {'slr', 'cpr', 'spr', 'vgr', 'na', 'nb', 'otail', 'pref', 'dtop', 'vref'} & set(nodes) or any(n.startswith('dv') for n in nodes):
+            return 0.5                                      # r5 replica / error amplifier / divider rows
         if 'fbias' in nodes:                                # r4 follower sinks and their reference
             return 7 if nodes[0].startswith('CTLE_') else 0
         # r4: one row per half circuit (translation-symmetric): input-pair fingers, load strips, clamp, follower of
@@ -379,7 +417,7 @@ from the GHz range to ~31 MHz (code 1) ... ~4.5 MHz (code 7) with the same boost
     c.lines = sorted(c.lines, key=lambda l: rank(l) if l.startswith('X') else 0)
     # r4: the capacitor row and the two half-circuit rows start and end a layout row; the half-circuit rows are
     # kept free of foreign metal (wrx_flow matched=)
-    grp = lambda rk: 'cap' if rk == 2 else 'A' if 5 <= rk < 5.5 else 'B' if 5.5 <= rk < 6 else None
+    grp = lambda rk: 'cap' if rk == 2 else 'A' if 5 <= rk < 5.5 else 'B' if 5.5 <= rk < 6 else 'R' if rk == 0.5 else 'R2' if rk == 0.6 else None
     out, prev = [], None
     for l in c.lines:
         rk = rank(l) if l.startswith('X') else 0
@@ -396,14 +434,18 @@ from the GHz range to ~31 MHz (code 1) ... ~4.5 MHz (code 7) with the same boost
 # scratch/wired_rx/r2front, variants A/C)
 CTLE_RBASE = 4.1
 CTLE_LEGS = ((1.25, 24), (1.74, 16), (2.43, 12), (3.35, 8), (4.74, 6), (6.46, 4), (9.0, 3))
-CTLE_TAIL = (20, 1.0, 40, 8)      # tail finger W, L, fingers per side; bias diode W (same L): W/L ratio 100
+CTLE_TAIL = (20, 1.0, 42, 8)      # tail finger W, L, fingers per side; bias diode W (same L): W/L ratio 105 (r5: 42 = 6 x 7)
+CTLE_REP = 6                      # r5 replica half circuit = 1/6 of one side (7 tail fingers, 1 input finger, 1 strip,
+                                  # 1 follower finger, 2 sink fingers): every unit identical to the main ones
+CTLE_EA_PAIR = (20, 0.5, 2)       # r5 error amplifier PMOS pair: finger W, L, fingers
+CTLE_DIV_L = 10                   # r5 reference divider unit: 1 x 10 um ppolyf_u_1k (10 kohm), 20 units
 CTLE_PAIR_M = 6                   # input pair fingers of 16 um per side (r1: 3): HF gain for 12 dB at gdc > -12 dB
 CTLE_LFZ_UNITS, CTLE_LFZ_CAP, CTLE_LFZ_SW = 1, (80, 6.2), 8   # r3 IX-13 bank: units of group 0, cap W/L, switch W per unit
-CTLE_RL_W, CTLE_RL_L, CTLE_RL_M, CTLE_RL_SW = 1, 2.88, 6, 21  # load: 6 strips of 1 x 2.88 um (480 ohm), switch W total
+CTLE_RL_W, CTLE_RL_L, CTLE_RL_M, CTLE_RL_SW = 1, 3.6, 6, 0  # r5 load: 6 strips of 1 x 3.6 um (600 ohm) straight to VSS (r4: 2.88 um + 21 um switch)
 CTLE_SF = (10, 6)                 # r4 follower: finger W (um), fingers per side (60/0.28), isolated p-well
-CTLE_SK = (6, 0.5, 10, 1)         # r4 follower sink: finger W, L, fingers per side (60/0.5), fingers of the mirror diode (x10)
+CTLE_SK = (18, 0.5, 12, 1)        # follower sink: finger W, L, fingers per side (r5: 72/0.5), fingers of the mirror diode (x12)
 CTLE_SF_N = 1                     # follower units (islands) and sink groups per side; 2 = the R8-ARCH two-bank reserve (r10 what-if)
-CTLE_SF_REF_M = 5                 # r4 sink reference: tail-type PMOS fingers (20/1 each = 62.5 uA at 25 uA in the 8/1 diode)
+CTLE_SF_REF_M = 4                 # sink reference: tail-type PMOS fingers (r5: 4 x 20/1 -> ~0.25 mA -> 12 sink fingers ~3 mA)
 CTLE_CS_M = 0                     # source caps (20x4 NMOS) per side: r2 relies on the tail drain capacitance
 
 

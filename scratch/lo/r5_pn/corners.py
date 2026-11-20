@@ -103,3 +103,15 @@ def processed(rfwork, kind, cw, rser):
 rx.processed = processed
 # 2026-11-20 divider envelope: ff weakest tank (L-15 %, Q 4, MIM/varactor +5 ohm) at the low supply 3.15 V
 rx.CORNERS['FFW85'] = dict(corner='ff', temp=22, v=3.15, spiral='pt_spiral_l85_q4', cw=0.90, rser=5.0)
+# 2026-11-20 range fix: sf / fs process corners (MOS skewed; MIM, MOS-cap and resistor typical: the PDK has no
+# skewed MIM/MOS-cap libraries for them), nominal spiral
+import run_lcvco as _rlc
+_hdr0 = _rlc.hdr
+def _hdr(corner, temp):
+    if corner in ('sf', 'fs'):
+        return (_rlc.tf.header(corner, temp) + f'.lib {_rlc.tf.MODELS}/sm141064.ngspice mimcap_typical\n'
+                f'.lib {_rlc.tf.MODELS}/sm141064.ngspice moscap_typical\n')
+    return _hdr0(corner, temp)
+_rlc.hdr = _hdr
+rx.CORNERS['SF'] = dict(corner='sf', temp=27, v=3.3, spiral='pt_spiral', cw=1.0, rser=0.0)
+rx.CORNERS['FS'] = dict(corner='fs', temp=27, v=3.3, spiral='pt_spiral', cw=1.0, rser=0.0)

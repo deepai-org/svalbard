@@ -37,13 +37,18 @@ NETS = dict(
     stg=dict(lo_ext=AP / 'cand/run2/lo_ext/stage/lo_ext.ext.spice', mmd=AP / 'rc/lo_mmd_new/pt_lo_mmd_flat.rc.spice',
              qdum=AP / 'run_lo_mmd_qdum_ap4/lo_mmd_qdum/stage/lo_mmd_qdum.ext.spice',
              obs=AP / 'run_lo_obs_ap4/lo_obs/stage/lo_obs.ext.spice'),
+    # 2026-11-20 range fix r9: extracted lo_ext n6 (12-unit internal pair, loext3/lay/a6) + v7 divider (fixcap)
+    r9=dict(lo_ext=AP / 'loext3/lay/a6/lo_ext/stage/lo_ext.ext.spice', mmd=AP / 'rc/lo_mmd_v7/pt_lo_mmd_flat.rcfix.spice',
+            qdum=AP / 'run_lo_mmd_qdum_ap4/lo_mmd_qdum/stage/lo_mmd_qdum.ext.spice',
+            obs=AP / 'run_lo_obs_ap4/lo_obs/stage/lo_obs.ext.spice'),
     # 2026-11-20: stg with the v7 divider, substrate C corrected (fixcap)
     fix=dict(lo_ext=AP / 'cand/run2/lo_ext/stage/lo_ext.ext.spice', mmd=AP / 'rc/lo_mmd_v7/pt_lo_mmd_flat.rcfix.spice',
              qdum=AP / 'run_lo_mmd_qdum_ap4/lo_mmd_qdum/stage/lo_mmd_qdum.ext.spice',
              obs=AP / 'run_lo_obs_ap4/lo_obs/stage/lo_obs.ext.spice'),
 )
 # QVCO core-top wiring not in the RF cell (fF): q7/topc (top.c.spice minus rft6 c.spice), see NOTES
-TOPC = json.loads((HERE / 'topc.json').read_text()) if (HERE / 'topc.json').exists() else None
+_TOPCF = HERE / __import__('os').environ.get('QTOPC', 'topc.json')   # topc9f.json: r8 port tracks + MIM 9.0 core top
+TOPC = json.loads(_TOPCF.read_text()) if _TOPCF.exists() else None
 md5 = lambda p: hashlib.md5(Path(p).read_bytes()).hexdigest()
 
 

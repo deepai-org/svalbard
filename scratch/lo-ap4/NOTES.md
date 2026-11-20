@@ -175,3 +175,15 @@ All runs: v7 divider with corrected C (`fix` loads), 12-unit lo_ext pair and r8 
 (2.635 / 2.262 = the band limits 2.558 / 2.330 with the 3 % margin; sf/fs and the 3.15/3.50 V supply pairs not run yet.)
 Reading: the nominal-L criterion is met with margin; the pessimistic bounds need a top/bottom ratio of 2.584/2.307 = 1.1201 and t9d gives 1.1197. Fewer varactor fingers narrow the ratio (drop it). To get >= 1 % at both pessimistic ends: a larger bank (MIM 9.0 um: layout shorts VDDCI/VDDCQ to IN in the generator today, to fix) AND an upward shift of about 1.5 % (spiral L -3 %, or ~75 fF per node less fixed C; the 8-unit pair gives only ~30 fF).
 Generator: `qvco_rf_layout.py` takes QVCO_PARAMS (JSON) for size variants; CELL_H follows the MIM; default build reproduces r6b (t9z LVS unique).
+
+## 2026-11-20: range fix round 2, all extracted (`q7/r10`, `q7/r11`; queue `q10.sh`)
+RF cell rft9f (bank MIM 9.0 um, straps/Q origin moved out 1.2 um, LVS unique), lo_ext n6 extracted (12-unit internal pair; macro built in loext3/var/n6, layout loext3/lay/a6, DRC 0 / LVS unique / KLayout 0, 370 x 417.6 um), v7 divider fixcap, core-top C re-extracted with the r8 port tracks (`topc9f.json`: IP/IN/QP/QN to ground 28.4/18.1/10.7/24.3 fF, IP-IN / IN-QP / QP-QN mutual 33.9 fF each, was 23.3), route 40 fF top / 0 bottom, no fill (markers). sf/fs: MOS skewed, MIM/MOS-cap typical (no skewed libs).
+| case | 3.15 V | 3.50 V | limit | result |
+|---|---|---|---|---|
+| top b0 vt3.0 TT / SS / FF / SF / FS (nominal L) | 2.752 / 2.716 / 2.792 / 2.733 / 2.771 | 2.728 / 2.692 / 2.766 / 2.708 / 2.749 | >= 2.635 (3 %) | PASS, worst SS 3.50 V +5.2 % |
+| bottom b15 vt0.3 TT / SS / FF / SF / FS | 1.963 / 1.897 / 2.037 / 1.960 / 1.967 | 1.963 / 1.896 / 2.037 / 1.959 / 1.967 | <= 2.262 (3 %) | PASS, worst FF +12.6 % |
+| top pessimistic PF115 | 2.4995 | 2.4827 | >= 2.571 (0.5 %) | **FAIL -2.9 % (3.50 V)** |
+| bottom pessimistic OPT85 | 2.2184 | 2.2184 | <= 2.318 (0.5 %) | PASS +4.8 % |
+Q-I -83.7 ... -88.6 deg everywhere (limit 90 +- 10); all start.
+Decomposition at PF115 3.15 V (r11): rft6 + old core top + n6 lo_ext 2.5296 (the 12-unit pair gains ~nothing over cand2: the -60 fF hand estimate was wrong); + MIM 9.0 2.5175 (-0.48 %); + port tracks 2.4995 (-0.71 %, mostly the larger IP-IN / IN-QP / QP-QN mutuals); cand2 instead of n6 2.5013.
+Conclusion: 0.5 % at the pessimistic top is not reachable without the spiral change. The range sits ~3.5 % low at the pessimistic ends while the bottom has 4.8 %: an upward shift of ~3.5 % (L about -7 %) gives about +0.6 % top / +1.3 % bottom (estimate). Cheaper partial levers: tank port tracks at wider spacing (recover part of the 0.7 %), bank back to 8.4 (+0.5 %).

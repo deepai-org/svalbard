@@ -164,7 +164,8 @@ def build(tag='', params=None):
     L = XF()
     L.auto_port = True
     info = {}
-    for core, (ox, sx) in (('I', (0.0, 1)), ('Q', (2 * 79.0 + 2.0, -1))):
+    size_globals()
+    for core, (ox, sx) in (('I', (0.0, 1)), ('Q', (OXQ, -1))):
         L.ox, L.sx = ox, sx
         info[core] = core_layout(L, core)
     script = R.magic_script('pt_lc_qvco_rf', L.cmds)
@@ -185,6 +186,20 @@ OXQ = 160.0                                # core Q mirror origin
 COLGAP = 1.6                               # MIM ring to ring >= 1.2 um (MIMTM.1)
 STRAPS = {'VSS': (5.3, 1.0), 'VT': (6.6, 0.6), 'TS': (XM + 0.3, 2.0), 'VDDC': (74.6, 1.2), 'VDD': (76.2, 1.4),
           'CMLSEL': (77.6, 0.6), 'IBIAS': (78.6, 0.6)}
+STRAPS0, OXQ0 = dict(STRAPS), OXQ
+
+
+def size_globals():
+    """r9: a larger bank MIM widens each bank column by 2 x (side - 8.4) um: the outer side straps and the Q-core
+    mirror origin move out by that much (else the column-1 P tank strap overlaps the VDDC strap)."""
+    global OXQ
+    dx = round(2 * (D['mim'] - 8.4), 3) if D['mim'] > 8.4 else 0.0
+    for k, (x, w) in STRAPS0.items():
+        STRAPS[k] = (x + dx, w) if k in ('VDDC', 'VDD', 'CMLSEL', 'IBIAS') else (x, w)
+    OXQ = OXQ0 + 2 * dx
+
+
+size_globals()
 
 
 def via3_on(L, x, w, y1, y2):

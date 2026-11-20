@@ -70,8 +70,35 @@ requirement.
 |---|---|---|
 | Flight time 60 mm | 364 ps; ±2.5 mm match = ±15 ps (inside HL-D2H-BOARD 50 ps) | analytic |
 | D2H budget at full rate | 400 + 160 + 100 + 200 + 150 + 50 ps + FPGA window 1000 ps = 2060 ps against the 3200 ps UI | interface-requirements 3.1; FPGA window *(verify)* per family |
-| SSO | 486 mV at 0.76 ns edges unstaggered, ≈ 245 mV staggered, 189 mV at 1.4 ns (limit 300 mV) | **same number in both chips' package json: it assumes the whole-ring parallel return (≈ 0.8 nH effective), not the real south return set.** The south edge has one dedicated VSS bond (`dvss_pads[0]`) for 11 D2H + SPI + RESET_N on both bond maps. Unverified (row OBS-15) |
+| SSO | per chip on the real bond set (OBS-15, below) | computed |
 | Rates | div4 bring-up, div2 with slow slew, full only fast slew + stagger (HL-B6, HL-RATE) | bring-up.md section 7 |
+
+### Host ground bounce per chip (OBS-15)
+
+Method: `scratch/obs-bringup/sso/sso.py <chip>` on the chip PDN model `scratch/integration/m1-pdn` (every bond of
+`integration/chips/<chip>/bond_map.txt` at its provider bond centre with coupled bond inductance, provider ring rails
+plus core ring, mesh, the as-built 5.4 nF decap plan, COB 1 µF on provider supply fingers, test board ideal beyond
+the COB ground plane). The 11 D2H outputs switch at their own south sites (sin² current, peak dI/dt of the
+package-channel table: 11 × 42 mA / 0.76 ns fast, 35 mA / 1.0 ns, 30 mA / 1.4 ns slow); victim = a quiet D2H/MISO
+output = die VSS (quiet low) or die VDD (quiet high) at its site. Known answer: the same synthesis on a 0.8 nH lump
+reproduces the old 486 mV; a 4× slower edge gives 4× less. Results `sso_rf.json`, `sso_wired.json`.
+
+| Case (pess corner unless stated) | pt_rf low / high mV | pt_wired low / high mV |
+|---|---|---|
+| fast 0.76 ns, no stagger (nom corner) | 134 / 147 | 135 / 151 |
+| fast 0.76 ns, no stagger | 185 / 202 | 185 / 204 |
+| fast 0.76 ns, stagger | 139 / 158 | 139 / 160 |
+| slow 1.4 ns, no stagger | 83 / 103 | 83 / 104 |
+| fast, no stagger, VSS bonds on signal sites ignored (bound: their trace + connector path is not the COB plane) | 215 / 232 | 215 / 234 |
+| control: no die decap, fast, no stagger | 200 / 307 | 201 / 365 |
+
+The south edge has one ground bond (`dvss_pads[0]`) and no supply bond, but the return spreads through the provider
+ring rails to all 20-29 VSS bonds and the die decap couples VDD and VSS; the effective return inductance is ~0.3 nH,
+not the 0.8 nH lump. **Every rate passes HL-SSO (300 mV) on both chips**: full rate (fast slew, required by the eye)
+185-234 mV unstaggered, 139-180 mV staggered; div2 / div4 with slow slew 83-113 mV. Push-out ≈ 0.23 V / 4.3 V/ns
+≈ 55 ps < the 200 ps HL-D2H-SSO budget. No bond-map change is needed; the die decap is what holds the VDD side
+(control row). Not modelled: the COB finger-to-plane via (~0.3 nH per ground bond, would add ≈ 15 %) and the
+connector ground contacts that carry the line return.
 
 ## 7. Benches that assume something about the test board
 
@@ -83,6 +110,6 @@ requirement.
 | Wired RX real neighbours (`scratch/wired_rx/r11`) | 120 mVppd source at the pad / channel | test-board loss (0.6-1.4 dB at 30-50 mm) before the COB must be in the source amplitude | TB-4 |
 | External LO (`analog/timing` lo_ext, B3) | 3.0-4.0 Vpp open circuit, 1.5 nH bond, no carrier line | stale (B3 says so): requalify with `tb_ext_lo` + `tb_leg` + COB chain | TB-5 |
 | Power delivery `scratch/integration/m1-pdn` | eight 1 µF COB caps, ideal supply beyond | consistent; add `tb_supply` for load steps and the 3.50 V case | TB-6 |
-| Host-link pad screens (6-10 pF, 486 mV SSO) | lumped load, generic return | load matches; SSO return set unverified (section 6) | OBS-15 |
+| Host-link pad screens (6-10 pF) and the package json `host_ssn` (486 mV) | lumped load, 0.8 nH lumped return | load matches; the 486 mV lump is superseded by section 6 (≤ 234 mV) | OBS-15 |
 | USB HS amplitude (B11) | 45 Ω to ground per leg at the pad | test-board line + TVS (B46) not included | TB-7 |
 | Core bias / bring-up fixtures (`check_chip_fallback`, `check_core_bias_observation`) | ideal SMU on ATB, ideal supply | acceptable for DC; supply ramp should use `tb_supply` t_ss | TB-6 |

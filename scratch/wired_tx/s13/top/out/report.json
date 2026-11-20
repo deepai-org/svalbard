@@ -1048,7 +1048,8 @@
   "plate_cuts": 3968,
   "mux_vdd_cuts": 72,
   "hdr_bridge_cuts": 56,
-  "mid_bridge_cuts": 16
+  "mid_bridge_cuts": 28,
+  "mid_bridge_h": 4.0
  },
  "mux_vss_necks_x": [
   282.9,
@@ -1825,7 +1826,7 @@
  },
  "verify_from_disk": {
   "gds": "/home/ubuntu/svalbard/scratch/wired_tx/s13/top/build/pt_wiredtx8.gds",
-  "sha256": "sha256:55729294ca7ee4422225aa53ddca912b8497aaf11150d54387f98bf387cd27fa",
+  "sha256": "sha256:96b7bdbe50f95eda632434a547b03e6a2abb76b0c0bba7928bef0b0121dec009",
   "magic_drc": 0,
   "lvs": {
    "unique_match": true,
@@ -1894,8 +1895,8 @@
    "PS0": 0.04,
    "POST_P": 0.02,
    "MAIN_N": 0.01,
-   "MAIN_P": 0.0,
-   "F2": 0.0
+   "F2": 0.0,
+   "MAIN_P": 0.0
   },
   "PH1": {
    "total": 34.8,
@@ -1931,8 +1932,8 @@
    "PS3": 0.04,
    "POST_P": 0.02,
    "MAIN_N": 0.01,
-   "F5": 0.0,
-   "MAIN_P": 0.0
+   "MAIN_P": 0.0,
+   "F5": 0.0
   },
   "PH4": {
    "total": 35.4,
@@ -1943,8 +1944,8 @@
    "PS4": 0.04,
    "POST_P": 0.02,
    "MAIN_N": 0.01,
-   "MAIN_P": 0.0,
-   "F6": 0.0
+   "F6": 0.0,
+   "MAIN_P": 0.0
   },
   "PH5": {
    "total": 34.8,
@@ -1968,8 +1969,8 @@
    "POST_P": 0.05,
    "PS6": 0.04,
    "MAIN_N": 0.04,
-   "MAIN_P": 0.0,
    "aux": 0.0,
+   "MAIN_P": 0.0,
    "F0": 0.0
   },
   "PH7": {
@@ -1982,8 +1983,8 @@
    "POST_P": 0.02,
    "aux": 0.02,
    "MAIN_N": 0.01,
-   "MAIN_P": 0.0,
-   "F1": 0.0
+   "F1": 0.0,
+   "MAIN_P": 0.0
   },
   "PS0": {
    "total": 65.5,
@@ -2116,9 +2117,9 @@
    "PS2": 0.05,
    "F1": 0.05,
    "F4": 0.05,
+   "F6": 0.05,
    "F5": 0.05,
    "F0": 0.05,
-   "F6": 0.05,
    "PS4": 0.05,
    "PS6": 0.05,
    "PH7": 0.04,
@@ -2141,8 +2142,8 @@
    "F2": 0.06,
    "PS7": 0.05,
    "PS6": 0.05,
-   "PH6": 0.0,
-   "PS0": 0.0
+   "PS0": 0.0,
+   "PH6": 0.0
   },
   "F1": {
    "total": 41.4,
@@ -2181,8 +2182,8 @@
    "PS1": 0.05,
    "PS3": 0.05,
    "PS5": 0.02,
-   "PS7": 0.0,
-   "PH0": 0.0
+   "PH0": 0.0,
+   "PS7": 0.0
   },
   "F3": {
    "total": 69.8,
@@ -2222,9 +2223,9 @@
    "F1": 0.05,
    "PS7": 0.05,
    "PS6": 0.05,
+   "PS0": 0.0,
    "PS1": 0.0,
-   "PH2": 0.0,
-   "PS0": 0.0
+   "PH2": 0.0
   },
   "F5": {
    "total": 47.8,
@@ -2243,9 +2244,9 @@
    "PS5": 0.05,
    "PS7": 0.05,
    "PS6": 0.05,
+   "PS2": 0.0,
    "PH3": 0.0,
-   "PS3": 0.0,
-   "PS2": 0.0
+   "PS3": 0.0
   },
   "F6": {
    "total": 36.3,
@@ -2289,13 +2290,13 @@
    "VDD": 1.6,
    "aux": 0.87,
    "PH1": 0.03,
+   "PH3": 0.0,
    "PH5": 0.0,
    "PH2": 0.0,
    "PH6": 0.0,
    "PH0": 0.0,
    "PH7": 0.0,
-   "PH4": 0.0,
-   "PH3": 0.0
+   "PH4": 0.0
   },
   "MAIN_N": {
    "total": 115.2,
@@ -2310,10 +2311,10 @@
    "PH1": 0.02,
    "PH2": 0.01,
    "PH5": 0.01,
-   "PH4": 0.01,
-   "PH3": 0.01,
    "PH0": 0.01,
-   "PH7": 0.01
+   "PH7": 0.01,
+   "PH4": 0.01,
+   "PH3": 0.01
   },
   "POST_P": {
    "total": 143.0,
@@ -2326,8 +2327,8 @@
    "PH2": 0.06,
    "PH6": 0.05,
    "aux": 0.03,
-   "PH5": 0.03,
    "PH1": 0.03,
+   "PH5": 0.03,
    "PH0": 0.02,
    "PH7": 0.02,
    "PH4": 0.02,
@@ -2473,10 +2474,10 @@
    "PS3": 0.05,
    "PS5": 0.05,
    "PS2": 0.05,
+   "F4": 0.05,
    "F6": 0.05,
    "F0": 0.05,
    "F5": 0.05,
-   "F4": 0.05,
    "PS4": 0.05,
    "PS7": 0.05
   },
@@ -2599,10 +2600,10 @@
    "F1": 0.06,
    "F3": 0.06,
    "PS5": 0.05,
-   "PS7": 0.05,
    "PS6": 0.05,
-   "PS3": 0.0,
-   "PS2": 0.0
+   "PS7": 0.05,
+   "PS2": 0.0,
+   "PS3": 0.0
   },
   "F6": {
    "total": 10.1,
@@ -2833,31 +2834,31 @@
     "limit": 0.58,
     "margin_pct": 20.0
    },
-   "strap between the mux headers, bridge (Metal3 + Metal4, 2.4 um; bound: half a bank)": {
+   "strap between the mux headers, bridge (Metal3 + Metal4, 4 um; bound: half a bank)": {
     "mA": 13.0,
-    "um": 4.8,
-    "mA_per_um": 2.71,
+    "um": 8.0,
+    "mA_per_um": 1.62,
     "limit": 2.09,
-    "margin_pct": -29.6
+    "margin_pct": 22.2
    },
    "strap between the mux headers, bridge end Via3 / Via4 (bound: half a bank)": {
     "mA": 13.0,
-    "cuts": 16,
-    "mA_per_cut": 0.812,
+    "cuts": 28,
+    "mA_per_cut": 0.464,
     "limit": 0.58,
-    "margin_pct": -40.1
+    "margin_pct": 20.0
    }
   },
   "worst": [
-   "strap between the mux headers, bridge end Via3 / Via4 (bound: half a bank)",
-   -40.1
+   "header strap bridge (Metal3 + Metal4 under a lane / landing cut; the whole bank)",
+   17.1
   ],
   "note": "Rails, plate, bars, header strap and the children's supply metal: raster run s13/top/ir (2-D, drawn geometry)."
  },
  "sha256": {
-  "pt_wiredtx8.gds": "sha256:55729294ca7ee4422225aa53ddca912b8497aaf11150d54387f98bf387cd27fa",
-  "pt_wiredtx8.ext.spice": "sha256:824bc707acbac2e56d9a0e3e851142eef8f6768eb7c6d1c1cc8cc703882d38f6",
-  "pt_wiredtx8.rc.spice": "sha256:183c40bce24269dc79ed6cb4686a25a3c59ad73060f293ce599c59942a577895",
+  "pt_wiredtx8.gds": "sha256:96b7bdbe50f95eda632434a547b03e6a2abb76b0c0bba7928bef0b0121dec009",
+  "pt_wiredtx8.ext.spice": "sha256:fc6ec863fdaee8eba707d1a6bc27771ccc14b8a236e6588aad24962922556ce8",
+  "pt_wiredtx8.rc.spice": "sha256:3f497f78ed8d07d756bc590cfdc6fcc86bc70d9be2ad4410908f337e61be9cb3",
   "pt_wiredtx8.lvs.spice": "sha256:8c7a0f132305521a4c8853cd5bf32a9a8558cd9ed00ee7e028da1d79195cb0d4"
  }
 }

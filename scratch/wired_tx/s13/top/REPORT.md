@@ -314,8 +314,29 @@ IR at 60 mA, tie to output stage (`ir/run.sh`, `ir/phE|phO/*.json`; budget 6.6 m
 High R improves by 4.6 (E) / 4.9 (O) mV in the block, short of the 5.6 mV power delivery asked for at the tap.
 EM: raster (85 C) worst margins VDD Metal4 38.6 % (high R), vias 35.8 %, VSS Metal5 45.9 %; the session-15 tie-pixel
 artefact is gone. Table: header strap bridges (Metal3 + Metal4 2 x 7.5 um, >= 56 cuts per end) 17.1 % / 20.0 %; the
-strap between the two mux headers is cut at grid_tie_3 and bridged with 2 x 2.4 um / 16 cuts, which fails the table's
-half-a-bank bound (-29.6 % / -40.1 %); the raster, which sees the real split, has no violation there.
+strap between the two mux headers is cut at grid_tie_3 and bridged with Metal3 + Metal4 4 um tall plus 4 um Metal5 end
+pads (28 cuts per end): 22.2 % / 20.0 % at the half-a-bank bound (follow-up 1; first version 2.4 um / 16 cuts failed).
+
+### Follow-ups (owner, after commit e86a7730)
+- **Grid phase fixed by assembly: phase O** (x0 = 1493.75 in chip coordinates; owner: same block-relative geometry,
+  VSS ties grid_tie_0 / 2 / 3 / 4 at 260.5 / 330.5 / 400.5 / 470.5, channel tabs chanO_*). The grid straps there are
+  10.5 um: `ir/run.sh` now runs phase O only with 10.5 um contacts centred on the landings / tabs (`TIEW`).
+  **IR 60 mA tie to output stage: nominal 6.09 mV PASS (VDD 3.34, VSS 2.75), high R 10.87 mV (7.02 / 3.85)**; with
+  16 um contacts 6.08 / 10.87: the strap width does not matter here. Raster EM worst 35.8 % (vias, VDD).
+- **ser8d hop timing after the C changes** (`s13/probe16.sh`, `probe16.py`, results `ser8d/hops_s16.json`): ring-driven
+  decks of `runs/p1` (ss pessimistic 3.15 V, slot 319 ps = 3.13 Gb/s) and `runs/p_ff` (ff 3.35 V, slot 318 ps) with the
+  current R+C ser8d and the previous one (3bc5ca72). Minimum hop set-up 698.6 ps (XH4_1, ssp) / 901.3 ps (ff); every hop
+  within -9.8 .. +9.7 ps of the previous ser8d; hold >= 689 ps. Stream changes vs the fed slice's phase edge: ssp at
+  -1.10 .. -0.99 ns and +1.24 .. +1.27 ns (rule: none in -0.1 .. +0.35), ff at +0.67 .. +1.03 ns (rule: none in 0 .. +0.25):
+  0 violations. PASS. (The decks' mux is the revision-2 netlist of those runs: it only loads the F nets.)
+- **Bus C, stated plainly:** mux extraction MAIN_N 114.2 / MAIN_P 123.5 / POST_P 128.0 / POST_N 136.2 fF, spread 22.0 fF
+  (session 15: 100.6 / 109.4 / 119.3 / 122.8, spread 22.2): the "within 1.5 fF" target was never met; pair differences
+  MAIN_P - MAIN_N 9.3 fF (was 8.8), POST_N - POST_P 8.2 fF (was 3.5). Eye with the buses matched by bench-only dummy C to
+  VSS (+22.0 / +12.7 / +8.2 fF on MAIN_N / MAIN_P / POST_P, same bench and codes as above): far eye **0.1973 V** (0e, W
+  0.625 UI) against 0.2059 V unmatched: matching by adding C costs 8.6 mV, the total C is the limiter, not the mismatch.
+  Not done in layout: it would need about 550 um2 of VSS Metal4 under MAIN_N in the bus band, where the drain stubs and
+  columns leave only 2.6 um gaps, and the bench shows it hurts. Reducing C on POST_N / POST_P (their VSS share rose
+  most, 47.5 -> 60.4 fF on POST_N, from the neck-zone tie verticals and the PH shields) would be the useful direction.
 Checks from disk: block Magic DRC 0, KLayout 0, LVS unique, antenna 0, 5/5 negative controls fail; wtx_mux8 DRC 0/0,
 LVS unique, antenna 0, 5/5; wtx8_aux DRC 0, LVS unique, 2/2; mux output buses (wiring C, mux extraction) MAIN_N 114.2 / MAIN_P 123.5 / POST_P 128.0 / POST_N 136.2 fF
 (before: 100.6 / 109.4 / 119.3 / 122.8; +8.7 to +14.1 fF from the shields, tie verticals and moved clusters), bus EM

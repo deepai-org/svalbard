@@ -528,19 +528,26 @@ def build(work=None, bare=False):
     hspan = [(XM + MR['clusters'][c][0] - MR['geo']['hdr_rail'][c]['width_um'] / 2 - 1.0, XM + MR['clusters'][c][0] + MR['geo']['hdr_rail'][c]['width_um'] / 2 + 1.0) for c in ('M', 'Q')]
     bridges = [b_ for b_ in bridges if not any(a_ <= b_[0] - 2.6 and b_[1] + 2.6 <= c_ for a_, c_ in hspan)]     # over a mux header: its Metal2-4 rail carries on
     over = lambda u, v: any(u < c_ and v > a_ for a_, c_ in hspan)
+    MIDH = 4.0                              # bridge on the strap between the mux headers: 4 um (Metal3 + Metal4, and Metal5 end pads)
     for a, b, y0b, y1b in bridges:
+        mid = (y0b, y1b) == hdr_y[1]
+        if mid:
+            y0b = s(y1b - MIDH)
+            em['mid_bridge_h'] = MIDH
         for m in (3, 4):
             g.rect(f'metal{m}', a - 2.6, y0b, b + 2.6, y1b)
         for u, v in ((a - 2.6, a - 0.2), (b + 0.2, b + 2.6)):     # an end over a mux header joins its Metal2-4 rail instead
             if over(u, v):
                 continue
+            if mid:
+                g.rect('metal5', u, y0b, v, y1b)
             occ = sorted((r[1] - 0.4, r[3] + 0.4) for r in g.r if r[0].startswith('via') and r[1] < v and r[3] > u and r[2] < y1b and r[4] > y0b)
             n_, x_ = 0, u                       # clear of other via stacks there (the aux tap-row VDD feed)
             for c0, c1 in occ + [(v, v)]:
                 if c0 - x_ >= 0.8:
                     n_ += g.varr(x_, y0b, c0, y1b, 3, 5, metal=False)
                 x_ = max(x_, c1)
-            kk = 'hdr_bridge_cuts' if (y0b, y1b) == hdr_y[0] else 'mid_bridge_cuts'
+            kk = 'mid_bridge_cuts' if mid else 'hdr_bridge_cuts'
             em[kk] = min(em[kk], n_)
     for l_ in lands:
         g.rect('metal5', *l_['core'])
@@ -686,7 +693,7 @@ def em_table(res, mr):
         row('header strap bridge (Metal3 + Metal4 under a lane / landing cut; the whole bank)', I_BANK, 2 * HSTRAP, L.LIM14)
         cut('header strap bridge end Via3 / Via4, fewest cuts (the whole bank)', I_BANK, c['hdr_bridge_cuts'])
         if c.get('mid_bridge_cuts', 10 ** 9) < 10 ** 9:
-            row('strap between the mux headers, bridge (Metal3 + Metal4, 2.4 um; bound: half a bank)', I_BANK / 2, 2 * 2.4, L.LIM14)
+            row(f'strap between the mux headers, bridge (Metal3 + Metal4, {c.get("mid_bridge_h", 2.4):g} um; bound: half a bank)', I_BANK / 2, 2 * c.get('mid_bridge_h', 2.4), L.LIM14)
             cut('strap between the mux headers, bridge end Via3 / Via4 (bound: half a bank)', I_BANK / 2, c['mid_bridge_cuts'])
     worst = min(rows.items(), key=lambda kv: kv[1]['margin_pct'])
     return dict(rows=rows, worst=[worst[0], worst[1]['margin_pct']],

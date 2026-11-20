@@ -169,9 +169,9 @@ Ruling: >= 3 % at both band ends at process/voltage corners with nominal L; >= 1
 All runs: v7 divider with corrected C (`fix` loads), 12-unit lo_ext pair and r8 port tracks modelled as -60 + 15 = -45 fF per tank node (estimates, not extracted), route 40 fF top / 0 bottom.
 | RF cell | SS b0 vt3.0 (nominal L, >= 2.635) | FF/3.50 b15 vt0.3 (nominal L, <= 2.262) | PF115 top (>= 2.584) | OPT85 3.35 / 3.50 bottom (<= 2.307) |
 |---|---|---|---|---|
-| r6b as built (MIM 8.4, varactor 17) | 2.770 (+5.1 %... 8.3 % over 2.558) | 2.123 (6.1 % under 2.262... 8.9 % under 2.330) | 2.5546 FAIL (-1.1 %) | 2.3121 / 2.3123 FAIL |
+| r6b as built (MIM 8.4, varactor 17) | 2.770 PASS (5.1 % over 2.635) | 2.123 PASS (6.1 % under 2.262) | 2.5546 FAIL (-1.1 %) | 2.3121 / 2.3123 FAIL |
 | t9d: bank MIM 8.7 um (+7.3 % C) | - | - | 2.5505 FAIL | - / 2.2778 PASS (1.3 %) |
 | t9e: MIM 8.7, varactor 15 | - | - | 2.5654 FAIL | - / 2.2978 PASS (0.4 %) |
-(nominal margins are against the band limits 2.558 / 2.330 with 3 %: 2.635 / 2.262; both pass with >= 5 %.)
+(2.635 / 2.262 = the band limits 2.558 / 2.330 with the 3 % margin; sf/fs and the 3.15/3.50 V supply pairs not run yet.)
 Reading: the nominal-L criterion is met with margin; the pessimistic bounds need a top/bottom ratio of 2.584/2.307 = 1.1201 and t9d gives 1.1197. Fewer varactor fingers narrow the ratio (drop it). To get >= 1 % at both pessimistic ends: a larger bank (MIM 9.0 um: layout shorts VDDCI/VDDCQ to IN in the generator today, to fix) AND an upward shift of about 1.5 % (spiral L -3 %, or ~75 fF per node less fixed C; the 8-unit pair gives only ~30 fF).
 Generator: `qvco_rf_layout.py` takes QVCO_PARAMS (JSON) for size variants; CELL_H follows the MIM; default build reproduces r6b (t9z LVS unique).

@@ -1,0 +1,50 @@
+{
+ "gds": "/home/ubuntu/svalbard/scratch/wired_tx/s13/top/build/pt_wiredtx8.gds",
+ "sha256": "sha256:d05b17f71348ba8ae577c8b01f996ae65179ec01c9c48837b14bdbf72aa2a444",
+ "magic_drc": 0,
+ "lvs": {
+  "unique_match": true,
+  "summary": "Final result: Circuits match uniquely.\n.",
+  "report": "/home/ubuntu/svalbard/scratch/wired_tx/s13/top/verify/lvs.txt",
+  "counts": [
+   "Number of devices: 36 |Number of devices: 36",
+   "Number of nets: 155 |Number of nets: 155"
+  ],
+  "property_errors": 0
+ },
+ "negative_controls": {
+  "neg_ph0_ph1_swapped_at_mux": {
+   "fails_as_required": true,
+   "summary": "Final result: Top level cell failed pin matching."
+  },
+  "neg_stream_rotation_plus_one": {
+   "fails_as_required": true,
+   "summary": "Final result: Netlists do not match.\nPort matching may fail to disambiguate symmetries."
+  },
+  "neg_ovp_ovn_swapped_at_mux": {
+   "fails_as_required": true,
+   "summary": "Final result: Netlists do not match.\nPort matching may fail to disambiguate symmetries."
+  },
+  "neg_buffer_outputs_ps0_ps1_swapped_at_ser8d": {
+   "fails_as_required": true,
+   "summary": "Final result: Netlists do not match.\nPort matching may fail to disambiguate symmetries."
+  },
+  "neg_trim_pins_tr6_0_tr7_3_swapped_at_mux": {
+   "fails_as_required": true,
+   "summary": "Final result: Top level cell failed pin matching."
+  }
+ },
+ "antenna_magic": {
+  "violations": 0,
+  "lines": [],
+  "ran": true
+ },
+ "klayout_drc": {
+  "ran": true,
+  "violations": 0,
+  "by_rule": {},
+  "report": "/home/ubuntu/svalbard/scratch/wired_tx/s13/top/verify/klayout/out/pt_wiredtx8.klayout.drc/pt_wiredtx8.lyrdb",
+  "deck": "gf180mcuD KLayout (sak-drc.sh -k)",
+  "antenna_rules_flagged": []
+ }
+}

@@ -212,3 +212,13 @@ The top generator reads:
 - `s13/top/serm5/dcols.json`.
 
 Keep those.
+
+## Supply grid (ASM-8), state 2026-11-20
+Option A: whole L outline is a Metal5 exception with a grid ring around it (block VDD is the switched island
+`RAIL_wired_tx`, so grid VDD must never tie to it; `wtx_ser8d` Metal5 straps fill the outline, so 70 um channels cannot
+cross). Seam VSS Metal5 plate (3944 Via4), mux VSS necks 9 um, TAP_P/N, TR*, MAIN_BIAS/POST_BIAS pins moved to Metal3
+(same positions). Checks from disk: Magic 0, KLayout 0, antenna 0, LVS unique, 5 negative controls fail.
+IR at 60 mA, tie point to output stage (raster mesh, `ir/run.sh`, results `ir/*.json`; budget 6.6 mV = 117 mV
+ASM-9 minus 110.4 mV modelled at this tap): VDD 3.7 mV, VSS 11.2 mV, total 14.8 mV FAIL (high R 22.3 mV). Passes
+(6.4 mV) with three 10 um VSS trunks through `wtx_ser8d` at x about 340 / 410 / 480. EM worst 23 % margin (block top).
+Tie points and abstract: `out/report.json` key `ties`. PH0..7 remain Metal5 pads inside the block (no edge access).

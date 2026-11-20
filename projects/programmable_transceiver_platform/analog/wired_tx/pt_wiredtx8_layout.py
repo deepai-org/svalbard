@@ -23,12 +23,16 @@ buffer's PS track to clear them), Metal5 from ser8d pins below.
 Phase nets: the ring sees, per phase, the block pin (Metal5 pad under the mux PH k pin), a Metal3 stub of the same length
 up to the mux pin and the first buffer inverter on that stub: identical geometry for all eight.
 Pins: PH k as above; D0..D39, WORD_CLK40: Metal5 on the bottom edge (ser8d's own port trunks continued down); trim bits
-TR k_b: the mux's Metal4 pins on its right side, continued under the right-hand supply bars to the block edge at the free
-top right corner (x = end of the used outline, mux rows y); control ports
-(codes, statics, IBIAS, ATB_*, TX_RUN, WTX_EXT_DATA): Metal2 on the left edge (lowest-x pins) or the right edge, split
-where the fewest Metal2 tracks result; MAIN_BIAS / POST_BIAS: Metal4 on the top edge over the aux cell; TAP_P / TAP_N:
-Metal4 on the left edge near the top; MAIN / POST: the mux's risers on the top edge; supplies: Metal5 bars left of the
-decap and right of the mux.
+TR k_b: the mux's Metal4 pins on its right side, continued (Metal3 under the right-hand supply bars) to the block edge at
+the free top right corner (x = end of the used outline, mux rows y); control ports (codes, statics, IBIAS, ATB_*, TX_RUN,
+WTX_EXT_DATA): Metal2 on the left edge (lowest-x pins) or the right edge, split where the fewest Metal2 tracks result;
+MAIN_BIAS / POST_BIAS: Metal3 on the top edge over the aux cell; TAP_P / TAP_N: Metal3 on the left edge near the top;
+MAIN / POST: the mux's risers on the top edge.  Edge pins other than D, MAIN / POST and the supplies are on Metal1-3, so a
+Metal4 / Metal5 ring round the block (ASM-8 / power-delivery G3) passes over them.
+Supplies (ASM-8, session 15): VSS bars (left edge, inner edge of the L), VDD bars (start at the VDD rail), the header strap
+on the top edge, a VSS Metal5 plate over the seam VSS rail, plate stubs to the free corner's lower edge; tie points
+(outline edge) in geom.json -> ties: VDD at the header strap ends beside the MAIN / POST risers and the VDD bars' top ends,
+VSS along both VSS bars and the corner stubs.
 """
 import json
 import re
@@ -53,7 +57,8 @@ RAIL_VSS, RAIL_VDD = 14.5, 5.0       # supply rails in zone T: Metal4 || Metal2 
 BAR, BAR_R = 12.0, 14.0              # Metal5 supply bars: left edge, right of the mux (the right pair carries most of the mux current)
 BWN, BWP = 1.0, 2.0                  # finger width limits of the phase-buffer row (a short cell: it hangs from the VDD rail into the VSS rail)
 HSTRAP = 7.5                         # Metal5 strap from a VDD bar to a header rail of the mux
-NECK = 2.5                           # mux VSS strap in zone T
+NECK = 2.5                           # minimum width of a mux VSS neck in zone T (each is as wide as the mux strap allows, <= L.VSS_W)
+CL5 = 0.8                            # Metal5 clearance to another net's Metal5 for the supply shapes added in session 15
 I_BANK, I_LOGIC, I_MUXL = 26.0, 30.0, 3.0      # mA: per bank; ser8d + all logic; of which the mux's logic
 CGATE = 2.2                          # fF per um of gate width (estimate for the ring-load figure)
 SER = json.loads((FAST / 'wtx_ser8d.pins.json').read_text())
@@ -236,8 +241,8 @@ def build(work=None, bare=False):
             xs2 = [0.5] + [v for hx in holes for v in hx] + [Wb - 0.5]
             for a, b in zip(xs2[::2], xs2[1::2]):
                 g.rect('metal2', a, yhole, b, y0_ + h)
-        for a, b in xbar[net]:
-            g.rect('metal5', a, yT0, b, Yt)
+        for a, b in xbar[net]:             # VDD bars start at the VDD rail: the VSS plate passes under them in y
+            g.rect('metal5', a, yT0 if net == 'VSS' else s(y0_ + 0.2), b, Yt)
             em[f'{net}_rail_bar_cuts'] = g.varr(a + 0.2, y0_ + 0.2, b - 0.2, y0_ + h - 0.2, 2, 5)
     ser_x = {'VDD': sorted(x for n, x, _ in SER['power_pins'] if n == 'VDD'), 'VSS': sorted(x for n, x, _ in SER['power_pins'] if n == 'VSS')}
     dec_x0, dec_x1 = s(2.0 + 2 * BAR + 2.0), s(XA - 1.9 - 2.0)
@@ -249,6 +254,8 @@ def build(work=None, bare=False):
                 continue                   # a strap under the other net's bar stays inside ser8d
             if min(abs(px - x) for x in xm) < 0.6 + 1.0 + 0.7:
                 continue                   # ... and so does a strap that would run into a phase pin pad
+            if net == 'VDD' and xbar['VDD'][1][0] - 10.0 < px < xbar['VSS'][1][1]:
+                continue                   # ... and a VDD strap between the mux and the right bars (the VSS plate stays whole there)
             ytop = dec_y1 if dec_x0 + 1.2 < px < dec_x1 - 1.2 else y_end
             ext[net].append(px)
             g.rect('metal5', px - 1.0, ypin_s - 0.3, px + 1.0, ytop)
@@ -256,16 +263,50 @@ def build(work=None, bare=False):
             em[f'ser_{net}_cuts'] = g.varr(px - 1.0, y0_ + 0.2, px + 1.0, y0_ + h - 0.2, 4, 5)
     X0m, Wsl = MR['control_um'][0], MR['slice_um'][0]
     vdd_dx = MR['pins']['VDD'][-1][1] - X0m
-    necks = []
-    for p in range(9):
+    necks, neckw = [], []
+    for p in range(9):                     # each neck as wide as the mux strap, cut back only where a ser8d VDD strap rises
         xb = XM + X0m + p * Wsl
-        best = max((min(abs(xb + d - q) for q in ser_x['VDD']), -abs(d), d) for d in [i * 0.25 - 3.0 for i in range(25)])
-        if best[0] < NECK / 2 + 1.0 + 0.6:
+        a, b = xb - L.VSS_W / 2, xb + L.VSS_W / 2
+        for q in ext['VDD']:
+            if q < xb:
+                a = max(a, q + 1.0 + CL5)
+            else:
+                b = min(b, q - 1.0 - CL5)
+        a, b = s(a), s(b)
+        if b - a < NECK:
             raise RuntimeError('no place for a mux VSS neck')
-        xn = s(xb + best[2])
-        g.rect('metal5', xn - NECK / 2, yvs + 0.2, xn + NECK / 2, Ym + 0.6)
-        em['mux_vss_neck_cuts'] = g.varr(xn - NECK / 2, yvs + 0.2, xn + NECK / 2, yvs + RAIL_VSS - 0.2, 4, 5)
-        necks.append(xn)
+        g.rect('metal5', a, yvs + 0.2, b, Ym + 0.6)
+        em[f'mux_vss_neck_cuts_{p}'] = g.varr(a, yvs + 0.2, b, yvs + RAIL_VSS - 0.2, 4, 5)
+        necks.append(s((a + b) / 2))
+        neckw.append(round(b - a, 2))
+    # VSS Metal5 plate over the VSS rail (Metal4 || Metal2), broken only where another net's Metal5 crosses it (the ser8d
+    # VDD straps that rise into the VDD rail); via4 rows along both long edges.  Under the free top right corner
+    # the plate segments continue up to the outline edge (y = Ym): VSS tie points to the ring there.
+    yp0, yp1 = s(yvs + 0.3), s(yvs + RAIL_VSS - 0.2)
+    blk = sorted((q - 1.0 - CL5, q + 1.0 + CL5) for q in ext['VDD'])        # the VDD bars start above the plate
+    plate, x_ = [], 0.5
+    for a, b in blk:
+        if a > x_ + 2.0:
+            plate.append((s(x_), s(a)))
+        x_ = max(x_, b)
+    if Wb - 0.5 > x_ + 2.0:
+        plate.append((s(x_), s(Wb - 0.5)))
+    em['plate_cuts'] = 0
+    v4own = sorted([(a, b) for a, b in xbar['VSS']] + [(x_ - w / 2, x_ + w / 2) for x_, w in zip(necks, neckw)] +
+                   [(q - 1.0, q + 1.0) for q in ext['VSS']] + [(s(XA - 1.9), s(XA - 0.9))])      # these carry their own Via4 arrays
+    for a, b in plate:
+        g.rect('metal5', a, yp0, b, yp1)
+        x_ = a + 0.2
+        for c, d_ in v4own + [(b - 0.2 + 0.6, b + 1.0)]:
+            if d_ + 0.6 <= x_ or c - 0.6 >= b - 0.2 + 0.6:
+                continue
+            if c - 0.6 - x_ >= 1.0:
+                em['plate_cuts'] += g.varr(x_, yp0 + 0.2, c - 0.6, yp0 + 1.4, 4, 5) + g.varr(x_, yp1 - 1.4, c - 0.6, yp1 - 0.2, 4, 5)
+            x_ = max(x_, d_ + 0.6)
+    xr_vss = xbar['VSS'][1][0]
+    stubs = [(max(a, xr_vss), b) for a, b in plate if b > xr_vss + 2.0]
+    for a, b in stubs:
+        g.rect('metal5', a, yp0, b, Ym)
     mvdd = []
     for p in range(8):
         xv = XM + X0m + p * Wsl + vdd_dx
@@ -354,9 +395,9 @@ def build(work=None, bare=False):
             raise RuntimeError('bias riser over an aux Metal5 riser')
         g.via(x, Ym + 0.2, 3, 5)
         g.rect('metal5', x - 0.22, Ym, x + 0.22, yh0 - 1.0)
-        g.via(x, yh0 - 1.2, 4, 5)
-        g.rect('metal4', x - 0.2, yh0 - 1.4, x + 0.2, Yt)
-        pins[n] = ('metal4', x, s(Yt - 0.5))
+        g.via(x, yh0 - 1.2, 3, 5)             # Metal3 to the top edge (passes under a Metal4 / Metal5 ring)
+        g.rect('metal3', x - 0.2, yh0 - 1.4, x + 0.2, Yt)
+        pins[n] = ('metal3', x, s(Yt - 0.5))
     # ------------------------------------------------------------------ decap rows (left of the aux cell)
     d = T.DECAP
     nfin = int((dec_x1 - dec_x0 - 1.2) / (2 * (0.44 + (d['l'] - L.L0) / 2))) + 1
@@ -390,20 +431,32 @@ def build(work=None, bare=False):
     for i, n in enumerate(('TAP_P', 'TAP_N')):
         _, px, py = AR['pins'][n]
         x, y, yt = s(XA - 1.9 + px), s(Ym + py), s(Ym + 1.0 + nrow * (row.top + 0.4) + 0.4 + 0.9 * i)        # above the last decap row
+        xt = s(dec_x0 - 1.0)                  # Metal4 over the mux / aux / decap, Metal3 under the bars to the edge
         g.rect('metal3', x - 0.2, y - 0.2, x + 0.2, yt + 0.2)
         g.via(x, yt, 3, 4)
-        g.rect('metal4', 0.3, yt - 0.2, x + 0.2, yt + 0.2)
-        pins[n] = ('metal4', 0.6, yt)
+        g.rect('metal4', xt - 0.2, yt - 0.2, x + 0.2, yt + 0.2)
+        g.via(xt, yt, 3, 4)
+        g.rect('metal3', 0.3, yt - 0.2, xt + 0.2, yt + 0.2)
+        pins[n] = ('metal3', 0.6, yt)
     # ------------------------------------------------------------------ labels
     for n in ('MAIN_P', 'MAIN_N', 'POST_P', 'POST_N'):
         port = next(p_ for p_, v in cn['wtx_mux8'].items() if v == n and p_.startswith(('MAIN', 'POST')))
         _, x, y = MR['pins'][port][0]
         pins[n] = ('metal5', s(XM + x), s(Ym + y))
         g.rect('metal5', XM + x - 0.5, Ym + y - 0.4, XM + x + 0.5, Ym + y + 0.4)
+    # tie points (outline edge, Metal5): VDD = the header strap ends beside the MAIN / POST risers (the island strap lands
+    # there, carries both banks) and the two VDD bars' top ends; VSS = the two VSS bars (full height on the left edge and
+    # on the inner edge of the L) and the plate stubs on the free corner's lower edge.
+    ties = dict(VDD=dict(T_main=(s(xl_end - 40.0), xl_end, yh0, s(Yt)), T_post=(xr_start, s(xr_start + 40.0), yh0, s(Yt)),
+                         bar_left=(xbar['VDD'][0][0], xbar['VDD'][0][1], s(Yt - 20.0), s(Yt)), bar_right=(xbar['VDD'][1][0], xbar['VDD'][1][1], s(Yt - 20.0), s(Yt))),
+                VSS=dict(bar_left=(xbar['VSS'][0][0], xbar['VSS'][0][1], yT0, s(Yt)), bar_right=(xbar['VSS'][1][0], xbar['VSS'][1][1], yT0, s(Yt)),
+                         **{f'corner_{j}': (max(a, s(xbar['VSS'][1][1] + 0.5)), b, s(Ym - 1.0), Ym) for j, (a, b) in enumerate(stubs)}))
     for i, n in enumerate(T.PORTS):
         if n in ('VDD', 'VSS'):
             for a, b in xbar[n]:
                 g.label(n, 'metal5', s((a + b) / 2), s(Yt - 20.0), i + 1)
+            for _, (a, b, y0t, y1t) in ties[n].items():
+                g.label(n, 'metal5', s((a + b) / 2), s((y0t + y1t) / 2), i + 1)
         elif n.startswith('TR'):
             continue                       # labelled with the trim wires below
         else:
@@ -420,8 +473,11 @@ def build(work=None, bare=False):
         if layer != 'metal4':
             raise RuntimeError(f'mux trim pin {port} is not on Metal4')
         xa_, ya_ = s(XM + x), s(Ym + y)
-        g.rect('metal4', xa_ - 0.2, ya_ - 0.2, xk, ya_ + 0.2)
-        pins[net] = ('metal4', s(xk - 0.6), ya_)
+        xv = s(xr0 + 2.0)                     # Metal4 from the mux pin, Metal3 under the bars to the block edge
+        g.rect('metal4', xa_ - 0.2, ya_ - 0.2, xv + 0.2, ya_ + 0.2)
+        g.via(xv, ya_, 3, 4)
+        g.rect('metal3', xv - 0.2, ya_ - 0.2, xk, ya_ + 0.2)
+        pins[net] = ('metal3', s(xk - 0.6), ya_)
         trims[net] = dict(y=ya_, metal4_um=round(xk - xa_, 1))
     for i, n in enumerate(T.PORTS):
         if n.startswith('TR'):
@@ -438,8 +494,8 @@ def build(work=None, bare=False):
                f_wires_um={n: round(m4nets[n][1] - m4nets[n][0], 1) for n in m4nets}, ser_straps_in_rails={k: len(v) for k, v in ext.items()},
                header_strap=dict(y=[yh0, s(Yt - 0.2)], left_end_x=xl_end, right_start_x=xr_start), ser_trunks={n: DC[p_]['lo'] for n, p_ in down_pins.items()},
                rail_holes=holes, vss_metal2_at_hole_um=round(yhole - yvs, 2), exits={n: v[2] for n, v in m2nets.items() if v[2]},
-               rail_loads=dict(VSS=[(x, (I_LOGIC - I_MUXL) / len(ext['VSS'])) for x in ext['VSS']] + [(x, (2 * I_BANK + I_MUXL) / len(necks)) for x in necks],
-                               VDD=[(x, (I_LOGIC - I_MUXL) / len(ext['VDD'])) for x in ext['VDD']] + [(x, I_MUXL / len(mvdd)) for x in mvdd]))
+               ties=ties, vss_plate=dict(y=[yp0, yp1], segments=plate, corner_stubs=stubs), neck_width_um=neckw,
+               mux_vdd_x=mvdd)
     (work / 'geom.json').write_text(json.dumps(res, indent=1))
     return res
 
@@ -490,57 +546,11 @@ def net_caps(text, nets):
     return {n: dict(total=round(sum(v.values()), 1), **{k: round(x, 2) for k, x in sorted(v.items(), key=lambda kv: -kv[1])}) for n, v in out.items()}
 
 
-def rail_currents(res, net, step=0.5):
-    """1-D model of one supply rail (uniform sheet, both layers): the bars hold it at 0 V, the children draw their DC current
-    at their strap positions.  Returns {bar index: mA into that bar, 'max_hole_mA': largest current along the rail inside a
-    phase-buffer hole (where only Metal4 carries it), 'max_mA': largest current anywhere}."""
-    import numpy as np
-    Wb = res['size_um'][0]
-    xs = np.arange(0.5, Wb - 0.5 + 1e-9, step)
-    n = len(xs)
-    I = np.zeros(n)
-    sinks = res['rail_loads'][net]
-    for x, i in sinks:
-        I[int(round((x - 0.5) / step))] += i
-    fixed = np.zeros(n, bool)
-    bars = res['supply_bars'][net]
-    for a, b in bars:
-        fixed |= (xs >= a) & (xs <= b)
-    # Laplacian with unit conductance per step; V = 0 at the bars; current is drawn at the sinks (sign: flows towards the sinks)
-    free = np.where(~fixed)[0]
-    idx = {j: k for k, j in enumerate(free)}
-    A = np.zeros((len(free), len(free)))
-    rhs = np.zeros(len(free))
-    for j in free:
-        k = idx[j]
-        for nb in (j - 1, j + 1):
-            if 0 <= nb < n:
-                A[k, k] += 1
-                if nb in idx:
-                    A[idx[nb], k] -= 1
-        rhs[k] = -I[j]
-    V = np.zeros(n)
-    V[free] = np.linalg.solve(A, rhs)
-    seg = V[:-1] - V[1:]                      # current from node j to j + 1 (unit conductance)
-    xm_ = (xs[:-1] + xs[1:]) / 2
-    inhole = np.zeros(len(seg), bool)
-    for a, b in res['rail_holes']:
-        inhole |= (xm_ > a) & (xm_ < b)
-    out = {}
-    for bi, (a, b) in enumerate(bars):
-        m = (xm_ > a - step) & (xm_ < b + step)
-        lo, hi = np.where(m)[0][0], np.where(m)[0][-1]
-        out[bi] = round(float(abs(seg[lo - 1]) if lo > 0 else 0.0) + float(abs(seg[hi + 1]) if hi + 1 < len(seg) else 0.0), 2)
-    out['max_hole_mA'] = round(float(np.abs(seg[inhole]).max()), 2)
-    out['max_mA'] = round(float(np.abs(seg).max()), 2)
-    out['total_mA'] = round(float(I.sum()), 2)
-    return out
-
-
 def em_table(res, mr):
-    """supply metal of the block top, mA DC at 85 C (limits as wtx_mux8_layout).  Loads: each bank I_BANK (VSS through the
-    mux's nine VSS straps, VDD through the header straps on the top edge), ser8d + logic I_LOGIC (over ser8d's straps), mux
-    logic 3 mA per VDD strap (estimate).  Rail currents from the 1-D model rail_currents()."""
+    """supply metal of the block top that the raster IR / EM run (s13/top/ir) does not resolve better: strap, neck and via
+    counts per load, mA DC at 85 C (limits as wtx_mux8_layout).  Loads: each bank I_BANK (VSS through the mux's nine VSS
+    straps, VDD through the header strap ends), ser8d + logic I_LOGIC (bound, over ser8d's straps), mux logic 3 mA.  The
+    rails, the VSS plate and the bars are in the raster run (current density per pixel from the drawn geometry)."""
     rows = {}
 
     def row(name, i, w, lim):
@@ -549,30 +559,20 @@ def em_table(res, mr):
     def cut(name, i, n):
         rows[name] = dict(mA=round(i, 2), cuts=n, mA_per_cut=round(i / n, 3), limit=L.CUT, margin_pct=round(100 * (1 - i / n / L.CUT), 1))
     c = res['em_cuts']
-    rc = {net: rail_currents(res, net) for net in ('VSS', 'VDD')}
-    res['rail_model'] = rc
-    ivb, idb = max(rc['VSS'][0], rc['VSS'][1]), max(rc['VDD'][0], rc['VDD'][1])
-    row('VSS bar left (Metal5, rail model)', rc['VSS'][0], BAR, L.LIM5)
-    row('VSS bar right of the mux (Metal5, rail model)', rc['VSS'][1], BAR_R, L.LIM5)
-    row('VDD bar left (Metal5; one header bank + rail model share)', I_BANK + rc['VDD'][0], BAR, L.LIM5)
-    row('VDD bar right of the mux (Metal5; one header bank + rail model share)', I_BANK + rc['VDD'][1], BAR_R, L.LIM5)
-    row('VSS rail (Metal4 || Metal2), largest current along it', rc['VSS']['max_mA'], 2 * RAIL_VSS, L.LIM14)
-    row('VDD rail (Metal4 || Metal2), largest current along it', rc['VDD']['max_mA'], 2 * RAIL_VDD, L.LIM14)
-    row('VSS rail over a phase buffer (Metal4 + the Metal2 below the cell)', rc['VSS']['max_hole_mA'], RAIL_VSS + res['vss_metal2_at_hole_um'], L.LIM14)
-    cut('VSS rail -> bar Via2-4 (per bar)', ivb, c['VSS_rail_bar_cuts'])
-    cut('VDD rail -> bar Via2-4 (per bar)', idb, c['VDD_rail_bar_cuts'])
-    row('header strap bar -> MAIN / POST header (Metal5; the whole bank through one strap)', I_BANK, HSTRAP, L.LIM5)
+    row('header strap end -> MAIN / POST header (Metal5; the whole bank through one strap end)', I_BANK, HSTRAP, L.LIM5)
     ivss = I_BANK / 4 + 3.0
-    row('mux VSS strap neck in the rails (Metal5; two banks of two slices + 3 mA logic, as the mux table)', ivss, NECK, L.LIM5)
-    cut('mux VSS neck -> rail Via4', ivss, c['mux_vss_neck_cuts'])
+    wn = min(res['neck_width_um'])
+    row(f'mux VSS neck in the rails, narrowest ({wn:g} um; two banks of two slices + 3 mA logic, as the mux table)', ivss, wn, L.LIM5)
+    cut('mux VSS neck -> rail Via4, fewest cuts', ivss, min(v for k, v in c.items() if k.startswith('mux_vss_neck_cuts')))
+    cut('VSS rail -> plate Via4 (all banks + logic, whole plate)', 2 * I_BANK + I_LOGIC, c['plate_cuts'])
     row('mux logic VDD strap (Metal5, ~3 mA estimate)', 3.0, 5.0, L.LIM5)
     ns = res['ser_straps_in_rails']
     row(f'ser8d VSS strap (Metal5 2 um; {I_LOGIC:g} mA over {ns["VSS"]} straps)', I_LOGIC / ns['VSS'], 2.0, L.LIM5)
     row(f'ser8d VDD strap (Metal5 2 um; {I_LOGIC:g} mA over {ns["VDD"]} straps)', I_LOGIC / ns['VDD'], 2.0, L.LIM5)
     cut('ser8d strap -> rail Via4', I_LOGIC / min(ns.values()), min(c['ser_VSS_cuts'], c['ser_VDD_cuts']))
     worst = min(rows.items(), key=lambda kv: kv[1]['margin_pct'])
-    return dict(rows=rows, rail_model=rc, worst=[worst[0], worst[1]['margin_pct']],
-                note='Header rails: the strap reaches the outer segment; the mux carries the bank under its risers on Metal1-4 (its own EM table).')
+    return dict(rows=rows, worst=[worst[0], worst[1]['margin_pct']],
+                note='Rails, plate, bars, header strap and the children\'s supply metal: raster run s13/top/ir (2-D, drawn geometry).')
 
 
 def add_top_r(text, res):
@@ -585,16 +585,18 @@ def add_top_r(text, res):
       PS k   buffer output node PS k; ser8d's devices move to PS k#s behind the Metal3 + Metal4 + Metal5 path
              (res['ph'][PS k]['r_ohm']); capacitors to ser8d nets go to PS k#s, the others half / half;
       F k, SERQ  ser8d's devices move to <net>#s behind the Metal4 track (0.4 um, length = track span);
-      VDD / VSS  each child hangs on <net>#mux / #ser / #aux behind one lumped resistor: rail (Metal4 || Metal2) from both
-             bars to the block centre (distributed: 1/8 of the end-to-end value) + the child's straps in parallel (coarse)."""
+      VDD / VSS  each child hangs on <net>#mux / #ser / #aux behind one lumped resistor: rail (VDD: Metal4 || Metal2; VSS:
+             Metal4 || Metal2 || the Metal5 plate) from both ends to the block centre (distributed: 1/8 of the end-to-end value)
+             + the child's straps in parallel (coarse; the raster run s13/top/ir has the drawn-geometry drops)."""
     r4 = RS / 0.4
     rr = {f'PH{k}': ('m', res['ph'][f'PH{k}']['r_pin_to_mux_ohm']) for k in range(8)}
     rr.update({f'PS{k}': ('s', res['ph'][f'PS{k}']['r_ohm']) for k in range(8)})
     fw = res['f_wires_um']
     Wb = res['size_um'][0]
     rail = lambda w: RS * Wb / (2 * w) / 8
-    sup = dict(VSS=dict(mux=round(rail(RAIL_VSS) + RS5 * 30.0 / NECK / 9, 3), ser=round(rail(RAIL_VSS) + RS5 * 100.0 / 2.0 / res['ser_straps_in_rails']['VSS'], 3),
-                        aux=round(rail(RAIL_VSS) + RS5 * 30.0 / 1.0, 3)),
+    rv = Wb / 16 / (2 * RAIL_VSS / RS + (res['vss_plate']['y'][1] - res['vss_plate']['y'][0]) / RS5)      # rail || plate, coarse
+    sup = dict(VSS=dict(mux=round(rv + RS5 * 30.0 / (sum(res['neck_width_um']) / 9) / 9, 3), ser=round(rv + RS5 * 100.0 / 2.0 / res['ser_straps_in_rails']['VSS'], 3),
+                        aux=round(rv + RS5 * 30.0 / 1.0, 3)),
                VDD=dict(mux=round(rail(RAIL_VDD) + RS5 * 12.0 / 5.0 / 8, 3), ser=round(rail(RAIL_VDD) + RS5 * 100.0 / 2.0 / res['ser_straps_in_rails']['VDD'], 3),
                         aux=round(rail(RAIL_VDD) + RS5 * 12.0 / 1.0, 3)))
     side = lambda toks: next((c for p_, c in (('XMUX', 'mux'), ('XSER', 'ser'), ('XAUX', 'aux')) if any(x.startswith(p_) for x in toks)), None)

@@ -208,9 +208,9 @@ these blocks has one. Bench results live in `scratch/lo-ap4/` until published.
 
 | Block (cell) | Schematic | Published layout | Read-back LVS | Benches | Blocking issue |
 | --- | --- | --- | --- | --- | --- |
-| QVCO `pt_lc_qvco5` | `lcvco/qvco5.spice` (generated) | `generated/lcvco/`, DRC 0, fill markers | top: spirals extract as shorts (documented), core unique | RC-extracted RF cell + real loads (`q7/`) | top of range 2.532 GHz (staged loads) / 2.488 (published) vs >= 2.558; no phase-noise, mismatch or sf/fs run with real loads |
+| QVCO `pt_lc_qvco5` | `lcvco/qvco5.spice` (generated) | `generated/lcvco/`, DRC 0, fill markers | top: spirals extract as shorts (documented), core unique | RC-extracted RF cell + real loads (`q7/`) | top of range 2.532 GHz (staged loads) / 2.488 (published) vs >= 2.558; removing 60-110 fF per tank node closes both ends (`q7/RESULTS-vq.md`); no phase-noise, mismatch or sf/fs run with real loads |
 | LO regulator `pt_lo_vreg` | `lo_vreg.spice` (uncommitted, in flight) | none (0.44 mm2 staged) | - | `scratch/lo-ap4/vreg2/` | not qualified vs LO-11 (33 dB at 78.125 MHz); pessimistic tank needs VDD_LO >= 3.05 V |
-| Feedback divider `pt_lo_mmd` | `lo_mmd.spice` | yes (0.361 mm2, 0.9 mm tank trunks) | unique | v7 relayout staged (`mmd7/`, 0.140 mm2): divides to 3.8 GHz at ss | v7 divides by 33 instead of 56 at ff/2.40 GHz/0.4 V per leg (published passes); review NO-GO on ap4 |
+| Feedback divider `pt_lo_mmd` | `lo_mmd.spice` | yes (0.361 mm2, 0.9 mm tank trunks) | unique | v7 relayout staged (`mmd7/`, 0.140 mm2): divides to 3.8 GHz at ss | v7 fails at ff/3.35 with 0.4 V per leg at CM 1.52 V (2.30-2.40 GHz; published passes 2.40), passes at the ff tank CM 1.83 V with >= 0.55 V; not reviewed |
 | Q dummy `pt_lo_mmd_qdum` | `lo_mmd_qdum.spice` | yes | unique | in QVCO real-load bench | published pair gives 9 deg / 9 % I/Q error (staged pair 0.5 deg) |
 | PFD/CP `pt_lo_pfdcp` | `lo_pfdcp.spice` | yes | unique | behavioural loop only | presets VTUNE to VDD/2, not 2.1 V |
 | Loop filter `pt_lo_lf` | `lo_lf.spice` | yes | unique | `lock/lock_rc.json` | lock 60-65 us at the slow filter corner vs 50 us; C3 must move to the QVCO (INT23-3) |

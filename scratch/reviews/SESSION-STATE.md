@@ -218,3 +218,13 @@ Disk 2026-11-19: freed 15 GB (old waveforms, superseded hardening runs pC6/run14
 | Bias and power per chip (D8, D9, stale checks) | a19eb0e38a50aaf24 | bias/power files, integration/core_bias.py, power-delivery spec |
 
 Every brief requires current-state docs and deletion of superseded files and runs (no archive folders).
+
+### Agents added 2026-11-20
+
+| Role | Agent ID | Scope |
+|---|---|---|
+| Chip assembly (full-chip floorplan, power grid, top routing, sign-off) | a67ba37dcfd1a2abb | integration/assembly |
+| Observation, debug, bring-up, test-board models | a17b557baf31977af | spec/bring-up.md, spec/test-board-models.md, tools/bringup |
+| LO synthesis (QVCO, regulator, dividers, PFD/CP, filter, external LO) on pt_rf | ab699c0348c88d032 | LO cells in analog/timing (not the ring cells) |
+
+Machine rule given to all agents: at most one waiting loop each, ending with its job or a timeout; kill only processes you started.

@@ -110,7 +110,7 @@ Not on the block (digital signals without an analog consumer, see WT25 / WT30): 
 | pad `DETECT_ENABLE` | `tx_interlock.EN_DETECT` | |
 | pad `DETECT_PBIAS` | `RAIL_wired` (detect source off) unless pads state a bias source | pads to confirm |
 | pad `TERM_ENABLE` | `tx_interlock.EN_TERM` | |
-| pad `TERM_VCM` | `tx_term_buffer.OUT` | 1.65 V in the wired TX benches (ideal source, 2 ohm); VSS in the fallback fixture (TMDS-style, termination off). The pad netlist has `X235 TERM_VCM VSS VSS ppolyf_u_1k` 2 x 2 um (`physical.spice:255`), which reads as about 1 kohm to VSS = about 1.65 mA of static load on the buffer: pads to confirm |
+| pad `TERM_VCM` | `tx_term_buffer.OUT` | 1.65 V in the wired TX benches (ideal source, 2 ohm). Wired TX needs no TERM_VCM-at-VSS mode: the TMDS-style fallback was removed (WT22), and the ring-stopped fallback (`WTX_EXT`) runs with the termination on. TERM_VCM >= 1.0 V whenever the island is on (row WT51). The pad netlist has `X235 TERM_VCM VSS VSS ppolyf_u_1k` 2 x 2 um (`physical.spice:255`), which reads as about 1 kohm to VSS = about 1.65 mA of static load on the buffer: pads to confirm |
 | pad `ATB_ESD_RAIL` | ATB leaf or 1 Mohm to VSS | |
 | `tx_term_buffer.REF`, `.BIAS`, `.ENABLE` | pads to state (REF = 1.65 V source, bias branch, enable = `EN_TERM`) | no source is bound in any netlist (mode-walk section 1) |
 | `tx_interlock.REQ_MAIN` | normal: `(wiredtx.state == active) & (txpad.config.branch in {serial (1), tmds (2)})` (NOT `detect` (3)); fallback: `wtx_fallback_control.TMDS_REQUEST` (WT28) | TWO sources and no combiner exists: an OR on the wired rail (or a second decode output on `pt_wtx_fallback_control`) must be defined; owner open (chip-top / bring-up control) |
@@ -168,10 +168,10 @@ Schematic `wtx8_top.py` (`generated/fast/pt_wiredtx8.spice`) = `wtx_ser8d` + `wt
 
 | Pin | Dir | Connect to | Notes |
 | --- | --- | --- | --- |
-| `PH0..PH7` | in | `pll_tx.PH0..PH7` directly | eight matched routes (the mux and the stream registers both hang on them); swing = ring supply |
+| `PH0..PH7` | in | `pll_tx.PH0..PH7` directly | eight matched routes (the mux and the stream registers both hang on them); swing = ring supply. The stream-register path enters through NAND2(PH k, SER_EN) (`wtx8_phbuf`, session 17), so **SER_EN must be low while the pll island is off**: the PH inputs then float without crowbar current in the buffers (<= 1 uA per buffer, ff 3.63 V hot). Ring load per PH (block extraction incl. the NAND input) 36.0-37.6 fF, spread 1.6 fF |
 | `D0..D39` | in | `digital.wire_tx_data[39:0]`, D0 first on the line | the whole 40-bit word is loaded at once; launch about a quarter word period after the `WORD_CLK40` rise (benches: 0.25 T) |
 | `WORD_CLK40` | out | wired iso clamp -> `digital.wire_tx_clk` | ring / 5 (60-81 MHz), duty 2/5 |
-| `SER_EN` | in | as `pt_wiredtx` (section 2) | |
+| `SER_EN` | in | as `pt_wiredtx` (section 2) | also gates the eight phase buffers (NAND2 with PH k): low whenever the pll island is off |
 | `IDLE`, `IDLE_MODE` | in | `digital.wire_idle`; NEW static field `wtx.idle_mode` | data gating, asynchronous. `IDLE_MODE` 0: both pad gates of each pair at the supply; 1: both legs of the conducting slice on (gates at mid level). Differential 0 in both |
 | `WTX_EXT`, `DX` | in | `debug.wtx_ext.enable`, fallback data (section 4) | `DX` = 1 gives `V(PAD_P) > V(PAD_N)`. With the ring running the slices work as usual on `DX`; with the ring stopped all eight MAIN slices conduct in parallel (ring-independent, low rate). POST is off in this mode |
 | `POST_POL` | in | `wiredtx.config.post_polarity` | 0 de-emphasis, 1 same sign (three-level) |

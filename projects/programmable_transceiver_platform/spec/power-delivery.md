@@ -247,8 +247,13 @@ G5 limit (`scratch/integration/m1-pdn/wt44_tap.py`, `out/wired/wt44_tap.txt`). T
 | 56 mA | east gap | 92.8 | **106.6** | 44.6 / 12.0 / 14.0 / 36.0 |
 | 50 mA | east gap | 87.4 | 100.4 | 42.9 / 11.0 / 12.5 / 34.0 |
 | 56 mA | south-east (not moved) | 92.2 | 105.8 | |
+| 60 mA | east gap | 96.5 | 110.7 | 45.8 / 12.6 / 15.0 / 37.4 |
 
-Nominal passes. High-R misses by 5.6 mV at 56 mA and passes with 0.6 mV at 50 mA: the grid VSS tie through the mux is
+With the grid VSS ties through the mux (WT47: in-block 6.8 / 11.5 mV at 60 mA) the total at 60 mA is 103.3 mV nominal
+(pass) and 122.2 mV high-R (5.2 mV over 117). The ties act inside the block; at the chip level the tap is one mesh node
+and does not change. The 15 mV strap is the G5 allowance: with the switch pair in the east slot beside the block (about
+150 um) a 100 um Metal5 bar drops about 6 mV at 60 mA, giving about 113.5 mV high-R total: pass, if the switches are
+there. Before the ties: nominal passes, high-R misses by 5.6 mV at 56 mA and passes with 0.6 mV at 50 mA: the grid VSS tie through the mux is
 needed (36 mV of the high-R drop is ground rise). Moving `isw_wired_rx` does not change this tap (0.6-0.8 mV).
 `isw_wired_tx_a` / `_b` are drawn in the north-west (x 858-1122, y 4006-4533), about 3 mm from the block; the numbers
 assume the east switch slot beside the block (with the switch at the drawn position and the strap still at 15 mV:

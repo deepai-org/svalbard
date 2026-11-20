@@ -5,6 +5,9 @@ import atb
 from regs import Regs, FIELDS, STATUS, CommitError, ID, ABI, HASH, CHIP_ID, A_ID, A_ABI, A_HASH, A_ISLAND, A_FAULT, A_RESET, A_CFGERR
 
 RING_TT_330 = 210.5e6           # bring-up.md section 6 (extracted pt_ring_osc, tt, 3.30 V, 27 C)
+DIG_TT_330 = 101.5e6            # pt_dig_ring (41 mcu7t5v0 inversions) tt 3.30 V, schematic estimate (bring-up.md 6)
+SWITCH_PG = {'rf': (0, 1, 2, 3), 'wired': (4, 5, 6), 'pll': (7,), 'conv': (8,), 'debug': (9,)}   # status.health.switch_pg
+HALVED = (3, 7)                 # counter sources counted through a /2 flop (OBS-IMPL-1/2): count = edges / 2
 ISLAND_BIT = {'wired': 0, 'rf': 1, 'pll': 2, 'conv': 4, 'debug': 5}
 PAYLOAD = {'rf': ('rf', 'conv'), 'wired': ('wired',)}
 
@@ -20,7 +23,11 @@ def atb_walk(r, board, codes, vdd=3.30, log=print):
         log('  (no ATB meter on this board: skipped)'); return fails
     for c in codes:
         r.set(**{'debug.atb.atb1': 0}); r.commit()
-        r.set(**{'debug.atb.atb1': c}); r.commit()
+        r.set(**{'debug.atb.atb1': c})
+        if r.read(A_CFGERR) & 1:                 # write rejected: no leaf for this code on this chip (OBS-IMPL-3)
+            r.write_reg(A_CFGERR, 0x7F); r.set(**{'debug.atb.atb1': 0})
+            log(f'  ATB1 {c:2d} rejected by the register file (no leaf on pt_{r.chip})  FAIL'); fails.append(c); continue
+        r.commit()
         v = board.atb_read(c); ion = r.read(A_ISLAND) & 0x3F
         ok, lim = atb.judge(c, v, vdd, ion)
         log(f'  ATB1 {c:2d} = {"open bus" if v is None else f"{v:.4f} V"}  [{lim}] {"ok" if ok else "FAIL"}')
@@ -29,9 +36,12 @@ def atb_walk(r, board, codes, vdd=3.30, log=print):
     return fails
 
 
-def trim_choice(s):
-    """Supply setpoint from the speed index S = f_ring / f_ring(tt, 3.30 V) measured at 3.30 V (section 6)."""
-    return 3.50 if s < 0.91 else 3.20 if s > 1.09 else 3.30
+def trim_choice(s, s_dig=None):
+    """Supply setpoint from the speed indices measured at 3.30 V (section 6): S = f_ring_osc / 210.5 MHz (3.3 V devices),
+    S_dig = f_dig_ring / f_dig_ring(tt) (5 V-device macro cells). Slow if either is slow; fast only if both are fast."""
+    slow = s < 0.91 or (s_dig is not None and s_dig < 0.86)
+    fast = s > 1.09 and (s_dig is None or s_dig > 1.16)
+    return 3.50 if slow else 3.20 if fast else 3.30
 
 
 def run(spi, board, chip, f_ref, log=print):
@@ -72,7 +82,11 @@ def run(spi, board, chip, f_ref, log=print):
         got = r.read(A_ISLAND)
         if got != want:
             raise RuntimeError(f'5 island {isl_name}: ISLAND_STATUS 0x{got:04X} != 0x{want:04X}')
-        log(f'5 island {isl_name} on, ISLAND_STATUS 0x{got:04X} (record the supply-current step)')
+        pg = r.status('status.health.switch_pg')
+        bad = [b for b in SWITCH_PG[isl_name] if not pg >> b & 1 and not (chip == 'rf' and b in (4, 5, 6)) and not (chip == 'wired' and b in (0, 1, 2, 3, 8))]
+        if bad:
+            raise RuntimeError(f'5 island {isl_name}: switch power-good bits {bad} low (status.health.switch_pg 0x{pg:03X}): a dead switch in the group')
+        log(f'5 island {isl_name} on, ISLAND_STATUS 0x{got:04X}, switch_pg 0x{pg:03X} (record the supply-current step)')
         rails = [RAIL_CODE[isl_name]] + ([10] if isl_name == 'wired' else [])
         out['atb_fail'] += atb_walk(r, board, rails, log=log)
     # 6. speed indicator: ring_osc on the counter (cross-check path; CLK_OBS is primary, OBS-2)
@@ -80,9 +94,12 @@ def run(spi, board, chip, f_ref, log=print):
     f_ring = count(r, board, 3, f_ref)
     if hasattr(board, 'clk_obs_hz'):
         f_ring = 4 * board.clk_obs_hz()
-    s = f_ring / RING_TT_330
-    out.update(ring_hz=f_ring, speed_index=s, supply_setpoint=trim_choice(s))
-    log(f'6 ring_osc {f_ring/1e6:.1f} MHz, S = {s:.3f} -> supply setpoint {out["supply_setpoint"]:.2f} V')
+    r.set(**{'debug.replica.dig_ring_enable': 1}); r.commit()
+    f_dig = count(r, board, 7, f_ref)
+    r.set(**{'debug.replica.dig_ring_enable': 0, 'debug.freq_count_a.source': 0}); r.commit()
+    s, sd = f_ring / RING_TT_330, f_dig / DIG_TT_330
+    out.update(ring_hz=f_ring, dig_ring_hz=f_dig, speed_index=s, dig_speed_index=sd, supply_setpoint=trim_choice(s, sd))
+    log(f'6 ring_osc {f_ring/1e6:.1f} MHz (S {s:.3f}), dig_ring {f_dig/1e6:.1f} MHz (S_dig {sd:.3f}) -> supply setpoint {out["supply_setpoint"]:.2f} V')
     return out
 
 
@@ -93,7 +110,7 @@ def count(r, board, source, f_ref, window_code=1):
     r.set(**{'debug.freq_count_a.source': source, 'debug.freq_count_a.window': window_code}); r.commit()
     board.wait_us(3.2 * window / f_ref * 1e6)        # first window only sets the reference point
     n = r.status('status.freq_count_a.count')
-    return n * f_ref / window
+    return n * f_ref / window * (2 if source in HALVED else 1)
 
 
 HOST_PRESCALE = 2      # /4. Host follow on the TX ring (D-HF): ring = f(H2D_CLK) x 4 (modulus code 2), word clock = ring / 4 = f(H2D_CLK)
@@ -233,13 +250,15 @@ def mode(spi, board, chip, log=print):
 
 
 def h2d_health(spi, chip, log=print):
-    """H2D check, waiting for the digital status bit (coordinator: digital adds it). Uses any status field whose name
-    starts with status.host.h2d; until it exists the check reports 'not available'."""
+    """H2D health (OBS-IMPL-6): sticky status.health.h2d_overflow / h2d_underflow must read 0 after training and traffic."""
     r = Regs(spi, chip)
-    names = [n for n in STATUS if n.startswith('status.host.h2d') or n.startswith('status.hostio.h2d')]
+    names = [n for n in STATUS if n.startswith('status.health.h2d')]
     if not names:
         log('8 H2D health: no status field yet (digital to add); H2D proven only by commands working at this rate')
         return None
     vals = {n: r.status(n) for n in names}
-    log(f'8 H2D health: {vals}')
+    bad = {n: v for n, v in vals.items() if v}
+    log(f'8 H2D health: {vals} ({"ok" if not bad else "FAIL"})')
+    if bad:
+        raise RuntimeError(f'8 H2D health: {bad} (sticky until reset; rate too high or H2D_CLK not centred)')
     return vals

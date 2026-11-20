@@ -15,6 +15,7 @@ LOOP = r'''
  // H2D_CLK -> ring reference (PS_H2D), TX ring enabled, host prescaler /4, host select HS_INT
  always @* hw_en = analog.p_clockmux__PS_H2D & analog.p_pll_tx__EN & analog.p_prescale__EN & analog.p_prescale__D4 & analog.p_clockmux__HS_INT;
  // FPGA model: H2D is the D2H stream looped back; the forwarded clock is delayed by the trained capture delay
+ initial if ($test$plusargs("pg_dead")) force s_pg_lo = 1'b0;   // negative control: dead lo switch on pt_rf
  real cap_dly = 0.0; reg dclk_d = 0; always @(dut.d2h_clk_pin) dclk_d <= #(cap_dly) dut.d2h_clk_pin;
  wire h2d_lb = dclk_d; wire [9:0] h2d_pin_lb = dut.d2h_pin;
  integer qn = 0; always @(posedge dut.core_clk) if ($test$plusargs("qtrace") && qn < 40 && dut.host_rst_n) begin qn = qn + 1; $display("Q %h en=%b crst=%b", dut.d2h_quad, dut.host.en_c, dut.core_rst_n); end
@@ -71,9 +72,9 @@ def build(chip, work):
 
 
 class Sim:
-    def __init__(self, vvp, ring_mhz, trace=False):
+    def __init__(self, vvp, ring_mhz, trace=False, extra=()):
         self.trace = trace
-        self.p = subprocess.Popen(['vvp', '-n', str(vvp), f'+ring_half={500.0/ring_mhz:.6f}'] + (['+qtrace'] if trace else []), stdin=subprocess.PIPE,
+        self.p = subprocess.Popen(['vvp', '-n', str(vvp), f'+ring_half={500.0/ring_mhz:.6f}'] + (['+qtrace'] if trace else []) + list(extra), stdin=subprocess.PIPE,
                                   stdout=subprocess.PIPE, text=True, bufsize=1)
     def _cmd(self, s):
         self.p.stdin.write(s + '\n'); self.p.stdin.flush()
@@ -116,15 +117,18 @@ def main():
     ap.add_argument('--trace', action='store_true')
     ap.add_argument('--negative', action='store_true', help='build the other chip: the identity step must stop the sequence')
     ap.add_argument('--negative-host', action='store_true', help='host prescaler /8 instead of /4: no 156.25 MHz word clock, training must fail')
+    ap.add_argument('--negative-pg', action='store_true', help='pt_rf: lo switch power-good held low: step 5 must stop')
     ap.add_argument('--negative-atb', action='store_true', help='also sense a code with no leaf on this chip: must fail')
     a = ap.parse_args()
+    if a.negative_pg:
+        a.negative = True
     if a.negative_atb:
         sequence.EXTRA_ATB = ({'rf': 7, 'wired': 8}[a.chip],)
     if a.negative_host:
         sequence.HOST_PRESCALE = 3; a.negative = True
     with tempfile.TemporaryDirectory() as w:
         other = {'rf': 'wired', 'wired': 'rf'}[a.chip]
-        sim = Sim(build(other if a.negative and not a.negative_host else a.chip, Path(w)), a.ring_mhz, a.trace)
+        sim = Sim(build(other if a.negative and not (a.negative_host or a.negative_pg) else a.chip, Path(w)), a.ring_mhz, a.trace, ['+pg_dead'] if a.negative_pg else [])
         meter = atb.AtbSim(sim, a.chip); sim.atb_read = meter.read
         try:
             out = sequence.run(sim, sim, a.chip, F_REF)
@@ -141,8 +145,11 @@ def main():
     if a.negative:
         print('FAIL: negative control was not detected'); sys.exit(1)
     err = abs(out['ring_hz'] / (a.ring_mhz * 1e6) - 1)
-    ok = not out['atb_fail'] and err < 0.01 and out['supply_setpoint'] == sequence.trim_choice(a.ring_mhz * 1e6 / sequence.RING_TT_330)
-    print(f'{"PASS" if ok else "FAIL"} pt_{a.chip}: ring read {out["ring_hz"]/1e6:.2f} MHz vs {a.ring_mhz} MHz modelled')
+    f_dig_model = 1e9 / (2 * 6.5)        # pt_dig_ring behavioural model HALF_NS = 6.5 (rtl/pt_cells.sv)
+    err_d = abs(out['dig_ring_hz'] / f_dig_model - 1)
+    ok = not out['atb_fail'] and err < 0.01 and err_d < 0.01 and out['supply_setpoint'] == sequence.trim_choice(
+        a.ring_mhz * 1e6 / sequence.RING_TT_330, f_dig_model / sequence.DIG_TT_330)
+    print(f'{"PASS" if ok else "FAIL"} pt_{a.chip}: ring read {out["ring_hz"]/1e6:.2f} MHz vs {a.ring_mhz} modelled; dig ring {out["dig_ring_hz"]/1e6:.2f} vs {f_dig_model/1e6:.2f} MHz')
     sys.exit(0 if ok else 1)
 
 

@@ -73,12 +73,15 @@ SPI mode 0, 32 clocks per transaction, ≤ 1 MHz at bring-up, ≤ 5 MHz after (B
 Enable groups (power-delivery.md section 2): `debug.island_power` bit 5 debug, 2 pll, then pt_rf: 1 rf (rf_rx, rf_tx,
 lod, lo), 4 conv; pt_wired: 0 wired (wired_rx, wired_cap, wired_tx a+b). Order: **debug, pll, then the payload
 groups**. For each: write the bit, commit, wait 20 µs, read 0x0A (effective-on b5:0 and pgood b13:8 must both set:
-debug 0x2020, pll 0x0404, rf 0x0202, conv 0x1010, wired 0x0101, cumulative), record the supply-current step, read
-the island's rail on ATB1 (codes 7/8/9/10/11/12; rf_tx, lod, lo and wired_cap have no tap, OBS-3), then set that
-island's `core.refchain.dist_en_*` and read its trunk (14 / 22 / 29 / 35 / 56). Outputs to an island stay
+debug 0x2020, pll 0x0404, rf 0x0202, conv 0x1010, wired 0x0101, cumulative) **and every switch of the group in
+`status.health.switch_pg` (0xFF: rf = b0-b3 rf_rx/rf_tx/lod/lo, wired = b4-b6, pll b7, conv b8, debug b9; OBS-IMPL-4: a dead
+switch inside a group shows here although the group pgood is an AND)**, record the supply-current step, read
+the island's rail on ATB1 (codes 7/8/9/10/11/12; rf_tx, lod, lo and wired_cap have no tap yet, OBS-3), then set that
+island's `core.refchain.dist_en_*` and read its trunk (14 / 22 / 29 / 35 / 56). ATB codes with no leaf on the chip
+are rejected at write (CONFIG_ERROR b0, OBS-IMPL-3); ATB0 trunk forces close only with their island on (OBS-IMPL-5).
+Outputs to an island stay
 isolated (0) until its switch reports pgood (register-map "Safety enforcement"); `pgood_override` only for a
-diagnosed dead pgood. ATB leaves on island trunks are not gated by the island (DBG-03): never close one on an off
-island with a bench force.
+diagnosed dead pgood.
 
 ## 6. Speed indicator and supply-trim choice (B2, MANDATE 2)
 
@@ -86,19 +89,26 @@ Readout: `pt_ring_osc` (21-stage 3.3 V-device ring, debug island, no bias). Two 
 
 - **CLK_OBS (primary, needs no REF_IN):** `debug.replica.ringosc_enable` = 1, `debug.clk_obs.source` = 10,
   `divider_log2` = 2; the FPGA counts CLK_OBS against its TCXO for 1 ms. f_ring = 4 × f_CLK_OBS.
-- **Frequency counter (SPI):** `debug.freq_count_a.source` = 3, window 1024, target = expected count; read
-  `status.freq_count_a.count` (0xF4). **Caveat OBS-2:** the counter sources are timed at 156.25 MHz and the ring runs
-  166-260 MHz; until the digital owner closes OBS-2 the SPI count is a cross-check, not the reference.
+- **Frequency counter (SPI):** `debug.freq_count_a.source` = 3, window 1024; read `status.freq_count_a.count` (0xF4).
+  **Source 3 is counted through a /2 flop (OBS-IMPL-1, timed at 278 MHz): f_ring = 2 × count × f_ref / window.**
+- **Digital-cell ring (OBS-IMPL-2):** `debug.replica.dig_ring_enable` = 1 (0x4E b5), counter source 7, also /2:
+  f_dig = 2 × count × f_ref / window. `pt_dig_ring` = nand2 + 40 inv_1 of gf180mcu_fd_sc_mcu7t5v0 (the macro's cells),
+  core supply. Switch it off after the reading.
 
 Simulated (extracted `ring_osc`, `aosc`, 27 °C; decks and logs `scratch/obs-bringup/ring/`, table
 `speed_table.json`; std-cell ring `scratch/obs-bringup/scring/`, schematic cells + 3 fF/node):
 
-| Corner | ring_osc MHz 3.15 / 3.30 / 3.50 V | fc count, 1024 window, 25 MHz ref (3.15/3.30/3.50) | same, 50 MHz ref | std-cell (5 V cells) ring MHz 3.15/3.30/3.50 | aosc MHz 3.15/3.50 |
-|---|---|---|---|---|---|
-| ss | 166.4 / 173.8 / 183.1 | 6816 / 7119 / 7500 | 3408 / 3559 / 3750 | 134.0 / 142.1 / 152.3 | 43.3 / 42.7 |
-| tt | 202.6 / 210.5 / 220.3 | 8298 / 8622 / 9023 | 4149 / 4311 / 4512 | 188.6 / 198.2 / 210.4 | 48.0 / 47.3 |
-| ff | 242.0 / 249.9 / 259.6 | 9912 / 10236 / 10633 | 4956 / 5118 / 5317 | 250.6 / 261.3 / 274.9 | 54.3 / 53.6 |
-| sf / fs | 201.4-201.6 / 209.0-209.8 / 218.4-219.8 | ≈ tt | ≈ tt | not run | |
+| Corner | ring_osc MHz 3.15 / 3.30 / 3.50 V | source 3 count (= edges/2), 1024 window, 25 MHz ref | same, 50 MHz ref | dig_ring MHz 3.15 / 3.30 / 3.50 (estimate) | source 7 count, 25 / 50 MHz ref, 3.30 V | aosc MHz 3.15/3.50 |
+|---|---|---|---|---|---|---|
+| ss | 166.4 / 173.8 / 183.1 | 3408 / 3560 / 3750 | 1704 / 1780 / 1875 | 68.6 / 72.8 / 78.0 | 1491 / 745 | 43.3 / 42.7 |
+| tt | 202.6 / 210.5 / 220.3 | 4149 / 4311 / 4512 | 2075 / 2155 / 2256 | 96.6 / 101.5 / 107.8 | 2079 / 1039 | 48.0 / 47.3 |
+| ff | 242.0 / 249.9 / 259.6 | 4956 / 5118 / 5317 | 2478 / 2559 / 2658 | 128.4 / 133.8 / 140.8 | 2740 / 1370 | 54.3 / 53.6 |
+| sf / fs | 201.4-201.6 / 209.0-209.8 / 218.4-219.8 | ≈ tt | ≈ tt | not run | | |
+
+dig_ring estimate = the 21-stage mcu7t5v0 schematic ring of `scratch/obs-bringup/scring/` (3 fF per node) scaled by
+21/41 stages; the digital owner's Liberty estimate is 54 MHz ss / 120 MHz ff (no wire). Replace both by the routed,
+extracted number after hardening (digital, OBS-IMPL-2). The RTL model of the cell runs at 76.9 MHz (HALF_NS 6.5),
+so a simulated die reads as "slow digital".
 
 Reading: corners are 17-19 % apart at a fixed supply, temperature 22-32 °C moves the ring ~1.7 %, the ring moves
 +5 % from 3.30 to 3.50 V. The ring **cannot see sf/fs** (both read as tt). It tracks 3.3 V devices; the digital
@@ -106,12 +116,17 @@ macro is built from 5 V-device cells (gf180mcu_fd_sc_mcu7t5v0), whose corner spr
 3.30 V) and whose supply gain is larger (+7.2 % vs +5.3 % for 3.30→3.50 V at ss). A cell ring in the macro (OBS-14)
 would read the digital speed directly; until it exists the trim maps the ring through the PDK corner correlation.
 
-**Trim procedure (both chips, provisional thresholds until the blocks publish their minimum passing supplies):**
-1. At 3.30 V, 22-32 °C, debug island on, measure f_ring (CLK_OBS path). S = f_ring / 210.5 MHz.
-2. S < 0.91 (slow; ss reads 0.83): set the regulator to **3.50 V** (B2: setpoint + 1 % + ripple + overshoot ≤ 3.63 V;
-   [test-board-models.md](test-board-models.md) section 5 shows 3.57 V worst). 0.91 ≤ S ≤ 1.09: stay at 3.30 V.
-   S > 1.09 (fast; ff reads 1.19): set **3.20 V** (stays in the 3.15-3.35 window with the 1 % tolerance).
-3. Re-measure at the new setpoint; expected ss 183 MHz at 3.50 V. Record S, setpoint and both readings in the board
+**Trim procedure (both chips; thresholds accepted provisionally by the coordinator until the blocks publish their
+minimum passing supplies):**
+1. At 3.30 V, 22-32 °C, debug island on, measure f_ring (CLK_OBS path, counter cross-check) and f_dig (counter source
+   7). S = f_ring / 210.5 MHz (3.3 V devices: analog, CML, rings); S_dig = f_dig / f_dig(tt, 3.30 V) (5 V-device cells:
+   the digital macro).
+2. **Slow** if S < 0.91 (ss reads 0.83) **or** S_dig < 0.86 (ss reads 0.72): set the regulator to **3.50 V** (B2:
+   setpoint + 1 % + ripple + overshoot ≤ 3.63 V; [test-board-models.md](test-board-models.md) section 4: 3.563 V worst).
+   **Fast** only if S > 1.09 (ff 1.19) **and** S_dig > 1.16 (ff 1.32): set **3.20 V**. Otherwise stay at 3.30 V. The
+   two rings disagreeing by more than one class (one slow, one fast) is a finding: record both and report it.
+3. Re-measure at the new setpoint; expected ss 183 MHz (ring_osc) and ~78 MHz (dig_ring) at 3.50 V. Record S,
+   S_dig, setpoint and the readings in the board
    EEPROM with `debug.calibration.tag`.
 4. One setpoint serves all modes of the die (MANDATE 2). A block whose minimum passing supply at the die's corner is
    above the setpoint is a block miss, not a trim choice.
@@ -132,8 +147,8 @@ would read the digital speed directly; until it exists the trim maps the ring th
    (`rtl/pt_core.sv` crst, `pt_quad_link_tx`; fpga-connection-plan 1). Toggling `d2h_enable` or the rate does not
    resend it. The FPGA trains per-bit delay and per-lane bitslip (HL-B5, HL-TRAIN): per tap step write ENABLE 0, move
    the tap, write ENABLE 1, search the capture for the prefix (FPGA-1); centre of the passing taps.
-   Verify H2D with the pattern checker (`debug.pattern.check_*`, `status.pattern.errors` 0xF1 = 0) and D2H with a
-   PRBS from the pattern generator.
+   H2D health: `status.health.h2d_overflow` / `h2d_underflow` (0xFF b10 / b11, sticky until reset, OBS-IMPL-6) must
+   read 0 after training and traffic at each rate; on pt_wired also the pattern checker (`status.pattern.errors` 0xF1).
 4. Raise the rate: div2 (slow slew allowed), then full rate with fast slew (HL-RATE: slow slew leaves 1.65 ns of eye
    against 1.68 ns at ss). Ground bounce on the real bond sets (OBS-15, [test-board-models.md](test-board-models.md)
    section 6) is 139-215 mV fast-edge worst case, inside the 300 mV HL-SSO limit with or without stagger; keep
@@ -187,9 +202,10 @@ range widened only where the evidence has no corner data (marked ±30 %, a scree
 | T8 | VBG after `bgap_trim` | 1.200 V | 1.190-1.210 V (SMU ≥ 1 GΩ) | trim range exhausted: record, continue untrimmed |
 | T9 | ATB1 1 / 2 / 3 / 57 | ROOT_REF 0.92 V; VREF0 = 5/6 VBG; VCM = VDD/2; IDAC1 0.94 µA/LSB (code 10 = 9.4 µA into ~1 V) | 0.80-1.05 V; ±1.5 %; ±1 %; ±30 % | set `idac2_source` from IDAC1 (section 4) |
 | T10 | Each island on, blocks off: ISLAND_STATUS, rail (ATB1 7-12), current step | pgood + effective-on bits; rail ≥ VDD − 20 mV (switch drop ≤ 19.9 mV at design current, power-budget `island_switch`) | bits exact; rail ≥ VDD − 50 mV; step < 2 mA | step > 10 mA: STOP that island (short / latch); pgood without rail: pgood logic |
-| T11 | Ring oscillator (CLK_OBS 10, then counter 3) | 173.8 / 210.5 / 249.9 MHz at ss / tt / ff, 3.30 V | 150-280 MHz; CLK_OBS and counter agree within 1 % (after OBS-2) | set the supply trim (section 6) |
+| T11 | Ring oscillator (CLK_OBS 10, then counter 3 × 2) and digital ring (counter 7 × 2) | ring_osc 173.8 / 210.5 / 249.9 MHz at ss / tt / ff; dig_ring ~73 / 101 / 134 MHz (estimate) at 3.30 V | ring_osc 150-280 MHz, CLK_OBS and counter within 1 %; dig_ring 45-160 MHz | set the supply trim (section 6) |
 | T12 | TX ring: counter source 1 against target; DBG_OBS 10 lock | count = target ± tolerance | locked within 1 ms | band / modulus; ATB1 30 VCTRL not at a rail |
-| T13 | Host link, div4: training window (FPGA tap sweep) | D2H budget 2.06 ns of a 3.2 ns UI at full rate (interface-requirements 3.1) | div4 ≥ 6 ns of 12.8 ns; div2 ≥ 3 ns of 6.4 ns (fpga-connection-plan); full rate ≥ 0.6 ns | stay at the slower rate; check stagger / slew |
+| T12a | Per-switch power-good with each group on | `status.health.switch_pg` bits of the group set | exact | a dead switch inside an AND group: STOP that group |
+| T13 | Host link, div4: training window (FPGA tap sweep); H2D health 0xFF b10/b11 = 0 | D2H budget 2.06 ns of a 3.2 ns UI at full rate (interface-requirements 3.1) | div4 ≥ 6 ns of 12.8 ns; div2 ≥ 3 ns of 6.4 ns (fpga-connection-plan); full rate ≥ 0.6 ns | stay at the slower rate; check stagger / slew |
 
 ### pt_rf
 
@@ -217,7 +233,7 @@ range widened only where the evidence has no corner data (marked ±30 %, a scree
 
 ## Open items that change this sequence
 
-OBS-2 (counter /2 at the input, digital), OBS-6 (per-chip ATB legality), OBS-14 (digital-speed ring), DBG-03 (recommended:
-gate the five ATB0 trunk selects by their island, OBS-17; until then never force a trunk with its island off),
+OBS-2 / 6 / 14 / 17 / 3 (status) are implemented (OBS-IMPL-1..6, e3bfb4b2); open: OBS-3 / 4 / 5 / 7 / 11 sense leaves,
+OBS-12 dead codes, the routed dig_ring frequency,
 PWR-13 (brownout and slow-corner ramps not run), HL-03 / PKG-08 (full-rate SSO on the real ground bonds, section 7 of
 [test-board-models.md](test-board-models.md)).

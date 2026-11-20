@@ -326,9 +326,26 @@ module pt_digital_macro(
  wire adc_i_ovl, adc_i_b_ovl, adc_q_ovl, adc_q_b_ovl, adc_i_done, adc_i_b_done, adc_q_done, adc_q_b_done, refbuf_ready;
  pt_iso_and #(9, 0, ON_RF) iso_s_conv(.a({s_refbuf_ready, s_adc_q_b_done, s_adc_q_done, s_adc_i_b_done, s_adc_i_done, s_adc_q_b_ovl, s_adc_q_ovl, s_adc_i_b_ovl, s_adc_i_ovl}),
   .on(island_on[4]), .y({refbuf_ready, adc_q_b_done, adc_q_done, adc_i_b_done, adc_i_done, adc_q_b_ovl, adc_q_ovl, adc_i_b_ovl, adc_i_ovl}));
- wire[5:0] fc; wire aux_present, wtx_ext_present;
+ wire[6:0] fc; wire[3:2] fc_c; wire aux_present, wtx_ext_present;
  assign fc[0] = fc_src[0], fc[4] = fc_src[4];        // tx ring FBCK (outside clamp, shared with CLK_OBS), aosc (core rail)
- pt_iso_and #(2, 1) iso_fc_src_debug(.a(fc_src[3:2]), .on(island_on[5]), .y(fc[3:2]));
+ pt_iso_and #(2, 1) iso_fc_src_debug(.a(fc_src[3:2]), .on(island_on[5]), .y(fc_c[3:2]));
+ assign fc[3] = fc_c[3];   // vco_replica OUT is already VCO/16 (<= ~69 MHz, analog/timing/README.md): counted undivided
+ // OBS-2: ring_osc (165-260 MHz) reaches the counters divided by 2: one kept toggle flop (fc_half2, SDC generated
+ // clock fc2h at its Q). Only this flop runs at the source rate (clk -> Q -> inverter -> D); the counters' Johnson
+ // stage runs at <= 130 MHz. Counts of code 3 are edges / 2.
+ wire fc2h;
+ pt_clock_dff fc_half2(.clk(fc_c[2]), .rst_n(rst_n), .d(~fc2h), .q(fc2h));
+ // Each toggle Q drives only its own inverter and a kept clkbuf_8 (the generated clock's root): the source-rate
+ // loop (clk -> Q -> inverter -> D) stays lightly loaded (unbuffered, the two counters' select muxes on Q gave
+ // ~2.4 ns clk -> Q at ss in the synthesized netlist).
+ pt_clock_buf fc_half2_buf(.I(fc2h), .Z(fc[2]));
+ // OBS-14: standard-cell ring oscillator (rtl/pt_cells.sv pt_dig_ring, core supply, kept cells), enabled by
+ // debug.replica.dig_ring_enable (reset 0), divided by 2 (kept toggle flop dring_half, SDC clock dring at the ring,
+ // generated clock dringh at the flop) and counted as frequency-counter source 7 (dig_ring).
+ wire dring_ck, dringh, dring_en;   // dring_en = debug.replica.dig_ring_enable (assigned after pt_regmap_fields.svh)
+ pt_dig_ring dring(.en(dring_en), .out(dring_ck));
+ pt_clock_dff dring_half(.clk(dring_ck), .rst_n(rst_n), .d(~dringh), .q(dringh));
+ pt_clock_buf dring_half_buf(.I(dringh), .Z(fc[6]));
  pt_iso_and #(1) iso_s_debug(.a(s_aux_present), .on(island_on[5]), .y(aux_present));
  pt_iso_and #(1, 0, ON_WIRED) iso_s_debug_w(.a(s_wtx_ext_present), .on(island_on[5]), .y(wtx_ext_present));   // WTX_EXT receiver: pt_wired
  wire ct_wclk_c, rf_tx_clk_c, pll_cdr_lock, pll_tx_lock;
@@ -354,6 +371,7 @@ module pt_digital_macro(
  assign analog_cfg = analog_cfg_raw & {`PT_ANALOG_CFG_W{reset_seen}};
  assign debug_cfg = debug_cfg_raw & {`PT_DEBUG_CFG_W{reset_seen}};
 `include "pt_regmap_fields.svh"
+ assign dring_en = f_debug_replica__dig_ring_enable[0];
  wire[6:0] rx_gain; wire rx_gain_active;
  wire[39:0] h2d_quad, d2h_quad;
  // Reduced-rate fallback (debug.host_link.rate, stopped-only): the host link and the whole
@@ -393,6 +411,11 @@ module pt_digital_macro(
  wire[15:0] rf_trim, wire_trim, clock_trim, status; wire enable, mode8, commit_toggle; wire[11:0] cal_trial;
  wire[39:0] wire_tx_quad; wire wire_tx_valid, wire_idle; wire[23:0] rf_tx_sample_q;
  assign rf_tx_sample = rf_tx_sample_q & {24{island_on[4]}};
+ // status.health (OBS-3, OBS-IMPL): raw power-good of every island switch (a switch absent on this chip reads 0)
+ // and the sticky H2D FIFO flags (pt_host_link; synchronized into SCLK by the register file).
+ wire h2d_ovf, h2d_unf;
+ wire[9:0] sw_pg = {s_pg_debug, s_pg_conv, s_pg_pll, s_pg_wired_tx & ON_WIRED, s_pg_wired_cap & ON_WIRED, s_pg_wired_rx & ON_WIRED,
+  s_pg_lo & ON_RF, s_pg_lod & ON_RF, s_pg_rf_tx & ON_RF, s_pg_rf_rx & ON_RF};
  pt_digital #(.PT_CHIP(PT_CHIP)) digital(.rst_n(rst_n), .ref_clk(ref_clk), .host_sclk(spi_sclk), .host_cs_n(spi_cs_n), .host_mosi(spi_mosi),
   .host_miso(spi_miso), .host_miso_oe(spi_miso_oe), .host_tx_clk(core_clk), .host_rx_clk(core_clk), .core_rst_n(core_rst_n),
   .wire_rx_clk(wire_rx_clk_c), .wire_tx_clk(wire_tx_clk_c), .rf_rx_clk(rf_rx_clk_i), .rf_tx_clk(rf_tx_clk_c),
@@ -417,13 +440,14 @@ module pt_digital_macro(
   .wrx_flags({wrx_slm_seen, wrx_slp_seen, wrx_idle, wrx_sig_ok, wrx_wclk_alive, wrx_freq_ok, wrx_fll_lost, wrx_fll_done}),
   .wrx_fll_win(wrx_fll_win), .wrx_pick_acc(wrx_pick_acc), .wrx_slip_cnt(wrx_slip_cnt), .wrx_fll_err(wrx_fll_err), .wrx_viol(wrx_viol),
   .usb_line(usb_line), .usb_flags({usb_disconnect, usb_squelch, usb_diff, usb_se1, usb_se0, usb_k, usb_j}),
-  .usb_stream({usb_tx_armed, usb_tx_blocked, usb_tx_underrun, usb_tx_busy, usb_rx_active}));
+  .usb_stream({usb_tx_armed, usb_tx_blocked, usb_tx_underrun, usb_tx_busy, usb_rx_active}),
+  .sw_pg(sw_pg), .h2d_ovf(h2d_ovf), .h2d_unf(h2d_unf));
  assign rx_en_wclk = 1'b0;   // CP4-3: the forwarded wire clock uses the AUX_CLK pair (rx_en_aux); no WCLK_IN receiver
  pt_toggle_div aosc_dv(fc[4], rst_n, aosc_div);
  pt_host_link host(.rst_n(host_rst_n), .mode(f_debug_host_link__mode), .d2h_enable(f_hostio_controls__d2h_enable),
   .h2d_clk(h2d_clk), .h2d_pin(h2d_pin), .link_clk(ddr_clk), .word_clk(sdr_word_clk), .core_clk(core_clk), .core_rst_n(core_rst_n), .h2d_quad(h2d_quad), .d2h_quad(d2h_quad),
   .d2h_pin(d2h_pin), .d2h_clk_pin(d2h_clk_pin), .d2h_stagger(f_hostio_controls__d2h_stagger),
-  .d2h_oe(d2h_oe), .h2d_overflow(), .h2d_underflow());
+  .d2h_oe(d2h_oe), .h2d_overflow(h2d_ovf), .h2d_underflow(h2d_unf));
  assign d2h_pdrv = f_hostio_controls__drive;
  assign d2h_sl = f_hostio_controls__slew;
 

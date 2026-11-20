@@ -1,15 +1,22 @@
 // Self-checking test of rtl/pt_freq_count.sv (P3-7): source select, exact lock, target ratio,
 // offset vs tolerance, raw count, lost lock when the source stops (sticky), source change handled as
-// restart, disable clears, SCLK stopped freezes the published value, diff saturation. Prints FREQ_COUNT_PASS.
+// restart, disable clears, SCLK stopped freezes the published value, diff saturation. OBS-2: a 260 MHz ring
+// (top of the 166-260 MHz ring_osc range) through the macro's /2 toggle flop (pt_clock_dff, as fc_half2) on
+// code 3; OBS-14: the standard-cell ring model (pt_dig_ring) through its /2 flop on code 7. Prints FREQ_COUNT_PASS.
 `timescale 1ns/1ps
 module tb_pt_freq_count;
  reg rst_n=1,ref_clk=0,sclk=0,run1=1,sclk_run=1;
  reg[2:0]src_sel=0,tol=2;reg[1:0]win=0,cnt=1;reg[15:0]target=256;
- real t0=50.0,t3=12.5;reg[5:0]s=0;
+ real t0=50.0,t3=12.5;reg[5:0]s=0;reg fast=0,dr_en=0;wire q2,qr,drck;
  always #25 ref_clk=~ref_clk;                       // 20 MHz reference
  always #(t0/2) if(run1) s[0]=~s[0];                // tx_ring_fbck
  always #(t3/2) s[3]=~s[3];                         // vco_replica (80 MHz)
  always #7 s[5]=~s[5];                              // lc_prescale (~71.4 MHz)
+ always #1.923 fast=~fast;                          // ring_osc at 260 MHz (period 3.846 ns)
+ pt_clock_dff h2(.clk(fast),.rst_n(rst_n),.d(~q2),.q(q2));          // fc_half2: ring_osc / 2 = 130 MHz
+ pt_dig_ring #(.HALF_NS(6.5)) dr(.en(dr_en),.out(drck));            // dig ring model: 76.9 MHz
+ pt_clock_dff hr(.clk(drck),.rst_n(rst_n),.d(~qr),.q(qr));          // dring_half: 38.5 MHz
+ wire[6:0]src={qr,s[5:3],q2,s[1:0]};
  always #50 if(sclk_run) sclk=~sclk;
  wire lref,locked,lost;wire[13:0]diff;wire[15:0]count;
  // Register-file commit model: every configuration change is one commit (commit_toggle flips once
@@ -17,7 +24,7 @@ module tb_pt_freq_count;
  reg ct=0,ct_pend=0;
  always @(src_sel,tol,win,cnt,target) if(!ct_pend)begin ct_pend=1;#0.001 ct=~ct;ct_pend=0;end
  pt_freq_count dut(.rst_n(rst_n),.cfg_source(src_sel),.cfg_window(win),.cfg_tol(tol),.cfg_count(cnt),.cfg_target(target),
-  .src(s),.ref_clk(ref_clk),.sclk(sclk),.locked_ref(lref),.locked(locked),.lost_lock(lost),.diff(diff),.count(count),
+  .src(src),.ref_clk(ref_clk),.sclk(sclk),.locked_ref(lref),.locked(locked),.lost_lock(lost),.diff(diff),.count(count),
   .commit_toggle(ct));
  // eval_window: the multicycle evaluation's sources (snapshot, fb_prev, captured configuration unless
  // the window is marked fresh) hold from the snapshot edge to the result-load edge 5 cycles later.
@@ -50,7 +57,12 @@ module tb_pt_freq_count;
   sclk_run=0; run1=0; #(256*50*4); check(1,1,2,3,258,259,"sclk stopped: frozen");
   sclk_run=1; #2000; check(0,1,-256,-256,0,0,"sclk resumed");
   run1=1; src_sel=6; target=914; tol=5; #(256*50*6); check(1,0,-16,16,898,930,"switch to src6 restarts");
-  src_sel=0; #3000; win=3; target=0; tol=0; cnt=0; src_sel=4; #(4096*50*3); check(0,0,8191,8191,16384,16384,"saturated diff high");
+  // OBS-2: 260 MHz / 2 = 130 MHz -> 1664.06 counts per 256 x 50 ns window
+  src_sel=0; #3000; target=1664; tol=1; cnt=1; src_sel=3; #(256*50*6); check(1,0,-1,1,1663,1665,"src3 260 MHz ring /2");
+  // OBS-14: dig ring 76.92 MHz / 2 -> 492.3 counts per window; off (en=0) the source is dead
+  src_sel=0; #3000; target=492; tol=2; src_sel=7; #(256*50*4); check(0,0,-492,-492,0,0,"src7 dig ring disabled: dead");
+  src_sel=0; #3000; dr_en=1; src_sel=7; #(256*50*6); check(1,0,-2,2,490,494,"src7 dig ring /2");
+  dr_en=0; src_sel=0; #3000; win=3; target=0; tol=0; cnt=0; src_sel=4; #(4096*50*3); check(0,0,8191,8191,16384,16384,"saturated diff high");
   if(ev_viol!=0||ev_seen<20)begin errs=errs+1;$display("FAIL eval_window: %0d violations in %0d evaluations",ev_viol,ev_seen);end
   else $display("ok   eval_window: %0d evaluations, sources stable 5 cycles",ev_seen);
   if(errs==0)$display("FREQ_COUNT_PASS");else $display("FREQ_COUNT_FAIL %0d",errs);

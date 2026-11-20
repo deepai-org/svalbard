@@ -42,6 +42,7 @@ def validate_mapping(controls, ledger, arch, read):
     errors, gaps = [], {}
     mapping = controls.get('block_observation', {}).get('blocks', {})
     nodes = {n['name']: n for n in controls['atb_nodes']}
+    chips = json.loads(read(PROJECT/'spec/chips.json'))['chips']
     groups = controls['atb_groups']
     for bus in ('atb0', 'atb1'):
         for group in groups[bus]:
@@ -69,6 +70,8 @@ def validate_mapping(controls, ledger, arch, read):
             for index, e in enumerate(entries):
                 tag = f'{name}[{index}] {e["path"]}:{e["select"]}'
                 problems = []
+                if not e.get('chips') or not set(e['chips']) <= set(chips):
+                    problems.append('chips must name pt_rf / pt_wired dies (rf, wired) on which the entry exists (OBS-6)')
                 if e['path'] not in PATH_CATALOG:
                     problems.append('unknown path')
                 if e['path'] == 'atb1':
@@ -83,6 +86,10 @@ def validate_mapping(controls, ledger, arch, read):
                         allowed = block_islands | set(e.get('islands') or [])
                         if node['island'] and node['island'] not in allowed:
                             problems.append(f'node island {node["island"]} not among the entry/block islands')
+                        # OBS-6: an atb1 entry is declared only on the chips that have the leaf
+                        no_leaf = {c for c, cv in chips.items() if node['code'] in cv.get('atb_no_leaf', {}).get('atb1', [])}
+                        if no_leaf & set(e.get('chips') or []):
+                            problems.append(f'declared on {sorted(no_leaf & set(e["chips"]))} without an ATB1 leaf there')
                 elif e['path'] == 'dbg_obs' and e['select'] not in controls['obs_status'] + controls['wire_status'] + ['commit_toggle']:
                     problems.append('not an obs_status / wire_status name')   # PD22: wire_status is on DBG_OBS (codes 37+n)
                 elif e['path'] in ('wdbg_obs', 'wclk_obs'):

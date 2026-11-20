@@ -29,6 +29,10 @@ endmodule
 endmodule
 (* blackbox *) module gf180mcu_fd_sc_mcu7t5v0__dffsnq_1(input wire D,SETN,CLK,output wire Q);
 endmodule
+(* blackbox *) module gf180mcu_fd_sc_mcu7t5v0__inv_1(input wire I,output wire ZN);
+endmodule
+(* blackbox *) module gf180mcu_fd_sc_mcu7t5v0__nand2_1(input wire A1,A2,output wire ZN);
+endmodule
 `endif
 
 // Generated-clock source flop (divider / Johnson output that becomes a clock): a kept x4 flop.
@@ -42,6 +46,41 @@ module pt_clock_dff(input wire clk,rst_n,d,output wire q);
  reg r;
  always @(posedge clk or negedge rst_n) if(!rst_n) r<=1'b0; else r<=d;
  assign q=r;
+`endif
+endmodule
+
+// OBS-14: standard-cell ring oscillator (digital-cell speed monitor for per-chip supply trim). One kept NAND2
+// (A1 = enable, A2 = feedback) and N kept inv_1 in a loop: N + 1 inversions, N even, so the loop is odd and
+// oscillates only while en = 1 (en = 0 holds the NAND output at 1 and the chain static). Output = the last
+// inverter (the NAND feedback node). Estimate: OpenSTA on the yosys netlist with the in-window ss_032C_3v15
+// Liberty (no wire) gives 9.2 ns for one pass of the 41 stages (0.19 / 0.26 ns per fall / rise stage), i.e. a period
+// of ~18.5 ns (~54 MHz) at ss; ff_022C_3v35 is about 2.2x faster (~120 MHz); routing adds delay. The macro divides
+// it by 2 (kept toggle flop) before the frequency counter (source 7). SDC: clock dring at the NAND output, the
+// loop arc A2 -> ZN disabled; every cell is dont_touch (keep=1, dont_touch=1 here and RSZ_DONT_TOUCH_LIST).
+// Area: 40 x 8.78 + 10.98 um2 = 0.00036 mm2 of cells.
+// Behavioural model (simulation): a free-running square wave of half-period HALF_NS while en = 1 (iverilog);
+// constant 0 for verilator / formal / yosys reads, which do not model the loop.
+module pt_dig_ring #(parameter integer N = 40, parameter real HALF_NS = 6.5)(input wire en, output wire out);
+`ifdef SYNTHESIS
+ wire[N:0] n;
+ (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__nand2_1 en_nand(.A1(en),.A2(n[N]),.ZN(n[0]));
+ genvar i;
+ generate for (i = 0; i < N; i = i + 1) begin : st
+  (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__inv_1 inv(.I(n[i]),.ZN(n[i+1]));
+ end endgenerate
+ assign out = n[N];
+`elsif FORMAL
+ assign out = 1'b0;
+`elsif VERILATOR
+ assign out = 1'b0;
+`else
+ timeunit 1ns; timeprecision 1ps;   // local: pt_cells.sv has no `timescale (the bench's applies elsewhere)
+ reg r = 1'b0;
+ always @(posedge en) begin
+  while (en) begin #(HALF_NS) r = en ? ~r : 1'b0; end
+  r = 1'b0;
+ end
+ assign out = r;
 `endif
 endmodule
 

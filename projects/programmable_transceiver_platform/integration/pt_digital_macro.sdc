@@ -29,8 +29,18 @@
 #   ctref     word reference into pt_clocktree_slow = ctw/10 (modulus 10).
 #   ctdet     detector divider input clock (prescaled), 156.25 MHz.
 #   fc0..fc5  frequency-counter sources (pt_freq_count, P3-7): ring FBCKs (VCO/16 <= ~69 MHz), ring_osc,
-#             vco_replica, aosc (~35-56 MHz), LC prescale; all constrained at 156.25 MHz. They reach the
-#             counters through a stopped-only select mux, so they are logically exclusive with each other.
+#             vco_replica, aosc (~35-56 MHz), LC prescale; constrained at 156.25 MHz (FC_PERIOD) except
+#             OBS-2: fc2 (ring_osc, 165-260 MHz) at FC_FAST_PERIOD 3.6 ns (278 MHz). It reaches the counters
+#             only through one kept toggle flop (fc_half2, generated clock fc2h = /2), whose only source-rate path is
+#             its own clk -> Q -> inverter -> D loop; every counter flop runs at <= 139 MHz (inside FC_PERIOD). STA
+#             argument: the toggle loop is ~3.0 ns at in-window ss (dffrnq_4 clk->Q ~2.4 ns + inverter + setup;
+#             +0.54 ns slack at 3.6 ns on the yosys netlist) and the ring is slowest at ss (165 MHz, 6 ns); it reaches
+#             255-260 MHz only at ff, where the flop is ~2x faster. fc3 (vco_replica OUT = VCO/16, <= ~69 MHz) stays
+#             at FC_PERIOD, undivided.
+#   dring     OBS-14 standard-cell ring (pt_dig_ring, clock defined at the enable NAND output, loop arc A2 -> ZN
+#             disabled): DRING_PERIOD 5.0 ns (200 MHz; estimate ~54 MHz ss, ~120 MHz ff), generated dringh = /2
+#             at dring_half (frequency-counter source 7).
+#             All sources reach the counters through a stopped-only select mux: logically exclusive.
 # Chip configuration (split, SPL-7): PT_CHIP in the environment (rf | wired; unset = both halves, module benches).
 # Only the checks that require a block of one chip depend on it; constraints on absent logic match nothing.
 # Every tool that reads this SDC on a chip netlist must set PT_CHIP (run_digital_hardening.sh passes it to its
@@ -41,7 +51,8 @@ if {[lsearch -exact {rf wired both} $PT_CHIP_NAME] < 0} {error "PT_CHIP must be 
 # Experiment hook: PT_SCLK_PERIOD in the environment overrides the SCLK constraint (area/closure studies).
 if {[info exists ::env(PT_SCLK_PERIOD)]} { set SCLK_PERIOD $::env(PT_SCLK_PERIOD) }
 foreach {v d} {SCLK_PERIOD 200.0 REF_PERIOD 10.0 HWORD_PERIOD 6.4 WTX_PERIOD 12.3 WRX_PERIOD 12.3
-               RFTX_PERIOD 20.0 RFRX_PERIOD 20.0 CTW_PERIOD 6.4 CTDET_PERIOD 6.4 FC_PERIOD 6.4} {
+               RFTX_PERIOD 20.0 RFRX_PERIOD 20.0 CTW_PERIOD 6.4 CTDET_PERIOD 6.4 FC_PERIOD 6.4
+               FC_FAST_PERIOD 3.6 DRING_PERIOD 5.0} {
     if {![info exists $v]} { set $v $d }
 }
 # HOST_RATE_DIV: reduced-rate fallback mode (see hddr below); the forwarded H2D clock follows it.
@@ -229,19 +240,44 @@ set fc_clks {}
 for {set i 0} {$i < 6} {incr i} {
     # fc_src[4] is the always-on oscillator (40-60 MHz, analog/timing/README.md): it also clocks the supply / clock
     # monitor (rtl/pt_monitor.sv), so it gets its own period, 16.0 ns = 62.5 MHz (the fastest oscillator + 4 %).
-    create_clock -name fc$i -period [expr {$i == 4 ? 16.0 : $FC_PERIOD}] [get_ports "fc_src\[$i\]"]
+    # OBS-2: fc_src[2] (ring_osc) at FC_FAST_PERIOD; it clocks only its /2 flop.
+    create_clock -name fc$i -period [expr {$i == 4 ? 16.0 : $i == 2 ? $FC_FAST_PERIOD : $FC_PERIOD}] [get_ports "fc_src\[$i\]"]
     lappend fc_clks fc$i
 }
+# OBS-2 /2 toggle flop (pt_clock_dff fc_half2) and OBS-14 ring (pt_dig_ring dring + dring_half).
+# fc_master(i): the clock that reaches the counters' select mux for source code i+1.
+array set fc_master {0 fc0 1 fc1 3 fc3 4 fc4 5 fc5}
+foreach {i h} {2 fc2h} {
+    set q [get_pins -quiet -hierarchical "*fc_half$i.cell/Q"]
+    if {[llength $q] != 1} {error "Expected one frequency-counter /2 flop fc_half$i (OBS-2)"}
+    create_generated_clock -name $h -master_clock fc$i -source [get_ports "fc_src\[$i\]"] -divide_by 2 $q
+    lappend fc_clks $h
+    set fc_master($i) $h
+}
+set dring_z [get_pins -quiet -hierarchical "*dring.en_nand/ZN"]
+set dring_q [get_pins -quiet -hierarchical "*dring_half.cell/Q"]
+if {[llength $dring_z] != 1 || [llength $dring_q] != 1} {error "Expected one ring-oscillator NAND (dring.en_nand) and /2 flop (dring_half) (OBS-14)"}
+# The combinational loop is broken at the NAND feedback input; the clock starts at the NAND output. The enable input
+# (A1) is an SCLK-static register level (debug.replica.dig_ring_enable, update stopped).
+set_disable_timing -from A2 -to ZN [get_cells -quiet -hierarchical "*dring.en_nand"]
+create_clock -name dring -period $DRING_PERIOD $dring_z
+create_generated_clock -name dringh -master_clock dring -source $dring_z -divide_by 2 $dring_q
+lappend fc_clks dring dringh
+set fc_master(6) dringh
 # pt_freq_count block clocks (2026-11-10 timing rework): the Johnson counter MSB, through the kept
 # buffer blk_clock_buf, is the source divided by 8 (50 % duty); it clocks the two Gray block counters
 # (ha on its fall, hb on its rise). One generated clock per instance and per selectable source.
 set fc_groups {}
-for {set i 0} {$i < 6} {incr i} {
-    set grp [list fc$i]
+for {set i 0} {$i < 7} {incr i} {
+    set grp [list $fc_master($i)]
+    if {$i == 2} { lappend grp fc$i }
+    if {$i == 6} { lappend grp dring }
+    set msrc [expr {[string match fc? $fc_master($i)] ? [get_ports "fc_src\[$i\]"] :
+                    $i == 2 ? [get_pins -hierarchical "*fc_half2.cell/Q"] : $dring_q}]
     foreach inst {fca fcb} {
         set b [get_pins -quiet -hierarchical "*${inst}.blk_clock_buf.cell/Z"]
         if {[llength $b] == 1} {
-            create_generated_clock -name ${inst}_blk$i -master_clock fc$i -source [get_ports "fc_src\[$i\]"] \
+            create_generated_clock -name ${inst}_blk$i -master_clock $fc_master($i) -source $msrc \
                 -divide_by 8 -add $b
             lappend grp ${inst}_blk$i
             lappend fc_clks ${inst}_blk$i
@@ -809,7 +845,7 @@ if {[info exists ::env(STEP_ID)] && $::env(STEP_ID) eq "OpenROAD.CTS"} {
     if {[llength $ingress_clks]} { delete_clock [get_clocks ingress_rfrx] }
     if {$mem_on} { delete_clock [get_clocks egress_mem_sclk] }
     # pt_freq_count block clocks: the six source alternatives share one buffer output per instance
-    foreach inst {fca fcb} { for {set i 1} {$i < 6} {incr i} {
+    foreach inst {fca fcb} { for {set i 1} {$i < 7} {incr i} {
         if {[llength [get_clocks -quiet ${inst}_blk$i]]} { delete_clock [get_clocks ${inst}_blk$i] } } }
     # monitor time base: fc4 and mon_host share the mon_mux output. The one physical tree behind the mux is built
     # for fc4 (16 ns, the faster alternative); mon_div's clock pin stays an ordinary hcore sink.

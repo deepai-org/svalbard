@@ -371,7 +371,9 @@ def build(seed, n_random):
         if rule.get('absent'):
             continue
         bad, good = rule_configs(rule)
-        if any(F[n].get('absent') and v for n, v in bad.items()):     # needs a field of the other chip: cannot be violated here
+        # needs a field of the other chip, or a value this chip rejects at write time (OBS-6: an ATB code with no leaf
+        # on the chip): cannot be violated here
+        if any((F[n].get('absent') and v) or not M.field_ok(F[n], v) for n, v in bad.items()):
             not_violable.append(rule['id']); continue
         cfg = M.reset_config()
         cfg.update(bad)

@@ -336,7 +336,8 @@
       "island": null,
       "kind": "bias",
       "force": "allowed",
-      "note": "core_support TRK_RF; current out of node. Force precondition (commit rule): dist_en_rf=0, or the island switched off (allows the README idac2 trim)."
+      "note": "core_support TRK_RF; current out of node. Force precondition (commit rule): dist_en_rf=0, or the island switched off. OBS-17: the ATB0 switch itself closes only while the island it feeds is on with real power-good; a force written with the island off is accepted but leaves the switch open (the idac2 trim measures on ATB1 code 57).",
+      "force_island": "rf"
     },
     {
       "code": 15,
@@ -393,7 +394,9 @@
       "island": null,
       "kind": "bias",
       "force": "allowed",
-      "note": "core_support TRK_WIRE; current out of node. Force precondition (commit rule): dist_en_wire=0, or the island switched off (allows the README idac2 trim)."
+      "note": "core_support TRK_WIRE; current out of node. Force precondition (commit rule): dist_en_wire=0, or the island switched off. OBS-17: the ATB0 switch itself closes only while the island it feeds is on with real power-good (or debug.wtx_ext.enable is set: WTX_EXT fallback force; the fallback cell ANDs it with WIRED_ON); a force written with the island off is accepted but leaves the switch open (the idac2 trim measures on ATB1 code 57).",
+      "force_island": "wired",
+      "force_or": "debug.wtx_ext.enable"
     },
     {
       "code": 23,
@@ -443,7 +446,8 @@
       "island": null,
       "kind": "bias",
       "force": "allowed",
-      "note": "core_support TRK_PLL; current out of node. Force precondition (commit rule): dist_en_pll=0, or the island switched off (allows the README idac2 trim)."
+      "note": "core_support TRK_PLL; current out of node. Force precondition (commit rule): dist_en_pll=0, or the island switched off. OBS-17: the ATB0 switch itself closes only while the island it feeds is on with real power-good; a force written with the island off is accepted but leaves the switch open (the idac2 trim measures on ATB1 code 57).",
+      "force_island": "pll"
     },
     {
       "code": 30,
@@ -489,7 +493,8 @@
       "island": null,
       "kind": "bias",
       "force": "allowed",
-      "note": "core_support TRK_CONV; current out of node. Force precondition (commit rule): dist_en_conv=0, or the island switched off (allows the README idac2 trim)."
+      "note": "core_support TRK_CONV; current out of node. Force precondition (commit rule): dist_en_conv=0, or the island switched off. OBS-17: the ATB0 switch itself closes only while the island it feeds is on with real power-good; a force written with the island off is accepted but leaves the switch open (the idac2 trim measures on ATB1 code 57).",
+      "force_island": "conv"
     },
     {
       "code": 36,
@@ -641,7 +646,8 @@
       "island": null,
       "kind": "bias",
       "force": "allowed",
-      "note": "core_support TRK_DEBUG; current out of node. Force precondition (commit rule): dist_en_debug=0, or the island switched off (allows the README idac2 trim)."
+      "note": "core_support TRK_DEBUG; current out of node. Force precondition (commit rule): dist_en_debug=0, or the island switched off. OBS-17: the ATB0 switch itself closes only while the island it feeds is on with real power-good; a force written with the island off is accepted but leaves the switch open (the idac2 trim measures on ATB1 code 57).",
+      "force_island": "debug"
     },
     {
       "code": 57,
@@ -1221,6 +1227,15 @@
           "maximum": 1,
           "unit": "code",
           "description": "characterization speed cell enable (CLK_OBS code 15 ORs the three outputs: enable one at a time)"
+        },
+        "dig_ring_enable": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "islands": [],
+          "description": "OBS-14: standard-cell ring oscillator inside the digital macro (rtl/pt_cells.sv pt_dig_ring: enable NAND + 40 inverters, kept cells, core supply; ~54 MHz at in-window ss, ~120 MHz ff, Liberty estimate without wire), divided by 2 in the macro and counted as frequency-counter source 7 (dig_ring). Tracks the speed of the macro's own 5 V cells for per-chip supply trim. Core domain (no island)."
         }
       }
     },
@@ -1607,7 +1622,7 @@
       }
     },
     "debug.freq_count_a": {
-      "description": "Generalized frequency counter instance a (PLL/TX ring; consolidation item P3-7, rtl owned by the digital hardening agent): counts the selected source against the reference over a window; enable = source != off. Placed at 0xE8 (free tail of the 0x60-0xEF block) because the 0x40-0x5F debug block is full.",
+      "description": "Generalized frequency counter instance a (PLL/TX ring; consolidation item P3-7, rtl owned by the digital hardening agent): counts the selected source against the reference over a window; enable = source != off. Placed at 0xE8 (free tail of the 0x60-0xEF block) because the 0x40-0x5F debug block is full. Sources 3 (ring_osc) and 7 (dig_ring) are divided by 2 in the macro (OBS-2 / OBS-14): their count is source edges / 2; the other sources count edges.",
       "update": "stopped",
       "islands": [],
       "live": false,
@@ -1623,8 +1638,10 @@
             "ring_osc",
             "vco_replica",
             "aosc",
-            "lc_prescale"
-          ]
+            "lc_prescale",
+            "dig_ring"
+          ],
+          "description": "OBS-2 / OBS-14: codes 3 (ring_osc) and 7 (dig_ring) are divided by 2 in the macro before the counter, so their count is source edges / 2; codes 1, 2, 4, 5, 6 count source edges."
         },
         "window": {
           "bits": 2,
@@ -1672,7 +1689,7 @@
       }
     },
     "debug.freq_count_b": {
-      "description": "Generalized frequency counter instance b (CDR ring; consolidation item P3-7, rtl owned by the digital hardening agent): counts the selected source against the reference over a window; enable = source != off. Placed at 0xEA (free tail of the 0x60-0xEF block) because the 0x40-0x5F debug block is full.",
+      "description": "Generalized frequency counter instance b (CDR ring; consolidation item P3-7, rtl owned by the digital hardening agent): counts the selected source against the reference over a window; enable = source != off. Placed at 0xEA (free tail of the 0x60-0xEF block) because the 0x40-0x5F debug block is full. Sources 3 (ring_osc) and 7 (dig_ring) are divided by 2 in the macro (OBS-2 / OBS-14): their count is source edges / 2; the other sources count edges.",
       "update": "stopped",
       "islands": [],
       "live": false,
@@ -1688,8 +1705,10 @@
             "ring_osc",
             "vco_replica",
             "aosc",
-            "lc_prescale"
-          ]
+            "lc_prescale",
+            "dig_ring"
+          ],
+          "description": "OBS-2 / OBS-14: codes 3 (ring_osc) and 7 (dig_ring) are divided by 2 in the macro before the counter, so their count is source edges / 2; codes 1, 2, 4, 5, 6 count source edges."
         },
         "window": {
           "bits": 2,
@@ -3246,6 +3265,26 @@
             "meaning": "1 = pt_rf, 2 = pt_wired (3 = the both-halves build used by module-level benches only; no chip is built with it)"
           }
         }
+      },
+      "status.health": {
+        "description": "OBS-3 / OBS-IMPL: raw power-good of every island switch (the enable groups in ISLAND_STATUS 0x0A AND several switches) and the sticky H2D FIFO health flags of the host link (pt_host_link: overflow = a complete H2D quad found no free FIFO entry, underflow = the core read an empty FIFO while running; both sticky until the next reset). Bits of switches that do not exist on a chip read 0.",
+        "fields": {
+          "switch_pg": {
+            "bits": 10,
+            "port": "sw_pg",
+            "meaning": "b0 rf_rx, b1 rf_tx, b2 lod, b3 lo, b4 wired_rx, b5 wired_cap, b6 wired_tx, b7 pll, b8 conv, b9 debug switch power-good (raw s_pg_* inputs, synchronized)"
+          },
+          "h2d_overflow": {
+            "bits": 1,
+            "port": "h2d_ovf",
+            "meaning": "sticky until reset: H2D quad dropped (FIFO full)"
+          },
+          "h2d_underflow": {
+            "bits": 1,
+            "port": "h2d_unf",
+            "meaning": "sticky until reset: H2D FIFO read empty while running"
+          }
+        }
       }
     }
   },
@@ -3371,11 +3410,11 @@
   },
   "atb_switch_dead_time_s": 2e-08,
   "block_observation": {
-    "policy": "Per-block observation assignment (spec/tapeout-plan.md, debug and test pads). Each entry names one signal, the block port it observes (null = status/bias node with no architecture port), the path and its selection, the shared-cell mode (register field -> value) that makes it block-specific, the islands that must be on in addition to the path control's own islands, and the expected bench-visible result. via = observed through the named downstream blocks (indirect). Paths: atb1 (code by node name), dbg_obs (DBG_OBS0 sel = 4+obs_status index), wdbg_obs (sel = 3+wire_status index), clk_obs/wclk_obs/wmon/bb_tap/freq_count (source value), spi (address[bits]), host_data (D2H payload), pad (instrument at a functional pad). A mapping is not a verified path: verification/observation_coverage.py checks it against the catalogs and reports what has assembled evidence. Retired blocks are omitted.",
+    "policy": "Per-block observation assignment (spec/tapeout-plan.md, debug and test pads). Each entry names one signal, the block port it observes (null = status/bias node with no architecture port), the path and its selection, the shared-cell mode (register field -> value) that makes it block-specific, the islands that must be on in addition to the path control's own islands, and the expected bench-visible result. via = observed through the named downstream blocks (indirect). Paths: atb1 (code by node name), dbg_obs (DBG_OBS0 sel = 4+obs_status index), wdbg_obs (sel = 3+wire_status index), clk_obs/wclk_obs/wmon/bb_tap/freq_count (source value), spi (address[bits]), host_data (D2H payload), pad (instrument at a functional pad). A mapping is not a verified path: verification/observation_coverage.py checks it against the catalogs and reports what has assembled evidence. Retired blocks are omitted. Per chip (split, OBS-6): every entry carries `chips`, the dies on which its path, block, islands, mode fields and ATB leaf exist (spec/chips.json; atb1 entries are checked against chips.json atb_no_leaf by verification/observation_coverage.py). Updated 2026-11-20 against spec/observation.md.",
     "blocks": {
       "power": [
         {
-          "signal": "island_pgood (5 islands)",
+          "signal": "island_pgood (enable groups)",
           "port": [
             "rf_v",
             "wire_v",
@@ -3384,63 +3423,107 @@
           ],
           "path": "spi",
           "select": "0x0A[13:8]",
-          "expected": "ISLAND_STATUS reads 0x3737 with all five islands on (pass evidence: evidence/assembled-power-observation.json)"
+          "expected": "ISLAND_STATUS b13:8 = power-good per enable group: pt_rf rf (rf_rx AND rf_tx AND lod AND lo), pll, conv, debug; pt_wired wired (wired_rx AND wired_cap AND wired_tx), pll, debug; groups absent on the chip read 0",
+          "chips": [
+            "rf",
+            "wired"
+          ]
+        },
+        {
+          "signal": "switch_pg (per island switch)",
+          "port": null,
+          "path": "spi",
+          "select": "0xFF[9:0]",
+          "expected": "status.health.switch_pg (OBS-3): each bit follows its own switch (pt_rf b0-b3 rf_rx, rf_tx, lod, lo; pt_wired b4-b6 wired_rx, wired_cap, wired_tx; both b7 pll, b9 debug; pt_rf b8 conv); a switch that is enabled but reads 0 is the failed one of its group",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "wire_vdd_sw_sense",
           "port": "wire_v",
           "path": "atb1",
           "select": "wire_vdd_sw_sense",
-          "expected": "ATB1 = switched WIRE_VDD (3.3 V on, <0.3 V off)"
+          "expected": "ATB1 = switched WIRE_VDD (3.3 V on, <0.3 V off)",
+          "chips": [
+            "wired"
+          ]
         },
         {
           "signal": "rf_vdd_sw_sense",
           "port": "rf_v",
           "path": "atb1",
           "select": "rf_vdd_sw_sense",
-          "expected": "ATB1 = switched RF_VDD"
+          "expected": "ATB1 = switched RF_VDD",
+          "chips": [
+            "rf"
+          ]
         },
         {
           "signal": "pll_vdd_sw_sense",
           "port": "pll_v",
           "path": "atb1",
           "select": "pll_vdd_sw_sense",
-          "expected": "ATB1 = switched PLL_VDD"
+          "expected": "ATB1 = switched PLL_VDD",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "conv_vdd_sw_sense",
           "port": "conv_v",
           "path": "atb1",
           "select": "conv_vdd_sw_sense",
-          "expected": "ATB1 = switched CONV_VDD"
+          "expected": "ATB1 = switched CONV_VDD",
+          "chips": [
+            "rf"
+          ]
         },
         {
           "signal": "debug_vdd_sw_sense",
           "port": null,
           "path": "atb1",
           "select": "debug_vdd_sw_sense",
-          "expected": "ATB1 = switched DEBUG_VDD"
+          "expected": "ATB1 = switched DEBUG_VDD",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "core_vdd_sense",
           "port": "core_v",
           "path": "atb1",
           "select": "core_vdd_sense",
-          "expected": "ATB1 = CORE_VDD"
+          "expected": "ATB1 = CORE_VDD",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "host_vdd_sense",
           "port": "host_v",
           "path": "atb1",
           "select": "host_vdd_sense",
-          "expected": "ATB1 = HOST_VDD"
+          "expected": "ATB1 = HOST_VDD",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "vss_local_sense",
           "port": "vss",
           "path": "atb1",
           "select": "vss_local_sense",
-          "expected": "ATB1 = local VSS (<10 mV)"
+          "expected": "ATB1 = local VSS (<10 mV)",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         }
       ],
       "monitor": [
@@ -3449,28 +3532,44 @@
           "port": "fault",
           "path": "spi",
           "select": "0x0B[0]",
-          "expected": "FAULT_STATUS b0 = 0 in nominal operation, 1 under an injected supply fault"
+          "expected": "FAULT_STATUS b0 = 0 in nominal operation, 1 under an injected supply fault",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "monitor_fault",
           "port": "fault",
           "path": "dbg_obs",
           "select": "monitor_fault",
-          "expected": "DBG_OBS0 follows FAULT_STATUS b0 live"
+          "expected": "DBG_OBS0 follows FAULT_STATUS b0 live",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "por_n",
           "port": "ready",
           "path": "dbg_obs",
           "select": "por_n",
-          "expected": "DBG_OBS0 high after POR release (por_n=1)"
+          "expected": "DBG_OBS0 high after POR release (por_n=1)",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "por_occurred",
           "port": "ready",
           "path": "spi",
           "select": "0x0D[0]",
-          "expected": "RESET_STATUS b0 = 1 after power-up, survives RESET_N, clears on W1C"
+          "expected": "RESET_STATUS b0 = 1 after power-up, survives RESET_N, clears on W1C",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         }
       ],
       "aosc": [
@@ -3480,21 +3579,33 @@
           "path": "clk_obs",
           "select": "aosc",
           "expected": "CLK_OBS square wave 50 MHz/128 = 390 kHz (40-60 MHz envelope -> 312-469 kHz)",
-          "divider_log2": 7
+          "divider_log2": 7,
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "aosc_div",
           "port": "clock",
           "path": "dbg_obs",
           "select": "aosc_div",
-          "expected": "DBG_OBS0 toggles at the divided management clock"
+          "expected": "DBG_OBS0 toggles at the divided management clock",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "clock count",
           "port": "clock",
           "path": "freq_count",
           "select": "aosc",
-          "expected": "status.freq_count_a.count = aosc/ref ratio x window; locked=1 with target set from nominal"
+          "expected": "status.freq_count_a.count = aosc/ref ratio x window; locked=1 with target set from nominal",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         }
       ],
       "bias": [
@@ -3503,42 +3614,66 @@
           "port": "ibias",
           "path": "atb1",
           "select": "master_ibias",
-          "expected": "ATB1 = ROOT_REF mirror gate (core-bias fixture: passes)"
+          "expected": "ATB1 = ROOT_REF mirror gate (core-bias fixture: passes)",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "vbg",
           "port": null,
           "path": "atb1",
           "select": "vbg",
-          "expected": "ATB1 = VBG 1.20-1.23 V (core-bias fixture: passes)"
+          "expected": "ATB1 = VBG 1.20-1.23 V (core-bias fixture: passes)",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "idac1_source_ibias",
           "port": null,
           "path": "atb1",
           "select": "idac1_source_ibias",
-          "expected": "ATB1 into 1 V SMU: off <10 nA, 0.94 uA/LSB (IDAC1 SMU fixture: passes)"
+          "expected": "ATB1 into 1 V SMU: off <10 nA, 0.94 uA/LSB (IDAC1 SMU fixture: passes)",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "master_vref0",
           "port": "vref0",
           "path": "atb1",
           "select": "master_vref0",
-          "expected": "ATB1 = vref0 reference voltage"
+          "expected": "ATB1 = vref0 reference voltage",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "master_vcm",
           "port": "vcm",
           "path": "atb1",
           "select": "master_vcm",
-          "expected": "ATB1 = master VCM (about VDD/2)"
+          "expected": "ATB1 = master VCM (about VDD/2)",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "bias_ready",
           "port": "ready",
           "path": "dbg_obs",
           "select": "bandgap_ok",
-          "expected": "DBG_OBS0 high once the bias generator is enabled and settled"
+          "expected": "DBG_OBS0 high once the bias generator is enabled and settled",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         }
       ],
       "refbuf": [
@@ -3550,6 +3685,9 @@
           "expected": "ATB1 = buffered converter VREF (block evidence passes)",
           "islands": [
             "conv"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -3560,6 +3698,9 @@
           "expected": "DBG_OBS0 high with refbuf enabled and settled",
           "islands": [
             "conv"
+          ],
+          "chips": [
+            "rf"
           ]
         }
       ],
@@ -3569,21 +3710,33 @@
           "port": "miso",
           "path": "spi",
           "select": "0x00",
-          "expected": "ID 0x5356, ABI 0x0002, MAP_HASH match; status.pattern and freq-count registers readable"
+          "expected": "ID 0x5356, ABI 0x0003, MAP_HASH match, status.chip.id = 1 (pt_rf) / 2 (pt_wired); status.pattern and freq-count registers readable",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "commit_toggle",
           "port": "controls",
           "path": "dbg_obs",
           "select": "commit_toggle",
-          "expected": "DBG_OBS0 = commit toggle (select code 3) flips on each accepted commit"
+          "expected": "DBG_OBS0 = commit toggle (select code 3) flips on each accepted commit",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "capture_done",
           "port": "host_words",
           "path": "dbg_obs",
           "select": "capture_done",
-          "expected": "DBG_OBS0 high after a capture completes"
+          "expected": "DBG_OBS0 high after a capture completes",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "dac codes",
@@ -3601,6 +3754,9 @@
           "islands": [
             "conv",
             "rf"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -3612,15 +3768,21 @@
           "path": "pad",
           "select": "WIRE_TX_P/N",
           "expected": "indirect: PRBS eye at WIRE_TX; postcursor setting changes the de-emphasis step",
-          "via": "wiredtx"
+          "via": "wiredtx",
+          "chips": [
+            "wired"
+          ]
         },
         {
           "signal": "usb_symbols",
           "port": "usb_symbols",
           "path": "pad",
-          "select": "WIRE_RX_P/N",
-          "expected": "indirect: FS/HS symbols on D+/D-",
-          "via": "usbfs,usbhs,usbdrive"
+          "select": "USB_DP/DN",
+          "expected": "indirect: FS/HS symbols on the USB pads USB_DP/USB_DN (pt_wired; pad_usb, not WIRE_RX)",
+          "via": "usbfs,usbhs,usbdrive",
+          "chips": [
+            "wired"
+          ]
         },
         {
           "signal": "burst_phase_seed/retune_window",
@@ -3631,7 +3793,36 @@
           "path": "host_data",
           "select": "D2H",
           "expected": "indirect: burst receive and retune complete without D2H errors",
-          "via": "cdr,clocktree"
+          "via": "cdr,clocktree",
+          "chips": [
+            "rf",
+            "wired"
+          ]
+        },
+        {
+          "signal": "dig_ring",
+          "port": null,
+          "path": "freq_count",
+          "select": "dig_ring",
+          "expected": "OBS-14: debug.replica.dig_ring_enable = 1, frequency-counter source 7 counts the macro's standard-cell ring / 2 (estimate ~27 MHz at in-window ss .. ~60 MHz ff after the /2, before routing); 0 counts with the enable off. Tracks the digital-cell speed for supply trim",
+          "chips": [
+            "rf",
+            "wired"
+          ]
+        },
+        {
+          "signal": "ring_osc count",
+          "port": null,
+          "path": "freq_count",
+          "select": "ring_osc",
+          "expected": "OBS-2: debug.replica.ringosc_enable = 1 (debug island), source 3 counts ring_osc / 2 (83-130 MHz for the 165-260 MHz ring): count x 2 = ring edges per window",
+          "islands": [
+            "debug"
+          ],
+          "chips": [
+            "rf",
+            "wired"
+          ]
         }
       ],
       "hostio": [
@@ -3640,14 +3831,22 @@
           "port": "d2h",
           "path": "host_data",
           "select": "D2H",
-          "expected": "D2H words carry the PRBS/capture stream; H2D loopback through debug.pattern checker (status.pattern.errors=0)"
+          "expected": "D2H words carry the PRBS/capture stream; H2D loopback through debug.pattern checker (status.pattern.errors=0)",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "host_rx_clk_div",
           "port": "host_follow_clock",
           "path": "dbg_obs",
           "select": "host_rx_clk_div",
-          "expected": "DBG_OBS0 toggles at host RX clock / 2"
+          "expected": "DBG_OBS0 toggles at host RX clock / 2",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "miso_pad/management_out",
@@ -3657,7 +3856,11 @@
           ],
           "path": "spi",
           "select": "0x00",
-          "expected": "SPI ID reads 0x5356 through the MISO pad"
+          "expected": "SPI ID reads 0x5356 through the MISO pad",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "host_in",
@@ -3665,7 +3868,11 @@
           "path": "host_data",
           "select": "H2D",
           "expected": "indirect: H2D PRBS checked by debug.pattern (status.pattern.errors=0)",
-          "via": "digital"
+          "via": "digital",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "align_marker",
@@ -3673,7 +3880,22 @@
           "path": "host_data",
           "select": "D2H",
           "expected": "indirect: D2H word alignment follows SCLK-with-CS_N-high markers",
-          "via": "clocktree,digital"
+          "via": "clocktree,digital",
+          "chips": [
+            "rf",
+            "wired"
+          ]
+        },
+        {
+          "signal": "h2d_health",
+          "port": null,
+          "path": "spi",
+          "select": "0xFF[11:10]",
+          "expected": "status.health.h2d_overflow / h2d_underflow = 0 after a clean H2D session (sticky until reset; 1 = a quad was dropped / the FIFO ran empty while running)",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         }
       ],
       "refpad": [
@@ -3683,17 +3905,25 @@
           "path": "dbg_obs",
           "select": "ref_present",
           "expected": "DBG_OBS0 high with a board reference applied to REF_IN, low with it removed",
-          "via": "refinput"
+          "via": "refinput",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "reference to PLL",
           "port": "clock_pair",
           "path": "freq_count",
           "select": "tx_ring_fbck",
-          "expected": "status.freq_count_a locks only with a valid reference at REF_IN",
+          "expected": "status.freq_count_a locks only with a valid reference at REF_IN (needs a clock on REF_IN)",
           "via": "rfpll",
           "islands": [
             "pll"
+          ],
+          "chips": [
+            "rf",
+            "wired"
           ]
         }
       ],
@@ -3706,6 +3936,9 @@
           "expected": "BB_I/BB_Q show the downconverted tone injected at RF_RX (pad, LNA and mixer in path)",
           "via": "lna,rxmix_i,rxmix_q",
           "islands": [
+            "rf"
+          ],
+          "chips": [
             "rf"
           ]
         }
@@ -3721,6 +3954,9 @@
           "islands": [
             "rf",
             "pll"
+          ],
+          "chips": [
+            "rf"
           ]
         }
       ],
@@ -3734,6 +3970,9 @@
           "via": "wiredtx",
           "islands": [
             "wired"
+          ],
+          "chips": [
+            "wired"
           ]
         }
       ],
@@ -3746,6 +3985,9 @@
           "expected": "WMON = buffered WIRE_RX_P (scope shows the applied line pattern)",
           "islands": [
             "wired"
+          ],
+          "chips": [
+            "wired"
           ]
         },
         {
@@ -3756,6 +3998,9 @@
           "expected": "WMON = buffered WIRE_RX_N",
           "islands": [
             "wired"
+          ],
+          "chips": [
+            "wired"
           ]
         }
       ],
@@ -3765,12 +4010,16 @@
           "port": "clock",
           "path": "clk_obs",
           "select": "pll_vco",
-          "expected": "CLK_OBS = RF PLL VCO / 2^7 (owner=rf)",
+          "expected": "CLK_OBS = TX ring VCO / 2^7 (the TX ring PLL is on both chips)",
           "mode": {},
           "islands": [
             "pll"
           ],
-          "divider_log2": 7
+          "divider_log2": 7,
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "feedback",
@@ -3781,6 +4030,10 @@
           "mode": {},
           "islands": [
             "pll"
+          ],
+          "chips": [
+            "rf",
+            "wired"
           ]
         },
         {
@@ -3788,10 +4041,14 @@
           "port": "lock",
           "path": "dbg_obs",
           "select": "pll_tx_lock",
-          "expected": "DBG_OBS0 high after lock (owner=rf)",
+          "expected": "DBG_OBS0 high after lock",
           "mode": {},
           "islands": [
             "pll"
+          ],
+          "chips": [
+            "rf",
+            "wired"
           ]
         },
         {
@@ -3803,6 +4060,10 @@
           "mode": {},
           "islands": [
             "pll"
+          ],
+          "chips": [
+            "rf",
+            "wired"
           ]
         },
         {
@@ -3810,17 +4071,25 @@
           "port": null,
           "path": "atb1",
           "select": "pll_ibias",
-          "expected": "ATB1 = PLL trunk bias"
+          "expected": "ATB1 = PLL trunk bias",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "fbck count",
           "port": "clock",
           "path": "freq_count",
           "select": "tx_ring_fbck",
-          "expected": "status.freq_count_a.locked=1, count matches target",
+          "expected": "status.freq_count_a.locked=1, count matches target (needs a clock on REF_IN)",
           "mode": {},
           "islands": [
             "pll"
+          ],
+          "chips": [
+            "rf",
+            "wired"
           ]
         }
       ],
@@ -3830,22 +4099,30 @@
           "port": "clock",
           "path": "clk_obs",
           "select": "pll_vco",
-          "expected": "CLK_OBS = wired PLL VCO / 2^7 (owner=wired)",
+          "expected": "CLK_OBS = wired PLL VCO / 2^7",
           "mode": {},
           "islands": [
             "pll"
           ],
-          "divider_log2": 7
+          "divider_log2": 7,
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "pll_lock",
           "port": "lock",
           "path": "dbg_obs",
           "select": "pll_cdr_lock",
-          "expected": "DBG_OBS high after lock (owner=wired)",
+          "expected": "DBG_OBS high after lock",
           "mode": {},
           "islands": [
             "pll"
+          ],
+          "chips": [
+            "rf",
+            "wired"
           ]
         },
         {
@@ -3853,10 +4130,14 @@
           "port": "lock",
           "path": "dbg_obs",
           "select": "pll_tx_lock",
-          "expected": "DBG_OBS0 high after lock (owner=wired)",
+          "expected": "DBG_OBS0 high after lock",
           "mode": {},
           "islands": [
             "pll"
+          ],
+          "chips": [
+            "rf",
+            "wired"
           ]
         },
         {
@@ -3864,10 +4145,14 @@
           "port": null,
           "path": "atb1",
           "select": "pll_vctrl",
-          "expected": "ATB1 = loop control voltage (owner=wired)",
+          "expected": "ATB1 = loop control voltage",
           "mode": {},
           "islands": [
             "pll"
+          ],
+          "chips": [
+            "rf",
+            "wired"
           ]
         },
         {
@@ -3875,10 +4160,14 @@
           "port": "clock",
           "path": "freq_count",
           "select": "tx_ring_fbck",
-          "expected": "status.freq_count_a.locked=1 (owner=wired)",
+          "expected": "status.freq_count_a.locked=1",
           "mode": {},
           "islands": [
             "pll"
+          ],
+          "chips": [
+            "rf",
+            "wired"
           ]
         }
       ],
@@ -3892,7 +4181,10 @@
           "islands": [
             "pll"
           ],
-          "divider_log2": 7
+          "divider_log2": 7,
+          "chips": [
+            "rf"
+          ]
         },
         {
           "signal": "wire_clock",
@@ -3904,7 +4196,10 @@
             "pll",
             "wired"
           ],
-          "divider_log2": 7
+          "divider_log2": 7,
+          "chips": [
+            "wired"
+          ]
         }
       ],
       "refinput": [
@@ -3916,6 +4211,10 @@
           "expected": "DBG_OBS0 = 1 with REF_IN toggling, 0 when removed",
           "islands": [
             "pll"
+          ],
+          "chips": [
+            "rf",
+            "wired"
           ]
         },
         {
@@ -3923,11 +4222,15 @@
           "port": "low_ref",
           "path": "freq_count",
           "select": "tx_ring_fbck",
-          "expected": "PLL frequency counter locks against low_ref (indirect)",
+          "expected": "PLL frequency counter locks against low_ref (indirect) (needs a clock on REF_IN)",
           "mode": {},
           "via": "rfpll",
           "islands": [
             "pll"
+          ],
+          "chips": [
+            "rf",
+            "wired"
           ]
         },
         {
@@ -3940,6 +4243,10 @@
           "via": "rfpll",
           "islands": [
             "pll"
+          ],
+          "chips": [
+            "rf",
+            "wired"
           ]
         }
       ],
@@ -3953,6 +4260,9 @@
           "via": "rxmix_i,rxmix_q",
           "islands": [
             "rf"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -3963,6 +4273,9 @@
           "expected": "ATB1 = LNA bias node",
           "islands": [
             "rf"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -3972,6 +4285,9 @@
           "select": "rf_vcm",
           "expected": "ATB1 = RF common-mode reference",
           "islands": [
+            "rf"
+          ],
+          "chips": [
             "rf"
           ]
         }
@@ -3985,6 +4301,9 @@
           "expected": "BB_I_P/N = I mixer output, tone at f_RF-f_LO",
           "islands": [
             "rf"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -3994,6 +4313,9 @@
           "select": "rxmix_bias",
           "expected": "ATB1 = RX mixer bias (shared I/Q node)",
           "islands": [
+            "rf"
+          ],
+          "chips": [
             "rf"
           ]
         }
@@ -4007,6 +4329,9 @@
           "expected": "BB_Q_P/N = Q mixer output, 90 deg from BB_I",
           "islands": [
             "rf"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -4016,6 +4341,9 @@
           "select": "rxmix_bias",
           "expected": "ATB1 = RX mixer bias (shared I/Q node)",
           "islands": [
+            "rf"
+          ],
+          "chips": [
             "rf"
           ]
         }
@@ -4032,6 +4360,9 @@
           },
           "islands": [
             "rf"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -4041,6 +4372,9 @@
           "select": "pga_bias",
           "expected": "ATB1 = PGA bias",
           "islands": [
+            "rf"
+          ],
+          "chips": [
             "rf"
           ]
         }
@@ -4057,6 +4391,9 @@
           },
           "islands": [
             "rf"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -4066,6 +4403,9 @@
           "select": "pga_bias",
           "expected": "ATB1 = PGA bias",
           "islands": [
+            "rf"
+          ],
+          "chips": [
             "rf"
           ]
         }
@@ -4082,6 +4422,9 @@
           },
           "islands": [
             "rf"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -4094,6 +4437,9 @@
             "consolidation.bbfilter.direction": "rx"
           },
           "islands": [
+            "rf"
+          ],
+          "chips": [
             "rf"
           ]
         }
@@ -4110,6 +4456,9 @@
           },
           "islands": [
             "rf"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -4122,6 +4471,9 @@
             "consolidation.bbfilter.direction": "rx"
           },
           "islands": [
+            "rf"
+          ],
+          "chips": [
             "rf"
           ]
         }
@@ -4136,6 +4488,9 @@
           "islands": [
             "conv",
             "rf"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -4146,6 +4501,9 @@
           "expected": "DBG_OBS0 toggles at the conversion rate",
           "islands": [
             "conv"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -4156,6 +4514,9 @@
           "expected": "DBG_OBS0 high when BB_I injection exceeds full scale",
           "islands": [
             "conv"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -4166,6 +4527,9 @@
           "expected": "ATB1 = SAR comparator bias (shared I/Q)",
           "islands": [
             "conv"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -4176,6 +4540,9 @@
           "expected": "ATB1 = converter VCM",
           "islands": [
             "conv"
+          ],
+          "chips": [
+            "rf"
           ]
         }
       ],
@@ -4189,6 +4556,9 @@
           "islands": [
             "conv",
             "rf"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -4199,6 +4569,9 @@
           "expected": "DBG_OBS0 toggles at the conversion rate",
           "islands": [
             "conv"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -4209,6 +4582,9 @@
           "expected": "DBG_OBS0 high on BB_Q over-range",
           "islands": [
             "conv"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -4219,6 +4595,9 @@
           "expected": "ATB1 = SAR comparator bias (shared I/Q)",
           "islands": [
             "conv"
+          ],
+          "chips": [
+            "rf"
           ]
         }
       ],
@@ -4236,6 +4615,9 @@
           "islands": [
             "conv",
             "rf"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -4246,6 +4628,9 @@
           "expected": "ATB1 = DAC bias (shared I/Q)",
           "islands": [
             "conv"
+          ],
+          "chips": [
+            "rf"
           ]
         }
       ],
@@ -4263,6 +4648,9 @@
           "islands": [
             "conv",
             "rf"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -4273,6 +4661,9 @@
           "expected": "ATB1 = DAC bias (shared I/Q)",
           "islands": [
             "conv"
+          ],
+          "chips": [
+            "rf"
           ]
         }
       ],
@@ -4288,6 +4679,9 @@
           },
           "islands": [
             "rf"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -4300,6 +4694,9 @@
             "consolidation.bbfilter.direction": "tx"
           },
           "islands": [
+            "rf"
+          ],
+          "chips": [
             "rf"
           ]
         }
@@ -4316,6 +4713,9 @@
           },
           "islands": [
             "rf"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -4328,6 +4728,9 @@
             "consolidation.bbfilter.direction": "tx"
           },
           "islands": [
+            "rf"
+          ],
+          "chips": [
             "rf"
           ]
         }
@@ -4343,6 +4746,9 @@
           "islands": [
             "rf",
             "pll"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -4352,6 +4758,9 @@
           "select": "txmix_bias",
           "expected": "ATB1 = TX mixer bias (shared I/Q)",
           "islands": [
+            "rf"
+          ],
+          "chips": [
             "rf"
           ]
         }
@@ -4367,6 +4776,9 @@
           "islands": [
             "rf",
             "pll"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -4376,6 +4788,9 @@
           "select": "txmix_bias",
           "expected": "ATB1 = TX mixer bias (shared I/Q)",
           "islands": [
+            "rf"
+          ],
+          "chips": [
             "rf"
           ]
         }
@@ -4391,6 +4806,9 @@
           "islands": [
             "rf",
             "pll"
+          ],
+          "chips": [
+            "rf"
           ]
         }
       ],
@@ -4404,6 +4822,9 @@
           "islands": [
             "rf",
             "pll"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -4414,6 +4835,9 @@
           "expected": "ATB1 = RF driver bias",
           "islands": [
             "rf"
+          ],
+          "chips": [
+            "rf"
           ]
         },
         {
@@ -4422,7 +4846,10 @@
           "path": "dbg_obs",
           "select": "rf_mute",
           "expected": "DBG_OBS0 = rf_mute level",
-          "islands": []
+          "islands": [],
+          "chips": [
+            "rf"
+          ]
         }
       ],
       "wiredtx": [
@@ -4438,6 +4865,9 @@
           "islands": [
             "wired",
             "pll"
+          ],
+          "chips": [
+            "wired"
           ]
         },
         {
@@ -4451,6 +4881,9 @@
           },
           "islands": [
             "wired"
+          ],
+          "chips": [
+            "wired"
           ]
         },
         {
@@ -4461,6 +4894,9 @@
           "expected": "DBG_OBS follows WTX_EXT data when debug.wtx_ext.enable=1",
           "islands": [
             "wired"
+          ],
+          "chips": [
+            "wired"
           ]
         },
         {
@@ -4468,7 +4904,10 @@
           "port": null,
           "path": "dbg_obs",
           "select": "wire_tx_request",
-          "expected": "DBG_OBS = wire_tx_request"
+          "expected": "DBG_OBS = wire_tx_request",
+          "chips": [
+            "wired"
+          ]
         }
       ],
       "tmds": [
@@ -4484,6 +4923,9 @@
           "islands": [
             "wired",
             "pll"
+          ],
+          "chips": [
+            "wired"
           ]
         },
         {
@@ -4496,6 +4938,9 @@
             "consolidation.wiredtx_stage.stage": "tmds"
           },
           "islands": [
+            "wired"
+          ],
+          "chips": [
             "wired"
           ]
         }
@@ -4511,28 +4956,43 @@
             "wired",
             "pll"
           ],
-          "divider_log2": 3
+          "divider_log2": 3,
+          "chips": [
+            "wired"
+          ]
         },
         {
           "signal": "cdr_qualified",
           "port": "qualified",
           "path": "dbg_obs",
           "select": "cdr_freq_ok",
-          "expected": "DBG_OBS high once qualified"
+          "expected": "DBG_OBS high once qualified",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "cdr_qualified",
           "port": "qualified",
           "path": "dbg_obs",
           "select": "cdr_freq_ok",
-          "expected": "DBG_OBS0 high once qualified"
+          "expected": "DBG_OBS0 high once qualified",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "cdr_loss",
           "port": "loss",
           "path": "dbg_obs",
           "select": "cdr_fll_lost",
-          "expected": "DBG_OBS pulses on loss of lock"
+          "expected": "DBG_OBS pulses on loss of lock",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "cdr_rx_state0",
@@ -4540,7 +5000,10 @@
           "path": "dbg_obs",
           "select": "wrx_sig_ok",
           "expected": "DBG_OBS = rx_state bit 0",
-          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead.",
+          "chips": [
+            "wired"
+          ]
         },
         {
           "signal": "cdr_rx_state1",
@@ -4548,7 +5011,10 @@
           "path": "dbg_obs",
           "select": "wrx_idle",
           "expected": "DBG_OBS = rx_state bit 1",
-          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead.",
+          "chips": [
+            "wired"
+          ]
         },
         {
           "signal": "phase",
@@ -4557,7 +5023,10 @@
           "select": "wrx_sig_ok",
           "expected": "indirect: early/late balance at DBG_OBS reflects the selected phase",
           "via": "slicer",
-          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead.",
+          "chips": [
+            "wired"
+          ]
         },
         {
           "signal": "burst_phases/burst_seed_ack",
@@ -4568,7 +5037,11 @@
           "path": "host_data",
           "select": "D2H",
           "expected": "indirect: burst receive payload on D2H is error-free only with correct burst phases and seed handshake",
-          "via": "slicer,digital"
+          "via": "slicer,digital",
+          "chips": [
+            "rf",
+            "wired"
+          ]
         },
         {
           "signal": "cdr_bias",
@@ -4578,6 +5051,10 @@
           "expected": "ATB1 = CDR ring bias",
           "islands": [
             "pll"
+          ],
+          "chips": [
+            "rf",
+            "wired"
           ]
         },
         {
@@ -4588,6 +5065,10 @@
           "expected": "status.freq_count_b counts the CDR ring feedback",
           "islands": [
             "pll"
+          ],
+          "chips": [
+            "rf",
+            "wired"
           ]
         }
       ],
@@ -4600,6 +5081,9 @@
           "expected": "WMON = CTLE output P; boosted high-frequency content vs rx_p",
           "islands": [
             "wired"
+          ],
+          "chips": [
+            "wired"
           ]
         },
         {
@@ -4609,6 +5093,9 @@
           "select": "ctle_n",
           "expected": "WMON = CTLE output N",
           "islands": [
+            "wired"
+          ],
+          "chips": [
             "wired"
           ]
         },
@@ -4620,6 +5107,9 @@
           "expected": "ATB1 = CTLE bias",
           "islands": [
             "wired"
+          ],
+          "chips": [
+            "wired"
           ]
         }
       ],
@@ -4630,7 +5120,10 @@
           "path": "dbg_obs",
           "select": "wrx_sig_ok",
           "expected": "DBG_OBS = sampled data bit",
-          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead.",
+          "chips": [
+            "wired"
+          ]
         },
         {
           "signal": "slicer_early",
@@ -4638,7 +5131,10 @@
           "path": "dbg_obs",
           "select": "wrx_sig_ok",
           "expected": "DBG_OBS = early indication",
-          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead.",
+          "chips": [
+            "wired"
+          ]
         },
         {
           "signal": "slicer_late",
@@ -4646,7 +5142,10 @@
           "path": "dbg_obs",
           "select": "wrx_sig_ok",
           "expected": "DBG_OBS = late indication",
-          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead.",
+          "chips": [
+            "wired"
+          ]
         },
         {
           "signal": "burst_samples/boundary/phase_code",
@@ -4658,7 +5157,10 @@
           "path": "host_data",
           "select": "D2H",
           "expected": "D2H payload and status.pattern.errors=0 with PRBS on WIRE_RX",
-          "via": "digital"
+          "via": "digital",
+          "chips": [
+            "wired"
+          ]
         },
         {
           "signal": "slicer_bias",
@@ -4667,6 +5169,9 @@
           "select": "slicer_bias",
           "expected": "ATB1 = slicer bias",
           "islands": [
+            "wired"
+          ],
+          "chips": [
             "wired"
           ]
         }
@@ -4679,7 +5184,10 @@
           "select": "wrx_sig_ok",
           "expected": "indirect: slicer data follows the line only through the level shifter; no local tap",
           "via": "rxselect,slicer",
-          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead.",
+          "chips": [
+            "wired"
+          ]
         }
       ],
       "rxselect": [
@@ -4690,7 +5198,10 @@
           "select": "wrx_sig_ok",
           "expected": "indirect: slicer data follows the selected serial/USB input; no local tap",
           "via": "slicer",
-          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead.",
+          "chips": [
+            "wired"
+          ]
         }
       ],
       "termination": [
@@ -4702,6 +5213,9 @@
           "expected": "WMON rx_p swing halves with termination enabled vs open (board source 50 ohm)",
           "islands": [
             "wired"
+          ],
+          "chips": [
+            "wired"
           ]
         },
         {
@@ -4711,6 +5225,9 @@
           "select": "termination_vcm",
           "expected": "ATB1 = termination common mode",
           "islands": [
+            "wired"
+          ],
+          "chips": [
             "wired"
           ]
         },
@@ -4722,6 +5239,9 @@
           "expected": "ATB1 = wired VCM reference",
           "islands": [
             "wired"
+          ],
+          "chips": [
+            "wired"
           ]
         }
       ],
@@ -4732,7 +5252,10 @@
           "path": "dbg_obs",
           "select": "detect_diff",
           "expected": "DBG_OBS pulses on receiver-detect event",
-          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead.",
+          "chips": [
+            "wired"
+          ]
         },
         {
           "signal": "detect_timeout",
@@ -4740,7 +5263,10 @@
           "path": "dbg_obs",
           "select": "detect_diff",
           "expected": "DBG_OBS high on detect timeout (no receiver)",
-          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead.",
+          "chips": [
+            "wired"
+          ]
         },
         {
           "signal": "electrical_quiet",
@@ -4748,7 +5274,10 @@
           "path": "dbg_obs",
           "select": "wrx_idle",
           "expected": "DBG_OBS high with the line idle",
-          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead.",
+          "chips": [
+            "wired"
+          ]
         },
         {
           "signal": "test_current",
@@ -4757,6 +5286,9 @@
           "select": "rx_p",
           "expected": "WMON shows the detect current step on the line (wire_detect_via_wmon)",
           "islands": [
+            "wired"
+          ],
+          "chips": [
             "wired"
           ]
         },
@@ -4768,6 +5300,9 @@
           "expected": "ATB1 = detect test-current bias",
           "islands": [
             "wired"
+          ],
+          "chips": [
+            "wired"
           ]
         }
       ],
@@ -4777,15 +5312,21 @@
           "port": "squelch",
           "path": "dbg_obs",
           "select": "usb_squelch",
-          "expected": "DBG_OBS high with the bus idle, low with HS traffic"
+          "expected": "DBG_OBS high with the bus idle, low with HS traffic",
+          "chips": [
+            "wired"
+          ]
         },
         {
           "signal": "drive",
           "port": "drive",
           "path": "pad",
-          "select": "WIRE_RX_P/N",
-          "expected": "Scope on D+/D- (WIRE_RX pads): HS 400 mV current-mode drive",
+          "select": "USB_DP/DN",
+          "expected": "Scope on USB_DP/USB_DN (USB pads): HS 400 mV current-mode drive",
           "islands": [
+            "wired"
+          ],
+          "chips": [
             "wired"
           ]
         },
@@ -4796,7 +5337,10 @@
           "select": "wrx_sig_ok",
           "expected": "indirect: HS receive data at the slicer via rxselect usb input",
           "via": "rxselect,slicer",
-          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead.",
+          "chips": [
+            "wired"
+          ]
         },
         {
           "signal": "usbhs_ibias",
@@ -4805,6 +5349,9 @@
           "select": "usbhs_ibias",
           "expected": "ATB1 = HS bias",
           "islands": [
+            "wired"
+          ],
+          "chips": [
             "wired"
           ]
         }
@@ -4817,21 +5364,30 @@
           "select": "wrx_sig_ok",
           "expected": "indirect: FS line state via the usb_fs_via_slicer path",
           "via": "rxselect,slicer",
-          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead."
+          "note": "r6: the per-sampler / detector status bit named here had no producer (D-STATUS); the nearest real status of the macro is observed instead.",
+          "chips": [
+            "wired"
+          ]
         },
         {
           "signal": "drive",
           "port": "drive",
           "path": "pad",
-          "select": "WIRE_RX_P/N",
-          "expected": "Scope on D+/D-: FS 3.3 V single-ended drive"
+          "select": "USB_DP/DN",
+          "expected": "Scope on USB_DP/USB_DN: FS 3.3 V single-ended drive",
+          "chips": [
+            "wired"
+          ]
         },
         {
           "signal": "usbfs_vref",
           "port": null,
           "path": "atb1",
           "select": "usbfs_vref",
-          "expected": "ATB1 = FS receiver reference (core node)"
+          "expected": "ATB1 = FS receiver reference (core node)",
+          "chips": [
+            "wired"
+          ]
         }
       ],
       "usbdrive": [
@@ -4839,9 +5395,70 @@
           "signal": "drive_usb",
           "port": "drive_usb",
           "path": "pad",
-          "select": "WIRE_RX_P/N",
-          "expected": "Scope on D+/D-: HS vs FS drive swaps with usbdrive select",
+          "select": "USB_DP/DN",
+          "expected": "Scope on USB_DP/USB_DN: HS vs FS drive swaps with usbdrive select",
           "islands": [
+            "wired"
+          ],
+          "chips": [
+            "wired"
+          ]
+        }
+      ],
+      "lo_synth": [
+        {
+          "signal": "lo_fb count",
+          "port": null,
+          "path": "freq_count",
+          "select": "lc_prescale",
+          "expected": "source 6 = LO_FB (lo_mmd feedback, f_VCO / 2N): count = reference count when the LO loop is locked; no lock bit, QVCO VTUNE unobserved (OBS-7)",
+          "islands": [
+            "rf"
+          ],
+          "chips": [
+            "rf"
+          ]
+        },
+        {
+          "signal": "rf_lo",
+          "port": null,
+          "path": "clk_obs",
+          "select": "rf_lo",
+          "expected": "CLK_OBS = LO / 8 (lo_obs, I tank) / 2^N; external LO is not on CLK_OBS (OBS-8)",
+          "islands": [
+            "rf",
+            "pll"
+          ],
+          "divider_log2": 7,
+          "chips": [
+            "rf"
+          ]
+        }
+      ],
+      "wired_word_clocks": [
+        {
+          "signal": "wclk_alive",
+          "port": null,
+          "path": "spi",
+          "select": "status.wired.rx_flags",
+          "expected": "rx_flags.wclk_alive = 1 with the wired RX word clock (WRX_WCLK40) running; the word clocks are not on CLK_OBS (OBS-13)",
+          "islands": [
+            "wired"
+          ],
+          "chips": [
+            "wired"
+          ]
+        },
+        {
+          "signal": "ptrim",
+          "port": null,
+          "path": "host_data",
+          "select": "D2H",
+          "expected": "indirect: CDR phase trim (cdr.phase_trim) moves the sampling phase; pattern errors vs trim code bathtub",
+          "islands": [
+            "wired"
+          ],
+          "chips": [
             "wired"
           ]
         }

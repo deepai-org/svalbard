@@ -19,9 +19,10 @@ module pt_digital #(parameter integer PT_CHIP = 3)(input wire rst_n,ref_clk,
  output wire[15:0]status,
  // Generated control boundary (rtl/pt_regfile.sv, spec/register-map.md).
  input wire por_n,input wire[2:0]por_path,input wire fault,input wire[`PT_ISLAND_W-1:0]island_pgood,
- // Frequency-counter sources (P3-7), code 1..6 of debug.freq_count_{a,b}.source: [0] tx_ring_fbck (pt_pll
- // FBCK = VCO/16), [1] cdr_ring_fbck, [2] ring_osc, [3] vco_replica, [4] aosc, [5] lc_prescale.
- input wire[5:0]fc_src,
+ // Frequency-counter sources (P3-7), code 1..7 of debug.freq_count_{a,b}.source: [0] tx_ring_fbck (pt_pll
+ // FBCK = VCO/16), [1] cdr_ring_fbck, [2] ring_osc / 2, [3] vco_replica, [4] aosc, [5] lc_prescale,
+ // [6] dig_ring / 2 (OBS-2, OBS-14: the /2 toggle flops are in pt_digital_macro).
+ input wire[6:0]fc_src,
  output wire cdr_freq_locked, // freq_count_b lock (reference domain): CDR frequency-to-phase handover
  output wire fca_locked_ref,  // freq_count_a lock (reference domain): TX ring ready / monitor rf lock
  output wire[13:0]fcb_diff_ref,output wire fcb_upd_ref, // freq_count_b signed result (pt_wrx_ctl frequency loop)
@@ -42,7 +43,9 @@ module pt_digital #(parameter integer PT_CHIP = 3)(input wire rst_n,ref_clk,
  output wire[1:0]vth_fast,output wire[7:0]vth_a,vth_b,
  input wire[9:0]mon_cause,mon_qualified,input wire mon_cause_clk,mon_ready,mon_dead,mon_ref_alive,mon_in_alive,mon_fault,
  input wire[2:0]wtx_state,wrx_state,input wire wtx_seq_fault,wtx_ring_ready,input wire[7:0]wrx_flags,wrx_fll_win,wrx_pick_acc,wrx_slip_cnt,
- input wire[13:0]wrx_fll_err,input wire[4:0]wrx_viol,input wire[1:0]usb_line,input wire[6:0]usb_flags,input wire[4:0]usb_stream);
+ input wire[13:0]wrx_fll_err,input wire[4:0]wrx_viol,input wire[1:0]usb_line,input wire[6:0]usb_flags,input wire[4:0]usb_stream,
+ // status.health: raw island-switch power-good, sticky H2D FIFO overflow / underflow (OBS-3, OBS-IMPL)
+ input wire[9:0]sw_pg,input wire h2d_ovf,h2d_unf);
  wire memory_write,capture_done,playback_enable,capture_enable,memory_loop;wire[4:0]index,memory_last;
  wire[39:0]memory_wdata,capture_data;
  wire config_error,cal_busy,cal_done,host_rx_div;
@@ -78,7 +81,8 @@ module pt_digital #(parameter integer PT_CHIP = 3)(input wire rst_n,ref_clk,
   .mon_in_alive(mon_in_alive),.mon_fault(mon_fault),.mon_qualified(mon_qualified),.wtx_state(wtx_state),.wtx_seq_fault(wtx_seq_fault),
   .wtx_ring_ready(wtx_ring_ready),.wrx_state(wrx_state),.wrx_flags(wrx_flags),.wrx_fll_err(wrx_fll_err),.wrx_viol(wrx_viol),
   .wrx_fll_win(wrx_fll_win),.wrx_pick_acc(wrx_pick_acc),.wrx_slip_cnt(wrx_slip_cnt),.usb_line(usb_line),.usb_flags(usb_flags),.usb_stream(usb_stream),
-  .chip_id(CHIP_ID));   // status.chip.id
+  .chip_id(CHIP_ID),   // status.chip.id
+  .sw_pg(sw_pg),.h2d_ovf(h2d_ovf),.h2d_unf(h2d_unf));
  // Frequency counters (rtl/pt_freq_count.sv, consolidation P3-7). status.pll_lock is reserved (reads 0).
  pt_freq_count fca(.rst_n(rst_n),.cfg_source(debug_cfg[`PT_D_DEBUG_FREQ_COUNT_A__SOURCE_LSB+:`PT_D_DEBUG_FREQ_COUNT_A__SOURCE_W]),
   .cfg_window(debug_cfg[`PT_D_DEBUG_FREQ_COUNT_A__WINDOW_LSB+:`PT_D_DEBUG_FREQ_COUNT_A__WINDOW_W]),

@@ -1,5 +1,5 @@
 {
-  "about": "The two chips of the split (MANDATE 1, scratch/reviews/SPLIT-PLAN.md, assignment scratch/reviews/split/assignment.md). One block library, one RTL, one register address map: this file says which enable groups, islands and register fields each chip has. Read by integration/chips/check_top.py, verification/check_contract.py and spec/check_performance_requirements.py. A field is on a chip unless it matches the other chip's only-list.",
+  "about": "atb_no_leaf (OBS-6): ATB codes that are legal in the shared map but have no leaf on this chip (no SEL=atbX_sw[code-1] or FORCE_LEAF binding in integration/chips/common.conn + <chip>/chip.conn; rtl/gen/gen_regfile.py checks the list against the conns); pt_regfile rejects them at write time on that chip (cfg_err[0], like any illegal encoding). The two chips of the split (MANDATE 1, scratch/reviews/SPLIT-PLAN.md, assignment scratch/reviews/split/assignment.md). One block library, one RTL, one register address map: this file says which enable groups, islands and register fields each chip has. Read by integration/chips/check_top.py, verification/check_contract.py and spec/check_performance_requirements.py. A field is on a chip unless it matches the other chip's only-list.",
   "chips": {
     "rf": {
       "name": "pt_rf",
@@ -7,6 +7,7 @@
       "scope": "RF receive and transmit, LO synthesis (QVCO, dividers, LO regulator), external-LO input, ADC/DAC I/Q, baseband filter, RF test structures, plus the shared infrastructure, the TX ring and (D2) the CDR ring as the second host-clock route",
       "enable_groups": {"rf": 1, "pll": 2, "conv": 4, "debug": 5},
       "islands": ["rf_rx", "rf_tx", "lod", "lo", "pll", "conv", "debug"],
+      "atb_no_leaf": {"atb0": [22], "atb1": [7, 10, 22, 23, 24, 26, 27, 28, 40]},
       "only_fields": [
         "debug\\.island_power\\.(rf|conv)", "debug\\.pgood_override\\.(rf|conv)", "debug\\.clk_select\\.conv_sample", "clockmux\\.config\\.conv_prescale",
         "debug\\.bb_tap\\..*", "debug\\.rf_(rx|tx|bb)_bypass\\..*", "debug\\.bias_override\\..*",
@@ -23,6 +24,7 @@
       "scope": "wired RX (CTLE, slicer, capture, CDR ring, phase trim, detect), wired TX (fast path, USB and 100BASE-TX drivers), forwarded/AUX clock, wired monitors, speed test structures, plus the shared infrastructure",
       "enable_groups": {"wired": 0, "pll": 2, "debug": 5},
       "islands": ["wired_rx", "wired_cap", "wired_tx", "pll", "debug"],
+      "atb_no_leaf": {"atb0": [14, 35, 36], "atb1": [8, 11, 14, 15, 16, 17, 18, 19, 20, 21, 33, 35, 36, 38, 39]},
       "only_fields": [
         "debug\\.island_power\\.wired", "debug\\.pgood_override\\.wired",
         "debug\\.wire_bypass\\..*", "debug\\.wtx_ext\\..*", "debug\\.wmon_select\\..*",

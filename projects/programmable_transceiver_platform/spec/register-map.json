@@ -218,10 +218,11 @@
   {
    "code": 14,
    "force": "allowed",
+   "force_island": "rf",
    "island": null,
    "kind": "bias",
    "name": "rf_ibias",
-   "note": "core_support TRK_RF; current out of node. Force precondition (commit rule): dist_en_rf=0, or the island switched off (allows the README idac2 trim)."
+   "note": "core_support TRK_RF; current out of node. Force precondition (commit rule): dist_en_rf=0, or the island switched off. OBS-17: the ATB0 switch itself closes only while the island it feeds is on with real power-good; a force written with the island off is accepted but leaves the switch open (the idac2 trim measures on ATB1 code 57)."
   },
   {
    "code": 15,
@@ -275,10 +276,12 @@
   {
    "code": 22,
    "force": "allowed",
+   "force_island": "wired",
+   "force_or": "debug.wtx_ext.enable",
    "island": null,
    "kind": "bias",
    "name": "wire_ibias",
-   "note": "core_support TRK_WIRE; current out of node. Force precondition (commit rule): dist_en_wire=0, or the island switched off (allows the README idac2 trim)."
+   "note": "core_support TRK_WIRE; current out of node. Force precondition (commit rule): dist_en_wire=0, or the island switched off. OBS-17: the ATB0 switch itself closes only while the island it feeds is on with real power-good (or debug.wtx_ext.enable is set: WTX_EXT fallback force; the fallback cell ANDs it with WIRED_ON); a force written with the island off is accepted but leaves the switch open (the idac2 trim measures on ATB1 code 57)."
   },
   {
    "code": 23,
@@ -325,10 +328,11 @@
   {
    "code": 29,
    "force": "allowed",
+   "force_island": "pll",
    "island": null,
    "kind": "bias",
    "name": "pll_ibias",
-   "note": "core_support TRK_PLL; current out of node. Force precondition (commit rule): dist_en_pll=0, or the island switched off (allows the README idac2 trim)."
+   "note": "core_support TRK_PLL; current out of node. Force precondition (commit rule): dist_en_pll=0, or the island switched off. OBS-17: the ATB0 switch itself closes only while the island it feeds is on with real power-good; a force written with the island off is accepted but leaves the switch open (the idac2 trim measures on ATB1 code 57)."
   },
   {
    "code": 30,
@@ -371,10 +375,11 @@
   {
    "code": 35,
    "force": "allowed",
+   "force_island": "conv",
    "island": null,
    "kind": "bias",
    "name": "conv_ibias",
-   "note": "core_support TRK_CONV; current out of node. Force precondition (commit rule): dist_en_conv=0, or the island switched off (allows the README idac2 trim)."
+   "note": "core_support TRK_CONV; current out of node. Force precondition (commit rule): dist_en_conv=0, or the island switched off. OBS-17: the ATB0 switch itself closes only while the island it feeds is on with real power-good; a force written with the island off is accepted but leaves the switch open (the idac2 trim measures on ATB1 code 57)."
   },
   {
    "code": 36,
@@ -523,10 +528,11 @@
   {
    "code": 56,
    "force": "allowed",
+   "force_island": "debug",
    "island": null,
    "kind": "bias",
    "name": "debug_ibias",
-   "note": "core_support TRK_DEBUG; current out of node. Force precondition (commit rule): dist_en_debug=0, or the island switched off (allows the README idac2 trim)."
+   "note": "core_support TRK_DEBUG; current out of node. Force precondition (commit rule): dist_en_debug=0, or the island switched off. OBS-17: the ATB0 switch itself closes only while the island it feeds is on with real power-good; a force written with the island off is accepted but leaves the switch open (the idac2 trim measures on ATB1 code 57)."
   },
   {
    "code": 57,
@@ -571,9 +577,51 @@
  "break_before_make_rule": "A commit may not change one of these fields directly from one non-zero code to a different non-zero code; it must commit the zero (stopped/off/open) code first. Two SPI transactions separate the commits, far exceeding the 4 ns switch dead time in control_semantics.switch_dead_time_s.",
  "bus_widths": {
   "analog": 610,
-  "debug": 221
+  "debug": 222
  },
  "cdc_semantics": "The register file is clocked only by SPI SCLK and asynchronously reset by RESET_N AND POR. Active fields are quasi-static: they change only on a successful commit, which also toggles commit_toggle. A consuming clock domain that must see a coherent multi-bit value synchronizes commit_toggle through two flops and reloads its local copy on a toggle edge; the next commit cannot occur for at least one more 32-clock SPI transaction. Purely analog consumers see each field change once per commit; stopped-only fields are changed only while their outputs are isolated.",
+ "chip_atb_no_leaf": {
+  "rf": {
+   "atb0": [
+    22
+   ],
+   "atb1": [
+    7,
+    10,
+    22,
+    23,
+    24,
+    26,
+    27,
+    28,
+    40
+   ]
+  },
+  "wired": {
+   "atb0": [
+    14,
+    35,
+    36
+   ],
+   "atb1": [
+    8,
+    11,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    33,
+    35,
+    36,
+    38,
+    39
+   ]
+  }
+ },
  "chip_ids": {
   "rf": 1,
   "wired": 2
@@ -2583,6 +2631,55 @@
   },
   {
    "address_slots": 1,
+   "allowed": null,
+   "atb_bus": null,
+   "bits": 1,
+   "bus": "debug",
+   "bus_bits": 1,
+   "bus_lsb": 60,
+   "chips": [
+    "rf",
+    "wired"
+   ],
+   "chunks": [
+    {
+     "addr": 78,
+     "field_lsb": 0,
+     "reg_lsb": 5,
+     "width": 1
+    }
+   ],
+   "clear_when_running": null,
+   "decode": null,
+   "decoded_bits": null,
+   "default": 0,
+   "direct": false,
+   "field": "dig_ring_enable",
+   "gate_and": null,
+   "group": "debug.replica",
+   "islands": [],
+   "kind": "debug",
+   "live": false,
+   "mantissa_bits": null,
+   "maximum": 1,
+   "meaning": "OBS-14: standard-cell ring oscillator inside the digital macro (rtl/pt_cells.sv pt_dig_ring: enable NAND + 40 inverters, kept cells, core supply; ~54 MHz at in-window ss, ~120 MHz ff, Liberty estimate without wire), divided by 2 in the macro and counted as frequency-counter source 7 (dig_ring). Tracks the speed of the macro's own 5 V cells for per-chip supply trim. Core domain (no island).",
+   "minimum": 0,
+   "name": "debug.replica.dig_ring_enable",
+   "range_text": null,
+   "split": false,
+   "store": [
+    0,
+    0
+   ],
+   "store_mask": 1,
+   "sv": "debug_replica__dig_ring_enable",
+   "trim": null,
+   "unit": "code",
+   "update": "stopped",
+   "values": null
+  },
+  {
+   "address_slots": 1,
    "allowed": [
     0,
     1,
@@ -2592,7 +2689,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 60,
+   "bus_lsb": 61,
    "chips": [
     "rf",
     "wired"
@@ -2649,7 +2746,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 62,
+   "bus_lsb": 63,
    "chips": [
     "rf",
     "wired"
@@ -2706,7 +2803,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 64,
+   "bus_lsb": 65,
    "chips": [
     "rf"
    ],
@@ -2760,7 +2857,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 66,
+   "bus_lsb": 67,
    "chips": [
     "rf"
    ],
@@ -2810,7 +2907,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 67,
+   "bus_lsb": 68,
    "chips": [
     "rf"
    ],
@@ -2863,7 +2960,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 68,
+   "bus_lsb": 69,
    "chips": [
     "wired"
    ],
@@ -2920,7 +3017,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 69,
+   "bus_lsb": 70,
    "chips": [
     "wired"
    ],
@@ -2974,7 +3071,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 71,
+   "bus_lsb": 72,
    "chips": [
     "rf"
    ],
@@ -3024,7 +3121,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 72,
+   "bus_lsb": 73,
    "chips": [
     "wired"
    ],
@@ -3083,7 +3180,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 73,
+   "bus_lsb": 74,
    "chips": [
     "wired"
    ],
@@ -3140,7 +3237,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 76,
+   "bus_lsb": 77,
    "chips": [
     "wired"
    ],
@@ -3188,7 +3285,7 @@
    "bits": 10,
    "bus": "debug",
    "bus_bits": 10,
-   "bus_lsb": 77,
+   "bus_lsb": 78,
    "chips": [
     "wired"
    ],
@@ -3236,7 +3333,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 87,
+   "bus_lsb": 88,
    "chips": [
     "wired"
    ],
@@ -3284,7 +3381,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 88,
+   "bus_lsb": 89,
    "chips": [
     "wired"
    ],
@@ -3341,7 +3438,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 89,
+   "bus_lsb": 90,
    "chips": [
     "wired"
    ],
@@ -3398,7 +3495,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 92,
+   "bus_lsb": 93,
    "chips": [
     "wired"
    ],
@@ -3446,7 +3543,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 93,
+   "bus_lsb": 94,
    "chips": [
     "wired"
    ],
@@ -3494,7 +3591,7 @@
    "bits": 6,
    "bus": "debug",
    "bus_bits": 6,
-   "bus_lsb": 94,
+   "bus_lsb": 95,
    "chips": [
     "rf"
    ],
@@ -3544,7 +3641,7 @@
    "bits": 6,
    "bus": "debug",
    "bus_bits": 6,
-   "bus_lsb": 100,
+   "bus_lsb": 101,
    "chips": [
     "rf"
    ],
@@ -3594,7 +3691,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 106,
+   "bus_lsb": 107,
    "chips": [
     "rf",
     "wired"
@@ -3643,7 +3740,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 107,
+   "bus_lsb": 108,
    "chips": [
     "rf",
     "wired"
@@ -3692,7 +3789,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 108,
+   "bus_lsb": 109,
    "chips": [
     "rf",
     "wired"
@@ -3741,7 +3838,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 109,
+   "bus_lsb": 110,
    "chips": [
     "rf",
     "wired"
@@ -3790,7 +3887,7 @@
    "bits": 5,
    "bus": "debug",
    "bus_bits": 5,
-   "bus_lsb": 110,
+   "bus_lsb": 111,
    "chips": [
     "rf",
     "wired"
@@ -3839,7 +3936,7 @@
    "bits": 5,
    "bus": "debug",
    "bus_bits": 5,
-   "bus_lsb": 115,
+   "bus_lsb": 116,
    "chips": [
     "rf",
     "wired"
@@ -3888,7 +3985,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 120,
+   "bus_lsb": 121,
    "chips": [
     "rf",
     "wired"
@@ -3937,7 +4034,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 123,
+   "bus_lsb": 124,
    "chips": [
     "rf",
     "wired"
@@ -3986,7 +4083,7 @@
    "bits": 5,
    "bus": "debug",
    "bus_bits": 5,
-   "bus_lsb": 125,
+   "bus_lsb": 126,
    "chips": [
     "rf",
     "wired"
@@ -4035,7 +4132,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 130,
+   "bus_lsb": 131,
    "chips": [
     "rf",
     "wired"
@@ -4084,7 +4181,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 133,
+   "bus_lsb": 134,
    "chips": [
     "rf",
     "wired"
@@ -4133,7 +4230,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 136,
+   "bus_lsb": 137,
    "chips": [
     "rf",
     "wired"
@@ -4182,7 +4279,7 @@
    "bits": 5,
    "bus": "debug",
    "bus_bits": 16,
-   "bus_lsb": 137,
+   "bus_lsb": 138,
    "chips": [
     "rf",
     "wired"
@@ -4231,7 +4328,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 153,
+   "bus_lsb": 154,
    "chips": [
     "rf"
    ],
@@ -4279,7 +4376,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 154,
+   "bus_lsb": 155,
    "chips": [
     "rf"
    ],
@@ -4327,7 +4424,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 155,
+   "bus_lsb": 156,
    "chips": [
     "rf",
     "wired"
@@ -4376,7 +4473,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 156,
+   "bus_lsb": 157,
    "chips": [
     "wired"
    ],
@@ -4424,7 +4521,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 157,
+   "bus_lsb": 158,
    "chips": [
     "rf",
     "wired"
@@ -4475,13 +4572,14 @@
     3,
     4,
     5,
-    6
+    6,
+    7
    ],
    "atb_bus": null,
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 158,
+   "bus_lsb": 159,
    "chips": [
     "rf",
     "wired"
@@ -4507,7 +4605,7 @@
    "live": false,
    "mantissa_bits": null,
    "maximum": null,
-   "meaning": null,
+   "meaning": "OBS-2 / OBS-14: codes 3 (ring_osc) and 7 (dig_ring) are divided by 2 in the macro before the counter, so their count is source edges / 2; codes 1, 2, 4, 5, 6 count source edges.",
    "minimum": null,
    "name": "debug.freq_count_a.source",
    "range_text": null,
@@ -4528,7 +4626,8 @@
     "ring_osc",
     "vco_replica",
     "aosc",
-    "lc_prescale"
+    "lc_prescale",
+    "dig_ring"
    ]
   },
   {
@@ -4543,7 +4642,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 161,
+   "bus_lsb": 162,
    "chips": [
     "rf",
     "wired"
@@ -4606,7 +4705,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 163,
+   "bus_lsb": 164,
    "chips": [
     "rf",
     "wired"
@@ -4669,7 +4768,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 166,
+   "bus_lsb": 167,
    "chips": [
     "rf",
     "wired"
@@ -4723,7 +4822,7 @@
    "bits": 16,
    "bus": "debug",
    "bus_bits": 16,
-   "bus_lsb": 168,
+   "bus_lsb": 169,
    "chips": [
     "rf",
     "wired"
@@ -4774,13 +4873,14 @@
     3,
     4,
     5,
-    6
+    6,
+    7
    ],
    "atb_bus": null,
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 184,
+   "bus_lsb": 185,
    "chips": [
     "rf",
     "wired"
@@ -4806,7 +4906,7 @@
    "live": false,
    "mantissa_bits": null,
    "maximum": null,
-   "meaning": null,
+   "meaning": "OBS-2 / OBS-14: codes 3 (ring_osc) and 7 (dig_ring) are divided by 2 in the macro before the counter, so their count is source edges / 2; codes 1, 2, 4, 5, 6 count source edges.",
    "minimum": null,
    "name": "debug.freq_count_b.source",
    "range_text": null,
@@ -4827,7 +4927,8 @@
     "ring_osc",
     "vco_replica",
     "aosc",
-    "lc_prescale"
+    "lc_prescale",
+    "dig_ring"
    ]
   },
   {
@@ -4842,7 +4943,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 187,
+   "bus_lsb": 188,
    "chips": [
     "rf",
     "wired"
@@ -4905,7 +5006,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 189,
+   "bus_lsb": 190,
    "chips": [
     "rf",
     "wired"
@@ -4968,7 +5069,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 192,
+   "bus_lsb": 193,
    "chips": [
     "rf",
     "wired"
@@ -5022,7 +5123,7 @@
    "bits": 16,
    "bus": "debug",
    "bus_bits": 16,
-   "bus_lsb": 194,
+   "bus_lsb": 195,
    "chips": [
     "rf",
     "wired"
@@ -5071,7 +5172,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 210,
+   "bus_lsb": 211,
    "chips": [
     "rf",
     "wired"
@@ -5123,7 +5224,7 @@
    "bits": 8,
    "bus": "debug",
    "bus_bits": 8,
-   "bus_lsb": 211,
+   "bus_lsb": 212,
    "chips": [
     "rf",
     "wired"
@@ -5172,7 +5273,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 219,
+   "bus_lsb": 220,
    "chips": [
     "rf",
     "wired"
@@ -5221,7 +5322,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 220,
+   "bus_lsb": 221,
    "chips": [
     "rf"
    ],
@@ -15353,7 +15454,8 @@
     "debug.replica.vco_enable",
     "debug.replica.ro33_enable",
     "debug.replica.ro50_enable",
-    "debug.replica.cmldiv_enable"
+    "debug.replica.cmldiv_enable",
+    "debug.replica.dig_ring_enable"
    ],
    "kind": "debug",
    "name": "debug.replica",
@@ -15510,7 +15612,7 @@
    "update": "stopped"
   },
   {
-   "description": "Generalized frequency counter instance a (PLL/TX ring; consolidation item P3-7, rtl owned by the digital hardening agent): counts the selected source against the reference over a window; enable = source != off. Placed at 0xE8 (free tail of the 0x60-0xEF block) because the 0x40-0x5F debug block is full.",
+   "description": "Generalized frequency counter instance a (PLL/TX ring; consolidation item P3-7, rtl owned by the digital hardening agent): counts the selected source against the reference over a window; enable = source != off. Placed at 0xE8 (free tail of the 0x60-0xEF block) because the 0x40-0x5F debug block is full. Sources 3 (ring_osc) and 7 (dig_ring) are divided by 2 in the macro (OBS-2 / OBS-14): their count is source edges / 2; the other sources count edges.",
    "fallback_routes": [],
    "fields": [
     "debug.freq_count_a.source",
@@ -15528,7 +15630,7 @@
    "update": "stopped"
   },
   {
-   "description": "Generalized frequency counter instance b (CDR ring; consolidation item P3-7, rtl owned by the digital hardening agent): counts the selected source against the reference over a window; enable = source != off. Placed at 0xEA (free tail of the 0x60-0xEF block) because the 0x40-0x5F debug block is full.",
+   "description": "Generalized frequency counter instance b (CDR ring; consolidation item P3-7, rtl owned by the digital hardening agent): counts the selected source against the reference over a window; enable = source != off. Placed at 0xEA (free tail of the 0x60-0xEF block) because the 0x40-0x5F debug block is full. Sources 3 (ring_osc) and 7 (dig_ring) are divided by 2 in the macro (OBS-2 / OBS-14): their count is source edges / 2; the other sources count edges.",
    "fallback_routes": [],
    "fields": [
     "debug.freq_count_b.source",
@@ -16595,7 +16697,7 @@
  },
  "last_analog": 183,
  "last_debug": 90,
- "map_hash16": 62604,
+ "map_hash16": 28352,
  "obs_status": [
   "island_pgood_wired",
   "island_pgood_rf",
@@ -16975,12 +17077,18 @@
      0,
      1,
      4
+    ],
+    [
+     "debug.replica.dig_ring_enable",
+     0,
+     1,
+     5
     ]
    ],
    "group": "debug.replica",
    "kind": "debug",
    "reset": 0,
-   "writable_mask": 31
+   "writable_mask": 63
   },
   {
    "addr": 79,
@@ -21362,6 +21470,45 @@
    "reg_lsb": 0,
    "reserved": false,
    "sync": false
+  },
+  {
+   "addr": 255,
+   "bits": 10,
+   "encoding": "binary",
+   "field": "switch_pg",
+   "group": "status.health",
+   "meaning": "b0 rf_rx, b1 rf_tx, b2 lod, b3 lo, b4 wired_rx, b5 wired_cap, b6 wired_tx, b7 pll, b8 conv, b9 debug switch power-good (raw s_pg_* inputs, synchronized)",
+   "name": "status.health.switch_pg",
+   "port": "sw_pg",
+   "reg_lsb": 0,
+   "reserved": false,
+   "sync": true
+  },
+  {
+   "addr": 255,
+   "bits": 1,
+   "encoding": "binary",
+   "field": "h2d_overflow",
+   "group": "status.health",
+   "meaning": "sticky until reset: H2D quad dropped (FIFO full)",
+   "name": "status.health.h2d_overflow",
+   "port": "h2d_ovf",
+   "reg_lsb": 10,
+   "reserved": false,
+   "sync": true
+  },
+  {
+   "addr": 255,
+   "bits": 1,
+   "encoding": "binary",
+   "field": "h2d_underflow",
+   "group": "status.health",
+   "meaning": "sticky until reset: H2D FIFO read empty while running",
+   "name": "status.health.h2d_underflow",
+   "port": "h2d_unf",
+   "reg_lsb": 11,
+   "reserved": false,
+   "sync": true
   }
  ],
  "status_registers": [
@@ -21659,6 +21806,31 @@
     ]
    ],
    "group": "status.chip",
+   "kind": "status"
+  },
+  {
+   "addr": 255,
+   "chunks": [
+    [
+     "status.health.switch_pg",
+     0,
+     10,
+     0
+    ],
+    [
+     "status.health.h2d_overflow",
+     0,
+     1,
+     10
+    ],
+    [
+     "status.health.h2d_underflow",
+     0,
+     1,
+     11
+    ]
+   ],
+   "group": "status.health",
    "kind": "status"
   }
  ],

@@ -1,7 +1,9 @@
 // Generalized frequency counter / lock check (consolidation P3-7), standard cells. Replaces the
 // former pt_pll_lock (status.pll_lock is reserved). One instance per debug.freq_count_{a,b} group.
-//   * source: 1..6 select one of six clock inputs (tx_ring_fbck, cdr_ring_fbck, ring_osc,
-//     vco_replica, aosc, lc_prescale); 0 = off (counter disabled, state cleared). The select is a
+//   * source: 1..7 select one of seven clock inputs (tx_ring_fbck, cdr_ring_fbck, ring_osc,
+//     vco_replica, aosc, lc_prescale, dig_ring); 0 = off. OBS-2/OBS-14: ring_osc (3) and dig_ring (7) arrive
+//     already divided by 2 (kept toggle flops in pt_digital_macro), so for those codes the
+//     count is source edges / 2 (software doubles it); codes 1, 2, 4, 5, 6 are counted undivided (counter disabled, state cleared). The select is a
 //     plain clock mux: it may only change while stopped (update: stopped); any change of the
 //     captured select is also handled as a disable (state cleared, next window re-primes).
 //   * source domain (timing rework 2026-11-10, CLOSE_R2 fc -10.6 ns at in-window ss): the only logic
@@ -35,7 +37,7 @@ module pt_freq_count #(parameter integer CW = 18)(
     input  wire [2:0]  cfg_tol,     // 0,1,2,4,8,16,32,64 counts
     input  wire [1:0]  cfg_count,   // 1,2,4,8 consecutive windows
     input  wire [15:0] cfg_target,  // expected source edges per window
-    input  wire [5:0]  src,         // source clocks (code 1..6 -> src[0..5])
+    input  wire [6:0]  src,         // source clocks (code 1..7 -> src[0..6])
     input  wire        ref_clk,
     input  wire        sclk,
     output wire        locked_ref,  // reference domain
@@ -51,7 +53,7 @@ module pt_freq_count #(parameter integer CW = 18)(
 );
     localparam integer HW = CW - 3;           // block-count width
     localparam integer FC_EVAL_DELAY = 6;     // reference cycles from snapshot to result load
-    wire en = cfg_source != 3'd0 && cfg_source <= 3'd6;
+    wire en = cfg_source != 3'd0;
     // ---------------- source clock mux and source domain
     wire fb_clk = src[cfg_source == 3'd0 ? 3'd0 : cfg_source - 3'd1] & en;
     wire en_f;
@@ -125,7 +127,7 @@ module pt_freq_count #(parameter integer CW = 18)(
             if (ld[3]) cfg_r[4:0]   <= cfg_target[4:0];
         end
     wire [2:0] src_cfg = cfg_src_r;
-    wire en_r = cfg_loaded && src_cfg != 3'd0 && src_cfg <= 3'd6;
+    wire en_r = cfg_loaded && src_cfg != 3'd0;
     reg [2:0] src_q; reg run; (* keep *) reg run_e;   // run_e: replica for the evaluation block (fanout)
     // `run` is registered (timing): a source change or disable clears the state one cycle later.
     always @(posedge ref_clk or negedge rst_n)

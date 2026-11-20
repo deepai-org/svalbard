@@ -61,6 +61,12 @@ def build_model():
             raise SpecError(f"ATB node {n['name']}: unknown island")
         if n['force'] not in ('sense_only', 'override', 'allowed'):
             raise SpecError(f"ATB node {n['name']}: bad force policy")
+        # OBS-17: a core trunk node's ATB0 (force) switch may be gated by the power state of the island it feeds.
+        if n.get('force_island') is not None and (n['island'] is not None or n['force'] != 'allowed' or
+                                                    n['force_island'] not in islands):
+            raise SpecError(f"ATB node {n['name']}: force_island needs a core node with force=allowed and a known island")
+        if n.get('force_or') is not None and n.get('force_island') is None:
+            raise SpecError(f"ATB node {n['name']}: force_or needs force_island")
 
     fields, groups = [], []
 
@@ -260,6 +266,25 @@ def build_model():
         else:
             f['chips'] = [c for c in chips['chips'] if not any(re.fullmatch(x, f['name']) for o, oc in chips['chips'].items()
                                                                    if o != c for x in oc['only_fields'])]
+    # OBS-6: ATB codes without a leaf on a chip (chips.json atb_no_leaf, checked against the chip conns) are
+    # rejected at write time on that chip; on the both-halves build a code is legal when either chip has it.
+    chip_atb_no_leaf = {}
+    for c, cv in chips['chips'].items():
+        nl = cv.get('atb_no_leaf', {})
+        chip_atb_no_leaf[c] = {bus: sorted(nl.get(bus, [])) for bus in ('atb0', 'atb1')}
+        for bus in ('atb0', 'atb1'):
+            f = by_name[f'debug.atb.{bus}']
+            legal = set(f['allowed'] if f['allowed'] is not None else range(f['minimum'], f['maximum'] + 1)) - {0}
+            if not set(chip_atb_no_leaf[c][bus]) <= legal:
+                raise SpecError(f'chips.json {c}.atb_no_leaf.{bus}: codes not legal in the map '
+                                f'{sorted(set(chip_atb_no_leaf[c][bus]) - legal)}')
+            conn = ''.join(re.sub(r'#.*', '', (P / x).read_text()) for x in
+                           ('integration/chips/common.conn', f'integration/chips/{c}/chip.conn'))
+            leaves = {int(k) + 1 for k in re.findall(r'(?:SEL|FORCE_LEAF)=%s_sw\[(\d+)\]' % bus, conn)}
+            want = legal - leaves
+            if want != set(chip_atb_no_leaf[c][bus]):
+                raise SpecError(f'chips.json {c}.atb_no_leaf.{bus} {chip_atb_no_leaf[c][bus]} does not match the conns '
+                                f'(legal codes without a leaf: {sorted(want)})')
     for reg in registers:
         reg['writable_mask'] = sum(((1 << w) - 1) << rl for _, _, w, rl in reg['chunks'])
         del reg['used']
@@ -342,7 +367,7 @@ def build_model():
         wire_status=dbg['wire_status'], fields=fields, groups=[dict(name=g['name'], kind=g['kind'],
             description=g['description'], update=g['update'], registers=g['registers'],
             fallback_routes=g['fallback_routes'], fields=[f['name'] for f in g['fields']]) for g in groups],
-        chip_ids={c: v['chip_id'] for c, v in chips['chips'].items()},
+        chip_ids={c: v['chip_id'] for c, v in chips['chips'].items()}, chip_atb_no_leaf=chip_atb_no_leaf,
         registers=registers, status_registers=status_regs, status_fields=status_fields, rules=rules, break_before_make=bbm, split_fields=split, fault_forced=forced,
         bus_widths=widths, atb_width=len(atb_nodes), atb_groups=dbg.get('atb_groups', {}),
         atb_switch_dead_time_s=dbg.get('atb_switch_dead_time_s'), last_debug=last_debug, last_analog=last_analog,
@@ -362,7 +387,8 @@ def runtime_namespace(model):
               REGISTERS=model['registers'], REGISTER_BY_ADDR={r['addr']: r for r in model['registers']},
               RULES=model['rules'], BREAK_BEFORE_MAKE=model['break_before_make'],
               SPLIT_FIELDS=model['split_fields'], FORCED=model['fault_forced'], ISLANDS=model['islands'],
-              ATB_NODES=model['atb_nodes'], STATUS_FIELDS=model['status_fields'], ATB_GROUPS=model['atb_groups'])
+              ATB_NODES=model['atb_nodes'], STATUS_FIELDS=model['status_fields'], ATB_GROUPS=model['atb_groups'],
+              CHIP_ATB_NO_LEAF=model['chip_atb_no_leaf'])
     return ns
 
 
@@ -653,10 +679,16 @@ def emit_sv(model):
     a(' // ATB: one-hot switch vectors, bit k-1 = node code k; island nodes open while the island is off.')
     a(' // LU-02 / RA-3 interlock: an island node also needs the island\'s real power-good; the bring-up')
     a(' // pgood override (which feeds island_on) never closes an ATB switch into an unpowered island.')
+    a(' // OBS-17: the ATB0 (force) switch of a core trunk node (force_island) is gated the same way by the island the')
+    a(' // trunk feeds; force_or ORs in an ungated active enable (TRK_WIRE: the WTX_EXT fallback force). ATB1 stays ungated.')
     for bus in (0, 1):
         for n in model['atb_nodes']:
             k = islands[n['island']] if n['island'] else None
             gate = f'&&island_on[{k}]&&island_pgood[{k}]' if n['island'] else ''
+            if bus == 0 and n.get('force_island'):
+                kf = islands[n['force_island']]
+                alt = f'||a_{by_name[n["force_or"]]["sv"]}[0]' if n.get('force_or') else ''
+                gate = f'&&((island_on[{kf}]&&island_pgood[{kf}]){alt})'
             a(f' assign atb{bus}_sw[{n["code"] - 1}]=(o_debug_atb__atb{bus}==6\'d{n["code"]}){gate};')
     a(' // ATB group and pad selects: ORs of the island-gated leaf lines (analog/island_support README A1).')
     for bus in (0, 1):
@@ -751,6 +783,14 @@ def emit_sv(model):
                 c = sv_check(f, f'wr_data[{rl + w - 1}:{rl}]')
                 if c != "1'b1":
                     terms.append(c if set(f['chips']) == {'rf', 'wired'} else f'(!PR_{f["sv"]}||{c})')     # absent: any value accepted, ignored
+                if f['atb_bus'] is not None:
+                    # OBS-6: a code with no leaf on this chip is rejected (legal when any built chip has the leaf)
+                    x = f'wr_data[{rl + w - 1}:{rl}]'
+                    per = []
+                    for chip, on in (('rf', 'ON_RF'), ('wired', 'ON_WIRED')):
+                        nl = model['chip_atb_no_leaf'][chip][f'atb{f["atb_bus"]}']
+                        per.append(f'({on}&&!(' + ('||'.join(f'{x}=={sv_const(w, v)}' for v in nl) or "1'b0") + '))')
+                    terms.append('(' + '||'.join(per) + ')')
         expr = '&&'.join(terms) or "1'b1"
         a(f" wire wok_{reg['addr']:02X}={expr};")
     # Sequential block.
@@ -1202,11 +1242,26 @@ def emit_markdown(model):
     a('')
     a('## ATB nodes')
     a('')
-    a('| Code | Node | Island gate | Kind | ATB0 force |')
-    a('| --- | --- | --- | --- | --- |')
+    a('Per chip (OBS-6, `spec/chips.json` atb_no_leaf, checked against the chip conns): a code with no leaf on the chip')
+    a('is rejected at write time (CONFIG_ERROR bit 0, like an illegal encoding). OBS-17: the ATB0 switch of a core trunk')
+    a('node is gated by the power state of the island it feeds (switch on, power-good, real power-good), TRK_WIRE also')
+    a('by the active `debug.wtx_ext.enable` (WTX_EXT fallback force); ATB1 (sense) is never gated for those nodes.')
+    a('')
+    a('| Code | Node | Island gate | Kind | ATB0 force | pt_rf ATB0/ATB1 | pt_wired ATB0/ATB1 |')
+    a('| --- | --- | --- | --- | --- | --- | --- |')
+    nl = model['chip_atb_no_leaf']
     for n in model['atb_nodes']:
         force = {'sense_only': 'no (ATB1 only)', 'allowed': 'yes', 'override': f'with `debug.bias_override.{n.get("override")}`'}[n['force']]
-        a(f"| {n['code']} | {n['name']} | {n['island'] or '-'} | {n['kind']} | {force} |")
+        if n.get('force_island'):
+            force += f' (gated by {n["force_island"]}' + (f' OR `{n["force_or"]}`' if n.get('force_or') else '') + ')'
+        f0, f1 = by_name['debug.atb.atb0'], by_name['debug.atb.atb1']
+        def has(chip):
+            r = []
+            for bus, f in (('atb0', f0), ('atb1', f1)):
+                legal = f['allowed'] if f['allowed'] is not None else range(f['minimum'], f['maximum'] + 1)
+                r.append('yes' if n['code'] in legal and n['code'] not in nl[chip][bus] else '-')
+            return '/'.join(r)
+        a(f"| {n['code']} | {n['name']} | {n['island'] or '-'} | {n['kind']} | {force} | {has('rf')} | {has('wired')} |")
     a('')
     a('## Observation mux codes')
     a('')
@@ -1367,7 +1422,7 @@ def emit_py(model):
                 FORCED=model['fault_forced'], ISLANDS=model['islands'], ATB_NODES=model['atb_nodes'],
                 OBS_STATUS=model['obs_status'], STATUS_FIELDS=model['status_fields'], ATB_GROUPS=model['atb_groups'],
                 STATUS_REGISTERS=model['status_registers'], WIRE_STATUS=model['wire_status'], MAP_HASH=model['map_hash16'],
-                BUS_WIDTHS=model['bus_widths'], ATB_WIDTH=model['atb_width'])
+                BUS_WIDTHS=model['bus_widths'], ATB_WIDTH=model['atb_width'], CHIP_ATB_NO_LEAF=model['chip_atb_no_leaf'])
     blob = json.dumps(data, sort_keys=True, separators=(',', ':'))
     return ('"""GENERATED by rtl/gen/gen_regfile.py; do not edit. Programmable transceiver control map\n'
             'and reference model for bench software. Data tables plus the semantics in regmap_runtime.py."""\n'
@@ -1378,7 +1433,7 @@ def emit_py(model):
             'FORCED = _DATA["FORCED"]\nISLANDS = _DATA["ISLANDS"]\nATB_NODES = _DATA["ATB_NODES"]\n'
             'ATB_GROUPS = _DATA["ATB_GROUPS"]\nSTATUS_FIELDS = _DATA["STATUS_FIELDS"]\nSTATUS_REGISTERS = _DATA["STATUS_REGISTERS"]\n'
             'OBS_STATUS = _DATA["OBS_STATUS"]\nWIRE_STATUS = _DATA["WIRE_STATUS"]\nMAP_HASH = _DATA["MAP_HASH"]\n'
-            'BUS_WIDTHS = _DATA["BUS_WIDTHS"]\nATB_WIDTH = _DATA["ATB_WIDTH"]\n'
+            'BUS_WIDTHS = _DATA["BUS_WIDTHS"]\nATB_WIDTH = _DATA["ATB_WIDTH"]\nCHIP_ATB_NO_LEAF = _DATA["CHIP_ATB_NO_LEAF"]\n'
             'FIELD_BY_NAME = {f["name"]: f for f in FIELDS}\n'
             'REGISTER_BY_ADDR = {r["addr"]: r for r in REGISTERS}\n\n'
             '# ---- verbatim copy of rtl/gen/regmap_runtime.py ----\n' + RUNTIME_SRC)

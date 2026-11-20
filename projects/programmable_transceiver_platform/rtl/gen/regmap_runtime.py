@@ -109,6 +109,11 @@ def chip_view(chip):
     for rule in RULES:
         if all(FIELD_BY_NAME[c[0]].get('absent') for c in rule['if_any'] + rule['if_all'] + rule['then_all']):
             rule['absent'] = True
+    # OBS-6: ATB codes with no leaf on this chip are rejected at write time (spec/chips.json atb_no_leaf).
+    for bus in ('atb0', 'atb1'):
+        f = FIELD_BY_NAME['debug.atb.' + bus]
+        legal = f['allowed'] if f['allowed'] is not None else list(range(f['minimum'], f['maximum'] + 1))
+        f['allowed'] = [c for c in legal if c not in CHIP_ATB_NO_LEAF[chip][bus]]
 
 
 def register_at(addr):
@@ -213,8 +218,11 @@ def outputs(active, pgood, fault, enable=0):
     atb = [0, 0]
     for node in ATB_NODES:
         for bus in (0, 1):
-            if out['debug.atb.atb%d' % bus] == node['code'] and (node['island'] is None or (
-                    on[node['island']] and (pgood >> ISLANDS[node['island']]) & 1)):
+            gate = node['island'] is None or (on[node['island']] and (pgood >> ISLANDS[node['island']]) & 1)
+            if bus == 0 and node.get('force_island'):     # OBS-17: trunk force gated by the island it feeds
+                k = node['force_island']
+                gate = bool(on[k] and (pgood >> ISLANDS[k]) & 1) or bool(node.get('force_or') and active[node['force_or']] & 1)
+            if out['debug.atb.atb%d' % bus] == node['code'] and gate:
                 atb[bus] |= 1 << (node['code'] - 1)
     grp = {}
     for bus in (0, 1):

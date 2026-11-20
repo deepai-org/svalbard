@@ -272,7 +272,7 @@ inst atb1_leaf40 atb_leaf_s core
 
 # Supply / ground bonds on free signal sites (D12; bond_map.txt gives the site and the reason of each). Provider supply
 # cell at a signal site (demand master until the pads owner confirms it: D-SPLIT-SUPSITE); no COB capacitor on these fingers.
-inst pad_xvss_{0:6} prov_supply_sig chip
+inst pad_xvss_{0:5} prov_supply_sig chip
   PAD~VSS
-inst pad_xvdd_{0:1} prov_supply_sig chip
+inst pad_xvdd_{0:2} prov_supply_sig chip      # pad_xvdd_2 at bidir[22] (was pad_xvss_6): bond margin, PDS-9 / PC-53
   PAD~VDD

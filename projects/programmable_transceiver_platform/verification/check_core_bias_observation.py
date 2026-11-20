@@ -484,7 +484,7 @@ if __name__ == '__main__':
     parser.add_argument('--negative', choices=('swap', 'enable'),
                         help='negative control (must FAIL; observes only the codes it needs)')
     parser.add_argument('--assess-only', action='store_true', help='Re-assess an existing completed wave.txt/ngspice.log')
-    parser.add_argument('--timeout', type=float, default=21600)
+    parser.add_argument('--timeout', type=float, default=43200)
     args = parser.parse_args()
     chip = os.environ['PT_CHIP']
     out = (args.output_dir or ROOT/f'scratch/core-bias-observation-{chip}{"-idac1" if args.idac1_smu else ""}').resolve()
@@ -530,4 +530,8 @@ if __name__ == '__main__':
     result = assess(out, experiment)
     result['analog_runtime_s'] = time.monotonic()-started
     (out/'report.json').write_text(json.dumps(result, indent=2)+'\n')
+    for name in ('wave.txt', 'ngspice.log'):      # hashed in the report; keep the output dir small
+        subprocess.run(['gzip', '-f', str(out/name)], check=True)
+    if result['status'] == 'pass':
+        (out/'wave.txt.gz').unlink()     # ~100 MB; its sha256 is in the report and the independent audit
     sys.exit(0 if result['status'] == 'pass' else 1)

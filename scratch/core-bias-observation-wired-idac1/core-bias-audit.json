@@ -1,0 +1,237 @@
+{
+  "status": "pass",
+  "waveform_stop_s": 0.0002541999999999997,
+  "scope": "exact frozen mixed-level core reference / bank / ATB fixture",
+  "completed_checks": [
+    {
+      "check": "physical SPI reads",
+      "reads": [
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 8,
+          "value": 3
+        },
+        {
+          "address": 9,
+          "value": 62604
+        },
+        {
+          "address": 10,
+          "value": 9509
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 5,
+          "value": 0
+        },
+        {
+          "address": 5,
+          "value": 0
+        }
+      ]
+    },
+    {
+      "check": "normal reference and bank currents over 5 us",
+      "vbg_min_v": 1.2119629007179378,
+      "vbg_max_v": 1.2119629124635176,
+      "currents": {
+        "pll_ring_tx": {
+          "min_a": 9.490524333000103e-06,
+          "max_a": 9.490524403309916e-06
+        },
+        "pll_ring_rx": {
+          "min_a": 9.490522779101474e-06,
+          "max_a": 9.490522849416781e-06
+        },
+        "cdr": {
+          "min_a": 9.490522779101168e-06,
+          "max_a": 9.490522849389893e-06
+        },
+        "ctle": {
+          "min_a": 9.490523127005324e-06,
+          "max_a": 9.490523197219915e-06
+        },
+        "detect": {
+          "min_a": 9.490522959736475e-06,
+          "max_a": 9.49052302998429e-06
+        },
+        "wiredtx": {
+          "min_a": 9.490537345694874e-06,
+          "max_a": 9.490537415946225e-06
+        },
+        "hsbias": {
+          "min_a": 9.49053873234675e-06,
+          "max_a": 9.490538802629087e-06
+        },
+        "bb_tap_wmon": {
+          "min_a": 9.49052331889257e-06,
+          "max_a": 9.490523389045065e-06
+        }
+      }
+    },
+    {
+      "check": "IDAC1 SMU current",
+      "code": 0,
+      "atb_code": 57,
+      "window_s": [
+        0.000190001000000002,
+        0.00019500100000000202
+      ],
+      "window_samples": 5,
+      "min_a": -7.592118731273472e-10,
+      "max_a": -7.592067141626302e-10,
+      "mean_a": -7.592074898512709e-10,
+      "settled_span_a": 5.158964717010606e-15
+    },
+    {
+      "check": "IDAC1 SMU current",
+      "code": 4,
+      "atb_code": 57,
+      "window_s": [
+        0.00020470100000000198,
+        0.000209701000000002
+      ],
+      "window_samples": 5,
+      "min_a": 3.7519463837073956e-06,
+      "max_a": 3.75284802753284e-06,
+      "mean_a": 3.7527084746002555e-06,
+      "settled_span_a": 9.01643825444611e-10
+    },
+    {
+      "check": "IDAC1 SMU current",
+      "code": 8,
+      "atb_code": 57,
+      "window_s": [
+        0.00021940100000000201,
+        0.000224401000000002
+      ],
+      "window_samples": 5,
+      "min_a": 7.504762230944975e-06,
+      "max_a": 7.506511255600534e-06,
+      "mean_a": 7.5062269579089405e-06,
+      "settled_span_a": 1.7490246555597523e-09
+    },
+    {
+      "check": "IDAC1 SMU current",
+      "code": 0,
+      "atb_code": 57,
+      "window_s": [
+        0.000234101000000002,
+        0.000239101000000002
+      ],
+      "window_samples": 5,
+      "min_a": -7.592231010544737e-10,
+      "max_a": -7.592058814953618e-10,
+      "mean_a": -7.592110036587648e-10,
+      "settled_span_a": 1.721955911189482e-14
+    },
+    {
+      "check": "IDAC1 code ratio 8/4",
+      "ratio": 2.000215846425032
+    },
+    {
+      "check": "IDAC1 off before and after",
+      "off_a": [
+        -7.592074898512709e-10,
+        -7.592110036587648e-10
+      ]
+    },
+    {
+      "check": "producer schedule consistency (informational)",
+      "producer_steps": [
+        {
+          "code": 0,
+          "time_s": 0.0001950500000000017
+        },
+        {
+          "code": 4,
+          "time_s": 0.00020975000000000187
+        },
+        {
+          "code": 8,
+          "time_s": 0.00022445000000000204
+        },
+        {
+          "code": 0,
+          "time_s": 0.0002391500000000022
+        }
+      ],
+      "decoded_steps": [
+        {
+          "code": 0,
+          "time_s": 0.000187001000000002
+        },
+        {
+          "code": 4,
+          "time_s": 0.000201701000000002
+        },
+        {
+          "code": 8,
+          "time_s": 0.00021640100000000202
+        },
+        {
+          "code": 0,
+          "time_s": 0.000231101000000002
+        }
+      ],
+      "producer_codes_agree": true
+    }
+  ],
+  "pending_checks": [],
+  "current_sources_changed": [
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/integration/chips/wired/chip.conn"
+  ],
+  "fixture_boundaries": [
+    "external reset/POR at 2 us, not the real cold-start POR",
+    "every consumer enable tied on (LOAD_EN), diode load on every bank output",
+    "nets of blocks outside the fixture terminate through 1 Gohm",
+    "per-island block capacitance and 1 mA load (check_chip_power.py)",
+    "one supply net VDD as in the conn; 80 mA host load on it",
+    "ATB cells with a select made outside the macro held open: ['atb0_leaf22']"
+  ],
+  "artifact_hashes": {
+    "experiment.json": "736eab94a3169d81d03be0c979b893b05dc688ec5359cbc92e92cdada674bca8",
+    "runtime-snapshot.json": "8110dacf340db7deaa5cdce44aefa0ee95f3345852ad1f8022c6fdc20dbaaf07",
+    "frozen-sources/manifest.json": "875bffd018afbc5c7474214e4b3182e544a5b5b189325b180b07f6a49b1d24ed",
+    "wave.txt": "3e3ce214bc65806ed226346f9535216d9de57b29f7a4f81acb3581950d39090f"
+  },
+  "auditor_sha256": "e6cc2c750ccf5cfd56e8b4ef6fae06bf899a97eb22fc6c7ec8aa5e617bf9138a"
+}

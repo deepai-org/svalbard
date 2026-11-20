@@ -167,6 +167,54 @@ Each mode's register sequence is the block owner's; the generic rules are:
 - Fault monitor (`monitor.config.*`) armed only after the requirements it watches are running; clear with
   `monitor.reset.clear_fault` 1 then 0.
 
+## 10. Bench test plan (first silicon, per chip)
+
+Measure in this order; stop at the first STOP. Expected values are from the evidence named; a limit is the evidence
+range widened only where the evidence has no corner data (marked ±30 %, a screening limit, not a spec). All at
+3.30 V, 22-32 °C, sections 0-7 board state. `tools/bringup/` automates T2-T11 (ATB through an SMU back-end).
+
+### Both chips
+
+| # | Measure | Expected (basis) | Pass | On fail |
+|---|---|---|---|---|
+| T1 | Supply current, `RESET_N` low | ≈ 4.6 mA stopped (spec/budgets/power-budget.json `stopped` 4.62 mA; 15 mW) | 1-15 mA | > 15 mA: STOP, power off (short / latch-up / back-feed, B53); < 1 mA: open supply bond or no die |
+| T2 | 0x00 / 0x08 / 0x09 / 0xFE | 0x5356 / 0x0003 / map hash / 1 rf, 2 wired | exact | no answer: B50 levels, B51 rescue; wrong id: STOP (wrong die) |
+| T3 | `RESET_STATUS` after power-up | b0 = 1, b2 = 0 | exact | b0 = 0: POR never fired; b0 stuck 1: POR stuck (B51) |
+| T4 | `ISLAND_STATUS`, all off | 0x0000 | exact | pgood with island off = back-drive: find the driven pad (B53) |
+| T5 | aosc on counter source 5 | 42.7-54.3 MHz extracted ss..ff, 3.15-3.50 V (section 6) | 40-60 MHz (design window) | REF_IN absent (DBG_OBS 11), counter, or aosc fault: use CLK_OBS 12 |
+| T6 | Current step: bias enable | bandgap 87-161 µA + biasgen (core_support README) | 0.05-0.5 mA | |
+| T7 | ATB1 55 VBG, untrimmed | 1.204-1.220 V (core_support evidence, tt/ss/ff) | 1.17-1.25 V | outside: bandgap / ATB path; ATB1 13 (VSS) and 5 (VDD) prove the bus |
+| T8 | VBG after `bgap_trim` | 1.200 V | 1.190-1.210 V (SMU ≥ 1 GΩ) | trim range exhausted: record, continue untrimmed |
+| T9 | ATB1 1 / 2 / 3 / 57 | ROOT_REF 0.92 V; VREF0 = 5/6 VBG; VCM = VDD/2; IDAC1 0.94 µA/LSB (code 10 = 9.4 µA into ~1 V) | 0.80-1.05 V; ±1.5 %; ±1 %; ±30 % | set `idac2_source` from IDAC1 (section 4) |
+| T10 | Each island on, blocks off: ISLAND_STATUS, rail (ATB1 7-12), current step | pgood + effective-on bits; rail ≥ VDD − 20 mV (switch drop ≤ 19.9 mV at design current, power-budget `island_switch`) | bits exact; rail ≥ VDD − 50 mV; step < 2 mA | step > 10 mA: STOP that island (short / latch); pgood without rail: pgood logic |
+| T11 | Ring oscillator (CLK_OBS 10, then counter 3) | 173.8 / 210.5 / 249.9 MHz at ss / tt / ff, 3.30 V | 150-280 MHz; CLK_OBS and counter agree within 1 % (after OBS-2) | set the supply trim (section 6) |
+| T12 | TX ring: counter source 1 against target; DBG_OBS 10 lock | count = target ± tolerance | locked within 1 ms | band / modulus; ATB1 30 VCTRL not at a rail |
+| T13 | Host link, div4: training window (FPGA tap sweep) | D2H budget 2.06 ns of a 3.2 ns UI at full rate (interface-requirements 3.1) | div4 ≥ 6 ns of 12.8 ns; div2 ≥ 3 ns of 6.4 ns (fpga-connection-plan); full rate ≥ 0.6 ns | stay at the slower rate; check stagger / slew |
+
+### pt_rf
+
+| # | Measure | Expected (basis) | Pass |
+|---|---|---|---|
+| R1 | Current steps per block enable (rf island) | LNA 18.9-21.4 mA (19.0 limit), rxmix 3.01-3.09 each, bbfilter 5.22-5.32 each (power_budget.py MEASURED, extracted) | ±30 % of nominal; LNA ≤ 21.4 mA |
+| R2 | conv island: ADC, DAC, refbuf | ADC 5.73 / 5.72 mA, DAC 2.07 each, refbuf 0.55 mA (+1 mA delivered) | ±30 %; DBG_OBS 13 refbuf_ready = 1; ATB1 36 VREF_CONV recorded |
+| R3 | Converter loopback DAC → bbfilter rx_direct → ADC (MEMORY capture) | tone at the programmed frequency | SNDR recorded; the published ADC FFT is ENOB 4.9 (MOD-04): screening pass ≥ 4 ENOB |
+| R4 | On-chip LO band search, counter source 6 (LO_FB = f_VCO / 2N) | count = f_ref × 1024 / 1024 at lock for the band chosen (LO-INTEGRATION 4.2) | a band locks for 2.400-2.4835 GHz; CLK_OBS 1 = f_LO / 8 / 2^N agrees |
+| R5 | RX tone at BB_I/Q taps, then ADC | gain per the rf_rx README chain rows | recorded; I/Q 90° ± 10° before trim |
+| R6 | RF_TX output (spectrum analyser, B17) | per rf_tx README matched powers minus placement loss (test-board-models 3) | recorded; mute drops it > 30 dB |
+| R7 | ATB1 15-21, 33, 38, 39 bias nodes | no published node values (OBS row gap) | record; flag a node at a rail (< 0.1 V or > VDD − 0.1 V) |
+
+### pt_wired
+
+| # | Measure | Expected (basis) | Pass |
+|---|---|---|---|
+| W1 | pll island: CDR ring current step | 6.85-10.2 mA (power_budget.py pll_cdr) | within |
+| W2 | Wired TX: `status.wired.tx_state` = 3, ring ready; MAIN tail step | tail 9.05 mA at code 109 (wired_tx INTEGRATION) | ±30 %; eye on WIRE_TX (scope, B22) recorded per rate |
+| W3 | Fallback route WTX_EXT → WIRE_TX (B12) | data through at 0.5 Gb/s (check_chip_fallback.py) | 0 errors in 10^4 bits |
+| W4 | Termination by SMU on the pads (powered, term on/off, ≤ 1 mA, B7): USB_DP/DN and WIRE_RX_P/N | USB `pad_wirepad`: 40.5-49.5 Ω per leg in candidate b5, 165-255 Ω in the published cell (PC-50); WIRE_RX `pad_hspad`: per the pads README after the PAD-09 fix | USB 40-55 Ω with the b5 cell; record which cell shipped; off > 10 kΩ |
+| W5 | Wired RX loopback cable TX → RX, PRBS7, `status.pattern.errors` | 0 errors at 1.25 Gb/s (wired_rx README real-neighbour rows) | 0 in 10^9 bits at 1.25 Gb/s; record 2.5 / 3.24 Gb/s |
+| W6 | USB HS amplitude (B11) | 360-440 mV after `usbhs.bias.code` calibration | within |
+| W7 | ATB1 23, 24, 26, 27, 28, 40 | no published node values | record; flag a node at a rail |
+
 ## Open items that change this sequence
 
 OBS-2 (counter /2 at the input, digital), OBS-6 (per-chip ATB legality), OBS-14 (digital-speed ring), DBG-03 (recommended:

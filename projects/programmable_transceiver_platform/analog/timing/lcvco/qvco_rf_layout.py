@@ -39,6 +39,8 @@ D = dict(
     cfix_mim=8.4,                         # fixed-C cell MIM side (the 16th cell; series pair across P-N)
     sw_f=5, sw_w=5.0,                     # unit switch fingers x W (+ 2 pull-down fingers)
 )
+import os as _os
+D.update(json.loads(_os.environ.get('QVCO_PARAMS', '{}')))   # r9: size variants (bank MIM, varactor) for every sub-command
 MIMX, MIMY = 10.8, 9.6        # PCell M4 ring size for the 8.4 um cap (scaled with the cap below)
 
 
@@ -146,6 +148,8 @@ def build(tag='', params=None):
     p = dict(D)
     p.update(params or {})
     D.update(p)
+    global CELL_H
+    CELL_H = max(10.9, round(D['mim'] + 2.5, 2))     # r9: MIM ring + 1.2 um ring-to-ring (MIMTM.1) for a larger bank cap
     work = WORK / ('rf' + tag)
     if work.exists():
         shutil.rmtree(work)

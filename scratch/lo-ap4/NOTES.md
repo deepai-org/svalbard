@@ -163,3 +163,15 @@ Schematic variants of revision n4 (`loext3/var/n5k*`: ct_locml copy with k of 20
 | 12 | 20.75 | -1.0 | 2.15-2.90 |
 | 8 | 19.89 | -1.85 | 2.29-2.89 |
 Gate C off the tank (estimate, not extracted): 12 units ~ -60 fF per node, 8 units ~ -90 fF. Neither reaches the ~220 fF the >= 3 % range target needs from fixed C, so the band-bank relayout must carry the rest (or the pair goes below 8 units at a larger mixer loss). Proposed: 12 units (then LO-RX-2 with extracted numbers). Schematic only: layout, extraction, tt/ff and external mode not run.
+
+## 2026-11-20: range fix, round 1 (`q7/r9*`, RF-cell variants `scratch/lo/r4_qvco2/rft9*`)
+Ruling: >= 3 % at both band ends at process/voltage corners with nominal L; >= 1 % at the pessimistic bounds (top >= 2.584 GHz, bottom <= 2.307 GHz).
+All runs: v7 divider with corrected C (`fix` loads), 12-unit lo_ext pair and r8 port tracks modelled as -60 + 15 = -45 fF per tank node (estimates, not extracted), route 40 fF top / 0 bottom.
+| RF cell | SS b0 vt3.0 (nominal L, >= 2.635) | FF/3.50 b15 vt0.3 (nominal L, <= 2.262) | PF115 top (>= 2.584) | OPT85 3.35 / 3.50 bottom (<= 2.307) |
+|---|---|---|---|---|
+| r6b as built (MIM 8.4, varactor 17) | 2.770 (+5.1 %... 8.3 % over 2.558) | 2.123 (6.1 % under 2.262... 8.9 % under 2.330) | 2.5546 FAIL (-1.1 %) | 2.3121 / 2.3123 FAIL |
+| t9d: bank MIM 8.7 um (+7.3 % C) | - | - | 2.5505 FAIL | - / 2.2778 PASS (1.3 %) |
+| t9e: MIM 8.7, varactor 15 | - | - | 2.5654 FAIL | - / 2.2978 PASS (0.4 %) |
+(nominal margins are against the band limits 2.558 / 2.330 with 3 %: 2.635 / 2.262; both pass with >= 5 %.)
+Reading: the nominal-L criterion is met with margin; the pessimistic bounds need a top/bottom ratio of 2.584/2.307 = 1.1201 and t9d gives 1.1197. Fewer varactor fingers narrow the ratio (drop it). To get >= 1 % at both pessimistic ends: a larger bank (MIM 9.0 um: layout shorts VDDCI/VDDCQ to IN in the generator today, to fix) AND an upward shift of about 1.5 % (spiral L -3 %, or ~75 fF per node less fixed C; the 8-unit pair gives only ~30 fF).
+Generator: `qvco_rf_layout.py` takes QVCO_PARAMS (JSON) for size variants; CELL_H follows the MIM; default build reproduces r6b (t9z LVS unique).

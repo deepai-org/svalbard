@@ -212,52 +212,102 @@ assign empty=playing?pe:empty_r;
  pt_sel2 #(.W(1)) empty_sel(.s(take),.a(e_hold),.b(e_take),.z(empty_n));
  pt_sel2 #(.W(1)) full_sel(.s(put),.a(f_hold),.b(f_put),.z(full_n));
  pt_sel2 #(.W(A+1)) cnt_sel(.s(take),.a(cnt_hold),.b(cnt_take),.z(cnt_n));
- // Read port, two pipeline stages (timing 2026-11-11: the 28 x 40 AND-OR read trees spanning the
- // array were the hcore / bounded-CDC worst paths, -4.7 / -2.5 ns post-CTS in TC6).
- // Registered ONE-HOT selects for the head and the next two entries (roh, roh1, roh2 = rb, rb+1,
- // rb+2 with the playback wrap) select, per half of the array, three candidate partial words that
- // are REGISTERED (p*a / p*b); the next clock ORs the halves and the late takes pick the candidate:
- //   dq(t+1) = mem[rb(t) + take(t)] = mem[rb(t-1) + take(t-1) + take(t)] = candidate take_d + take.
- // A readable entry was written at least three reader clocks before the reader can see it (array
- // write, then wgp, wg1, wg2, wbin), so the one-clock-older array sample is the same data; dq
- // reloads every clock, so an entry that becomes readable later is picked up as before.
- reg[W-1:0]dq;reg[DEPTH-1:0]roh,roh1,roh2;reg take_d;
- function automatic[DEPTH-1:0]oh_next(input[DEPTH-1:0]v);
-  begin oh_next=(playing&&v[lastc])?{{(DEPTH-1){1'b0}},1'b1}:{v[DEPTH-2:0],v[DEPTH-1]};end endfunction
- // roh2 = oh_next(roh1): constant reset value 4, corrected on the first clock after the release (the
- // playback wrap may make it 1); candidate 2 is only used after two consecutive takes.
- reg roh_init;
+ // Read port (DG9-EG, replaces the three parallel read trees roh / roh1 / roh2): ONE read tree with a
+ // registered fetch pointer and a two-entry skid. The tree reads mem[F] (F = foh, one-hot FETCH pointer, a
+ // register) into registered half-array partials (pa / pb, split as before); p = pa|pb is the entry fetched
+ // one clock earlier. Fetched entries queue in order behind the head: dq (head, = mem[rb] whenever the FIFO
+ // reports data) and sk (rb+1); vq / vs / pv mark dq, sk and p valid (vs implies vq, never vs && pv, so at
+ // most rb .. rb+2 are in flight). On a take the queue shifts and p lands in the first free slot.
+ // F advances (a fetch) when entry F is readable and the queue has room after this clock:
+ //   fetch = readable && (take || room),  room = !(vq && (vs || pv)),  readable = playing || (gray(F) != wg2)
+ // wg2 is the synchronized write pointer two reader clocks ahead of wbin / empty_r, so an entry is fetched no
+ // earlier than the old trees sampled it (written at least one reader clock before), F never passes the write
+ // pointer (no stale prefetch), and the head is in dq on the clock empty_r / nonempty clears. room and
+ // readable are registers (next-state compares); every pointer / queue next state is computed for take = 0
+ // and take = 1 from registers and the late take drives only kept 2:1s (pt_sel2). The playback wrap flag fl
+ // ("F is play_last") is a register, so the old roh2 -> play_last 28:1 mux -> roh2 loop (egress_wtx -2.2 /
+ // -2.9 ns routed) is gone. Playback: the "is last" flag travels with the data (pl / sl / ql) and drives
+ // play_done. On the first clock after the read-side release in playback (pinit) the tree reads the entry
+ // after 0 while p already holds entry 0 (sampled during reset), so dq holds entry 0 and p entry 1 when
+ // nonempty first rises, as with the old trees. Looped play_last = 0 now sends entry 0 every clock as
+ // specified (the old roh1 reset value skipped the wrap and sent 0, 1, .., DEPTH-1 first).
+ // dout while the FIFO reports no data: the last head or a fetched entry (old: mem[rb], a stale slot or a word
+ // being written); every consumer qualifies dout with nonempty / empty / rd_count.
+ // Equivalence against the three-tree read side: sim/tb_cdc_fifo_readside_equiv.sv.
+ reg[W-1:0]dq,sk;reg[DEPTH-1:0]foh;reg[A:0]fbn,fg;reg fl,vq,vs,pv,ql,sl,pl,rinit;
+ wire last0=lastc==0,last1=lastc==1;
+ wire[DEPTH-1:0]lastm1=(last0?{DEPTH{1'b0}}:({{(DEPTH-1){1'b0}},1'b1}<<(lastc-1'b1)));   // one-hot play_last-1
+ // pinit = the first clock after the read-side release, in playback. rd_rel is a low-fanout replica of the
+ // second synchronizer stage rd_reset[1] (same D rd_reset[0], clock and reset rst_n; kept-hierarchy so synthesis
+ // does not merge it), so the release reset tree never reaches the read-tree address.
+ wire rd_rel;
+ pt_dff_rep rd_rel_rep(rd_clk,rst_n,rd_reset[0],rd_rel);
+ wire pinit=playing&&rinit&&rd_rel;
+ // readable / room are registers holding (F's Gray != wg2) and !(vq && (vs || pv)) (next-state compares below)
+ reg rdr,room;
+ wire readable=playing||rdr;
+ wire pvx=pv||pinit;
+ wire[DEPTH-1:0]fstep=(playing&&fl)?{{(DEPTH-1){1'b0}},1'b1}:{foh[DEPTH-2:0],foh[DEPTH-1]};
+ wire fl_step=playing&&(fl?last0:|(foh&lastm1));
+ // pinit: address the entry after 0 (0 itself if play_last is 0); afterwards F. F is entry 0 (its reset value)
+ // during pinit, so only address bits 0 and 1 take the pinit term.
+ wire pin1=pinit&&!last0;
+ wire[DEPTH-1:0]faddr={foh[DEPTH-1:2],foh[1]||pin1,foh[0]&&!pin1};
+ wire ftag=pinit?(last0||last1):rinit?last0:fl;
+ // F after the pinit clock: two entries past 0 with the playback wrap
+ wire[DEPTH-1:0]finit=(last0||last1)?{{(DEPTH-1){1'b0}},1'b1}:{{(DEPTH-3){1'b0}},3'b100};
+ wire flinit=last0||(!last1&&lastc==2);
+ initial if(DEPTH<3)$fatal(1,"pt_cdc_fifo: DEPTH must be at least 3 (one-tree read side)");
+ // Next control state for take = 0 (h) and take = 1 (t), both from registers; the late take only drives kept 2:1s.
+ localparam CS=DEPTH+2*(A+1)+6;
+ wire fetch_t=readable,fetch_h=readable&&room;   // room is 1 while vq is 0 (pinit)
+ // the two fetch alternatives of every pointer register (fetch = 1: advance) are plain wires of registers
+ wire[DEPTH-1:0]o_adv=pinit?finit:fstep,o_hold=pinit?finit:foh;
+ wire l_adv=pinit?flinit:fl_step,l_hold=pinit?flinit:fl;
+ wire[A:0]bn_adv=step(fbn),g_adv=gray(fbn);
+ wire[CS-1:0]cs_h={fetch_h?o_adv:o_hold,fetch_h?l_adv:l_hold,fetch_h?bn_adv:fbn,fetch_h?g_adv:fg,
+  vq||pvx,vq&&(vs||pvx),fetch_h,(fetch_h?g_adv:fg)!=wg1,!((vq||pvx)&&(vq&&(vs||pvx)||fetch_h))};   // wg2 <= wg1 now
+ wire[CS-1:0]cs_t={fetch_t?o_adv:o_hold,fetch_t?l_adv:l_hold,fetch_t?bn_adv:fbn,fetch_t?g_adv:fg,
+  vs||pvx,vs&&pvx,fetch_t,(fetch_t?g_adv:fg)!=wg1,!((vs||pvx)&&(vs&&pvx||fetch_t))};
+ wire[CS-1:0]cs_n;
+ pt_sel2 #(.W(CS)) cs_sel(.s(take),.a(cs_h),.b(cs_t),.z(cs_n));
  always @(posedge rd_clk or negedge rd_ready)
-  if(!rd_ready)begin roh<=1;roh1<=2;roh2<=4;take_d<=1'b0;roh_init<=1'b1;end
-  else begin
-   take_d<=take;roh_init<=1'b0;
-   if(take)begin roh<=roh1;roh1<=roh2;roh2<=oh_next(roh2);end
-   else if(roh_init)roh2<=oh_next(roh1);
-  end
- // playback: entries 0..play_last (one-hot head reaches play_last), then stop or wrap
- wire play_done_n=play_done||(playing&&take&&roh[lastc]&&!play_loop);
+  if(!rd_ready)begin foh<=1;fl<=1'b0;fbn<=step(0);fg<=gray(0);vq<=1'b0;vs<=1'b0;pv<=1'b0;rdr<=1'b0;room<=1'b1;rinit<=1'b1;end
+  else begin rinit<=1'b0;{foh,fl,fbn,fg,vq,vs,pv,rdr,room}<=cs_n;end
+ // playback: entries 0..play_last (the head's last flag), then stop or wrap
+ wire play_done_n=play_done||(playing&&take&&ql&&!play_loop);
  always @(posedge rd_clk or negedge rd_ready)
   if(!rd_ready)begin play_done<=0;pe<=1;end
   else begin play_done<=play_done_n;pe<=play_done_n;end
  always @(posedge rd_clk or negedge rd_ready)
   if(!rd_ready)ne_r<=1'b0;else ne_r<=!(playing?play_done_n:empty_n);
  localparam HALF=(DEPTH+1)/2;
- reg[W-1:0]c0a,c0b,c1a,c1b,c2a,c2b;integer j;
+ reg[W-1:0]ca,cb;integer j;
  always @*begin
-  c0a=0;c0b=0;c1a=0;c1b=0;c2a=0;c2b=0;
+  ca=0;cb=0;
   for(j=0;j<DEPTH;j=j+1)
-   if(j<HALF)begin c0a=c0a|({W{roh[j]}}&mem[j]);c1a=c1a|({W{roh1[j]}}&mem[j]);c2a=c2a|({W{roh2[j]}}&mem[j]);end
-   else begin c0b=c0b|({W{roh[j]}}&mem[j]);c1b=c1b|({W{roh1[j]}}&mem[j]);c2b=c2b|({W{roh2[j]}}&mem[j]);end
+   if(j<HALF)ca=ca|({W{faddr[j]}}&mem[j]);else cb=cb|({W{faddr[j]}}&mem[j]);
  end
- reg[W-1:0]p0a,p0b,p1a,p1b,p2a,p2b;
- always @(posedge rd_clk)begin p0a<=c0a;p0b<=c0b;p1a<=c1a;p1b<=c1b;p2a<=c2a;p2b<=c2b;end
- wire[W-1:0]s0=p0a|p0b,s1=p1a|p1b,s2=p2a|p2b;
- // the late takes drive only kept-hierarchy 2:1s (pt_sel2) after the registered partials
- wire[W-1:0]s_lo,s_hi,dq_n;
- pt_sel2 #(.W(W)) dq_sel_lo(.s(take_d),.a(s0),.b(s1),.z(s_lo));
- pt_sel2 #(.W(W)) dq_sel_hi(.s(take_d),.a(s1),.b(s2),.z(s_hi));
- pt_sel2 #(.W(W)) dq_sel(.s(take),.a(s_lo),.b(s_hi),.z(dq_n));
- always @(posedge rd_clk)dq<=dq_n;
+ reg[W-1:0]pa,pb;
+ always @(posedge rd_clk)begin pa<=ca;pb<=cb;pl<=ftag;end
+ wire[W-1:0]p=pa|pb;
+ // data moves: registers select the candidates, the late take drives only the final kept 2:1s
+ wire[W-1:0]dq_hold=vq?dq:p,dq_take=vs?sk:p,sk_hold=vs?sk:p;wire[W-1:0]dq_n,sk_n;
+ pt_sel2 #(.W(W)) dq_sel(.s(take),.a(dq_hold),.b(dq_take),.z(dq_n));
+ pt_sel2 #(.W(W)) sk_sel(.s(take),.a(sk_hold),.b(p),.z(sk_n));
+ wire ql_n,sl_n;
+ pt_sel2 #(.W(2)) tag_sel(.s(take),.a({vq?ql:pl,vs?sl:pl}),.b({vs?sl:pl,pl}),.z({ql_n,sl_n}));
+ always @(posedge rd_clk)begin
+  dq<=dq_n;sk<=sk_n;
+  ql<=ql_n;sl<=sl_n;
+ end
+`ifdef FORMAL
+ always @(posedge rd_clk)if(rd_ready)begin
+  assert(!(vs&&!vq));assert(!(vs&&pv));assert(!(take&&!vq));
+  assert(!(!vq&&!take&&vs));
+  assert(rdr==(fg!=wg2));assert(room==!(vq&&(vs||pv)));
+ end
+`endif
  assign dout=dq;
  assign wr_ptr=wb,rd_ptr=rb,rd_ptr_step=rnr,rd_take=take;
  // CNTPIPE=1 (TC11, egress_wtx: rnr -> 6-bit distance ripple -> rd_count was -0.43 ns at 12.3 ns): rd_count is
@@ -338,6 +388,14 @@ endmodule
 `endif
 module pt_rst_rep(input wire clk, rst_n, output reg q);
     always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= 1'b1;
+endmodule
+
+// Replicated flop (kept): a copy of another flop with the same D, clock and reset that synthesis must not merge.
+`ifndef FORMAL
+(* keep_hierarchy = "yes" *)
+`endif
+module pt_dff_rep(input wire clk, rst_n, d, output reg q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= d;
 endmodule
 
 // Kept 2:1 select (z = s ? b : a): a hierarchy boundary so synthesis cannot share the logic in front

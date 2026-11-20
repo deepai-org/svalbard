@@ -1,0 +1,209 @@
+// Reference for sim/tb_cdc_fifo_readside_equiv.sv (DG9-EG): pt_cdc_fifo with the three-tree read side, verbatim
+// from rtl/pt_fifo.sv at commit cd456c5f, renamed pt_cdc_fifo_ref. Simulation only, not synthesized.
+module pt_cdc_fifo_ref #(parameter W=40,A=4,DEPTH=(1<<A),SPARE=3,MEMORY=0,POPQ=0,CNTPIPE=0)(
+ input wire wr_clk,rd_clk,rst_n,input wire[W-1:0]din,input wire push,pop,
+ output wire[W-1:0]dout,output wire full,empty,output wire nonempty,output reg ready,
+ output reg[A:0]rd_count,output reg overflow,underflow,output wire wr_active,rd_active,
+ output wire[A:0]wr_ptr,rd_ptr,   // binary pointers (write / read domain), modulo 2*DEPTH
+ output wire[A:0]rd_ptr_step,output wire rd_take,   // step(rd_ptr) (register) and this clock's read
+ input wire[A-1:0]peek_idx,output wire[W-1:0]peek,
+ input wire play,play_loop,input wire[A-1:0]play_last,
+ input wire spi_clk,spi_we,input wire[A-1:0]spi_idx,input wire[W-1:0]spi_d);
+ localparam[A:0]LAST=2*DEPTH-1;
+ localparam[A+1:0]SPAN=2*DEPTH;
+ localparam[A:0]OFFSET=((1<<(A+1))-2*DEPTH)/2;
+ localparam POW2=DEPTH==(1<<A);
+ localparam[A:0]FULLC=DEPTH;
+ (* async_reg="true" *) reg[1:0]wr_reset,rd_reset;
+ always @(posedge wr_clk or negedge rst_n)
+  if(!rst_n)wr_reset<=0;else wr_reset<={wr_reset[0],1'b1};
+ always @(posedge rd_clk or negedge rst_n)
+  if(!rst_n)rd_reset<=0;else rd_reset<={rd_reset[0],1'b1};
+ wire wr_ready=wr_reset[1],rd_ready=rd_reset[1];
+ assign wr_active=wr_ready,rd_active=rd_ready;
+ reg[W-1:0]mem[0:DEPTH-1];
+ reg[A:0]wb,rb,wg,wgp,rg,rg1,rg2,wg1,wg2,rbin,rbd,wbin;
+ reg[DEPTH-1:0]woh;
+ function automatic[A:0]gray(input[A:0]b);
+  begin gray=(b+OFFSET)^((b+OFFSET)>>1);end endfunction
+ function automatic[A:0]binary(input[A:0]g);
+ integer k;reg[A:0]t;begin for(k=A;k>=0;k=k-1)t[k]=^(g>>k);binary=t-OFFSET;end endfunction   // per-bit XOR trees
+ function automatic[A:0]step(input[A:0]p);begin step=p==LAST?{(A+1){1'b0}}:p+1'b1;end endfunction
+ function automatic[A:0]distance(input[A:0]a,b);   // (a-b) mod 2*DEPTH
+ reg[A+1:0]d,e;begin d={1'b0,a}-{1'b0,b};e={1'b0,a}+(SPAN-{1'b0,b});distance=d[A+1]?e[A:0]:d[A:0];end endfunction
+ // (the wrapped candidate a + SPAN - b is a parallel adder, not a second adder after the first)
+ function automatic[A:0]plus_depth(input[A:0]p);     // (p+DEPTH) mod 2*DEPTH
+ reg[A+1:0]d;begin d={1'b0,p}+DEPTH;plus_depth=d>=SPAN?d-SPAN:d;end endfunction
+ // rn = step(rb) is a REGISTER (rnr, maintained with rb; timing 2026-11-11: rb -> increment / wrap
+ // compare -> distance -> rd_count was the post-synthesis egress_wtx worst path)
+ reg[A:0]rnr;
+ wire[A:0]wn=step(wb),rn=rnr;
+ // full / empty are REGISTERS: the same compares evaluated on next-state values one clock early
+ // (both alternatives in parallel, the late put / take only select), so no pointer compare sits
+ // between a flop and the 40-bit write-enable / read-select fanout.
+ reg full_r,empty_r;
+ assign full=full_r;
+ reg play_done;
+ wire playing=MEMORY==2&&play;
+ wire[A-1:0]lastc=play_last>=DEPTH?DEPTH-1:play_last;   // clamp: at most the whole bank
+ // playback empty is a REGISTER (pe): asynchronously set while the read side is in reset and loaded
+// with the next play_done value, so the reset synchronizer output rd_ready never reaches the
+// pop / take / 40-bit read-select logic as data (AC1_R4: egress.rd_active -> empty -> take was the
+// -15.6 ns egress_wtx path). Same values as play_done || !rd_ready except one extra empty clock
+// right after the read-side reset release (the first pop can only come a clock later).
+reg pe;
+assign empty=playing?pe:empty_r;
+ // POPQ=1 (timing TC9, egress): the caller qualifies pop with `nonempty` (a plain register, = !empty,
+ // no playback mux) so take = pop; the caller's pop must never be set while empty.
+ reg ne_r;
+ assign nonempty=ne_r;
+ wire put=push&&!full,take=POPQ?pop:(pop&&!empty);
+ wire[A:0]wb_next=put?wn:wb,rb_next=take?rn:rb;
+ // next-state compares from registers only, kept as separate nets so the late put / take is a final 2:1
+ // Non-power-of-two DEPTH (timing 2026-11-11, ingress_wrx -1.4 ns: wb -> step -> compare with
+ // plus_depth(binary(rg2)) -> full): both operands are registers, wnr = step(wb) and rbd = the read
+ // pointer + DEPTH registered one writer clock after rg2. rbd lags rg2 by one clock, so full can stay
+ // set one writer clock longer after a read (conservative: never an overflow, never a false not-full).
+ reg[A:0]wnr;
+ // ready (TC9, hcore -2.1 ns mid-PnR: wb/rbin -> distance -> compare -> ready rippled through ~12 levels):
+ // occupancy <= DEPTH-SPARE  <=>  wb lies in the window rbin .. rbin+DEPTH-SPARE (mod 2*DEPTH); the window end
+ // rlim and its wrap flag are registered with rbin (same rg2 sample), so ready is two compares from registers.
+ reg[A:0]rlim;reg rwrap;
+ localparam[A+1:0]KREADY=DEPTH-SPARE;
+ function automatic[A:0]plus_k(input[A:0]p);
+ reg[A+1:0]d;begin d={1'b0,p}+KREADY;plus_k=d>=SPAN?d-SPAN:d;end endfunction
+ wire ready_n=rwrap?(wb>=rbin||wb<=rlim):(wb>=rbin&&wb<=rlim);
+ (* keep *) wire f_put=POW2?(gray(wn)=={~rg1[A:A-1],rg1[A-2:0]}):(wnr==rbd);
+ (* keep *) wire f_hold=POW2?(wg=={~rg1[A:A-1],rg1[A-2:0]}):(wb==rbd);
+ // empty compares against wbin (binary(wg2) registered one reader clock later; timing 2026-11-11:
+ // wg2 -> Gray decode -> compare -> empty_r was the post-synthesis egress_wtx worst path). The write
+ // pointer is seen one clock later: empty stays set one clock longer (conservative, never early).
+ (* keep *) wire e_take=rn==wbin,e_hold=rb==wbin;
+ wire[A:0]occupancy=distance(wb,rbin);
+ (* keep *) wire[A:0]cnt_take=distance(wbin,rn),cnt_hold=distance(wbin,rb);
+ // The late put / take select the precomputed alternatives through kept-hierarchy 2:1 muxes:
+ // with plain ?: synthesis (opt_share) merged the two compares / subtractors into one behind a
+ // pointer mux, putting take back in front of the arithmetic (post-synthesis egress_wtx -1.4 ns).
+ wire empty_n,full_n;wire[A:0]cnt_n;
+ pt_sel2 #(.W(1)) empty_sel(.s(take),.a(e_hold),.b(e_take),.z(empty_n));
+ pt_sel2 #(.W(1)) full_sel(.s(put),.a(f_hold),.b(f_put),.z(full_n));
+ pt_sel2 #(.W(A+1)) cnt_sel(.s(take),.a(cnt_hold),.b(cnt_take),.z(cnt_n));
+ // Read port, two pipeline stages (timing 2026-11-11: the 28 x 40 AND-OR read trees spanning the
+ // array were the hcore / bounded-CDC worst paths, -4.7 / -2.5 ns post-CTS in TC6).
+ // Registered ONE-HOT selects for the head and the next two entries (roh, roh1, roh2 = rb, rb+1,
+ // rb+2 with the playback wrap) select, per half of the array, three candidate partial words that
+ // are REGISTERED (p*a / p*b); the next clock ORs the halves and the late takes pick the candidate:
+ //   dq(t+1) = mem[rb(t) + take(t)] = mem[rb(t-1) + take(t-1) + take(t)] = candidate take_d + take.
+ // A readable entry was written at least three reader clocks before the reader can see it (array
+ // write, then wgp, wg1, wg2, wbin), so the one-clock-older array sample is the same data; dq
+ // reloads every clock, so an entry that becomes readable later is picked up as before.
+ reg[W-1:0]dq;reg[DEPTH-1:0]roh,roh1,roh2;reg take_d;
+ function automatic[DEPTH-1:0]oh_next(input[DEPTH-1:0]v);
+  begin oh_next=(playing&&v[lastc])?{{(DEPTH-1){1'b0}},1'b1}:{v[DEPTH-2:0],v[DEPTH-1]};end endfunction
+ // roh2 = oh_next(roh1): constant reset value 4, corrected on the first clock after the release (the
+ // playback wrap may make it 1); candidate 2 is only used after two consecutive takes.
+ reg roh_init;
+ always @(posedge rd_clk or negedge rd_ready)
+  if(!rd_ready)begin roh<=1;roh1<=2;roh2<=4;take_d<=1'b0;roh_init<=1'b1;end
+  else begin
+   take_d<=take;roh_init<=1'b0;
+   if(take)begin roh<=roh1;roh1<=roh2;roh2<=oh_next(roh2);end
+   else if(roh_init)roh2<=oh_next(roh1);
+  end
+ // playback: entries 0..play_last (one-hot head reaches play_last), then stop or wrap
+ wire play_done_n=play_done||(playing&&take&&roh[lastc]&&!play_loop);
+ always @(posedge rd_clk or negedge rd_ready)
+  if(!rd_ready)begin play_done<=0;pe<=1;end
+  else begin play_done<=play_done_n;pe<=play_done_n;end
+ always @(posedge rd_clk or negedge rd_ready)
+  if(!rd_ready)ne_r<=1'b0;else ne_r<=!(playing?play_done_n:empty_n);
+ localparam HALF=(DEPTH+1)/2;
+ reg[W-1:0]c0a,c0b,c1a,c1b,c2a,c2b;integer j;
+ always @*begin
+  c0a=0;c0b=0;c1a=0;c1b=0;c2a=0;c2b=0;
+  for(j=0;j<DEPTH;j=j+1)
+   if(j<HALF)begin c0a=c0a|({W{roh[j]}}&mem[j]);c1a=c1a|({W{roh1[j]}}&mem[j]);c2a=c2a|({W{roh2[j]}}&mem[j]);end
+   else begin c0b=c0b|({W{roh[j]}}&mem[j]);c1b=c1b|({W{roh1[j]}}&mem[j]);c2b=c2b|({W{roh2[j]}}&mem[j]);end
+ end
+ reg[W-1:0]p0a,p0b,p1a,p1b,p2a,p2b;
+ always @(posedge rd_clk)begin p0a<=c0a;p0b<=c0b;p1a<=c1a;p1b<=c1b;p2a<=c2a;p2b<=c2b;end
+ wire[W-1:0]s0=p0a|p0b,s1=p1a|p1b,s2=p2a|p2b;
+ // the late takes drive only kept-hierarchy 2:1s (pt_sel2) after the registered partials
+ wire[W-1:0]s_lo,s_hi,dq_n;
+ pt_sel2 #(.W(W)) dq_sel_lo(.s(take_d),.a(s0),.b(s1),.z(s_lo));
+ pt_sel2 #(.W(W)) dq_sel_hi(.s(take_d),.a(s1),.b(s2),.z(s_hi));
+ pt_sel2 #(.W(W)) dq_sel(.s(take),.a(s_lo),.b(s_hi),.z(dq_n));
+ always @(posedge rd_clk)dq<=dq_n;
+ assign dout=dq;
+ assign wr_ptr=wb,rd_ptr=rb,rd_ptr_step=rnr,rd_take=take;
+ // CNTPIPE=1 (TC11, egress_wtx: rnr -> 6-bit distance ripple -> rd_count was -0.43 ns at 12.3 ns): rd_count is
+ // distance(wbin, rb) of the PREVIOUS clock in two stages: stage 1 registers the 3-bit low difference with its
+ // borrow and the four high-part candidates (borrow 0/1, wrapped +SPAN/8 or not; SPAN is a multiple of 8),
+ // stage 2 only selects. The count is distance(wbin, rb) one clock old: it lags the writer (under-count) but
+ // can miss the last two takes (over-count by <= 2); consumers that pop before a start threshold add 2.
+ reg[2:0]cp_lo;reg cp_lob;reg[A-2:0]cp_h0,cp_h1,cp_h0w,cp_h1w;reg cp_n0,cp_n1;
+ wire[3:0]cp_lo4={1'b0,wbin[2:0]}-{1'b0,rb[2:0]};
+ wire[A-2:0]cp_ah=wbin[A:3],cp_bh=rb[A:3];
+ wire[A-1:0]cp_d0={1'b0,cp_ah}-{1'b0,cp_bh},cp_d1=cp_d0-1'b1;
+ localparam[A-2:0]SPAN8=SPAN/8;
+ wire[A-2:0]cp_sel=cp_lob?(cp_n1?cp_h1w:cp_h1):(cp_n0?cp_h0w:cp_h0);
+ wire[A:0]cp_count={cp_sel,cp_lo};
+ always @(posedge rd_clk or negedge rd_ready)
+  if(!rd_ready)begin cp_lo<=0;cp_lob<=0;cp_h0<=0;cp_h1<=0;cp_h0w<=0;cp_h1w<=0;cp_n0<=0;cp_n1<=0;end
+  else begin
+   cp_lo<=cp_lo4[2:0];cp_lob<=cp_lo4[3];
+   cp_h0<=cp_d0[A-2:0];cp_h1<=cp_d1[A-2:0];cp_n0<=cp_d0[A-1];cp_n1<=cp_d1[A-1];
+   cp_h0w<=cp_d0[A-2:0]+SPAN8;cp_h1w<=cp_d1[A-2:0]+SPAN8;
+  end
+ initial if(CNTPIPE&&(SPAN%8)!=0)$fatal(1,"CNTPIPE needs 2*DEPTH to be a multiple of 8");
+ integer i;
+ // Write port pipelined (timing closure 2026-11-11): the per-entry write enables are REGISTERS
+ // (we_r = put & one-hot pointer, one flop per entry) and the data is registered with them, so the
+ // late push/full decision drives DEPTH flops instead of the DEPTH x W array enables (AC1_R4:
+ // lane_in_valid -> 1,120 ingress flops, -7.7 ns). The array is written one clock after the push;
+ // the Gray write pointer seen by the reader (wgp) is published one clock later to match.
+ reg[DEPTH-1:0]we_r;reg[W-1:0]din_r;
+ always @(posedge wr_clk or negedge wr_ready)
+  if(!wr_ready)we_r<=0;else we_r<=put?woh:{DEPTH{1'b0}};
+ always @(posedge wr_clk)din_r<=din;
+ generate if(MEMORY==2)begin:spi_port
+  // one stopped-only clock mux on the array write clock (SPI writes land on the SCLK fall)
+  wire mem_clk;
+  pt_clock_mux memory_clock_mux(.I0(wr_clk),.I1(~spi_clk),.S(play),.Z(mem_clk));
+  always @(posedge mem_clk)
+   for(i=0;i<DEPTH;i=i+1)
+    if(play?(spi_we&&spi_idx==i):we_r[i])mem[i]<=play?spi_d:din_r;
+  assign peek={W{1'b0}};
+ end else begin:wr_port
+  always @(posedge wr_clk)
+   for(i=0;i<DEPTH;i=i+1)if(we_r[i])mem[i]<=din_r;
+  if(MEMORY==1)begin:peek_port assign peek=mem[peek_idx];end
+  else begin:no_peek assign peek={W{1'b0}};end
+ end endgenerate
+ always @(posedge wr_clk or negedge wr_ready)begin
+  if(!wr_ready)begin wb<=0;wnr<=1;wg<=gray(0);wgp<=gray(0);rg1<=gray(0);rg2<=gray(0);rbin<=0;rbd<=DEPTH;rlim<=KREADY;rwrap<=1'b0;woh<=1;overflow<=0;ready<=0;full_r<=0;end
+  else begin
+   full_r<=full_n;
+   wgp<=wg;   // published after the array write (we_r) lands
+   rg1<=rg;rg2<=rg1;rbin<=binary(rg2);rbd<=plus_depth(binary(rg2));
+   rlim<=plus_k(binary(rg2));rwrap<=binary(rg2)>=SPAN-KREADY;
+   ready<=ready_n;   // == (occupancy <= DEPTH-SPARE)
+`ifdef FORMAL
+   assert(ready_n==(occupancy<=DEPTH-SPARE));
+`endif
+   if(put)begin wb<=wn;wnr<=step(wn);wg<=gray(wn);woh<={woh[DEPTH-2:0],woh[DEPTH-1]};end
+   if(push&&full)overflow<=1;
+  end
+ end
+ always @(posedge rd_clk or negedge rd_ready)begin
+  if(!rd_ready)begin rb<=0;rnr<=step(0);rg<=gray(0);wg1<=gray(0);wg2<=gray(0);wbin<=0;rd_count<=0;underflow<=0;empty_r<=1;end
+  else begin
+   empty_r<=empty_n;
+   wg1<=wgp;wg2<=wg1;wbin<=binary(wg2);
+   if(!CNTPIPE)rd_count<=playing?FULLC:cnt_n;   // both alternatives from registers; `take` selects late (pt_sel2)
+   else rd_count<=playing?FULLC:cp_count;
+   if(take)begin rb<=rn;rnr<=step(rn);rg<=gray(rn);end
+   if(pop&&empty)underflow<=1;
+  end
+ end
+endmodule

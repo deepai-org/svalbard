@@ -22,24 +22,28 @@ at 320 ps. Streams 1-4 are captured at phases 5, 6, 7, 0 and have 0.24-1.3 ns.
 Fix: new hop plan in `ser8d_macro.py` (first capture at phase 6 or 7, final hop 6 slots before the slice window),
 see "Hop plan" below. Not yet laid out.
 
-## RESUME HERE (state at 2026-11-20; nothing published)
-- Layout (all DRC 0/0, LVS unique from disk, negative controls fail): `pt_wiredtx8` 744.12 x 400.56 um L (0.274 mm2 used),
-  seam 38.4 um, Metal5 exception with ser8d grid channel pairs + VSS trunks/tabs (3bc5ca72); mux detector with hysteresis
-  input + RUN-gated phase NAND, trim pins on the mux right edge (5d73aae8). Reports: `s13/top/REPORT.md`, `s13/mux3/REPORT.md`,
-  `s13/ser8d/REPORT.md`.
-- Interlock (extracted mux, `s14/ilk/`): stop / all-0 / all-1 / mid-level / mid+0.3 V pp / stuck high+low / supply ramp all
-  PASS; negative control (RUN forced high) fails as required. Open: "eye unchanged" in the real chain (qF row W vs X).
-- Extraction: Magic extresist + ext2spice inflate substrate C (row WT42); use `s14/chain/fixcap.py`. Full-netlist rows
-  before a4edc78c are invalid. `s14/rcov/`: R valid, C/RC of resisted nets inflated.
-- Rows: queues qE (block cal + pad C / RC-typ at ssp 3.15 / ss 3.24 / tt 3.24 / ss 2.7, corrected old netlist) and qF
-  (new-detector confirmation W vs X, attribution: ideal phases, S=0.6, both pads) running, about a day; state and
-  tables in `s14/QUEUE.md`, `python3 s14/table14.py`. Snapshots predate 3bc5ca72 (ser8d wiring change <= 4 fF; hop timing
-  re-check by simulation still owed: `s13/probe.py` at ssp and ff on the new ser8d).
-- IR: 9.9-10.1 mV vs 6.6 mV budget (WT44 asks power delivery for 11 / 17 mV, else a grid tie onto the seam plate through
-  the mux). Placement: unrotated, x0 = 4.75 mod 35 um (WT44). PH0..7 access: ring owner's call (WT43).
-- Next after the rows: limiter attribution per failing row; reworked pad (option A) rows at S = 1.0 and 0.6 plus the
-  0.6x cost in 100BASE-TX (40 mA), USB, low rates; remaining table (0.48-3.24 Gb/s, sf / fs, pess.), supply impedance,
-  Monte Carlo, independent review, publish; then the quarter-rate retirement decision.
+## RESUME HERE (state at 2026-11-21; nothing published)
+- Layout, all from disk DRC 0/0, LVS unique, antenna 0, negative controls fail; report `s13/top/REPORT.md`, `out/report.json`:
+  - `pt_wiredtx8` 744.5 x 401.4 um, placed on pt_wired at R0, x0 = 1493.75 (rule x0 = 23.75 mod 70; rows WT48 / WT49).
+  - Metal5 exception with ser8d grid channels, grid VSS landings through the mux (4 tie at phase O), eight shielded PH lanes
+    from the top edge (WT47).
+  - In-block IR at 60 mA with 10.5 um straps: 6.28 mV nominal (pass, 6.6), 11.10 high-R. The chip high-R total closes only with
+    the `isw_wired_tx` switches in the east slot (CB8-11).
+  - EM: all rows pass, worst 17.1 %.
+  - Bus C 114.3 / 121.1 / 128.2 / 132.2 fF. POST pair difference 4.0 fF (target 3.5, accepted); mux eye 0.2063 V vs 0.2112.
+  - ser8d hop set-up >= 699 ps (ssp) / 901 ps (ff).
+- Interlock (`s14/ilk/`): every case passes, with a valid negative control.
+- Extraction: the C-inflation fault (WT42); use `s14/chain/fixcap.py`.
+- Rows: qE / qF in `s14/` are running. The block calibrations converge to a worst slot of 8.0-8.4 ps. See `s14/QUEUE.md` and
+  `python3 s14/table14.py`.
+  - Their netlist snapshots predate the PH lanes and grid ties (bus C +9-14 fF, about -5 mV eye). The final table must be
+    rerun on a fixcap'd full-coverage extraction of the current block, with ring route 30 ohm + 75 fF per phase
+    (bound 45 ohm / 110 fF; TIM-23).
+- Next:
+  - Limiter attribution per failing row.
+  - Reworked pad (option A): rows at S = 1.0 / 0.6, plus the 0.6x cost in 100BASE-TX, USB and low rates.
+  - Rest of the table; supply impedance; Monte Carlo; independent review; publish.
+  - Quarter-rate retirement decision: needed for the conn binding (WT49).
 
 ## State at 2026-11-18 07:05 UTC
 - `wtx_ser8d` rebuilt with the final hop plan (`ser8d_macro.HOPS`, docstring = timing data): 744.12 x 197.68 um

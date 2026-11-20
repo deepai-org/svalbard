@@ -252,7 +252,9 @@ PH0..7 remain Metal5 pads inside the block (no edge access).  (Superseded by ses
 ## PH access windows, grid phase shift and grid VSS ties (WT43 / ASM-8), state 2026-11-20 (session 16)
 Outline now **744.5 x 401.4 um** (was 744.12 x 400.56: ser8d 0.38 um wider after its re-route, seam one Metal4 track
 taller); L shape `used_polygon` [[0,0],[744.5,0],[744.5,236.96],[598.7,236.96],[598.7,401.4],[0,401.4]].
-**Placement rule changed: assembly origin x0 = 20.75 (mod 35) um, unrotated**: grid axes at block x 23.5 + 35 k. That is
+**Placement rule (WT48): R0, x0 ≡ 23.75 (mod 70); die grid VSS axes 502.25 + 70 k, VDD 467.25 + 70 k; landings at block
+x 268.5 / 338.5 / 408.5 / 478.5 (centres) on VSS** (assembly: x0 = 1493.75, grid_tie_0 centre 1762.25 = 502.25 + 18 x 70).
+The "x0 = 20.75 mod 35" first written here rested on a wrong die-grid assumption. Grid axes at block x 23.5 + 35 k. That is
 the axis phase mid-way between the PH lanes (lane centres 287.75 + 34.5 k drift 0.5 um per lane against the 35 um grid;
 mod 35 they span 4.25-7.75, the farthest axis is 23.5): minimum lane-to-landing clearance 7.35 um over all eight.
 Which axes carry VSS depends on x0 mod 70: phase E = axes with k even, phase O = k odd (`ties`: chanE_* / chanO_*).
@@ -337,6 +339,20 @@ pads (28 cuts per end): 22.2 % / 20.0 % at the half-a-bank bound (follow-up 1; f
   Not done in layout: it would need about 550 um2 of VSS Metal4 under MAIN_N in the bus band, where the drain stubs and
   columns leave only 2.6 um gaps, and the bench shows it hurts. Reducing C on POST_N / POST_P (their VSS share rose
   most, 47.5 -> 60.4 fF on POST_N, from the neck-zone tie verticals and the PH shields) would be the useful direction.
+- **Pair C trimmed on the higher legs (final state, superseding the C / IR / eye figures above):** tie verticals carry
+  no Metal4 under the MAIN_P and POST_N bands (Metal3 only there; Metal3 2.8 um wide in the POST_N band, `TIE_N3`), the
+  tie verticals' Metal5 pads sit 2.6 um above the top bus (was 0.75), and the window guard no longer reaches down to
+  POST_N. Measured contributions before the trim: tie verticals +5.5 / +6.4 / +5.8 / +7.2 fF on MAIN_N / MAIN_P / POST_P /
+  POST_N, shields +2.3 / 0 / +2.4 / +1.9.  Bus C now **MAIN_N 114.3 / MAIN_P 121.1 / POST_P 128.2 / POST_N 132.2 fF:
+  MAIN_P - MAIN_N 6.8 fF (target <= 8.8, met), POST_N - POST_P 4.0 fF (target <= 3.5, missed by 0.5)**.  Without any tie
+  vertical the POST difference would be 5.6 fF: the remainder comes from the moved load clusters (POST_N - MAIN_P
+  coupling 9.6 -> 11.1 fF, POST_P - MAIN_P 15.4 -> 14.9), not from the added VSS metal; closing it needs a cluster
+  move (tap positions), which ripples into the aux, ties and EM. PH to each bus <= 0.073 fF, pair differences <= 0.073 fF.
+  PH C 33.7-35.3 fF.  **Mux eye (same bench as x3_cal_ssp, codes [1,0,0,0,0,0,0,0]): 0.2063 V, 0 errors, W 0.641 UI:
+  -4.9 mV against 0.2112 V, within 5 mV.**  **IR phase O, 10.5 um contacts: nominal 6.28 mV PASS (VDD 3.34 / VSS 2.94),
+  high R 11.10 mV** (the narrower Metal3 costs 0.19 mV); raster EM worst 35.8 % (VDD vias), tie Metal3 50.1 %.
+  Block EM table worst 17.1 %; all bridge rows pass.  From disk: wtx_mux8 DRC 0/0, LVS unique, antenna 0, 5/5;
+  wtx8_aux DRC 0, LVS unique, 2/2, aux + mux combination DRC 0/0; pt_wiredtx8 DRC 0/0, LVS unique, antenna 0, 5/5.
 Checks from disk: block Magic DRC 0, KLayout 0, LVS unique, antenna 0, 5/5 negative controls fail; wtx_mux8 DRC 0/0,
 LVS unique, antenna 0, 5/5; wtx8_aux DRC 0, LVS unique, 2/2; mux output buses (wiring C, mux extraction) MAIN_N 114.2 / MAIN_P 123.5 / POST_P 128.0 / POST_N 136.2 fF
 (before: 100.6 / 109.4 / 119.3 / 122.8; +8.7 to +14.1 fF from the shields, tie verticals and moved clusters), bus EM

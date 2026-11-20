@@ -694,6 +694,7 @@ STRAP_KEEP = (2.75, 6.65)     # tap straps (Metal3 || Metal4) stay out of the sh
 # the block joins each pad to a grid VSS landing (16 um at the grid axes, block x 23.5 + 35 k = mux x GRID_AX0 + 35 k).
 VZONE = (-4.2, 1.4)           # neck zone, within the stack VSS rail (neck 0: from -3.0, control-block stubs at -4.59 / -3.69)
 GRID_AX0, LAND_HW = 26.4, 8.0
+TIE_N3 = 2.8                  # Metal3 width of a tie vertical inside the POST_N band (pair C balance; EM in the IR raster)
 
 
 
@@ -1754,6 +1755,9 @@ def build_top(P=None, work=None, checks=True):
     if yj1 + 0.3 > nlo:
         raise RuntimeError('PH jog runs into the bus band')
     straps_x = [(taps[n][0] - taps[n][1], taps[n][0] + taps[n][1]) for n in BUS_ORDER]
+    band = lambda n: ((ys + sl.bus[n] + BCORE - max(w for _, w in bw_tab[n]), ys + sl.bus[n] + BCORE) if BUS_GROW[n] < 0
+                      else (ys + sl.bus[n], ys + sl.bus[n] + max(w for _, w in bw_tab[n])))
+    gaps4 = sorted((s(band(n)[0] - 0.3), s(band(n)[1] + 0.3) if n != 'POST_N' else s(wy0)) for n in ('MAIN_P', 'POST_N'))
     phw, ties = [], []
     for p_ in range(8):
         xb = xs(p_)
@@ -1774,9 +1778,8 @@ def build_top(P=None, work=None, checks=True):
         g.rect('metal4', xb + SH4[0], ys0, xb + SH4[1], ys1)
         g.rect('metal4', xb + SH4[0], yrail[1] - 0.5, xb + SH4[0] + 0.55, ys0 + 0.5)
         # window guard (VSS Metal4): left / right / top of the pad, joined to the shield (the tap straps nearby saw the pad)
-        g.rect('metal4', xb + SH4[0], ys1 - 0.5, xb + SH4[0] + 0.5, wy1 + 0.7)
-        g.rect('metal4', xb + SH4[1] - 0.5, ys1 - 0.4, xb + WIN[1] + 0.7, ys1)
-        g.rect('metal4', xb + WIN[1] + 0.3, ys1 - 0.4, xb + WIN[1] + 0.7, wy1 + 0.7)
+        g.rect('metal4', xb + SH4[0], ys1 - 0.2, xb + SH4[0] + 0.5, wy1 + 0.7)
+        g.rect('metal4', xb + WIN[1] + 0.3, wy0 - 0.3, xb + WIN[1] + 0.7, wy1 + 0.7)     # joined through the top guard
         g.rect('metal4', xb + SH4[0], wy1 + 0.3, xb + WIN[1] + 0.7, wy1 + 0.7)
         for a_, b_ in SH3:
             g.rect('metal3', xb + a_, ys0, xb + b_, wy1 + 0.7)
@@ -1786,12 +1789,25 @@ def build_top(P=None, work=None, checks=True):
         z0, z1 = xb + (VZONE[0] if p_ else -3.0), xb + VZONE[1]
         if any(a_ - 0.3 < z1 and b_ + 0.3 > z0 for a_, b_ in straps_x):
             continue
-        g.rect('metal3', z0, yrail[0], z1, wy0 + 1.0)          # Metal3 ends below the pad (wtx8_aux Metal3 sits just above)
-        g.rect('metal4', z0, yrail[0], z1, wy1)
+        bn = band('POST_N')                                    # Metal3 half width in the POST_N band (Metal4 is out there)
+        g.rect('metal3', z0, yrail[0], z1, bn[0] - 0.3)
+        g.rect('metal3', z1 - TIE_N3, bn[0] - 0.3, z1, bn[1] + 0.3)
+        g.rect('metal3', z0, bn[1] + 0.3, z1, wy1 - 0.4)          # Metal3 ends below the pad top (wtx8_aux Metal3 sits just above)
+        # Metal4 of the vertical is left out under the higher-C leg of each output pair (MAIN_P, POST_N bands): Metal3 only
+        # there, so the vertical adds the same C to both legs of a pair (session 16 follow-up: pair C differences)
+        y4, cuts4 = yrail[0], []
+        for a_, b_ in gaps4:
+            g.rect('metal4', z0, y4, z1, a_)
+            g.varr(z0, max(y4, a_ - 2.0), z1, a_, 3, 4, metal=False)
+            if b_ + 2.0 < wy0 - 2.5:                         # above the last gap the pad's own Via3 array stitches
+                g.varr(z0, b_, z1, b_ + 2.0, 3, 4, metal=False)
+            y4 = b_
+        g.rect('metal4', z0, y4, z1, wy1)
         g.varr(z0, yrail[0], z1, yrail[1], 3, 4, metal=False)
-        g.varr(z0, wy0 - 2.0, z1, wy0 + 1.0, 3, 4, metal=False)
-        g.varr(z0, wy0, z1, wy1, 4, 5)
-        ties.append(dict(slice=p_, neck_x=s(xb), pad=[s(z0), wy0, s(z1), wy1], axis=s(grid_axes[p_])))
+        g.varr(z0, max(wy0 - 2.0, y4 + 0.1), z1, wy1 - 0.5, 3, 4, metal=False)
+        yp5 = s(wy1 - 2.0)                                   # Metal5 pad 2.6 um above the top bus edge (was 0.75: POST_N C)
+        g.varr(z0, yp5, z1, wy1, 4, 5)
+        ties.append(dict(slice=p_, neck_x=s(xb), pad=[s(z0), yp5, s(z1), wy1], axis=s(grid_axes[p_])))
     geo['ph_access'] = dict(windows=phw, lanes=[[s(xs(q) + LANE[0]), s(xs(q) + LANE[1])] for q in range(8)], window_y=[wy0, wy1],
                             lane_keep=[[s(xs(q) + LANE[0] - 0.6), s(xs(q) + LANE[1] + 0.6)] for q in range(8)],
                             note='mux coordinates; window = PH Metal4 pad (slice q = ORDER[q]); lane = the ring router\'s Metal5, top edge -> window, Via4')

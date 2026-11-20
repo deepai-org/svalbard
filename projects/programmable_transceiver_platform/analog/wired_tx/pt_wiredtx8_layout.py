@@ -36,8 +36,9 @@ on the top edge, a VSS Metal5 plate over the seam VSS rail, plate stubs to the f
 VSS trunks (wtx_ser8d's VSS bars, x 335-345 / 366.5-376.5 / 475-485) from the plate to the bottom edge; tie points (outline
 edge) in geom.json -> ties: VDD at the header strap ends beside the MAIN / POST risers and the VDD bars' top ends, VSS along
 both VSS bars, the corner stubs and the trunks' bottom ends.  wtx_ser8d keeps six Metal5-free channels (pins.json
-m5_channels) for the chip grid's straps (axes 23.5 + 35 k; assembly origin x0 = 20.75 mod 35), and grid VSS landings at the
-axes over the mux (16 um, top edge) join the mux's neck-zone VSS verticals (ties grid_tie_k); see s13/top/REPORT.md.
+m5_channels) for the chip grid's straps (axes 23.5 + 35 k in block coordinates), and grid VSS landings at the
+axes over the mux (16 um, top edge; R0, x0 = 23.75 mod 70, VSS on block x 268.5 / 338.5 / 408.5 / 478.5) join the mux's
+neck-zone VSS verticals (ties grid_tie_k); see s13/top/REPORT.md.
 """
 import json
 import re
@@ -502,7 +503,8 @@ def build(work=None, bare=False):
         ax = s(XM + t_['axis'])
         if abs((ax - 23.5) / 35.0 - round((ax - 23.5) / 35.0)) > 1e-6:
             raise RuntimeError('grid axis not at 23.5 + 35 k')
-        lands.append(dict(axis=ax, core=[s(ax - 8.0), wy0, s(ax + 8.0), Yt], jog=[s(ax + 8.0), wy0, s(XM + t_['pad'][2]), wy1], slice=t_['slice']))
+        yl = s(Ym + t_['pad'][1])             # Metal5 pad / jog only in the upper part of the window band (away from POST_N)
+        lands.append(dict(axis=ax, core=[s(ax - 8.0), yl, s(ax + 8.0), Yt], jog=[s(ax + 8.0), yl, s(XM + t_['pad'][2]), wy1], slice=t_['slice']))
     keep = [(a - 0.6, wy0 - 0.6, b + 0.6, Yt + 1.0) for a, b in lanes] + \
            [(l_['core'][0] - 0.6, wy0 - 0.6, l_['core'][2] + 0.6, Yt + 1.0) for l_ in lands] + \
            [(l_['jog'][0] - 0.6, wy0 - 0.6, l_['jog'][2] + 0.6, wy1 + 0.6) for l_ in lands]
@@ -611,7 +613,7 @@ def build(work=None, bare=False):
                ph_windows=dict(windows={k: v for k, v in win.items()}, layer='metal4 (pin PH k), Via4 from the lane',
                                lanes={f'PH{k}': next([a, wy0, b, Yt] for a, b in lanes if win[f'PH{k}'][0] < a < win[f'PH{k}'][2]) for k in range(8)},
                                lane_keep_um=0.6, guard='VSS Metal4 left / right / top of each window, VSS Metal4 shield + Metal3 beside PH in the bus band (wtx_mux8)',
-                               landings=lands, header_bridges=bridges, x0_rule='assembly origin x0 = 20.75 (mod 35): grid axes at block x 23.5 + 35 k'),
+                               landings=lands, header_bridges=bridges, x0_rule='R0, x0 = 23.75 (mod 70); die grid VSS axes 502.25 + 70 k, VDD 467.25 + 70 k; landings at block x 268.5 / 338.5 / 408.5 / 478.5 (centres) on VSS (WT48)'),
                ties=ties, vss_plate=dict(y=[yp0, yp1], segments=plate, corner_stubs=stubs), neck_width_um=neckw,
                mux_vdd_x=mvdd, vss_trunks=[list(v) for v in vbars],
                m5_channels=dict(x=SER.get('m5_channels', []), y=[0.0, Y0], note='Metal5-free over wtx_ser8d (block x = ser8d x); grid strap axes at their centres'))

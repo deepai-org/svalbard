@@ -313,6 +313,33 @@ def phbuf8x():
     return row, ports + ['VDD', 'VSS'], net
 
 
+def phbuf8m():
+    """ct_phbuf8 with its internal nodes M0..M7 brought out as extra ports (same columns, so every original pin keeps its
+    position: drops into pt_pll_ring r9v in place of ct_phbuf8; the duty pairs sit in ct_xc4 next to it, TIM-17)."""
+    row, ports, net = phbuf8()
+    extra = [f'M{k}' for k in range(8)]
+    row.ports = row.ports + extra
+    row.name = 'ct_phbuf8m'
+    return row, row.ports + ['VDD', 'VSS'], net
+
+
+def xc4():
+    """Duty pairs of ct_phbuf8x as a separate cell: M_k <- inv(M_k+4), M_k+4 <- inv(M_k), NMOS 2 / PMOS 4 um."""
+    S = C('VSS', 'VDD', same=False)
+    cols, net = [], []
+    for k in range(4):
+        a, b = f'M{k}', f'M{k + 4}'
+        if k:
+            cols.append(BRK)
+        cols += [C(a), G(b, 2, 4), S, G(a, 2, 4), C(b)]
+        net += [fet(f'x{k}an', a, b, 'VSS', 'VSS', 2), fet(f'x{k}ap', a, b, 'VDD', 'VDD', 4, 'p'),
+                fet(f'x{k}bn', b, a, 'VSS', 'VSS', 2), fet(f'x{k}bp', b, a, 'VDD', 'VDD', 4, 'p')]
+    ports = [f'M{k}' for k in range(8)]
+    row = compact.Row('ct_xc4', cols, ports=ports, wn=2, wp=4)
+    row.track_order = ports
+    return row, ports + ['VDD', 'VSS'], net
+
+
 def tspcd():
     """TSPC D flip-flop (rising CK) with reset: Q = NOR(QB, ENB)."""
     row, ports, net = tspc2()
@@ -501,7 +528,7 @@ def rxamp(F=8):
     return row, ports + ['VDD', 'VSS'], net
 
 
-CELLS = dict(ct_rxamp=rxamp, ct_locml=locml, ct_div5=div5core, ct_tspcn3=tspcn3, ct_mux4=mux4, ct_tspcd=tspcd, ct_phbuf8=phbuf8, ct_phbuf8x=phbuf8x, ct_rxout=rxout, ct_lim=lim, ct_ring8=ring8, ct_ring9=ring9, ct_tspc2=tspc2, ct_lodrv=lodrv, ct_rxin=rxin)
+CELLS = dict(ct_rxamp=rxamp, ct_locml=locml, ct_div5=div5core, ct_tspcn3=tspcn3, ct_mux4=mux4, ct_tspcd=tspcd, ct_phbuf8=phbuf8, ct_phbuf8x=phbuf8x, ct_phbuf8m=phbuf8m, ct_xc4=xc4, ct_rxout=rxout, ct_lim=lim, ct_ring8=ring8, ct_ring9=ring9, ct_tspc2=tspc2, ct_lodrv=lodrv, ct_rxin=rxin)
 
 
 def subckt(name, ports, net):

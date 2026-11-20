@@ -1,0 +1,21 @@
+* NGSPICE file created from ct_xc4.ext - technology: gf180mcuD
+
+.subckt ct_xc4 M0 M1 M2 M3 M4 M5 M6 M7 VDD VSS
+X0 VDD M4 M0 VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X1 M4 M0 VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X2 VDD M5 M1 VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X3 VSS M5 M1 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X4 M7 M3 VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X5 VDD M6 M2 VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X6 M5 M1 VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X7 VSS M7 M3 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X8 VSS M6 M2 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+X9 M4 M0 VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X10 M5 M1 VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X11 M7 M3 VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X12 M6 M2 VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.02p ps=3.02u w=2u l=0.28u
+X13 VDD M7 M3 VDD pfet_03v3 ad=2.04p pd=5.02u as=1.94p ps=8.97u w=4u l=0.28u
+X14 M6 M2 VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.04p ps=5.02u w=4u l=0.28u
+X15 VSS M4 M0 VSS nfet_03v3 ad=1.02p pd=3.02u as=0.97p ps=4.97u w=2u l=0.28u
+.ends
+

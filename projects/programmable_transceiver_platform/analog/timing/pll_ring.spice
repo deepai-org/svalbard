@@ -1,5 +1,5 @@
 * SPDX-License-Identifier: Apache-2.0
-* VERSION: pt_pll_ring r9v (2026-11-12, r8ring RING ECO: r9d core layout kept as routed; old FT legs + VCF resistors removed; FT = header current-steered macro pt_pll_ring_ft (pll_ring_ft.spice, r9h scheme), hand layout; FU/FD/KP ports moved to the block bottom) / r9d (2026-11-11, RINGAREA: WT21 BAND bit, tail m8 + replica 6.67 (r9c); r9 2026-11-10) -- ports REF EN N4 N8 HOLD IBIAS PH0..PH7 LOCK FBCK REFO ATB_VCTRL N5 N10 KP0..KP2 FU0..FU3 FD0..FD3 BAND VDD VSS
+* VERSION: pt_pll_ring r12 STAGED (2026-11-20, ECO on r9v: ct_phbuf8m + ct_xc4 duty pairs, east strip +10.75 um; not published) / r9v (2026-11-12, r8ring RING ECO: r9d core layout kept as routed; old FT legs + VCF resistors removed; FT = header current-steered macro pt_pll_ring_ft (pll_ring_ft.spice, r9h scheme), hand layout; FU/FD/KP ports moved to the block bottom) / r9d (2026-11-11, RINGAREA: WT21 BAND bit, tail m8 + replica 6.67 (r9c); r9 2026-11-10) -- ports REF EN N4 N8 HOLD IBIAS PH0..PH7 LOCK FBCK REFO ATB_VCTRL N5 N10 KP0..KP2 FU0..FU3 FD0..FD3 BAND VDD VSS
 * r9 (IX-1, PD9, AC3-W9; 2026-11-10): (1) ring cell ct_ring9 (interleaved layout, 2x ring devices): the extracted
 *   ct_ring8 lost 42 % of its speed to cell wiring; r9 runs on the pt_pll_vreg output (VDD = ring supply, ~0.9 x rail)
 *   and covers 393-834 MHz in ONE band with VCTRL 0.87..2.02 V (ff/22/3.015 .. ss/32/2.71 V; ring cell extracted).
@@ -29,7 +29,8 @@
 .include pll_ring_ft.spice
 .include generated/fast/ct_ring9.spice
 .include generated/fast/ct_tspc2.spice
-.include generated/fast/ct_phbuf8.spice
+.include generated/fast/ct_phbuf8m.spice
+.include generated/fast/ct_xc4.spice
 .include generated/fast/ct_mux4.spice
 .include generated/fast/ct_tspcd.spice
 .include generated/fast/ct_div5.spice
@@ -139,7 +140,9 @@ XFT VH VPBF KP0 KP1 KP2 FU0 FU1 FU2 FU3 FD0 FD1 FD2 FD3 EN IBIAS VDD VSS pt_pll_
 XRVP VPB VPBF VSS ppolyf_u_1k r_width=1u r_length=20u
 XRING O0 O1 O2 O3 O4 O5 O6 O7 ENB VT VH VDD VSS ct_ring9
 * common-mode-insensitive phase restore + balanced port drivers
-XPHB O4 O5 O6 O7 O0 O1 O2 O3 PH0 PH1 PH2 PH3 PH4 PH5 PH6 PH7 ODC VDD VSS ct_phbuf8
+XPHB O4 O5 O6 O7 O0 O1 O2 O3 PH0 PH1 PH2 PH3 PH4 PH5 PH6 PH7 ODC PM0 PM1 PM2 PM3 PM4 PM5 PM6 PM7 VDD VSS ct_phbuf8m
+* r12 duty pairs (TIM-15/17): complementary phase-buffer nodes cross-coupled
+XXC4 PM0 PM1 PM2 PM3 PM4 PM5 PM6 PM7 VDD VSS ct_xc4
 * feedback /16 from the dedicated divider tap
 * divider clock ODC from ct_phbuf8 (tapped at input 0, dummy-balanced)
 XD1 ODC Q1 ENB VDD VSS ct_tspc2

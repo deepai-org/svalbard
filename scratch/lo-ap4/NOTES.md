@@ -154,3 +154,12 @@ Third message written for the die-fit / packing agent. The LO owner has no packe
 - v7 with corrected C: ss 3.8 GHz N=50 pass; ff 0.54 V at CM 1.32 (2.30 / 2.40 GHz) and at 1.98 (2.30) pass. ff 0.4 V / 1.52 V is outside the ff envelope (fails with no FB output): DROPPED from the pass list per ruling 3, recorded here.
 - Not yet run in the envelope: ss 0.29 V, tt, supply 3.50 V, frequency ends 2.2 / 2.75 GHz, 1.36 V amplitude, corrected-C rerun of the full v7 set. No publish, no review yet.
 - lo_ext vs tank (ruling 1): the external-mode CML pair (XE1/XE2, gates on the pad MIMs) is already separate from the tank; the tank load in modes 2 and 3 is the internal pair of ct_locml (2 x 20 x 6 um /0.28 per side, ~183 fF per node). No isolation switch helps: the lever is shrinking that pair (tank swing >= 0.37 V per leg) as a new LO-owned cell (ct_* files belong to the wired owner), then re-bench mixer drive (LO-RX-2). Range target (ruling 1): >= 3 % margin both ends => about 220 fF per node off the top case and about 360 fF per node more band C at band 15 (estimate from the sens slopes); needs RF-cell relayout of the band bank.
+
+## 2026-11-20: internal CML input-pair sizing (ruling: weakest tank swing + 20 % => design at 0.31 V per leg, CM 1.36, ss/32/3.15)
+Schematic variants of revision n4 (`loext3/var/n5k*`: ct_locml copy with k of 20 input units per side kept, tail unchanged; joint3 into the extracted mixers, IF 5 MHz; square reference 21.74 dB):
+| input units per side (6 um each) | gain dB | vs square | LO at mixer V (min-max) |
+|---|---|---|---|
+| 20 (n4) | 20.95 | -0.8 | 2.10-2.93 |
+| 12 | 20.75 | -1.0 | 2.15-2.90 |
+| 8 | 19.89 | -1.85 | 2.29-2.89 |
+Gate C off the tank (estimate, not extracted): 12 units ~ -60 fF per node, 8 units ~ -90 fF. Neither reaches the ~220 fF the >= 3 % range target needs from fixed C, so the band-bank relayout must carry the rest (or the pair goes below 8 units at a larger mixer loss). Proposed: 12 units (then LO-RX-2 with extracted numbers). Schematic only: layout, extraction, tt/ff and external mode not run.

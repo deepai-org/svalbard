@@ -23,7 +23,7 @@ sys.path.insert(0, str(PADS))
 import stress_safe_family_sims as f  # noqa: E402
 import stress_safe_clamp as s  # noqa: E402
 
-HERE = Path(os.environ.get('HBM_CORE_DIR', '/home/ubuntu/svalbard/scratch/pads-pd28/hbm_core'))   # sims and per-case outputs (scratch)
+HERE = Path(os.environ.get('HBM_CORE_DIR', '/home/ubuntu/svalbard/scratch/pads-core/hbm_core'))   # sims and per-case outputs (scratch)
 G = PADS / 'generated/stress-safe-families'
 MOS = {'nfet_03v3', 'pfet_03v3', 'nfet_06v0', 'pfet_06v0', 'nfet_06v0_nvt', 'nfet_05v0', 'pfet_05v0'}
 import os  # noqa: E402

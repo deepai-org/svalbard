@@ -1,35 +1,23 @@
 {
   "status": "physical_MOS_resistor_diode_MIM_graph_comparison",
   "device_graph_matches": true,
-  "physical_devices": 508,
-  "simulated_devices": 508,
+  "physical_devices": 554,
+  "simulated_devices": 554,
   "missing": [],
   "unexpected": [],
   "supplemental_device_counts": {
     "csubckt:cap_mim_2f0_m4m5_noshield": 8,
-    "ndiode:diode_nd2ps_06v0": 12,
-    "pdiode:diode_pd2nw_06v0": 16
+    "ndiode:diode_nd2ps_06v0": 14,
+    "pdiode:diode_pd2nw_06v0": 60
   },
   "excluded_devices": {
-    "explicit_well_replacement": [
-      "DWELL_ARRAY VSS ESD_RAIL diode_nw2ps_06v0 area=1138.9056p pj=941.44u"
-    ]
+    "explicit_well_replacement": []
   },
   "scope": "MOS/resistor bodies and sizes, steering-diode polarity/area/perimeter, and ordered MIM terminals/dimensions checked. Explicit well replacement and parasitic values not certified; no ESD rating.",
   "source_sha256": {
-    "/home/ubuntu/svalbard/scratch/pads-core/hsfix/build/f6/pad_hspad_flat.ext": "f9d4129fbfb6a420c532531abbd2b02fb29af5ea309168b7ec41956cf7881f97",
-    "/home/ubuntu/svalbard/scratch/pads-core/hsfix/build/f6/physical.spice": "8348278714317ecdfb19e844ef90b58f49f637b00e6f9b223f2620a4a1f2cee0",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protection_device_audit.py": "faca1155b3ec8d51ec1db7a43fd2d1102d0e0441cf036f494fc71c4b318512f5",
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/extract_audit.py": "298878a66dd11de1d63d3f7bef18a0673b083a5a4045b09cf60b8c739690e646",
-    "/home/ubuntu/svalbard/scratch/pads-core/hsfix/build/f6/pad_hspad_flat.spice": "877dc31eb52a16f52237ccb2e7bbf4df65ad1b0f6aa79da7c419daccb0d66ee1"
-  },
-  "well_replacement": {
-    "extracted_well_area_um2": 1138.9056,
-    "extracted_well_perimeter_um": 941.44,
-    "linear_capacitance_removed_ff": 136.6686699999991,
-    "expected_removal_ff": 136.66867200000002,
-    "other_extracted_capacitances_unchanged": true,
-    "scope": "Terminal well areas assume isolated, nonshared array wells as established by array geometry; no nonlinear junction accuracy or ESD qualification.",
-    "raw_spice_sha256": "877dc31eb52a16f52237ccb2e7bbf4df65ad1b0f6aa79da7c419daccb0d66ee1"
+    "/home/ubuntu/svalbard/scratch/pads-core/esdopt/hs/sec/build/a6/pad_hspad_flat.ext": "0f4f1ff49d2372fa56b83e70014a49d7e1a9564d7390c6137e9fde3e21f76c69",
+    "/home/ubuntu/svalbard/scratch/pads-core/esdopt/hs/sec/build/a6/physical.spice": "1399bc07291959d99ccf3f2aa4935b4b26c417ad8ad01257bcec1a97261a02a1",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/protection_device_audit.py": "2b6745db9c3845afb283504ec09f060bff1b93608d4b5161b79f59217f68f046",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/extract_audit.py": "298878a66dd11de1d63d3f7bef18a0673b083a5a4045b09cf60b8c739690e646"
   }
 }

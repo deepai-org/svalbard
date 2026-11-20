@@ -1,992 +1,1080 @@
 * LVS reference for pad_hspad_flat (analog/pads/lvs_reference.py): physical.spice without the model-only
 * DWELL_ARRAY n-well diode. Simulations keep using physical.spice.
-.subckt pad_hspad_flat ESD_RAIL VSS VDD TERM_VCM TERM_ENABLE TERM_TRIM0 TERM_TRIM1
+.subckt pad_hspad_flat DVDD ESD_RAIL VSS VDD TERM_VCM TERM_ENABLE TERM_TRIM0 TERM_TRIM1
 + TERM_TRIM2 TERM_TRIM3 VBIAS RX_P RX_N PAD_P PAD_N
 X0 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
 X1 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X2 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
-X3 a_1005_133505# a_13878_133225# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
-X4 a_76948_152096# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X2 a_68216_149604# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X3 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+X4 a_1005_133505# a_13878_133225# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
 X5 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
 X6 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
 X7 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X8 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X9 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X10 a_86560_152896# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X8 RX_N VBIAS VSS ppolyf_u_1k r_width=1u r_length=40u
+X9 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X10 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
 X11 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X12 VDD w_71178_112128# w_71178_112128# w_71178_112128# pfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.55u
-D0 PAD_P ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
-X13 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X14 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
-X15 a_76948_90204# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
-X16 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X17 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X18 a_68216_149334# PAD_N VSS ppolyf_u r_width=2u r_length=2.6u
-X19 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X20 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X21 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X22 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X23 a_71608_90204# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
-X24 ESD_RAIL a_13878_134345# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X12 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X13 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+X14 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+D0 a_76544_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X15 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X16 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X17 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X18 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X19 RX_P PAD_P cap_mim_2f0_m4m5_noshield c_width=35u c_length=35u
+X20 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X21 ESD_RAIL a_13878_134345# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X22 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X23 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X24 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
 X25 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X26 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X27 a_91900_152896# PAD_N VSS ppolyf_u r_width=2u r_length=1u
-X28 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X29 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X30 RX_N VSS VSS VSS nfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.7u
-D1 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
-X31 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X32 a_71608_152096# PAD_N VSS ppolyf_u r_width=2u r_length=2.6u
-X33 a_78016_152096# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
-X34 a_83356_152896# PAD_N VSS ppolyf_u r_width=2u r_length=1u
-X35 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X36 PAD_P a_70540_90204# VSS ppolyf_u r_width=2u r_length=2.6u
-X37 a_68216_96864# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
-X38 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X26 PAD_P a_78592_93106# VSS ppolyf_u r_width=2u r_length=1u
+X27 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X28 a_73472_152994# PAD_N VSS ppolyf_u r_width=2u r_length=4.2u
+X29 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X30 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X31 a_75520_152994# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X32 PAD_P a_70400_93106# VSS ppolyf_u r_width=2u r_length=4.2u
+X33 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X34 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+X35 a_73472_152994# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X36 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X37 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X38 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
 X39 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X40 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
-X41 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
-X42 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X43 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X44 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X45 PAD_P a_76948_90204# VSS ppolyf_u r_width=2u r_length=2.6u
-X46 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
-X47 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X48 a_85492_152896# TERM_TRIM2 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X49 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X50 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X51 a_86560_91004# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X52 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X53 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-D2 PAD_N ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
-X54 a_83356_152896# TERM_TRIM2 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X55 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X56 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X57 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X58 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X59 a_81220_91004# TERM_TRIM1 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X60 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X61 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X62 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
-X63 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X64 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X65 ESD_RAIL a_1005_131545# a_3813_117064# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X40 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X41 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X42 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X43 PAD_P a_76544_93106# VSS ppolyf_u r_width=2u r_length=4.2u
+X44 a_76544_93106# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X45 a_75520_152994# PAD_N VSS ppolyf_u r_width=2u r_length=4.2u
+D1 a_77568_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X46 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X47 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X48 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X49 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X50 a_87808_152994# PAD_N VSS ppolyf_u r_width=2u r_length=1u
+X51 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X52 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X53 a_71424_93106# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X54 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X55 a_79616_152994# PAD_N VSS ppolyf_u r_width=2u r_length=1u
+X56 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X57 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X58 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X59 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X60 a_68216_96594# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X61 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X62 ESD_RAIL a_1005_131545# a_3813_117064# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+D2 VSS PAD_N diode_nd2ps_06v0 pj=51.8u area=22.5p
 D3 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
-X66 VDD w_71178_112128# w_71178_112128# w_71178_112128# pfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.55u
-D4 PAD_N ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
-X67 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X68 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X69 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X70 a_76948_152096# PAD_N VSS ppolyf_u r_width=2u r_length=2.6u
-X71 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X72 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X73 a_84424_152896# TERM_TRIM2 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X74 a_82288_152896# TERM_TRIM2 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X75 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X63 a_74496_152994# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+D4 PAD_N DVDD diode_pd2nw_06v0 pj=51.8u area=22.5p
+X64 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X65 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X66 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D5 PAD_P DVDD diode_pd2nw_06v0 pj=51.8u area=22.5p
+X67 a_72448_152994# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X68 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X69 a_85760_93106# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X70 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X71 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X72 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X73 a_80640_93106# TERM_TRIM1 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X74 a_80640_152994# PAD_N VSS ppolyf_u r_width=2u r_length=1u
+X75 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
 X76 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X77 RX_P VSS VSS VSS nfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.7u
-D5 PAD_N ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
-X78 a_91900_91004# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X79 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X80 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X77 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X78 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X79 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X80 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D6 a_70400_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
 X81 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X82 RX_N VDD VDD VDD pfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.55u
+X82 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
 X83 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X84 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X84 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
 X85 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X86 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X86 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
 X87 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X88 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X89 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X90 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X91 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X92 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X93 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
-X94 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-D6 PAD_N ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X88 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X89 PAD_P a_84736_93106# VSS ppolyf_u r_width=2u r_length=1u
+X90 PAD_P a_86784_93106# VSS ppolyf_u r_width=2u r_length=1u
+D7 a_79616_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
+D8 a_87808_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X91 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D9 VSS PAD_N diode_nd2ps_06v0 pj=51.8u area=22.5p
+X92 a_71424_152994# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X93 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X94 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
 X95 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X96 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X97 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X98 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X99 a_88696_152896# PAD_N VSS ppolyf_u r_width=2u r_length=1u
-X100 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X101 a_91900_152896# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X102 a_1005_132385# a_13878_132105# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
-X103 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X104 ESD_RAIL w_71178_112128# VSS ppolyf_u_1k_6p0 r_width=1u r_length=0.47474m
-X105 RX_N PAD_N cap_mim_2f0_m4m5_noshield c_width=35u c_length=35u
-X106 a_80152_152896# PAD_N VSS ppolyf_u r_width=2u r_length=1u
-X107 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X108 a_87628_91004# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+D10 a_72448_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X96 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X97 a_77568_152994# PAD_N VSS ppolyf_u r_width=2u r_length=4.2u
+X98 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X99 a_1005_132385# a_13878_132105# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+D11 a_85760_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X100 a_79616_152994# TERM_TRIM1 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X101 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X102 ESD_RAIL w_71178_112088# VSS ppolyf_u_1k_6p0 r_width=1u r_length=0.47474m
+X103 a_69376_152994# PAD_N VSS ppolyf_u r_width=2u r_length=4.2u
+X104 a_90880_93106# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X105 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D12 a_76544_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X106 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X107 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X108 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
 X109 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X110 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X111 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X112 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X113 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X114 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X115 a_2245_90628# a_4789_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X116 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X117 ESD_RAIL a_1005_131545# a_3813_117064# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X118 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X119 PAD_P a_72676_90204# VSS ppolyf_u r_width=2u r_length=2.6u
-X120 a_80152_91004# TERM_TRIM1 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X121 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X122 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X123 RX_P PAD_P cap_mim_2f0_m4m5_noshield c_width=35u c_length=35u
-X124 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X125 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
-X126 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
-X127 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X128 RX_N VBIAS VSS ppolyf_u_1k r_width=1u r_length=40u
-X129 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X130 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
-X131 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X132 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X133 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X134 RX_P VDD VDD VDD pfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.55u
-X135 a_72676_90204# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
-X136 a_1005_131545# VSS cap_mim_2f0_m4m5_noshield c_width=14u c_length=14u
-X137 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X138 a_81220_152896# PAD_N VSS ppolyf_u r_width=2u r_length=1u
-X139 a_90832_152896# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X140 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X141 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X142 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X143 PAD_P a_90832_91004# VSS ppolyf_u r_width=2u r_length=1u
-X144 a_1005_131825# a_13878_132105# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
-D7 PAD_P ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
-X145 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
-X146 a_69448_96864# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
-X147 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X148 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X149 a_73744_152096# PAD_N VSS ppolyf_u r_width=2u r_length=2.6u
-X150 a_69448_149334# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
-X151 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X152 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X153 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X154 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X155 PAD_P a_92968_91004# VSS ppolyf_u r_width=2u r_length=1u
-X156 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X110 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+D13 a_71424_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X111 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X112 a_2245_90628# a_4789_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X113 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X114 ESD_RAIL a_1005_131545# a_3813_117064# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X115 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X116 PAD_P a_72448_93106# VSS ppolyf_u r_width=2u r_length=4.2u
+X117 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D14 a_89856_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X118 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X119 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X120 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X121 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X122 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D15 a_73472_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X123 a_78592_152994# TERM_TRIM0 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X124 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+D16 a_82688_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X125 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+D17 a_68216_149604# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X126 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X127 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D18 a_86784_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X128 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X129 a_80640_152994# TERM_TRIM1 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X130 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X131 a_1005_131545# VSS cap_mim_2f0_m4m5_noshield c_width=14u c_length=14u
+X132 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X133 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D19 a_86784_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X134 a_86784_93106# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+D20 a_72448_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X135 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X136 a_1005_131825# a_13878_132105# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X137 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X138 a_79616_93106# TERM_TRIM1 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X139 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X140 PAD_P a_85760_93106# VSS ppolyf_u r_width=2u r_length=1u
+X141 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X142 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X143 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X144 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X145 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D21 a_69376_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X146 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X147 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X148 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X149 PAD_P a_92928_93106# VSS ppolyf_u r_width=2u r_length=1u
+X150 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X151 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X152 VSS a_4789_117064# a_2245_90628# VSS nfet_06v0 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.7u
+X153 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X154 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+X155 a_72448_93106# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X156 a_1005_132945# a_13878_133225# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
 X157 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X158 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X159 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X160 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X161 VSS a_4789_117064# a_2245_90628# VSS nfet_06v0 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.7u
-X162 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X163 a_75880_152096# PAD_N VSS ppolyf_u r_width=2u r_length=2.6u
-X164 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
-D8 VSS PAD_N diode_nd2ps_06v0 pj=51.8u area=22.5p
-X165 a_1005_132945# a_13878_133225# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
-X166 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X167 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X168 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X158 a_89856_152994# PAD_N VSS ppolyf_u r_width=2u r_length=1u
+X159 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X160 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X161 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X162 a_88832_152994# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X163 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X164 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X165 a_2245_90628# a_4789_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+D22 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
+X166 a_69376_93106# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X167 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.7u
+D23 PAD_N DVDD diode_pd2nw_06v0 pj=51.8u area=22.5p
+X168 a_3813_117064# a_1005_131545# VSS VSS nfet_06v0 ad=2.2p pd=10.88u as=2.2p ps=10.88u w=5u l=0.7u
+D24 PAD_P DVDD diode_pd2nw_06v0 pj=51.8u area=22.5p
+D25 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
+D26 a_91904_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
 X169 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X170 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X171 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X172 a_2245_90628# a_4789_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X173 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.7u
-X174 a_3813_117064# a_1005_131545# VSS VSS nfet_06v0 ad=2.2p pd=10.88u as=2.2p ps=10.88u w=5u l=0.7u
-X175 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X176 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-D9 PAD_P ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
-X177 VBIAS RX_P VSS ppolyf_u_1k r_width=1u r_length=40u
-X178 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X179 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X180 a_68216_149334# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
-X181 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X182 a_2245_90628# a_4789_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X183 a_74812_90204# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
-X184 VSS a_3813_117064# a_4789_117064# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X185 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X186 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X187 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X188 a_1005_134065# a_13878_134345# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
-X189 PAD_P a_83356_91004# VSS ppolyf_u r_width=2u r_length=1u
-X190 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X170 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X171 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X172 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X173 a_91904_152994# PAD_N VSS ppolyf_u r_width=2u r_length=1u
+X174 a_74496_152994# PAD_N VSS ppolyf_u r_width=2u r_length=4.2u
+X175 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X176 a_2245_90628# a_4789_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X177 VDD w_71178_112088# w_71178_112088# w_71178_112088# pfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.55u
+X178 VSS a_3813_117064# a_4789_117064# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X179 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X180 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X181 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X182 a_83712_152994# PAD_N VSS ppolyf_u r_width=2u r_length=1u
+X183 a_1005_134065# a_13878_134345# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X184 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X185 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X186 PAD_P a_90880_93106# VSS ppolyf_u r_width=2u r_length=1u
+X187 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X188 VSS a_3813_117064# a_4789_117064# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X189 PAD_P a_83712_93106# VSS ppolyf_u r_width=2u r_length=1u
+X190 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
 X191 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X192 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X193 VSS a_3813_117064# a_4789_117064# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-D10 PAD_P ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
-X194 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X195 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X196 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X192 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X193 RX_P VSS VSS VSS nfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.7u
+X194 a_87808_152994# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X195 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X196 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D27 a_80640_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
 X197 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X198 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X199 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X198 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X199 a_74496_93106# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
 X200 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-D11 VSS PAD_N diode_nd2ps_06v0 pj=51.8u area=22.5p
-X201 a_75880_152096# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
-X202 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X203 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X204 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X205 a_73744_152096# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
-X206 PAD_P a_69448_96864# VSS ppolyf_u r_width=2u r_length=2.6u
-X207 a_90832_152896# PAD_N VSS ppolyf_u r_width=2u r_length=1u
-X208 a_78016_152096# PAD_N VSS ppolyf_u r_width=2u r_length=2.6u
-X209 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
-X210 a_88696_91004# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X211 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X212 PAD_P a_81220_91004# VSS ppolyf_u r_width=2u r_length=1u
-X213 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X214 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X215 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X216 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X217 a_69448_149334# PAD_N VSS ppolyf_u r_width=2u r_length=2.6u
-D12 PAD_P ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
-X218 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X219 PAD_P a_88696_91004# VSS ppolyf_u r_width=2u r_length=1u
-X220 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
-X221 a_92968_152896# PAD_N VSS ppolyf_u r_width=2u r_length=1u
-X222 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
-X223 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X224 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X225 a_84424_152896# PAD_N VSS ppolyf_u r_width=2u r_length=1u
+D28 a_79616_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X201 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X202 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X203 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X204 PAD_P a_69376_93106# VSS ppolyf_u r_width=2u r_length=4.2u
+X205 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X206 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X207 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X208 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X209 PAD_P a_81664_93106# VSS ppolyf_u r_width=2u r_length=1u
+X210 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D29 a_81664_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X211 a_86784_152994# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X212 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X213 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X214 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X215 PAD_P a_88832_93106# VSS ppolyf_u r_width=2u r_length=1u
+X216 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X217 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X218 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X219 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X220 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X221 RX_P PAD_P cap_mim_2f0_m4m5_noshield c_width=35u c_length=35u
+D30 a_78592_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X222 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X223 a_87808_93106# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X224 a_70400_152994# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X225 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
 X226 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X227 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X227 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
 X228 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X229 a_74812_152096# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
-X230 a_72676_152096# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
-X231 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X232 a_73744_90204# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X229 RX_P VDD VDD VDD pfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.55u
+X230 a_88832_152994# PAD_N VSS ppolyf_u r_width=2u r_length=1u
+D31 a_82688_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
+D32 a_68216_96594# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X231 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X232 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D33 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
 X233 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X234 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X235 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X236 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X237 a_80152_152896# TERM_TRIM1 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X238 a_94036_91004# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-D13 PAD_N ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
-X239 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X240 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-D14 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
-X241 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X242 PAD_P a_74812_90204# VSS ppolyf_u r_width=2u r_length=2.6u
-X243 a_4789_117064# a_3813_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.7u
+X234 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X235 a_4789_117064# a_3813_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.7u
+D34 a_77568_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
+D35 VSS PAD_N diode_nd2ps_06v0 pj=51.8u area=22.5p
+X236 PAD_P a_74496_93106# VSS ppolyf_u r_width=2u r_length=4.2u
+X237 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D36 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
+X238 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X239 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X240 a_91904_152994# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X241 PAD_P a_79616_93106# VSS ppolyf_u r_width=2u r_length=1u
+X242 a_73472_93106# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X243 ESD_RAIL a_1852_148519# cap_mim_2f0_m4m5_noshield c_width=90u c_length=90u
+D37 a_74496_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
 X244 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X245 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-D15 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
-X246 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X245 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X246 a_1005_131825# a_13878_131545# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+D38 PAD_N DVDD diode_pd2nw_06v0 pj=51.8u area=22.5p
 X247 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X248 PAD_P a_79084_91004# VSS ppolyf_u r_width=2u r_length=1u
-X249 a_79084_152896# TERM_TRIM0 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-D16 PAD_N ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
-X250 ESD_RAIL a_1852_148519# cap_mim_2f0_m4m5_noshield c_width=90u c_length=90u
-X251 a_71608_152096# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
-X252 a_1005_131825# a_13878_131545# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
-X253 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X254 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X255 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X256 ESD_RAIL VSS cap_mim_2f0_m4m5_noshield c_width=31.6u c_length=31.6u
-X257 a_81220_152896# TERM_TRIM1 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X248 ESD_RAIL VSS cap_mim_2f0_m4m5_noshield c_width=31.6u c_length=31.6u
+X249 a_70400_152994# PAD_N VSS ppolyf_u r_width=2u r_length=4.2u
+D39 PAD_P DVDD diode_pd2nw_06v0 pj=51.8u area=22.5p
+X250 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X251 a_92928_93106# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X252 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+D40 a_91904_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
+D41 a_78592_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X253 a_81664_152994# PAD_N VSS ppolyf_u r_width=2u r_length=1u
+X254 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+X255 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X256 a_92928_152994# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X257 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
 X258 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X259 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
-D17 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
-X260 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
-X261 a_75880_90204# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
-X262 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X263 a_82288_91004# TERM_TRIM2 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X264 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X265 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X266 a_74812_152096# PAD_N VSS ppolyf_u r_width=2u r_length=2.6u
-X267 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X268 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X269 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X270 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X271 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X272 a_1005_132945# a_13878_132665# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X259 VBIAS RX_P VSS ppolyf_u_1k r_width=1u r_length=40u
+X260 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X261 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X262 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X263 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+D42 a_88832_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X264 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X265 a_1005_132945# a_13878_132665# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X266 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X267 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X268 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X269 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X270 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X271 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X272 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
 X273 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X274 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X275 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-D18 PAD_N ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X274 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D43 a_92928_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X275 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
 X276 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X277 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X278 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X279 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
-X280 a_89764_152896# PAD_N VSS ppolyf_u r_width=2u r_length=1u
-X281 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X282 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X283 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X284 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X285 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X286 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X287 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X288 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X289 a_3813_117064# a_1005_131545# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X290 a_89764_152896# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X291 a_92968_91004# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X292 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
-D19 PAD_N ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
-X293 VSS ESD_RAIL VSS ppolyf_u_1k_6p0 r_width=1u r_length=9.98874m
+D44 a_70400_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
+D45 PAD_N DVDD diode_pd2nw_06v0 pj=51.8u area=22.5p
+X277 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X278 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X279 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X280 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X281 a_3813_117064# a_1005_131545# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+D46 a_90880_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X282 a_75520_93106# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X283 a_81664_93106# TERM_TRIM2 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X284 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X285 VSS ESD_RAIL VSS ppolyf_u_1k_6p0 r_width=1u r_length=9.98874m
+X286 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X287 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D47 a_83712_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
+D48 a_89856_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X288 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X289 a_4789_117064# a_3813_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.7u
+X290 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+D49 a_92928_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X291 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X292 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X293 a_84736_152994# PAD_N VSS ppolyf_u r_width=2u r_length=1u
 X294 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
 X295 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X296 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
-X297 a_4789_117064# a_3813_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.7u
-X298 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
-X299 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X300 a_89764_91004# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X301 PAD_P a_85492_91004# VSS ppolyf_u r_width=2u r_length=1u
-X302 PAD_P a_87628_91004# VSS ppolyf_u r_width=2u r_length=1u
-X303 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X304 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X305 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X306 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X307 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X308 a_84424_91004# TERM_TRIM2 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X309 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X310 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X296 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X297 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D50 a_80640_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X298 a_72448_152994# PAD_N VSS ppolyf_u r_width=2u r_length=4.2u
+D51 a_73472_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X299 RX_N PAD_N cap_mim_2f0_m4m5_noshield c_width=35u c_length=35u
+X300 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X301 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X302 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X303 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X304 a_76544_152994# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X305 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X306 a_1005_134065# a_13878_133785# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X307 a_91904_93106# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X308 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X309 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X310 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
 X311 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X312 a_82288_152896# PAD_N VSS ppolyf_u r_width=2u r_length=1u
-X313 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X314 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X315 a_1005_134065# a_13878_133785# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
-X316 a_88696_152896# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X317 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X318 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X319 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X320 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X321 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X322 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X323 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X312 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X313 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X314 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X315 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X316 a_88832_93106# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X317 ESD_RAIL a_1852_148519# cap_mim_2f0_m4m5_noshield c_width=90u c_length=90u
+X318 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D52 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
+X319 ESD_RAIL a_3813_117064# a_4789_117064# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X320 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X321 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X322 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X323 PAD_P a_73472_93106# VSS ppolyf_u r_width=2u r_length=4.2u
 X324 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X325 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X326 ESD_RAIL a_1852_148519# cap_mim_2f0_m4m5_noshield c_width=90u c_length=90u
-D20 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
-X327 PAD_P a_73744_90204# VSS ppolyf_u r_width=2u r_length=2.6u
-X328 ESD_RAIL a_3813_117064# a_4789_117064# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X329 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X325 a_78592_152994# PAD_N VSS ppolyf_u r_width=2u r_length=1u
+D53 a_90880_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X326 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+D54 a_74496_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X327 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X328 a_83712_93106# TERM_TRIM2 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X329 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D55 VSS PAD_N diode_nd2ps_06v0 pj=51.8u area=22.5p
 X330 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X331 a_79084_91004# TERM_TRIM0 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X331 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D56 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
 X332 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X333 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X334 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X335 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X336 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X337 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X338 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X339 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X340 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X341 PAD_P a_75880_90204# VSS ppolyf_u r_width=2u r_length=2.6u
-X342 a_3813_117064# a_1005_131545# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.7u
-X343 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X344 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
-X345 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
-X346 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X347 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X348 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X333 a_77568_152994# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X334 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X335 a_3813_117064# a_1005_131545# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.7u
+X336 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X337 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X338 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=22p pd=0.10088m as=13p ps=50.52u w=50u l=0.7u
+X339 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X340 PAD_P a_75520_93106# VSS ppolyf_u r_width=2u r_length=4.2u
+X341 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X342 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X343 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X344 a_85760_152994# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X345 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X346 a_4789_117064# a_3813_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X347 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X348 a_92928_152994# PAD_N VSS ppolyf_u r_width=2u r_length=1u
+D57 PAD_P DVDD diode_pd2nw_06v0 pj=51.8u area=22.5p
 X349 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X350 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
-X351 a_87628_152896# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X352 a_4789_117064# a_3813_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X350 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X351 a_78592_93106# TERM_TRIM0 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X352 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
 X353 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X354 PAD_P a_86560_91004# VSS ppolyf_u r_width=2u r_length=1u
-X355 a_85492_152896# PAD_N VSS ppolyf_u r_width=2u r_length=1u
-X356 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X357 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D58 PAD_P DVDD diode_pd2nw_06v0 pj=51.8u area=22.5p
+X354 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X355 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D59 a_83712_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X356 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
+X357 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
 X358 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X359 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X360 PAD_P a_94036_91004# VSS ppolyf_u r_width=2u r_length=1u
-X361 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X362 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X363 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=22p ps=0.10088m w=50u l=0.7u
-X364 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X365 a_70540_152096# PAD_N VSS ppolyf_u r_width=2u r_length=2.6u
-D21 PAD_P ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
-X366 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X367 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X368 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X369 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X370 a_83356_91004# TERM_TRIM2 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X371 a_1852_148519# VSS VSS ppolyf_u_1k_6p0 r_width=1u r_length=6u
-X372 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X373 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-D22 PAD_P ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X359 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X360 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X361 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X362 a_1852_148519# VSS VSS ppolyf_u_1k_6p0 r_width=1u r_length=6u
+X363 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X364 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X365 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X366 a_84736_152994# TERM_TRIM2 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X367 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X368 VDD w_71178_112088# w_71178_112088# w_71178_112088# pfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.55u
+X369 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D60 a_69376_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X370 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X371 a_82688_152994# TERM_TRIM2 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X372 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X373 a_86784_152994# PAD_N VSS ppolyf_u r_width=2u r_length=1u
 X374 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X375 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
-X376 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X377 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-D23 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
-X378 a_92968_152896# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X379 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
-X380 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X381 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X382 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X383 RX_P PAD_P cap_mim_2f0_m4m5_noshield c_width=35u c_length=35u
-X384 a_79084_152896# PAD_N VSS ppolyf_u r_width=2u r_length=1u
-X385 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X386 VSS a_3813_117064# a_4789_117064# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X387 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X388 a_70540_152096# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
-X389 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X390 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X391 PAD_P a_91900_91004# VSS ppolyf_u r_width=2u r_length=1u
-X392 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
-X393 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X394 PAD_P a_84424_91004# VSS ppolyf_u r_width=2u r_length=1u
+X375 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X376 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X377 a_85760_152994# PAD_N VSS ppolyf_u r_width=2u r_length=1u
+X378 a_68216_149604# PAD_N VSS ppolyf_u r_width=2u r_length=4.2u
+X379 PAD_P a_89856_93106# VSS ppolyf_u r_width=2u r_length=1u
+X380 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X381 VSS a_3813_117064# a_4789_117064# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+D61 a_84736_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X382 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X383 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X384 RX_N VSS VSS VSS nfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.7u
+X385 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X386 a_71424_152994# PAD_N VSS ppolyf_u r_width=2u r_length=4.2u
+X387 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X388 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X389 PAD_P a_91904_93106# VSS ppolyf_u r_width=2u r_length=1u
+X390 a_82688_93106# TERM_TRIM2 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X391 VSS a_4789_117064# a_2245_90628# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X392 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X393 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X394 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
 X395 VSS a_4789_117064# a_2245_90628# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X396 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X397 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X398 VSS a_4789_117064# a_2245_90628# VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X399 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X400 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X401 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X402 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
-X403 a_1005_131545# a_13878_131545# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
-X404 a_94036_152896# PAD_N VSS ppolyf_u r_width=2u r_length=1u
-X405 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X406 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X407 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X408 a_94036_152896# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X409 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X410 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X411 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
-X412 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
-X413 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X414 a_4789_117064# a_3813_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X415 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X416 a_85492_91004# TERM_TRIM2 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X417 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X418 PAD_P a_71608_90204# VSS ppolyf_u r_width=2u r_length=2.6u
-D24 PAD_P ESD_RAIL diode_pd2nw_06v0 pj=51.8u area=22.5p
+X396 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X397 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X398 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X399 a_1005_131545# a_13878_131545# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X400 a_83712_152994# TERM_TRIM2 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X401 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X402 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X403 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X404 a_81664_152994# TERM_TRIM2 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X405 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X406 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X407 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X408 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X409 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X410 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X411 a_4789_117064# a_3813_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X412 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X413 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X414 PAD_P a_71424_93106# VSS ppolyf_u r_width=2u r_length=4.2u
+X415 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X416 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X417 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X418 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
 X419 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X420 a_2245_90628# a_4789_117064# ESD_RAIL ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X421 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X422 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X423 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X424 PAD_P a_78016_90204# VSS ppolyf_u r_width=2u r_length=2.6u
-X425 a_72676_152096# PAD_N VSS ppolyf_u r_width=2u r_length=2.6u
-X426 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X427 a_1005_132385# a_13878_132665# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
-X428 RX_N PAD_N cap_mim_2f0_m4m5_noshield c_width=35u c_length=35u
-X429 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X430 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
-X431 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X432 PAD_P a_82288_91004# VSS ppolyf_u r_width=2u r_length=1u
-D25 VSS PAD_N diode_nd2ps_06v0 pj=51.8u area=22.5p
-X433 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
-X434 a_78016_90204# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
-X435 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X436 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X437 a_87628_152896# PAD_N VSS ppolyf_u r_width=2u r_length=1u
+X420 PAD_P a_77568_93106# VSS ppolyf_u r_width=2u r_length=4.2u
+X421 a_1005_132385# a_13878_132665# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X422 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+X423 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X424 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D62 a_87808_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X425 PAD_P a_82688_93106# VSS ppolyf_u r_width=2u r_length=1u
+D63 a_71424_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X426 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=23.584p pd=0.10808m as=13.936p ps=54.12u w=53.6u l=0.7u
+X427 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X428 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X429 a_76544_152994# PAD_N VSS ppolyf_u r_width=2u r_length=4.2u
+X430 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X431 a_90880_152994# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+D64 VSS PAD_N diode_nd2ps_06v0 pj=51.8u area=22.5p
+X432 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D65 a_75520_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X433 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+D66 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
+X434 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D67 a_84736_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X435 a_84736_93106# TERM_TRIM2 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X436 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.7u
+D68 PAD_N DVDD diode_pd2nw_06v0 pj=51.8u area=22.5p
+X437 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
 X438 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X439 a_86560_152896# PAD_N VSS ppolyf_u r_width=2u r_length=1u
-X440 PAD_P a_89764_91004# VSS ppolyf_u r_width=2u r_length=1u
-X441 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X442 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
-X443 a_70540_90204# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
-X444 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X445 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.7u
-X446 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X447 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X448 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X449 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X450 a_1005_133505# a_13878_133785# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
-X451 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X452 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X453 a_90832_91004# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
-X454 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X455 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X456 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X457 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X458 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X459 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X460 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
-X461 PAD_P a_68216_96864# VSS ppolyf_u r_width=2u r_length=2.6u
-X462 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-X463 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X464 a_2245_90628# VSS VSS ppolyf_u_1k_6p0 r_width=1u r_length=99.24u
-X465 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X466 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X467 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X468 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-D26 VSS PAD_N diode_nd2ps_06v0 pj=51.8u area=22.5p
-X469 a_4789_117064# a_3813_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
-D27 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
+X439 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X440 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X441 RX_N VDD VDD VDD pfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.55u
+X442 a_1005_133505# a_13878_133785# ESD_RAIL ppolyf_u r_width=0.8u r_length=63.855u
+X443 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+D69 a_88832_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X444 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X445 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X446 a_90880_152994# PAD_N VSS ppolyf_u r_width=2u r_length=1u
+X447 a_69376_152994# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X448 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X449 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X450 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X451 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X452 ESD_RAIL a_2245_90628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X453 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=23.584p ps=0.10808m w=53.6u l=0.7u
+D70 a_81664_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X454 ESD_RAIL a_4789_117064# a_2245_90628# ESD_RAIL pfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X455 a_82688_152994# PAD_N VSS ppolyf_u r_width=2u r_length=1u
+X456 a_77568_93106# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X457 PAD_P a_68216_96594# VSS ppolyf_u r_width=2u r_length=4.2u
+X458 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X459 a_2245_90628# VSS VSS ppolyf_u_1k_6p0 r_width=1u r_length=99.24u
+X460 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X461 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X462 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X463 PAD_P a_80640_93106# VSS ppolyf_u r_width=2u r_length=1u
+X464 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+D71 a_85760_93106# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X465 a_4789_117064# a_3813_117064# VSS VSS nfet_06v0 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.7u
+X466 a_70400_93106# TERM_ENABLE TERM_VCM VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X467 a_89856_152994# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
+X468 RX_N PAD_N cap_mim_2f0_m4m5_noshield c_width=35u c_length=35u
+D72 VSS ESD_RAIL diode_nd2ps_06v0 pj=82u area=40p
+D73 a_75520_152994# DVDD diode_pd2nw_06v0 pj=4u area=1p
+X469 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
 X470 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X471 PAD_P a_80152_91004# VSS ppolyf_u r_width=2u r_length=1u
-X472 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X473 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X474 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
-X475 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X471 PAD_P a_87808_93106# VSS ppolyf_u r_width=2u r_length=1u
+X472 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
+X473 VSS a_1852_148519# ESD_RAIL VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X474 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X475 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
 X476 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X477 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-X478 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X477 ESD_RAIL a_1852_148519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.12u w=53.6u l=0.7u
+X478 a_89856_93106# TERM_TRIM3 TERM_VCM VSS nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
 X479 VSS a_2245_90628# ESD_RAIL VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
-C0 a_88696_91004# TERM_TRIM3 0.21124f
-C1 TERM_VCM a_78016_152096# 1.41027f
-C2 TERM_ENABLE RX_P 0
-C3 a_92968_91004# TERM_TRIM3 0.21124f
-C4 a_69448_96864# a_70540_90204# 0.05543f
-C5 a_76948_152096# a_75880_152096# 0.12196f
-C6 TERM_TRIM1 VDD 0.28454f
-C7 a_86560_91004# TERM_TRIM3 0.21124f
-C8 a_79084_91004# a_82288_91004# 0
-C9 PAD_P a_68216_96864# 0.08723f
-C10 a_94036_91004# a_90832_91004# 0
-C11 a_84424_91004# TERM_TRIM3 0
-C12 a_79084_91004# a_80152_91004# 0.38185f
-C13 a_87628_91004# a_85492_91004# 0.21287f
-C14 TERM_TRIM0 a_79084_152896# 0.21106f
-C15 TERM_VCM a_73744_90204# 1.62038f
-C16 VBIAS TERM_VCM 12.5417f
-C17 a_76948_90204# a_75880_90204# 0.12196f
-C18 a_87628_91004# PAD_P 0.04185f
-C19 VBIAS TERM_TRIM2 0.17979f
-C20 PAD_N a_82288_152896# 0.04185f
-C21 a_91900_152896# a_89764_152896# 0.16889f
-C22 a_86560_152896# TERM_TRIM3 0.21124f
-C23 PAD_N a_72676_152096# 0.02841f
-C24 TERM_VCM a_71608_152096# 1.50642f
-C25 a_79084_91004# a_76948_90204# 0.01248f
-C26 a_85492_152896# a_82288_152896# 0.00939f
-C27 a_81220_91004# a_82288_91004# 0.02726f
-C28 TERM_VCM VDD 0.5469f
-C29 TERM_VCM a_84424_152896# 1.98432f
-C30 a_71608_90204# a_70540_90204# 0.0582f
-C31 VDD TERM_TRIM2 0.28557f
-C32 TERM_TRIM2 a_84424_152896# 0.21125f
-C33 a_2245_90628# a_4789_117064# 11.6307f
-C34 a_94036_152896# a_90832_152896# 0
-C35 a_81220_91004# a_80152_91004# 0.17182f
-C36 TERM_VCM a_75880_152096# 1.48038f
-C37 a_74812_90204# PAD_P 0.02841f
-C38 TERM_VCM a_94036_91004# 0.94575f
-C39 TERM_VCM a_76948_152096# 1.7715f
-C40 TERM_TRIM0 a_79084_91004# 0.21106f
-C41 a_83356_91004# a_86560_91004# 0.01123f
-C42 PAD_P TERM_ENABLE 0.13182f
-C43 TERM_VCM a_90832_91004# 1.14097f
-C44 TERM_TRIM1 TERM_VCM 0.97948f
-C45 a_87628_152896# a_88696_152896# 0.77264f
-C46 a_72676_90204# a_73744_90204# 0.07173f
-C47 TERM_TRIM1 TERM_TRIM2 46.0872f
-C48 PAD_N a_78016_152096# 0.02856f
-C49 TERM_VCM a_90832_152896# 1.14097f
-C50 a_83356_91004# a_84424_91004# 0.18702f
-C51 TERM_TRIM0 TERM_TRIM3 0.07988f
-C52 TERM_ENABLE a_68216_96864# 0.34621f
-C53 a_83356_152896# a_82288_152896# 0.55795f
-C54 a_83356_91004# a_82288_91004# 0.55795f
-C55 a_13878_133225# a_13878_133785# 0.0346f
-C56 TERM_ENABLE a_70540_152096# 0.34621f
-C57 a_85492_91004# a_88696_91004# 0.01848f
-C58 TERM_VCM a_94036_152896# 0.94575f
-C59 a_83356_91004# a_80152_91004# 0.00715f
-C60 PAD_P a_88696_91004# 0.04185f
-C61 VBIAS PAD_N 0.16017f
-C62 a_85492_91004# a_86560_91004# 0.69466f
-C63 a_92968_91004# PAD_P 0.04185f
-C64 a_80152_152896# a_82288_152896# 0.03597f
-C65 PAD_P a_86560_91004# 0.04185f
-C66 a_1005_131545# a_4789_117064# 0.02926f
-C67 a_85492_91004# a_84424_91004# 0.64047f
-C68 TERM_TRIM0 RX_P 0.16216f
-C69 w_71178_112128# TERM_TRIM3 0.24787f
-C70 PAD_N a_71608_152096# 0.02841f
-C71 TERM_VCM TERM_TRIM2 1.83029f
-C72 a_87628_152896# TERM_TRIM3 0.21127f
-C73 PAD_P a_84424_91004# 0.04185f
-C74 VDD PAD_N 0.39442f
-C75 PAD_N a_84424_152896# 0.04185f
-C76 a_85492_91004# a_82288_91004# 0.00939f
-C77 a_82288_152896# a_79084_152896# 0
-C78 PAD_P a_82288_91004# 0.04185f
-C79 PAD_P a_70540_90204# 0.02841f
-C80 a_74812_90204# TERM_ENABLE 0.34673f
-C81 a_87628_91004# a_88696_91004# 0.77264f
-C82 PAD_N a_75880_152096# 0.02841f
-C83 a_1005_131545# a_2245_90628# 0.01301f
-C84 TERM_VCM a_69448_149334# 1.40781f
-C85 PAD_N a_76948_152096# 0.02841f
-C86 a_85492_152896# a_84424_152896# 0.64047f
-C87 PAD_P a_80152_91004# 0.04185f
-C88 a_87628_91004# a_86560_91004# 0.10088f
-C89 TERM_TRIM1 PAD_N 0.25684f
-C90 ESD_RAIL PAD_P 49.4072f
-C91 a_91900_91004# a_94036_91004# 0.129f
-C92 a_80152_152896# a_78016_152096# 0.01596f
-C93 PAD_N a_90832_152896# 0.04745f
-C94 RX_P w_71178_112128# 2.17742f
-C95 a_87628_91004# a_84424_91004# 0.01397f
-C96 a_74812_152096# a_72676_152096# 0
-C97 RX_N RX_P 3.37337f
-C98 a_91900_91004# a_90832_91004# 0.02179f
-C99 TERM_VCM a_72676_90204# 1.55911f
-C100 ESD_RAIL a_4789_117064# 16.8853f
-C101 TERM_ENABLE a_73744_152096# 0.34716f
-C102 a_76948_90204# PAD_P 0.02841f
-C103 PAD_N a_94036_152896# 0.04035f
-C104 a_79084_152896# a_78016_152096# 0.2179f
-C105 a_91900_152896# a_87628_152896# 0.00449f
-C106 a_1005_131545# m2_2279_124800# 0.05457f
-C107 m2_2279_124800# a_1005_132385# 0
-C108 a_84424_152896# a_83356_152896# 0.18702f
-C109 TERM_TRIM0 PAD_P 0.09134f
-C110 PAD_P a_1852_148519# 0.25621f
-C111 ESD_RAIL a_2245_90628# 0.24349p
-C112 ESD_RAIL a_13878_133225# 0.53916f
-C113 TERM_VCM PAD_N 1.98056f
-C114 a_1005_131545# a_1005_132385# 0
-C115 PAD_N TERM_TRIM2 0.25684f
-C116 ESD_RAIL a_13878_133785# 0.53942f
-C117 TERM_VCM a_91900_91004# 1.78464f
-C118 TERM_ENABLE a_70540_90204# 0.34621f
-C119 TERM_VCM a_85492_152896# 1.23609f
-C120 TERM_TRIM2 a_85492_152896# 0.21106f
-C121 a_92968_91004# a_88696_91004# 0.00866f
-C122 PAD_N a_69448_149334# 0.02841f
-C123 a_88696_91004# a_86560_91004# 0.26567f
-C124 a_75880_90204# a_73744_90204# 0
-C125 PAD_P w_71178_112128# 0.50822f
-C126 TERM_TRIM1 a_80152_152896# 0.21124f
-C127 ESD_RAIL m2_2279_124800# 5.47988f
-C128 a_89764_152896# a_86560_152896# 0.02726f
-C129 a_76948_152096# a_79084_152896# 0.01248f
-C130 a_86560_91004# a_84424_91004# 0.1626f
-C131 m2_2279_124800# a_1005_132945# 0
-C132 a_76948_90204# TERM_ENABLE 0.34634f
-C133 ESD_RAIL a_1005_131545# 97.1325f
-C134 TERM_VCM a_83356_152896# 1.14221f
-C135 TERM_TRIM1 a_79084_152896# 0
-C136 ESD_RAIL a_1005_132385# 0.53823f
-C137 m2_2279_124800# a_1005_133505# 0
-C138 a_94036_91004# a_89764_91004# 0.0102f
-C139 TERM_TRIM2 a_83356_152896# 0.21124f
-C140 TERM_VCM a_78016_90204# 1.41027f
-C141 a_1005_131545# a_1005_132945# 0
-C142 a_74812_152096# a_75880_152096# 0.0804f
-C143 a_1005_132945# a_1005_132385# 0.0346f
-C144 a_84424_91004# a_82288_91004# 0.06432f
-C145 VBIAS TERM_TRIM3 3.98309f
-C146 TERM_TRIM0 TERM_ENABLE 30.6738f
-C147 a_90832_152896# a_88696_152896# 0.13566f
-C148 a_90832_91004# a_89764_91004# 0.1211f
-C149 TERM_VCM a_80152_152896# 1.34775f
-C150 a_13878_132665# a_13878_133225# 0.0346f
-C151 a_82288_91004# a_80152_91004# 0.03597f
-C152 VDD TERM_TRIM3 4.05216f
-C153 a_84424_152896# TERM_TRIM3 0
-C154 PAD_N a_85492_152896# 0.04185f
-C155 a_79084_91004# TERM_TRIM1 0
-C156 a_90832_152896# a_92968_152896# 0
-C157 TERM_ENABLE a_68216_149334# 0.34621f
-C158 TERM_VCM a_79084_152896# 1.71924f
-C159 a_94036_91004# TERM_TRIM3 0.21106f
-C160 VBIAS RX_P 0.079f
-C161 TERM_ENABLE w_71178_112128# 16.5685f
-C162 TERM_VCM a_88696_152896# 1.33262f
-C163 RX_N TERM_ENABLE 0.14434f
-C164 a_90832_91004# TERM_TRIM3 0.21124f
-C165 TERM_TRIM1 TERM_TRIM3 0.08733f
-C166 ESD_RAIL a_1005_132945# 0.53823f
-C167 TERM_VCM a_89764_91004# 1.13649f
-C168 a_90832_152896# TERM_TRIM3 0.21124f
-C169 a_94036_152896# a_92968_152896# 1.06738f
-C170 TERM_VCM a_74812_152096# 1.42307f
-C171 TERM_VCM a_75880_90204# 1.48038f
-C172 a_89764_152896# a_87628_152896# 0.1215f
-C173 a_81220_152896# a_82288_152896# 0.02726f
-C174 ESD_RAIL a_1005_133505# 0.53842f
-C175 VDD RX_P 2.31443f
-C176 a_1005_132945# a_1005_133505# 0.0346f
-C177 PAD_N a_83356_152896# 0.04185f
-C178 a_81220_91004# TERM_TRIM1 0.21106f
-C179 TERM_VCM a_69448_96864# 1.40781f
-C180 ESD_RAIL a_13878_132105# 0.53942f
-C181 TERM_VCM a_92968_152896# 1.1354f
-C182 a_79084_91004# TERM_VCM 1.71924f
-C183 a_94036_152896# TERM_TRIM3 0.21106f
-C184 a_85492_152896# a_83356_152896# 0.10767f
-C185 ESD_RAIL a_1852_148519# 0.33756p
-C186 TERM_TRIM1 RX_P 0.14387f
-C187 PAD_N a_80152_152896# 0.04185f
-C188 TERM_VCM TERM_TRIM3 3.52988f
-C189 TERM_TRIM2 TERM_TRIM3 49.2025f
-C190 a_81220_152896# a_78016_152096# 0
-C191 VBIAS PAD_P 0.15544f
-C192 PAD_P a_73744_90204# 0.02841f
-C193 a_91900_152896# a_90832_152896# 0.02179f
-C194 PAD_N a_79084_152896# 0.04185f
-C195 a_81220_91004# TERM_VCM 1.14109f
-C196 TERM_VCM a_71608_90204# 1.50642f
-C197 a_87628_152896# a_86560_152896# 0.10088f
-C198 a_81220_91004# TERM_TRIM2 0
-C199 ESD_RAIL w_71178_112128# 0.08713f
-C200 TERM_ENABLE a_72676_152096# 0.34621f
-C201 PAD_N a_88696_152896# 0.04185f
-C202 TERM_VCM RX_P 3.60176f
-C203 PAD_N a_74812_152096# 0.02841f
-C204 PAD_P VDD 0.39442f
-C205 a_91900_152896# a_94036_152896# 0.129f
-C206 RX_P TERM_TRIM2 0.14387f
-C207 ESD_RAIL a_13878_132665# 0.53916f
-C208 a_88696_152896# a_85492_152896# 0.01848f
-C209 a_91900_91004# a_89764_91004# 0.16889f
-C210 PAD_P a_94036_91004# 0.04035f
-C211 a_73744_152096# a_72676_152096# 0.07173f
-C212 a_80152_152896# a_83356_152896# 0.00715f
-C213 PAD_N a_92968_152896# 0.04185f
-C214 a_70540_152096# a_71608_152096# 0.0582f
-C215 TERM_VCM a_91900_152896# 1.78464f
-C216 PAD_P a_90832_91004# 0.04745f
-C217 a_83356_91004# TERM_VCM 1.14221f
-C218 TERM_TRIM1 PAD_P 0.07659f
-C219 TERM_ENABLE a_78016_152096# 0.34603f
-C220 a_83356_91004# TERM_TRIM2 0.21124f
-C221 a_13878_134345# a_13878_133785# 0.0346f
-C222 TERM_TRIM0 w_71178_112128# 0.17103f
-C223 a_1005_134065# m2_2279_124800# 0
-C224 a_13878_132665# a_13878_132105# 0.0346f
-C225 a_72676_90204# a_71608_90204# 0.06277f
-C226 PAD_N TERM_TRIM3 0.40303f
-C227 a_74812_90204# a_73744_90204# 0.16284f
-C228 TERM_TRIM1 a_81220_152896# 0.21106f
-C229 TERM_ENABLE a_73744_90204# 0.34716f
-C230 a_91900_91004# TERM_TRIM3 0.21132f
-C231 VBIAS TERM_ENABLE 0.33773f
-C232 a_85492_152896# TERM_TRIM3 0
-C233 a_87628_91004# a_90832_91004# 0.31618f
-C234 a_80152_152896# a_79084_152896# 0.38185f
-C235 a_85492_91004# TERM_VCM 1.23609f
-C236 a_78016_90204# a_75880_90204# 0.01025f
-C237 a_85492_91004# TERM_TRIM2 0.21106f
-C238 TERM_VCM PAD_P 1.58641f
-C239 RX_N w_71178_112128# 2.17714f
-C240 TERM_ENABLE a_71608_152096# 0.34621f
-C241 PAD_P TERM_TRIM2 0.07529f
-C242 VDD TERM_ENABLE 12.9618f
-C243 a_79084_91004# a_78016_90204# 0.2179f
-C244 TERM_VCM a_68216_96864# 1.34664f
-C245 TERM_ENABLE a_75880_152096# 0.34631f
-C246 TERM_ENABLE a_76948_152096# 0.34634f
-C247 TERM_VCM a_81220_152896# 1.14109f
-C248 TERM_VCM a_70540_152096# 1.45374f
-C249 TERM_TRIM2 a_81220_152896# 0
-C250 PAD_N a_91900_152896# 0.04185f
-C251 TERM_TRIM1 TERM_ENABLE 0.09198f
-C252 ESD_RAIL a_1005_134065# 0.57348f
-C253 a_87628_91004# TERM_VCM 2.15129f
-C254 a_73744_152096# a_75880_152096# 0
-C255 a_70540_152096# a_69448_149334# 0.05543f
-C256 PAD_P a_72676_90204# 0.02841f
-C257 a_1005_134065# a_1005_133505# 0.0346f
-C258 a_89764_152896# a_90832_152896# 0.1211f
-C259 a_81220_91004# a_78016_90204# 0
-C260 a_92968_91004# a_94036_91004# 1.06738f
-C261 a_88696_152896# a_92968_152896# 0.00866f
-C262 a_13878_134345# ESD_RAIL 0.5677f
-C263 a_90832_91004# a_88696_91004# 0.13566f
-C264 TERM_VCM a_74812_90204# 1.42307f
-C265 a_92968_91004# a_90832_91004# 0
-C266 a_90832_91004# a_86560_91004# 0
-C267 a_89764_152896# a_94036_152896# 0.0102f
-C268 TERM_VCM TERM_ENABLE 19.4833f
-C269 PAD_P PAD_N 28.1675f
-C270 TERM_TRIM0 a_78016_152096# 0
-C271 TERM_ENABLE TERM_TRIM2 0.07746f
-C272 a_88696_152896# TERM_TRIM3 0.21124f
-C273 a_86560_152896# a_84424_152896# 0.1626f
-C274 a_89764_91004# TERM_TRIM3 0.21124f
-C275 a_91900_91004# PAD_P 0.04185f
-C276 TERM_VCM a_89764_152896# 1.13649f
-C277 m2_2279_124800# a_1005_131825# 0
-C278 TERM_ENABLE a_69448_149334# 0.34621f
-C279 TERM_VCM a_73744_152096# 1.62038f
-C280 PAD_N a_81220_152896# 0.0455f
-C281 PAD_N a_70540_152096# 0.02841f
-C282 TERM_TRIM0 VBIAS 0.17633f
-C283 TERM_TRIM1 a_80152_91004# 0.21124f
-C284 a_4789_117064# a_3813_117064# 3.03168f
-C285 TERM_VCM a_88696_91004# 1.33262f
-C286 a_1005_131545# a_1005_131825# 0.03725f
-C287 a_1005_132385# a_1005_131825# 0.0346f
-C288 a_92968_152896# TERM_TRIM3 0.21124f
-C289 a_90832_152896# a_86560_152896# 0
-C290 a_74812_90204# a_72676_90204# 0
-C291 a_92968_91004# TERM_VCM 1.1354f
-C292 TERM_VCM a_86560_91004# 1.13637f
-C293 a_72676_90204# TERM_ENABLE 0.34621f
-C294 a_87628_91004# a_91900_91004# 0.00449f
-C295 TERM_TRIM0 VDD 0.28403f
-C296 TERM_VCM a_84424_91004# 1.98432f
-C297 a_2245_90628# a_3813_117064# 0.00994f
-C298 a_81220_91004# a_79084_91004# 0.13387f
-C299 a_84424_91004# TERM_TRIM2 0.21125f
-C300 a_91900_152896# a_88696_152896# 0.0331f
-C301 PAD_P a_78016_90204# 0.02856f
-C302 TERM_VCM a_82288_91004# 1.5022f
-C303 TERM_VCM a_70540_90204# 1.45374f
-C304 VBIAS w_71178_112128# 1.98188f
-C305 RX_N VBIAS 0.24116f
-C306 a_82288_91004# TERM_TRIM2 0.21124f
-C307 TERM_TRIM0 TERM_TRIM1 44.358f
-C308 TERM_VCM a_80152_91004# 1.34775f
-C309 TERM_VCM a_86560_152896# 1.13637f
-C310 TERM_ENABLE PAD_N 0.36353f
-C311 a_81220_152896# a_83356_152896# 0
-C312 ESD_RAIL a_1005_131825# 0.53823f
-C313 VDD w_71178_112128# 5.53294f
-C314 a_91900_152896# a_92968_152896# 1.01318f
-C315 RX_N VDD 8.13768f
-C316 a_87628_152896# a_84424_152896# 0.01397f
-C317 RX_P TERM_TRIM3 0.14387f
-C318 PAD_N a_89764_152896# 0.04185f
-C319 a_76948_90204# TERM_VCM 1.7715f
-C320 PAD_N a_73744_152096# 0.02841f
-C321 a_81220_152896# a_80152_152896# 0.17182f
-C322 a_89764_152896# a_85492_152896# 0.00355f
-C323 TERM_TRIM1 w_71178_112128# 0.15092f
-C324 a_91900_152896# TERM_TRIM3 0.21132f
-C325 a_1005_131545# a_3813_117064# 2.44008f
-C326 a_85492_91004# a_89764_91004# 0.00355f
-C327 a_87628_152896# a_90832_152896# 0.31618f
-C328 TERM_TRIM0 TERM_VCM 0.5732f
-C329 PAD_P a_89764_91004# 0.04185f
-C330 a_91900_91004# a_88696_91004# 0.0331f
-C331 TERM_TRIM0 TERM_TRIM2 0.07657f
-C332 PAD_P a_75880_90204# 0.02841f
-C333 a_81220_152896# a_79084_152896# 0.13387f
-C334 a_92968_91004# a_91900_91004# 1.01318f
-C335 PAD_P a_69448_96864# 0.02841f
-C336 a_83356_91004# a_81220_91004# 0
-C337 TERM_ENABLE a_78016_90204# 0.34603f
-C338 a_79084_91004# PAD_P 0.04185f
-C339 TERM_VCM a_68216_149334# 1.34664f
-C340 a_69448_96864# a_68216_96864# 0.05357f
-C341 PAD_N a_86560_152896# 0.04185f
-C342 a_87628_91004# a_89764_91004# 0.1215f
-C343 a_85492_91004# TERM_TRIM3 0
-C344 ESD_RAIL PAD_N 44.664f
-C345 TERM_VCM w_71178_112128# 0.37921f
-C346 TERM_VCM a_87628_152896# 2.15129f
-C347 RX_N TERM_VCM 3.74563f
-C348 TERM_TRIM2 w_71178_112128# 0.14537f
-C349 a_84424_152896# a_82288_152896# 0.06432f
-C350 PAD_P TERM_TRIM3 0.13496f
-C351 a_71608_152096# a_72676_152096# 0.06277f
-C352 ESD_RAIL a_3813_117064# 5.25092f
-C353 a_86560_152896# a_85492_152896# 0.69466f
-C354 a_68216_149334# a_69448_149334# 0.05357f
-C355 ESD_RAIL a_13878_131545# 0.56772f
-C356 TERM_ENABLE a_79084_152896# 0
-C357 a_81220_91004# PAD_P 0.0455f
-C358 PAD_P a_71608_90204# 0.02841f
-C359 a_74812_90204# a_75880_90204# 0.0804f
-C360 TERM_TRIM0 PAD_N 0.25684f
-C361 a_87628_91004# TERM_TRIM3 0.21127f
-C362 TERM_ENABLE a_74812_152096# 0.34673f
-C363 PAD_N a_1852_148519# 0.10489f
-C364 PAD_P RX_P 14.8446f
-C365 TERM_ENABLE a_75880_90204# 0.34631f
-C366 a_13878_131545# a_13878_132105# 0.0346f
-C367 a_89764_152896# a_88696_152896# 0.85543f
-C368 a_86560_152896# a_83356_152896# 0.01123f
-C369 TERM_ENABLE a_69448_96864# 0.34621f
-C370 a_80152_91004# a_78016_90204# 0.01596f
-C371 a_78016_152096# a_75880_152096# 0.01025f
-C372 a_85492_91004# a_83356_91004# 0.10767f
-C373 a_76948_152096# a_78016_152096# 0.32283f
-C374 a_79084_91004# TERM_ENABLE 0
-C375 a_73744_152096# a_74812_152096# 0.16284f
-C376 a_83356_91004# PAD_P 0.04185f
-C377 PAD_N a_68216_149334# 0.08723f
-C378 TERM_VCM a_82288_152896# 1.5022f
-C379 a_88696_91004# a_89764_91004# 0.85543f
-C380 TERM_TRIM2 a_82288_152896# 0.21124f
-C381 VBIAS VDD 6.77457f
-C382 a_89764_152896# a_92968_152896# 0.08066f
-C383 a_92968_91004# a_89764_91004# 0.08066f
-C384 PAD_N w_71178_112128# 7.11848f
-C385 PAD_N a_87628_152896# 0.04185f
-C386 TERM_VCM a_72676_152096# 1.55911f
-C387 RX_N PAD_N 14.8446f
-C388 a_86560_91004# a_89764_91004# 0.02726f
-C389 TERM_ENABLE TERM_TRIM3 0.08127f
-C390 a_76948_90204# a_78016_90204# 0.32283f
-C391 a_87628_152896# a_85492_152896# 0.21287f
-C392 VBIAS TERM_TRIM1 0.17736f
-C393 a_89764_152896# TERM_TRIM3 0.21124f
-C394 TERM_TRIM0 a_78016_90204# 0
-C395 TERM_ENABLE a_71608_90204# 0.34621f
-C396 a_85492_91004# PAD_P 0.04185f
-C397 a_88696_152896# a_86560_152896# 0.26567f
-C398 RX_P VSS 44.3161f
-C399 VBIAS VSS 9.70078f
-C400 RX_N VSS 38.4929f
-C401 PAD_P VSS 0.37441p
-C402 PAD_N VSS 0.35672p
-C403 TERM_TRIM3 VSS 63.0308f
-C404 TERM_TRIM2 VSS 21.1689f
-C405 TERM_TRIM1 VSS 13.3829f
-C406 TERM_TRIM0 VSS 14.0915f
-C407 TERM_VCM VSS 0.12516p
-C408 TERM_ENABLE VSS 40.4973f
-C409 VDD VSS 32.293f
-C410 ESD_RAIL VSS 2978.62133f
-C411 m2_2279_124800# VSS 7.46506f $ **FLOATING
-C412 a_94036_91004# VSS 4.53629f
-C413 a_92968_91004# VSS 3.43891f
-C414 a_91900_91004# VSS 3.37039f
-C415 a_90832_91004# VSS 4.71404f
-C416 a_89764_91004# VSS 4.18037f
-C417 a_88696_91004# VSS 3.10965f
-C418 a_87628_91004# VSS 2.88432f
-C419 a_86560_91004# VSS 3.96932f
-C420 a_85492_91004# VSS 3.19002f
-C421 a_84424_91004# VSS 3.0172f
-C422 a_83356_91004# VSS 3.84876f
-C423 a_82288_91004# VSS 3.25899f
-C424 a_81220_91004# VSS 3.9821f
-C425 a_80152_91004# VSS 3.36022f
-C426 a_79084_91004# VSS 2.98519f
-C427 a_78016_90204# VSS 3.95769f
-C428 a_76948_90204# VSS 3.75737f
-C429 a_75880_90204# VSS 3.90066f
-C430 a_74812_90204# VSS 4.00403f
-C431 a_73744_90204# VSS 3.71772f
-C432 a_72676_90204# VSS 3.72171f
-C433 a_71608_90204# VSS 3.69238f
-C434 a_70540_90204# VSS 3.66017f
-C435 a_69448_96864# VSS 3.66977f
-C436 a_68216_96864# VSS 3.65691f
-C437 a_2245_90628# VSS 0.24972p
-C438 a_4789_117064# VSS 8.91806f
-C439 a_3813_117064# VSS 5.17875f
-C440 a_1005_131545# VSS 98.15211f
-C441 a_13878_131545# VSS 0.07835f
-C442 a_1005_131825# VSS 0.07377f
-C443 a_13878_132105# VSS 0.07394f
-C444 a_1005_132385# VSS 0.07377f
-C445 a_13878_132665# VSS 0.07394f
-C446 a_1005_132945# VSS 0.07377f
-C447 a_13878_133225# VSS 0.07394f
-C448 a_1005_133505# VSS 0.07377f
-C449 a_13878_133785# VSS 0.07394f
-C450 a_1005_134065# VSS 0.07377f
-C451 a_13878_134345# VSS 0.07838f
-C452 a_94036_152896# VSS 4.53629f
-C453 a_92968_152896# VSS 3.43891f
-C454 a_91900_152896# VSS 3.37039f
-C455 a_90832_152896# VSS 4.71404f
-C456 a_89764_152896# VSS 4.18037f
-C457 a_88696_152896# VSS 3.10965f
-C458 a_87628_152896# VSS 2.88432f
-C459 a_86560_152896# VSS 3.96932f
-C460 a_85492_152896# VSS 3.19002f
-C461 a_84424_152896# VSS 3.0172f
-C462 a_83356_152896# VSS 3.84876f
-C463 a_82288_152896# VSS 3.25899f
-C464 a_81220_152896# VSS 3.9821f
-C465 a_80152_152896# VSS 3.36022f
-C466 a_79084_152896# VSS 2.98519f
-C467 a_78016_152096# VSS 3.95769f
-C468 a_76948_152096# VSS 3.75737f
-C469 a_75880_152096# VSS 3.90066f
-C470 a_74812_152096# VSS 4.00403f
-C471 a_73744_152096# VSS 3.71772f
-C472 a_72676_152096# VSS 3.72171f
-C473 a_71608_152096# VSS 3.69238f
-C474 a_70540_152096# VSS 3.66017f
-C475 a_69448_149334# VSS 3.66977f
-C476 a_68216_149334# VSS 3.65691f
-C477 a_1852_148519# VSS 0.41778p
-C478 w_71178_112128# VSS 50.1585f
+C0 a_71424_152994# TERM_VCM 2.45338f
+C1 a_85760_152994# a_83712_152994# 0.0669f
+C2 a_1005_133505# a_1005_134065# 0.0346f
+C3 a_77568_93106# TERM_VCM 2.67274f
+C4 a_91904_93106# a_89856_93106# 0.88121f
+C5 TERM_TRIM2 w_71178_112088# 0.13298f
+C6 VBIAS TERM_VCM 15.9004f
+C7 RX_P TERM_TRIM1 0.14387f
+C8 DVDD a_76544_93106# 0.99222f
+C9 a_74496_152994# a_73472_152994# 0.55801f
+C10 PAD_N a_75520_152994# 0.02968f
+C11 TERM_ENABLE a_77568_152994# 0.41456f
+C12 DVDD a_78592_93106# 1.00049f
+C13 DVDD a_80640_152994# 0.99421f
+C14 a_1005_133505# m2_2279_124800# 0
+C15 TERM_TRIM3 a_85760_152994# 0.28938f
+C16 a_75520_93106# TERM_ENABLE 0.42568f
+C17 TERM_ENABLE a_76544_152994# 0.42439f
+C18 a_74496_93106# TERM_ENABLE 0.42442f
+C19 PAD_P a_71424_93106# 0.02968f
+C20 a_88832_152994# a_86784_152994# 0.13394f
+C21 PAD_P w_71178_112088# 0.48776f
+C22 a_83712_152994# TERM_VCM 2.7669f
+C23 DVDD a_77568_152994# 0.9869f
+C24 a_91904_93106# a_88832_93106# 0.12581f
+C25 PAD_N a_69376_152994# 0.02983f
+C26 TERM_ENABLE a_72448_152994# 0.42916f
+C27 TERM_TRIM3 a_89856_152994# 0.28932f
+C28 PAD_N a_81664_152994# 0.10174f
+C29 a_13878_132105# a_13878_131545# 0.0346f
+C30 a_90880_152994# a_87808_152994# 0.00286f
+C31 a_91904_152994# a_89856_152994# 0.88121f
+C32 DVDD a_75520_93106# 0.9806f
+C33 a_86784_93106# a_84736_93106# 0.10584f
+C34 a_92928_93106# a_90880_93106# 0.22145f
+C35 TERM_TRIM0 TERM_VCM 4.39961f
+C36 DVDD a_76544_152994# 0.99222f
+C37 VBIAS w_71178_112088# 1.98187f
+C38 DVDD a_74496_93106# 0.97527f
+C39 a_1005_132945# a_1005_133505# 0.0346f
+C40 PAD_N a_73472_152994# 0.02968f
+C41 a_92928_152994# a_89856_152994# 1.22348f
+C42 PAD_N a_74496_152994# 0.02968f
+C43 a_87808_93106# TERM_TRIM3 0.28932f
+C44 VBIAS RX_N 0.24116f
+C45 DVDD a_85760_152994# 0.98018f
+C46 a_13878_133785# a_13878_134345# 0.0346f
+C47 a_84736_152994# a_85760_152994# 1.20883f
+C48 TERM_TRIM3 TERM_VCM 7.81019f
+C49 a_91904_152994# TERM_VCM 2.39934f
+C50 DVDD a_72448_152994# 0.97204f
+C51 PAD_N a_87808_152994# 0.10174f
+C52 ESD_RAIL a_13878_132665# 0.53916f
+C53 a_86784_93106# a_89856_93106# 0
+C54 a_80640_152994# a_79616_152994# 0.91639f
+C55 a_92928_152994# TERM_VCM 2.43607f
+C56 PAD_P ESD_RAIL 3.46613f
+C57 TERM_ENABLE TERM_VCM 25.0657f
+C58 a_70400_93106# TERM_ENABLE 0.42741f
+C59 TERM_TRIM1 PAD_N 0.25684f
+C60 DVDD a_89856_152994# 0.97254f
+C61 PAD_N a_90880_152994# 0.10419f
+C62 ESD_RAIL a_13878_133225# 0.53916f
+C63 RX_P VDD 2.31443f
+C64 PAD_P a_92928_93106# 0.09822f
+C65 a_77568_152994# a_79616_152994# 0.01217f
+C66 TERM_TRIM2 a_83712_93106# 0.28934f
+C67 a_87808_93106# DVDD 0.98679f
+C68 m2_2279_124800# a_1005_131825# 0
+C69 PAD_P a_90880_93106# 0.10419f
+C70 DVDD TERM_VCM 0.88745f
+C71 TERM_TRIM2 a_81664_93106# 0.28938f
+C72 a_84736_152994# TERM_VCM 2.1151f
+C73 a_85760_93106# a_83712_93106# 0.0669f
+C74 TERM_TRIM0 w_71178_112088# 0.14528f
+C75 DVDD a_70400_93106# 0.99807f
+C76 PAD_P TERM_TRIM2 0.13985f
+C77 ESD_RAIL a_3813_117064# 5.25092f
+C78 TERM_TRIM3 a_88832_152994# 0.28932f
+C79 a_86784_93106# a_88832_93106# 0.13394f
+C80 a_91904_152994# a_88832_152994# 0.12581f
+C81 TERM_TRIM3 w_71178_112088# 0.15218f
+C82 PAD_P a_85760_93106# 0.10174f
+C83 a_68216_149604# a_69376_152994# 0.50385f
+C84 a_82688_152994# a_81664_152994# 0.963f
+C85 a_88832_152994# a_92928_152994# 0.34682f
+C86 a_83712_93106# a_81664_93106# 0.04802f
+C87 a_84736_93106# a_82688_93106# 0.06104f
+C88 a_71424_93106# TERM_ENABLE 0.42933f
+C89 PAD_P a_83712_93106# 0.10174f
+C90 TERM_TRIM2 VBIAS 0.17974f
+C91 a_77568_152994# a_75520_152994# 0.00631f
+C92 TERM_ENABLE w_71178_112088# 17.179f
+C93 a_4789_117064# a_1005_131545# 0.02926f
+C94 a_1005_131825# a_1005_131545# 0.03725f
+C95 TERM_ENABLE RX_N 0.14434f
+C96 PAD_P a_81664_93106# 0.10174f
+C97 a_68216_96594# TERM_VCM 2.10964f
+C98 a_81664_93106# a_79616_93106# 0.03216f
+C99 TERM_TRIM1 VDD 0.28454f
+C100 PAD_P a_79616_93106# 0.10174f
+C101 a_80640_93106# TERM_TRIM1 0.27606f
+C102 DVDD a_88832_152994# 1.00598f
+C103 a_76544_152994# a_75520_152994# 0.58491f
+C104 DVDD a_71424_93106# 0.979f
+C105 a_13878_133225# a_13878_132665# 0.0346f
+C106 PAD_P a_77568_93106# 0.02968f
+C107 a_81664_152994# a_80640_152994# 1.01459f
+C108 m2_2279_124800# a_1005_134065# 0
+C109 DVDD w_71178_112088# 1.14161f
+C110 a_79616_93106# a_77568_93106# 0.01217f
+C111 TERM_TRIM0 a_78592_152994# 0.27606f
+C112 a_79616_152994# TERM_VCM 2.62526f
+C113 TERM_TRIM2 a_83712_152994# 0.28934f
+C114 PAD_P VBIAS 0.15544f
+C115 a_2245_90628# a_4789_117064# 11.6307f
+C116 a_70400_152994# TERM_VCM 2.34702f
+C117 PAD_N VDD 0.39442f
+C118 a_1005_132385# a_1005_131825# 0.0346f
+C119 a_87808_93106# a_91904_93106# 0.0011f
+C120 a_88832_93106# a_89856_93106# 1.12997f
+C121 TERM_TRIM3 a_92928_93106# 0.27606f
+C122 a_91904_93106# TERM_VCM 2.39934f
+C123 TERM_TRIM2 TERM_TRIM0 0.07657f
+C124 PAD_N a_82688_152994# 0.10174f
+C125 TERM_TRIM3 a_90880_93106# 0.28932f
+C126 TERM_ENABLE a_78592_152994# 0.00349f
+C127 a_78592_93106# TERM_TRIM1 0.01326f
+C128 a_68216_149604# PAD_N 0.29192f
+C129 TERM_TRIM1 a_80640_152994# 0.27606f
+C130 TERM_TRIM2 TERM_TRIM3 52.2297f
+C131 a_75520_152994# TERM_VCM 2.53316f
+C132 a_74496_152994# a_76544_152994# 0
+C133 PAD_N a_1852_148519# 0.106f
+C134 TERM_TRIM3 a_85760_93106# 0.28938f
+C135 a_82688_93106# a_80640_93106# 0.03556f
+C136 TERM_TRIM2 TERM_ENABLE 0.07746f
+C137 a_72448_93106# TERM_VCM 2.44942f
+C138 a_69376_93106# TERM_VCM 2.24614f
+C139 DVDD a_78592_152994# 1.00049f
+C140 a_70400_93106# a_69376_93106# 0.51149f
+C141 m2_2279_124800# a_1005_131545# 0.05457f
+C142 PAD_P TERM_TRIM0 0.11161f
+C143 DVDD a_92928_93106# 0.87302f
+C144 PAD_N a_80640_152994# 0.10174f
+C145 a_72448_152994# a_73472_152994# 0.53659f
+C146 a_1005_132945# m2_2279_124800# 0
+C147 a_73472_93106# a_74496_93106# 0.55801f
+C148 ESD_RAIL a_13878_131545# 0.56772f
+C149 a_87808_152994# a_85760_152994# 0.11772f
+C150 DVDD a_90880_93106# 0.79439f
+C151 RX_P TERM_VCM 6.30872f
+C152 PAD_P TERM_TRIM3 0.39826f
+C153 a_77568_93106# TERM_TRIM0 0.00894f
+C154 TERM_TRIM2 DVDD 0.66921f
+C155 TERM_TRIM3 a_86784_152994# 0.28932f
+C156 TERM_TRIM2 a_84736_152994# 0.27606f
+C157 PAD_N a_77568_152994# 0.02968f
+C158 VBIAS TERM_TRIM0 0.17628f
+C159 a_69376_152994# TERM_VCM 2.24614f
+C160 PAD_P TERM_ENABLE 0.11264f
+C161 DVDD a_85760_93106# 0.98018f
+C162 a_81664_152994# TERM_VCM 2.71287f
+C163 TERM_TRIM3 VBIAS 4.00884f
+C164 a_87808_152994# a_89856_152994# 0.21281f
+C165 a_87808_93106# a_86784_93106# 1.38507f
+C166 TERM_ENABLE a_71424_152994# 0.42933f
+C167 DVDD a_83712_93106# 0.97117f
+C168 a_73472_152994# TERM_VCM 2.44067f
+C169 a_74496_152994# TERM_VCM 2.52891f
+C170 a_77568_93106# TERM_ENABLE 0.41456f
+C171 a_1005_132945# a_1005_131545# 0
+C172 a_1005_132385# m2_2279_124800# 0
+C173 PAD_N a_76544_152994# 0.02968f
+C174 a_86784_93106# TERM_VCM 2.25313f
+C175 a_72448_93106# a_71424_93106# 0.53348f
+C176 DVDD a_81664_93106# 0.97997f
+C177 VBIAS TERM_ENABLE 0.34917f
+C178 PAD_N a_85760_152994# 0.10174f
+C179 PAD_P DVDD 36.80691f
+C180 a_87808_152994# TERM_VCM 2.16174f
+C181 a_90880_152994# a_89856_152994# 0.90297f
+C182 DVDD a_79616_93106# 1.01128f
+C183 DVDD a_86784_152994# 0.98947f
+C184 a_73472_93106# TERM_VCM 2.44067f
+C185 PAD_N a_72448_152994# 0.02968f
+C186 a_86784_152994# a_84736_152994# 0.10584f
+C187 a_78592_152994# a_79616_152994# 0.86144f
+C188 ESD_RAIL a_1005_133505# 0.53842f
+C189 DVDD a_71424_152994# 0.979f
+C190 TERM_TRIM1 TERM_VCM 3.78482f
+C191 DVDD a_77568_93106# 0.9869f
+C192 RX_P w_71178_112088# 2.17742f
+C193 a_80640_93106# a_78592_93106# 0.02487f
+C194 a_2245_90628# a_1005_131545# 0.01301f
+C195 RX_P RX_N 3.37337f
+C196 a_90880_152994# TERM_VCM 2.20446f
+C197 DVDD VBIAS 0.17161f
+C198 PAD_N a_89856_152994# 0.10149f
+C199 a_1005_132385# a_1005_131545# 0
+C200 a_87808_93106# a_84736_93106# 0
+C201 a_1005_132385# a_1005_132945# 0.0346f
+C202 a_82688_152994# a_80640_152994# 0.03556f
+C203 a_91904_93106# a_92928_93106# 2.06022f
+C204 a_84736_93106# TERM_VCM 2.1151f
+C205 TERM_TRIM3 TERM_TRIM0 0.07988f
+C206 PAD_P a_68216_96594# 0.29192f
+C207 a_91904_93106# a_90880_93106# 2.82046f
+C208 PAD_N TERM_VCM 4.83836f
+C209 a_78592_93106# a_76544_93106# 0.00896f
+C210 ESD_RAIL a_13878_134345# 0.5677f
+C211 a_87808_93106# a_89856_93106# 0.21281f
+C212 TERM_TRIM0 TERM_ENABLE 33.7009f
+C213 a_88832_152994# a_87808_152994# 0.95844f
+C214 TERM_TRIM3 a_91904_152994# 0.28932f
+C215 a_89856_93106# TERM_VCM 2.03379f
+C216 DVDD a_83712_152994# 0.97117f
+C217 a_84736_152994# a_83712_152994# 1.09786f
+C218 TERM_TRIM3 a_92928_152994# 0.27606f
+C219 TERM_TRIM3 TERM_ENABLE 0.08127f
+C220 a_91904_152994# a_92928_152994# 2.06022f
+C221 TERM_TRIM1 w_71178_112088# 0.13391f
+C222 a_88832_152994# a_90880_152994# 0.2912f
+C223 a_82688_93106# TERM_VCM 2.1345f
+C224 DVDD TERM_TRIM0 0.55616f
+C225 PAD_P a_91904_93106# 0.10199f
+C226 a_71424_152994# a_70400_152994# 0.52298f
+C227 a_75520_93106# a_76544_93106# 0.58491f
+C228 TERM_TRIM3 DVDD 5.14747f
+C229 TERM_TRIM3 a_84736_152994# 0.01326f
+C230 a_87808_93106# a_88832_93106# 0.95844f
+C231 PAD_N a_88832_152994# 0.10174f
+C232 a_76544_93106# a_74496_93106# 0
+C233 DVDD a_91904_152994# 0.82057f
+C234 ESD_RAIL a_4789_117064# 16.8853f
+C235 TERM_TRIM2 RX_P 0.14387f
+C236 ESD_RAIL a_1005_131825# 0.53823f
+C237 a_88832_93106# TERM_VCM 2.00731f
+C238 PAD_N w_71178_112088# 7.2118f
+C239 DVDD a_92928_152994# 0.87302f
+C240 DVDD TERM_ENABLE 0.55294f
+C241 PAD_N RX_N 16.0706f
+C242 VDD TERM_VCM 3.62756f
+C243 PAD_P a_72448_93106# 0.02968f
+C244 a_80640_93106# TERM_VCM 2.17853f
+C245 PAD_P a_69376_93106# 0.02983f
+C246 TERM_TRIM2 a_81664_152994# 0.28938f
+C247 a_82688_152994# TERM_VCM 2.1345f
+C248 a_77568_152994# a_76544_152994# 0.6373f
+C249 a_68216_149604# TERM_VCM 2.10964f
+C250 TERM_TRIM1 a_78592_152994# 0.01326f
+C251 PAD_P RX_P 16.0706f
+C252 DVDD a_84736_152994# 0.97492f
+C253 a_86784_93106# a_85760_93106# 1.21265f
+C254 TERM_ENABLE a_68216_96594# 0.42436f
+C255 ESD_RAIL PAD_N 0.77975f
+C256 a_75520_93106# a_74496_93106# 0.58535f
+C257 a_76544_93106# TERM_VCM 2.31981f
+C258 TERM_TRIM2 TERM_TRIM1 49.1143f
+C259 RX_P VBIAS 0.079f
+C260 a_78592_93106# TERM_VCM 2.24159f
+C261 ESD_RAIL a_1005_134065# 0.57348f
+C262 a_80640_152994# TERM_VCM 2.17853f
+C263 PAD_N a_78592_152994# 0.10174f
+C264 PAD_P a_86784_93106# 0.10174f
+C265 VDD w_71178_112088# 5.53293f
+C266 TERM_TRIM2 a_84736_93106# 0.27606f
+C267 VDD RX_N 8.13768f
+C268 DVDD a_68216_96594# 0.97412f
+C269 TERM_TRIM3 a_91904_93106# 0.28932f
+C270 a_92928_93106# a_89856_93106# 1.22348f
+C271 TERM_ENABLE a_70400_152994# 0.42741f
+C272 a_77568_152994# TERM_VCM 2.67274f
+C273 a_86784_152994# a_87808_152994# 1.38507f
+C274 PAD_P a_73472_93106# 0.02968f
+C275 a_84736_93106# a_85760_93106# 1.20883f
+C276 TERM_TRIM2 PAD_N 0.25684f
+C277 ESD_RAIL m2_2279_124800# 5.47988f
+C278 a_90880_93106# a_89856_93106# 0.90297f
+C279 PAD_P TERM_TRIM1 0.11203f
+C280 ESD_RAIL a_13878_133785# 0.53942f
+C281 a_84736_93106# a_83712_93106# 1.09786f
+C282 TERM_TRIM1 a_79616_93106# 0.28933f
+C283 a_75520_93106# TERM_VCM 2.53316f
+C284 DVDD a_79616_152994# 1.01128f
+C285 a_76544_152994# TERM_VCM 2.31981f
+C286 a_74496_93106# TERM_VCM 2.52891f
+C287 DVDD a_70400_152994# 0.99807f
+C288 a_3813_117064# a_4789_117064# 3.03168f
+C289 PAD_P a_84736_93106# 0.10174f
+C290 a_85760_152994# TERM_VCM 2.80748f
+C291 a_83712_152994# a_81664_152994# 0.04802f
+C292 TERM_ENABLE a_75520_152994# 0.42568f
+C293 RX_P TERM_TRIM0 0.16216f
+C294 TERM_TRIM1 VBIAS 0.17732f
+C295 TERM_TRIM2 a_82688_93106# 0.28932f
+C296 DVDD a_91904_93106# 0.82057f
+C297 a_72448_93106# TERM_ENABLE 0.42916f
+C298 a_72448_152994# TERM_VCM 2.44942f
+C299 PAD_P PAD_N 16.6709f
+C300 ESD_RAIL a_1005_131545# 97.1325f
+C301 TERM_ENABLE a_69376_93106# 0.4257f
+C302 a_92928_93106# a_88832_93106# 0.34682f
+C303 PAD_N a_86784_152994# 0.10174f
+C304 TERM_TRIM3 RX_P 0.14387f
+C305 ESD_RAIL a_1005_132945# 0.53823f
+C306 PAD_N a_71424_152994# 0.02968f
+C307 PAD_P a_89856_93106# 0.10149f
+C308 a_90880_93106# a_88832_93106# 0.2912f
+C309 a_82688_93106# a_83712_93106# 1.15414f
+C310 a_89856_152994# TERM_VCM 2.03379f
+C311 RX_P TERM_ENABLE 0
+C312 DVDD a_75520_152994# 0.9806f
+C313 VBIAS PAD_N 0.15966f
+C314 a_82688_93106# a_81664_93106# 0.963f
+C315 DVDD a_72448_93106# 0.97204f
+C316 a_87808_93106# TERM_VCM 2.16174f
+C317 ESD_RAIL a_1852_148519# 0.33756p
+C318 TERM_TRIM2 VDD 0.28557f
+C319 PAD_P a_82688_93106# 0.10174f
+C320 DVDD a_69376_93106# 1.00706f
+C321 a_85760_93106# a_88832_93106# 0
+C322 TERM_ENABLE a_69376_152994# 0.4257f
+C323 TERM_TRIM2 a_80640_93106# 0.01326f
+C324 ESD_RAIL a_2245_90628# 0.24349p
+C325 TERM_TRIM3 a_86784_93106# 0.28932f
+C326 a_70400_93106# TERM_VCM 2.34702f
+C327 a_88832_152994# a_85760_152994# 0
+C328 ESD_RAIL a_1005_132385# 0.53823f
+C329 TERM_TRIM2 a_82688_152994# 0.28932f
+C330 TERM_ENABLE a_73472_152994# 0.42888f
+C331 TERM_TRIM1 TERM_TRIM0 47.3852f
+C332 TERM_ENABLE a_74496_152994# 0.42442f
+C333 TERM_TRIM3 a_87808_152994# 0.28932f
+C334 ESD_RAIL a_13878_132105# 0.53942f
+C335 a_91904_152994# a_87808_152994# 0.0011f
+C336 a_78592_152994# a_80640_152994# 0.02487f
+C337 PAD_N a_83712_152994# 0.10174f
+C338 PAD_P a_88832_93106# 0.10174f
+C339 a_13878_133785# a_13878_133225# 0.0346f
+C340 a_92928_152994# a_87808_152994# 0.01199f
+C341 TERM_TRIM3 TERM_TRIM1 0.08733f
+C342 DVDD a_69376_152994# 1.00706f
+C343 a_80640_93106# a_81664_93106# 1.01459f
+C344 PAD_P VDD 0.39442f
+C345 DVDD a_81664_152994# 0.97997f
+C346 a_88832_152994# a_89856_152994# 1.12997f
+C347 a_73472_93106# TERM_ENABLE 0.42888f
+C348 a_68216_96594# a_69376_93106# 0.50385f
+C349 TERM_TRIM3 a_90880_152994# 0.28932f
+C350 PAD_P a_80640_93106# 0.10174f
+C351 a_91904_152994# a_90880_152994# 2.82046f
+C352 DVDD a_73472_152994# 0.97065f
+C353 TERM_TRIM1 TERM_ENABLE 0.09198f
+C354 a_80640_93106# a_79616_93106# 0.91639f
+C355 DVDD a_74496_152994# 0.97527f
+C356 a_78592_152994# a_77568_152994# 0.61569f
+C357 TERM_TRIM0 PAD_N 0.25684f
+C358 TERM_TRIM2 a_80640_152994# 0.01326f
+C359 a_90880_152994# a_92928_152994# 0.22145f
+C360 DVDD a_86784_93106# 0.98947f
+C361 TERM_TRIM3 a_84736_93106# 0.01326f
+C362 a_88832_152994# TERM_VCM 2.00731f
+C363 VBIAS VDD 6.80037f
+C364 a_71424_93106# TERM_VCM 2.45338f
+C365 DVDD a_87808_152994# 0.98679f
+C366 TERM_TRIM3 PAD_N 0.35588f
+C367 a_84736_152994# a_87808_152994# 0
+C368 w_71178_112088# TERM_VCM 0.37908f
+C369 a_70400_93106# a_71424_93106# 0.52298f
+C370 PAD_N a_91904_152994# 0.10199f
+C371 a_73472_93106# DVDD 0.97065f
+C372 RX_N TERM_VCM 6.84313f
+C373 a_78592_152994# a_76544_152994# 0.00896f
+C374 PAD_P a_1852_148519# 0.25621f
+C375 PAD_N a_92928_152994# 0.09822f
+C376 DVDD TERM_TRIM1 0.60038f
+C377 PAD_P a_76544_93106# 0.02968f
+C378 TERM_TRIM3 a_89856_93106# 0.28932f
+C379 PAD_N TERM_ENABLE 0.33094f
+C380 DVDD a_90880_152994# 0.79439f
+C381 a_3813_117064# a_1005_131545# 2.44008f
+C382 PAD_P a_78592_93106# 0.10174f
+C383 a_78592_93106# a_79616_93106# 0.86144f
+C384 a_77568_93106# a_76544_93106# 0.6373f
+C385 DVDD a_84736_93106# 0.97492f
+C386 a_13878_132665# a_13878_132105# 0.0346f
+C387 a_78592_93106# a_77568_93106# 0.61569f
+C388 a_81664_152994# a_79616_152994# 0.03216f
+C389 a_69376_152994# a_70400_152994# 0.51149f
+C390 DVDD PAD_N 62.6347f
+C391 PAD_N a_84736_152994# 0.10174f
+C392 a_83712_152994# a_82688_152994# 1.15414f
+C393 TERM_TRIM0 VDD 0.28403f
+C394 a_2245_90628# a_3813_117064# 0.00994f
+C395 DVDD a_89856_93106# 0.97254f
+C396 TERM_TRIM3 a_88832_93106# 0.28932f
+C397 a_87808_93106# a_92928_93106# 0.01199f
+C398 a_78592_152994# TERM_VCM 2.24159f
+C399 PAD_P a_75520_93106# 0.02968f
+C400 w_71178_112088# RX_N 2.17714f
+C401 a_92928_93106# TERM_VCM 2.43607f
+C402 TERM_TRIM3 VDD 4.05215f
+C403 PAD_P a_74496_93106# 0.02968f
+C404 a_87808_93106# a_90880_93106# 0.00286f
+C405 DVDD a_82688_93106# 0.9704f
+C406 TERM_TRIM1 a_79616_152994# 0.28933f
+C407 a_90880_93106# TERM_VCM 2.20446f
+C408 a_75520_93106# a_77568_93106# 0.00631f
+C409 a_86784_152994# a_85760_152994# 1.21265f
+C410 TERM_ENABLE VDD 12.9618f
+C411 TERM_TRIM2 TERM_VCM 5.12464f
+C412 a_87808_93106# a_85760_93106# 0.11772f
+C413 a_74496_152994# a_75520_152994# 0.58535f
+C414 a_85760_93106# TERM_VCM 2.80748f
+C415 a_71424_152994# a_72448_152994# 0.53348f
+C416 a_68216_149604# TERM_ENABLE 0.42436f
+C417 DVDD a_88832_93106# 1.00598f
+C418 a_78592_93106# TERM_TRIM0 0.27606f
+C419 a_83712_93106# TERM_VCM 2.7669f
+C420 a_86784_152994# a_89856_152994# 0
+C421 ESD_RAIL w_71178_112088# 0.08713f
+C422 PAD_N a_79616_152994# 0.10174f
+C423 DVDD VDD 10.3757f
+C424 PAD_P a_87808_93106# 0.10174f
+C425 PAD_N a_70400_152994# 0.02968f
+C426 DVDD a_80640_93106# 0.99421f
+C427 a_81664_93106# TERM_VCM 2.71287f
+C428 a_73472_93106# a_72448_93106# 0.53659f
+C429 a_76544_93106# TERM_ENABLE 0.42439f
+C430 PAD_P TERM_VCM 4.45493f
+C431 DVDD a_82688_152994# 0.9704f
+C432 a_84736_152994# a_82688_152994# 0.06104f
+C433 TERM_TRIM0 a_77568_152994# 0.00894f
+C434 a_79616_93106# TERM_VCM 2.62526f
+C435 PAD_P a_70400_93106# 0.02968f
+C436 a_86784_152994# TERM_VCM 2.25313f
+C437 DVDD a_68216_149604# 0.97412f
+C438 a_78592_93106# TERM_ENABLE 0.00349f
+C439 PAD_P VSS 0.47045p
+C440 RX_P VSS 43.3925f
+C441 VBIAS VSS 8.63568f
+C442 RX_N VSS 37.5198f
+C443 PAD_N VSS 0.43016p
+C444 TERM_TRIM3 VSS 60.4428f
+C445 TERM_TRIM2 VSS 21.139f
+C446 TERM_TRIM1 VSS 13.3581f
+C447 TERM_TRIM0 VSS 13.2893f
+C448 TERM_VCM VSS 0.29884p
+C449 TERM_ENABLE VSS 41.6599f
+C450 DVDD VSS 0.466p
+C451 VDD VSS 27.6088f
+C452 ESD_RAIL VSS 2.87455p
+C453 m2_2279_124800# VSS 7.46506f $ **FLOATING
+C454 a_92928_93106# VSS 6.8905f
+C455 a_91904_93106# VSS 5.17199f
+C456 a_90880_93106# VSS 6.12432f
+C457 a_89856_93106# VSS 5.80315f
+C458 a_88832_93106# VSS 7.21276f
+C459 a_87808_93106# VSS 6.85766f
+C460 a_86784_93106# VSS 6.67282f
+C461 a_85760_93106# VSS 6.15535f
+C462 a_84736_93106# VSS 6.75134f
+C463 a_83712_93106# VSS 6.18878f
+C464 a_82688_93106# VSS 6.6628f
+C465 a_81664_93106# VSS 6.19982f
+C466 a_80640_93106# VSS 6.57327f
+C467 a_79616_93106# VSS 6.2116f
+C468 a_78592_93106# VSS 6.50305f
+C469 a_77568_93106# VSS 6.86875f
+C470 a_76544_93106# VSS 6.92071f
+C471 a_75520_93106# VSS 6.83431f
+C472 a_74496_93106# VSS 6.82804f
+C473 a_73472_93106# VSS 6.6374f
+C474 a_72448_93106# VSS 6.60695f
+C475 a_71424_93106# VSS 6.56669f
+C476 a_70400_93106# VSS 6.39551f
+C477 a_69376_93106# VSS 6.24082f
+C478 a_68216_96594# VSS 6.64343f
+C479 a_2245_90628# VSS 0.24972p
+C480 a_4789_117064# VSS 8.91806f
+C481 a_3813_117064# VSS 5.17875f
+C482 a_1005_131545# VSS 98.15211f
+C483 a_13878_131545# VSS 0.07835f
+C484 a_1005_131825# VSS 0.07377f
+C485 a_13878_132105# VSS 0.07394f
+C486 a_1005_132385# VSS 0.07377f
+C487 a_13878_132665# VSS 0.07394f
+C488 a_1005_132945# VSS 0.07377f
+C489 a_13878_133225# VSS 0.07394f
+C490 a_1005_133505# VSS 0.07377f
+C491 a_13878_133785# VSS 0.07394f
+C492 a_1005_134065# VSS 0.07377f
+C493 a_13878_134345# VSS 0.07838f
+C494 a_92928_152994# VSS 6.8905f
+C495 a_91904_152994# VSS 5.17199f
+C496 a_90880_152994# VSS 6.12432f
+C497 a_89856_152994# VSS 5.80315f
+C498 a_88832_152994# VSS 7.21276f
+C499 a_87808_152994# VSS 6.85766f
+C500 a_86784_152994# VSS 6.67282f
+C501 a_85760_152994# VSS 6.15535f
+C502 a_84736_152994# VSS 6.75134f
+C503 a_83712_152994# VSS 6.18878f
+C504 a_82688_152994# VSS 6.6628f
+C505 a_81664_152994# VSS 6.19982f
+C506 a_80640_152994# VSS 6.57327f
+C507 a_79616_152994# VSS 6.2116f
+C508 a_78592_152994# VSS 6.50305f
+C509 a_77568_152994# VSS 6.86875f
+C510 a_76544_152994# VSS 6.92071f
+C511 a_75520_152994# VSS 6.83431f
+C512 a_74496_152994# VSS 6.82804f
+C513 a_73472_152994# VSS 6.6374f
+C514 a_72448_152994# VSS 6.60695f
+C515 a_71424_152994# VSS 6.56669f
+C516 a_70400_152994# VSS 6.39551f
+C517 a_69376_152994# VSS 6.24082f
+C518 a_68216_149604# VSS 6.64343f
+C519 a_1852_148519# VSS 0.41778p
+C520 w_71178_112088# VSS 50.5532f
 .ends

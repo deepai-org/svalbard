@@ -1,0 +1,153 @@
+{
+ "row": "PC-47",
+ "cell": "pad_hspad",
+ "candidate": "a6 (option A: pad-site primary diodes + secondary diodes, ring contacted to VSS)",
+ "build_command": "scratch/pads-core/esdopt/hs/sec/q_s.sh a6 leg7 '{\"up\": [1, 1], \"dvdd_w\": 3.0, \"ring\": true}'  (leg: hs_leg_layout.py --lb=4.2 --sec=...; compose: hs_pad_compose.py ... --stacked --site-primary --no-core-array --esd-opt={\"neck_m1\": true} --sec)",
+ "rebuild_check": "rebuilt 2026-11-20 from the committed generators: pad_hspad.gds and pt_hs_leg.gds identical to the candidate with GDS timestamps zeroed (normalised f16f9f05472ea423 / bcaa90e8c23a40c6); physical.spice identical up to Magic capacitor ordering; no-flag build XOR 0.0 um2 vs the previously published GDS 8c8e2533",
+ "sha256": {
+  "pad_hspad.gds": "07b6800d73eab73e31acb0ce7756436e37e999d3e707adf486b0e5ec7b226953",
+  "physical.spice": "1399bc07291959d99ccf3f2aa4935b4b26c417ad8ad01257bcec1a97261a02a1",
+  "physical-r-low.spice": "045547de7934b4286d5c3e4a8e5224b8d75f75030188167ece0124dae81648fe",
+  "physical-r-typ.spice": "e8402507b9d6c747e3e254b7e0edc40af896da5b35cded72cbc3934887e6f836",
+  "physical-r-high.spice": "2f088962a409dc5534b72c34e953c1e145b22d750b56c2d377ced45770608f4c",
+  "physical-r-low-rail.spice": "ca144452d05f03293a4272c0736f94b0347be8a720f0685c2843d873d1f77a05",
+  "physical-r-typ-rail.spice": "eadcf8d351683ee62cdd6f096c1cf561785d875a976bd11c8a1a8af59ed5d9be",
+  "physical-r-high-rail.spice": "a2bc3ec3a87469d07e0fd92cb64dd67c8c75cc9b80ea854fe10ee701e623091e",
+  "lvs-reference.spice": "50e63d1fa10e175aab1ee709d84f2bf2c7e20e3accf857cc9bc5c8397a0131fe",
+  "leg/pt_hs_leg.gds": "12b51cd3eafac9f312ec2fc61f51ded9e3546199c7068b4b5e1439a41f15b43b"
+ },
+ "generators_sha256_8": {
+  "hs_pad_compose.py": "d00f1f37",
+  "hs_leg_layout.py": "7be4a1f6",
+  "pad_site_primary.py": "5ff82d2a",
+  "protection_device_audit.py": "2b6745db",
+  "circuits.py": "b3410460"
+ },
+ "ports": "hs_protected_pad DVDD VSS VDD TERM_VCM TERM_ENABLE TERM_TRIM0 TERM_TRIM1 TERM_TRIM2 TERM_TRIM3 VBIAS RX_P RX_N PAD_P PAD_N (DVDD new, first; ring supply of the pad-site up-diodes and secondaries)",
+ "models": "physical-r-{low,typ,high}.spice = R-aware cell models; *-rail.spice add the under-rail capacitance of the provider rail cell (CRAIL 206.05 / 205.59 fF PAD_P / PAD_N to VSS); physical.spice C-only",
+ "limits_a6": [
+  [
+   "DRC / composer LVS / device audit; read-back LVS pos / sch",
+   "0 / match / match; match / match",
+   "PASS"
+  ],
+  [
+   "LVS controls (RX swap, site diode, secondary diode)",
+   "mismatch x3",
+   "PASS"
+  ],
+  [
+   "KLayout precheck cell / on rail",
+   "0/0, 0/0",
+   "PASS"
+  ],
+  [
+   "Latch-up 15 um; isolated-nmos control",
+   "0.0 um2; 6.4 um2",
+   "PASS"
+  ],
+  [
+   "rail_site_check / selftest / railconn",
+   "PASS / OK / clean",
+   "PASS"
+  ],
+  [
+   "Floating lines <= 1",
+   "1 (shell piece)",
+   "PASS"
+  ],
+  [
+   "HBM 2 kV switch gates typ / high (8.0 V)",
+   "5.12 / 5.26 V",
+   "PASS"
+  ],
+  [
+   "CDM 2 A, 1 nF, gates typ / high (8.0 V)",
+   "6.72 / 7.31 V",
+   "PASS"
+  ],
+  [
+   "CDM 1 A / 3 A, 1 nF, high",
+   "4.63 / 8.53 V (15 over at 3 A)",
+   "1 A PASS, 3 A reported"
+  ],
+  [
+   "Receiver RX (6 V oxide 8.0)",
+   "4.69 V HBM, 4.11 V CDM 2 A",
+   "PASS"
+  ],
+  [
+   "Reverse junction < bv",
+   "HBM 6.89 V; CDM 2 A high 10.73 V (site nd2ps, bv 11)",
+   "PASS (0.27 V)"
+  ],
+  [
+   "MIM; pad vs rail HBM",
+   "5.18 V; 5.90 / 6.79 V",
+   "PASS"
+  ],
+  [
+   "C per leg (_rail typ) vs f6 + 0.150 pF",
+   "1.331-1.355 pF, +0.092 pF (high +0.044, low +0.126)",
+   "PASS"
+  ],
+  [
+   "P/N imbalance",
+   "5.5 fF",
+   "PASS"
+  ],
+  [
+   "Termination low / typ / high (one code 80-120 ohm)",
+   "code 7: 80.2-114.7 / 81.1-113.1 / 85.1-114.9 ohm",
+   "PASS"
+  ],
+  [
+   "Die RL 2.4 GHz vs f6 (limit -0.3 dB)",
+   "_rail -0.67 dB (high -0.25, low -0.80); no rail -0.49 dB",
+   "MISS (WR-SATA2-RL recorded fail)"
+  ],
+  [
+   "COB RL vs f6",
+   "_rail -0.31 dB (low -0.47); no rail -0.15 dB",
+   "MISS"
+  ],
+  [
+   "Receive loss",
+   "typ 1.23-1.32 dB (f6 1.59-1.68); high 1.75-1.88 dB",
+   "PASS"
+  ]
+ ],
+ "site_cap_PC45": {
+  "setup": "1 nF between DVDD and VSS with 0.7 ohm on each rail to the site landing (1.4 ohm loop), no far-node die cap, ring at the bound, a6 high model, receiver gate on (scratch/pads-core/esdopt/ring/REPORT.md, PC-45 section)",
+  "rows": [
+   [
+    "CDM 2 A, 10 cases",
+    "gate max 6.52 V, RX max 4.52 V, MIM max 4.77 V, primary rev max 9.96 V, primary 7.24 mA/um fwd / 0.052 mA/um aval",
+    "PASS"
+   ],
+   [
+    "CDM 1 A pad-to-pad",
+    "gate 4.45 V, RX 3.18 V, MIM 2.23 V",
+    "PASS"
+   ],
+   [
+    "HBM 2 kV pad-to-pad",
+    "gate 4.81 / 4.90 V, RX 3.33 V, MIM 4.02 V",
+    "PASS"
+   ],
+   [
+    "CDM 3 A pad-to-pad (beyond requirement)",
+    "gate 7.99 V, RX 5.42 V, MIM 6.62 V, primary 10.5 mA/um fwd / 1.12 mA/um aval",
+    "MISS (information)"
+   ]
+  ]
+ },
+ "review": "scratch/pads-core/esdopt/hs/review-a6b/REVIEW.md (GO with conditions; earlier pass scratch/pads-core/esdopt/hs/review-a6/REVIEW.md)",
+ "conditions": [
+  "PC-45: >= 1 nF within 0.7 ohm incl. ESR of each east wired site, verified on the assembled GDS before tapeout; CDM evidence void without it",
+  "TLP / vf-TLP measurement of the primary site diodes (rating is a literature figure; CDM density 7.2 mA/um)",
+  "CDM headroom thin: 3 A misses; 2 A is the requirement",
+  "WR-SATA2-RL stays a recorded fail (a6 about 0.7 dB worse at the die than f6)"
+ ],
+ "detail": "scratch/pads-core/esdopt/hs/STATUS.md (CANDIDATE a6 RESULTS), scratch/pads-core/esdopt/hs/sec/"
+}

@@ -1,24 +1,24 @@
-.subckt pt_hs_leg PAD RX VBIAS TERM_VCM TERM_ENABLE TERM_TRIM0 TERM_TRIM1 TERM_TRIM2 TERM_TRIM3 VDD VSS RAILPRE
+.subckt pt_hs_leg PAD RX VBIAS TERM_VCM TERM_ENABLE TERM_TRIM0 TERM_TRIM1 TERM_TRIM2 TERM_TRIM3 VDD VSS RAILPRE DVDD
 XS0_0 TU0 TERM_ENABLE TERM_VCM VSS nfet_06v0 w=20.0u l=0.7u
-XR0_0 PAD TU0 VSS ppolyf_u r_width=2.0u r_length=2.6u
+XR0_0 PAD TU0 VSS ppolyf_u r_width=2.0u r_length=4.2u
 XS1_0 TU1 TERM_ENABLE TERM_VCM VSS nfet_06v0 w=20.0u l=0.7u
-XR1_0 PAD TU1 VSS ppolyf_u r_width=2.0u r_length=2.6u
+XR1_0 PAD TU1 VSS ppolyf_u r_width=2.0u r_length=4.2u
 XS2_0 TU2 TERM_ENABLE TERM_VCM VSS nfet_06v0 w=20.0u l=0.7u
-XR2_0 PAD TU2 VSS ppolyf_u r_width=2.0u r_length=2.6u
+XR2_0 PAD TU2 VSS ppolyf_u r_width=2.0u r_length=4.2u
 XS3_0 TU3 TERM_ENABLE TERM_VCM VSS nfet_06v0 w=20.0u l=0.7u
-XR3_0 PAD TU3 VSS ppolyf_u r_width=2.0u r_length=2.6u
+XR3_0 PAD TU3 VSS ppolyf_u r_width=2.0u r_length=4.2u
 XS4_0 TU4 TERM_ENABLE TERM_VCM VSS nfet_06v0 w=20.0u l=0.7u
-XR4_0 PAD TU4 VSS ppolyf_u r_width=2.0u r_length=2.6u
+XR4_0 PAD TU4 VSS ppolyf_u r_width=2.0u r_length=4.2u
 XS5_0 TU5 TERM_ENABLE TERM_VCM VSS nfet_06v0 w=20.0u l=0.7u
-XR5_0 PAD TU5 VSS ppolyf_u r_width=2.0u r_length=2.6u
+XR5_0 PAD TU5 VSS ppolyf_u r_width=2.0u r_length=4.2u
 XS6_0 TU6 TERM_ENABLE TERM_VCM VSS nfet_06v0 w=20.0u l=0.7u
-XR6_0 PAD TU6 VSS ppolyf_u r_width=2.0u r_length=2.6u
+XR6_0 PAD TU6 VSS ppolyf_u r_width=2.0u r_length=4.2u
 XS7_0 TU7 TERM_ENABLE TERM_VCM VSS nfet_06v0 w=20.0u l=0.7u
-XR7_0 PAD TU7 VSS ppolyf_u r_width=2.0u r_length=2.6u
+XR7_0 PAD TU7 VSS ppolyf_u r_width=2.0u r_length=4.2u
 XS8_0 TU8 TERM_ENABLE TERM_VCM VSS nfet_06v0 w=20.0u l=0.7u
-XR8_0 PAD TU8 VSS ppolyf_u r_width=2.0u r_length=2.6u
+XR8_0 PAD TU8 VSS ppolyf_u r_width=2.0u r_length=4.2u
 XS9_0 TU9 TERM_ENABLE TERM_VCM VSS nfet_06v0 w=20.0u l=0.7u
-XR9_0 PAD TU9 VSS ppolyf_u r_width=2.0u r_length=2.6u
+XR9_0 PAD TU9 VSS ppolyf_u r_width=2.0u r_length=4.2u
 XS10_0 TU10 TERM_TRIM0 TERM_VCM VSS nfet_06v0 w=12.0u l=0.7u
 XR10_0 PAD TU10 VSS ppolyf_u r_width=2.0u r_length=1.0u
 XS11_0 TU11 TERM_TRIM1 TERM_VCM VSS nfet_06v0 w=12.0u l=0.7u
@@ -55,4 +55,29 @@ XRB_0 VBIAS RX VSS ppolyf_u_1k r_width=1.0u r_length=40.0u
 XCLH_0 RX VDD VDD VDD pfet_06v0 w=4.0u l=0.55u
 XCLL_0 RX VSS VSS VSS nfet_06v0 w=4.0u l=0.7u
 XPRE_0 VDD RAILPRE RAILPRE RAILPRE pfet_06v0 w=4.0u l=0.55u
+DDS0_0 TU0 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS1_0 TU1 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS2_0 TU2 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS3_0 TU3 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS4_0 TU4 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS5_0 TU5 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS6_0 TU6 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS7_0 TU7 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS8_0 TU8 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS9_0 TU9 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS10_0 TU10 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS11_0 TU11 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS12_0 TU12 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS13_0 TU13 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS14_0 TU14 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS15_0 TU15 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS16_0 TU16 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS17_0 TU17 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS18_0 TU18 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS19_0 TU19 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS20_0 TU20 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS21_0 TU21 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS22_0 TU22 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS23_0 TU23 DVDD diode_pd2nw_06v0 area=1p pj=4u
+DDS24_0 TU24 DVDD diode_pd2nw_06v0 area=1p pj=4u
 .ends

@@ -45,7 +45,7 @@ All under `generated/`. Every cell: Magic DRC 0, netgen LVS unique, independent 
 
 | Cell (top) | Folder | Outline (µm) | Area (µm²) | Devices (MOS) | Ports |
 |---|---|---|---|---|---|
-| `pad_hspad` | `stress-safe-families/wired-receive-hs/` | 492 × 912.91 | 449,202 bbox | 508 (404) | `VSS VDD TERM_VCM TERM_ENABLE TERM_TRIM0..3 VBIAS RX_P RX_N PAD_P PAD_N` |
+| `pad_hspad` | `stress-safe-families/wired-receive-hs/` | 492 × 912.91 | 449,202 bbox | 554 (404) | `DVDD VSS VDD TERM_VCM TERM_ENABLE TERM_TRIM0..3 VBIAS RX_P RX_N PAD_P PAD_N` |
 | `pad_wirepad` | `stress-safe-families/wired-receive-usb/` | 2.78..524 × 0..1434.72 | 316,021 allocated (ceiling 340,000) | 739 (615) | `PAD_P PAD_N VDD VSS TERM_VCM TERM_ENABLE DIFF_ENABLE DIV_ENABLE BYPASS_ENABLE RX_P RX_N HS_PBIAS HS_P HS_N FS_HIGH_P/N FS_LOW_P/N PULLUP_P/N PULLDOWN_P/N TERM_TRIM0..2 LS_SLOW ATB_ESD_RAIL` |
 | `pad_txpad` | `stress-safe-families/wired-transmit/` | 2.78..484 × 0..1226.72 | 282,862 allocated (ceiling 300,000) | 595 (536) | `PAD_P PAD_N VDD VSS CASCODE MAIN_P/N MAIN_BIAS POST_P/N POST_BIAS TMDS_P/N TMDS_BIAS DETECT_ENABLE DETECT_PBIAS TERM_ENABLE TERM_VCM ATB_ESD_RAIL` |
 | `pad_refpad` | `stress-safe-families/reference/` | 2.78..404 × 0..912.91 | 176,476 allocated (ceiling 185,000) | 404 (348) | `PAD_P PAD_N VSS VCM ATB_ESD_RAIL` |
@@ -64,7 +64,7 @@ Evidence files that belong to the published netlists:
 
 | Cell | Files |
 |---|---|
-| `pad_hspad` (GDS sha 8c8e2533…; hashes in `pc22-hspad-sha256.txt`) | `geometry.json`, `layout-screen.json`, `independent-device-audit.json`, `lu.json`, `pad_hspad-kldrc.json`, `pad-lvs.txt`, `pc22-hspad-*.json`, models `physical-r-{low,typ,high}.spice` |
+| `pad_hspad` (GDS sha 07b6800d…; hashes in `pc47-hspad-a6.json`) | `geometry.json`, `layout-screen.json`, `independent-device-audit.json`, `site-primary.json`, `lu.json`, `pad_hspad-kldrc.json`, `pad-lvs.txt`, `pc47-hspad-a6.json`, models `physical-r-{low,typ,high}[-rail].spice` |
 | `pad_wirepad` (GDS sha 4e4b9d92…) | `placement-layout.json`, `layout-screen.json`, `model-audit.json`, `lu.json`, `pad_wirepad-kldrc.json`, `combined-lvs.txt`, `pd47-usb-ls-miller.json`; 1 kV HBM and CDM surrogate in `../pd48-esd-tiering.json` key `pd48c` |
 | `pad_txpad`, `pad_refpad`, `pad_rf_pair` | folder layout/audit/kldrc files; safe/HBM runs in `../pd13-family-sims.json` (model sha matches); 1 kV runs for txpad and rftxpad in `../pd48-esd-tiering.json` key `family` |
 
@@ -88,38 +88,53 @@ Shared by every family (`circuits.py:foundation_devices`, `protection_network_ss
 Gate screens: DC 3.63 V (3.3 V devices) / 6.0 V (6 V devices); for ~150 ns events the transient limits 5.0 V /
 8.0 V from `spec/design-assumptions.md`. HBM-like source: 2 kV = 1.33 A, 1 kV = 0.67 A.
 
-### `pad_hspad` (`pc22-hspad-*.json`; resistance-aware models `physical-r-{low,typ,high}.spice`)
+### `pad_hspad` (`pc47-hspad-a6.json`; resistance-aware models `physical-r-{low,typ,high}[-rail].spice`)
 
-`physical.spice` is the capacitance-only extraction and is NOT valid for termination, receive loss or ESD on this
-cell: simulate with `physical-r-typ.spice` and bound with `-low` / `-high`. Corners: tt / ss / ff / sf / fs,
+Pad-site primary diodes at the bond pad to the ring rails (`pad_site_primary.py`: 5 down to VSS, 5 up to `DVDD` per
+leg), secondary diodes at the termination / receiver node (1 × 1 µm, outer p-sub ring contacted to VSS), no core
+protection array. New port `DVDD` (first port of `hs_protected_pad`): the ring supply of the pad-site up-diodes and
+the secondaries; it must be connected to the provider ring supply at the site. `physical.spice` is the
+capacitance-only extraction and is NOT valid for termination, receive loss or ESD: simulate with
+`physical-r-typ.spice` and bound with `-low` / `-high`; the `-rail` variants add the provider rail cell above the
+cell (206 fF per leg PAD to VSS) and are the ones for return loss and pad capacitance. Corners: tt / ss / ff / sf / fs,
 22 and 32 °C, 3.15 and 3.35 V, ss also at 3.50 V (23 corners).
 
 | Quantity | Typical metal | High-resistance metal | Limit |
 |---|---|---|---|
-| Code giving 100 Ω differential | 3.2 (ff) … 8.0 (ss); tt 5.3 | 4.4 … 9.4; tt 6.5 | code 2 … 13 |
-| Termination at the best code, all corners | 98.1–103.1 Ω | 97.0–102.5 Ω | 95–105 Ω |
-| Per-leg P − N at that code | 0.04 Ω | 0.01 Ω | ≤ 1.0 Ω |
-| One code for all in-window corners | code 6: 82.0–113.1 Ω | code 7: 84.9–114.0 Ω | 80–120 Ω |
-| Low-resistance metal (review run) | ff 22 °C 3.35 V lands on code 2: no margin left | | |
-| Bond pad → termination heads, per leg | 6.8 Ω | 8.9 Ω | |
-| `TERM_VCM` between the legs | 1.1 Ω | 1.8 Ω | |
-| Receive path loss, bond pad to `RX_P/N` | 1.5–1.7 dB | 1.9–2.3 dB | (1.2–1.3 dB low metal) |
-| Die return loss at 2.4 GHz, best code | 8.40–8.64 dB | 8.89–9.06 dB | |
-| Die return loss minimum, 0.1–1.25 GHz | 13.4–13.7 dB | 13.9–14.1 dB | |
-| Return loss through the chip-on-board channel, 1.25–2.5 GHz | 6.14–6.20 dB | 6.25–6.38 dB | package-limited; bond modelled as 2.32 nH (about 0.55 dB lower at 2.8 nH) |
-| Pad capacitance per leg (capacitance-only extraction) | 1.27–1.31 pF | | 1.15 pF budget: MISS (published before: 1.13–1.15) |
-| HBM 2 kV, pad-side resistance in the model | bond pad 11.6–12.2 V; MOS exposure 5.6–6.8 V (25 devices over 6.0 V on the PAD_N positive zap) | exposure 6.1–7.6 V | 6.0 V screen / 8.0 V transient |
-| HBM 2 kV with the return resistance added (3.6 / 5.7 Ω) | 10–15 V | | **2 kV tier NOT met** |
-| HBM 1 kV, pad-side resistance in the model | bond pad 6.8–7.3 V, 0 MOS over the screen | | holds at typical metal only with the return added |
-| CDM-speed surrogate, 1 ns | 10.0 / 17.3 / 24.6 V at 1 / 2 / 3 A | | 8.0 V: MISS |
-| Supply ramp 0 → 3.35 V in 10 ns / 1 µs | 66–71 µA / 5–7.5 µA peak, as before | | no clamp in the cell fires on supply edges |
+| Code giving 100 Ω differential | 5.0 (ff) … 10.0 (ss); tt 7.1 | 6.3 … 11.6; tt 8.7 | code 2 … 13 |
+| Termination at the best code, all corners | 96.3–103.0 Ω | 97.2–103.1 Ω | 95–105 Ω |
+| Per-leg P − N at that code | 0.36 Ω | 0.33 Ω | ≤ 1.0 Ω |
+| One code for all in-window corners | code 8: 81.1–113.1 Ω | code 9: 85.1–114.9 Ω | 80–120 Ω (low metal code 7: 80.2–114.7 Ω) |
+| Receive path loss, bond pad to `RX_P/N` | 1.23–1.32 dB | 1.75–1.88 dB | (0.9–1.0 dB low metal) |
+| Pad capacitance per leg, with rail | 1.331–1.355 pF | 1.288–1.306 pF | 1.15 pF budget: MISS (low metal 1.37–1.40 pF) |
+| P / N imbalance | 5.5 fF | | ≤ 20 fF |
+| Die return loss at 2.4 GHz, with rail | 6.91–7.22 dB | 7.23–7.49 dB | WR-SATA2-RL: recorded fail |
+| Die return loss minimum, 0.1–1.25 GHz, with rail | 11.7–12.1 dB | 12.1–12.4 dB | |
+| Return loss through the chip-on-board channel, 1.25–2.5 GHz, with rail | 5.34–5.37 dB | 5.49–5.56 dB | package-limited |
+| HBM 2 kV, switch gates | 5.12 V | 5.26 V | 8.0 V transient |
+| CDM 2 A with 1 nF at the far ring node, gates | 6.72 V | 7.31 V | 8.0 V |
+| Receiver input (`RX`, 6 V oxide), HBM / CDM 2 A | 4.69 / 4.11 V | | 8.0 V (5.0 V at the 3.3 V requirement points: PASS) |
+| Worst reverse junction, CDM 2 A high metal | 10.73 V (site nd2ps) | | bv 11 V |
+| MIM; pad to rail HBM | 5.18 V; 5.90 / 6.79 V | | 6.0 V; 8.0 V |
 
-Not in any model: about 0.12 pF per pad between the Metal2 escape and the ring rails above it (with it the die return
-loss at 2.4 GHz is about 7.6 dB), VSS / rail / gate-line resistance, mismatch. Reset code for the trim: 6.
-`TERM_VCM` is 0.3–0.5 V (checked at both ends). The receiver common mode comes from `VBIAS` through the 4.9 pF
-coupling MIM, not from the termination. Pins and outline are unchanged: RX_P and RX_N on Metal5, adjacent on the
-side edge (x = 492), 6 µm apart. Termination units: 10 base (2 × 2.6 µm poly + 20/0.7 switch) and 15 trim
-(2 × 1.0 µm + 12/0.7) per leg. Independent review: `scratch/pads-core/review-f6/REVIEW.md` (GO with conditions).
+CDM with the PC-45 site decap (1 nF at 0.7 Ω on each rail from the site, ring resistance at the stated bound, high metal;
+`scratch/pads-core/esdopt/ring/REPORT.md`): CDM 2 A all ten cases gate ≤ 6.52 V, RX ≤ 4.52 V, MIM ≤ 4.77 V, primary
+reverse ≤ 9.96 V, primary diode 7.2 mA/µm forward / 0.05 mA/µm avalanche: PASS. CDM 1 A pad-to-pad 4.45 V gate, HBM 2 kV
+pad-to-pad 4.90 V gate: PASS. CDM 3 A pad-to-pad (beyond the 2 A requirement) misses on RX 5.42 V, MIM 6.62 V and diode
+current density 10.5 / 1.12 mA/µm.
+
+Conditions of the publication (independent review `scratch/pads-core/esdopt/hs/review-a6b/REVIEW.md`, GO with conditions):
+1. **PC-45:** ≥ 1 nF of decap within 0.7 Ω (including its ESR) of each east wired site, on `DVDD` / VSS. The CDM
+   evidence is void without it; verify on the assembled GDS before tapeout.
+2. TLP / vf-TLP of the primary site diodes (the current-density rating is a literature figure).
+3. CDM headroom is thin: 2 A is the requirement, 3 A misses.
+4. WR-SATA2-RL: die return loss stays a recorded fail.
+
+Pins and outline are unchanged apart from `DVDD`: RX_P and RX_N on Metal5, adjacent on the side edge (x = 492),
+6 µm apart. Trim reset code: not fixed by the a6 evidence (single-code rows: 7 / 8 / 9 for low / typical / high
+metal). The receiver common mode comes from `VBIAS` through the coupling MIM. Termination units: 10 base (2 × 2.6 µm poly + 20/0.7 switch) and 15 trim (2 × 1.0 µm +
+12/0.7) per leg. Not in any model: ss / ff / hot ESD, low-metal ESD, per-finger current density outside the primary
+diodes, ring resistance beyond the stated bound.
 
 ### `pad_wirepad` (USB; `pd47-usb-ls-miller.json`)
 
@@ -244,18 +259,15 @@ budget-sized ideal capacitors on top of extracted capacitance.
    extracted there are 23–32 Ω (typical) between each bond pad and its primary diodes and 56–85 Ω around the
    discharge loop, confirmed by hand calculation, Magic `extresist` and a separate solver on all seven families. No
    family meets its HBM tier; every HBM / CDM number in section 4 except the `pad_hspad` rows is capacitance-only and
-   is not evidence. `pad_hspad` is improved (5–6 Ω pad side) but still misses 2 kV. Decided fix (PC-27): primary diodes at the
-   bond pad tied to the ring rails, all families; back-feed is accepted and sequenced by the board (`spec/board-requirements.md`
-   B53). Candidates under `scratch/pads-core/esdopt/`: `pad_hspad` a4 complete and reviewed NO-GO (pad-to-pad and CDM at the
-   termination switches, pad C; rulings asked in PC-36), `pad_txpad` a4 in evidence; the other five families not started.
+   is not evidence. Decided fix (PC-27): primary diodes at the bond pad tied to the ring rails, all families; back-feed is
+   accepted and sequenced by the board (`spec/board-requirements.md` B53). `pad_hspad` is published with it (a6, PC-47,
+   conditions in section 4); `pad_txpad` a4 in evidence under `scratch/pads-core/esdopt/`; the other five families not started.
    `RF_TX` gets no diode to the supply (it swings above it). (PAD-11)
 2. **`pad_txpad` and `pad_wirepad` signal paths.** `pad_txpad` termination is 287 Ω differential at tt with metal
    resistance (92 Ω without), 16–19 Ω sit between the bond pad and the output cascodes, and the termination is
    untrimmed (152 / 58 Ω at ss / ff even without metal): `scratch/pads-core/txr/STATUS.md`. `pad_wirepad` has about
    81 Ω of metal in series with its 45 Ω HS termination (survey only). Neither is fixed. Resistance-aware extraction
    is mandatory for all pad evidence from now on (`rextract/`).
-   Known defect of the published `pad_hspad` (PC-28): 40 unconnected Metal3/Metal4 overlay pieces in the diode array
-   (dead metal, 41 `**FLOATING` nodes in the models: simulate with `rshunt`); removed in the pad-site-diode rebuild.
 3. **CDM.** 250 V is a target only; die capacitance and CDM current are estimates.
 4. **Supply-clamp events.** Survivability of a fired clamp and the hot-plug waveform are not shown. The slew
    rule is in MANDATE section 6 and interface-changes row PC-16; it is not yet a row of

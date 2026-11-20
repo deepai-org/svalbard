@@ -2,9 +2,10 @@
  "status": "hs_pad_composed",
  "drc_count": 0,
  "lvs_match": true,
- "well_corrections": 1,
+ "well_corrections": 0,
  "independent_device_graph_match": true,
  "ports": [
+  "DVDD",
   "VSS",
   "VDD",
   "TERM_VCM",
@@ -37,20 +38,24 @@
    "TERM_TRIM3": -17.2,
    "VSS": -10.0,
    "TERM_VCM": -7.5,
+   "DVDD": -21.5,
    "PAD": -3.0,
    "RAILPRE": -12.200000000000001,
    "RX": -5.5,
    "VDD": -19.2,
    "VBIAS": -18.2
   },
-  "leg_top": 154.5,
+  "leg_top": 178.22,
   "leg_right": 152.0,
-  "pad_trunk_lo": 51.52,
-  "railpre_lo": 100.32000000000001,
+  "pad_trunk_lo": 75.24,
+  "railpre_lo": 124.04,
   "vss_lo": 6.9,
   "stacked": true,
+  "sec": true,
+  "dvdd_lo": 54.76,
   "r_fix": {
-   "tu_extra_via2": 44,
+   "tu_extra_via2": 0,
+   "sec_extra": 141,
    "vcm_strap": [
     121.0,
     151.0
@@ -67,22 +72,62 @@
    ],
    "pad_strap": [
     -4.0,
-    50.52,
+    74.24,
     132.0,
-    52.77
+    76.49
    ],
    "pad_landing": [
     -5.0,
-    48.52,
+    72.24,
     -1.0,
-    54.52
+    78.24
    ]
+  },
+  "site_primary": {
+   "neck": [
+    33.5,
+    41.5
+   ],
+   "neck_extra_left": 0.0,
+   "pad_bar": 7,
+   "vss_strip": [
+    0.5,
+    25.5
+   ],
+   "n_dn": 5,
+   "n_up": 5,
+   "pitch": 6.0,
+   "first_x": null,
+   "y_dn": 82.0,
+   "y_up": 113.5,
+   "plate_y": 62.0,
+   "y_vdd_top": 148.7,
+   "dvss_band": [
+    70.0,
+    117.0
+   ],
+   "dvdd_bands": [
+    [
+     118.0,
+     125.0
+    ],
+    [
+     134.0,
+     197.0
+    ]
+   ],
+   "x_max": 74.0
+  },
+  "core_array": false,
+  "esd_opt": {
+   "neck_m1": true
   }
  },
  "source_sha256": {
-  "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/hs_pad_compose.py": "54df77ab7f2acff50361c04cb3334c96a0b9919bfd97998711511ab019367fd5",
+  "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/hs_pad_compose.py": "d00f1f37a106080e45288bd6806c5e00509b59d5b9071f480916ebdc5ba48e9d",
   "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/wired-receive-hs/shell/pad.gds": "1f153fd5c6309551013166219555768a3bc9b5579f994e7efd7cb142c9d6c0aa",
-  "/home/ubuntu/svalbard/scratch/pads-core/hsfix/build/leg4/pt_hs_leg.gds": "9229a29419baa34167b938d38bf0db7d16dc92ed0ffbd5fb33e4c5c76878cd84",
-  "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/network-gc-d2/network-layout.json": "f649201c7a823d4e801ff6d1004300c487e6f0d4d9320b23425cbe09faca15b1"
+  "/home/ubuntu/svalbard/scratch/pads-core/esdopt/hs/sec/build/leg7/pt_hs_leg.gds": "12b51cd3eafac9f312ec2fc61f51ded9e3546199c7068b4b5e1439a41f15b43b",
+  "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/network-gc-d2/network-layout.json": "f649201c7a823d4e801ff6d1004300c487e6f0d4d9320b23425cbe09faca15b1",
+  "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/pad_site_primary.py": "5ff82d2a2bcbf4218132f28a033081078c9ad944780b2c14f982c91ab81ab570"
  }
 }

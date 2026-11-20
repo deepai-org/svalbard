@@ -105,11 +105,13 @@ def attachment(circuit):
 
 def wired_transmit(*, protection_units=2, protection_width_um=16.,
                    steering_units=8, steering_width_um=20., tail_width_um=20.,
-                   cascode_units=2, cascode_width_um=16., tail_units=2, serial_tail_units=None,
+                   cascode_units=2, cascode_width_um=16., tail_units=2, serial_tail_units=None, steering_widths_um=None,
                    termination_bleed_width_um=2., termination_bleed_length_um=2.):
     """Driver/detection branches and selectable source termination.
 
     Generation-time sizing knobs are not runtime protocol profiles.
+    steering_widths_um (option, default None = one width for all branches): per-branch switch width, e.g.
+    {'MAIN': 12.} for the 0.6x MAIN switch of WT24 / WT34; laid out by tx_pad_layout.py --main-scale.
 
     Per-leg gate controls use complementary pairs supplied by the serializer.
     Biases are supplied by the core current DACs. Reset/power-down must discharge
@@ -152,7 +154,7 @@ def wired_transmit(*, protection_units=2, protection_width_um=16.,
             for leg in ('P', 'N'):
                 internal = f'SUM_{leg}_D_{unit}'
                 mos(f'{branch}_{leg}_SEL_{unit}', internal, f'{branch}_{leg}', tail, 'VSS',
-                    w=steering_width_um)
+                    w=steering_width_um if steering_widths_um is None else steering_widths_um.get(branch, steering_width_um))
     # Supply-powered enable buffers with passive discharge. These do not
     # substitute for the still-required reset/brownout supervisor.
     for control in ('DETECT', 'TERM'):

@@ -22,11 +22,13 @@ def write(d):
     subs = re.findall(r'(?ms)^\.subckt (\S+) .*?^\.ends[^\n]*\n?', text)
     blocks = {m.group(1): m.group(0) for m in re.finditer(r'(?ms)^\.subckt (\S+) .*?^\.ends[^\n]*\n?', text)}
     flat = [n for n in blocks if 'DWELL_ARRAY' in blocks[n]]
+    if not flat:     # cell built without the core protection array (pad_hspad a6): no well diode appended; the flat cell is the one the wrapper instantiates
+        flat = [n for n in blocks if re.search(rf'(?m)^X\S+ .* {re.escape(n)}\s*$', text)]
     if len(flat) != 1:
-        raise SystemExit(f'{d}: expected exactly one subcircuit with the appended well diode, found {flat}')
+        raise SystemExit(f'{d}: expected exactly one flat cell subcircuit, found {flat}')
     body, n = re.subn(r'(?m)^DWELL_ARRAY \S+ \S+ diode_nw2ps_06v0 [^\n]*\n', '', blocks[flat[0]])
-    if n != 1:
-        raise SystemExit(f'{d}: appended well-diode line not found exactly once')
+    if n > 1:
+        raise SystemExit(f'{d}: appended well-diode line found more than once')
     out = (f'* LVS reference for {flat[0]} (analog/pads/lvs_reference.py): physical.spice without the model-only\n'
            f'* DWELL_ARRAY n-well diode. Simulations keep using physical.spice.\n' + body)
     (d / 'lvs-reference.spice').write_text(out)

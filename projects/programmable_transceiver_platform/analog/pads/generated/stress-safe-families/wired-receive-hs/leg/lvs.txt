@@ -69,14 +69,15 @@ Circuit 1: ppolyf_u_1k                     |Circuit 2: ppolyf_u_1k
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes ppolyf_u_1k and ppolyf_u_1k are equivalent.
-Flattening unmatched subcell pt_hs_leg__prim_6 in circuit pt_hs_leg (0)(15 instances)
-Flattening unmatched subcell pt_hs_leg__prim_1 in circuit pt_hs_leg (0)(15 instances)
-Flattening unmatched subcell pt_hs_leg__prim_2 in circuit pt_hs_leg (0)(10 instances)
-Flattening unmatched subcell pt_hs_leg__prim_7 in circuit pt_hs_leg (0)(10 instances)
-Flattening unmatched subcell pt_hs_leg__prim_4 in circuit pt_hs_leg (0)(2 instances)
-Flattening unmatched subcell pt_hs_leg__prim_3 in circuit pt_hs_leg (0)(1 instance)
+Flattening unmatched subcell pt_hs_leg__prim_7 in circuit pt_hs_leg (0)(15 instances)
+Flattening unmatched subcell pt_hs_leg__prim_1 in circuit pt_hs_leg (0)(25 instances)
+Flattening unmatched subcell pt_hs_leg__prim_2 in circuit pt_hs_leg (0)(15 instances)
+Flattening unmatched subcell pt_hs_leg__prim_3 in circuit pt_hs_leg (0)(10 instances)
+Flattening unmatched subcell pt_hs_leg__prim_8 in circuit pt_hs_leg (0)(10 instances)
+Flattening unmatched subcell pt_hs_leg__prim_5 in circuit pt_hs_leg (0)(2 instances)
+Flattening unmatched subcell pt_hs_leg__prim_4 in circuit pt_hs_leg (0)(1 instance)
 Flattening unmatched subcell pt_hs_leg__prim_0 in circuit pt_hs_leg (0)(2 instances)
-Flattening unmatched subcell pt_hs_leg__prim_5 in circuit pt_hs_leg (0)(1 instance)
+Flattening unmatched subcell pt_hs_leg__prim_6 in circuit pt_hs_leg (0)(1 instance)
 
 Class pt_hs_leg (0):  Merged 1 parallel devices.
 Class pt_hs_leg (1):  Merged 1 parallel devices.
@@ -84,17 +85,18 @@ Subcircuit summary:
 Circuit 1: pt_hs_leg                       |Circuit 2: pt_hs_leg                       
 -------------------------------------------|-------------------------------------------
 ppolyf_u (25)                              |ppolyf_u (25)                              
+diode_pd2nw_06v0 (25)                      |diode_pd2nw_06v0 (25)                      
 nfet_06v0 (26)                             |nfet_06v0 (26)                             
 pfet_06v0 (2)                              |pfet_06v0 (2)                              
 cap_mim_2f0_m4m5_noshield (2->1)           |cap_mim_2f0_m4m5_noshield (2->1)           
 ppolyf_u_1k (1)                            |ppolyf_u_1k (1)                            
-Number of devices: 55                      |Number of devices: 55                      
-Number of nets: 37                         |Number of nets: 37                         
+Number of devices: 80                      |Number of devices: 80                      
+Number of nets: 38                         |Number of nets: 38                         
 ---------------------------------------------------------------------------------------
 Resolving symmetries by property value.
 Resolving symmetries by pin name.
 Resolving symmetries by net name.
-Netlists match with 12 symmetries.
+Netlists match with 16 symmetries.
 
 Subcircuit pins:
 Circuit 1: pt_hs_leg                       |Circuit 2: pt_hs_leg                       
@@ -104,13 +106,14 @@ VBIAS                                      |VBIAS
 TERM_TRIM2                                 |TERM_TRIM2                                 
 RX                                         |RX                                         
 VDD                                        |VDD                                        
-RAILPRE                                    |RAILPRE                                    
 TERM_TRIM3                                 |TERM_TRIM3                                 
 TERM_ENABLE                                |TERM_ENABLE                                
+TERM_TRIM1                                 |TERM_TRIM1                                 
 TERM_VCM                                   |TERM_VCM                                   
+DVDD                                       |DVDD                                       
 PAD                                        |PAD                                        
 VSS                                        |VSS                                        
-TERM_TRIM1                                 |TERM_TRIM1                                 
+RAILPRE                                    |RAILPRE                                    
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes pt_hs_leg and pt_hs_leg are equivalent.

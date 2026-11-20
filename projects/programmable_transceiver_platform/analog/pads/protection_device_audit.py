@@ -62,15 +62,19 @@ def supplemental_graphs(records, model):
     return actual,simulated,well
 
 
-def well_replacement(extraction, raw, model):
-    """Audit the isolated array wells and conservation of extracted capacitance."""
+def well_replacement(extraction, raw, model, ring_wells=()):
+    """Audit the isolated array wells and conservation of extracted capacitance.
+    ring_wells: nets (e.g. 'DVDD') whose pd2nw wells are pad-site primaries tied to a ring rail (pad_site_primary.py); those wells
+    are not array wells, get no replacement, and are only counted.  Default (): every pd2nw well must be on ESD_RAIL, as before."""
     rows=[shlex.split(line) for line in extraction.read_text().splitlines()]
     scale=float(next(r[3] for r in rows if r and r[0]=='scale'))*.01
-    areas=[];perimeters=[]
+    areas=[];perimeters=[];ring=0
     for r in rows:
         if not r or r[:3]!=['device','pdiode','diode_pd2nw_06v0']:continue
         index=7
         while '=' in r[index]:index+=1
+        if ring_wells and r[index] in ring_wells and r[index+4]==r[index]:
+            ring+=1;continue
         if r[index]!='ESD_RAIL' or r[index+4]!='ESD_RAIL':
             raise ValueError('Array well is not on isolated protection rail')
         area,perimeter=map(float,r[index+6].split(','))
@@ -100,14 +104,14 @@ def well_replacement(extraction, raw, model):
     changes={k:before[k]-after[k] for k in set(before)|set(after)}
     if any(abs(v-(correction if k==key else 0.))>1e-5 for k,v in changes.items()):
         raise ValueError('Well replacement changed unrelated capacitance or double-counted area')
-    return dict(extracted_well_area_um2=sum(areas),extracted_well_perimeter_um=sum(perimeters),
+    return dict(extracted_well_area_um2=sum(areas),extracted_well_perimeter_um=sum(perimeters),**(dict(ring_rail_wells_not_replaced=ring) if ring_wells else {}),
         linear_capacitance_removed_ff=changes[key],expected_removal_ff=correction,
         other_extracted_capacitances_unchanged=True,
         scope='Terminal well areas assume isolated, nonshared array wells as established by array geometry; no nonlinear junction accuracy or ESD qualification.',
         raw_spice_sha256=hashlib.sha256(raw.read_bytes()).hexdigest())
 
 
-def check(extraction, model, output, raw=None):
+def check(extraction, model, output, raw=None, ring_wells=()):
     records=extraction.read_text().splitlines()
     excluded=Counter()
     kept=[]
@@ -143,7 +147,7 @@ def check(extraction, model, output, raw=None):
         source_sha256={str(p.resolve()):hashlib.sha256(p.read_bytes()).hexdigest()
                        for p in (extraction,model,Path(__file__),Path(__file__).with_name('extract_audit.py'))})
     if raw is not None:
-        result['well_replacement']=well_replacement(extraction,raw,model)
+        result['well_replacement']=well_replacement(extraction,raw,model,ring_wells)
         result['source_sha256'][str(raw.resolve())]=hashlib.sha256(raw.read_bytes()).hexdigest()
     output.write_text(json.dumps(result,indent=2)+'\n')
     return result

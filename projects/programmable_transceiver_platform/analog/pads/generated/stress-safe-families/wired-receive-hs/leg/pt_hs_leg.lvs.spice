@@ -1,26 +1,30 @@
 * NGSPICE file created from pt_hs_leg.ext - technology: gf180mcuD
 
-.subckt pt_hs_leg__prim_6 a_n200_n202# a_n392_n394# a_n200_100#
+.subckt pt_hs_leg__prim_7 a_n200_n202# a_n392_n394# a_n200_100#
 X0 a_n200_100# a_n200_n202# a_n392_n394# ppolyf_u r_width=2u r_length=1u
 .ends
 
-.subckt pt_hs_leg__prim_1 a_n70_n1360# a_n302_n1492# a_70_n1200# a_n158_n1200#
+.subckt pt_hs_leg__prim_1 w_n276_n276# a_n100_n100#
+D0 a_n100_n100# w_n276_n276# diode_pd2nw_06v0 pj=4u area=1p
+.ends
+
+.subckt pt_hs_leg__prim_2 a_n70_n1360# a_n302_n1492# a_70_n1200# a_n158_n1200#
 X0 a_70_n1200# a_n70_n1360# a_n158_n1200# a_n302_n1492# nfet_06v0 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.7u
 .ends
 
-.subckt pt_hs_leg__prim_2 a_n70_n2160# a_n302_n2292# a_70_n2000# a_n158_n2000#
+.subckt pt_hs_leg__prim_3 a_n70_n2160# a_n302_n2292# a_70_n2000# a_n158_n2000#
 X0 a_70_n2000# a_n70_n2160# a_n158_n2000# a_n302_n2292# nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
 .ends
 
-.subckt pt_hs_leg__prim_7 a_n200_n362# a_n200_260# a_n392_n554#
-X0 a_n200_260# a_n200_n362# a_n392_n554# ppolyf_u r_width=2u r_length=2.6u
+.subckt pt_hs_leg__prim_8 a_n392_n714# a_n200_n522# a_n200_420#
+X0 a_n200_420# a_n200_n522# a_n392_n714# ppolyf_u r_width=2u r_length=4.2u
 .ends
 
-.subckt pt_hs_leg__prim_4 w_n319_n724# a_n55_n560# a_55_n400# a_n143_n400#
+.subckt pt_hs_leg__prim_5 w_n319_n724# a_n55_n560# a_55_n400# a_n143_n400#
 X0 a_55_n400# a_n55_n560# a_n143_n400# w_n319_n724# pfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.55u
 .ends
 
-.subckt pt_hs_leg__prim_3 a_70_n400# a_n302_n692# a_n158_n400# a_n70_n560#
+.subckt pt_hs_leg__prim_4 a_70_n400# a_n302_n692# a_n158_n400# a_n70_n560#
 X0 a_70_n400# a_n70_n560# a_n158_n400# a_n302_n692# nfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.7u
 .ends
 
@@ -28,67 +32,92 @@ X0 a_70_n400# a_n70_n560# a_n158_n400# a_n302_n692# nfet_06v0 ad=1.76p pd=8.88u 
 X0 m4_n3620_n3500# m4_n3740_n3620# cap_mim_2f0_m4m5_noshield c_width=35u c_length=35u
 .ends
 
-.subckt pt_hs_leg__prim_5 a_n100_n4122# a_n312_n4334# a_n100_4000#
+.subckt pt_hs_leg__prim_6 a_n100_n4122# a_n312_n4334# a_n100_4000#
 X0 a_n100_4000# a_n100_n4122# a_n312_n4334# ppolyf_u_1k r_width=1u r_length=40u
 .ends
 
 .subckt pt_hs_leg PAD RX VBIAS TERM_VCM TERM_ENABLE TERM_TRIM0 TERM_TRIM1 TERM_TRIM2
-+ TERM_TRIM3 VDD VSS RAILPRE
-XXR19_0 TU19 VSS PAD pt_hs_leg__prim_6
-XXS11_0 TERM_TRIM1 VSS TU11 TERM_VCM pt_hs_leg__prim_1
-XXS5_0 TERM_ENABLE VSS TU5 TERM_VCM pt_hs_leg__prim_2
-XXR24_0 TU24 VSS PAD pt_hs_leg__prim_6
-XXR17_0 TU17 VSS PAD pt_hs_leg__prim_6
-XXR8_0 TU8 PAD VSS pt_hs_leg__prim_7
-XXR22_0 TU22 VSS PAD pt_hs_leg__prim_6
-XXR6_0 TU6 PAD VSS pt_hs_leg__prim_7
-XXS3_0 TERM_ENABLE VSS TU3 TERM_VCM pt_hs_leg__prim_2
-XXR15_0 TU15 VSS PAD pt_hs_leg__prim_6
-XXS1_0 TERM_ENABLE VSS TU1 TERM_VCM pt_hs_leg__prim_2
-XXR20_0 TU20 VSS PAD pt_hs_leg__prim_6
-XXR4_0 TU4 PAD VSS pt_hs_leg__prim_7
-XXS18_0 TERM_TRIM3 VSS TU18 TERM_VCM pt_hs_leg__prim_1
-XXR13_0 TU13 VSS PAD pt_hs_leg__prim_6
-XXPRE_0 RAILPRE RAILPRE VDD RAILPRE pt_hs_leg__prim_4
-XXS23_0 TERM_TRIM3 VSS TU23 TERM_VCM pt_hs_leg__prim_1
-XXR2_0 TU2 PAD VSS pt_hs_leg__prim_7
-XXS16_0 TERM_TRIM2 VSS TU16 TERM_VCM pt_hs_leg__prim_1
-XXR11_0 TU11 VSS PAD pt_hs_leg__prim_6
-XXS21_0 TERM_TRIM3 VSS TU21 TERM_VCM pt_hs_leg__prim_1
-XXS8_0 TERM_ENABLE VSS TU8 TERM_VCM pt_hs_leg__prim_2
-XXCLL_0 RX VSS VSS VSS pt_hs_leg__prim_3
-XXR0_0 TU0 PAD VSS pt_hs_leg__prim_7
-XXS14_0 TERM_TRIM2 VSS TU14 TERM_VCM pt_hs_leg__prim_1
-XXS6_0 TERM_ENABLE VSS TU6 TERM_VCM pt_hs_leg__prim_2
-XXR9_0 TU9 PAD VSS pt_hs_leg__prim_7
-XXS12_0 TERM_TRIM1 VSS TU12 TERM_VCM pt_hs_leg__prim_1
-XXR18_0 TU18 VSS PAD pt_hs_leg__prim_6
-XXS4_0 TERM_ENABLE VSS TU4 TERM_VCM pt_hs_leg__prim_2
++ TERM_TRIM3 VDD VSS RAILPRE DVDD
+XXR19_0 TU19 VSS PAD pt_hs_leg__prim_7
+XXDS13_0 DVDD TU13 pt_hs_leg__prim_1
+XXDS5_0 DVDD TU5 pt_hs_leg__prim_1
+XXS11_0 TERM_TRIM1 VSS TU11 TERM_VCM pt_hs_leg__prim_2
+XXS5_0 TERM_ENABLE VSS TU5 TERM_VCM pt_hs_leg__prim_3
+XXR24_0 TU24 VSS PAD pt_hs_leg__prim_7
+XXR17_0 TU17 VSS PAD pt_hs_leg__prim_7
+XXR8_0 VSS TU8 PAD pt_hs_leg__prim_8
+XXDS11_0 DVDD TU11 pt_hs_leg__prim_1
+XXDS3_0 DVDD TU3 pt_hs_leg__prim_1
+XXR22_0 TU22 VSS PAD pt_hs_leg__prim_7
+XXR6_0 VSS TU6 PAD pt_hs_leg__prim_8
+XXS3_0 TERM_ENABLE VSS TU3 TERM_VCM pt_hs_leg__prim_3
+XXR15_0 TU15 VSS PAD pt_hs_leg__prim_7
+XXDS1_0 DVDD TU1 pt_hs_leg__prim_1
+XXS1_0 TERM_ENABLE VSS TU1 TERM_VCM pt_hs_leg__prim_3
+XXR20_0 TU20 VSS PAD pt_hs_leg__prim_7
+XXR4_0 VSS TU4 PAD pt_hs_leg__prim_8
+XXS18_0 TERM_TRIM3 VSS TU18 TERM_VCM pt_hs_leg__prim_2
+XXR13_0 TU13 VSS PAD pt_hs_leg__prim_7
+XXPRE_0 RAILPRE RAILPRE VDD RAILPRE pt_hs_leg__prim_5
+XXDS18_0 DVDD TU18 pt_hs_leg__prim_1
+XXS23_0 TERM_TRIM3 VSS TU23 TERM_VCM pt_hs_leg__prim_2
+XXR2_0 VSS TU2 PAD pt_hs_leg__prim_8
+XXDS23_0 DVDD TU23 pt_hs_leg__prim_1
+XXS16_0 TERM_TRIM2 VSS TU16 TERM_VCM pt_hs_leg__prim_2
+XXR11_0 TU11 VSS PAD pt_hs_leg__prim_7
+XXDS16_0 DVDD TU16 pt_hs_leg__prim_1
+XXDS8_0 DVDD TU8 pt_hs_leg__prim_1
+XXS21_0 TERM_TRIM3 VSS TU21 TERM_VCM pt_hs_leg__prim_2
+XXS8_0 TERM_ENABLE VSS TU8 TERM_VCM pt_hs_leg__prim_3
+XXCLL_0 RX VSS VSS VSS pt_hs_leg__prim_4
+XXR0_0 VSS TU0 PAD pt_hs_leg__prim_8
+XXDS21_0 DVDD TU21 pt_hs_leg__prim_1
+XXS14_0 TERM_TRIM2 VSS TU14 TERM_VCM pt_hs_leg__prim_2
+XXDS14_0 DVDD TU14 pt_hs_leg__prim_1
+XXDS6_0 DVDD TU6 pt_hs_leg__prim_1
+XXS6_0 TERM_ENABLE VSS TU6 TERM_VCM pt_hs_leg__prim_3
+XXR9_0 VSS TU9 PAD pt_hs_leg__prim_8
+XXS12_0 TERM_TRIM1 VSS TU12 TERM_VCM pt_hs_leg__prim_2
+XXR18_0 TU18 VSS PAD pt_hs_leg__prim_7
+XXDS12_0 DVDD TU12 pt_hs_leg__prim_1
+XXDS4_0 DVDD TU4 pt_hs_leg__prim_1
+XXS4_0 TERM_ENABLE VSS TU4 TERM_VCM pt_hs_leg__prim_3
 XXCAC_0 RX PAD pt_hs_leg__prim_0
-XXRB_0 RX VSS VBIAS pt_hs_leg__prim_5
-XXCLH_0 VDD VDD RX VDD pt_hs_leg__prim_4
-XXR23_0 TU23 VSS PAD pt_hs_leg__prim_6
-XXR7_0 TU7 PAD VSS pt_hs_leg__prim_7
-XXS10_0 TERM_TRIM0 VSS TU10 TERM_VCM pt_hs_leg__prim_1
+XXRB_0 RX VSS VBIAS pt_hs_leg__prim_6
+XXCLH_0 VDD VDD RX VDD pt_hs_leg__prim_5
+XXR23_0 TU23 VSS PAD pt_hs_leg__prim_7
+XXR7_0 VSS TU7 PAD pt_hs_leg__prim_8
+XXS10_0 TERM_TRIM0 VSS TU10 TERM_VCM pt_hs_leg__prim_2
 XXCAC_1 RX PAD pt_hs_leg__prim_0
-XXR16_0 TU16 VSS PAD pt_hs_leg__prim_6
-XXS2_0 TERM_ENABLE VSS TU2 TERM_VCM pt_hs_leg__prim_2
-XXR21_0 TU21 VSS PAD pt_hs_leg__prim_6
-XXR5_0 TU5 PAD VSS pt_hs_leg__prim_7
-XXS19_0 TERM_TRIM3 VSS TU19 TERM_VCM pt_hs_leg__prim_1
-XXR14_0 TU14 VSS PAD pt_hs_leg__prim_6
-XXS24_0 TERM_TRIM3 VSS TU24 TERM_VCM pt_hs_leg__prim_1
-XXS0_0 TERM_ENABLE VSS TU0 TERM_VCM pt_hs_leg__prim_2
-XXR3_0 TU3 PAD VSS pt_hs_leg__prim_7
-XXS17_0 TERM_TRIM3 VSS TU17 TERM_VCM pt_hs_leg__prim_1
-XXR12_0 TU12 VSS PAD pt_hs_leg__prim_6
-XXS22_0 TERM_TRIM3 VSS TU22 TERM_VCM pt_hs_leg__prim_1
-XXS15_0 TERM_TRIM2 VSS TU15 TERM_VCM pt_hs_leg__prim_1
-XXS9_0 TERM_ENABLE VSS TU9 TERM_VCM pt_hs_leg__prim_2
-XXR10_0 TU10 VSS PAD pt_hs_leg__prim_6
-XXR1_0 TU1 PAD VSS pt_hs_leg__prim_7
-XXS20_0 TERM_TRIM3 VSS TU20 TERM_VCM pt_hs_leg__prim_1
-XXS13_0 TERM_TRIM2 VSS TU13 TERM_VCM pt_hs_leg__prim_1
-XXS7_0 TERM_ENABLE VSS TU7 TERM_VCM pt_hs_leg__prim_2
+XXR16_0 TU16 VSS PAD pt_hs_leg__prim_7
+XXDS10_0 DVDD TU10 pt_hs_leg__prim_1
+XXDS2_0 DVDD TU2 pt_hs_leg__prim_1
+XXS2_0 TERM_ENABLE VSS TU2 TERM_VCM pt_hs_leg__prim_3
+XXR21_0 TU21 VSS PAD pt_hs_leg__prim_7
+XXR5_0 VSS TU5 PAD pt_hs_leg__prim_8
+XXS19_0 TERM_TRIM3 VSS TU19 TERM_VCM pt_hs_leg__prim_2
+XXR14_0 TU14 VSS PAD pt_hs_leg__prim_7
+XXDS19_0 DVDD TU19 pt_hs_leg__prim_1
+XXDS0_0 DVDD TU0 pt_hs_leg__prim_1
+XXS24_0 TERM_TRIM3 VSS TU24 TERM_VCM pt_hs_leg__prim_2
+XXS0_0 TERM_ENABLE VSS TU0 TERM_VCM pt_hs_leg__prim_3
+XXR3_0 VSS TU3 PAD pt_hs_leg__prim_8
+XXDS24_0 DVDD TU24 pt_hs_leg__prim_1
+XXS17_0 TERM_TRIM3 VSS TU17 TERM_VCM pt_hs_leg__prim_2
+XXR12_0 TU12 VSS PAD pt_hs_leg__prim_7
+XXDS17_0 DVDD TU17 pt_hs_leg__prim_1
+XXDS9_0 DVDD TU9 pt_hs_leg__prim_1
+XXS22_0 TERM_TRIM3 VSS TU22 TERM_VCM pt_hs_leg__prim_2
+XXS15_0 TERM_TRIM2 VSS TU15 TERM_VCM pt_hs_leg__prim_2
+XXS9_0 TERM_ENABLE VSS TU9 TERM_VCM pt_hs_leg__prim_3
+XXR10_0 TU10 VSS PAD pt_hs_leg__prim_7
+XXR1_0 VSS TU1 PAD pt_hs_leg__prim_8
+XXDS22_0 DVDD TU22 pt_hs_leg__prim_1
+XXDS15_0 DVDD TU15 pt_hs_leg__prim_1
+XXDS7_0 DVDD TU7 pt_hs_leg__prim_1
+XXS20_0 TERM_TRIM3 VSS TU20 TERM_VCM pt_hs_leg__prim_2
+XXS13_0 TERM_TRIM2 VSS TU13 TERM_VCM pt_hs_leg__prim_2
+XXS7_0 TERM_ENABLE VSS TU7 TERM_VCM pt_hs_leg__prim_3
+XXDS20_0 DVDD TU20 pt_hs_leg__prim_1
 .ends
 

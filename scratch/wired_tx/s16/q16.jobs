@@ -1,0 +1,89 @@
+# ---- step 3 (priority): cal per condition, then pad=C and pad=RT (scratch/pads-core/txr/models/tx_rt.spice); ring layout-11Nov, route TIM-23 nominal unless "route"
+{"kind": "cal", "tag": "c_ssp3125_0", "rate": 3125000000.0, "codes": [0, 1, 3, 2, 3, 5, 2, 6], "corner": "ss", "pess": true, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "cal", "tag": "c_ssp3125_1", "after": "c_ssp3125_0", "rate": 3125000000.0, "corner": "ss", "pess": true, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "row", "tag": "R_ssp3125_C", "rate": 3125000000.0, "pad_model": "C", "codes_from": ["c_ssp3125_0", "c_ssp3125_1"], "edge_probe": true, "corner": "ss", "pess": true, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "row", "tag": "R_ssp3125_RT", "rate": 3125000000.0, "pad_model": "RT", "codes_from": ["c_ssp3125_0", "c_ssp3125_1"], "edge_probe": true, "corner": "ss", "pess": true, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "row", "tag": "R_ssp3125_RT_bound", "rate": 3125000000.0, "pad_model": "RT", "codes_from": ["c_ssp3125_0", "c_ssp3125_1"], "edge_probe": true, "corner": "ss", "pess": true, "vdd": 3.15, "vring": 2.69, "temp": 32, "route": [45.0, 1.1e-13]}
+{"kind": "cal", "tag": "c_ss324_0", "rate": 3240000000.0, "codes": [0, 2, 2, 4, 2, 3, 3, 6], "corner": "ss", "pess": false, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "cal", "tag": "c_ss324_1", "after": "c_ss324_0", "rate": 3240000000.0, "corner": "ss", "pess": false, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "row", "tag": "R_ss324_C", "rate": 3240000000.0, "pad_model": "C", "codes_from": ["c_ss324_0", "c_ss324_1"], "edge_probe": true, "corner": "ss", "pess": false, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "row", "tag": "R_ss324_RT", "rate": 3240000000.0, "pad_model": "RT", "codes_from": ["c_ss324_0", "c_ss324_1"], "edge_probe": true, "corner": "ss", "pess": false, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "cal", "tag": "c_tt324_0", "rate": 3240000000.0, "codes": [0, 2, 2, 4, 2, 3, 2, 6], "corner": "typical", "pess": false, "vdd": 3.3, "vring": 2.95, "temp": 27}
+{"kind": "cal", "tag": "c_tt324_1", "after": "c_tt324_0", "rate": 3240000000.0, "corner": "typical", "pess": false, "vdd": 3.3, "vring": 2.95, "temp": 27}
+{"kind": "row", "tag": "R_tt324_C", "rate": 3240000000.0, "pad_model": "C", "codes_from": ["c_tt324_0", "c_tt324_1"], "edge_probe": true, "corner": "typical", "pess": false, "vdd": 3.3, "vring": 2.95, "temp": 27}
+{"kind": "row", "tag": "R_tt324_RT", "rate": 3240000000.0, "pad_model": "RT", "codes_from": ["c_tt324_0", "c_tt324_1"], "edge_probe": true, "corner": "typical", "pess": false, "vdd": 3.3, "vring": 2.95, "temp": 27}
+{"kind": "cal", "tag": "c_ss27_0", "rate": 2700000000.0, "codes": [0, 2, 2, 4, 2, 3, 3, 6], "corner": "ss", "pess": false, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "cal", "tag": "c_ss27_1", "after": "c_ss27_0", "rate": 2700000000.0, "corner": "ss", "pess": false, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "row", "tag": "R_ss27_C", "rate": 2700000000.0, "pad_model": "C", "codes_from": ["c_ss27_0", "c_ss27_1"], "edge_probe": true, "corner": "ss", "pess": false, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "row", "tag": "R_ss27_RT", "rate": 2700000000.0, "pad_model": "RT", "codes_from": ["c_ss27_0", "c_ss27_1"], "edge_probe": true, "corner": "ss", "pess": false, "vdd": 3.15, "vring": 2.69, "temp": 32}
+# ---- attribution rows (from s14 qF, stopped): ss pess. 3.125, ideal phases codes 0 (pad C / RT), S=0.6 (pad C / RT)
+{"kind": "row", "rate": 3125000000.0, "corner": "ss", "pess": true, "vdd": 3.15, "vring": 2.69, "temp": 32, "edge_probe": true, "tag": "A_ssp3125_C_ideal", "pad_model": "C", "ideal": {"tr": 6e-11}, "codes": [0, 0, 0, 0, 0, 0, 0, 0]}
+{"kind": "row", "rate": 3125000000.0, "corner": "ss", "pess": true, "vdd": 3.15, "vring": 2.69, "temp": 32, "edge_probe": true, "tag": "A_ssp3125_RT_ideal", "pad_model": "RT", "ideal": {"tr": 6e-11}, "codes": [0, 0, 0, 0, 0, 0, 0, 0]}
+{"kind": "row", "rate": 3125000000.0, "corner": "ss", "pess": true, "vdd": 3.15, "vring": 2.69, "temp": 32, "edge_probe": true, "tag": "A_ssp3125_C_S06", "pad_model": "C", "S_": 0.6, "codes_from": ["c_ssp3125_0", "c_ssp3125_1"]}
+{"kind": "row", "rate": 3125000000.0, "corner": "ss", "pess": true, "vdd": 3.15, "vring": 2.69, "temp": 32, "edge_probe": true, "tag": "A_ssp3125_RT_S06", "pad_model": "RT", "S_": 0.6, "codes_from": ["c_ssp3125_0", "c_ssp3125_1"]}
+# ---- step 4: remaining table (pad=RT first; pad=C duplicates at the end)
+{"kind": "cal", "tag": "c_tt25_0", "rate": 2500000000.0, "codes": [0, 2, 2, 4, 2, 3, 2, 6], "corner": "typical", "pess": false, "vdd": 3.3, "vring": 2.95, "temp": 27}
+{"kind": "cal", "tag": "c_tt25_1", "after": "c_tt25_0", "rate": 2500000000.0, "corner": "typical", "pess": false, "vdd": 3.3, "vring": 2.95, "temp": 27}
+{"kind": "cal", "tag": "c_ss25_0", "rate": 2500000000.0, "codes": [0, 2, 2, 4, 2, 3, 3, 6], "corner": "ss", "pess": false, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "cal", "tag": "c_ss25_1", "after": "c_ss25_0", "rate": 2500000000.0, "corner": "ss", "pess": false, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "cal", "tag": "c_ssp25_0", "rate": 2500000000.0, "codes": [0, 1, 3, 2, 3, 5, 2, 6], "corner": "ss", "pess": true, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "cal", "tag": "c_ssp25_1", "after": "c_ssp25_0", "rate": 2500000000.0, "corner": "ss", "pess": true, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "cal", "tag": "c_tt30_0", "rate": 3000000000.0, "codes": [0, 2, 2, 4, 2, 3, 2, 6], "corner": "typical", "pess": false, "vdd": 3.3, "vring": 2.95, "temp": 27}
+{"kind": "cal", "tag": "c_tt30_1", "after": "c_tt30_0", "rate": 3000000000.0, "corner": "typical", "pess": false, "vdd": 3.3, "vring": 2.95, "temp": 27}
+{"kind": "cal", "tag": "c_ss30_0", "rate": 3000000000.0, "codes": [0, 2, 2, 4, 2, 3, 3, 6], "corner": "ss", "pess": false, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "cal", "tag": "c_ss30_1", "after": "c_ss30_0", "rate": 3000000000.0, "corner": "ss", "pess": false, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "cal", "tag": "c_ssp30_0", "rate": 3000000000.0, "codes": [0, 1, 3, 2, 3, 5, 2, 6], "corner": "ss", "pess": true, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "cal", "tag": "c_ssp30_1", "after": "c_ssp30_0", "rate": 3000000000.0, "corner": "ss", "pess": true, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "cal", "tag": "c_ff25_0", "rate": 2500000000.0, "codes": [0, 2, 2, 4, 2, 3, 2, 6], "corner": "ff", "pess": false, "vdd": 3.45, "vring": 3.01, "temp": 22}
+{"kind": "cal", "tag": "c_ff25_1", "after": "c_ff25_0", "rate": 2500000000.0, "corner": "ff", "pess": false, "vdd": 3.45, "vring": 3.01, "temp": 22}
+{"kind": "cal", "tag": "c_ff3125_0", "rate": 3125000000.0, "codes": [0, 2, 2, 4, 2, 3, 2, 6], "corner": "ff", "pess": false, "vdd": 3.45, "vring": 3.01, "temp": 22}
+{"kind": "cal", "tag": "c_ff3125_1", "after": "c_ff3125_0", "rate": 3125000000.0, "corner": "ff", "pess": false, "vdd": 3.45, "vring": 3.01, "temp": 22}
+{"kind": "cal", "tag": "c_ff324_0", "rate": 3240000000.0, "codes": [0, 2, 2, 4, 2, 3, 2, 6], "corner": "ff", "pess": false, "vdd": 3.45, "vring": 3.01, "temp": 22}
+{"kind": "cal", "tag": "c_ff324_1", "after": "c_ff324_0", "rate": 3240000000.0, "corner": "ff", "pess": false, "vdd": 3.45, "vring": 3.01, "temp": 22}
+{"kind": "cal", "tag": "c_sf3125_0", "rate": 3125000000.0, "codes": [0, 2, 2, 4, 2, 3, 2, 6], "corner": "sf", "pess": false, "vdd": 3.3, "vring": 2.75, "temp": 27}
+{"kind": "cal", "tag": "c_sf3125_1", "after": "c_sf3125_0", "rate": 3125000000.0, "corner": "sf", "pess": false, "vdd": 3.3, "vring": 2.75, "temp": 27}
+{"kind": "cal", "tag": "c_sf324_0", "rate": 3240000000.0, "codes": [0, 2, 2, 4, 2, 3, 2, 6], "corner": "sf", "pess": false, "vdd": 3.3, "vring": 2.75, "temp": 27}
+{"kind": "cal", "tag": "c_sf324_1", "after": "c_sf324_0", "rate": 3240000000.0, "corner": "sf", "pess": false, "vdd": 3.3, "vring": 2.75, "temp": 27}
+{"kind": "cal", "tag": "c_fs3125_0", "rate": 3125000000.0, "codes": [0, 2, 2, 4, 2, 3, 2, 6], "corner": "fs", "pess": false, "vdd": 3.3, "vring": 2.75, "temp": 27}
+{"kind": "cal", "tag": "c_fs3125_1", "after": "c_fs3125_0", "rate": 3125000000.0, "corner": "fs", "pess": false, "vdd": 3.3, "vring": 2.75, "temp": 27}
+{"kind": "cal", "tag": "c_fs324_0", "rate": 3240000000.0, "codes": [0, 2, 2, 4, 2, 3, 2, 6], "corner": "fs", "pess": false, "vdd": 3.3, "vring": 2.75, "temp": 27}
+{"kind": "cal", "tag": "c_fs324_1", "after": "c_fs324_0", "rate": 3240000000.0, "corner": "fs", "pess": false, "vdd": 3.3, "vring": 2.75, "temp": 27}
+{"kind": "row", "tag": "R_tt25_RT", "rate": 2500000000.0, "pad_model": "RT", "codes_from": ["c_tt25_0", "c_tt25_1"], "edge_probe": true, "corner": "typical", "pess": false, "vdd": 3.3, "vring": 2.95, "temp": 27}
+{"kind": "row", "tag": "R_ss25_RT", "rate": 2500000000.0, "pad_model": "RT", "codes_from": ["c_ss25_0", "c_ss25_1"], "edge_probe": true, "corner": "ss", "pess": false, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "row", "tag": "R_ssp25_RT", "rate": 2500000000.0, "pad_model": "RT", "codes_from": ["c_ssp25_0", "c_ssp25_1"], "edge_probe": true, "corner": "ss", "pess": true, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "row", "tag": "R_tt30_RT", "rate": 3000000000.0, "pad_model": "RT", "codes_from": ["c_tt30_0", "c_tt30_1"], "edge_probe": true, "corner": "typical", "pess": false, "vdd": 3.3, "vring": 2.95, "temp": 27}
+{"kind": "row", "tag": "R_ss30_RT", "rate": 3000000000.0, "pad_model": "RT", "codes_from": ["c_ss30_0", "c_ss30_1"], "edge_probe": true, "corner": "ss", "pess": false, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "row", "tag": "R_ssp30_RT", "rate": 3000000000.0, "pad_model": "RT", "codes_from": ["c_ssp30_0", "c_ssp30_1"], "edge_probe": true, "corner": "ss", "pess": true, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "row", "tag": "R_ss24n5_RT", "rate": 2400000000.0, "pad_model": "RT", "codes_from": ["c_ss25_0", "c_ss25_1"], "edge_probe": true, "corner": "ss", "pess": false, "vdd": 3.15, "vring": 2.69, "temp": 32, "n_over": 5}
+{"kind": "row", "tag": "R_ss25n2_RT", "rate": 2500000000.0, "pad_model": "RT", "codes_from": ["c_ss25_0", "c_ss25_1"], "edge_probe": true, "corner": "ss", "pess": false, "vdd": 3.15, "vring": 2.69, "temp": 32, "n_over": 2}
+{"kind": "row", "tag": "R_ssp24n5_RT", "rate": 2400000000.0, "pad_model": "RT", "codes_from": ["c_ssp25_0", "c_ssp25_1"], "edge_probe": true, "corner": "ss", "pess": true, "vdd": 3.15, "vring": 2.69, "temp": 32, "n_over": 5}
+{"kind": "row", "tag": "R_ssp25n2_RT", "rate": 2500000000.0, "pad_model": "RT", "codes_from": ["c_ssp25_0", "c_ssp25_1"], "edge_probe": true, "corner": "ss", "pess": true, "vdd": 3.15, "vring": 2.69, "temp": 32, "n_over": 2}
+{"kind": "row", "tag": "R_ff24n5_RT", "rate": 2400000000.0, "pad_model": "RT", "codes_from": ["c_ff25_0", "c_ff25_1"], "edge_probe": true, "corner": "ff", "pess": false, "vdd": 3.45, "vring": 3.01, "temp": 22, "n_over": 5}
+{"kind": "row", "tag": "R_ff25n2_RT", "rate": 2500000000.0, "pad_model": "RT", "codes_from": ["c_ff25_0", "c_ff25_1"], "edge_probe": true, "corner": "ff", "pess": false, "vdd": 3.45, "vring": 3.01, "temp": 22, "n_over": 2}
+{"kind": "row", "tag": "R_ff3125_RT", "rate": 3125000000.0, "pad_model": "RT", "codes_from": ["c_ff3125_0", "c_ff3125_1"], "edge_probe": true, "corner": "ff", "pess": false, "vdd": 3.45, "vring": 3.01, "temp": 22}
+{"kind": "row", "tag": "R_ff324_RT", "rate": 3240000000.0, "pad_model": "RT", "codes_from": ["c_ff324_0", "c_ff324_1"], "edge_probe": true, "corner": "ff", "pess": false, "vdd": 3.45, "vring": 3.01, "temp": 22}
+{"kind": "row", "tag": "R_sf3125_RT", "rate": 3125000000.0, "pad_model": "RT", "codes_from": ["c_sf3125_0", "c_sf3125_1"], "edge_probe": true, "corner": "sf", "pess": false, "vdd": 3.3, "vring": 2.75, "temp": 27}
+{"kind": "row", "tag": "R_sf324_RT", "rate": 3240000000.0, "pad_model": "RT", "codes_from": ["c_sf324_0", "c_sf324_1"], "edge_probe": true, "corner": "sf", "pess": false, "vdd": 3.3, "vring": 2.75, "temp": 27}
+{"kind": "row", "tag": "R_fs3125_RT", "rate": 3125000000.0, "pad_model": "RT", "codes_from": ["c_fs3125_0", "c_fs3125_1"], "edge_probe": true, "corner": "fs", "pess": false, "vdd": 3.3, "vring": 2.75, "temp": 27}
+{"kind": "row", "tag": "R_fs324_RT", "rate": 3240000000.0, "pad_model": "RT", "codes_from": ["c_fs324_0", "c_fs324_1"], "edge_probe": true, "corner": "fs", "pess": false, "vdd": 3.3, "vring": 2.75, "temp": 27}
+# negative controls (must FAIL): one ring phase grounded (kill=3), one stream stuck at 0 (stuck=2)
+{"kind": "row", "tag": "NC_ssp3125_kill3", "rate": 3125000000.0, "pad_model": "C", "codes_from": ["c_ssp3125_0", "c_ssp3125_1"], "edge_probe": true, "corner": "ss", "pess": true, "vdd": 3.15, "vring": 2.69, "temp": 32, "kill": 3}
+{"kind": "row", "tag": "NC_ssp3125_stuck2", "rate": 3125000000.0, "pad_model": "C", "codes_from": ["c_ssp3125_0", "c_ssp3125_1"], "edge_probe": true, "corner": "ss", "pess": true, "vdd": 3.15, "vring": 2.69, "temp": 32, "stuck": 2}
+{"kind": "row", "tag": "R_tt25_C", "rate": 2500000000.0, "pad_model": "C", "codes_from": ["c_tt25_0", "c_tt25_1"], "edge_probe": true, "corner": "typical", "pess": false, "vdd": 3.3, "vring": 2.95, "temp": 27}
+{"kind": "row", "tag": "R_ss25_C", "rate": 2500000000.0, "pad_model": "C", "codes_from": ["c_ss25_0", "c_ss25_1"], "edge_probe": true, "corner": "ss", "pess": false, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "row", "tag": "R_ssp25_C", "rate": 2500000000.0, "pad_model": "C", "codes_from": ["c_ssp25_0", "c_ssp25_1"], "edge_probe": true, "corner": "ss", "pess": true, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "row", "tag": "R_tt30_C", "rate": 3000000000.0, "pad_model": "C", "codes_from": ["c_tt30_0", "c_tt30_1"], "edge_probe": true, "corner": "typical", "pess": false, "vdd": 3.3, "vring": 2.95, "temp": 27}
+{"kind": "row", "tag": "R_ss30_C", "rate": 3000000000.0, "pad_model": "C", "codes_from": ["c_ss30_0", "c_ss30_1"], "edge_probe": true, "corner": "ss", "pess": false, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "row", "tag": "R_ssp30_C", "rate": 3000000000.0, "pad_model": "C", "codes_from": ["c_ssp30_0", "c_ssp30_1"], "edge_probe": true, "corner": "ss", "pess": true, "vdd": 3.15, "vring": 2.69, "temp": 32}
+{"kind": "row", "tag": "R_ss24n5_C", "rate": 2400000000.0, "pad_model": "C", "codes_from": ["c_ss25_0", "c_ss25_1"], "edge_probe": true, "corner": "ss", "pess": false, "vdd": 3.15, "vring": 2.69, "temp": 32, "n_over": 5}
+{"kind": "row", "tag": "R_ss25n2_C", "rate": 2500000000.0, "pad_model": "C", "codes_from": ["c_ss25_0", "c_ss25_1"], "edge_probe": true, "corner": "ss", "pess": false, "vdd": 3.15, "vring": 2.69, "temp": 32, "n_over": 2}
+{"kind": "row", "tag": "R_ssp24n5_C", "rate": 2400000000.0, "pad_model": "C", "codes_from": ["c_ssp25_0", "c_ssp25_1"], "edge_probe": true, "corner": "ss", "pess": true, "vdd": 3.15, "vring": 2.69, "temp": 32, "n_over": 5}
+{"kind": "row", "tag": "R_ssp25n2_C", "rate": 2500000000.0, "pad_model": "C", "codes_from": ["c_ssp25_0", "c_ssp25_1"], "edge_probe": true, "corner": "ss", "pess": true, "vdd": 3.15, "vring": 2.69, "temp": 32, "n_over": 2}
+{"kind": "row", "tag": "R_ff24n5_C", "rate": 2400000000.0, "pad_model": "C", "codes_from": ["c_ff25_0", "c_ff25_1"], "edge_probe": true, "corner": "ff", "pess": false, "vdd": 3.45, "vring": 3.01, "temp": 22, "n_over": 5}
+{"kind": "row", "tag": "R_ff25n2_C", "rate": 2500000000.0, "pad_model": "C", "codes_from": ["c_ff25_0", "c_ff25_1"], "edge_probe": true, "corner": "ff", "pess": false, "vdd": 3.45, "vring": 3.01, "temp": 22, "n_over": 2}
+{"kind": "row", "tag": "R_ff3125_C", "rate": 3125000000.0, "pad_model": "C", "codes_from": ["c_ff3125_0", "c_ff3125_1"], "edge_probe": true, "corner": "ff", "pess": false, "vdd": 3.45, "vring": 3.01, "temp": 22}
+{"kind": "row", "tag": "R_ff324_C", "rate": 3240000000.0, "pad_model": "C", "codes_from": ["c_ff324_0", "c_ff324_1"], "edge_probe": true, "corner": "ff", "pess": false, "vdd": 3.45, "vring": 3.01, "temp": 22}
+{"kind": "row", "tag": "R_sf3125_C", "rate": 3125000000.0, "pad_model": "C", "codes_from": ["c_sf3125_0", "c_sf3125_1"], "edge_probe": true, "corner": "sf", "pess": false, "vdd": 3.3, "vring": 2.75, "temp": 27}
+{"kind": "row", "tag": "R_sf324_C", "rate": 3240000000.0, "pad_model": "C", "codes_from": ["c_sf324_0", "c_sf324_1"], "edge_probe": true, "corner": "sf", "pess": false, "vdd": 3.3, "vring": 2.75, "temp": 27}
+{"kind": "row", "tag": "R_fs3125_C", "rate": 3125000000.0, "pad_model": "C", "codes_from": ["c_fs3125_0", "c_fs3125_1"], "edge_probe": true, "corner": "fs", "pess": false, "vdd": 3.3, "vring": 2.75, "temp": 27}
+{"kind": "row", "tag": "R_fs324_C", "rate": 3240000000.0, "pad_model": "C", "codes_from": ["c_fs324_0", "c_fs324_1"], "edge_probe": true, "corner": "fs", "pess": false, "vdd": 3.3, "vring": 2.75, "temp": 27}

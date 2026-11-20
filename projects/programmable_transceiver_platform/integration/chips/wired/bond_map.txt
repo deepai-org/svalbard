@@ -36,7 +36,7 @@ dvdd_pads[1].pad east  VDD        pad_dvdd_1         provider supply site (fixed
 dvss_pads[2].pad east  VSS        pad_dvss_2         provider supply site (fixed)
 bidir[20].pad    east  WIRE_TX_P  pad_wire_tx
 bidir[21].pad    east  WIRE_TX_N  pad_wire_tx
-bidir[22].pad    east  VSS        pad_xvss_6         HS driver ground between WIRE_TX and WTX_EXT
+bidir[22].pad    east  VDD        pad_xvdd_2         supply (PDS-9: one-open-bond IR case of dvdd_pads[0]/[1])
 bidir[23].pad    east  WTX_EXT_P  pad_wtx_ext        fallback external serial data
 bidir[24].pad    east  WTX_EXT_N  pad_wtx_ext
 bidir[25].pad    east  VDD        pad_xvdd_1         HS driver (wired_tx island) supply next to vss_pads[0] / vdd_pads[0]

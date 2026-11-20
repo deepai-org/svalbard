@@ -591,7 +591,13 @@ def rf_points():
     return pts
 
 
-def top(rftag='t3', auxtag='a1', tag=''):
+EDGE_W = -369.0     # west outline of pt_lc_qvco5 (spiral outer turn at -344 + the 25 um keep-out halo), ASM-1
+AUX_ONLY = ('EN', 'IBIAS', 'PRE', 'VDDB', 'ATB_EN', 'ATB_VTUNE', 'ATB_ITAIL')
+
+
+def top(rftag='t3', auxtag='a1', tag='', edge='west'):
+    """edge='west' (r8, ASM-1): every port is a Metal4 (BAND: Metal2 track, Metal3 pin) track run out to the west outline
+    EDGE_W of the assembled cell, label at the edge, so nothing routes over the tank; edge='' = the r7 internal labels."""
     import timing_flow as tf
     work = WORK / ('top' + tag)
     if work.exists():
@@ -626,7 +632,7 @@ def top(rftag='t3', auxtag='a1', tag=''):
     nets_aux = {n: x for n, x in ax['trunk_x'].items() if n in AUX_PORTS}
     pw = {'VDD': [x for n, x in ax['straps'] if n == 'VDD'], 'VSS': [x for n, x in ax['straps'] if n == 'VSS']}
     # tracks
-    order = ['VSS', 'VDD', 'VTUNE', 'TAILG', 'CMLSEL', 'VDDCI', 'VDDCQ', 'IP', 'IN', 'QP', 'QN']
+    order = ['VSS', 'VDD', 'VTUNE', 'TAILG', 'CMLSEL', 'VDDCI', 'VDDCQ', 'IP', 'IN', 'QP', 'QN'] + (list(AUX_ONLY) if edge else [])
     widths = {'VSS': 2.0, 'VDD': 2.0, 'VDDCI': 0.8, 'VDDCQ': 0.8}
     y = -3.0
     ytr = {}
@@ -651,7 +657,13 @@ def top(rftag='t3', auxtag='a1', tag=''):
         for x in xs:
             L.rect('metal3', x - 0.2, yt - 0.2, x + 0.2, -1.8)
             L.rect('via2', x - 0.14, yt - 0.14, x + 0.14, yt + 0.14)
-        L.label(n, 'metal2', min(xs), yt, TOP_PORTS.index(n) + 1)
+        if edge:
+            L.rect('metal2', EDGE_W, yt - 0.2, min(xs), yt + 0.2)
+            L.rect('metal3', EDGE_W, yt - 0.2, EDGE_W + 1.0, yt + 0.2)
+            L.rect('via2', EDGE_W + 0.36, yt - 0.14, EDGE_W + 0.64, yt + 0.14)
+            L.label(n, 'metal3', EDGE_W + 0.5, yt, TOP_PORTS.index(n) + 1)
+        else:
+            L.label(n, 'metal2', min(xs), yt, TOP_PORTS.index(n) + 1)
     for n in order:
         w = widths.get(n, 0.6)
         yt = ytr[n]
@@ -667,7 +679,7 @@ def top(rftag='t3', auxtag='a1', tag=''):
         ap = [nets_aux[n] + AUX_X] if n in nets_aux else []
         if n in pw:
             ap = [x + AUX_X for x in pw[n]]
-        if n in ('VDDCI', 'VDDCQ', 'IP', 'IN', 'QP', 'QN', 'VTUNE', 'TAILG', 'CMLSEL', 'VDD', 'VSS'):
+        if n in ('VDDCI', 'VDDCQ', 'IP', 'IN', 'QP', 'QN', 'VTUNE', 'TAILG', 'CMLSEL', 'VDD', 'VSS') + AUX_ONLY:
             for x in ap:
                 vw = 2.0 if n in ('VDD', 'VSS') else 0.5
                 L.rect('metal5', x - vw / 2, aux_top - 1.0, x + vw / 2, yt + w / 2)
@@ -678,10 +690,14 @@ def top(rftag='t3', auxtag='a1', tag=''):
             allx = [x for m in ('IP', 'IN', 'QP', 'QN') for x, _, _ in pts.get(m, [])] + \
                    [nets_aux[m] + AUX_X for m in ('IP', 'IN', 'QP', 'QN') if m in nets_aux]
             xs = xs + [min(allx), max(allx)]
-        L.rect('metal4', min(xs) - 1.2, yt - w / 2, max(xs) + 1.2, yt + w / 2)
-        L.label(n, 'metal4', min(xs), yt, TOP_PORTS.index(n) + 1 if n in TOP_PORTS else None)
+        if edge and n in TOP_PORTS:
+            L.rect('metal4', EDGE_W, yt - w / 2, max(xs) + 1.2, yt + w / 2)
+            L.label(n, 'metal4', EDGE_W + 0.5, yt, TOP_PORTS.index(n) + 1)
+        else:
+            L.rect('metal4', min(xs) - 1.2, yt - w / 2, max(xs) + 1.2, yt + w / 2)
+            L.label(n, 'metal4', min(xs), yt, TOP_PORTS.index(n) + 1 if n in TOP_PORTS else None)
     # aux-only ports: M5 stubs below... label on the aux trunk tops (already M5 labels inside aux) -> top labels
-    for n in ('EN', 'IBIAS', 'PRE', 'VDDB', 'ATB_EN', 'ATB_VTUNE', 'ATB_ITAIL'):
+    for n in (() if edge else AUX_ONLY):
         x = nets_aux[n] + AUX_X
         L.rect('metal5', x - 0.25, aux_top - 1.0, x + 0.25, aux_top + 1.0)
         L.label(n, 'metal5', x, aux_top + 0.5, TOP_PORTS.index(n) + 1)
@@ -696,7 +712,7 @@ def top(rftag='t3', auxtag='a1', tag=''):
     le.docker_magic(work, 'ext.tcl')
     (work / 'ref.spice').write_text(top_ref(axw))
     lvs = le.netgen_lvs(work, f'{TOP}.lvs.spice', TOP, 'ref.spice', TOP)
-    res = dict(rftag=rftag, drc=drc[:600], lvs=lvs, aux_y=ay, aux_top=aux_top, tracks=ytr, height=info['I']['bank']['top'] + 6.0 - ay)
+    res = dict(rftag=rftag, auxtag=auxtag, edge=edge, drc=drc[:600], lvs=lvs, aux_y=ay, aux_top=aux_top, tracks=ytr, height=info['I']['bank']['top'] + 6.0 - ay)
     (work / 'result.json').write_text(json.dumps(res, indent=1, default=str))
     print(json.dumps(res, indent=1, default=str)[:2500])
     return res

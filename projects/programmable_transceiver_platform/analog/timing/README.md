@@ -203,6 +203,23 @@ Two LO sources drive the mixer gates through `pt_lo_ext`; the mode table is in `
 
 There is no polyphase network: the external I/Q LO is the only fallback.
 
+**Status per LO block (pt_rf; 2026-11-20).** "Evidence" means a current `generated/*-evidence.json`; none of
+these blocks has one. Bench results live in `scratch/lo-ap4/` until published.
+
+| Block (cell) | Schematic | Published layout | Read-back LVS | Benches | Blocking issue |
+| --- | --- | --- | --- | --- | --- |
+| QVCO `pt_lc_qvco5` | `lcvco/qvco5.spice` (generated) | `generated/lcvco/`, DRC 0, fill markers | top: spirals extract as shorts (documented), core unique | RC-extracted RF cell + real loads (`q7/`) | top of range 2.532 GHz (staged loads) / 2.488 (published) vs >= 2.558; no phase-noise, mismatch or sf/fs run with real loads |
+| LO regulator `pt_lo_vreg` | `lo_vreg.spice` (uncommitted, in flight) | none (0.44 mm2 staged) | - | `scratch/lo-ap4/vreg2/` | not qualified vs LO-11 (33 dB at 78.125 MHz); pessimistic tank needs VDD_LO >= 3.05 V |
+| Feedback divider `pt_lo_mmd` | `lo_mmd.spice` | yes (0.361 mm2, 0.9 mm tank trunks) | unique | v7 relayout staged (`mmd7/`, 0.140 mm2): divides to 3.8 GHz at ss | v7 divides by 33 instead of 56 at ff/2.40 GHz/0.4 V per leg (published passes); review NO-GO on ap4 |
+| Q dummy `pt_lo_mmd_qdum` | `lo_mmd_qdum.spice` | yes | unique | in QVCO real-load bench | published pair gives 9 deg / 9 % I/Q error (staged pair 0.5 deg) |
+| PFD/CP `pt_lo_pfdcp` | `lo_pfdcp.spice` | yes | unique | behavioural loop only | presets VTUNE to VDD/2, not 2.1 V |
+| Loop filter `pt_lo_lf` | `lo_lf.spice` | yes | unique | `lock/lock_rc.json` | lock 60-65 us at the slow filter corner vs 50 us; C3 must move to the QVCO (INT23-3) |
+| Observation `pt_lo_obs` (+ `lo_obs_q`) | `lo_obs.spice` | yes | unique | 20 of 24 corner cases | does not divide at ss / 3.15 V; repack staged, not benched |
+| `obs_pre4` | `obs_pre4.spice` | yes | unique | 20 of 24 corner cases | as `pt_lo_obs` |
+| External LO / mixer driver `pt_lo_ext` | `lo_ext.spice` | yes | unique | `loext3/` revision n4: -1.2 / -1.5 dB vs square (tt / ss) | published -3.3 / -9.8 dB; revision not published; external modes not co-simulated with the pads (LO-05) |
+| AUX_CLK / REF_IN receiver `pt_diff_clk_rx` | `diff_clk_rx.spice` | yes | unique | `auxrx/` | does not drive a 3.1 mm route at 810 MHz unbuffered |
+| LO distribution to mixers | - | no routed top | - | 0-40 fF route assumption | no chip-top route extraction |
+
 **Drive at the mixers** (extracted `pt_lo_ext`, internal mode, into extracted `rxmix_i` / `rxmix_q`, IF 5 MHz;
 conversion gain relative to an ideal 0 / VDD square LO; `scratch/lo-ap4/mw20/`):
 
@@ -216,7 +233,11 @@ is the available mitigation. The external modes have not been run with the mixer
 
 **QVCO** (`generated/lcvco/`): Magic DRC 0, KLayout precheck main 0 / antenna 0 (`lcvco5-kldrc.json`); top-level
 LVS on the GDS read back from disk, unique, with the spirals as documented shorts (`pt_lc_qvco5-lvs.txt`,
-`pt_lc_qvco5_core-lvs-readback.txt`). Fill keep-out markers cover both spirals plus 25 um, the feeds, the tank
+`pt_lc_qvco5_core-lvs-readback.txt`). All 19 ports are Metal4 tracks (BAND0-3: Metal3 pin on a Metal2 track) run out
+to the west outline (x = -369 um), 1.2 um pitch from y = -3.0 to -31.1 um, labels at the edge; outline 898 x 661.3 um
+(row ASM-1: nothing routes over the cell). The four tank tracks are about 163 um longer than before, equal on I and Q,
+not yet in the real-load frequency runs. `pt_lc_qvco5-fillcheck.json` is from the previous build (spiral region
+unchanged). Fill keep-out markers cover both spirals plus 25 um, the feeds, the tank
 core and the tank channel; stock fill leaves no dummy within 25 um of spiral metal
 (`pt_lc_qvco5-fillcheck.json`). 12 mA tail per core with an RC-filtered tail gate: wait 1.5 ms from `EN` to use.
 

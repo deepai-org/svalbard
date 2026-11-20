@@ -119,6 +119,12 @@ Current work status is in `SESSION-STATE.md`, not here.
 - **Off-chip passives** go into `spec/board-requirements.md` with part class, value and tolerance, and their
   pin and parasitic model goes into the sims that rely on them. Board trimmers (set once at build) are preferred
   over on-chip trims that cost noise figure.
+- **Test boards (user, 2026-11-20).** Packaging is fixed: chip-on-board module with a board-to-board connector on
+  its back, plugged into a larger test/carrier board where all test circuitry goes. Those test boards are not
+  designed now, but their performance must be predicted wherever it matters to the chip's evidence: the channel
+  beyond the connector (loss, return loss, crosstalk for the HS and RF paths), where the RF match, external LNA,
+  external LO source and baluns sit and their losses, supply regulator and trim, decap reach through the connector,
+  and the FPGA host-link timing. Benches that depend on the test board use these predicted models, with a stated basis.
 - **Per-application carriers are fully acceptable.** A carrier may populate only its application's passives and
   a pad may carry different functions on different carriers. Every carrier still needs bring-up, debug and
   fallback access. A passive needed only in one mode may use pads idle in that mode.

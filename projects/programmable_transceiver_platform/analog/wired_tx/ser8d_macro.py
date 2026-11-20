@@ -24,15 +24,79 @@ Hop plan (HOPS: stream -> hop clock phases), from measurements on the extracted 
 
     python3 ser8d_macro.py        # -> generated/fast/wtx_ser8d.*
 """
+import inspect
 import json
 
 import serq4_macro as M
 import serq8_macro as Q
+import tools
 
 NAME = 'wtx_ser8d'
 PORTS = [f'D{i}' for i in range(40)] + Q.PH + ['SERQ'] + [f'F{k}' for k in range(8)] + ['WCKQ', 'VDD', 'VSS']
 HOPS = {0: (6,), 1: (7,), 2: (0,), 3: (0,), 4: (6, 2), 5: (7, 3), 6: (6, 4), 7: (7, 5)}
 CELLS = [c for c in Q.CELLS if not c.startswith(('wtx_omux8', 'wtx_ofin8', 'wtx_ppost8'))]
+
+
+# ---- Metal5 / supply plan (ASM-8, session 15).  Metal5 is the top grid's.  The chip grid's Metal5 straps (VDD / VSS
+# alternating every 35 um, pair pitch 70 um, 10.5-16 um wide, cut 2.5 um from block Metal5) cross wtx_ser8d in Metal5-free
+# CHANNELS of CH_W um at x = CH_X0 + 35 k for k in CH_K (block = ser8d coordinates; the assembly places pt_wiredtx8 so that
+# grid strap axes land on these axes).  Not every axis is opened: channel pairs are spaced so that no piece of the block's
+# Metal5 exception is wider than 250 um (power-delivery G3), see REPORT.  ser8d's own Metal5 (supply straps, signal trunks)
+# lives between them.  Three VSS_BAR_W VSS bars (block VSS trunks: seam plate -> bottom edge tie points) at VSS_BARS:
+# 340 / 410 / 480 lie half-way between the mux PH pin pads above (285.25 + 34.5 k), which the bars pass in the seam.
+CH_PITCH, CH_X0, CH_W = 35.0, 7.5, 21.0          # channel = 16 um strap (strap_widths.json ME/SE) + 2 x 2.5 um grid cut
+CH_K = (6, 7, 11, 12, 16, 17)
+VSS_BARS, VSS_BAR_W = (340.0, 410.0, 480.0), 10.0
+STRAP_PITCH, STRAP_X0 = 35.0, 23.5               # ser8d strap pairs (VDD x, VSS x + 3) centred between grid axes (25 + 35 k);
+                                                 # the three pairs under the VSS bars are dropped by the keep-out: 18 pairs
+
+
+def channels(width=744.12):
+    """Channel x ranges (Metal5 free over the full ser8d height), block coordinates."""
+    return [(round(max(0.0, CH_X0 + CH_PITCH * k - CH_W / 2), 3), round(min(width, CH_X0 + CH_PITCH * k + CH_W / 2), 3)) for k in CH_K]
+
+
+def bars():
+    return [(round(x - VSS_BAR_W / 2, 3), round(x + VSS_BAR_W / 2, 3)) for x in VSS_BARS]
+
+
+def _engine():
+    """le.generate with three options that analog/timing/layout_engine.py (not ours to edit) lacks, patched in at run time
+    from its own source (each anchor must occur exactly once, else this raises):
+      em['m5_keep']   [(x0, x1)]: Metal5 keep-outs for straps and trunk columns (the engine's MIM keep-out mechanism);
+      em['strap_x0']  x of the first strap pair (default origin + 3);
+      em['m5_bars']   [(net, x0, x1)]: full-height Metal5 bars of a power net, Via4 arrays (0.56 um pitch) on every
+                      power track of that net they cross."""
+    le = M.le
+    src = inspect.getsource(le.generate)
+    bars_src = """    for n_, xa_, xb_ in (em or {}).get('m5_bars', ()):
+        L.net = n_
+        L.rect('metal5', xa_, 0.0, xb_, top - 0.5)
+        nx_ = int((xb_ - xa_ - 0.44) / 0.56 + 1e-9) + 1
+        for (ri_, net_), ty_ in tracks.items():
+            if net_ != n_:
+                continue
+            ky_ = max(1, int((pwr_w(ri_) - 0.44) / 0.56 + 1e-9) + 1)
+            for ix_ in range(nx_):
+                for iy_ in range(ky_):
+                    L.via(snap((xa_ + xb_) / 2 + (ix_ - (nx_ - 1) / 2) * 0.56), snap(ty_ + (iy_ - (ky_ - 1) / 2) * 0.56), 4, 5)
+"""
+    for a, b in (("    m5_ok = lambda x, half:", "    m5_keep += [tuple(k_) for k_ in (em or {}).get('m5_keep', ())]\n    m5_ok = lambda x, half:"),
+                 ("    x = origin_x + 3.0\n    while x < width - 2.0:", "    x = (em or {}).get('strap_x0', origin_x + 3.0)\n    while x < width - 2.0:"),
+                 ("    L.net = None\n    # --- antenna diodes", bars_src + "    L.net = None\n    # --- antenna diodes")):
+        if src.count(a) != 1:
+            raise RuntimeError(f'layout_engine.generate changed: anchor {a[:40]!r} found {src.count(a)} times')
+        src = src.replace(a, b)
+    ns = {}
+    exec(compile(src, le.__file__, 'exec'), le.__dict__, ns)
+    return ns['generate']
+
+
+def supply_em():
+    """em options of the supply plan (see channels / bars)."""
+    keep = channels() + [(a - 0.6, b + 0.6) for a, b in bars()]
+    return dict(m5_keep=keep, strap_x0=STRAP_X0, strap_pitch=STRAP_PITCH, strap_cuts=True,
+                m5_bars=[('VSS', a, b) for a, b in bars()])
 
 
 def _slot_w(cell):
@@ -91,8 +155,34 @@ def build_top():
     # 9-11 fF, PH135 beside SERQ 10 fF; second build: B1_0 beside LDA 17 fF).
     hopd = [c[1] for i, _, c in top_instances() if i[:2] == 'XH']     # hop data inputs: B k_0, R k_i
     quiet = {n: 0.02 for n in list(Q.PH) + [f'F{k}' for k in range(8)] + [f'Q{k}' for k in range(8)] + hopd}
-    return M.build_le(NAME, PORTS, top_spice(), text, rows(), CELLS, max_row_width=760.0, workname='ser8d',
-                      over_cell=True, em=dict(track_first=list(Q.PH)), net_space=quiet)
+    # Metal5 / supply plan (ASM-8): channels, lanes, VSS bars, strap Via4 arrays; the patched engine (see _engine)
+    gen, M.le.generate = M.le.generate, _engine()
+    try:
+        res = M.build_le(NAME, PORTS, top_spice(), text, rows(), CELLS, max_row_width=760.0, workname='ser8d',
+                         over_cell=True, em=dict(track_first=list(Q.PH), **supply_em()), net_space=quiet)
+    finally:
+        M.le.generate = gen
+    write_m5_plan()
+    return res
+
+
+def write_m5_plan():
+    """For the block top (pt_wiredtx8_layout.py): the Metal5 plan in wtx_ser8d.pins.json (channels, VSS bars) and the
+    lower ends of the port trunks that the top continues to the bottom edge (s13/top/serm5/dcols.json), both from the
+    engine report of this build."""
+    rep = json.loads((M.SCRATCH / 'ser8d' / 'layout-report.json').read_text())
+    pj = M.FAST / f'{NAME}.pins.json'
+    meta = json.loads(pj.read_text())
+    meta['m5_channels'] = channels(meta['bbox'][2])
+    meta['vss_bars'] = bars()
+    pj.write_text(json.dumps(meta, indent=1))
+    tr = rep['routes']['trunks']
+    dc = {}
+    for t in tr:
+        if t['net'] in PORTS and (t['net'][0] == 'D' or t['net'] == 'WCKQ'):
+            below = [u for u in tr if u is not t and abs(u['x'] - t['x']) < 0.05 and u['hi'] < t['lo']]
+            dc[t['net']] = dict(x=t['x'], lo=round(t['lo'] - t['width'] / 2, 3), nblk=len(below), top=[])
+    (tools.SCRATCH / 's13' / 'top' / 'serm5' / 'dcols.json').write_text(json.dumps(dc))
 
 
 if __name__ == '__main__':

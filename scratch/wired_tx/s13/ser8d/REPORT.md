@@ -1,5 +1,29 @@
 # wtx_ser8d rebuild, session 13 (layout sub-agent, 2026-11-18)
 
+## 0. Session 15 (2026-11-20): Metal5 / supply change for ASM-8 (current state; sections 1-8 describe the s13 build)
+
+Only Metal5 / supply changed (`ser8d_macro.py`: `channels()`, `bars()`, `supply_em()`, `_engine()`, `write_m5_plan()`);
+devices, `HOPS` (as found in the file: `{0:(6,), 1:(7,), 2:(0,), 3:(0,), 4:(6,2), 5:(7,3), 6:(6,4), 7:(7,5)}`), row plan and
+Metal1-4 routing rules untouched (the engine re-places Metal5 trunk columns around the keep-outs, so Metal4 track ends move).
+- **Grid channels** (Metal5-free over the full height, block x = ser8d x): 207-228, 242-263, 382-403, 417-438, 557-578, 592-613 um
+  (21 um = 16 um grid strap + 2 x 2.5 um cut; axes 217.5 / 252.5 / 392.5 / 427.5 / 567.5 / 602.5 = 7.5 + 35 k, k = 6, 7, 11, 12, 16, 17).
+- **VSS bars** (block VSS trunks): x 335-345, 405-415, 475-485, y 0 - 197.18, Via4 arrays (0.56 um pitch) on every VSS power track (432 cuts).
+- **Supply straps**: 18 pairs (VDD x, VSS x + 3) at 23.5 + 35 k (was 19 at 40 um), the 3 pairs under the bars dropped;
+  `strap_cuts` on (6 Via4 per strap / power-track crossing, was 1).
+- The engine (`analog/timing/layout_engine.py`, not ours) has no option for these: `_engine()` patches three anchors of
+  `generate` at run time (raises if the source changes). Owner of the engine may want `m5_keep`, `strap_x0`, `m5_bars` as real options.
+- Outline unchanged 744.12 x 197.68 um. Pins: same ports, top edge; PH / F x moved by up to 6 / 24 um (F5).
+- Checks from disk (`verify.py v`, GDS = generated/fast): Magic DRC 0, KLayout DRC 0, LVS `Circuits match uniquely`,
+  no-diode reference fails as expected, 4 negative controls fail (fswap, hopclk, prop, dswap); 39 antenna diodes;
+  antenna also clean in the block top (Magic antenna 0 on pt_wiredtx8).
+- ser8d logic IR (block mesh, 60 mA, `s13/top/ir`): VDD 20.6 mV (was 21.05), VSS 11.4 mV (was 17.4); high R 35.6 / 22.4 (was 37.1 / 30.3).
+- Timing evidence: `rc.py` rerun (`rcx/wtx_ser8d.rc.spice`, copied to generated/fast: 1546 R, 13779 C, 2434 X, 39 D, ports ok).
+  `ctab.py` -> `ctab_s15.json`. **Compared to `ctab_final.json` the hop plan also differs** (HOPS was edited after s13: streams 2, 3
+  single hop at phase 0, R3_0 gone), so hop-clock C moved by the plan: Q0 +52, Q1 -31, Q6 -13, Q7 -25 fF. Wiring-only effect
+  (dry runs, same HOPS, with / without the plan): Q4 +22 um (+3.7 fF), Q0 +13 um, F5 +33 um (+2.9 fF), F4 +3.9 fF, B5_0 +3.2 fF,
+  PH 21.2-24.5 fF (spread 3.3, was 3.1), all other hop nets within +-3.3 fF. **No timing simulation was run**: the set-up change
+  is not measured; at <= 4 fF on Q / B / R nets it is expected well under 10 ps, but this is not shown. Owner's bench to confirm.
+
 Hop plan built: `HOPS = {"0": [6], "1": [7], "2": [7], "3": [6, 1], "4": [6, 2], "5": [7, 3], "6": [6, 4], "7": [7, 5]}` (stream -> hop clock phases), as found in
 `analog/wired_tx/ser8d_macro.py` at build time. **`HOPS-FINAL.txt` did not exist when this was finished; the build uses
 what is in `ser8d_macro.py`.** If the table changes: rerun section 7 (build 8 s, verification about 1 min); `rows()` is derived

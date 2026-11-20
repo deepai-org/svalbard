@@ -30,9 +30,11 @@ MAIN_BIAS / POST_BIAS: Metal3 on the top edge over the aux cell; TAP_P / TAP_N: 
 MAIN / POST: the mux's risers on the top edge.  Edge pins other than D, MAIN / POST and the supplies are on Metal1-3, so a
 Metal4 / Metal5 ring round the block (ASM-8 / power-delivery G3) passes over them.
 Supplies (ASM-8, session 15): VSS bars (left edge, inner edge of the L), VDD bars (start at the VDD rail), the header strap
-on the top edge, a VSS Metal5 plate over the seam VSS rail, plate stubs to the free corner's lower edge; tie points
-(outline edge) in geom.json -> ties: VDD at the header strap ends beside the MAIN / POST risers and the VDD bars' top ends,
-VSS along both VSS bars and the corner stubs.
+on the top edge, a VSS Metal5 plate over the seam VSS rail, plate stubs to the free corner's lower edge, and three 10 um
+VSS trunks (wtx_ser8d's VSS bars, x 335-345 / 405-415 / 475-485) from the plate to the bottom edge; tie points (outline
+edge) in geom.json -> ties: VDD at the header strap ends beside the MAIN / POST risers and the VDD bars' top ends, VSS along
+both VSS bars, the corner stubs and the trunks' bottom ends.  wtx_ser8d keeps six Metal5-free channels (pins.json
+m5_channels) for the chip grid's straps; the Metal5 exception is the block above them (see s13/top/REPORT.md).
 """
 import json
 import re
@@ -333,6 +335,16 @@ def build(work=None, bare=False):
     g.rect('metal5', xq, Ym + tvdd, xq + 3.0, yh0 + 0.5)
     xq = s(XM + tb[2] - 3.0)
     g.rect('metal1', xq, Ym + MR['slice_um'][1] - 0.8, xq + 0.6, Ym + tvss + 0.5)
+    # VSS tabs (ASM-8): the plate continued down to wtx_ser8d's top edge inside each grid channel that has no phase pin pad
+    # (16 um, the grid strap width); a grid VSS strap coming up its channel ends 2.5 um below the tab and is hooked to it.
+    # Which channel of a pair carries VSS depends on the placement phase: A = the left channel of each pair, B = the right.
+    tabs = {}
+    for i_, (ca, cb) in enumerate(SER.get('m5_channels', [])):
+        c_ = (ca + cb) / 2
+        if any(abs(x - c_) < 8.0 + 0.6 + CL5 + 1.0 for x in xm):
+            continue
+        g.rect('metal5', c_ - 8.0, Y0, c_ + 8.0, yp1)
+        tabs[f'chan{"AB"[i_ % 2]}_{i_}'] = (s(c_ - 8.0), s(c_ + 8.0), Y0, s(Y0 + 1.0))
     # ------------------------------------------------------------------ phase buffers, PH pins, PS nets
     fy = lambda y: s(by0 + y)
     ypin = s(yT0 - 1.0)                                    # pad 0.6 below the rails (the mux VSS necks start at the VSS rail)
@@ -366,13 +378,28 @@ def build(work=None, bare=False):
         tab[f'PH{k}'] = dict(pin=[xm[k], ypin], stub_metal3_um=round(lst, 2), r_pin_to_mux_ohm=round(RS / 0.4 * (Ym + 0.2 - ypin), 2))
         tab[n] = dict(metal4_um=round(lps, 1), r_ohm=round(RS / 0.4 * (lps + abs(y - tys)) + RS5 / 0.44 * (y - ypin_s), 2), buffer_x=psx[k], ser_pin_x=xs_[k])
     lo, hi = min(v[0] for v in psn.values()) - 1.0, max(v[1] for v in psn.values()) + 1.0
-    for j in range(nP + 1):                # VSS tracks between the PS tracks, tied to the ser8d VSS straps they cross
+    vbars = [tuple(v) for v in SER.get('vss_bars', [])]
+    for j in range(nP + 1):                # VSS tracks between the PS tracks, tied to the ser8d VSS straps / VSS bars they cross
         y = s(yP0 + 2 * j * P4)
         g.rect('metal4', lo, y - 0.2, hi, y + 0.2)
         for px in ext['VSS']:
             if lo + 1.0 < px < hi - 1.0:
                 g.via(px - 0.45, y, 4, 5)
                 g.via(px + 0.45, y, 4, 5)
+        for a_, b_ in vbars:
+            for i_ in range(int((b_ - a_ - 0.44) / 0.56) + 1):
+                if lo + 0.5 < a_ + 0.22 + 0.56 * i_ < hi - 0.5:
+                    g.via(s(a_ + 0.22 + 0.56 * i_ + (b_ - a_ - 0.44 - 0.56 * int((b_ - a_ - 0.44) / 0.56)) / 2), y, 4, 5)
+    # ------------------------------------------------------------------ VSS bars (ASM-8 VSS trunks): wtx_ser8d's three 10 um Metal5 VSS
+    # bars, drawn again here over their full length (bottom edge = tie points) and continued through zone B into the VSS plate
+    for a_, b_ in vbars:
+        if any(min(abs(a_ - x), abs(b_ - x)) < 0.6 + CL5 or a_ < x < b_ for x in xm):
+            raise RuntimeError('VSS bar over a phase pin pad')
+        g.rect('metal5', a_, 0.0, b_, yp1)
+        for xn, wn in zip(necks, neckw):     # a mux VSS neck (same net) closer than Metal5 spacing below the plate: fill the notch
+            na, nb = xn - wn / 2, xn + wn / 2
+            if 0 < na - b_ < 1.0 or 0 < a_ - nb < 1.0:
+                g.rect('metal5', min(b_, nb), yvs + 0.2, max(a_, na), yp1)
     # rails: Metal2 and Metal4 stitched at the ser8d straps that have no Metal3 vertical nearby
     nst = {'VSS': 0, 'VDD': 0}
     for net, y0_, h in (('VSS', yvs, RAIL_VSS), ('VDD', yvd, RAIL_VDD)):
@@ -450,7 +477,8 @@ def build(work=None, bare=False):
     ties = dict(VDD=dict(T_main=(s(xl_end - 40.0), xl_end, yh0, s(Yt)), T_post=(xr_start, s(xr_start + 40.0), yh0, s(Yt)),
                          bar_left=(xbar['VDD'][0][0], xbar['VDD'][0][1], s(Yt - 20.0), s(Yt)), bar_right=(xbar['VDD'][1][0], xbar['VDD'][1][1], s(Yt - 20.0), s(Yt))),
                 VSS=dict(bar_left=(xbar['VSS'][0][0], xbar['VSS'][0][1], yT0, s(Yt)), bar_right=(xbar['VSS'][1][0], xbar['VSS'][1][1], yT0, s(Yt)),
-                         **{f'corner_{j}': (max(a, s(xbar['VSS'][1][1] + 0.5)), b, s(Ym - 1.0), Ym) for j, (a, b) in enumerate(stubs)}))
+                         **{f'corner_{j}': (max(a, s(xbar['VSS'][1][1] + 0.5)), b, s(Ym - 1.0), Ym) for j, (a, b) in enumerate(stubs)},
+                         **{f'bottom_{j}': (a, b, 0.0, 1.0) for j, (a, b) in enumerate(vbars)}, **tabs))
     for i, n in enumerate(T.PORTS):
         if n in ('VDD', 'VSS'):
             for a, b in xbar[n]:
@@ -495,7 +523,8 @@ def build(work=None, bare=False):
                header_strap=dict(y=[yh0, s(Yt - 0.2)], left_end_x=xl_end, right_start_x=xr_start), ser_trunks={n: DC[p_]['lo'] for n, p_ in down_pins.items()},
                rail_holes=holes, vss_metal2_at_hole_um=round(yhole - yvs, 2), exits={n: v[2] for n, v in m2nets.items() if v[2]},
                ties=ties, vss_plate=dict(y=[yp0, yp1], segments=plate, corner_stubs=stubs), neck_width_um=neckw,
-               mux_vdd_x=mvdd)
+               mux_vdd_x=mvdd, vss_trunks=[list(v) for v in vbars],
+               m5_channels=dict(x=SER.get('m5_channels', []), y=[0.0, Y0], note='Metal5-free over wtx_ser8d (block x = ser8d x); grid strap axes at their centres'))
     (work / 'geom.json').write_text(json.dumps(res, indent=1))
     return res
 

@@ -213,12 +213,38 @@ The top generator reads:
 
 Keep those.
 
-## Supply grid (ASM-8), state 2026-11-20
-Option A: whole L outline is a Metal5 exception with a grid ring around it (block VDD is the switched island
-`RAIL_wired_tx`, so grid VDD must never tie to it; `wtx_ser8d` Metal5 straps fill the outline, so 70 um channels cannot
-cross). Seam VSS Metal5 plate (3944 Via4), mux VSS necks 9 um, TAP_P/N, TR*, MAIN_BIAS/POST_BIAS pins moved to Metal3
-(same positions). Checks from disk: Magic 0, KLayout 0, antenna 0, LVS unique, 5 negative controls fail.
-IR at 60 mA, tie point to output stage (raster mesh, `ir/run.sh`, results `ir/*.json`; budget 6.6 mV = 117 mV
-ASM-9 minus 110.4 mV modelled at this tap): VDD 3.7 mV, VSS 11.2 mV, total 14.8 mV FAIL (high R 22.3 mV). Passes
-(6.4 mV) with three 10 um VSS trunks through `wtx_ser8d` at x about 340 / 410 / 480. EM worst 23 % margin (block top).
-Tie points and abstract: `out/report.json` key `ties`. PH0..7 remain Metal5 pads inside the block (no edge access).
+## Supply grid (ASM-8), state 2026-11-20 (session 15)
+**Exception hole reduced, not full 70 um channels.** Full channels at every grid axis (35 um) through `wtx_ser8d` were
+tried (dry runs): with 16 um straps the trunks do not fit ("no free trunk column"); with 10.5 um straps they fit but the PH
+trunks go from 38-46 to 41-76 um (phase equality lost) and half the ser8d strap pairs go. Instead `wtx_ser8d` keeps three
+channel PAIRS (Metal5-free, y 0-197.68, 21 um = 16 um strap + 2 x 2.5 um): x 207-228 / 242-263, 382-403 / 417-438,
+557-578 / 592-613 (axes 7.5 + 35 k). The Metal5 exception is then the block above y 197.68 plus the four ser8d pieces between
+channels; widest piece 229 um (x -19.5 to 209.5 between grid strap edges), others 124 / 124 / 136 um; the upper part is
+about 208 um tall (y 195-403). No 250 um square fits in the hole (G3). **Assembly: place pt_wiredtx8 unrotated with
+x0 = 4.75 (mod 35) um** so the grid axes (core x0 + 15.25 + 35 k) hit the channel axes; the two channels of a pair carry
+VDD and VSS, which one depends on x0 mod 70 (phase A: left channel VSS, B: right).
+Block VDD is the switched island `RAIL_wired_tx`: grid VDD in a channel only passes over ser8d (no tie).
+- **VSS trunks**: three 10 um Metal5 bars x 335-345 / 405-415 / 475-485 from the seam plate (top y 228.3) to the bottom edge
+  (tie points `bottom_0..2`, y 0-1), half-way between the PH pads; Via4 to every ser8d VSS track and the zone-B VSS tracks.
+- **VSS tabs**: 16 um Metal5 from the plate down to y 197.68 in the channels with no PH pad (x 209.5-225.5, 244.5-260.5,
+  559.5-575.5, 594.5-610.5; ties `chanA_0`, `chanB_1`, `chanA_4`, `chanB_5`). The grid VSS strap of that channel ends 2.5 um
+  below the tab and needs a hook to it (assembly). The middle channels (392.5 / 427.5) hold PH pads (PH6, PH2): no tab.
+- Checks from disk: Magic 0, KLayout 0, Magic antenna 0, LVS unique, 5 negative controls fail. Outline unchanged 744.12 x 400.56.
+IR at 60 mA, tie point to output stage (`ir/run.sh`, results `ir/phA|phB/*.json`; budget 6.6 mV):
+
+| case | VDD | VSS | total | ser8d logic VDD / VSS |
+|---|---|---|---|---|
+| s14 (no trunks) nominal / high R | 3.67 / 7.60 | 11.15 / 14.67 | 14.8 / 22.3 | 21.05 / 17.4 ; 37.1 / 30.3 |
+| trunks only, nominal / high R | 3.67 / 7.60 | 7.80 / 10.08 | 11.5 / 17.7 | 20.55 / 13.2 ; 35.6 / 24.7 |
+| trunks + tabs, phase A nominal / high | 3.67 / 7.60 | 6.42 / 8.49 | **10.1 / 16.1 FAIL** | 20.55 / 11.45 ; 35.6 / 22.4 |
+| trunks + tabs, phase B nominal / high | 3.67 / 7.60 | 6.18 / 8.20 | **9.9 / 15.8 FAIL** | 20.55 / 11.42 ; 35.6 / 22.4 |
+| diagnostic: ideal tie along the whole plate | 3.67 | 1.93 | 5.6 | |
+
+The earlier 6.4 mV estimate for three trunks was wrong: the trunks themselves (about 0.3 ohm over 214 um) carry the drop;
+VSS needs a tie on the plate near x 280-560 (under the tails). Options (not done): a grid VSS tie into the plate from above
+through the middle of the block (needs the mux area / a declared opening), moving PH2 / PH6 pads out of channels 392.5 / 427.5
+so tabs fit there, or a bigger budget share from the power owner (WT43 asked to re-split ASM-9 at this tap).
+EM (85 C limits): band cuts worst 51.5 % margin (seam plate), trunks 55.9 / 85 / 87 %, VDD 78 %; header strap end 23 % (table,
+unchanged). The raster also flags VDD Metal4 -6.8 % (high R -29.6 %) at the T_main tie pixel (389.7, 398.5), the same
+as before this change: a tie-edge artefact of the raster, the band cut there is 93 %; not re-examined.
+PH0..7 remain Metal5 pads inside the block (no edge access).

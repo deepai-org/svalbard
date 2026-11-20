@@ -196,7 +196,10 @@ def via_fill(cell, lay, region, inset=0.5):
         for t in poly.decompose_trapezoids(1):
             b = t.bbox(); nx = int((b.width()-260)//620)+1; ny = int((b.height()-260)//620)+1
             if b.width() < 260 or b.height() < 260: continue
-            ox = b.left+(b.width()-((nx-1)*620+260))//2; oy = b.bottom+(b.height()-((ny-1)*620+260))//2
+            ox = (b.left+(b.width()-((nx-1)*620+260))//2+9)//10*10; oy = (b.bottom+(b.height()-((ny-1)*620+260))//2+9)//10*10   # 10 nm grid
+            if ox+(nx-1)*620+260 > b.right: nx -= 1
+            if oy+(ny-1)*620+260 > b.top: ny -= 1
+            if nx < 1 or ny < 1: continue
             cell.insert(db.CellInstArray(vc.cell_index(), db.Trans(db.Vector(ox, oy)), db.Vector(620, 0), db.Vector(0, 620), nx, ny)); n += nx*ny
     return n
 nvia = 0

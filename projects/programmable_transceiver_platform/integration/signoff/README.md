@@ -1,6 +1,8 @@
 # Shuttle acceptance flows (wafer.space Run 3, GF180MCU)
 
-Current state only. Everything here runs on a **skeleton chip**: the real 1x1 pad ring, seal ring and ID cells, the
+Current state only. The flows now read the assembled, routed chip of `../assembly` (`scratch/integration/assembly-<chip>/chip/pt_chip_top.gds`,
+`chip/manifest.json`); the skeleton is deleted. The sections below that describe the skeleton are the previous numbers.
+Formerly everything here ran on a **skeleton chip**: the real 1x1 pad ring, seal ring and ID cells, the
 custom pad families, every block that has a GDS, and pin-only placeholders for the rest, with **no top-level wiring**.
 The flows are ready for the real top; the numbers below are the skeleton's.
 

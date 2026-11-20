@@ -41,6 +41,21 @@ named `asm-<chip>-<pid>`: stop a run only by that name (`docker kill asm-...`) o
 - **Net classes** (`kl_place.cls`): island rails / regulator outputs 3 um wide; hooks 1.2 um; clock, high-speed and RF
   nets twice the minimum spacing (no drawn shields). Booked ledger items without a conn instance are Metal1-3 blockages.
 
-## Results (latest run)
+## Results (run of 2026-11-19/20)
 
-See the per-chip table at the end of this file (written by hand from `report/route.json` after each run).
+| | `pt_rf` | `pt_wired` |
+|---|---|---|
+| Floorplan (`report/floorplan.png`) | all 190 conn blocks placed, 0 overlaps, 0 keep-away fails (QVCO rule kept); 16 decap tiles (0.24 mm2) do not fit | all 213 placed (isw_wired_tx_a/b, steer_0..3 by the second pass), 0 overlaps, 0 keep-away fails |
+| Nets routed (signal / clock / hs / rf / rail) | 402 / 402, every pin reached | 424 / 424 |
+| Hooks routed | 238 / 275 | 220 / 264 |
+| Wire length | 1383 mm | 1372 mm |
+| Global-route overflow gcells | 558 (QVCO interior pins, pad cells, macro south edge) | 1494 (macro SE corner against pad_wire_tx, pad_aux_clk / pad_hs_rx, macro south edge over the decap row) |
+| Detailed-route violations (20 iterations) | 467 (379 shorts: 221 inside the QVCO, 61 in pad cells) | 1035 (822 shorts: 520 inside pad cells, 68 at the macro) |
+| LVS (black boxes, by name) | 572 match, 150 short+internal, 6 open, 64 not checkable | 741 match, 105 short+internal, 33 short, 56 not checkable |
+| DRC main deck (shuttle 792ef67) | 641 347 before the via-grid fix: 627 636 via4_OFFGRID + 1922 V4.2a in the grid vias (fixed: 10 nm grid, not rerun), 9928 GR.4 in the provider ring, 165 in the top wiring (GR.2 near the seal: wiring outside the ring) | not run |
+| Antenna | 175 (ANT.16 via ANT.5 / ANT.6) | not run |
+| Density after fill (`rf` keep-outs) | not run | every global rule passes (COMP 44.0, Poly2 37.1, M1 41.2, M2 39.1, M3 40.2, M4 48.8, M5 51.4 %); 48 DCF.1a inside blocks |
+| Power grid coverage per net | M4 7.3-7.8 %, M5 10.5-11.0 % (G1: >= 15 %) | M4 8.0-8.5 %, M5 11.5-11.9 % |
+
+Open in the flow: routing blockage outside the core-ring band (wires reached the seal ring); hook nets that are not routed;
+main deck rerun after the via-grid fix; full precheck on one chip. Owner rows ASM-1..7 in `scratch/reviews/interface-changes.md`.

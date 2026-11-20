@@ -165,3 +165,8 @@ Results so far (round 3):
   differ by 7-18 mV (pass <= 20 mV). atb_vdcm differs by 47 mV and tailx by 41 mV: these are not like-for-like, because the
   observation node and the bare label node are on light / unsolved metal in rext. rext is the slightly pessimistic view (less
   current). The hand patch Rvtkport (1.85 ohm) existed only in the superseded rc3 netlist and is used nowhere.
+- Coordinator check (extresist double-counts substrate C, ~2.4x): the metal-aware view generated/lna.rext.spice has the C-only
+  extraction's capacitors verbatim. Checked: 2151 node pairs, 8.298 pF total, 0 pairs differing from lna.ext.spice; lna_netres.py
+  adds resistors only. The extresist cross-check (scratch/rf_rx/rc4) was a DC operating point, where capacitance does not enter.
+  Its raw netlist is not used for any AC, noise or transient row. If the full-extraction view is ever used for AC: apply
+  scratch/wired_tx/s14/chain/fixcap.py first.

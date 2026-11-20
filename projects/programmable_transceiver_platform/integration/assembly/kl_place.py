@@ -163,22 +163,39 @@ for ln in ('Metal4', 'Metal5'):
 digi = man['blocks'].get('digital', {}).get('bbox')
 blk4 = blkmetal['Metal4'] + (db.Region(db.Box(*[um(x) for x in digi]).enlarged(um(2), um(2))) if digi else db.Region())
 avoid = {'Metal4': (blk4 + noover + padreg.sized(um(3))).merged(), 'Metal5': (blkmetal['Metal5'] + noover + padreg.sized(um(3))).merged()}
-PITCH, SW = 70.0, float(os.environ.get('STRAP_W', '16.0'))   # PDS-8: 16 um (23 % nominal) to draw >= 12 % M4 / 15 % M5 after the cuts
+PITCH, SW = 70.0, float(os.environ.get('STRAP_W', '10.5'))   # G1 15 % nominal; wider per region from strap_widths.json
 core = C.CORE
 straps = {('VDD', 'Metal4'): db.Region(), ('VSS', 'Metal4'): db.Region(), ('VDD', 'Metal5'): db.Region(), ('VSS', 'Metal5'): db.Region()}
-y = core[1]+10
-while y+PITCH/2+SW <= core[3]:
-    for net, off in (('VDD', 0.0), ('VSS', PITCH/2)):
-        straps[(net, 'Metal4')].insert(db.Box(0, um(y+off), um(C.DIE[2]), um(y+off+SW)))
-    y += PITCH
-x = core[0]+10
-while x+PITCH/2+SW <= core[2]:
-    for net, off in (('VDD', 0.0), ('VSS', PITCH/2)):
-        straps[(net, 'Metal5')].insert(db.Box(um(x+off), 0, um(x+off+SW), um(C.DIE[3])))
-    x += PITCH
+# strap width per core region (3 x 3: rows S/M/N, columns W/C/E, as in pdn_regions_pct): strap_widths.json
+# {"<chip>": {"default": um, "SE": um, ...}}, set from the power owner's IR/EM answer (PDS-8); the strap axis stays on
+# the 70 um pitch, so pieces of different width meet on the region border. The default is STRAP_W (10.5 um).
+SWJ = json.load(open('/asm/strap_widths.json')).get(CHIP, {}) if os.path.exists('/asm/strap_widths.json') else {}
+SW = float(SWJ.get('default', SW))
+def cells3():
+    for i, cx in enumerate('WCE'):
+        for j, ry in enumerate('SMN'):
+            x0 = core[0]+(core[2]-core[0])*i/3; x1 = core[0]+(core[2]-core[0])*(i+1)/3
+            y0 = core[1]+(core[3]-core[1])*j/3; y1 = core[1]+(core[3]-core[1])*(j+1)/3
+            # outer cells reach the die edge so the straps still meet the core ring
+            yield ry+cx, (0 if i == 0 else x0, 0 if j == 0 else y0, C.DIE[2] if i == 2 else x1, C.DIE[3] if j == 2 else y1)
+for key, (x0, y0, x1, y1) in cells3():
+    w = float(SWJ.get(key, SW)); cell = db.Region(db.Box(um(x0), um(y0), um(x1), um(y1)))
+    y = core[1]+10
+    while y+PITCH <= core[3]+PITCH/2:
+        for net, off in (('VDD', 0.0), ('VSS', PITCH/2)):
+            c = y+off+5.25
+            if c+w/2 <= core[3]: straps[(net, 'Metal4')] += db.Region(db.Box(0, um(c-w/2), um(C.DIE[2]), um(c+w/2))) & cell
+        y += PITCH
+    x = core[0]+10
+    while x+PITCH <= core[2]+PITCH/2:
+        for net, off in (('VDD', 0.0), ('VSS', PITCH/2)):
+            c = x+off+5.25
+            if c+w/2 <= core[2]: straps[(net, 'Metal5')] += db.Region(db.Box(um(c-w/2), 0, um(c+w/2), um(C.DIE[3]))) & cell
+        x += PITCH
+man['strap_widths'] = dict(SWJ, default=SW)
 for (net, ln), reg in straps.items():
     reg = (reg & reach[net]) - avoid[ln] - (ring['VSS' if net == 'VDD' else 'VDD'] if net == 'VSS' else db.Region())
-    keep = db.Region([p for p in reg.merged().each() if p.area() >= um(SW)*um(20)])
+    keep = db.Region([p for p in reg.merged().each() if p.area() >= um(10.5)*um(20)])
     straps[(net, ln)] = keep
 # the VSS ring gives way where a VDD strap crosses it on the same layer (the other layer stays continuous)
 metal = {}

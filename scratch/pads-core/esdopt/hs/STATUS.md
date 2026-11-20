@@ -220,3 +220,45 @@ secondaries (the strip rule matches any cathode on a DVDD node): still fails as 
 DVDD route resistance beyond the cell (ring assumed as esd.py); per-finger current density; f6 through the new ESD bench; a rebuild
 with the floating-ring fix; low-metal ESD. Review blockers: floating rings (hygiene, one-line fix + full re-run), RL miss (needs a ruling or
 a lower-C diode/route: the in-leg diode row, jumpers and DVDD trunk cost ~0.4 dB die RL vs a4).
+
+# CANDIDATE a6 (2026-11-19 ~22:00 UTC; requested by the coordinator after a5): declared before the run, limits UNCHANGED (a5 list above)
+Changes vs a5: (1) floating-ring fix: the secondary diodes' outer p-sub ring is contacted and routed to VSS (`--sec` key "ring": true;
+a5 behaviour without it); trial compose: floating lines 1. (2) return-loss recovery attempt: diode 1 x 1 um (was 1 x 2; model sizing
+1 um2: CDM 2 A 1 nF high +0.25 V vs 2 um2). DVDD reinforcement kept (it carries the N leg's clamp current and sits beside the legs,
+not over signal nodes); TU jumpers stay (moving them off the signal nodes needs a different row order, not attempted).
+Command: `sec/q_s.sh a6 leg7 '{"up": [1, 1], "dvdd_w": 3.0, "ring": true}'`.
+
+## CANDIDATE a6 RESULTS (2026-11-19/20, queue 22:00-23:40 UTC, all on the exact GDS). NOT published, NOT committed. Supersedes a5.
+GDS `sec/build/a6/pad_hspad.gds` sha256 07b6800d73eab73e...; physical.spice 1399bc07; leg `sec/build/leg7/pt_hs_leg.gds` 12b51cd3;
+models a6_r_{typ,high,low} e8402507 / 2f088962 / 045547de (+ _rail, ctest). Generators: hs_pad_compose.py d00f1f37, hs_leg_layout.py 7be4a1f6,
+pad_site_primary.py 5ff82d2a, protection_device_audit.py 2b6745db. Default paths rechecked with 7be4a1f6: default leg normalised 144da01f == leg5,
+a4 command normalised e4b38786 == build/a4, no-flag XOR 0 (unchanged composer). Command: `sec/q_s.sh a6 leg7 '{"up": [1, 1], "dvdd_w": 3.0, "ring": true}'`.
+The superseded a5 build, its results and `sec/r1/` were deleted (a5 numbers remain in the a5 table above).
+
+| Limit | a6 | Result |
+|---|---|---|
+| DRC / composer LVS / audit; read-back LVS pos / sch | 0 / match / match; match / match | PASS |
+| LVS controls (RX swap, site diode, secondary diode) | mismatch x3 | PASS |
+| Precheck cell / on rail; sliver control | 0/0, 0/0; M1.1 + DF.14_LV found | PASS |
+| Latch-up 15 um; isolated-nmos control | 0.0 um2; 6.4 um2 | PASS |
+| rail_site_check / selftest / railconn | PASS / OK / clean | PASS |
+| Floating lines <= 1 | 1 (shell piece) | PASS (a5 miss fixed) |
+| Default paths / outline / pins | as a5 | PASS |
+| E1 switch gates HBM 2 kV typ / high | 5.12 / 5.26 V, 0 over | PASS |
+| E1 CDM 2 A with 1 nF typ / high | 6.72 / 7.31 V, 0 over | PASS |
+| CDM 1 A / 3 A with 1 nF high (report) | 4.63 / 8.53 V (15 over at 3 A) | 1 A PASS, 3 A reported |
+| E2 receiver RX (6 V oxide 8.0) | 4.69 V HBM, 4.11 V CDM 2 A | PASS; 3.3 V (5.0) PASS at the requirement points |
+| E3 reverse < bv | HBM 6.89; CDM 2 A 1 nF high 10.73 (site nd2ps, bv 11) | PASS (0.27 V) |
+| E4 MIM; E5 pad vs rail HBM | 5.18 V; 5.90 / 6.79 V | PASS |
+| Controls: toy / site stripped / secondaries stripped | 2.781 V / 29.2 kV / 10.07-10.32 V 25 over | PASS |
+| C per leg (_rail typ) vs f6rt_rail + 0.150 | 1.331-1.355 pF, +0.092 (high +0.044, low +0.126) | PASS |
+| P/N imbalance; ctest | 5.5 fF; 105.2 fF | PASS |
+| Termination low / typ / high | all PASS (T-D 80.2-114.7 / 81.1-113.1 / 85.1-114.9) | PASS |
+| Die RL 2.4 GHz vs f6, per corner (limit -0.3 dB) | _rail -0.67 dB (high -0.25, low -0.80); no rail -0.49 dB | **MISS** |
+| COB RL vs f6 | _rail -0.31 dB (low -0.47); no rail -0.15 dB | **MISS** (rail) |
+| Receive loss | typ 1.23-1.32 vs f6 1.59-1.68 dB; high 1.75-1.88 vs f6rh 2.06-2.15 | PASS |
+
+Return loss: the 1 x 1 um diode (half the a5 area) changed nothing (a5 -0.67 / -0.49 dB, identical). On the same per-corner
+reading a4 (no secondary) is already -0.52 dB (_rail) / -0.28 dB (no rail): the secondary adds about 0.15-0.2 dB, the rest is the
+option-A site / under-rail C. Recovery not found within this change; reported as a budget request (coordinator). Not run: ss/ff/hot ESD,
+low-metal ESD, ring R beyond the cell, per-finger current density, f6 on the ESD bench.

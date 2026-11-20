@@ -1,0 +1,15 @@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice ss
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice res_ss
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice diode_ss
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.temp 27
+.option method=gear reltol=1e-3
+.include ring_osc.ext.spice
+VDD vdd 0 3.15
+VEN en 0 pwl(0 0 2n 0 2.1n 3.15)
+X1 en out vdd 0 pt_ring_osc
+CL out 0 20f
+.tran 2p 50n
+.measure tran per trig v(out) val=1.575 td=15n rise=1 targ v(out) val=1.575 td=15n rise=5
+.measure tran ion avg i(VDD) from=15n to=50n
+.end

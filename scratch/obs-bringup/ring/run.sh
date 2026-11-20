@@ -1,0 +1,1 @@
+for n in ro_tt_3.15 ro_tt_3.30 ro_tt_3.50 ro_ss_3.15 ro_ss_3.30 ro_ss_3.50 ro_ff_3.15 ro_ff_3.30 ro_ff_3.50 ro_sf_3.15 ro_sf_3.30 ro_sf_3.50 ro_fs_3.15 ro_fs_3.30 ro_fs_3.50 ao_tt_3.15 ao_tt_3.50 ao_ss_3.15 ao_ss_3.50 ao_ff_3.15 ao_ff_3.50; do ngspice -b $n.spice > $n.log 2>&1; done

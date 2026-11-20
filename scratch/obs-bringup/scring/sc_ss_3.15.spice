@@ -1,0 +1,52 @@
+.lib /foss/pdks/gf180mcuD/libs.tech/ngspice/sm141064.ngspice ss
+.include /foss/pdks/gf180mcuD/libs.tech/ngspice/design.ngspice
+.include /foss/pdks/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/spice/gf180mcu_fd_sc_mcu7t5v0.spice
+.temp 27
+.option method=gear reltol=1e-3
+VDD vdd 0 3.15
+VEN en 0 pwl(0 0 2n 0 2.1n 3.15)
+XN r20 en r0 vdd vdd 0 0 gf180mcu_fd_sc_mcu7t5v0__nand2_1
+C0 r0 0 3f
+X1 r0 r1 vdd vdd 0 0 gf180mcu_fd_sc_mcu7t5v0__inv_1
+C1 r1 0 3f
+X2 r1 r2 vdd vdd 0 0 gf180mcu_fd_sc_mcu7t5v0__inv_1
+C2 r2 0 3f
+X3 r2 r3 vdd vdd 0 0 gf180mcu_fd_sc_mcu7t5v0__inv_1
+C3 r3 0 3f
+X4 r3 r4 vdd vdd 0 0 gf180mcu_fd_sc_mcu7t5v0__inv_1
+C4 r4 0 3f
+X5 r4 r5 vdd vdd 0 0 gf180mcu_fd_sc_mcu7t5v0__inv_1
+C5 r5 0 3f
+X6 r5 r6 vdd vdd 0 0 gf180mcu_fd_sc_mcu7t5v0__inv_1
+C6 r6 0 3f
+X7 r6 r7 vdd vdd 0 0 gf180mcu_fd_sc_mcu7t5v0__inv_1
+C7 r7 0 3f
+X8 r7 r8 vdd vdd 0 0 gf180mcu_fd_sc_mcu7t5v0__inv_1
+C8 r8 0 3f
+X9 r8 r9 vdd vdd 0 0 gf180mcu_fd_sc_mcu7t5v0__inv_1
+C9 r9 0 3f
+X10 r9 r10 vdd vdd 0 0 gf180mcu_fd_sc_mcu7t5v0__inv_1
+C10 r10 0 3f
+X11 r10 r11 vdd vdd 0 0 gf180mcu_fd_sc_mcu7t5v0__inv_1
+C11 r11 0 3f
+X12 r11 r12 vdd vdd 0 0 gf180mcu_fd_sc_mcu7t5v0__inv_1
+C12 r12 0 3f
+X13 r12 r13 vdd vdd 0 0 gf180mcu_fd_sc_mcu7t5v0__inv_1
+C13 r13 0 3f
+X14 r13 r14 vdd vdd 0 0 gf180mcu_fd_sc_mcu7t5v0__inv_1
+C14 r14 0 3f
+X15 r14 r15 vdd vdd 0 0 gf180mcu_fd_sc_mcu7t5v0__inv_1
+C15 r15 0 3f
+X16 r15 r16 vdd vdd 0 0 gf180mcu_fd_sc_mcu7t5v0__inv_1
+C16 r16 0 3f
+X17 r16 r17 vdd vdd 0 0 gf180mcu_fd_sc_mcu7t5v0__inv_1
+C17 r17 0 3f
+X18 r17 r18 vdd vdd 0 0 gf180mcu_fd_sc_mcu7t5v0__inv_1
+C18 r18 0 3f
+X19 r18 r19 vdd vdd 0 0 gf180mcu_fd_sc_mcu7t5v0__inv_1
+C19 r19 0 3f
+X20 r19 r20 vdd vdd 0 0 gf180mcu_fd_sc_mcu7t5v0__inv_1
+C20 r20 0 3f
+.tran 5p 120n
+.measure tran per trig v(r10) val=1.575 td=40n rise=1 targ v(r10) val=1.575 td=40n rise=5
+.end

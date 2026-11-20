@@ -128,10 +128,4 @@ Each line is a gate. "Gap" is the state today.
 
 ## Bring-up order on silicon
 
-1. Start every die at 3.3 V with no POR override. Measure supply current with `RESET_N`
-   low, release reset, read the SPI ID and `RESET_STATUS`.
-2. Walk the analog test bus: bias currents, references, supply monitors, device replicas.
-   Read the ring monitors and set the supply trim.
-3. Turn on each island alone and record its current.
-4. Exercise fallback routes first, then primary routes.
-5. Close each capability on whichever route works.
+One current sequence for both chips: [bring-up.md](bring-up.md).

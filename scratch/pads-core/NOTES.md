@@ -28,4 +28,5 @@ Read first: scratch/reviews/MANDATE.md, SPLIT-PLAN.md, scratch/reviews/pads-core
 2. `pad_txpad` a4: independent review (fresh agent, artefacts only), publish on GO, rows to wired TX / chip top (new DVDD port, trim pins).
 3. Remaining five families with `pad_site_primary.py`; RF_TX: down-diodes in the site + a pair-shared RC clamp (PC-31 alternative).
 4. After each publish: `lvs_reference.py`, delete the candidate builds and the superseded scratch (hsfix/, hsfix2/, hspad/ once hspad is republished).
-5. Older open items: `$P/analog/pads/README.md` section 8.
+5. SATA Gen2 return loss (WR-SATA2-RL, PC-47): T-coil / C reduction (S7, IX-3) or a physical-limits proof; after txpad and the five families.
+6. Older open items: `$P/analog/pads/README.md` section 8.

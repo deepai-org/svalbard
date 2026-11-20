@@ -621,7 +621,7 @@ if {[llength $sync_first]} { set_false_path -to $sync_first }
 #     asynchronous by design and release is re-timed by the two-flop chain itself. Only the
 #     async RN/SN pins of these flops are cut; their D paths stay timed in their own domain.
 set rst_sync_pins {}
-foreach pat {*.wr_reset* *.rd_reset* *.wr_active* *.rd_active* *.release_state* *.e?.active* *host.h2d.hrs* *host.drs* *host.crs* *host.pingpong.wt*} {
+foreach pat {*.wr_reset* *.rd_reset* *.wr_active* *.rd_active* *.release_state* *.e?.active* *host.h2d.hrs* *host.drs* *host.crs* *host.pingpong.wt* *.rd_rel_rep*} {
     foreach c [pt_cells $pat] {
         foreach pin [get_pins -quiet -of_objects $c -filter "direction == input"] {
             if {[lsearch -exact {RN SETN SN} [get_property $pin lib_pin_name]] >= 0} { lappend rst_sync_pins $pin }

@@ -24,7 +24,6 @@ Hop plan (HOPS: stream -> hop clock phases), from measurements on the extracted 
 
     python3 ser8d_macro.py        # -> generated/fast/wtx_ser8d.*
 """
-import inspect
 import json
 
 import serq4_macro as M
@@ -58,38 +57,6 @@ def channels(width=744.12):
 
 def bars():
     return [(round(x - VSS_BAR_W / 2, 3), round(x + VSS_BAR_W / 2, 3)) for x in VSS_BARS]
-
-
-def _engine():
-    """le.generate with three options that analog/timing/layout_engine.py (not ours to edit) lacks, patched in at run time
-    from its own source (each anchor must occur exactly once, else this raises):
-      em['m5_keep']   [(x0, x1)]: Metal5 keep-outs for straps and trunk columns (the engine's MIM keep-out mechanism);
-      em['strap_x0']  x of the first strap pair (default origin + 3);
-      em['m5_bars']   [(net, x0, x1)]: full-height Metal5 bars of a power net, Via4 arrays (0.56 um pitch) on every
-                      power track of that net they cross."""
-    le = M.le
-    src = inspect.getsource(le.generate)
-    bars_src = """    for n_, xa_, xb_ in (em or {}).get('m5_bars', ()):
-        L.net = n_
-        L.rect('metal5', xa_, 0.0, xb_, top - 0.5)
-        nx_ = int((xb_ - xa_ - 0.44) / 0.56 + 1e-9) + 1
-        for (ri_, net_), ty_ in tracks.items():
-            if net_ != n_:
-                continue
-            ky_ = max(1, int((pwr_w(ri_) - 0.44) / 0.56 + 1e-9) + 1)
-            for ix_ in range(nx_):
-                for iy_ in range(ky_):
-                    L.via(snap((xa_ + xb_) / 2 + (ix_ - (nx_ - 1) / 2) * 0.56), snap(ty_ + (iy_ - (ky_ - 1) / 2) * 0.56), 4, 5)
-"""
-    for a, b in (("    m5_ok = lambda x, half:", "    m5_keep += [tuple(k_) for k_ in (em or {}).get('m5_keep', ())]\n    m5_ok = lambda x, half:"),
-                 ("    x = origin_x + 3.0\n    while x < width - 2.0:", "    x = (em or {}).get('strap_x0', origin_x + 3.0)\n    while x < width - 2.0:"),
-                 ("    L.net = None\n    # --- antenna diodes", bars_src + "    L.net = None\n    # --- antenna diodes")):
-        if src.count(a) != 1:
-            raise RuntimeError(f'layout_engine.generate changed: anchor {a[:40]!r} found {src.count(a)} times')
-        src = src.replace(a, b)
-    ns = {}
-    exec(compile(src, le.__file__, 'exec'), le.__dict__, ns)
-    return ns['generate']
 
 
 def supply_em():
@@ -155,13 +122,9 @@ def build_top():
     # 9-11 fF, PH135 beside SERQ 10 fF; second build: B1_0 beside LDA 17 fF).
     hopd = [c[1] for i, _, c in top_instances() if i[:2] == 'XH']     # hop data inputs: B k_0, R k_i
     quiet = {n: 0.02 for n in list(Q.PH) + [f'F{k}' for k in range(8)] + [f'Q{k}' for k in range(8)] + hopd}
-    # Metal5 / supply plan (ASM-8): channels, lanes, VSS bars, strap Via4 arrays; the patched engine (see _engine)
-    gen, M.le.generate = M.le.generate, _engine()
-    try:
-        res = M.build_le(NAME, PORTS, top_spice(), text, rows(), CELLS, max_row_width=760.0, workname='ser8d',
-                         over_cell=True, em=dict(track_first=list(Q.PH), **supply_em()), net_space=quiet)
-    finally:
-        M.le.generate = gen
+    # Metal5 / supply plan (ASM-8): channels, lanes, VSS bars, strap Via4 arrays (layout_engine em options m5_keep, strap_x0, m5_bars)
+    res = M.build_le(NAME, PORTS, top_spice(), text, rows(), CELLS, max_row_width=760.0, workname='ser8d',
+                     over_cell=True, em=dict(track_first=list(Q.PH), **supply_em()), net_space=quiet)
     write_m5_plan()
     return res
 

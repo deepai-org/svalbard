@@ -210,6 +210,37 @@ Full 5.4 nF on both chips (`scratch/reviews/die-fit/decap.json`, as built; posit
 Island-local: the plan adds no capacitor on any island rail. The model carries 50-250 pF of block capacitance per island
 at 0.3 ohm.
 
+### 5.1a Decap reach of the CDM-sensitive pads (PC-43, PC-44)
+
+Requirement: on pt_wired, >= 1 nF of die decap within 0.7 ohm (ring path plus the decap's own series resistance) of the
+HS pad sites `bidir[14]`-`bidir[21]` (WIRE_RX, USB, WIRE_TX); the CDM protection of `pad_hspad` and `pad_txpad` was
+qualified against that lumped 1 nF / 0.7 ohm. The same check is reported for the pt_rf RF and reference pads.
+
+Method (`scratch/integration/m1-pdn/cdm_decap.py`): impedance between ring VDD and ring VSS at the pad site, bonds
+removed (the board is not reached within a CDM event), plan as packed, mesh at the G1 requirement, ring from the
+provider rails (0.20 / 0.25 mohm per um DVDD / DVSS, `design-assumptions.md`); fitted as series R-L-C at 20 / 60 MHz and at 150 / 450 MHz (the CDM band). Pessimistic set:
+
+| Chip | Site | R at 60 MHz (ohm) | R at 450 MHz (ohm) | C reached (nF) | Loop L (nH) | Result |
+| --- | --- | ---: | ---: | ---: | ---: | --- |
+| pt_wired | bidir[14] WIRE_RX | 0.47 | 0.67 | 5.8 | 0.17 | pass, 4 % margin at 450 MHz |
+| pt_wired | bidir[15] WIRE_RX | 0.46 | 0.63 | 5.8 | 0.16 | pass, 10 % margin at 450 MHz |
+| pt_wired | bidir[18] USB | 0.43 | 0.54 | 5.8 | 0.14 | pass |
+| pt_wired | bidir[21] WIRE_TX | 0.42 | 0.50 | 5.8 | 0.13 | pass |
+| pt_wired | bidir[15], intrinsic only (negative control) | 0.53 | | 0.42 | 0.17 | miss, as it must |
+| pt_rf | inputs[9] RF_RX | 0.34 | 0.42 | 6.1 | 0.12 | pass |
+| pt_rf | inputs[1] RF_TX | 0.40 | 0.54 | 6.1 | 0.15 | pass |
+| pt_rf | bidir[20] REF_IN | 0.40 | 0.47 | 6.1 | 0.13 | pass |
+
+- pt_wired meets the requirement with the plan as packed, but only through the spread plan: the decap physically next to
+  the east pads is the bond-site tiles (about 18 pF per site) and three tiles (`decap_tile_00`, `_01`, `_21`). The loop
+  inductance of 0.13-0.17 nH is not in the pads' bench: at 2 A with a 200 ps edge it adds about 1.6 V. A 1 nF tile strip
+  inboard of the east pad cells (x 2870-2990, y 950-3100) brings bidir[15] to 0.41 / 0.50 ohm and 0.14 / 0.08 nH (60 /
+  450 MHz fits).
+- **Placement requirement (pt_wired):** >= 1 nF of the tile structure (`pt_decap_tile` + MIM, >= 40 % MIM) inboard of the
+  east pad cells between y 940 and 3110, tied to the core ring and the G1 mesh at that edge on both nets; area-neutral by
+  moving about 1 nF (0.25 mm2, 17 tiles) from the west-edge tiles (`decap_tile_02`-`_11`, `_16`-`_18`).
+- pt_rf: no pads row makes the RF or reference pads depend on die decap; with the plan they would meet the same rule.
+
 ### 5.2 Macro ripple (`e8_decap.py`)
 
 Case pt_rf DXa (D2H at div2), pt_wired W (D2H at 156.25 MHz). Limit 150 mV pk-pk at the macro (PD2-5). The two-phase
@@ -375,6 +406,7 @@ given, not a pass or fail: the supply-rejection evidence is the demand (PD2-14..
 - **PDS-1** (assembly, user): pt_wired wired_tx on two `isw_wired` in parallel (one VISL bar), +0.091 mm2 against the
   packed `isw_debug`.
 - **PDS-2** (closed by PDS-6): pt_wired ceiling 430 mA, thermal-set.
+- **PDS-7** (assembly): 1 nF of tiles next to the pt_wired east HS pads (section 5.1a).
 - **PDS-6** (board): B2a theta(junction-plate) <= 5.2 C/W is now binding for pt_wired; regulator >= 0.45 A leaves 20 mA.
 - **PDS-3** (floorplan): straps wider than practical at the packed distances (`wrx_cap` 323 um, `pt_wiredtx8` 290 um,
   `lo_mmd` 154 um, `pll_cdr` on pt_wired 161 um).
@@ -390,7 +422,7 @@ given, not a pass or fail: the supply-rejection evidence is the demand (PD2-14..
   ngspice, failing negative case), `e0_sanity_model.py` (builder against a hand calculation with the chip's bond count;
   negative control no decap + one supply bond fails), `e7_static.py` (section 4, bonds), `e8_decap.py` (section 5.2;
   negative controls intrinsic-only and rows + bond sites only fail), `e9_victims.py` (sections 6-7, single- and
-  two-phase), `e11_islands.py` (sections 5.3-5.4; intrinsic-only fails RQ-3a). Outputs `out/<chip>/`.
+  two-phase), `e11_islands.py` (sections 5.3-5.4; intrinsic-only fails RQ-3a), `cdm_decap.py` (section 5.1a; intrinsic-only misses). Outputs `out/<chip>/`.
 - Configuration: `chipcfg.py` reads the packing (`scratch/reviews/die-fit/run/<chip>/fit-s.json`), the decap split
   (`die-fit/decap.json`), the bond maps, `spec/chips.json` and `power_budget.py`; it holds nothing chip-specific of its own.
 - Soft start: `analog/island_support/pd2_softstart.py`, `pd2-softstart.json`.

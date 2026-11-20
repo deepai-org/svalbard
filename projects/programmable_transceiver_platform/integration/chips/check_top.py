@@ -312,6 +312,9 @@ def check(conn, masters_txt, ctl_txt, regmap, rtl, fp6, chip, bond, others, cont
         elif i['group'] not in ALWAYS_ON and i['group'] not in islands: R['supply'].append(f'{name}: island {i["group"]} is not on pt_{chip}')
     for name, i in inst.items():        # supply pin net must match the instance's declared island
         for p in ('VDD', 'VDD_WIRE_SW', 'VDD_PLL_SW', 'vdd3v3', 'DVDD'):
+            if p == 'DVDD' and i['master'].startswith('pad_') and p in i['pins']:   # ESD option A (PC-23): pad-site primaries tie to the ring supply
+                if i['pins'][p][1] != 'VDD': R['supply'].append(f'{name}.DVDD = {i["pins"][p][1]}: pad ring supply must be VDD (ESD option A)')
+                continue
             if p in i['pins'] and not rail_ok(i['group'], i['pins'][p][1]) and i['master'] != 'pt_wtx_fallback_control':
                 R['supply'].append(f'{name}.{p} = {i["pins"][p][1]} but the instance is declared on island {i["group"]}')
         for p in ('VSS', 'vss', 'DVSS', 'GND'):        # grounds: VSS everywhere; AGND_RX only where power-delivery 5.2 puts it

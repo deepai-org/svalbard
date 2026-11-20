@@ -95,7 +95,7 @@ Xisw_wired_cap VDD RAIL_wired_cap VSS island_en[0] NC_isw_wired_cap_ISO s_pg_wir
 Xpad_wtx_ext WTX_EXT_N WTX_EXT_P VSS ESD_RAIL_wtx_ext NC_pad_wtx_ext_ATB_ESD_RAIL pad_reference
 Xpad_wmon WMON VSS ESD_RAIL_wtx_ext NC_pad_wmon_ATB_ESD_RAIL pad_reference
 Xpad_tlp TLP_TEST VSS VDD pad_tlp_flat
-Xpad_hs_rx VSS RAIL_wired_rx HS_TERM_VCM HS_TERM_ENABLE HS_TERM_TRIM[0] HS_TERM_TRIM[1] HS_TERM_TRIM[2] HS_TERM_TRIM[3] HS_VBIAS HSRX_P HSRX_N WIRE_RX_P WIRE_RX_N hs_protected_pad
+Xpad_hs_rx VDD VSS RAIL_wired_rx HS_TERM_VCM HS_TERM_ENABLE HS_TERM_TRIM[0] HS_TERM_TRIM[1] HS_TERM_TRIM[2] HS_TERM_TRIM[3] HS_VBIAS HSRX_P HSRX_N WIRE_RX_P WIRE_RX_N hs_protected_pad
 Xpad_usb USB_DP USB_DN RAIL_wired_tx VSS TERM_VCM TERM_ENABLE DIFF_ENABLE DIV_ENABLE BYPASS_ENABLE URX_P URX_N HS_PBIAS USB_HS_P USB_HS_N USB_FS_HIGH_P USB_FS_HIGH_N USB_FS_LOW_P USB_FS_LOW_N c_usb_pullup_p c_usb_pullup_n c_usb_pulldown_p c_usb_pulldown_n c_usb_term_trim[0] c_usb_term_trim[1] c_usb_term_trim[2] c_usb_ls_slow NC_pad_usb_ATB_ESD_RAIL tx_protected_pad
 Xpad_wire_tx WIRE_TX_P WIRE_TX_N RAIL_wired_tx VSS RAIL_wired_tx TX_MAIN_P TX_MAIN_N TX_MAIN_BIAS TX_POST_P TX_POST_N TX_POST_BIAS VSS VSS VSS TX_EN_DETECT RAIL_wired_tx TX_EN_TERM TX_TERM_VCM NC_pad_wire_tx_ATB_ESD_RAIL tx_protected_pad
 Xbb_tap_wmon WMON_IN VSS WMON NC_bb_tap_wmon_pad_n NC_bb_tap_wmon_inj_p NC_bb_tap_wmon_inj_n BIAS_bb_tap_wmon c_wmon_obs_en VSS island_off[5] ATBN_debug_buffer_bias RAIL_debug VSS pt_bb_tap

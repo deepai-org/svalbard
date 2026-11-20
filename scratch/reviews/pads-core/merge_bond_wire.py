@@ -1,6 +1,7 @@
 """Merge bond-wire.json into a package-channel.json. Adds only: pins[*].bond_wire, supplies_grounds[*].bond_wire and the
 top-level key bond_wire_assumptions; no existing key is changed.
-usage: python3 -I merge_bond_wire.py <package-channel.json in> <bond-wire.json> <out.json>"""
+usage: python3 -I merge_bond_wire.py <package-channel.json in> <bond-wire.json> <out.json> [--per-chip]
+  --per-chip: a per-chip file (rf / wired) lists fewer than 74 bonds (its VDD / VSS-bonded signal-net sites are in neither section)"""
 import json, sys
 src, bw, dst = sys.argv[1:4]
 pc = json.load(open(src)); w = json.load(open(bw)); B = w['bonds']
@@ -15,7 +16,7 @@ for sec in ('pins', 'supplies_grounds'):
         site = name if sec == 'supplies_grounds' else p['site']
         assert site.replace('.pad', '') == B[str(b)]['site'], (name, site, B[str(b)]['site'])
         p['bond_wire'] = frag(b); n += 1
-assert n == 74, n
+assert n == 74 or ('--per-chip' in sys.argv and n < 74), n
 pc['bond_wire_assumptions'] = dict(w['wire_assumptions'], current=w['current'], source='scratch/pads-core/ws/bond-wire.json (wire.py), ' + w['status'])
 json.dump(pc, open(dst, 'w'), indent=1)
 print('merged', n, 'bonds ->', dst)

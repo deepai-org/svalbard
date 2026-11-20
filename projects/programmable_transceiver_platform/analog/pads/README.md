@@ -183,7 +183,7 @@ board carries eight 1 µF capacitors, one per supply finger net, and nothing on 
 | Supplies | 8 supply and 10 ground bonds; the ring joins all supply bonds into one net and all ground bonds into another: use one common external supply | `spec/contract.json` `packaging_gate` |
 | Bond plan length, finger-centre landing | 2.197–2.991 mm (limit < 3 mm), maximum angle 38.7° (limit 45°), no crossing | `scratch/reviews/pads-core/BOND-AUDIT.md` |
 | Near-end landing | maximum 2.665 mm, 44.0° | same |
-| Wire resistance, inductance per bond | 0.21–0.28 Ω (aluminium); per-bond values in `spec/package-channel.json` | `scratch/reviews/pads-core/wire-table.md` |
+| Wire resistance, inductance per bond | 0.21–0.28 Ω (aluminium); per-bond values in `spec/package-channel-{rf,wired}.json` | `scratch/reviews/pads-core/wire-table.md` |
 | Ring rails through custom pads | DVDD, DVSS, VDD, VSS continuous at full width on Metal3–5 through every custom family | `scratch/reviews/pads-core/RAIL-CONTINUITY.md` |
 
 `generated/packaging-audit.json` (`packaging_audit.py`) carries the signal names of an earlier bond map; its

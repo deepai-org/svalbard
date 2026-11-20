@@ -1,10 +1,11 @@
 """Merge generator outputs into the spec/package-channel.json schema (this step was manual on 2026-11-10).
   merge.py check -> rebuild from the OLD generator outputs in scratch/cob and compare with the current spec file (regression)
   merge.py       -> build package-channel.new.json from the outputs in this directory.  Never writes into the project tree."""
-import json, sys
+import json, sys, os
 R = '/home/ubuntu/svalbard/'
 SPEC = R + 'projects/programmable_transceiver_platform/spec/package-channel.json'
 OUT = R + 'scratch/pads-core/spec/'
+TEMPLATE = os.path.dirname(os.path.abspath(__file__)) + '/single-die-2026-11-18.json'   # copy of the retired spec/package-channel.json
 def build(src, cur):
     L = lambda n: json.load(open(src + n))
     ch, pl, lo, lt, bc = L('channel.json'), L('placement.json'), L('lo_sweep.json'), L('lo_term_skew.json'), L('lo_bigC.json')
@@ -25,13 +26,39 @@ def build(src, cur):
         elif k == 'pulse_2p5G_and_312M': out[k] = ch['pulse']
         elif k == 'intra_pair_and_group_skew': out[k] = lt['skew']
         elif k == 'placement_sweep':
-            out[k] = dict(definition=cur[k]['definition'], rf_rx_match=pl['rf_rx_match'], rf_tx_match=pl['rf_tx_match'],
-                          carrier_line_IL_dB_1p25G=pl['carrier_line_IL_dB_1p25G'], wired_rx_RL_vs_termination=pl['wired_rx_RL_vs_term'])
+            out[k] = dict(definition=cur[k]['definition'], rf_rx_match=pl.get('rf_rx_match'), rf_tx_match=pl.get('rf_tx_match'),
+                          carrier_line_IL_dB_1p25G=pl['carrier_line_IL_dB_1p25G'], wired_rx_RL_vs_termination=pl.get('wired_rx_RL_vs_term'))
+            out[k] = {kk: v for kk, v in out[k].items() if v is not None}       # per-chip: a die without RF / wired RX drops the row
         elif k == 'lo': out[k] = dict(diff_gain_vs_padC_unterminated=lo, termination_effect=lt['lo_term'], larger_padC=bc)
         else: out[k] = cur[k]                       # status, date, sources, board, pdn, host_ssn, thermal: not map dependent
     return out
-cur = json.load(open(SPEC))
-if sys.argv[1:] == ['check']:
+cur = json.load(open(SPEC if os.path.exists(SPEC) else TEMPLATE))
+CHIP = sys.argv[sys.argv.index('--chip') + 1] if '--chip' in sys.argv else None
+if CHIP:
+    # per-chip file: spec/package-channel-<chip>.json; map-independent keys (status, board, pdn, host_ssn, thermal,
+    # bond_wire_assumptions) carried from the single-die 2026-11-18 file (TEMPLATE, a copy kept next to these tools)
+    cur = json.load(open(TEMPLATE))
+    D = os.path.dirname(os.path.abspath(__file__)) + '/out/' + CHIP + '/'
+    new = build(D, cur)
+    new['date'] = '2026-11-20'
+    new['chip'] = 'pt_' + CHIP
+    new['sources'] = dict(cur['sources'], local_copy='scratch/cob/repo (clone), scratch/cob/raw.json; generator: '
+                          'scratch/reviews/pads-core/package-channel-tools/{channel_model,placement,lo_sweep,lo_term,lo_bigc,merge}.py --chip ' + CHIP,
+                          bond_map='projects/programmable_transceiver_platform/integration/chips/%s/bond_map.txt' % CHIP)
+    new['bond_map_notes'] = {
+        'map': 'pt_%s bond map, integration/chips/%s/bond_map.txt (2026-11-20, after PC-29 / PC-33 / PC-42 and the rf / wired split); '
+               'sites bonded to VDD / VSS in that map are not pins here' % (CHIP, CHIP),
+        'names': 'bond-map names H2D[i] / D2H[i] / SPI_* are listed as H2D_D[i] / D2H_D[i] / HOST_* (unchanged pin names)',
+        'P_N_order': 'pad families are placed unmirrored on the east edge (R90): PAD_P is the lower-numbered site (PC-42; '
+                     'pad_wirepad PAD_P traced to its local x 7.5 opening, 2026-11-20)',
+        'supplies_grounds': 'board-derived (non-signal nets of the 1x1 mezzanine), not the per-chip VDD / VSS sites of the bond map',
+        'bond_mm': cur['bond_map_notes']['bond_mm'],
+    }
+    keys = list(new); keys.insert(keys.index('date') + 1, keys.pop(keys.index('chip'))); new = {k: new[k] for k in keys}
+    dst = D + 'package-channel-%s.json' % CHIP
+    json.dump(new, open(dst, 'w'), indent=1)
+    print('wrote', dst, 'pins', len(new['pins']), 'placement_sweep', list(new['placement_sweep']))
+elif sys.argv[1:] == ['check']:
     old = build(R + 'scratch/cob/', cur)
     bad = [k for k in cur if old[k] != cur[k]]
     if 'pins' in bad:

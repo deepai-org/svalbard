@@ -2,8 +2,9 @@
 
 Analytic lumped / transmission-line model; not an EM solve. No S-parameters are published for
 the board or the connector, so the connector values are estimates. All numbers are in
-[package-channel.json](package-channel.json) (per pin: site, bond pad, board net, connector
-contact, bond wire, traces, S-parameters, crosstalk). Generator: `scratch/pads-core/spec/`.
+[package-channel-rf.json](package-channel-rf.json) and
+[package-channel-wired.json](package-channel-wired.json), one per chip from its `integration/chips/<chip>/bond_map.txt` (per pin: site, bond pad, board net, connector
+contact, bond wire, traces, S-parameters, crosstalk). Generator: `scratch/reviews/pads-core/package-channel-tools/` (`--chip rf|wired`).
 Board obligations that follow from it are in [board-requirements.md](board-requirements.md)
 (BP-1..8); risks are PKG-* in [risk-register.md](risk-register.md).
 

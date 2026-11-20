@@ -9,10 +9,11 @@ for bond-length spread (+-0.3 mm). Lumped/analytic, not EM; component values are
 """
 import json, math, cmath, sys
 import numpy as np
-sys.path.insert(0, '/home/ubuntu/svalbard/scratch/pads-core/spec')
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)) if '--chip' in sys.argv else '/home/ubuntu/svalbard/scratch/pads-core/spec')
 import channel_model as cm
 
-geo = json.load(open('/home/ubuntu/svalbard/scratch/pads-core/spec/channel.json'))['geometry']
+geo = json.load(open(cm.OUT + '/channel.json'))['geometry']
 PLACES = [('strip', None), ('conn+2mm', 2.0), ('car10mm', 10.0), ('car30mm', 30.0), ('car50mm', 50.0)]
 
 def chain_to(p, f, place, dbond=0.0):
@@ -134,13 +135,13 @@ def run():
     # RF TX: optimum per-leg load 100 ohm (200 ohm diff) behind 1.0 pF pad -> deliver into 50 ohm (balun 2:1 per leg)
     tx = lambda f: 1 / (1j * 2 * math.pi * f * 1.0e-12 + 1 / 100.0)
     band = (2.400e9, 2.4835e9)
-    out['rf_rx_match'] = {pl: match_study(geo['RF_RX_P'], rx, band, pl) for pl, _ in PLACES}
-    out['rf_tx_match'] = {pl: match_study(geo['RF_TX_P'], tx, band, pl) for pl, _ in PLACES}
+    if 'RF_RX_P' in geo: out['rf_rx_match'] = {pl: match_study(geo['RF_RX_P'], rx, band, pl) for pl, _ in PLACES}
+    if 'RF_TX_P' in geo: out['rf_tx_match'] = {pl: match_study(geo['RF_TX_P'], tx, band, pl) for pl, _ in PLACES}
     out['lo_ext_unmatched'] = {pl: lo_pad_study(geo['REF_IN'], geo['AUX_CLK_P'], pl) for pl, _ in PLACES if pl != 'strip'}
     out['lo_ext_unmatched_N'] = {pl: lo_pad_study(geo['REF_IN_N'], geo['AUX_CLK_N'], pl) for pl, _ in PLACES if pl != 'strip'}
     # Wired RX return loss at 1.25 GHz vs on-die termination value (differential approx = single-ended leg)
     wr = {}
-    for cpad in (2.35, 1.6, 1.0):
+    for cpad in ((2.35, 1.6, 1.0) if 'WIRE_RX_P' in geo else ()):
         row = {}
         for rt in (40, 45, 50, 55, 60):
             cm.CPAD['wired_rx'] = cpad
@@ -149,7 +150,7 @@ def run():
             row[f'R{rt}'] = dict(RL_1p25G=round(-20 * math.log10(abs(g)), 1), RL_625M=round(-20 * math.log10(abs(g2)), 1))
         wr[f'Cpad{cpad}pF'] = row
     cm.CPAD['wired_rx'] = 2.35
-    out['wired_rx_RL_vs_term'] = wr
+    if wr: out['wired_rx_RL_vs_term'] = wr
     # carrier trace loss contribution at 1.25 GHz (50-ohm, w 0.3 mm FR4 tand 0.02) per placement
     out['carrier_line_IL_dB_1p25G'] = {pl: round(-20 * math.log10(abs(cm.sparams(cm.abcd_line(50.0, 3.3, (L or 0) * 1e-3, 1.25e9))[1])), 3)
                                      for pl, L in PLACES if L}
@@ -157,5 +158,5 @@ def run():
 
 if __name__ == '__main__':
     r = run()
-    json.dump(r, open('/home/ubuntu/svalbard/scratch/pads-core/spec/placement.json', 'w'), indent=1)
+    json.dump(r, open(cm.OUT + '/placement.json', 'w'), indent=1)
     print(json.dumps(r, indent=1))

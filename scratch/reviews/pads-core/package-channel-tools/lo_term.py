@@ -1,5 +1,6 @@
 import json, math, cmath, sys
-sys.path.insert(0, '/home/ubuntu/svalbard/scratch/pads-core/spec')
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)) if '--chip' in sys.argv else '/home/ubuntu/svalbard/scratch/pads-core/spec')
 import placement as pl
 g = pl.geo
 def leg(p, f, C, R, db=0.0, place='car30mm'):
@@ -18,6 +19,7 @@ v = 1e3 / 299.792 * math.sqrt(pl.cm.EEFF)  # ps/mm
 for a, b in [('RF_RX_P', 'RF_RX_N'), ('RF_TX_P', 'RF_TX_N'), ('REF_IN', 'REF_IN_N'), ('AUX_CLK_P', 'AUX_CLK_N'),
              ('WIRE_RX_P', 'WIRE_RX_N'), ('WIRE_TX_P', 'WIRE_TX_N'), ('WTX_EXT_P', 'WTX_EXT_N'),
              ('BB_I_P', 'BB_I_N'), ('BB_Q_P', 'BB_Q_N')]:
+    if a not in g: continue
     la = g[a]['f_mm'] + g[a]['b_mm']; lb = g[b]['f_mm'] + g[b]['b_mm']
     sk[f'{a[:-2] if a.endswith("_P") else a}'] = dict(P_mm=round(la, 2), N_mm=round(lb, 2), skew_ps=round((la - lb) * v, 1),
                                                       bond_P=g[a]['bond_mm'], bond_N=g[b]['bond_mm'])
@@ -25,4 +27,4 @@ for k in ('D2H', 'H2D'):
     ls = {s: g[s]['f_mm'] + g[s]['b_mm'] for s in g if s.startswith(k)}
     sk[k + '_group'] = dict(min_mm=round(min(ls.values()), 2), max_mm=round(max(ls.values()), 2),
                             clk_mm=round(ls[k + '_CLK'], 2), spread_ps=round((max(ls.values()) - min(ls.values())) * v, 1))
-print(json.dumps(sk, indent=0)); json.dump(dict(lo_term=out, skew=sk, ps_per_mm=round(v, 2)), open('lo_term_skew.json', 'w'), indent=1)
+print(json.dumps(sk, indent=0)); json.dump(dict(lo_term=out, skew=sk, ps_per_mm=round(v, 2)), open((pl.cm.OUT + '/' if pl.cm.CHIP else '') + 'lo_term_skew.json', 'w'), indent=1)

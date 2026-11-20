@@ -1,5 +1,6 @@
 import json, math, cmath, sys
-sys.path.insert(0, '/home/ubuntu/svalbard/scratch/pads-core/spec')
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)) if '--chip' in sys.argv else '/home/ubuntu/svalbard/scratch/pads-core/spec')
 import placement as pl
 g = pl.geo
 def leg(p, place, f, C, db=0.0):
@@ -19,5 +20,5 @@ for C in (0.7e-12, 1.0e-12, 1.5e-12, 2.0e-12):
         sp = [abs(leg(g['REF_IN'], place, 2.45e9, C, d) + leg(g['REF_IN_N'], place, 2.45e9, C, d)) / 2 for d in (-0.3, 0, 0.3)]
         row['bond_pm0p3_dB'] = round(20 * math.log10(max(sp) / min(sp)), 2)
         res[f'C{C*1e12:.1f}pF_{place}'] = row
-json.dump(res, open('lo_sweep.json', 'w'), indent=1)
+json.dump(res, open((pl.cm.OUT + '/' if pl.cm.CHIP else '') + 'lo_sweep.json', 'w'), indent=1)
 for k, v in res.items(): print(k, v)

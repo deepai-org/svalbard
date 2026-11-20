@@ -1,7 +1,8 @@
 """Recompute the COB columns of lo.larger_padC (no generator on disk for scratch/cob/lo_bigC.json; formula = lo_term.leg).
 Usage: lo_bigc.py old  -> check against scratch/cob/lo_bigC.json with the old geometry;  lo_bigc.py -> new geometry."""
 import json, math, sys
-sys.path.insert(0, '/home/ubuntu/svalbard/scratch/pads-core/spec')
+import os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)) if '--chip' in sys.argv else '/home/ubuntu/svalbard/scratch/pads-core/spec')
 import placement as pl
 old = json.load(open('/home/ubuntu/svalbard/scratch/cob/lo_bigC.json'))
 g = json.load(open('/home/ubuntu/svalbard/scratch/cob/channel.json'))['geometry'] if sys.argv[1:] == ['old'] else pl.geo
@@ -18,4 +19,4 @@ for k, v in old.items():
 if sys.argv[1:] == ['old']:
     print('reproduces old file:', out == old, [(k, out[k], old[k]) for k in out if out[k] != old[k]][:3])
 else:
-    json.dump(out, open('/home/ubuntu/svalbard/scratch/pads-core/spec/lo_bigC.json', 'w'), indent=1); print(out)
+    json.dump(out, open(pl.cm.OUT + '/lo_bigC.json', 'w'), indent=1); print(out)

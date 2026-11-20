@@ -6,13 +6,20 @@ Electrical model = cascaded ABCD: die pad C -> bond wire (L,R) -> finger C -> F.
 -> carrier-board land + 10 mm 50-ohm line -> 50 ohm.
 Outputs: geometry.json, channel.json in this directory. Lumped/analytic; NOT an EM solve.
 """
-import json, math, cmath, collections, sys
+import json, math, cmath, collections, sys, re
 import numpy as np
 # copy of scratch/cob/channel_model.py for the 2026-11-14 bond map (pads owner); inputs still read from scratch/cob
 
 HERE = '/home/ubuntu/svalbard/scratch/cob'
 PCB = HERE + '/repo/run-1/1x1-cob/1x1-mezzanine.kicad_pcb'
 OUT = '/home/ubuntu/svalbard/scratch/pads-core/spec'
+import os
+TOOLS = os.path.dirname(os.path.abspath(__file__))
+# --chip <rf|wired>: per-chip mode (after the rf / wired split). Signals from integration/chips/<chip>/bond_map.txt,
+# outputs into package-channel-tools/out/<chip>/. Without --chip the single-die 2026-11-14 behaviour is unchanged.
+CHIP = sys.argv[sys.argv.index('--chip') + 1] if '--chip' in sys.argv else None
+if CHIP:
+    OUT = TOOLS + '/out/' + CHIP; os.makedirs(OUT, exist_ok=True)
 d = json.load(open(HERE + '/raw.json'))
 fp = {f['ref']: f for f in d['footprints']}
 U102, U101 = fp['U102'], fp['U101']
@@ -24,7 +31,7 @@ sides = c['assembly_policy']['provider_site_inventory']['ordered_sites_by_side']
 # FIX 2026-11-14: contract lists north west->east; bond numbers run counter-clockwise, so north is reversed too
 # (proof: north_proof.py, bond-audit.json).  The original reversed only west.
 order = sides['south'] + sides['east'] + list(reversed(sides['north'])) + list(reversed(sides['west']))
-_m = json.load(open(OUT + '/site_to_bond.json'))['site_to_bond']
+_m = json.load(open((TOOLS if CHIP else OUT) + '/site_to_bond.json'))['site_to_bond']
 assert all(_m[s] == i + 1 for i, s in enumerate(order)), 'site order disagrees with coordinate-derived bond numbers'
 ordinal = {s: i + 1 for i, s in enumerate(order)}
 side_of = {}
@@ -47,7 +54,21 @@ SIG = {
 for k, v in c['assembly_policy']['candidate_signal_sites'].items():
     if k.startswith(('D2H', 'H2D', 'HOST_')): SIG[k] = v
 SIG['HOST_CS_N'] = 'bidir[10].pad'
-assert len(set(SIG.values())) == len(SIG) == 56
+BOND_MAP_NAME = {'SPI_CS_N': 'HOST_CS_N', 'SPI_SCLK': 'HOST_SCLK', 'SPI_MOSI': 'HOST_MOSI', 'SPI_MISO': 'HOST_MISO'}
+def spec_name(n):                                   # bond-map name -> package-channel pin name (H2D[3] -> H2D_D[3])
+    m = re.fullmatch(r'(H2D|D2H)\[(\d+)\]', n)
+    return f'{m[1]}_D[{m[2]}]' if m else BOND_MAP_NAME.get(n, n)
+def read_bond_map(chip):
+    sig = {}
+    for ln in open(f'/home/ubuntu/svalbard/projects/programmable_transceiver_platform/integration/chips/{chip}/bond_map.txt'):
+        t = ln.split('#')[0].split()
+        if len(t) >= 3 and t[2] not in ('VDD', 'VSS'): sig[spec_name(t[2])] = t[0]
+    return sig
+if CHIP:
+    SIG = read_bond_map(CHIP)
+    assert len(set(SIG.values())) == len(SIG)
+else:
+    assert len(set(SIG.values())) == len(SIG) == 56
 
 CLASS = {}
 for s in SIG:
@@ -306,15 +327,16 @@ if __name__ == '__main__':
     geo, sup, out = run()
     xt = xtalk(geo)
     pr = {}
-    for sig in ('WIRE_RX_P', 'WIRE_TX_P', 'WTX_EXT_P', 'D2H_CLK', 'H2D_CLK'):
+    for sig in [s for s in ('WIRE_RX_P', 'WIRE_TX_P', 'WTX_EXT_P', 'D2H_CLK', 'H2D_CLK') if s in geo]:
         cls = geo[sig]['cls']
         pr[sig] = pulse(geo[sig], cls, 2.5e9 if cls.startswith('wired') else 312.5e6,
                         None if cls == 'host' else 50.0)
     # 2.5 Gb/s with the S7 target pad C and ideal 1 nH bond for comparison
     save = dict(CPAD)
-    CPAD['wired_rx'] = 1.6; pr['WIRE_RX_P@1.6pF'] = pulse(geo['WIRE_RX_P'], 'wired_rx'); CPAD.update(save)
-    g0 = dict(geo['WIRE_RX_P'], bond_mm=1.5, f_mm=0, b_mm=0, via_nH=0, conn_nH=0)
-    pr['WIRE_RX_P@old_assumption_1.5nH_only'] = pulse(g0, 'wired_rx')
+    if 'WIRE_RX_P' in geo:
+        CPAD['wired_rx'] = 1.6; pr['WIRE_RX_P@1.6pF'] = pulse(geo['WIRE_RX_P'], 'wired_rx'); CPAD.update(save)
+        g0 = dict(geo['WIRE_RX_P'], bond_mm=1.5, f_mm=0, b_mm=0, via_nH=0, conn_nH=0)
+        pr['WIRE_RX_P@old_assumption_1.5nH_only'] = pulse(g0, 'wired_rx')
     json.dump(dict(source=dict(repo='https://github.com/wafer-space/chip-on-board-wire-bonded-pcbs',
                                board='run-1/1x1-cob/1x1-mezzanine.kicad_pcb', clone_head='5cb4668',
                                board_sha256='b0de95dacd95a0e7ce6c4f997747d313230c8f4f259d64994fb9e6ab4f69dd8b'),
@@ -329,5 +351,5 @@ if __name__ == '__main__':
               f"sp {p['minsp_F_mm']:.2f}/{p['minsp_B_mm']:.2f} | " +
               ' '.join(f"{k}: IL{v['IL_interconnect_dB']} RLd{v['RL_with_die_dB']} G{v['gain_to_die_dB']}" for k, v in out[s].items()))
     for k, v in pr.items(): print(k, v)
-    for s in ('RF_RX_P', 'RF_TX_P', 'REF_IN', 'AUX_CLK_P', 'WIRE_RX_P', 'WIRE_TX_P', 'D2H_CLK', 'H2D_CLK', 'D2H_D[0]'):
+    for s in [s for s in ('RF_RX_P', 'RF_TX_P', 'REF_IN', 'AUX_CLK_P', 'WIRE_RX_P', 'WIRE_TX_P', 'D2H_CLK', 'H2D_CLK', 'D2H_D[0]') if s in xt]:
         print('xt', s, xt[s])

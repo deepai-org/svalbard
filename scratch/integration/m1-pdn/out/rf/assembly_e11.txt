@@ -1,0 +1,15 @@
+rf: |Z| at the island rail (ohm), plan 4.74 nF; opt / nom / pess
+rf_rx      peak 1.04 / 1.23 / 1.4 at 108.0 / 103.9 / 96.2 MHz, Q 1.9 / 2.0 / 1.8; max 1M-1G 1.04 / 1.23 / 1.40; Z78 0.63 / 0.82 / 1.05; Z156 0.62 / 0.71 / 0.82
+rf_tx      peak 1.13 / 1.35 / 1.55 at 108.0 / 100.0 / 96.2 MHz, Q 1.8 / 1.7 / 1.6; max 1M-1G 1.13 / 1.35 / 1.55; Z78 0.73 / 0.94 / 1.20; Z156 0.70 / 0.82 / 0.97
+lod        peak 1.18 / 1.42 / 1.66 at 108.0 / 100.0 / 96.2 MHz, Q 1.8 / 1.7 / 1.6; max 1M-1G 1.18 / 1.42 / 1.66; Z78 0.78 / 1.02 / 1.31; Z156 0.76 / 0.89 / 1.05
+lo         peak 1.36 / 1.65 / 1.94 at 108.0 / 103.9 / 96.2 MHz, Q 1.5 / 1.4 / 1.2; max 1M-1G 1.36 / 1.65 / 1.94; Z78 0.95 / 1.24 / 1.58; Z156 0.95 / 1.12 / 1.35
+pll        peak 1.11 / 1.33 / 1.55 at 108.0 / 103.9 / 96.2 MHz, Q 1.8 / 1.8 / 1.5; max 1M-1G 1.11 / 1.33 / 1.55; Z78 0.71 / 0.92 / 1.18; Z156 0.71 / 0.83 / 0.99
+conv       peak 1.22 / 1.46 / 1.69 at 108.0 / 100.0 / 96.2 MHz, Q 1.8 / 1.7 / 1.5; max 1M-1G 1.22 / 1.46 / 1.69; Z78 0.80 / 1.04 / 1.32; Z156 0.76 / 0.89 / 1.08
+debug      peak 1.15 / 1.39 / 1.61 at 108.0 / 103.9 / 96.2 MHz, Q 1.7 / 1.8 / 1.5; max 1M-1G 1.15 / 1.39 / 1.65; Z78 0.73 / 0.96 / 1.24; Z156 0.77 / 0.89 / 1.05
+RQ-3a die decap >= 3 nF: PASS (4.74 nF)
+RQ-3a anti-resonance Q <= 3 at the rf_rx rail: PASS (1.9 / 2.0 / 1.8)
+RQ-3a <= 0.5 nH per rail seen from the rf_rx switch: PASS (0.30 / 0.37 / 0.44 nH (loop 0.61 / 0.73 / 0.88))
+RQ-3a no undamped C >= 50 pF on the rf_rx rail: PASS (plan adds 0 pF there; model block C 120 pF at 0.3 ohm is block-internal (rf_rx owner, RQ-3))
+RQ-3a Q at the macro (e8, opt / nom / pess): PASS (see out/rf/e8_decap.txt PLAN row)
+negative control intrinsic only: peak Q (|Z| at the rail) 1.9 / 2.9 / 3.8 at 199.5 / 223.9 / 281.8 MHz -> fails as it must
+information (not a control: the rail Q metric includes the switch resistance; the LNA common-mode bench of RQ-3a is the rf_rx owner s) RQ-3a failing bench: 0.9 nF die (plan x 1/6) + 500 pF undamped on the rf_rx rail: peak Q (|Z| at the rail) 2.4 / 2.7 / 2.9 at 156.2 / 156.2 / 158.5 MHz -> DOES NOT FAIL

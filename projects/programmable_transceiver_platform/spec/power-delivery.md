@@ -214,6 +214,28 @@ W 432 mA with POST on), all bonds and each single open supply bond. EM at 85 C: 
 - With `dvdd_pads[0]` open, pt_wired misses 117 mV at any coverage up to 15 % (127 mV): an open bond is a yield /
   bring-up case, not an operating point; EM holds at >= 12 / 15 %.
 
+### 4.2 pt_wired bonds with one open supply bond
+
+Target: worst supply cell <= 106 mA (15 % margin to 125 mA) in every single-open-supply-bond case at W 432 mA with POST on
+(grid at 12 / 15 %, `asm9_drawn.py`). The current bond map gives 122.9 mA (`dvdd_pads[0]` with `dvdd_pads[1]` open): both
+east-bottom loads (`isw_wired_cap` and `isw_wired_rx`, 96 mA together) feed from `dvdd_pads[0]`. No east or south signal
+site is free. Required (`out/wired/pds9_bonds.txt`):
+
+- `bidir[22]` (east, between WIRE_TX and WTX_EXT, today the HS-driver ground) becomes a VDD bond (supply cell per
+  D-SPLIT-SUPSITE); ground bonds 17 -> 16, supply 10 -> 11.
+- `isw_wired_rx` moves from the south-east corner to the east edge gap beside `dvdd_pads[1]` (y about 2100-2420, between
+  `pad_usb` and `isw_wired_tx`); its strap to the wired RX blocks grows (G5 still 15 mV).
+
+| Case | Worst bond (mA) | Worst tap (mV) |
+| --- | ---: | ---: |
+| all bonds | 84.1 (`dvdd_pads[0]`) | 112.0 (`wrx_cap`) |
+| `dvdd_pads[0]` open | 105.4 (`dvdd_pads[1]`) | 127.4 (open-bond case, not an operating point) |
+| `dvdd_pads[1]` open | 104.4 (`dvdd_pads[0]`) | 116.9 |
+| any other supply bond open | <= 90.1 | <= 113.5 |
+
+Either change alone is not enough: `bidir[22]` to VDD gives 113.2 mA, moving `isw_wired_rx` alone 118.1 mA. Converting a
+west ground site (`inputs[1]`) does nothing (122.5 mA).
+
 ## 5. Decap
 
 ### 5.1 The plan per chip, as packed (D9)
@@ -262,6 +284,27 @@ provider rails (0.20 / 0.25 mohm per um DVDD / DVSS, `design-assumptions.md`); f
   east pad cells between y 940 and 3110, tied to the core ring and the G1 mesh at that edge on both nets; area-neutral by
   moving about 1 nF (0.25 mm2, 17 tiles) from the west-edge tiles (`decap_tile_02`-`_11`, `_16`-`_18`).
 - pt_rf: no pads row makes the RF or reference pads depend on die decap; with the plan they would meet the same rule.
+
+### 5.1b pt_rf decap as the assembly floorplan holds it
+
+`scratch/integration/assembly-rf/floorplan.json` places all 26 bank cells and 19 of the 30 tiles (`decap_tile_00`, `_16`,
+`_21`-`_29` do not fit): **4.74 nF, 0.66 nF short of the 5.4 nF plan** (11 tiles, 0.165 mm2). Rerun on that floorplan
+(`PDN_ASSEMBLY=1`, `out/rf/assembly_*.txt`):
+
+| Check | Value | Result |
+| --- | --- | --- |
+| RQ-3a die decap >= 3 nF | 4.74 nF | pass |
+| RQ-3a Q at the rf_rx rail | 1.9 / 2.0 / 1.8 | pass |
+| RQ-3a loop seen from the rf_rx switch | 0.30 / 0.37 / 0.44 nH per rail | pass |
+| No undamped >= 50 pF on the rf_rx rail | none added | pass |
+| Macro, 40 mA, residual 0.15 / single-phase | 90 / 194 mV (f_ar 95 MHz, Q 2.3) | pass two-phase |
+| QVCO rejection needed at 78.125 / 156.25 / 80 MHz | 32.1 (26.1 two-phase) / 22.4 / 13.1 dB | requirement of 6.1 unchanged within 1.1 dB |
+| Static IR | 92.9 mV (94.3 at 81.8 mA) | pass |
+
+The moved blocks (`lna`, `qvco` and the switches in the assembly placement) make up for the missing tiles here; every
+check passes at 4.74 nF. D9 still books 5.4 nF: the assembly makes up 0.66 nF as tile + MIM (`pt_decap_tile` with MIM
+above, >= 40 % MIM) on the raw grid within about 1 mm of the macro (south band, y 2900-3360, or the west edge x 452-577),
+or as grid MIM plates (0.35 mm2 of Metal4 / Metal5 plate at 1.9 fF/um2) over block outlines once ASM-8 frees Metal5.
 
 ### 5.2 Macro ripple (`e8_decap.py`)
 
@@ -428,6 +471,8 @@ given, not a pass or fail: the supply-rejection evidence is the demand (PD2-14..
 - **PDS-1** (assembly, user): pt_wired wired_tx on two `isw_wired` in parallel (one VISL bar), +0.091 mm2 against the
   packed `isw_debug`.
 - **PDS-2** (closed by PDS-6): pt_wired ceiling 430 mA, thermal-set.
+- **PDS-9** (pads, assembly): `bidir[22]` to VDD and `isw_wired_rx` beside `dvdd_pads[1]` (section 4.2).
+- **PDS-10** (assembly): 0.66 nF of pt_rf decap to make up (section 5.1b).
 - **PDS-7** (assembly): 1 nF of tiles next to the pt_wired east HS pads (section 5.1a).
 - **PDS-6** (board): B2a theta(junction-plate) <= 5.2 C/W is now binding for pt_wired; regulator >= 0.45 A leaves 20 mA.
 - **PDS-3** (floorplan): straps wider than practical at the packed distances (`wrx_cap` 323 um, `pt_wiredtx8` 290 um,

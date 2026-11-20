@@ -5,7 +5,7 @@
 at the unscaled 81.8 mA (pd2u: pt_wired W 432 mA with POST on), all bonds and each single open supply bond.
 EM at 85 C (DRM 14.2): core ring per net 14 um Metal4 x 2.09 + 14 um Metal5 x 4.5 mA/um = 92 mA; supply cell 125 mA.
 The core ring's share of each boundary-edge current is its conductance share against the provider rails at that edge.
-Usage: asm9_drawn.py chip=rf|wired [m4=0.073] [m5=0.105] [ring=14]"""
+Usage: asm9_drawn.py chip=rf|wired [m4=0.073] [m5=0.105] [ring=14] [tovdd=site,..] [move=rect:x0,y0;..] [tag=..]"""
 import sys, json, numpy as np
 import model as M, core as C, chipcfg as P2
 D = dict(a.split('=', 1) for a in sys.argv[1:]); P2.apply(); CH = P2.CHIP
@@ -13,6 +13,17 @@ DEF = {'rf': (0.073, 0.105), 'wired': (0.080, 0.115)}[CH]
 m4, m5, ring = float(D.get('m4', DEF[0])), float(D.get('m5', DEF[1])), float(D.get('ring', 14))
 RING_LIM = ring*2.09+ring*4.5; CELL = 125.0
 CASE = {'rf': ['RXa', 'TXa', 'DXa', 'DXe'], 'wired': ['W', 'U']}[CH]
+sites_xy = json.load(open(f'{M.PRJ}/analog/pads/generated/provider-sites.json'))['sites']
+for k, v in D.items():          # experiments: tovdd=site[,site] converts bonds/sites to VDD; move=rect:x0,y0 shifts a rectangle
+    if k == 'tovdd':
+        for st in v.split(','):
+            b = [b for b in M.BONDS if b['site'] == st]
+            if b: b[0]['net'] = 'VDD'; b[0]['cap'] = False
+            else:
+                x, y = sites_xy[st]['bond_center_um']; M.BONDS.append(dict(site=st, x=x, y=y, net='VDD', side='?', ring=max(b['ring'] for b in M.BONDS)+1, inst='x', cap=False))
+    if k == 'move':
+        for it in v.split(';'):
+            nm, xy = it.split(':'); x0, y0 = map(float, xy.split(',')); r = M.RECTS[nm]; w, h = r[2]-r[0], r[3]-r[1]; M.RECTS[nm] = [x0, y0, x0+w, y0+h]
 dec = P2.plan(); B0 = list(M.BONDS)
 def ring_seg(n, info, p):
     """max core-ring current (mA) over the boundary edges, per net"""
@@ -54,4 +65,4 @@ for k, r in res.items():
 a = res['all bonds']['taps']; print('taps over 117 mV with all bonds:', {b: round(t, 1) for b, t in sorted(a.items(), key=lambda x: -x[1]) if t > 117} or 'none')
 print('top taps, all bonds:', ', '.join(f'{b} {t:.1f}' for b, t in sorted(a.items(), key=lambda x: -x[1])[:6]))
 json.dump(dict(chip=CH, m4=m4, m5=m5, ring=ring, res={k: dict(v, taps={b: round(t, 2) for b, t in v['taps'].items()}) for k, v in res.items()}),
-          open(f'out/{CH}/asm9_drawn_m4{m4}_m5{m5}_r{ring:g}.json', 'w'), indent=0)
+          open(f"out/{CH}/asm9_{D.get('tag', 'drawn')}_m4{m4}_m5{m5}_r{ring:g}.json", 'w'), indent=0)

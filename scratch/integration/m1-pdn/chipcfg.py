@@ -27,7 +27,7 @@ SPIRALS = ('qvco', 'lna_ind_p', 'lna_ind_n', 'lna_deg_p', 'lna_deg_n')
 CASE_MODE = {'W': ('wired', None), 'U': ('usb', None), 'T': ('wired', None), 'RXe': ('rf_rx', 'rf_rx'), 'RXa': ('rf_rx', 'rf_rx'),
              'TXe': ('rf_tx', 'rf_tx'), 'TXa': ('rf_tx', 'rf_tx'), 'DXe': ('rf_rx', 'rf_duplex'), 'DXa': ('rf_rx', 'rf_duplex'),
              'stopped': ('stopped', None)}
-CASES = []; ISLANDS = []; DECAP = {}; DIG = {}; MAIN = None
+CASES = []; ISLANDS = []; DECAP = {}; DIG = {}; MAIN = None; FIT = None; TILE_SCALE = 1.0
 TAU_TILE = 335e-12     # pt_decap_tile: 152 ps tie-NMOS (extracted) + ~175-195 ps pfet L = 6 channel that the model cannot see
 TAU_ROW = 60e-12       # 7T fillcap / pt_decap50 (54.5 tt - 69.7 ss ps)
 TAU_MIM = 5e-12        # no ESR in the PDK model: plate + via estimate (grid resistance is in the mesh)
@@ -67,7 +67,16 @@ def apply(chip=None):
     if CHIP == chip: return
     assert CHIP is None, 'one chip per process'
     CHIP = chip
-    fit = json.load(open(f'{DF}/run/{chip}/fit-s.json'))
+    global FIT, TILE_SCALE
+    asm = os.environ.get('PDN_ASSEMBLY')      # =1: the chip assembly's floorplan (scratch/integration/assembly-<chip>) instead of the die fit
+    fit = json.load(open(f'{M.ROOT}/scratch/integration/assembly-{chip}/fit/fit-s.json' if asm else f'{DF}/run/{chip}/fit-s.json'))
+    if asm:
+        fp = json.load(open(f'{M.ROOT}/scratch/integration/assembly-{chip}/floorplan.json'))
+        n_plan = sum(1 for k in fit['placed_rects'] if k.startswith('decap_tile'))+len(fp.get('decap_tiles_unplaced', []))
+        fit['placed_rects'] = {k: dict(rect=v['rect']) for k, v in fp['blocks'].items()}
+        n_have = sum(1 for k in fit['placed_rects'] if k.startswith('decap_tile'))
+        TILE_SCALE = n_have/n_plan if n_plan else 1.0
+    FIT = fit
     M.RECTS.clear()
     for k, v in fit['placed_rects'].items(): M.RECTS[k] = v['rect']
     for k, v in fit['fixed'].items(): M.RECTS[k] = v
@@ -104,7 +113,8 @@ def apply(chip=None):
         C.PORTS[:] = ['dig', 'd2h0', 'd2h1', 'wrx', 'wtx']
         w = {k: [pb.pd2_expand(r)['W'] for r in pb.MEASURED if r[0] == k][0] for k in ('wiredtx8', 'wtx_post', 'wtx_padtail')}
         LD.WTX_MA = (w['wiredtx8'][0], sum(v[0] for v in w.values()), sum(v[1] for v in w.values()))
-    DECAP = json.load(open(f'{DF}/decap.json'))[chip]['scenarios']['asbuilt']
+    DECAP = dict(json.load(open(f'{DF}/decap.json'))[chip]['scenarios']['asbuilt'])
+    DECAP['tiles_nF'] = round(DECAP['tiles_nF']*TILE_SCALE, 3)   # tiles the floorplan actually holds (1.0 for the die fit)
 
 
 def strap_R(strap_mv=STRAP_MV):
@@ -190,7 +200,7 @@ def mim_rects():
     """Block outlines that carry the grid MIM plates: placed analog blocks, not the spirals, decap cells, switches, ATB leaves,
     pads or the macro (decap.py counts the Metal4/Metal5-free area of the same blocks)."""
     skip = ('decap_', 'isw_', 'atb', 'iso_', 'pd_', 'obs_pre4')
-    return [r for k, r in M.RECTS.items() if k in dict.fromkeys(json.load(open(f'{DF}/run/{CHIP}/fit-s.json'))['placed_rects'])
+    return [r for k, r in M.RECTS.items() if k in FIT['placed_rects']
             and not k.startswith(skip) and k not in SPIRALS]
 
 

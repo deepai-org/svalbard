@@ -247,4 +247,84 @@ so tabs fit there, or a bigger budget share from the power owner (WT43 asked to 
 EM (85 C limits): band cuts worst 51.5 % margin (seam plate), trunks 55.9 / 85 / 87 %, VDD 78 %; header strap end 23 % (table,
 unchanged). The raster also flags VDD Metal4 -6.8 % (high R -29.6 %) at the T_main tie pixel (389.7, 398.5), the same
 as before this change: a tie-edge artefact of the raster, the band cut there is 93 %; not re-examined.
-PH0..7 remain Metal5 pads inside the block (no edge access).
+PH0..7 remain Metal5 pads inside the block (no edge access).  (Superseded by session 16 below.)
+
+## PH access windows, grid phase shift and grid VSS ties (WT43 / ASM-8), state 2026-11-20 (session 16)
+Outline now **744.5 x 401.4 um** (was 744.12 x 400.56: ser8d 0.38 um wider after its re-route, seam one Metal4 track
+taller); L shape `used_polygon` [[0,0],[744.5,0],[744.5,236.96],[598.7,236.96],[598.7,401.4],[0,401.4]].
+**Placement rule changed: assembly origin x0 = 20.75 (mod 35) um, unrotated**: grid axes at block x 23.5 + 35 k. That is
+the axis phase mid-way between the PH lanes (lane centres 287.75 + 34.5 k drift 0.5 um per lane against the 35 um grid;
+mod 35 they span 4.25-7.75, the farthest axis is 23.5): minimum lane-to-landing clearance 7.35 um over all eight.
+Which axes carry VSS depends on x0 mod 70: phase E = axes with k even, phase O = k odd (`ties`: chanE_* / chanO_*).
+
+**PH pins (no edge pins, no Metal5 pads).** Each PH k is a Metal4 window pad inside wtx_mux8 above the output buses
+(block y 375.56-380.16, 1.6 um wide); the ring router lands on it from the top edge with a Metal5 lane and Via4.
+Windows / lanes (block x; lane 0.8 um, y 375.56 to the top edge 401.4; Metal5-free 0.6 um each side):
+
+| pin | window x | lane x |  | pin | window x | lane x |
+|---|---|---|---|---|---|---|
+| PH0 | 286.95-288.55 | 287.35-288.15 | | PH4 | 528.45-530.05 | 528.85-529.65 |
+| PH7 | 321.45-323.05 | 321.85-322.65 | | PH5 | 459.45-461.05 | 459.85-460.65 |
+| PH1 | 355.95-357.55 | 356.35-357.15 | | PH2 | 424.95-426.55 | 425.35-426.15 |
+| PH6 | 390.45-392.05 | 390.85-391.65 | | PH3 | 493.95-495.55 | 494.35-495.15 |
+
+The lanes cross only the island VDD header strap / mux header (cut, Metal3 || Metal4 bridges or the mux header's
+Metal2-4 rail underneath); nothing else of the block or the mux is in them (`ph_windows` in out/report.json).
+Behind each window, identical in all eight slices (wtx_mux8 `PH_*` constants): Metal3 from the slice PH pin up, a Metal4 jog
+past the stack VSS rail, then Metal3 through the bus band under a VSS Metal4 shield with VSS Metal3 on both sides; the
+window pad has a VSS Metal4 guard left / right / top. Tap straps keep out of rel 2.75-6.65 um of each neck (load
+clusters moved: MAIN pair at mux x 121.4 / 142.4, POST 210.8 / 191.8; aux rebuilt for the new pair centre).
+- Per-PH C (block extraction, mux path + stub + buffer input): **33.7-35.4 fF, spread 1.7 fF** (mux alone 29.8-31.4).
+  PH to each output bus 0.007-0.064 fF; |C(PH,MAIN_P)-C(PH,MAIN_N)| and |C(PH,POST_P)-C(PH,POST_N)| <= 0.064 fF (before the
+  window guard: up to 0.26 fF next to the tap straps). R window -> buffer 34.6 ohm (lumped, all eight equal).
+- Ring route over the block: the lane sees no block Metal5 within 7.35 um (nearest: grid landings), below it the mux
+  load area (Metal1-4) and, in the header band, VDD Metal3/4 bridges: estimate (not extracted, no lane drawn) about 0.1 fF/um
+  for a 0.8 um Metal5 lane to the layers below; equal for all eight lanes within the 0.5 um/lane drift of the landings.
+
+**Grid VSS ties through the mux.** VSS Metal3 || Metal4 verticals in the neck zones (rel -4.2..1.4 um to the slice
+boundary, slice 0 from -3.0) from the stack VSS rail under the buses to a Metal5 pad above them; the block joins each
+pad to a **grid VSS landing, Metal5 16 um at the axis from the top edge** (`ties.VSS.grid_tie_k`, top-edge rectangles):
+
+| tie | x | axis k | phase |
+|---|---|---|---|
+| grid_tie_0 | 260.5-276.5 | 7 | O |
+| grid_tie_1 | 295.5-311.5 | 8 | E |
+| grid_tie_2 | 330.5-346.5 | 9 | O |
+| grid_tie_3 | 400.5-416.5 | 11 | O |
+| grid_tie_4 | 470.5-486.5 | 13 | O |
+| grid_tie_5 | 505.5-521.5 | 14 | E |
+
+Slices 3 and 5 have no vertical (the MAIN_N / POST_P tap straps use those neck zones), so phase E gets 2 ties, O gets 4.
+Channel tabs (Y0 edge, 16 um): chanE_0 225.5-241.5, chanO_1 260.5-276.5, chanO_2 400.5-416.5, chanE_3 435.5-451.5,
+chanE_4 575.5-591.5, chanO_5 610.5-626.5 (all six channels now have tabs). Channels (ser8d, Metal5-free y 0-197.68):
+223-244 / 258-279, 398-419 / 433-454, 573-594 / 608-629. VSS trunks 335-345 / 366.5-376.5 / 475-485 (bottom ties).
+Island VDD ties moved with the clusters and are split by the lanes / landings: T_main_0..3 = 312.1-321.25, 323.25-329.9,
+347.1-355.75, 357.75-361.75; T_post_0..3 = 454.65-459.25, 461.25-469.9, 487.1-493.75, 495.75-504.9 (y 393.7-401.4);
+VDD bar tops 14-26 / 568.7-582.7.
+
+IR at 60 mA, tie to output stage (`ir/run.sh`, `ir/phE|phO/*.json`; budget 6.6 mV):
+
+| case | VDD (headers) | VSS (tails) | total | ser8d logic VDD / VSS |
+|---|---|---|---|---|
+| session 15, phase A / B nominal | 3.67 | 6.42 / 6.18 | 10.1 / 9.9 FAIL | 20.55 / 11.4 |
+| session 15, high R | 7.60 | 8.49 / 8.20 | 16.1 / 15.8 | 35.6 / 22.4 |
+| **session 16, phase E nominal / high R** | 3.34 / 7.02 | 3.44 / 4.50 | **6.78 FAIL (by 0.18) / 11.52** | 22.15 / 10.94 ; 37.82 / 21.59 |
+| **session 16, phase O nominal / high R** | 3.34 / 7.02 | 2.74 / 3.85 | **6.08 PASS / 10.87** | 22.15 / 10.90 ; 37.82 / 21.50 |
+
+High R improves by 4.6 (E) / 4.9 (O) mV in the block, short of the 5.6 mV power delivery asked for at the tap.
+EM: raster (85 C) worst margins VDD Metal4 38.6 % (high R), vias 35.8 %, VSS Metal5 45.9 %; the session-15 tie-pixel
+artefact is gone. Table: header strap bridges (Metal3 + Metal4 2 x 7.5 um, >= 56 cuts per end) 17.1 % / 20.0 %; the
+strap between the two mux headers is cut at grid_tie_3 and bridged with 2 x 2.4 um / 16 cuts, which fails the table's
+half-a-bank bound (-29.6 % / -40.1 %); the raster, which sees the real split, has no violation there.
+Checks from disk: block Magic DRC 0, KLayout 0, LVS unique, antenna 0, 5/5 negative controls fail; wtx_mux8 DRC 0/0,
+LVS unique, antenna 0, 5/5; wtx8_aux DRC 0, LVS unique, 2/2; mux output buses (wiring C, mux extraction) MAIN_N 114.2 / MAIN_P 123.5 / POST_P 128.0 / POST_N 136.2 fF
+(before: 100.6 / 109.4 / 119.3 / 122.8; +8.7 to +14.1 fF from the shields, tie verticals and moved clusters), bus EM
+worst 20.6 % (unchanged), end-to-tap R MAIN_N 0.98 / 2.16, MAIN_P 0.55 / 2.56, POST_P 1.52 / 1.90, POST_N 1.86 / 1.48 ohm.
+Mux eye (s13/m9.py on the new C-only extraction, ss pessimistic, 3.125 Gb/s, pad on, 240 bits, phase trims calibrated
+with cal.py: codes [1,0,0,0,0,0,0,0], worst slot 3.6 ps, as before; padr/eye16.sh): ideal phases far-end eye
+**0.2059 V** (0e, W 0.641 UI) against 0.2112 V for the same bench on the session-15 extraction (x3_cal_ssp): **-5.3 mV,
+just outside the 5 mV limit**; against the s12 padr baseline A_ssp_3.125_C (0.219 V, revision-2 mux, different bench)
+-13 mV.  With the extracted ring (layout, pess, vctrl 1.4823, 30 ohm / 60 fF route) and the same codes: 6 errors, not a
+valid result (ring not calibrated for this run: its frequency / trims need cal.py with ring=, not done).
+aux + mux combination DRC 0/0 (an M3.2a hit at block
+347.4, 380.2 was cleared by ending the tie verticals' Metal3 below the pad); wtx_ser8d DRC 0/0, LVS unique, 4/4.

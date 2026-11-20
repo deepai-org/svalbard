@@ -677,6 +677,23 @@ BUS_ORDER = ('MAIN_N', 'MAIN_P', 'POST_P', 'POST_N')       # from the stack upwa
 STUB_M = 4
 STUB = 0.9                    # Metal4 stub from a drain column to a bus that does not cross the finger
 RISER = 0.75                  # half width of an output pin riser (Metal5)
+# ---- PH access (WT43, session 16).  x relative to each slice's left edge (= its VSS strap axis, 'neck').  The PH input
+# of every slice continues up through the bus band on the block's own wiring to a Metal4 window pad above the buses;
+# the chip's ring router lands on it from the top edge with a Metal5 lane (Via4).  In the bus band PH runs on Metal3
+# under a VSS Metal4 shield with VSS Metal3 on both sides (no output bus sees PH).
+PH_A = (0.65, 1.05)           # Metal3 from the slice PH pin (pin x + this) up to below the stack VSS rail
+PH_J = (4.65, 5.05)           # Metal4 jog past the stack VSS rail (rail Metal ends at 4.3; another net's Metal3 at 5.0)
+PH_C = (3.87, 4.27)           # Metal3 through the bus band
+SH4 = (3.05, 5.10)            # VSS Metal4 shield over PH_C (0.34 / 0.33 to the MAIN_N stack and MAIN_P stub Metal4)
+SH3 = ((3.05, 3.45), (4.57, 4.97))   # VSS Metal3 beside PH_C
+WIN = (4.05, 5.65)            # Metal4 window pad (PH), above POST_N
+LANE = (4.45, 5.25)           # the ring's Metal5 lane onto the window (kept Metal5-free here, 0.6 each side)
+STRAP_KEEP = (2.75, 6.65)     # tap straps (Metal3 || Metal4) stay out of the shield / window guard
+# ---- grid VSS ties (ASM-8): VSS Metal3 || Metal4 verticals in the neck zones (between the previous slice's last drain
+# column and this slice's MAIN_N stack) from the stack VSS rail up to above the buses, Via4 onto a Metal5 pad there;
+# the block joins each pad to a grid VSS landing (16 um at the grid axes, block x 23.5 + 35 k = mux x GRID_AX0 + 35 k).
+VZONE = (-4.2, 1.4)           # neck zone, within the stack VSS rail (neck 0: from -3.0, control-block stubs at -4.59 / -3.69)
+GRID_AX0, LAND_HW = 26.4, 8.0
 
 
 
@@ -1490,8 +1507,20 @@ def place_clusters(sl, X0, hw, cx):
     above = {n: BUS_ORDER[i + 1:] for i, n in enumerate(BUS_ORDER)}
     colx = {n: sorted(X0 + p * W + x for p in range(8) for x in st.col_x[n]) for n in BUS_ORDER}
 
+    necks = [X0 + q * W for q in range(9)]
+    axes = [max(a for a in (GRID_AX0 + 35.0 * k for k in range(-2, 12)) if a <= nq) for nq in necks]
+
+    def riser_ok(x):               # output riser (Metal5 to the top edge) clear of the PH lanes and the grid VSS landings
+        return all(not (nq + LANE[0] - 0.6 - RISER < x < nq + LANE[1] + 0.6 + RISER) for nq in necks[:8]) and \
+            all(abs(x - a) >= LAND_HW + 0.6 + RISER for a in axes[:8])
+
     def half(n, x):
+        if not riser_ok(x):
+            return None
         for sw in SW:
+            r = (x - X0) % W
+            if any(rr + sw > STRAP_KEEP[0] and rr - sw < STRAP_KEEP[1] for rr in (r, r - W)):
+                continue
             if all(abs(x - c) >= sw + STUB / 2 + 0.35 for m in above[n] for c in colx[m]):
                 return sw
         return None
@@ -1537,6 +1566,7 @@ def build_top(P=None, work=None, checks=True):
     X0, W, H, ys, st = s(LEAK_W + ctl.W), sl.W, sl.H, sl.ys, sl.st
     xs = lambda p_: s(X0 + p_ * W)
     pos = {k: p_ for p_, k in enumerate(ORDER)}
+    grid_axes = [max(a for a in (GRID_AX0 + 35.0 * k for k in range(-2, 12)) if a <= xs(q)) for q in range(8)]
     g = Geo()
     g.place(ctl.g, LEAK_W)
     inst, em, geo = [], {}, {}
@@ -1632,14 +1662,27 @@ def build_top(P=None, work=None, checks=True):
             g.rect('metal5', xr - RISER, yA + 0.1, xr + RISER, ytop)
             ports[o] = ('metal5', xr, ytop - 0.5)
         # header VDD: Metal2 .. Metal5 on the rail (top edge), open where the two output risers pass
-        cuts = sorted([xb - D - RISER - 0.7, xb - D + RISER + 0.7, xb + D - RISER - 0.7, xb + D + RISER + 0.7])
-        geo['hdr_vdd_um'] = round(hs.width - 2 * (2 * RISER + 1.4) - 0.8, 1)
-        for a, b in ((hx0, cuts[0]), (cuts[1], cuts[2]), (cuts[3], hx0 + hs.width)):
+        # ... and where the PH lanes and the grid VSS landings come down from the top edge
+        opn = sorted([(xb - D - RISER - 0.7, xb - D + RISER + 0.7), (xb + D - RISER - 0.7, xb + D + RISER + 0.7)] +
+                     [(xs(q) + LANE[0] - 0.6, xs(q) + LANE[1] + 0.6) for q in range(8)] +
+                     [(a - LAND_HW - 0.6, a + LAND_HW + 0.6) for a in grid_axes])
+        segs, x_, hx1 = [], hx0, hx0 + hs.width
+        for a, b in opn:
+            a, b = max(a, hx0), min(b, hx1)
+            if b <= a:
+                continue
+            if a - x_ >= 1.0:
+                segs.append((x_, a))
+            x_ = max(x_, b)
+        if hx0 + hs.width - x_ >= 1.0:
+            segs.append((x_, hx0 + hs.width))
+        geo['hdr_vdd_um'] = round(min(geo.get('hdr_vdd_um', 1e9), sum(b - a - 0.4 for a, b in segs)), 1)
+        for a, b in segs:
             g.varr(a + 0.2, ytop - hs.rail_h + 0.2, b - 0.2, ytop - 0.2, 2, 5)
             ports.setdefault('VDD', []).append(('metal5', s((a + b) / 2), ytop - 1.5))
         # ... and Metal2-4 right across, under the risers: every segment is fed through the rail itself (block top feeds one end)
         g.varr(hx0 + 0.2, ytop - hs.rail_h + 0.2, hx0 + hs.width - 0.2, ytop - 0.2, 2, 4)
-        geo.setdefault('hdr_rail', {})[tag] = dict(metal_um=round(2 * hs.rail_h + 2 * (hs.rail_h - 0.4), 2), outer_seg_um=round(cuts[0] - hx0, 2), width_um=round(hs.width, 2))
+        geo.setdefault('hdr_rail', {})[tag] = dict(metal_um=round(2 * hs.rail_h + 2 * (hs.rail_h - 0.4), 2), outer_seg_um=round(segs[0][1] - hx0, 2), width_um=round(hs.width, 2))
         for xt in [s(xb - hw - 1.3)] + ([s(xb + hw + 2.5)] if tag == 'Q' else []):      # substrate taps of the resistors
             g.rect('psubdiff', xt - 0.25, H + 0.5, xt + 0.25, ytop)
             g.rect('psubdiffcont', xt - 0.115, H + 0.635, xt + 0.115, ytop - 0.135)
@@ -1701,6 +1744,59 @@ def build_top(P=None, work=None, checks=True):
         edges = [xr - sw] + [v for c in own for v in (c - 0.6, c + 0.6)] + [xr + sw]      # Via4 between the net's own column stacks
         em.setdefault('bus_tap_cuts', {})[n] = sum(g.varr(max(a_, xr - sw), y1b + 0.1, min(b_, xr + sw), y2b - 0.1, 4, 5)
                                                    for a_, b_ in zip(edges[::2], edges[1::2]) if min(b_, xr + sw) - max(a_, xr - sw) > 0.6)
+    # ---- PH access path (shielded) and grid VSS tie verticals, the same in every slice
+    yrail = (ys, ys + st.rail_h)                           # stack VSS rail (Metal2-5 on the VSS strap)
+    nlo = ys + sl.bus['MAIN_N'] + BCORE - max(w for _, w in bw_tab['MAIN_N'])     # lowest bus edge
+    nhi = ys + sl.bus['POST_N'] + max(w for _, w in bw_tab['POST_N'])            # highest bus edge
+    wy0, wy1 = s(nhi + 0.75), s(nhi + 0.75 + 4.6)
+    yA3 = s(yrail[0] - 4.0)                                # top of PH_A (Metal4 tracks end below it)
+    yj1 = s(yrail[1] + 2.6)                                # top of the Metal4 jog (below the lowest bus edge)
+    if yj1 + 0.3 > nlo:
+        raise RuntimeError('PH jog runs into the bus band')
+    straps_x = [(taps[n][0] - taps[n][1], taps[n][0] + taps[n][1]) for n in BUS_ORDER]
+    phw, ties = [], []
+    for p_ in range(8):
+        xb = xs(p_)
+        px = xb + sl.pin['PH'][0]
+        a0, a1 = px + PH_A[0], px + PH_A[1]
+        g.rect('metal3', px - 0.2, 0.3, a1, 0.7)                                  # pin -> PH_A
+        g.rect('metal3', a0, 0.3, a1, yA3)
+        g.via(s((a0 + a1) / 2), yA3 - 0.2, 3, 4)
+        g.rect('metal4', a0, yA3 - 0.42, xb + PH_J[1], yA3 + 0.02)
+        g.rect('metal4', xb + PH_J[0], yA3 - 0.42, xb + PH_J[1], yj1)
+        g.via(xb + (PH_J[0] + PH_J[1]) / 2, yj1 - 0.2, 3, 4)
+        g.rect('metal3', xb + PH_C[0], yj1 - 0.42, xb + PH_J[1], yj1 + 0.02)
+        g.rect('metal3', xb + PH_C[0], yj1 - 0.42, xb + PH_C[1], wy0 + 1.0)
+        g.via(xb + (PH_C[0] + PH_C[1]) / 2, wy0 + 0.6, 3, 4)
+        g.rect('metal4', xb + WIN[0], wy0, xb + WIN[1], wy1)
+        phw.append([s(xb + WIN[0]), wy0, s(xb + WIN[1]), wy1])
+        ys0, ys1 = s(yj1 + 0.35), s(wy0 - 0.35)               # shield: Metal4 over PH, Metal3 beside, stitched; tied to the rail
+        g.rect('metal4', xb + SH4[0], ys0, xb + SH4[1], ys1)
+        g.rect('metal4', xb + SH4[0], yrail[1] - 0.5, xb + SH4[0] + 0.55, ys0 + 0.5)
+        # window guard (VSS Metal4): left / right / top of the pad, joined to the shield (the tap straps nearby saw the pad)
+        g.rect('metal4', xb + SH4[0], ys1 - 0.5, xb + SH4[0] + 0.5, wy1 + 0.7)
+        g.rect('metal4', xb + SH4[1] - 0.5, ys1 - 0.4, xb + WIN[1] + 0.7, ys1)
+        g.rect('metal4', xb + WIN[1] + 0.3, ys1 - 0.4, xb + WIN[1] + 0.7, wy1 + 0.7)
+        g.rect('metal4', xb + SH4[0], wy1 + 0.3, xb + WIN[1] + 0.7, wy1 + 0.7)
+        for a_, b_ in SH3:
+            g.rect('metal3', xb + a_, ys0, xb + b_, wy1 + 0.7)
+            for i_ in range(int((ys1 - ys0 - 0.6) / 4.0) + 1):         # stitch to the Metal4 shield every 4 um
+                g.via(xb + (a_ + b_) / 2, ys0 + 0.3 + 4.0 * i_, 3, 4)
+        # grid VSS tie vertical in this slice's neck zone, unless a tap strap uses the zone
+        z0, z1 = xb + (VZONE[0] if p_ else -3.0), xb + VZONE[1]
+        if any(a_ - 0.3 < z1 and b_ + 0.3 > z0 for a_, b_ in straps_x):
+            continue
+        g.rect('metal3', z0, yrail[0], z1, wy0 + 1.0)          # Metal3 ends below the pad (wtx8_aux Metal3 sits just above)
+        g.rect('metal4', z0, yrail[0], z1, wy1)
+        g.varr(z0, yrail[0], z1, yrail[1], 3, 4, metal=False)
+        g.varr(z0, wy0 - 2.0, z1, wy0 + 1.0, 3, 4, metal=False)
+        g.varr(z0, wy0, z1, wy1, 4, 5)
+        ties.append(dict(slice=p_, neck_x=s(xb), pad=[s(z0), wy0, s(z1), wy1], axis=s(grid_axes[p_])))
+    geo['ph_access'] = dict(windows=phw, lanes=[[s(xs(q) + LANE[0]), s(xs(q) + LANE[1])] for q in range(8)], window_y=[wy0, wy1],
+                            lane_keep=[[s(xs(q) + LANE[0] - 0.6), s(xs(q) + LANE[1] + 0.6)] for q in range(8)],
+                            note='mux coordinates; window = PH Metal4 pad (slice q = ORDER[q]); lane = the ring router\'s Metal5, top edge -> window, Via4')
+    geo['vss_ties'] = dict(pads=ties, grid_axes=[s(a) for a in grid_axes], land_hw=LAND_HW,
+                           note='Metal5 pads on the VSS verticals; the block joins each to the landing at its axis (Metal5, top edge)')
     # ---- AVG resistors right of the last slice (guard-ringed PCells, rings tied to VSS): upper head under a
     #      0.6 um finger of the MAIN bus (via stack only), lower head on Metal3 down to the pin
     xe = xs(8)

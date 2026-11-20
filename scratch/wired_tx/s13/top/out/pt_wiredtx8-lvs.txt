@@ -343,8 +343,10 @@ Flattening unmatched subcell wtx_mx_slice in circuit wtx_mux8 (0)(8 instances)
 Flattening unmatched subcell wtx_mx_rcm in circuit wtx_mux8 (0)(2 instances)
 Flattening unmatched subcell wtx_mx_rl in circuit wtx_mux8 (0)(4 instances)
 
+Cell wtx_mux8 (0) disconnected node: a_21550_27760#
 Class wtx_mux8 (0):  Merged 804 parallel devices.
 Class wtx_mux8 (1):  Merged 678 parallel devices.
+Cell wtx_mux8 (0) disconnected node: a_21550_27760#
 Subcircuit summary:
 Circuit 1: wtx_mux8                        |Circuit 2: wtx_mux8                        
 -------------------------------------------|-------------------------------------------
@@ -356,7 +358,7 @@ Number of devices: 942                     |Number of devices: 942
 Number of nets: 508                        |Number of nets: 508                        
 ---------------------------------------------------------------------------------------
 Resolving symmetries by property value.
-Netlists match uniquely.
+Netlists match uniquely with port errors.
 
 Subcircuit pins:
 Circuit 1: wtx_mux8                        |Circuit 2: wtx_mux8                        
@@ -426,6 +428,7 @@ TR2_2                                      |TR2_2
 TR2_3                                      |TR2_3                                      
 MAIN_P                                     |MAIN_P                                     
 MAIN_N                                     |MAIN_N                                     
+a_21550_27760#                             |(no matching pin)                          
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes wtx_mux8 and wtx_mux8 are equivalent.
@@ -433,12 +436,12 @@ Flattening unmatched subcell wtx8_aux_rl in circuit wtx8_aux (0)(2 instances)
 Flattening unmatched subcell wtx_idac2m in circuit wtx8_aux (1)(2 instances)
 Flattening unmatched subcell wtx_inv1 in circuit wtx8_aux (1)(18 instances)
 
-Cell wtx8_aux (0) disconnected node: a_46010_28940#
-Cell wtx8_aux (0) disconnected node: a_46710_28940#
+Cell wtx8_aux (0) disconnected node: a_39760_28940#
+Cell wtx8_aux (0) disconnected node: a_40460_28940#
 Class wtx8_aux (0):  Merged 88 parallel devices.
 Class wtx8_aux (1):  Merged 35 parallel devices.
-Cell wtx8_aux (0) disconnected node: a_46010_28940#
-Cell wtx8_aux (0) disconnected node: a_46710_28940#
+Cell wtx8_aux (0) disconnected node: a_39760_28940#
+Cell wtx8_aux (0) disconnected node: a_40460_28940#
 Subcircuit summary:
 Circuit 1: wtx8_aux                        |Circuit 2: wtx8_aux                        
 -------------------------------------------|-------------------------------------------
@@ -458,8 +461,8 @@ Circuit 1: wtx8_aux                        |Circuit 2: wtx8_aux
 IBIAS                                      |IBIAS                                      
 INP                                        |INP                                        
 INN                                        |INN                                        
-DX                                         |DX                                         
 ATB_NBIAS                                  |ATB_NBIAS                                  
+DX                                         |DX                                         
 ENMAIN_G                                   |ENMAIN_G                                   
 ENPOST_G                                   |ENPOST_G                                   
 IDLE_MODE                                  |IDLE_MODE                                  
@@ -485,11 +488,11 @@ POST_CODE2                                 |POST_CODE2
 POST_CODE3                                 |POST_CODE3                                 
 POST_CODE4                                 |POST_CODE4                                 
 POST_CODE5                                 |POST_CODE5                                 
+TAP_P                                      |TAP_P                                      
+TAP_N                                      |TAP_N                                      
 ENM                                        |ENM                                        
 OVN                                        |OVN                                        
 OVP                                        |OVP                                        
-TAP_P                                      |TAP_P                                      
-TAP_N                                      |TAP_N                                      
 EXT                                        |EXT                                        
 MAIN_BIAS                                  |MAIN_BIAS                                  
 POST_BIAS                                  |POST_BIAS                                  
@@ -499,8 +502,8 @@ ISLAND_OFF                                 |ISLAND_OFF
 IDLE                                       |IDLE                                       
 TAP_EN                                     |TAP_EN                                     
 VDD                                        |VDD                                        
-a_46010_28940#                             |(no matching pin)                          
-a_46710_28940#                             |(no matching pin)                          
+a_39760_28940#                             |(no matching pin)                          
+a_40460_28940#                             |(no matching pin)                          
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes wtx8_aux and wtx8_aux are equivalent.

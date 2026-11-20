@@ -42,11 +42,13 @@ CELLS = [c for c in Q.CELLS if not c.startswith(('wtx_omux8', 'wtx_ofin8', 'wtx_
 # grid strap axes land on these axes).  Not every axis is opened: channel pairs are spaced so that no piece of the block's
 # Metal5 exception is wider than 250 um (power-delivery G3), see REPORT.  ser8d's own Metal5 (supply straps, signal trunks)
 # lives between them.  Three VSS_BAR_W VSS bars (block VSS trunks: seam plate -> bottom edge tie points) at VSS_BARS:
-# 340 / 410 / 480 lie half-way between the mux PH pin pads above (285.25 + 34.5 k), which the bars pass in the seam.
-CH_PITCH, CH_X0, CH_W = 35.0, 7.5, 21.0          # channel = 16 um strap (strap_widths.json ME/SE) + 2 x 2.5 um grid cut
+# 340 / 371.5 / 480 stay off the channels and the PH Metal3 stubs (285.25 + 34.5 k).  Session 16 (WT43 PH lanes): grid
+# axes moved to 23.5 + 35 k (block) so that the chip grid's VSS landings over the mux fall mid-way between the PH lanes
+# (287.75 + 34.5 k): assembly origin rule x0 = 20.75 (mod 35).
+CH_PITCH, CH_X0, CH_W = 35.0, 23.5, 21.0         # channel = 16 um strap (strap_widths.json ME/SE) + 2 x 2.5 um grid cut
 CH_K = (6, 7, 11, 12, 16, 17)
-VSS_BARS, VSS_BAR_W = (340.0, 410.0, 480.0), 10.0
-STRAP_PITCH, STRAP_X0 = 35.0, 23.5               # ser8d strap pairs (VDD x, VSS x + 3) centred between grid axes (25 + 35 k);
+VSS_BARS, VSS_BAR_W = (340.0, 371.5, 480.0), 10.0
+STRAP_PITCH, STRAP_X0 = 35.0, 39.5              # ser8d strap pairs (VDD x, VSS x + 3) centred between grid axes (25 + 35 k);
                                                  # the three pairs under the VSS bars are dropped by the keep-out: 18 pairs
 
 

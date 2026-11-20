@@ -89,7 +89,11 @@ def build(p, decap=None, n_vdd_bonds=None, strip_caps=True, split=None, host_spl
                 if horiz and a[1] == 0: edge = 'south'
                 if horiz and a[1] == NY-1: edge = 'north'
                 for net_, nm in (('vdd', vn), ('vss', gn)):
-                    n.add_rl(nm(*a), nm(*b), r, l)
+                    rr = r
+                    if p.get('cov_region') and not dig:    # per-region, per-net drawn coverage: (x, y, net, layer) -> fraction
+                        mx = CORE[0]+(a[0]+b[0])/2*PX; my = CORE[1]+(a[1]+b[1])/2*PY
+                        rr = (p['Rs_m34'] if horiz else p['Rs_m5'])/max(1e-3, p['cov_region'](mx, my, net_, 'Metal4' if horiz else 'Metal5'))*sq
+                    n.add_rl(nm(*a), nm(*b), rr, l)
                     if edge:
                         length = PX if horiz else PY
                         frac = 1.0

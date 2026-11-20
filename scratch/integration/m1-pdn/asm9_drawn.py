@@ -5,7 +5,7 @@
 at the unscaled 81.8 mA (pd2u: pt_wired W 432 mA with POST on), all bonds and each single open supply bond.
 EM at 85 C (DRM 14.2): core ring per net 14 um Metal4 x 2.09 + 14 um Metal5 x 4.5 mA/um = 92 mA; supply cell 125 mA.
 The core ring's share of each boundary-edge current is its conductance share against the provider rails at that edge.
-Usage: asm9_drawn.py chip=rf|wired [m4=0.073] [m5=0.105] [ring=14] [tovdd=site,..] [move=rect:x0,y0;..] [tag=..]"""
+Usage: asm9_drawn.py chip=rf|wired [m4=0.073] [m5=0.105] [ring=14] [tovdd=site,..] [move=rect:x0,y0;..] [tag=..] [regions=1 [set=SE:15;ME:12]]"""
 import sys, json, numpy as np
 import model as M, core as C, chipcfg as P2
 D = dict(a.split('=', 1) for a in sys.argv[1:]); P2.apply(); CH = P2.CHIP
@@ -24,6 +24,15 @@ for k, v in D.items():          # experiments: tovdd=site[,site] converts bonds/
     if k == 'move':
         for it in v.split(';'):
             nm, xy = it.split(':'); x0, y0 = map(float, xy.split(',')); r = M.RECTS[nm]; w, h = r[2]-r[0], r[3]-r[1]; M.RECTS[nm] = [x0, y0, x0+w, y0+h]
+REG = None
+if D.get('regions'):     # drawn per-region coverage: scratch/integration/assembly-<chip>/place.json pdn_regions_pct, 3 x 3 over the core
+    REG = json.load(open(f'{M.ROOT}/scratch/integration/assembly-{CH}/place.json'))['pdn_regions_pct']
+    for it in D.get('set', '').split(';'):          # overrides: set=SE:15;ME:12  (every net and layer of that region at least this %)
+        if it:
+            r, v = it.split(':'); REG[r] = {k: max(x, float(v)) for k, x in REG[r].items()}
+def cov_region(x, y, net, layer):
+    cx = min(2, int(3*(x-M.CORE[0])/(M.CORE[2]-M.CORE[0]))); cy = min(2, int(3*(y-M.CORE[1])/(M.CORE[3]-M.CORE[1])))
+    return REG['SMN'[cy]+'WCE'[cx]][f'{net.upper()}_{layer}']/100.0
 dec = P2.plan(); B0 = list(M.BONDS)
 def ring_seg(n, info, p):
     """max core-ring current (mA) over the boundary edges, per net"""
@@ -45,10 +54,12 @@ def ring_seg(n, info, p):
         out[nm.__name__] = w
     return out
 res = {}; worst = {}
+print(f"{CH}: {'per-region coverage ' + str(D.get('set', 'as drawn')) if REG else ''}")
 print(f'{CH}: drawn grid M4 {m4:.3f} / M5 {m5:.3f} per net, core ring 2 x {ring:g} um M4+M5 (EM limit {RING_LIM:.0f} mA per net), pess set, digital 81.8 mA')
 for drop in [None]+[b['site'] for b in B0 if b['net'] == 'VDD']:
     M.BONDS[:] = [b for b in B0 if b['site'] != drop]
     p = P2.pset('pess', dict(cov_m5=m5, cov_m4=m4), core_ring_w=ring, ring_core_w=ring)
+    if REG: p['cov_region'] = cov_region
     n, info, ports, vict = C.full(p, decap=dec, x_feed=P2.X_FEED)
     site = {b['ring']: (b['site'], b['net']) for b in M.BONDS}
     for case in CASE:

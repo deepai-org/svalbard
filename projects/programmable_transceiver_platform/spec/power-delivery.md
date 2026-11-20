@@ -214,6 +214,27 @@ W 432 mA with POST on), all bonds and each single open supply bond. EM at 85 C: 
 - With `dvdd_pads[0]` open, pt_wired misses 117 mV at any coverage up to 15 % (127 mV): an open bond is a yield /
   bring-up case, not an operating point; EM holds at >= 12 / 15 %.
 
+### 4.1a Per-region coverage as drawn (16 um straps)
+
+The assembly's per-region coverage (`scratch/integration/assembly-<chip>/place.json` `pdn_regions_pct`, 3 x 3 regions of
+the core, per net and layer) on the assembly placement (`PDN_ASSEMBLY=1 asm9_drawn.py regions=1`), pessimistic set,
+digital 81.8 mA, pt_wired W 432 mA with POST on:
+
+| Chip | Case | Worst tap, all bonds | Worst tap, one open supply bond | Worst bond, all / one open (mA) | Result |
+| --- | --- | --- | --- | --- | --- |
+| pt_rf | as drawn (SE 7.4-8.7 %) | 102.9 mV `lo_mmd` | 106.4 mV | 45.2 / 57.7 | pass, no region needs more |
+| pt_wired | as drawn (ME 6.5-10.2 %, SE 9.3-12.1 %, NE 8.4-16.8 %) | 109.9 mV `pt_wiredtx8` | 124.1 (`dvdd_pads[0]` open), 122.4 (`dvdd_pads[1]`) | 97.7 / 121.4 | pass with all bonds |
+| pt_wired | ME and SE >= 12 % every net and layer | 104.9 mV | 123.6 / 110.6 | 97.5 / 121.0 | |
+| pt_wired | PDS-9 (bidir[22] VDD, `isw_wired_rx` moved), as drawn | 110.4 mV | 118.9 / 120.7 | 84.8 / 105.2 | |
+| pt_wired | PDS-9 + ME and SE >= 12 % | 102.3 mV | 118.2 / 107.2 | 84.6 / 105.0 | |
+
+- With all bonds both chips pass 117 mV and the 85 C EM limits with the grid as drawn: no region needs wide straps.
+  The core-wide 0.1 % Metal4 VSS shortfall on pt_wired does not matter.
+- pt_wired margin is 7 mV (110 mV); ME and SE at >= 12 % on every net and layer give 12-15 mV. Recommended, not required.
+- One open supply bond on pt_wired: `dvdd_pads[0]` open stays 1-7 mV over 117 mV with any grid (the drop is in the
+  remaining bonds and the ring); an open bond is a yield / bring-up case, not an operating point. EM with one open bond
+  needs PDS-9 (121.4 -> 105.2 mA).
+
 ### 4.2 pt_wired bonds with one open supply bond
 
 Target: worst supply cell <= 106 mA (15 % margin to 125 mA) in every single-open-supply-bond case at W 432 mA with POST on

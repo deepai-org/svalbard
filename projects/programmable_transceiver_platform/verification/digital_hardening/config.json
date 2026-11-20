@@ -204,55 +204,6 @@
         180
       ],
       "orientation": "N"
-    },
-    "digital.interp.hdiv.d_gf180mcu_fd_sc_mcu7t5v0__nor2_1_ZN": {
-      "location": [
-        428,
-        180
-      ],
-      "orientation": "N"
-    },
-    "host.en_d_gf180mcu_fd_sc_mcu7t5v0__and2_1_A2": {
-      "location": [
-        685,
-        105
-      ],
-      "orientation": "N"
-    },
-    "host.en_d_gf180mcu_fd_sc_mcu7t5v0__clkinv_1_I": {
-      "location": [
-        685,
-        105
-      ],
-      "orientation": "N"
-    },
-    "host.en_d_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q": {
-      "location": [
-        685,
-        105
-      ],
-      "orientation": "N"
-    },
-    "host.mode_d[0]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q": {
-      "location": [
-        685,
-        105
-      ],
-      "orientation": "N"
-    },
-    "host.mode_d[1]_gf180mcu_fd_sc_mcu7t5v0__dffrnq_1_Q": {
-      "location": [
-        685,
-        105
-      ],
-      "orientation": "N"
-    },
-    "host.mode_d[1]_gf180mcu_fd_sc_mcu7t5v0__or2_1_A1": {
-      "location": [
-        685,
-        105
-      ],
-      "orientation": "N"
     }
   },
   "MACRO_PLACEMENT_CFG": "dir::hio_placement.cfg",
@@ -581,50 +532,10 @@
     "host.h2d.cap[9].cr.p.lr",
     "host.h2d.cap[9].cf.n.lf",
     "host.h2d.fhh[9].c.n.lf",
-    "dring.en_nand",
-    "dring.st[0].inv",
-    "dring.st[1].inv",
-    "dring.st[2].inv",
-    "dring.st[3].inv",
-    "dring.st[4].inv",
-    "dring.st[5].inv",
-    "dring.st[6].inv",
-    "dring.st[7].inv",
-    "dring.st[8].inv",
-    "dring.st[9].inv",
-    "dring.st[10].inv",
-    "dring.st[11].inv",
-    "dring.st[12].inv",
-    "dring.st[13].inv",
-    "dring.st[14].inv",
-    "dring.st[15].inv",
-    "dring.st[16].inv",
-    "dring.st[17].inv",
-    "dring.st[18].inv",
-    "dring.st[19].inv",
-    "dring.st[20].inv",
-    "dring.st[21].inv",
-    "dring.st[22].inv",
-    "dring.st[23].inv",
-    "dring.st[24].inv",
-    "dring.st[25].inv",
-    "dring.st[26].inv",
-    "dring.st[27].inv",
-    "dring.st[28].inv",
-    "dring.st[29].inv",
-    "dring.st[30].inv",
-    "dring.st[31].inv",
-    "dring.st[32].inv",
-    "dring.st[33].inv",
-    "dring.st[34].inv",
-    "dring.st[35].inv",
-    "dring.st[36].inv",
-    "dring.st[37].inv",
-    "dring.st[38].inv",
-    "dring.st[39].inv"
+    "dring.en_nand"
   ],
   "CTS_DELAY_BUFFER_DERATE_PCT": 0,
   "CTS_APPLY_NDR": "none",
-  "RSZ_DONT_TOUCH_RX": "^(rf_rx_sample|rf_rx_sample_b|wire_rx_data|wire_rx_edge|fc_src|h2d_pin|d2h_pin)\\[[0-9]+\\]$",
+  "RSZ_DONT_TOUCH_RX": "^((rf_rx_sample|rf_rx_sample_b|wire_rx_data|wire_rx_edge|fc_src|h2d_pin|d2h_pin)\\[[0-9]+\\]|dring\\.n\\[[0-9]+\\])$",
   "DRT_OPT_ITERS": 24
 }

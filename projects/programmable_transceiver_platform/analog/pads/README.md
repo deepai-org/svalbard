@@ -204,7 +204,9 @@ Measurement plan:
    floating, in 0.05 A steps to It2. Failure criterion: leakage at 3.3 V above 10× the pre-stress value or
    above 1 µA.
 2. VF-TLP 1–5 ns (CDM speed) to 3 A.
-3. Extract on-resistance and turn-on voltage per diode string, to calibrate the pad-to-rail and diode models
+3. Failure current per um of perimeter of the site diode (It2 at 100 ns and VF-TLP at 1-5 ns): it replaces the literature
+   assumption (10 mA/um forward, 1 mA/um avalanche, `spec/design-assumptions.md`) that judges every pad's primary diodes.
+4. Extract on-resistance and turn-on voltage per diode string, to calibrate the pad-to-rail and diode models
    behind every HBM surrogate here. The riser adds about 0.2 Ω (nominal sheet resistance) to the measured
    on-resistance.
 

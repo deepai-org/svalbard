@@ -700,7 +700,14 @@ module pt_digital_macro(
  // Review finding 4: these are registers of clocks that can stop (REF_CLK, WCLK40); each output is also ANDed with the
  // island of its consumer, so a stopped clock cannot leave a 1 on a pin of an unpowered island.
  wire wrx_fup, wrx_fdn, wrx_slipp, wrx_slipm; wire[2:0] wrx_psel;
- assign c_cdr_fup = wrx_fup & ion[2], c_cdr_fdn = wrx_fdn & ion[2];
+ // r9 (ref timing, pt_rf c_cdr_fup -2.5 ns: the pt_wrx_ctl flop sat far from the pin): one output-stage flop
+ // per pin with no logic behind it (one REF_CLK more on the FLL level pulses: at the pin a pulse starts 10
+ // REF_CLK after fc_upd, not the 9 of the pt_wrx_ctl header); the island-off gating stays
+ // asynchronous after it, so isolation timing is unchanged.
+ wire fup_q, fdn_q;
+ pt_rep_dff fup_out(.clk(ref_clk), .rst_n(rst_n), .d(wrx_fup), .q(fup_q));
+ pt_rep_dff fdn_out(.clk(ref_clk), .rst_n(rst_n), .d(wrx_fdn), .q(fdn_q));
+ assign c_cdr_fup = fup_q & ion[2], c_cdr_fdn = fdn_q & ion[2];
  assign c_wrx_cap_psel = wrx_psel & {3{ion[0]}}, c_wrx_cap_slipp = wrx_slipp & ion[0], c_wrx_cap_slipm = wrx_slipm & ion[0];
  pt_wrx_ctl wrx(.ref_clk(ref_clk), .wire_rx_clk(wire_rx_clk_c), .rst_n(rst_n), .cfg_en(wrx_en), .cfg_restart(f_wrx_loop__restart),
   .cfg_freq_src(f_wrx_loop__freq_source), .cfg_fll_auto(f_wrx_loop__fll_auto), .cfg_fll_inv(f_wrx_loop__fll_invert),

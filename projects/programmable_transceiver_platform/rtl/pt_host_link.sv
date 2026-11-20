@@ -472,13 +472,22 @@ module pt_h2d_gearbox(input wire rst_n, input wire [1:0] mode, input wire h2d_cl
     wire empty = rgray == wg2;
     wire [3:0] avail = wbin - rb;
     wire ctake = run && !empty;
+    // r9 (routed pt_wired hcore worst path: rb -> 8:1 read mux -> quad, -5.1 ns): the read select is a
+    // registered one-hot copy of rb[2:0] (roh == 1 << rb[2:0] always), so the 40-bit read is one AND-OR.
+    reg [7:0] roh;
+    reg [39:0] rd_q;
+    integer ri;
+    always @* begin rd_q = 40'd0; for (ri = 0; ri < 8; ri = ri + 1) rd_q = rd_q | ({40{roh[ri]}} & mem[ri]); end
+`ifdef FORMAL
+    always @(posedge core_clk) if (core_rst_n) assert(roh == (8'd1 << rb[2:0]));
+`endif
     always @(posedge core_clk or negedge core_rst_n)
-        if (!core_rst_n) begin rb <= 4'd0; rgray <= 4'd0; wg1 <= 4'd0; wg2 <= 4'd0; run <= 1'b0; quad <= 40'd0; underflow <= 1'b0; end
+        if (!core_rst_n) begin rb <= 4'd0; roh <= 8'd1; rgray <= 4'd0; wg1 <= 4'd0; wg2 <= 4'd0; run <= 1'b0; quad <= 40'd0; underflow <= 1'b0; end
         else begin
             wg1 <= wg; wg2 <= wg1;
             if (!run && avail >= 4'd2) run <= 1'b1;
-            quad <= ctake ? mem[rb[2:0]] : 40'd0;   // underflow: idle quad, flagged
-            if (ctake) begin rb <= rb + 1'b1; rgray <= (rb + 1'b1) ^ ((rb + 1'b1) >> 1); end
+            quad <= ctake ? rd_q : 40'd0;   // underflow: idle quad, flagged
+            if (ctake) begin rb <= rb + 1'b1; rgray <= (rb + 1'b1) ^ ((rb + 1'b1) >> 1); roh <= {roh[6:0], roh[7]}; end
             if (run && empty) underflow <= 1'b1;
         end
 endmodule

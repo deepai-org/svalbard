@@ -54,7 +54,12 @@ module pt_quad_tx #(parameter CW=5)(input wire clk,rst_n,payload_iq,
  assign encoded=encoded_a^{3'b000,encoded_b[36:0]};
  // words available now / words known to precede the new-gain samples
  wire[8:0]avail_words={1'b0,quads,2'b00}+rcnt;
- wire[8:0]before_words=mk_seen?{1'b0,pre_quads,2'b00}+rcnt:safe;
+ wire[8:0]before_mk={1'b0,pre_quads,2'b00}+rcnt;
+ wire[8:0]before_words=mk_seen?before_mk:safe;
+ // r9 (routed pt_rf hcore worst path: mark_ack -> mk_seen -> before_words -> compare -> lt_r, -4.6 ns):
+ // both compares are formed from registers and the late mk_seen only selects the result. Same values.
+ wire lt_mk=before_mk<avail_words,lt_sf=safe<avail_words;
+ wire eq_mk=before_mk=={3'd0,left},eq_sf=safe=={3'd0,left};
  // Words in chronological order: the rcnt held words, then the head quad.
  wire[69:0]cat={head,res};
  reg[39:0]avail;
@@ -113,7 +118,7 @@ module pt_quad_tx #(parameter CW=5)(input wire clk,rst_n,payload_iq,
     raw_count<=avail_words;raw_left<={3'd0,left};before_r<=before_words;bar_r<=barrier;mk_r<=mk_seen;
     // beat-12 compares registered here (timing 2026-11-11: before_r / raw_count -> compare -> raw_count
     // was a post-synthesis hcore path); avail_words / before_words are concatenations or registers
-    lt_r<=before_words<avail_words;eq_r<=before_words=={3'd0,left};
+    lt_r<=mk_seen?lt_mk:lt_sf;eq_r<=mk_seen?eq_mk:eq_sf;
    end
    if(beat==4'd12)begin
     if(bar_r&&mk_r&&eq_r)begin

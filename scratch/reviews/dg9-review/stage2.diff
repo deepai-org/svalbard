@@ -1,0 +1,76 @@
+diff --git a/projects/programmable_transceiver_platform/rtl/pt_digital_macro.sv b/projects/programmable_transceiver_platform/rtl/pt_digital_macro.sv
+index 952b9b55..ad9a75c3 100644
+--- a/projects/programmable_transceiver_platform/rtl/pt_digital_macro.sv
++++ b/projects/programmable_transceiver_platform/rtl/pt_digital_macro.sv
+@@ -700,7 +700,13 @@ module pt_digital_macro(
+  // Review finding 4: these are registers of clocks that can stop (REF_CLK, WCLK40); each output is also ANDed with the
+  // island of its consumer, so a stopped clock cannot leave a 1 on a pin of an unpowered island.
+  wire wrx_fup, wrx_fdn, wrx_slipp, wrx_slipm; wire[2:0] wrx_psel;
+- assign c_cdr_fup = wrx_fup & ion[2], c_cdr_fdn = wrx_fdn & ion[2];
++ // r9 (ref timing, pt_rf c_cdr_fup -2.5 ns: the pt_wrx_ctl flop sat far from the pin): one output-stage flop
++ // per pin with no logic behind it (one REF_CLK more on the FLL level pulses); the island-off gating stays
++ // asynchronous after it, so isolation timing is unchanged.
++ wire fup_q, fdn_q;
++ pt_rep_dff fup_out(.clk(ref_clk), .rst_n(rst_n), .d(wrx_fup), .q(fup_q));
++ pt_rep_dff fdn_out(.clk(ref_clk), .rst_n(rst_n), .d(wrx_fdn), .q(fdn_q));
++ assign c_cdr_fup = fup_q & ion[2], c_cdr_fdn = fdn_q & ion[2];
+  assign c_wrx_cap_psel = wrx_psel & {3{ion[0]}}, c_wrx_cap_slipp = wrx_slipp & ion[0], c_wrx_cap_slipm = wrx_slipm & ion[0];
+  pt_wrx_ctl wrx(.ref_clk(ref_clk), .wire_rx_clk(wire_rx_clk_c), .rst_n(rst_n), .cfg_en(wrx_en), .cfg_restart(f_wrx_loop__restart),
+   .cfg_freq_src(f_wrx_loop__freq_source), .cfg_fll_auto(f_wrx_loop__fll_auto), .cfg_fll_inv(f_wrx_loop__fll_invert),
+diff --git a/projects/programmable_transceiver_platform/rtl/pt_host_link.sv b/projects/programmable_transceiver_platform/rtl/pt_host_link.sv
+index c3a4c118..83a98004 100644
+--- a/projects/programmable_transceiver_platform/rtl/pt_host_link.sv
++++ b/projects/programmable_transceiver_platform/rtl/pt_host_link.sv
+@@ -472,13 +472,22 @@ module pt_h2d_gearbox(input wire rst_n, input wire [1:0] mode, input wire h2d_cl
+     wire empty = rgray == wg2;
+     wire [3:0] avail = wbin - rb;
+     wire ctake = run && !empty;
++    // r9 (routed pt_wired hcore worst path: rb -> 8:1 read mux -> quad, -5.1 ns): the read select is a
++    // registered one-hot copy of rb[2:0] (roh == 1 << rb[2:0] always), so the 40-bit read is one AND-OR.
++    reg [7:0] roh;
++    reg [39:0] rd_q;
++    integer ri;
++    always @* begin rd_q = 40'd0; for (ri = 0; ri < 8; ri = ri + 1) rd_q = rd_q | ({40{roh[ri]}} & mem[ri]); end
++`ifdef FORMAL
++    always @(posedge core_clk) if (core_rst_n) assert(roh == (8'd1 << rb[2:0]));
++`endif
+     always @(posedge core_clk or negedge core_rst_n)
+-        if (!core_rst_n) begin rb <= 4'd0; rgray <= 4'd0; wg1 <= 4'd0; wg2 <= 4'd0; run <= 1'b0; quad <= 40'd0; underflow <= 1'b0; end
++        if (!core_rst_n) begin rb <= 4'd0; roh <= 8'd1; rgray <= 4'd0; wg1 <= 4'd0; wg2 <= 4'd0; run <= 1'b0; quad <= 40'd0; underflow <= 1'b0; end
+         else begin
+             wg1 <= wg; wg2 <= wg1;
+             if (!run && avail >= 4'd2) run <= 1'b1;
+-            quad <= ctake ? mem[rb[2:0]] : 40'd0;   // underflow: idle quad, flagged
+-            if (ctake) begin rb <= rb + 1'b1; rgray <= (rb + 1'b1) ^ ((rb + 1'b1) >> 1); end
++            quad <= ctake ? rd_q : 40'd0;   // underflow: idle quad, flagged
++            if (ctake) begin rb <= rb + 1'b1; rgray <= (rb + 1'b1) ^ ((rb + 1'b1) >> 1); roh <= {roh[6:0], roh[7]}; end
+             if (run && empty) underflow <= 1'b1;
+         end
+ endmodule
+diff --git a/projects/programmable_transceiver_platform/rtl/pt_quad_link.sv b/projects/programmable_transceiver_platform/rtl/pt_quad_link.sv
+index a23dc822..26fc4e25 100644
+--- a/projects/programmable_transceiver_platform/rtl/pt_quad_link.sv
++++ b/projects/programmable_transceiver_platform/rtl/pt_quad_link.sv
+@@ -54,7 +54,12 @@ module pt_quad_tx #(parameter CW=5)(input wire clk,rst_n,payload_iq,
+  assign encoded=encoded_a^{3'b000,encoded_b[36:0]};
+  // words available now / words known to precede the new-gain samples
+  wire[8:0]avail_words={1'b0,quads,2'b00}+rcnt;
+- wire[8:0]before_words=mk_seen?{1'b0,pre_quads,2'b00}+rcnt:safe;
++ wire[8:0]before_mk={1'b0,pre_quads,2'b00}+rcnt;
++ wire[8:0]before_words=mk_seen?before_mk:safe;
++ // r9 (routed pt_rf hcore worst path: mark_ack -> mk_seen -> before_words -> compare -> lt_r, -4.6 ns):
++ // both compares are formed from registers and the late mk_seen only selects the result. Same values.
++ wire lt_mk=before_mk<avail_words,lt_sf=safe<avail_words;
++ wire eq_mk=before_mk=={3'd0,left},eq_sf=safe=={3'd0,left};
+  // Words in chronological order: the rcnt held words, then the head quad.
+  wire[69:0]cat={head,res};
+  reg[39:0]avail;
+@@ -113,7 +118,7 @@ module pt_quad_tx #(parameter CW=5)(input wire clk,rst_n,payload_iq,
+     raw_count<=avail_words;raw_left<={3'd0,left};before_r<=before_words;bar_r<=barrier;mk_r<=mk_seen;
+     // beat-12 compares registered here (timing 2026-11-11: before_r / raw_count -> compare -> raw_count
+     // was a post-synthesis hcore path); avail_words / before_words are concatenations or registers
+-    lt_r<=before_words<avail_words;eq_r<=before_words=={3'd0,left};
++    lt_r<=mk_seen?lt_mk:lt_sf;eq_r<=mk_seen?eq_mk:eq_sf;
+    end
+    if(beat==4'd12)begin
+     if(bar_r&&mk_r&&eq_r)begin

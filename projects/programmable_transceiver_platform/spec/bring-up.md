@@ -3,7 +3,7 @@
 Current state, 2026-11-20. The one place for the silicon bring-up order and its software-visible rules; every step
 cites the row or register that defines it. Owner: observation / debug / bring-up. Observation paths per block:
 [observation.md](observation.md). Test-board assumptions: [test-board-models.md](test-board-models.md). Reference
-software: `tools/bringup/` (runs this sequence against the RTL). Register names are `spec/register-map.md` fields;
+software: `tools/bringup/` (runs sections 1-7 and one mode per chip against the RTL). Register names are `spec/register-map.md` fields;
 the per-chip view (D4) means a field of the other chip reads 0 and is not stored.
 
 Steps 0-7 are the "no dead chip" path (MANDATE 1): they need only supplies, `RESET_N`, SPI, `REF_IN` and the
@@ -118,19 +118,26 @@ would read the digital speed directly; until it exists the trim maps the ring th
 
 ## 7. Host link (HL-*, HL-B*)
 
-1. Clock: bring-up uses **host_follow** (no REF_IN dependency): `clockmux.config.ring_ref` = h2d, `ring_c.config.line_pll`
-   = 1, `ring_c.config.modulus` = N4, `clockmux.config.hf_prescale` = D4, `debug.clk_select.host_clk` = 5 (host_follow)
-   (LO-INTEGRATION 5, register-map). The FPGA runs `H2D_CLK` free (monitor `require_input_clock`). Alternative:
-   `host_clk` = internal_pll from the TX ring on REF_IN (`ring_l.config.*`, `host_prescale`). Check: CLK_OBS source
-   13 (host word clock) and DBG_OBS 48 (CDR ring lock); `pllvreg.config.*_bypass` stays 1 (reset) for bring-up.
+1. Clock (baseline host follow on the TX ring, D-HF; `integration/chips/sim/tb_top_modes.sv` section 2):
+   `clockmux.config.ring_ref` = h2d (3), `ring_l.config.modulus` = 4 (code 2), `ring_l.config.enable` = 1,
+   `clockmux.config.host_prescale` = /4 (code 2), `debug.clk_select.host_clk` = internal_pll (1). The ring runs at
+   4 × f(H2D_CLK) and the word clock equals f(H2D_CLK); the FPGA keeps `H2D_CLK` free-running (monitor
+   `require_input_clock`). Needs no REF_IN. Check: CLK_OBS source 13 (host word clock), DBG_OBS 10 (TX ring lock);
+   `pllvreg.config.*_bypass` stays 1 (reset) for bring-up. Alternative: the CDR ring (`ring_c.config.line_pll` = 1,
+   `hf_prescale`, `host_clk` = host_follow 5).
 2. Rate: `debug.host_link.rate` = div4 (78.125 Mb/s/pin) first (HL-B6); reset value is full rate, so set it before
    `hostio.controls.d2h_enable` = 1. `slew` = 1 (slow, reset), `d2h_stagger` = 1, `drive` reset.
-3. Training: each link start sends the 8-word prefix `3A5 05A 2D3 12C 369 096 21E 1E1` once (fpga-connection-plan 1);
-   the FPGA trains per-bit delay and per-lane bitslip (HL-B5, HL-TRAIN); one SPI restart per tap step (FPGA-1).
+3. Training: set `hostio.controls.d2h_enable` = 1 first. A **link start is the payload `ENABLE` (0x01 b0) going
+   0 → 1**: the transport core leaves reset and sends the 8-word prefix `3A5 05A 2D3 12C 369 096 21E 1E1` once
+   (`rtl/pt_core.sv` crst, `pt_quad_link_tx`; fpga-connection-plan 1). Toggling `d2h_enable` or the rate does not
+   resend it. The FPGA trains per-bit delay and per-lane bitslip (HL-B5, HL-TRAIN): per tap step write ENABLE 0, move
+   the tap, write ENABLE 1, search the capture for the prefix (FPGA-1); centre of the passing taps.
    Verify H2D with the pattern checker (`debug.pattern.check_*`, `status.pattern.errors` 0xF1 = 0) and D2H with a
    PRBS from the pattern generator.
-4. Raise the rate: div2 (slow slew allowed), then full rate **only with fast slew and stagger** (HL-RATE, HL-03,
-   PKG-08: unstaggered fast slew 486 mV bounce > 300 mV HL-SSO).
+4. Raise the rate: div2 (slow slew allowed), then full rate with fast slew (HL-RATE: slow slew leaves 1.65 ns of eye
+   against 1.68 ns at ss). Ground bounce on the real bond sets (OBS-15, [test-board-models.md](test-board-models.md)
+   section 6) is 139-215 mV fast-edge worst case, inside the 300 mV HL-SSO limit with or without stagger; keep
+   `d2h_stagger` = 1 at full rate for margin.
 5. **pt_rf RF modes (DG9-7, RQ-16):** `host_link.rate` = div4 + slow slew + stagger with MODE8 or ≤ 0.72 Gb/s; 12-bit
    I/Q at 40 MS/s needs div2 + slow slew + stagger with the FPGA host word clock chosen per RF channel in 109-156.25 MHz
    so that no harmonic of the word clock (and of the core clock = word/2) falls inside the wanted channel ± its
@@ -162,6 +169,7 @@ Each mode's register sequence is the block owner's; the generic rules are:
 
 ## Open items that change this sequence
 
-OBS-2 (counter timing at ring speed), OBS-6 (per-chip ATB legality), OBS-14 (digital-speed ring), DBG-03 (ATB gating),
+OBS-2 (counter /2 at the input, digital), OBS-6 (per-chip ATB legality), OBS-14 (digital-speed ring), DBG-03 (recommended:
+gate the five ATB0 trunk selects by their island, OBS-17; until then never force a trunk with its island off),
 PWR-13 (brownout and slow-corner ramps not run), HL-03 / PKG-08 (full-rate SSO on the real ground bonds, section 7 of
 [test-board-models.md](test-board-models.md)).

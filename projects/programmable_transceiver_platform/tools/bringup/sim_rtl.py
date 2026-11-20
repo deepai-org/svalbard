@@ -11,6 +11,15 @@ TOP = P/'integration/chips'
 F_REF = 50e6                     # tb_top_modes ref_clk (#10 half period)
 
 LOOP = r'''
+ // host word clock (156.25 MHz) exists only when the software programmed the TX-ring host_follow path (D-HF):
+ // H2D_CLK -> ring reference (PS_H2D), TX ring enabled, host prescaler /4, host select HS_INT
+ always @* hw_en = analog.p_clockmux__PS_H2D & analog.p_pll_tx__EN & analog.p_prescale__EN & analog.p_prescale__D4 & analog.p_clockmux__HS_INT;
+ // FPGA model: H2D is the D2H stream looped back; the forwarded clock is delayed by the trained capture delay
+ real cap_dly = 0.0; reg dclk_d = 0; always @(dut.d2h_clk_pin) dclk_d <= #(cap_dly) dut.d2h_clk_pin;
+ wire h2d_lb = dclk_d; wire [9:0] h2d_pin_lb = dut.d2h_pin;
+ integer qn = 0; always @(posedge dut.core_clk) if ($test$plusargs("qtrace") && qn < 40 && dut.host_rst_n) begin qn = qn + 1; $display("Q %h en=%b crst=%b", dut.d2h_quad, dut.host.en_c, dut.core_rst_n); end
+ reg [9:0] capbuf [0:1023]; integer capn = 0, k;
+ always @(dclk_d) if (dut.d2h_oe && capn < 1024) begin capbuf[capn] = dut.d2h_pin; capn = capn + 1; end   // the FPGA's capture memory, from arming
  real ring_half = 2.375; reg ro = 0; always #(ring_half) ro = analog.p_ring_osc__EN ? ~ro : 1'b0;
  task spi(input [7:0] command, address, input [15:0] value, output [15:0] result);
   reg [31:0] tx; integer i;
@@ -31,7 +40,9 @@ LOOP = r'''
     "X": begin spi(c, a, d, r); if (^r === 1'bx) $display("R X %b", r); else $display("R %0d", r); end
     "W": begin #(c * 1000); $display("OK"); end
     "L": begin rst_pad = c; #100; $display("OK"); end
-    "P": begin $display("OK dbg rs=%b por=%b en=%b on=%b pg=%b%b rst_n=%b", dut.reset_seen, por_n, island_en, island_on, s_pg_pll, s_pg_debug, dut.rst_n); end
+    "T": begin cap_dly = c / 1000.0; capn = 0; $display("OK"); end
+    "C": begin $write("R 0 cap"); for (k = 0; k < capn; k = k + 1) $write(" %0d", capbuf[k]); $display(""); end
+    "P": begin $display("OK dbg hw=%b ps=%b txen=%b pen=%b d4=%b hs=%b oe=%b capn=%0d rs=%b rst_n=%b", hw_en, analog.p_clockmux__PS_H2D, analog.p_pll_tx__EN, analog.p_prescale__EN, analog.p_prescale__D4, analog.p_clockmux__HS_INT, dut.d2h_oe, capn, dut.reset_seen, dut.rst_n); end
     default: $finish;
    endcase
    $fflush;
@@ -47,7 +58,8 @@ def build(chip, work):
     head = head.replace('module tb_top_modes;', 'module tb_bringup;').replace('`include "tb_fields.svh"', '')
     head = head.replace(".fc_src({1'b0, aosc, 4'b0})", ".fc_src({1'b0, aosc, 1'b0, ro, 2'b0})")
     head = '\n'.join(l for l in head.split('\n') if 'task clear_mon_fault' not in l)
-    assert 'ro, 2' in head, 'tb_top_modes instantiation changed: update sim_rtl.py'
+    head = head.replace(".h2d_clk(h2d_clk), .h2d_pin(10'b0)", ".h2d_clk(h2d_lb), .h2d_pin(h2d_pin_lb)")
+    assert 'h2d_lb' in head and 'ro, 2' in head, 'tb_top_modes instantiation changed: update sim_rtl.py'
     tb = work/'tb_bringup.sv'
     tb.write_text('`timescale 1ns/1ps\n`include "pt_regmap_defs.svh"\n' + head + LOOP)
     rtl = sorted(str(p) for p in (P/'rtl').glob('*.sv'))
@@ -60,7 +72,7 @@ def build(chip, work):
 class Sim:
     def __init__(self, vvp, ring_mhz, trace=False):
         self.trace = trace
-        self.p = subprocess.Popen(['vvp', '-n', str(vvp), f'+ring_half={500.0/ring_mhz:.6f}'], stdin=subprocess.PIPE,
+        self.p = subprocess.Popen(['vvp', '-n', str(vvp), f'+ring_half={500.0/ring_mhz:.6f}'] + (['+qtrace'] if trace else []), stdin=subprocess.PIPE,
                                   stdout=subprocess.PIPE, text=True, bufsize=1)
     def _cmd(self, s):
         self.p.stdin.write(s + '\n'); self.p.stdin.flush()
@@ -68,6 +80,7 @@ class Sim:
             line = self.p.stdout.readline()
             if not line:
                 raise RuntimeError('simulator ended')
+            if self.trace and line.startswith('Q '): print('  ', line.strip())
             if line.startswith(('R ', 'OK')):
                 return line
     def xfer(self, cmd, addr, data):
@@ -82,6 +95,12 @@ class Sim:
         self._cmd(f'L {0 if low else 1} 0 0')
     def wait_us(self, t):
         self._cmd(f'W {max(1, int(round(t)))} 0 0')
+    def arm(self, delay_ps):
+        """FPGA side: set the capture delay and arm a 1024-word capture of D2H (first words after arming)."""
+        self._cmd(f'T {int(delay_ps)} 0 0')
+    def captured(self):
+        line = self._cmd('C 0 0 0').split()
+        return [int(x) if x.isdigit() else None for x in line[3:]]
     def close(self):
         self.p.stdin.write('Q 0 0 0\n'); self.p.stdin.close(); self.p.wait(timeout=60)
 
@@ -92,12 +111,17 @@ def main():
     ap.add_argument('--ring-mhz', type=float, default=210.5)
     ap.add_argument('--trace', action='store_true')
     ap.add_argument('--negative', action='store_true', help='build the other chip: the identity step must stop the sequence')
+    ap.add_argument('--negative-host', action='store_true', help='host prescaler /8 instead of /4: no 156.25 MHz word clock, training must fail')
     a = ap.parse_args()
+    if a.negative_host:
+        sequence.HOST_PRESCALE = 3; a.negative = True
     with tempfile.TemporaryDirectory() as w:
         other = {'rf': 'wired', 'wired': 'rf'}[a.chip]
-        sim = Sim(build(other if a.negative else a.chip, Path(w)), a.ring_mhz, a.trace)
+        sim = Sim(build(other if a.negative and not a.negative_host else a.chip, Path(w)), a.ring_mhz, a.trace)
         try:
             out = sequence.run(sim, sim, a.chip, F_REF)
+            out['host_link'] = sequence.host_link(sim, sim, a.chip)
+            sequence.mode(sim, sim, a.chip)
         except RuntimeError as e:
             print(f'{"PASS (negative control)" if a.negative else "FAIL"}: {e}')
             sys.exit(0 if a.negative else 1)

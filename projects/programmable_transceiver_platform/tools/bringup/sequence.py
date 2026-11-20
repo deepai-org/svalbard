@@ -15,6 +15,7 @@ def trim_choice(s):
 
 def run(spi, board, chip, f_ref, log=print):
     r, out = Regs(spi, chip), {}
+    board.shadow = r.shadow          # later steps continue from the same host shadow
     # 1. power-up and reset (B49, B53): RESET_N low through the ramp, then release
     board.reset(True); board.wait_us(1000); board.reset(False); board.wait_us(10)
     rs = r.read(A_RESET); out['reset_status'] = rs
@@ -69,3 +70,80 @@ def count(r, board, source, f_ref, window_code=1):
     board.wait_us(3.2 * window / f_ref * 1e6)        # first window only sets the reference point
     n = r.status('status.freq_count_a.count')
     return n * f_ref / window
+
+
+HOST_PRESCALE = 2      # /4. Host follow on the TX ring (D-HF): ring = f(H2D_CLK) x 4 (modulus code 2), word clock = ring / 4 = f(H2D_CLK)
+PREFIX = [0x3A5, 0x05A, 0x2D3, 0x12C, 0x369, 0x096, 0x21E, 0x1E1]   # fpga-connection-plan.md section 1
+
+
+def host_link(spi, fpga, chip, log=print, rate=2):
+    """bring-up.md section 7: TX-ring host_follow clock (D-HF), div4, slow slew + stagger, then per-step link restarts
+    while the FPGA sweeps its capture delay (FPGA-1: the prefix is sent once per link start); returns the window."""
+    r = Regs(spi, chip)
+    r.shadow = getattr(fpga, 'shadow', r.shadow)
+    r.set(**{'clockmux.config.ring_ref': 3, 'ring_l.config.modulus': 2, 'ring_l.config.enable': 1,
+             'clockmux.config.host_prescale': HOST_PRESCALE, 'debug.clk_select.host_clk': 1})
+    r.commit()
+    r.set(**{'debug.host_link.rate': rate, 'hostio.controls.slew': 1, 'hostio.controls.d2h_stagger': 1,
+             'hostio.controls.d2h_enable': 1})
+    r.commit()
+    word_ns = 3.2 * (1, 2, 4)[rate]
+    ok = []
+    for step in range(16):
+        # a link start = payload ENABLE (0x01 b0) 0 -> 1: the transport core leaves reset and the framer sends the
+        # training quads T0, T1 once (pt_core crst, pt_quad_link_tx); the FPGA re-arms at the next tap first (FPGA-1)
+        d = step * word_ns / 16
+        r.write_reg(0x01, 0)
+        fpga.arm(d * 1000)
+        r.write_reg(0x01, 1)
+        board_wait = getattr(fpga, 'wait_us', None)
+        if board_wait: board_wait(1)
+        words = fpga.captured()
+        if getattr(fpga, 'trace', False) and step in (0, 1, 8): print('   probe', step, fpga._cmd('P 0 0 0').strip(), [hex(w) if w is not None else w for w in words[:20]])
+        hit = any(words[i:i+8] == PREFIX for i in range(len(words) - 7))
+        ok.append(hit)
+    r.write_reg(0x01, 0)
+    good = [i for i, h in enumerate(ok) if h]
+    if not good:
+        raise RuntimeError(f'7 no capture delay sees the training prefix ({"".join("x" if h else "." for h in ok)})')
+    centre = good[len(good) // 2] * word_ns / 16
+    log(f'7 host link div{(1,2,4)[rate]}: prefix seen at delays {"".join("x" if h else "." for h in ok)} (step {word_ns/16:.2f} ns), centre {centre:.2f} ns')
+    return dict(window=ok, centre_ns=centre)
+
+
+MODES = {
+    # tb_top_modes section 2 (proven against the RTL): RF receive, external LO through the CML driver
+    'rf': ('rf receive (external LO)', [
+        {'rfpll.config.lo_mode': 3},
+        {'core.refchain.dist_en_rf': 1, 'core.refchain.dist_en_conv': 1},
+        {'debug.clk_select.wire_line': 1, 'debug.clk_select.conv_sample': 1, 'clockmux.config.conv_prescale': 2},
+        {'lna.state.state': 2, 'rxmix_i.state.state': 2, 'rxmix_q.state.state': 2, 'consolidation.bbfilter.direction': 1,
+         'adc_i.state.state': 2, 'adc_q.state.state': 2, 'refbuf.state.state': 2, 'adc.config.interleave': 1}]),
+    # tb_top_modes section 6: wired transmit, ring -> SER_EN -> pad request; checked on status.wired.tx_state
+    'wired': ('wired transmit (serial, x4)', [
+        {'core.refchain.dist_en_wire': 1},
+        {'ring_l.config.lock_time': 3, 'ring_l.config.modulus': 1, 'txpad.config.branch': 1, 'wiredtx.idle.idle': 0,
+         'consolidation.wiredtx_stage.rate_mode': 2, 'wiredtx.state.state': 2}]),
+}
+
+
+def mode(spi, board, chip, log=print):
+    """bring-up.md section 9: one mode per chip, each commit checked, then an SPI-visible result."""
+    r = Regs(spi, chip)
+    r.shadow = getattr(board, 'shadow', r.shadow)
+    name, steps = MODES[chip]
+    if chip == 'wired':      # the wired TX baseline clocks itself from REF_IN (ring_ref = ref), not from H2D_CLK
+        r.set(**{'debug.host_link.rate': 0, 'hostio.controls.d2h_enable': 0}); r.commit()
+        r.set(**{'ring_l.config.enable': 0}); r.commit()
+        r.set(**{'clockmux.config.ring_ref': 0}); r.commit()      # break-before-make: through 0 (register-map rules)
+        r.set(**{'clockmux.config.ring_ref': 1}); r.commit()
+    for s in steps:
+        r.set(**s); r.commit()
+    if chip == 'wired':
+        r.set(**{'ring_l.config.enable': 1}); r.commit(); board.wait_us(700)
+        st = r.status('status.wired.tx_state'); rdy = r.status('status.wired.tx_ring_ready')
+        if st != 3 or not rdy:
+            raise RuntimeError(f'9 {name}: tx_state {st}, ring_ready {rdy} (want 3 run, 1)')
+        log(f'9 {name}: tx_state 3 (run), ring ready')
+    else:
+        log(f'9 {name}: every commit accepted, ISLAND_STATUS 0x{r.read(A_ISLAND):04X}')

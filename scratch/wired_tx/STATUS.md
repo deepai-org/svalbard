@@ -22,26 +22,24 @@ at 320 ps. Streams 1-4 are captured at phases 5, 6, 7, 0 and have 0.24-1.3 ns.
 Fix: new hop plan in `ser8d_macro.py` (first capture at phase 6 or 7, final hop 6 slots before the slice window),
 see "Hop plan" below. Not yet laid out.
 
-## RESUME HERE (state at 2026-11-19, session 14; nothing published)
-Done this session:
-- Queues collected: pad matrix A / B (`s13/padr/padr.log`), `x3_cal_ssp` (`s13/q_x.log`), real-ring calibration (`s13/calres/`,
-  ss pess. codes [0,1,3,3,4,5,3,7], residual 10.6 ps > 8 ps limit), ring tuning (`s13/q_tune.log`). Row WT41.
-- `wtx_ser8d` final hop table re-verified from disk (`s13/ser8d/verify_s14.log`): DRC 0/0, LVS unique, 4 negative controls fail.
-- `pt_wiredtx8` pass 2 (commit 3334a8ca, `s13/top/REPORT.md`): 0.298 mm2 box / 0.274 used, seam 38.4 um, DRC 0/0, LVS unique, 4 neg.
-  controls fail. OPEN: TR* trim pins are internal Metal3 (edge routing = 47.9 um seam, or move mux trim pins to its right side).
-- Interlock on the EXTRACTED mux (`s13/ilk/ilk_ext.log`, `q_ilk_ext.sh`): stop 11110000 ssp 33.9 -> 0.001 mA in 247 ns, ff 36.8 -> 0.001
-  in 206 ns; all-0 / all-1 0.001 mA in 2-3 ns. Mid-level (1.35 V all phases): slices off (gates 0 V) but 6.1-6.2 mA flows (phase-input
-  crowbar, not slice current) and at ff RUN stays HIGH (detector does not flag mid level). x_neg_nointerlock is NOT a valid negative
-  control (ext= ignores interlock=false): redo with a netlist that has the detector output tied high. Not run: stuck phase, supply ramp.
-- Full-coverage resistance audit (`s14/rcov/RCOV.md`, commit be6e0c04): drawn-R netlists cover 6-14 % of nets; 191 nets over the
-  declared thresholds; the drawn lumps are 1.4-20x BELOW extresist (MAIN_P 0.26 vs 5.5 ohm, block PH 5.2 vs 53 ohm). The `*.rc.spice`
-  rows are therefore optimistic. Next netlist for the table: the extresist netlist (s14/rcov/ext_keep.py) per cell, not the drawn one.
-- First block-level real-chain rows (`s13/resultsC/t14_*`, top_ext = pass-2 `pt_wiredtx8.rc.spice`, ring=layout-11Nov pess., ss pess.
-  3.15 V, 3.125 Gb/s, mux-bench codes): pad=C 0 err / 320, eye 0.157 V / 0.55 UI FAIL; pad=RC-typ 0 err / 360, 0.090 V FAIL; I 55.8 mA.
-  Each row takes about 4 h on the full block netlist.
-Next: (1) re-calibrate trim codes on the block (phase buffers, PS skew 41-103 fF) and rerun the two rows; (2) switch to extresist
-netlists; (3) table rows with the reworked pad when published (else S=0.6 MAIN switch fallback, which gave 0.213 V with RC-typ at mux
-level); (4) stuck / ramp interlock rows and mid-level detector fix; (5) supply impedance, MC, review, publish; (6) retire quarter-rate TX.
+## RESUME HERE (state at 2026-11-20; nothing published)
+- Layout (all DRC 0/0, LVS unique from disk, negative controls fail): `pt_wiredtx8` 744.12 x 400.56 um L (0.274 mm2 used),
+  seam 38.4 um, Metal5 exception with ser8d grid channel pairs + VSS trunks/tabs (3bc5ca72); mux detector with hysteresis
+  input + RUN-gated phase NAND, trim pins on the mux right edge (5d73aae8). Reports: `s13/top/REPORT.md`, `s13/mux3/REPORT.md`,
+  `s13/ser8d/REPORT.md`.
+- Interlock (extracted mux, `s14/ilk/`): stop / all-0 / all-1 / mid-level / mid+0.3 V pp / stuck high+low / supply ramp all
+  PASS; negative control (RUN forced high) fails as required. Open: "eye unchanged" in the real chain (qF row W vs X).
+- Extraction: Magic extresist + ext2spice inflate substrate C (row WT42); use `s14/chain/fixcap.py`. Full-netlist rows
+  before a4edc78c are invalid. `s14/rcov/`: R valid, C/RC of resisted nets inflated.
+- Rows: queues qE (block cal + pad C / RC-typ at ssp 3.15 / ss 3.24 / tt 3.24 / ss 2.7, corrected old netlist) and qF
+  (new-detector confirmation W vs X, attribution: ideal phases, S=0.6, both pads) running, about a day; state and
+  tables in `s14/QUEUE.md`, `python3 s14/table14.py`. Snapshots predate 3bc5ca72 (ser8d wiring change <= 4 fF; hop timing
+  re-check by simulation still owed: `s13/probe.py` at ssp and ff on the new ser8d).
+- IR: 9.9-10.1 mV vs 6.6 mV budget (WT44 asks power delivery for 11 / 17 mV, else a grid tie onto the seam plate through
+  the mux). Placement: unrotated, x0 = 4.75 mod 35 um (WT44). PH0..7 access: ring owner's call (WT43).
+- Next after the rows: limiter attribution per failing row; reworked pad (option A) rows at S = 1.0 and 0.6 plus the
+  0.6x cost in 100BASE-TX (40 mA), USB, low rates; remaining table (0.48-3.24 Gb/s, sf / fs, pess.), supply impedance,
+  Monte Carlo, independent review, publish; then the quarter-rate retirement decision.
 
 ## State at 2026-11-18 07:05 UTC
 - `wtx_ser8d` rebuilt with the final hop plan (`ser8d_macro.HOPS`, docstring = timing data): 744.12 x 197.68 um

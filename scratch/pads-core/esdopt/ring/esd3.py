@@ -38,6 +38,7 @@ RING = {'typ': (.10, .30), 'high': (.125, .375)}
 CDIE = None
 RXGATE = False
 RINGV = None
+SITECAP = None   # (C, R per rail): ring decap at the site landing (PC-45)
 FAR = (7, 9)
 ALL = [f'{p}{sg}{r}' for r in ('VSS', 'VDD') for p in 'PN' for sg in '+-'] + ['P+N', 'P-N']
 
@@ -109,6 +110,7 @@ def deck(body, cell, ports, inner, case, wave, analysis, ring, toy=None):
     # 1 uA into the supply ring from t = 0: with the ring at exactly 0 V the provider clamp's behavioural MOS capacitor does not start
     # (ngspice 46 and 47: 'timestep too small' at the first point); a driven rail does.  1 uA x 300 ns = 0.3 pC: no effect on the result.
     d += 'IKICK VSSF DVDDF PWL(0 0 10p 1u)\n'
+    if SITECAP: d += f'CSITE DVDDSC VSSSC {SITECAP[0]}\nRSITED DVDDS DVDDSC {SITECAP[1]}\nRSITES VSSS VSSSC {SITECAP[1]}\n'
     if CDIE: d += f'CDIE DVDDF DIEX {CDIE}\nRDIE DIEX VSSF 0.5\n'      # --cdie: die supply capacitance behind 0.5 ohm (as scratch/pads-core/clamp/gen.py: 1n)
     gnd = {'VSS': 'VSSN', 'VDD': 'DVDDN', 'N': f'PAD_{other}'}[ref]
     d += f'VGND {gnd} 0 0\n'
@@ -160,7 +162,7 @@ def analyse(x, vec, nodemap, devs, case):
         r.update(rx_minus_vss_abs_v=float(max(np.abs(g('v(RX_P)') - g('v(VSSS)')).max(), np.abs(g('v(RX_N)') - g('v(VSSS)')).max())),
                  rx_minus_vdd_abs_v=float(max(np.abs(g('v(RX_P)') - g('v(VDDC)')).max(), np.abs(g('v(RX_N)') - g('v(VDDC)')).max())))
     node = lambda n: np.zeros(len(x)) if n == '0' else g(nodemap[n])
-    worst = {}; over_screen = over_limit = nmos = 0; wd = (0., ''); wm = (0., '')
+    worst = {}; over_screen = over_limit = nmos = 0; wd = (0., ''); wm = (0., ''); wnp = (0., 0., '')
     for name, model, nodes in devs:
         if model in MOS:
             nmos += 1; D, G, S, B = (node(n) for n in nodes)
@@ -171,12 +173,15 @@ def analyse(x, vec, nodemap, devs, case):
         elif model.startswith('diode'):
             v = float((node(nodes[1]) - node(nodes[0])).max())           # cathode - anode
             if v > wd[0]: wd = (v, f'{name} {model} {nodes[0]} {nodes[1]}')
+            if not any(re.match(r'PAD_[PN]__(dn|up)$', q) for q in nodes):
+                kb = v / (11.0 if 'nd2ps' in model else 10.5 if 'pd2nw' in model else 10.0)
+                if kb > wnp[0]: wnp = (kb, v, f'{name} {model} {nodes[0]} {nodes[1]}')
         else:
             v = float(np.abs(node(nodes[0]) - node(nodes[1])).max())
             if v > wm[0]: wm = (v, f'{name} {nodes[0]} {nodes[1]}')
     worst.pop('k', None)
     r.update(mos=nmos, mos_over_dc_screen=int(over_screen), mos_over_transient_limit=int(over_limit), worst_mos=worst,
-             worst_diode_reverse_v=round(wd[0], 3), worst_diode=wd[1], worst_mim_v=round(wm[0], 3), worst_mim=wm[1])
+             worst_diode_reverse_v=round(wd[0], 3), worst_diode=wd[1], worst_mim_v=round(wm[0], 3), worst_mim=wm[1], worst_nonprimary_diode_rev_v=round(wnp[1], 3), worst_nonprimary_diode=wnp[2], worst_nonprimary_frac_bv=round(wnp[0], 3))
     return r
 
 

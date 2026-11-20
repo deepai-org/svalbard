@@ -103,3 +103,34 @@ Reading: the 11.05-11.06 V reverse drop sits on fingers that carry only 2.7 mA (
 through the other polarity's fingers at 7.0-7.2 mA/um, 1.5x the HBM reference density but with 1/38 of its energy. Under the ruling, the two CDM
 pad-to-pad cases change from MISS to **PASS (forward 72 % of a conservative 10 mA/um, avalanche 5 % of 1 mA/um)**. The limit is a literature
 figure, not a foundry rating; the CDM peak density is above the known-good HBM density, so a TLP measurement of the site diode (planned TLP site) is the real check.
+
+## PC-45: 1 nF ring decap at 0.7 ohm from the site (2026-11-20)
+`esd3.py` option SITECAP (cur.py `--sitecap 1n,0.7`): CSITE 1 nF between DVDDSC and VSSSC, with **0.7 ohm on EACH rail** to the site landing nodes
+DVDDS / VSSS (1.4 ohm loop: the pessimistic reading of "0.7 ohm incl. its own series R"; the far-node CDIE is not used). Ring at the bound
+(0.155/0.189/0.46/0.57 ohm, far 5+7), a6 high model, receiver gate on. Ideal capacitor, no ESR beyond the 0.7 ohm.
+Judged: gate <= 8.0 V; RX-VSS, RX-VDD <= 5.0 V; MIM <= 6 V; non-primary diodes (secondary pd2nw, clamp, rail diodes) reverse < bv (nd2ps 11, pd2nw 10.5);
+primary site diodes peak <= 10 mA/um forward and <= 1 mA/um avalanche (pj 51.8 um). Files `esd/sc_*.json`, `sc.log`, `sc_table.txt`.
+
+| run | gate V | RX-VSS / RX-VDD V | MIM V | non-primary diode rev V (frac bv) | primary fwd mA/um | primary aval mA/um (V) | energy nJ/finger | result |
+|---|---|---|---|---|---|---|---|---|
+| cdm2_P+VSS | 6.21 | 4.28 / 2.65 | 4.69 | 3.00 (0.29) | 7.22 | 0.052 (9.77) | 2.02 | PASS |
+| cdm2_P-VSS | 1.11 | 1.47 / 1.57 | 3.19 | 1.01 (0.10) | 7.00 | 0.048 (5.28) | 1.92 | PASS |
+| cdm2_N+VSS | 6.33 | 4.29 / 2.70 | 4.76 | 3.04 (0.29) | 7.23 | 0.052 (9.78) | 2.02 | PASS |
+| cdm2_N-VSS | 1.10 | 1.48 / 1.58 | 3.23 | 1.01 (0.10) | 6.99 | 0.050 (5.27) | 1.92 | PASS |
+| cdm2_P+VDD | 3.22 | 1.49 / 1.66 | 4.57 | 0.26 (0.03) | 7.22 | 0.050 (6.75) | 2.02 | PASS |
+| cdm2_P-VDD | 4.28 | 1.89 / 4.52 | 3.19 | 4.03 (0.38) | 7.00 | 0.050 (8.34) | 1.92 | PASS |
+| cdm2_N+VDD | 3.35 | 1.50 / 1.67 | 4.64 | 0.25 (0.02) | 7.24 | 0.050 (6.76) | 2.02 | PASS |
+| cdm2_N-VDD | 4.28 | 1.91 / 4.52 | 3.23 | 4.03 (0.38) | 6.99 | 0.050 (8.33) | 1.92 | PASS |
+| cdm2_P+N | 6.39 | 4.36 / 4.32 | 4.63 | 4.45 (0.42) | 7.22 | 0.052 (9.95) | 2.02 | PASS |
+| cdm2_P-N | 6.52 | 4.37 / 4.32 | 4.71 | 4.44 (0.42) | 7.23 | 0.052 (9.96) | 2.02 | PASS |
+| cdm1_P+N | 4.38 | 3.16 / 3.18 | 2.20 | 3.38 (0.32) | 3.61 | 0.035 (6.16) | 0.62 | PASS |
+| cdm1_P-N | 4.45 | 3.16 / 3.18 | 2.23 | 3.38 (0.32) | 3.61 | 0.035 (6.17) | 0.62 | PASS |
+| cdm3_P+N | 7.82 | 5.41 / 5.40 | 6.52 | 5.26 (0.50) | 10.49 | 1.116 (12.48) | 3.95 | MISS |
+| cdm3_P-N | 7.99 | 5.42 / 5.39 | 6.62 | 5.25 (0.50) | 10.51 | 1.120 (12.48) | 3.96 | MISS |
+| hbm2_P+N | 4.81 | 3.33 / 3.32 | 3.98 | 3.52 (0.34) | 4.78 | 0.010 (7.16) | 77.05 | PASS |
+| hbm2_P-N | 4.90 | 3.33 / 3.32 | 4.02 | 3.52 (0.34) | 4.79 | 0.012 (7.16) | 77.27 | PASS |
+
+CDM 2 A (all 10 cases), CDM 1 A and HBM 2 kV pad-to-pad: PASS. The site cap lowers the CDM 2 A pad-to-pad gate from 7.64 to 6.52 V and the
+primary reverse from 11.06 to 9.96 V; primary forward density is unchanged (7.2 mA/um).
+CDM 3 A pad-to-pad: MISS on four counts: RX 5.42 V (> 5.0), MIM 6.62 V (> 6.0), primary forward 10.5 mA/um (> 10), avalanche 1.12 mA/um at 12.5 V (> 1).
+Gates hold (7.99 V, 0.01 V margin). 3 A is beyond the 2 A requirement; reported as information.

@@ -396,3 +396,46 @@ Commands: `python3 $P/analog/pads/tx_pad_layout.py sec/b/a8 --nvt '{"wb": 21, "w
 `sec/q8.sh` (term rt/rh/off, ka, gatec, trim gatec, esdka, 18 ESD cases with sec/env7.sh); `bash sec/checks6.sh a8 kl rb lu rail`; `rail_site_check.py --gds sec/b/a8/pad_txpad.gds
 --top pad_txpad --name txpad_a8 --out sec/checks/a8/railsite`; `tb2.py out sec/models/a8_rt|rh.spice a8rtd|a8rhd 21`; `python3 sec/gdsnorm.py b/a4/pad_txpad.gds <default rebuild>`;
 `python3 termtab.py a8rt a8rh`; `python3 paths.py sec/r8/res.json`. Sizing: `sec/sz6/optnvt.py` (analytic; simulated ss needs about one code more than predicted).
+
+# CANDIDATE a9 (2026-11-20): answer to review-a8 (NO-GO). NOT published, NOT committed. Supersedes a8: the a8 build, netres, models and benches are deleted.
+Requests (agent a0b585bf, from review-a8/REVIEW.md): (1) the termination-off leak with TERM_VCM at 0 V: evaluate a series disconnect; (2) make CDM 2 A
+vss:neg converge and judge it; (3) MOS junction reverse vs bv in the ESD bench; (4) rbverdict for 3 swapped labels; (5) >= 1 code margin beyond 13 at ss/3.15/32 high
+metal with pad C <= 3.223 pF.
+a9 = a8 with the base devices widened to the trim height (8 x 23.5/1.8, was 21) and base poly 2 x 2.2 (was 2.4). Generator unchanged (fea82f43):
+`python3 $P/analog/pads/tx_pad_layout.py sec/b/a9 --nvt '{"wb": 23.5, "wt": 23.5, "lb": 2.2, "lt": 1.0, "merged": true}' --upx '{"x": [63, 69], "yu": 107}' --top-pins`.
+GDS a11ad221..., netres `sec/r9/res.json` 9a6671350, models `sec/models/a9_rh` b015da0f / `a9_rt` 6567630b / `a9_c`; what-if disconnect models `sec/models/a9d_rt|rh`
+(`sec/dis/mkdis.py` 1ba02972: XDIS nfet_03v3 100/0.28 between the native banks' common source bus and the TERM_VCM pin, gate TERM_ENABLE_LOCAL, TERM_DISCHARGE moved to the
+pin side). Off-leak bench `sec/dis/offleak.py` 64b5e433. `tb2.py` d0f52dc6, `rbverdict.py` 591d6596.
+
+| Limit / request | a9 (exact GDS, no disconnect) | a9 + disconnect (what-if model) | Result |
+|---|---|---|---|
+| (1) leak per pad with termination off, TERM_VCM 0 V, pads 0.5-3.3 V | tt 1.72, ff32 10.8, ff22 10.7, fs 6.9, ss 0.02 mA | < 0.01 uA all 5 corners (both pads equal); pads 1 V apart: <= 0.16 uA (ff 32) | FAIL / **PASS** |
+| (1) TERM_VCM 1.65 V off control | >= 1.47e10 ohm | (unchanged path) | PASS |
+| (1) termination with the disconnect | | rh identical within 0.02 ohm at every code / corner (differential current does not pass XDIS) | PASS |
+| (1) pad C with the disconnect | 3.075 pF | 3.072 pF | PASS |
+| (1) CDM 2 A with the disconnect (vss+ / pp+ / pp-) | | XDIS (3.3 V) <= 0.90 V; nvt 6.92 / 7.25 / 7.30; n06 6.65 / 7.27 / 7.26 | PASS |
+| (1) common-mode cost | | XDIS on-resistance in series with TERM_VCM only (CM): about 5.2 kohm.um / 100 um = 52 ohm ss/3.15, about 26 ohm ff (corner Ron table) | info: needs a CM-impedance limit if one exists |
+| (2) CDM 2 A vss:neg (smooth edges, see below) | complete to 3.6 ns: all MOS <= 0.99 V, pad -4.11 V vs ref, prim 2.86 mA/um | | **PASS (now evaluated)** |
+| CDM 2 A other 5 (PULSE, exact a9_rh) | vss+ nvt 6.91 / n06 6.90 (gate); pp+ 7.22 / 7.28; pp- 7.27 / 7.27; vdd+ 3.92; vdd- 0.99 | | PASS (0.72 V margin) |
+| (3) MOS drain / source junction reverse vs bv (n03/p03 10 V BSIM default, n06 11, nvt / p06 10.5) | worst CDM 2 A: n06 7.06 V, nvt 6.91 V; CDM 3 A 9.48 V (< 10.5 / 11) | | PASS (0 over) |
+| HBM 1 kV, 6 cases | nvt 4.12, n06 4.36, n03 0.69 V; junctions <= 3.8 V | | PASS |
+| HBM 2 kV pp+ / CDM 1 A pp+ / CDM 3 A pp+ (report) | 5.74 / 4.86 / 9.59 V | | PASS / PASS / MISS |
+| (4) read-back LVS failing control | rbverdict now accepts "swapped N", N >= 2: mismatch -> PASS; pos unique match | | PASS |
+| (5) termination +-10 %, 23 corners, typ / high | rt worst 4.2 %, rh worst 4.2 %. **ss/32/3.15 rh: codes 12-15 in window (107.8 / 102.2 / 97.4 / 92.8)**, i.e. code 12 = 1 code beyond 13; ss/22/3.15 rh codes 12-15. ff/22/3.35: rt code 3 only (97.3), rh codes 3-4 | | PASS (ss margin restored; the ff end now sits 1 code inside the window) |
+| a4 +-5 % (report) | rt and rh pass at all 23 corners (termtab T1/T2 PASS) | | PASS (report) |
+| Pad C per leg 100 MHz <= 3.223 pF | rt 3.075, c 2.986 | 3.072 | PASS |
+| Gate C MAIN/POST/TMDS | max 0.299 pF (published 0.32-0.61) | | PASS |
+| O1 / O3 | bond->cascodes 1.370 / 1.755 ohm (effective, shorted drains; per-unit point-to-point is higher, review F6); drop simulated 37.6 / 53.9 mV at 20.2 / 20.1 mA delivered | | PASS |
+| Layout | Magic DRC 0, netgen unique, KLayout main 0 / antenna 0 (NAT rules), rb LVS pos match + control mismatch, latch-up 0 um2, rail_site PASS, railconn clean | not drawn | PASS |
+| Known answers | term 91.58 / ESD 6.747 V | | PASS |
+Bench changes: (2) the provider dvss cell diode D20 (`d.xdvssn.d20#internal`) stops ngspice at the PULSE corner (2.205 ns) whatever the step (1 ps tried, cshunt 1e-15
+tried). `TB2_CDMSMOOTH=1` uses the same pulse with tanh edges (10-90 % rise 0.2 ns, fall 0.5 ns, 1 ns flat top, 2 A). Cross-check on vss:pos: smooth 6.912 V vs PULSE 6.908 V.
+The smooth source does NOT converge for vdd:pos / pp:+- (stops near the start), so those are judged with PULSE, which completes. (3) MOS_BV + per-device junction audit
+(`jr`). Also TB2_TSTEP (smaller step; did not help vss:neg).
+Disconnect, not drawn yet: one device for both legs (not one per leg), so the termination does not change. With the termination off the common bus floats, and the natives
+self-bias off at about |Vth| (pad-to-pad <= 0.16 uA at 1 V difference, ff). Layout plan: TERM_VCM pin moves to the control cell's TERM_VCM trunk at the top edge (x 4.6),
+the device (100/0.28 nfet_03v3, gate TERM_ENABLE_LOCAL from its Metal3 line) sits at x 6-18, y 357-372, between that trunk and the bus west end; the east TERM_VCM riser
+goes away. Needs a ruling (or PC-57 from wired TX: TERM_VCM >= 1.0 V when off) before drawing.
+Power-down / unpowered: VDD 0 -> TERM_ENABLE_LOCAL 0 -> disconnect off -> same as the off case (bus floats). Without the disconnect, an unpowered pad behaves like
+TERM_VCM at 0 (the review's 1.5-10 mA path through the discharge resistor and the TERM_VCM pin).
+Cleaned: a8 build / r8 / models / benches; review-a8 left untouched.

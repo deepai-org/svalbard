@@ -1,0 +1,9 @@
+.include tb_models.spice
+Vn node 0 1.2
+Rpath node pad 18.2k
+X1 pad 0 tb_atb_meter
+X2 fp 0 tb_atb_force i_force=10u v_comp=3.3
+Rload fp 0 50k
+.op
+.print op v(pad) v(fp)
+.end

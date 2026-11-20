@@ -4,7 +4,7 @@ Python through vvp's stdin/stdout. The bench is built from the instantiation of 
     python3 sim_rtl.py rf|wired [--ring-mhz 210.5]"""
 import argparse, re, subprocess, sys, tempfile
 from pathlib import Path
-import sequence
+import sequence, atb
 
 P = Path(__file__).resolve().parents[2]
 TOP = P/'integration/chips'
@@ -40,6 +40,7 @@ LOOP = r'''
     "X": begin spi(c, a, d, r); if (^r === 1'bx) $display("R X %b", r); else $display("R %0d", r); end
     "W": begin #(c * 1000); $display("OK"); end
     "L": begin rst_pad = c; #100; $display("OK"); end
+    "A": begin $display("R 0 atb %0d %0d %0d %0d", atb1_sw, atb1_grp, atb1_en, island_on); end
     "T": begin cap_dly = c / 1000.0; capn = 0; $display("OK"); end
     "C": begin $write("R 0 cap"); for (k = 0; k < capn; k = k + 1) $write(" %0d", capbuf[k]); $display(""); end
     "P": begin $display("OK dbg hw=%b ps=%b txen=%b pen=%b d4=%b hs=%b oe=%b capn=%0d rs=%b rst_n=%b", hw_en, analog.p_clockmux__PS_H2D, analog.p_pll_tx__EN, analog.p_prescale__EN, analog.p_prescale__D4, analog.p_clockmux__HS_INT, dut.d2h_oe, capn, dut.reset_seen, dut.rst_n); end
@@ -101,6 +102,9 @@ class Sim:
     def captured(self):
         line = self._cmd('C 0 0 0').split()
         return [int(x) if x.isdigit() else None for x in line[3:]]
+    def atb_state(self):
+        """(atb1_sw, atb1_grp, atb1_en, island_on) as driven by the macro: the switch path the software closed."""
+        return tuple(int(x) for x in self._cmd('A 0 0 0').split()[3:7])
     def close(self):
         self.p.stdin.write('Q 0 0 0\n'); self.p.stdin.close(); self.p.wait(timeout=60)
 
@@ -112,25 +116,32 @@ def main():
     ap.add_argument('--trace', action='store_true')
     ap.add_argument('--negative', action='store_true', help='build the other chip: the identity step must stop the sequence')
     ap.add_argument('--negative-host', action='store_true', help='host prescaler /8 instead of /4: no 156.25 MHz word clock, training must fail')
+    ap.add_argument('--negative-atb', action='store_true', help='also sense a code with no leaf on this chip: must fail')
     a = ap.parse_args()
+    if a.negative_atb:
+        sequence.EXTRA_ATB = ({'rf': 7, 'wired': 8}[a.chip],)
     if a.negative_host:
         sequence.HOST_PRESCALE = 3; a.negative = True
     with tempfile.TemporaryDirectory() as w:
         other = {'rf': 'wired', 'wired': 'rf'}[a.chip]
         sim = Sim(build(other if a.negative and not a.negative_host else a.chip, Path(w)), a.ring_mhz, a.trace)
+        meter = atb.AtbSim(sim, a.chip); sim.atb_read = meter.read
         try:
             out = sequence.run(sim, sim, a.chip, F_REF)
             out['host_link'] = sequence.host_link(sim, sim, a.chip)
+            sequence.h2d_health(sim, a.chip)
             sequence.mode(sim, sim, a.chip)
         except RuntimeError as e:
             print(f'{"PASS (negative control)" if a.negative else "FAIL"}: {e}')
             sys.exit(0 if a.negative else 1)
         finally:
             sim.close()
+    if a.negative_atb:
+        ok = bool(out['atb_fail']); print(('PASS (negative control): ATB ' if ok else 'FAIL: ATB negative not detected ') + str(out['atb_fail'])); sys.exit(0 if ok else 1)
     if a.negative:
         print('FAIL: negative control was not detected'); sys.exit(1)
     err = abs(out['ring_hz'] / (a.ring_mhz * 1e6) - 1)
-    ok = err < 0.01 and out['supply_setpoint'] == sequence.trim_choice(a.ring_mhz * 1e6 / sequence.RING_TT_330)
+    ok = not out['atb_fail'] and err < 0.01 and out['supply_setpoint'] == sequence.trim_choice(a.ring_mhz * 1e6 / sequence.RING_TT_330)
     print(f'{"PASS" if ok else "FAIL"} pt_{a.chip}: ring read {out["ring_hz"]/1e6:.2f} MHz vs {a.ring_mhz} MHz modelled')
     sys.exit(0 if ok else 1)
 

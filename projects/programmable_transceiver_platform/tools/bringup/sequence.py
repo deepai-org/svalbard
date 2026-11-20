@@ -1,11 +1,32 @@
 """Reference bring-up sequence, spec/bring-up.md sections 1-6 (steps cite the section). Board-independent: needs an
 `spi` (xfer) and a `board` with reset(low: bool), wait_us(t) and optionally clk_obs_hz(). Returns a dict of findings;
 raises on a failure that stops bring-up."""
-from regs import Regs, ID, ABI, HASH, CHIP_ID, A_ID, A_ABI, A_HASH, A_ISLAND, A_FAULT, A_RESET, A_CFGERR
+import atb
+from regs import Regs, FIELDS, STATUS, CommitError, ID, ABI, HASH, CHIP_ID, A_ID, A_ABI, A_HASH, A_ISLAND, A_FAULT, A_RESET, A_CFGERR
 
 RING_TT_330 = 210.5e6           # bring-up.md section 6 (extracted pt_ring_osc, tt, 3.30 V, 27 C)
 ISLAND_BIT = {'wired': 0, 'rf': 1, 'pll': 2, 'conv': 4, 'debug': 5}
 PAYLOAD = {'rf': ('rf', 'conv'), 'wired': ('wired',)}
+
+
+EXTRA_ATB = ()          # negative control hook: a code with no leaf on this chip must read 'open bus'
+RAIL_CODE = {'debug': 12, 'pll': 9, 'rf': 8, 'conv': 11, 'wired': 7}
+
+
+def atb_walk(r, board, codes, vdd=3.30, log=print):
+    """Sense each ATB1 code (zero code between two codes: break-before-make) and judge it against atb.EXPECT."""
+    fails = []
+    if not hasattr(board, 'atb_read'):
+        log('  (no ATB meter on this board: skipped)'); return fails
+    for c in codes:
+        r.set(**{'debug.atb.atb1': 0}); r.commit()
+        r.set(**{'debug.atb.atb1': c}); r.commit()
+        v = board.atb_read(c); ion = r.read(A_ISLAND) & 0x3F
+        ok, lim = atb.judge(c, v, vdd, ion)
+        log(f'  ATB1 {c:2d} = {"open bus" if v is None else f"{v:.4f} V"}  [{lim}] {"ok" if ok else "FAIL"}')
+        if not ok: fails.append(c)
+    r.set(**{'debug.atb.atb1': 0}); r.commit()
+    return fails
 
 
 def trim_choice(s):
@@ -41,7 +62,8 @@ def run(spi, board, chip, f_ref, log=print):
     r.set(**{'core.biasgen.ena': 1, 'core.refchain.bgap_ena': 1}); r.commit()
     board.wait_us(100); r.clocks(9)
     r.set(**{'core.biasgen.ref_sel_vbg': 1, 'core.biasgen.ref_sel_coarse': 1}); r.commit()
-    log('4 bias on (256-SCLK interlock clocked); trims need the ATB1 SMU: codes 55, 57')
+    log('4 bias on (256-SCLK interlock clocked); ATB1 walk:')
+    out['atb_fail'] = atb_walk(r, board, (55, 1, 2, 3, 5, 13) + EXTRA_ATB, log=log)
     # 5. islands one at a time: debug, pll, payload groups; effective-on and pgood both set
     want = 0
     for isl_name in ('debug', 'pll') + PAYLOAD[chip]:
@@ -51,6 +73,8 @@ def run(spi, board, chip, f_ref, log=print):
         if got != want:
             raise RuntimeError(f'5 island {isl_name}: ISLAND_STATUS 0x{got:04X} != 0x{want:04X}')
         log(f'5 island {isl_name} on, ISLAND_STATUS 0x{got:04X} (record the supply-current step)')
+        rails = [RAIL_CODE[isl_name]] + ([10] if isl_name == 'wired' else [])
+        out['atb_fail'] += atb_walk(r, board, rails, log=log)
     # 6. speed indicator: ring_osc on the counter (cross-check path; CLK_OBS is primary, OBS-2)
     r.set(**{'debug.replica.ringosc_enable': 1, 'debug.clk_obs.source': 10, 'debug.clk_obs.divider_log2': 2}); r.commit()
     f_ring = count(r, board, 3, f_ref)
@@ -111,39 +135,111 @@ def host_link(spi, fpga, chip, log=print, rate=2):
     return dict(window=ok, centre_ns=centre)
 
 
+# Per-mode enable sequences (bring-up.md section 9). Step kinds: dict = set + commit (must be accepted);
+# ('reject', dict) = a commit the register file must refuse (the dict is then reverted in the shadow);
+# ('wait', us); ('status', name, want or None) = read a status field (None: log only). Third item: True = return
+# the previous modes' fields to reset first; False = build on them.
+# Order and values follow integration/chips/sim/tb_top_modes.sv sections 2-7, which check the analog pins.
 MODES = {
-    # tb_top_modes section 2 (proven against the RTL): RF receive, external LO through the CML driver
-    'rf': ('rf receive (external LO)', [
-        {'rfpll.config.lo_mode': 3},
-        {'core.refchain.dist_en_rf': 1, 'core.refchain.dist_en_conv': 1},
-        {'debug.clk_select.wire_line': 1, 'debug.clk_select.conv_sample': 1, 'clockmux.config.conv_prescale': 2},
-        {'lna.state.state': 2, 'rxmix_i.state.state': 2, 'rxmix_q.state.state': 2, 'consolidation.bbfilter.direction': 1,
-         'adc_i.state.state': 2, 'adc_q.state.state': 2, 'refbuf.state.state': 2, 'adc.config.interleave': 1}]),
-    # tb_top_modes section 6: wired transmit, ring -> SER_EN -> pad request; checked on status.wired.tx_state
-    'wired': ('wired transmit (serial, x4)', [
-        {'core.refchain.dist_en_wire': 1},
-        {'ring_l.config.lock_time': 3, 'ring_l.config.modulus': 1, 'txpad.config.branch': 1, 'wiredtx.idle.idle': 0,
-         'consolidation.wiredtx_stage.rate_mode': 2, 'wiredtx.state.state': 2}]),
+    'rf': [
+        ('rf receive, external LO (die-1 baseline)', [
+            {'rfpll.config.lo_mode': 3},
+            {'core.refchain.dist_en_rf': 1, 'core.refchain.dist_en_conv': 1},
+            {'debug.clk_select.wire_line': 1, 'debug.clk_select.conv_sample': 1, 'clockmux.config.conv_prescale': 2},
+            {'lna.state.state': 2, 'rxmix_i.state.state': 2, 'rxmix_q.state.state': 2, 'consolidation.bbfilter.direction': 1,
+             'adc_i.state.state': 2, 'adc_q.state.state': 2, 'refbuf.state.state': 2, 'adc.config.interleave': 1}], False),
+        ('rf transmit / duplex (on top of receive)', [
+            ('reject', {'txmix_i.state.state': 2, 'txmix_q.state.state': 2, 'txsum.state.state': 2, 'rfdriver.state.state': 2,
+                        'dac_i.state.state': 2, 'dac_q.state.state': 2}),      # RC-16k: TX with the LNA at full bias
+            {'lna.bias.lo': 1, 'txmix_i.state.state': 2, 'txmix_q.state.state': 2, 'txsum.state.state': 2,
+             'rfdriver.state.state': 2, 'dac_i.state.state': 2, 'dac_q.state.state': 2},
+            {'rfdriver.mute.mute': 0, 'dac_i.config.hold_zero': 0, 'dac_q.config.hold_zero': 0}], False),
+        ('on-chip LO synthesizer (LO-INTEGRATION 4.2)', [
+            {'core.refchain.dist_en_rf': 1},
+            {'rfpll.config.lo_mode': 2, 'rfpll.state.state': 2, 'rfpll.config.lo_n': 24, 'rfpll.config.vco_coarse': 9,
+             'rfpll.config.lo_icp': 3, 'rfpll.config.lo_preset': 1},
+            ('reject', {'rfpll.config.lo_n': 10}),                               # lo_n < 16 with the synthesizer active
+            ('wait', 20), {'rfpll.config.lo_preset': 0}], True),
+    ],
+    'wired': [
+        ('wired transmit, serial x4', [
+            {'core.refchain.dist_en_wire': 1},
+            {'ring_l.config.lock_time': 3, 'ring_l.config.modulus': 1, 'txpad.config.branch': 1, 'wiredtx.idle.idle': 0,
+             'consolidation.wiredtx_stage.rate_mode': 2, 'wiredtx.state.state': 2},
+            {'ring_l.config.enable': 1}, ('wait', 700),
+            ('status', 'status.wired.tx_state', 3), ('status', 'status.wired.tx_ring_ready', 1)], True),
+        ('wired receive (CDR, CTLE, slicer, capture)', [
+            {'core.refchain.dist_en_wire': 1, 'ring_l.config.modulus': 1, 'ring_l.config.enable': 1},
+            {'cdr.state.state': 2},
+            {'ctle.state.state': 2, 'slicer.state.state': 2, 'termination.config.hs_enable': 1,
+             'termination.config.hs_term_enable': 1, 'ctle.config.peak': 5, 'ring_c.config.modulus': 3, 'ring_c.config.kp': 6,
+             'slicer.capture.rate_mode': 1},
+            ('wait', 100), ('status', 'status.wired.rx_state', None)], True),
+        ('USB full speed, forced J (direct stream)', [
+            {'core.refchain.dist_en_wire': 1, 'ring_l.config.modulus': 1, 'ring_l.config.enable': 1},
+            {'usbdrive.select.branch': 2, 'usbdrive.state.state': 2, 'usbfs.config.drive_enable': 1,
+             'usb.config.force_symbol': 1, 'usb.config.force_enable': 1, 'usbfs.config.pullup_p': 1},
+            {'wiredtx.state.state': 2}, ('wait', 400),
+            ('reject', {'usbhs.config.tx_enable': 1}),                           # HS and FS drive together
+            ('status', 'status.usb.line', None)], True),
+    ],
 }
 
 
+def _teardown(r, touched):
+    """Return every field a mode touched to its reset value (one commit; reset codes are 0 / off, so no
+    break-before-make conflict), keeping islands and bias trunks."""
+    keep = ('core.refchain.', 'debug.island_power', 'core.', 'refinput.', 'debug.clk_select.host_clk', 'clockmux.config.ring_ref')
+    back = {n: FIELDS[n]['default'] for n in touched if not n.startswith(keep)}
+    if back:
+        r.set(**back); r.commit()
+
+
 def mode(spi, board, chip, log=print):
-    """bring-up.md section 9: one mode per chip, each commit checked, then an SPI-visible result."""
+    """bring-up.md section 9: every mode of the chip in turn; each commit checked, expected rejections checked."""
     r = Regs(spi, chip)
     r.shadow = getattr(board, 'shadow', r.shadow)
-    name, steps = MODES[chip]
-    if chip == 'wired':      # the wired TX baseline clocks itself from REF_IN (ring_ref = ref), not from H2D_CLK
-        r.set(**{'debug.host_link.rate': 0, 'hostio.controls.d2h_enable': 0}); r.commit()
-        r.set(**{'ring_l.config.enable': 0}); r.commit()
-        r.set(**{'clockmux.config.ring_ref': 0}); r.commit()      # break-before-make: through 0 (register-map rules)
+    if chip == 'wired':      # the wired modes clock the TX ring from REF_IN (ring_ref = ref), not from H2D_CLK
+        r.set(**{'hostio.controls.d2h_enable': 0, 'ring_l.config.enable': 0}); r.commit()
+        r.set(**{'clockmux.config.ring_ref': 0}); r.commit()      # break-before-make: through 0
         r.set(**{'clockmux.config.ring_ref': 1}); r.commit()
-    for s in steps:
-        r.set(**s); r.commit()
-    if chip == 'wired':
-        r.set(**{'ring_l.config.enable': 1}); r.commit(); board.wait_us(700)
-        st = r.status('status.wired.tx_state'); rdy = r.status('status.wired.tx_ring_ready')
-        if st != 3 or not rdy:
-            raise RuntimeError(f'9 {name}: tx_state {st}, ring_ready {rdy} (want 3 run, 1)')
-        log(f'9 {name}: tx_state 3 (run), ring ready')
-    else:
-        log(f'9 {name}: every commit accepted, ISLAND_STATUS 0x{r.read(A_ISLAND):04X}')
+    fails, touched = [], set()
+    for name, steps, teardown_before in MODES[chip]:
+        if teardown_before:
+            _teardown(r, touched); touched = set()
+        for st in steps:
+            if isinstance(st, dict):
+                r.set(**st); r.commit(); touched.update(st)
+            elif st[0] == 'wait':
+                board.wait_us(st[1])
+            elif st[0] == 'reject':
+                old = {n: r.get(n) for n in st[1]}
+                r.set(**st[1])
+                try:
+                    r.commit(); fails.append(f'{name}: commit {st[1]} accepted, must be rejected')
+                except CommitError:
+                    pass
+                r.set(**old)
+            elif st[0] == 'status':
+                v = r.status(st[1])
+                if st[2] is not None and v != st[2]:
+                    fails.append(f'{name}: {st[1]} = {v}, want {st[2]}')
+                log(f'   {st[1]} = {v}')
+        log(f'9 {name}: {"ok" if not fails else "FAIL " + fails[-1]} (ISLAND_STATUS 0x{r.read(A_ISLAND):04X}, CONFIG_ERROR {r.read(A_CFGERR)})')
+    _teardown(r, touched)
+    if fails:
+        raise RuntimeError('9 ' + '; '.join(fails))
+    return fails
+
+
+def h2d_health(spi, chip, log=print):
+    """H2D check, waiting for the digital status bit (coordinator: digital adds it). Uses any status field whose name
+    starts with status.host.h2d; until it exists the check reports 'not available'."""
+    r = Regs(spi, chip)
+    names = [n for n in STATUS if n.startswith('status.host.h2d') or n.startswith('status.hostio.h2d')]
+    if not names:
+        log('8 H2D health: no status field yet (digital to add); H2D proven only by commands working at this rate')
+        return None
+    vals = {n: r.status(n) for n in names}
+    log(f'8 H2D health: {vals}')
+    return vals

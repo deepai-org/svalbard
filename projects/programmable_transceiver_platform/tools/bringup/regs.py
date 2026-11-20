@@ -45,6 +45,12 @@ class Regs:
         for a in sorted(touched):
             self.write_reg(a, self.shadow[a])
 
+    def get(self, name):
+        f = FIELDS[name]; v = 0
+        for c in f['chunks']:
+            v |= ((self.shadow[c['addr']] >> c['reg_lsb']) & ((1 << c['width']) - 1)) << c['field_lsb']
+        return v
+
     def commit(self):
         self.write_reg(A_COMMIT, 0x0001)
         info = self.read(A_ERRINFO) >> 8

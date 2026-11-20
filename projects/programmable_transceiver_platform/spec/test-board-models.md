@@ -41,6 +41,16 @@ Wired benches: `tb_leg` per leg at `f0_ghz` = Nyquist of the rate (0.625 / 1.25 
 | Balun 50:100 (B18/B19) | `tb_balun`: coupled inductors k 0.995, il_db 0.8 max, 0.2 pF per leg | B18 maximum loss |
 | External LO (B3/B19/B31/B35) | `tb_ext_lo`: sine per leg from 50 Ω, 10 pF C0G, hybrid ±0.5 dB / ±3°, level vpp_oc settable ≥ 10 dB | B3, B19, B31; pad gain table package-channel section 4 (2.0-7.8 dB spread over pad C); I/Q −11° to −19° from fixed COB traces before BP-2 compensation |
 
+## 3a. ATB meter and force (B7, B10)
+
+`tb_atb_meter`: land + 30 mm line + instrument, 10 MΩ ∥ 100 pF (DMM) or ≥ 1 GΩ (SMU). On-chip sense path ≤ 18.2 kΩ
+(leaf 16.4 + group 1.17 + pad 0.59 kΩ, `analog/island_support/README.md`), so a 10 MΩ meter reads 0.2 % low plus
+the node's own source impedance (VBG: −2.8 mV at 1.2 V with ~5 kΩ; VCM divider 40 kΩ: −0.6 %). Use an SMU
+(≥ 1 GΩ) for the VBG trim. Off-leaf leakage on one bus ≤ 12 × 17 pA + groups ≈ 1 nA: < 20 µV across 18 kΩ.
+Settling: 18.2 kΩ × 100 pF = 1.8 µs (wait ≥ 20 µs per code). `tb_atb_force`: current source with compliance
+clamp (B7: ≤ 1 mA; documented forces are 10 µA). `tools/bringup/atb.py` uses the same numbers to give the bring-up
+software ATB readings in the RTL simulation (expected node values and limits: bring-up.md section 10).
+
 ## 4. Supply regulator and trim (B2, B37, B52)
 
 `tb_supply`: LDO-class regulator with a trimmer, closed-loop output R 10 mΩ + 50 nH (loop about 100 kHz), 10 µF bulk,

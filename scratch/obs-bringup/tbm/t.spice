@@ -1,0 +1,15 @@
+.include tb_models.spice
+V1 s 0 dc 0 ac 2
+Rs s a 50
+X1 a b 0 tb_line50 len_mm=48 f0_ghz=1.25
+Rl b 0 50
+V2 s2 0 dc 0 ac 2
+Rs2 s2 a2 50
+X2 a2 b2 0 tb_line50 len_mm=48 f0_ghz=2.45
+Rl2 b2 0 50
+V3 s3 0 dc 0 ac 1
+X3 s3 d3 n3 0 tb_balun
+Rd d3 n3 100
+.ac lin 3 1.25e9 2.45e9
+.print ac vdb(b) vdb(b2) vdb(d3,n3)
+.end

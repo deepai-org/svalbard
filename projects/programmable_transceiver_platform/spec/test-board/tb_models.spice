@@ -1,0 +1,140 @@
+* Test-board models (predicted, not measured): include from any bench that needs the part of the channel beyond the
+* COB mezzanine connector. Basis and validity: spec/test-board-models.md. The COB itself (bond, COB traces, via,
+* mezzanine connector) stays in spec/package-channel-{rf,wired}.json; these subcircuits start at the test-board
+* side of the mated connector. Units SI. Owner: observation / bring-up.
+
+* ---- 50 ohm FR4 microstrip, lumped 10-section ladder, loss set at one frequency f0 (narrowband / Nyquist use).
+* alpha(f) [dB/mm] = 0.0195*sqrt(f/GHz) + 0.00223*(f/GHz)  (conductor + dielectric, fitted to package-channel.md sec. 4)
+* td = 6.06 ps/mm (eeff 3.3). Valid 0.1-3 GHz, len 2-100 mm.
+.subckt tb_line50 a b gnd len_mm=30 f0_ghz=1.25
+.param sec={len_mm/10}
+.param lsec={50*6.06e-12*sec} csec={6.06e-12/50*sec}
+.param rsec={2*50*(0.0195*sqrt(f0_ghz)/8.686)*sec} gsec={2*(0.00223*f0_ghz/8.686)/50*sec}
+R1 a n1a {rsec}
+L1 n1a n1 {lsec}
+C1 n1 gnd {csec}
+Rg1 n1 gnd {1/gsec}
+R2 n1 n2a {rsec}
+L2 n2a n2 {lsec}
+C2 n2 gnd {csec}
+Rg2 n2 gnd {1/gsec}
+R3 n2 n3a {rsec}
+L3 n3a n3 {lsec}
+C3 n3 gnd {csec}
+Rg3 n3 gnd {1/gsec}
+R4 n3 n4a {rsec}
+L4 n4a n4 {lsec}
+C4 n4 gnd {csec}
+Rg4 n4 gnd {1/gsec}
+R5 n4 n5a {rsec}
+L5 n5a n5 {lsec}
+C5 n5 gnd {csec}
+Rg5 n5 gnd {1/gsec}
+R6 n5 n6a {rsec}
+L6 n6a n6 {lsec}
+C6 n6 gnd {csec}
+Rg6 n6 gnd {1/gsec}
+R7 n6 n7a {rsec}
+L7 n7a n7 {lsec}
+C7 n7 gnd {csec}
+Rg7 n7 gnd {1/gsec}
+R8 n7 n8a {rsec}
+L8 n8a n8 {lsec}
+C8 n8 gnd {csec}
+Rg8 n8 gnd {1/gsec}
+R9 n8 n9a {rsec}
+L9 n9a n9 {lsec}
+C9 n9 gnd {csec}
+Rg9 n9 gnd {1/gsec}
+R10 n9 n10a {rsec}
+L10 n10a b {lsec}
+C10 b gnd {csec}
+Rg10 b gnd {1/gsec}
+.ends tb_line50
+
+* ---- Test-board landing of the mated mezzanine connector (pad + via to the inner layer): one signal.
+.subckt tb_land a b gnd
+C1 a gnd 0.06p
+L1 a b 0.3n
+C2 b gnd 0.1p
+.ends tb_land
+
+* ---- Edge-launch SMA (bench access, B10): one signal.
+.subckt tb_sma a b gnd
+C1 a gnd 0.15p
+L1 a b 0.3n
+C2 b gnd 0.1p
+.ends tb_sma
+
+* ---- One wired/RF leg: connector side -> land -> line -> SMA (bench instrument at b, 50 ohm).
+.subckt tb_leg conn inst gnd len_mm=30 f0_ghz=1.25
+X1 conn n1 gnd tb_land
+X2 n1 n2 gnd tb_line50 len_mm={len_mm} f0_ghz={f0_ghz}
+X3 n2 inst gnd tb_sma
+.ends tb_leg
+
+* ---- External LNA (B5), 50 ohm gain block, behavioural: gain G (dB), in/out 50 ohm. Noise: NF <= 1.5 dB (add
+* the 0.5 dB bypass-switch loss when bypassed). Bypass mode = 0.5 dB loss through switch.
+.subckt tb_ext_lna in out gnd g_db=15 bypass=0
+Rin in gnd 50
+E1 x gnd in gnd {bypass ? 2*pwr(10,-0.5/20) : 2*pwr(10,g_db/20)}
+Rout x out 50
+.ends tb_ext_lna
+
+* ---- Balun 50:100 (B18/B17 class), ideal transformer + max insertion loss il_db, per-leg 0.2 pF parasitic.
+.subckt tb_balun se dp dn gnd il_db=0.8
+* coupled-inductor 50:100 balun, k 0.995; loss as a series resistor sized for il_db at 50 ohm
+Rl se a {50*(pwr(10,il_db/20)-1)}
+Lp a gnd 20n
+Ls dp dn 40n
+K1 Lp Ls 0.995
+Rct dp gnd 1e6
+Cp dp gnd 0.2p
+Cn dn gnd 0.2p
+.ends tb_balun
+
+* ---- External LO source (B3/B19/B31): sine, open-circuit amplitude vpp_oc from 50 ohm per leg, through a 90 deg
+* hybrid (+-0.5 dB, +-3 deg worst set by dA_db/dphi_deg), AC-coupled 10 pF C0G. Outputs LO I and LO Q pairs.
+.subckt tb_ext_lo ip in qp qn gnd f=2.45e9 vpp_oc=3.5 dA_db=0.5 dphi_deg=3
+VI ia gnd sin(0 {vpp_oc/4} {f} 0 0 0)
+VIb ib gnd sin(0 {vpp_oc/4} {f} 0 0 180)
+VQ qa gnd sin(0 {vpp_oc/4*pwr(10,dA_db/20)} {f} 0 0 {90+dphi_deg})
+VQb qb gnd sin(0 {vpp_oc/4*pwr(10,dA_db/20)} {f} 0 0 {270+dphi_deg})
+R1 ia i1 50
+R2 ib i2 50
+R3 qa q1 50
+R4 qb q2 50
+C1 i1 ip 10p
+C2 i2 in 10p
+C3 q1 qp 10p
+C4 q2 qn 10p
+.ends tb_ext_lo
+
+* ---- Per-die supply: LDO-class regulator + trimmer (B2/B37/B52), bulk and per-contact decoupling, planes to the
+* eight mated supply contacts (vc = one node per contact group; tie all for a single-node bench).
+* vset 3.15-3.50 V; tol = setpoint tolerance (+-1 %); Rout/Lout = closed-loop output impedance (loop ~100 kHz);
+* soft start t_ss (>= 11.7 us for 3.5 V at 0.3 V/us); ripple 1 mV rms class (B37) via the noise source vn.
+.subckt tb_supply vc gnd vset=3.30 tol=0 t_ss=20u
+Vr r gnd pwl(0 0 {t_ss} {vset*(1+tol)})
+Rout r a 0.01
+Lout a b 50n
+Cb b gnd 10u
+Rb b gnd 1e6
+Cbesr b bb 1u
+Rbesr bb gnd 0.005
+Lp b c 0.5n
+Cc c ce 1u
+Rce ce gnd 0.005
+Cd c de 100n
+Rde de gnd 0.02
+Lc c vc 0.4n
+.ends tb_supply
+
+* ---- Host-link line (HL-B2/B3/B5): FPGA LVCMOS33 driver/receiver side. Series termination at the driver end,
+* 50 ohm line len_mm (<= 60), receiver load c_load (FPGA pin + B6 bus switch, <= 10 pF total).
+.subckt tb_host_line drv rcv gnd len_mm=40 rs=27 c_load=8p
+Rs drv a {rs}
+X1 a b gnd tb_line50 len_mm={len_mm} f0_ghz=0.3
+Rsw b rcv 5
+Cl rcv gnd {c_load}
+.ends tb_host_line

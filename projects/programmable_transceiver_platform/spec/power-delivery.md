@@ -235,6 +235,25 @@ digital 81.8 mA, pt_wired W 432 mA with POST on:
   remaining bonds and the ring); an open bond is a yield / bring-up case, not an operating point. EM with one open bond
   needs PDS-9 (121.4 -> 105.2 mA).
 
+### 4.1b pt_wiredtx8 tap (WT44)
+
+Supply drop + ground rise at the `pt_wiredtx8` tap (the `wtx_mux8` position of the assembly floorplan), pt_wired W with
+POST on, chip 432 mA, all bonds with `bidir[22]` = VDD, ME / SE regions >= 12 % on every net and layer, strap at its
+G5 limit (`scratch/integration/m1-pdn/wt44_tap.py`, `out/wired/wt44_tap.txt`). The wired TX owner's budget at the tap:
+<= 107 mV nominal, <= 101 mV high-R (10 / 16 mV block-internal on top, 117 total).
+
+| Block current | `isw_wired_rx` | Nominal (mV) | High-R (mV) | High-R split: to switch / switch / strap / VSS rise |
+| ---: | --- | ---: | ---: | --- |
+| 56 mA | east gap | 92.8 | **106.6** | 44.6 / 12.0 / 14.0 / 36.0 |
+| 50 mA | east gap | 87.4 | 100.4 | 42.9 / 11.0 / 12.5 / 34.0 |
+| 56 mA | south-east (not moved) | 92.2 | 105.8 | |
+
+Nominal passes. High-R misses by 5.6 mV at 56 mA and passes with 0.6 mV at 50 mA: the grid VSS tie through the mux is
+needed (36 mV of the high-R drop is ground rise). Moving `isw_wired_rx` does not change this tap (0.6-0.8 mV).
+`isw_wired_tx_a` / `_b` are drawn in the north-west (x 858-1122, y 4006-4533), about 3 mm from the block; the numbers
+assume the east switch slot beside the block (with the switch at the drawn position and the strap still at 15 mV:
+104.2 mV high-R); the real strap from the north-west would be far over 15 mV: the pair belongs in the east slot.
+
 ### 4.2 pt_wired bonds with one open supply bond
 
 Target: worst supply cell <= 106 mA (15 % margin to 125 mA) in every single-open-supply-bond case at W 432 mA with POST on

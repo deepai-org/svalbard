@@ -163,7 +163,7 @@ for ln in ('Metal4', 'Metal5'):
 digi = man['blocks'].get('digital', {}).get('bbox')
 blk4 = blkmetal['Metal4'] + (db.Region(db.Box(*[um(x) for x in digi]).enlarged(um(2), um(2))) if digi else db.Region())
 avoid = {'Metal4': (blk4 + noover + padreg.sized(um(3))).merged(), 'Metal5': (blkmetal['Metal5'] + noover + padreg.sized(um(3))).merged()}
-PITCH, SW = 70.0, 10.5
+PITCH, SW = 70.0, float(os.environ.get('STRAP_W', '16.0'))   # PDS-8: 16 um (23 % nominal) to draw >= 12 % M4 / 15 % M5 after the cuts
 core = C.CORE
 straps = {('VDD', 'Metal4'): db.Region(), ('VSS', 'Metal4'): db.Region(), ('VDD', 'Metal5'): db.Region(), ('VSS', 'Metal5'): db.Region()}
 y = core[1]+10
@@ -233,6 +233,15 @@ for net in ('VDD', 'VSS'):
 top.insert(db.CellInstArray(pdn.cell_index(), db.Trans()))
 man['pdn'] = {f'{n}_{l}_mm2': round(metal[(n, l)].area()/1e12, 3) for n, l in metal}
 coreA = (core[2]-core[0])*(core[3]-core[1])
+# coverage per region (3 x 3 over the core, columns W/C/E, rows S/M/N) for the power owner's model (asm9_drawn.py)
+reg = {}
+for i, cx in enumerate('WCE'):
+    for j, ry in enumerate('SMN'):
+        x0 = core[0]+(core[2]-core[0])*i/3; x1 = core[0]+(core[2]-core[0])*(i+1)/3
+        y0 = core[1]+(core[3]-core[1])*j/3; y1 = core[1]+(core[3]-core[1])*(j+1)/3
+        bx = db.Region(db.Box(um(x0), um(y0), um(x1), um(y1))); A_ = (x1-x0)*(y1-y0)
+        reg[ry+cx] = {f'{n}_{l}': round(100*(metal[(n, l)] & bx).area()/1e6/A_, 1) for n, l in metal}
+man['pdn_regions_pct'] = reg
 man['pdn'].update({f'{n}_{l}_coverage_pct': round(100*(metal[(n, l)] & db.Region(db.Box(*[um(v) for v in core]))).area()/1e6/coreA, 1) for n, l in metal}, vias=nvia)
 
 # ------------------------------------------------------------------------------------------- hooks (block supply pins -> grid)

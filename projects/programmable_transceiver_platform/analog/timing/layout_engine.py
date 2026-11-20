@@ -446,10 +446,14 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
         if by_name[n].model == 'cap_mim_2f0_m4m5_noshield':
             b = prims[by_name[n].key].bbox
             m5_keep.append((cx + b[0] - 1.0, cx + b[2] + 1.0))
+    # em['m5_keep'] = [(x0, x1)]: extra Metal5 keep-out columns (strap channels / trunk columns of the chip grid, ASM-8;
+    # callers include their own cut margin, e.g. 2.5 um) -- WT46
+    m5_keep += [tuple(k_) for k_ in (em or {}).get('m5_keep', ())]
     m5_ok = lambda x, half: all(x + half < a or x - half > b for a, b in m5_keep)
     # --- power straps (M5, full height), alternating VSS/VDD
     straps = []
-    x = origin_x + 3.0
+    # em['strap_x0']: x of the first supply-strap pair (default origin + 3 um), so straps land on the chip grid -- WT46
+    x = (em or {}).get('strap_x0', origin_x + 3.0)
     while x < width - 2.0:
         for k, n in enumerate(power_nets):
             if n in count and m5_ok(x + 3.0 * k, STRAP_W / 2 + 0.5):
@@ -563,6 +567,19 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
         lo, hi = want[n]
         L.net = n
         L.vwire('metal5', xx, lo, hi, net_width.get(n, TRUNK_SIG_W))
+    # em['m5_bars'] = [(net, x0, x1)]: full-height Metal5 supply bars of a power net with Via4 arrays (0.56 um pitch) on
+    # every power track of that net they cross (wide trunks, e.g. 10 um VSS bars) -- WT46
+    for n_, xa_, xb_ in (em or {}).get('m5_bars', ()):
+        L.net = n_
+        L.rect('metal5', xa_, 0.0, xb_, top - 0.5)
+        nx_ = int((xb_ - xa_ - 0.44) / 0.56 + 1e-9) + 1
+        for (ri_, net_), ty_ in tracks.items():
+            if net_ != n_:
+                continue
+            ky_ = max(1, int((pwr_w(ri_) - 0.44) / 0.56 + 1e-9) + 1)
+            for ix_ in range(nx_):
+                for iy_ in range(ky_):
+                    L.via(snap((xa_ + xb_) / 2 + (ix_ - (nx_ - 1) / 2) * 0.56), snap(ty_ + (iy_ - (ky_ - 1) / 2) * 0.56), 4, 5)
     L.net = None
     # --- antenna diodes (KLayout ANT.16): gate-only nets with long M3-M5 get an N+/Psub diode
     #     under their own M4/M5 wire.  Placed diodes are added to the LVS reference by the caller

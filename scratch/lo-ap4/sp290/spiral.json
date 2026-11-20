@@ -1,0 +1,224 @@
+{
+ "geometry": {
+  "turns": 3,
+  "width_um": 25.0,
+  "space_um": 2.5,
+  "dout_um": 290.0,
+  "under_w_um": 12.0,
+  "f_hz": 2450000000.0,
+  "strap": [
+   "metal5",
+   "metal4",
+   "metal3"
+  ],
+  "underpass": [
+   "metal2",
+   "metal1"
+  ]
+ },
+ "fasthenry": {
+  "points": [
+   {
+    "f_hz": 1000000000.0,
+    "R_ohm": 2.68649,
+    "L_nH": 2.511162607598234,
+    "Q": 5.873128133735841
+   },
+   {
+    "f_hz": 1258930000.0,
+    "R_ohm": 2.77664,
+    "L_nH": 2.5018424319064527,
+    "Q": 7.127247320502478
+   },
+   {
+    "f_hz": 1584890000.0,
+    "R_ohm": 2.8776,
+    "L_nH": 2.4921377118953845,
+    "Q": 8.624235474006115
+   },
+   {
+    "f_hz": 1995260000.0,
+    "R_ohm": 2.98546,
+    "L_nH": 2.4827408554421737,
+    "Q": 10.425562559873521
+   },
+   {
+    "f_hz": 2511890000.0,
+    "R_ohm": 3.09784,
+    "L_nH": 2.4742264240250185,
+    "Q": 12.605525140097615
+   },
+   {
+    "f_hz": 3162280000.0,
+    "R_ohm": 3.21517,
+    "L_nH": 2.466864374334978,
+    "Q": 15.24479265482074
+   },
+   {
+    "f_hz": 3981070000.0,
+    "R_ohm": 3.34095,
+    "L_nH": 2.4606256823740655,
+    "Q": 18.42278393870007
+   }
+  ],
+  "log_tail": "reconditioner..\nconductor 0 from node nmetal3_0\nCalling gmres...\n1 2 3 4 5 6 7 8 9 10 11 12 \n\nAll impedance matrices dumped to file Zc.mat\n\nTimes:  Read geometry   0.000319\n        Multipole setup 0.237362\n        Scanning graph  4.8e-05\n        Form A M and Z  0.000135\n        form M'ZM       3e-06\n        Form precond    0.141523\n        GMRES time      0.277548\n   Total:               0.656938\n"
+ },
+ "fasthenry_vs_model": {
+  "L_ratio": 0.911933075657196,
+  "R_ratio": 0.741210337710041,
+  "fasthenry_at_f": {
+   "R_ohm": 3.0856642887234105,
+   "L_nH": 2.4751489125338244
+  }
+ },
+ "variants": {
+  "pt_spiral": {
+   "L_nH": 2.475148912533824,
+   "Rs_ohm": 4.163007626494427,
+   "Rdc_ohm": 3.004632352941176,
+   "R_turns_ohm": 3.2442576264944276,
+   "R_underpass_ohm": 0.61875,
+   "length_um": 2462.5,
+   "din_um": 130.0,
+   "metal_area_um2": 61562.5,
+   "footprint_um2": 95700.0,
+   "Cox_total_fF": 692.5378390580734,
+   "Cs_fF": 51.79589999999999,
+   "Csi_total_fF": 369.37500000000006,
+   "Rsi_total_ohm": 406.0913705583757,
+   "shunt_per_terminal_ohm": 1952.942994771742,
+   "shunt_per_terminal_fF": 125.45671897782144,
+   "Q_series": 9.152507190781732,
+   "Rp_diff_ohm": 320.14499595077103,
+   "Q_eff": 8.402324163070087,
+   "substrate": "nominal",
+   "rs_scale": 1.0,
+   "l_scale": 0.911933075657196,
+   "f_hz": 2450000000.0
+  },
+  "pt_spiral_lowq": {
+   "L_nH": 2.475148912533824,
+   "Rs_ohm": 6.2445114397416415,
+   "Rdc_ohm": 3.004632352941176,
+   "R_turns_ohm": 3.2442576264944276,
+   "R_underpass_ohm": 0.61875,
+   "length_um": 2462.5,
+   "din_um": 130.0,
+   "metal_area_um2": 61562.5,
+   "footprint_um2": 95700.0,
+   "Cox_total_fF": 692.5378390580734,
+   "Cs_fF": 51.79589999999999,
+   "Csi_total_fF": 123.12500000000001,
+   "Rsi_total_ohm": 135.36379018612521,
+   "shunt_per_terminal_ohm": 505.5507606885907,
+   "shunt_per_terminal_fF": 127.87104142380049,
+   "Q_series": 6.101671460521154,
+   "Rp_diff_ohm": 189.0229967970123,
+   "Q_eff": 4.960978661080431,
+   "substrate": "worst",
+   "rs_scale": 1.5,
+   "l_scale": 0.911933075657196,
+   "f_hz": 2450000000.0
+  },
+  "pt_spiral_lhi": {
+   "L_nH": 2.722663803787207,
+   "Rs_ohm": 4.163007626494427,
+   "Rdc_ohm": 3.004632352941176,
+   "R_turns_ohm": 3.2442576264944276,
+   "R_underpass_ohm": 0.61875,
+   "length_um": 2462.5,
+   "din_um": 130.0,
+   "metal_area_um2": 61562.5,
+   "footprint_um2": 95700.0,
+   "Cox_total_fF": 692.5378390580734,
+   "Cs_fF": 51.79589999999999,
+   "Csi_total_fF": 369.37500000000006,
+   "Rsi_total_ohm": 406.0913705583757,
+   "shunt_per_terminal_ohm": 1952.942994771742,
+   "shunt_per_terminal_fF": 125.45671897782144,
+   "Q_series": 10.067757909859907,
+   "Rp_diff_ohm": 380.8205339707158,
+   "Q_eff": 9.086160148587602,
+   "substrate": "nominal",
+   "rs_scale": 1.0,
+   "l_scale": 1.0031263832229156,
+   "f_hz": 2450000000.0
+  },
+  "pt_spiral_llo": {
+   "L_nH": 2.2276340212804424,
+   "Rs_ohm": 4.163007626494427,
+   "Rdc_ohm": 3.004632352941176,
+   "R_turns_ohm": 3.2442576264944276,
+   "R_underpass_ohm": 0.61875,
+   "length_um": 2462.5,
+   "din_um": 130.0,
+   "metal_area_um2": 61562.5,
+   "footprint_um2": 95700.0,
+   "Cox_total_fF": 692.5378390580734,
+   "Cs_fF": 51.79589999999999,
+   "Csi_total_fF": 369.37500000000006,
+   "Rsi_total_ohm": 406.0913705583757,
+   "shunt_per_terminal_ohm": 1952.942994771742,
+   "shunt_per_terminal_fF": 125.45671897782144,
+   "Q_series": 8.237256471703562,
+   "Rp_diff_ohm": 263.4197627191113,
+   "Q_eff": 7.681721530068916,
+   "substrate": "nominal",
+   "rs_scale": 1.0,
+   "l_scale": 0.8207397680914764,
+   "f_hz": 2450000000.0
+  },
+  "pt_spiral_lhi_lowq": {
+   "L_nH": 2.722663803787207,
+   "Rs_ohm": 6.2445114397416415,
+   "Rdc_ohm": 3.004632352941176,
+   "R_turns_ohm": 3.2442576264944276,
+   "R_underpass_ohm": 0.61875,
+   "length_um": 2462.5,
+   "din_um": 130.0,
+   "metal_area_um2": 61562.5,
+   "footprint_um2": 95700.0,
+   "Cox_total_fF": 692.5378390580734,
+   "Cs_fF": 51.79589999999999,
+   "Csi_total_fF": 123.12500000000001,
+   "Rsi_total_ohm": 135.36379018612521,
+   "shunt_per_terminal_ohm": 505.5507606885907,
+   "shunt_per_terminal_fF": 127.87104142380049,
+   "Q_series": 6.71183860657327,
+   "Rp_diff_ohm": 220.07779319502825,
+   "Q_eff": 5.250930282744519,
+   "substrate": "worst",
+   "rs_scale": 1.5,
+   "l_scale": 1.0031263832229156,
+   "f_hz": 2450000000.0
+  },
+  "pt_spiral_llo_lowq": {
+   "L_nH": 2.2276340212804424,
+   "Rs_ohm": 6.2445114397416415,
+   "Rdc_ohm": 3.004632352941176,
+   "R_turns_ohm": 3.2442576264944276,
+   "R_underpass_ohm": 0.61875,
+   "length_um": 2462.5,
+   "din_um": 130.0,
+   "metal_area_um2": 61562.5,
+   "footprint_um2": 95700.0,
+   "Cox_total_fF": 692.5378390580734,
+   "Cs_fF": 51.79589999999999,
+   "Csi_total_fF": 123.12500000000001,
+   "Rsi_total_ohm": 135.36379018612521,
+   "shunt_per_terminal_ohm": 505.5507606885907,
+   "shunt_per_terminal_fF": 127.87104142380049,
+   "Q_series": 5.49150431446904,
+   "Rp_diff_ohm": 158.74733971886482,
+   "Q_eff": 4.629314235089834,
+   "substrate": "worst",
+   "rs_scale": 1.5,
+   "l_scale": 0.8207397680914764,
+   "f_hz": 2450000000.0
+  }
+ },
+ "layout": {
+  "drc": "0\n\n",
+  "gds": true
+ }
+}

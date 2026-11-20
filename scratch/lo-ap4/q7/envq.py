@@ -37,6 +37,10 @@ NETS = dict(
     stg=dict(lo_ext=AP / 'cand/run2/lo_ext/stage/lo_ext.ext.spice', mmd=AP / 'rc/lo_mmd_new/pt_lo_mmd_flat.rc.spice',
              qdum=AP / 'run_lo_mmd_qdum_ap4/lo_mmd_qdum/stage/lo_mmd_qdum.ext.spice',
              obs=AP / 'run_lo_obs_ap4/lo_obs/stage/lo_obs.ext.spice'),
+    # 2026-11-20 range fix r10: extracted lo_ext n4 (20-unit pair, loext3/lay/a4) + v7 divider (fixcap)
+    r10=dict(lo_ext=AP / 'loext3/lay/a4/lo_ext/stage/lo_ext.ext.spice', mmd=AP / 'rc/lo_mmd_v7/pt_lo_mmd_flat.rcfix.spice',
+             qdum=AP / 'run_lo_mmd_qdum_ap4/lo_mmd_qdum/stage/lo_mmd_qdum.ext.spice',
+             obs=AP / 'run_lo_obs_ap4/lo_obs/stage/lo_obs.ext.spice'),
     # 2026-11-20 range fix r9: extracted lo_ext n6 (12-unit internal pair, loext3/lay/a6) + v7 divider (fixcap)
     r9=dict(lo_ext=AP / 'loext3/lay/a6/lo_ext/stage/lo_ext.ext.spice', mmd=AP / 'rc/lo_mmd_v7/pt_lo_mmd_flat.rcfix.spice',
             qdum=AP / 'run_lo_mmd_qdum_ap4/lo_mmd_qdum/stage/lo_mmd_qdum.ext.spice',

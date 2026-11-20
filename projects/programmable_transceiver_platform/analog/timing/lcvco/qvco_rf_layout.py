@@ -610,7 +610,8 @@ def rf_points():
     return pts
 
 
-EDGE_W = -369.0     # west outline of pt_lc_qvco5 (spiral outer turn at -344 + the 25 um keep-out halo), ASM-1
+EDGE_W = None      # set below SPIRAL_DOUT: west outline = spiral outer turn - 25 um keep-out halo (-369 for 300 um), ASM-1
+TANK_GAP = float(_os.environ.get('QVCO_TANK_GAP', '3.0'))   # r9 (range fix): gap around the four tank tracks; r8 = 0.6
 AUX_ONLY = ('EN', 'IBIAS', 'PRE', 'VDDB', 'ATB_EN', 'ATB_VTUNE', 'ATB_ITAIL')
 
 
@@ -663,7 +664,7 @@ def top(rftag='t3', auxtag='a1', tag='', edge='west'):
         w = widths.get(n, 0.6)
         y -= w / 2
         ytr[n] = y
-        y -= w / 2 + 0.6
+        y -= w / 2 + (TANK_GAP if edge and n in ('VDDCQ', 'IP', 'IN', 'QP', 'QN') else 0.6)   # r9: tank tracks spaced (mutual C)
     aux_top = y - 3.0
     ay = aux_top - ah
     L.cmds += [f'getcell pt_lc_qvco_rf child 0 0 parent 0 0', f'getcell {AUX} child 0 0 parent {AUX_X} {R.s(ay)}']
@@ -766,6 +767,8 @@ def top_ref(axw):
 ASM = 'pt_lc_qvco5'
 AUXTAG_PUBLISHED = 'f5'        # aux build of the published r6b top (top7); top() does not record it
 SPIRAL_GAP = 8.0
+SPIRAL_DOUT = float(_os.environ.get('QSPIRAL_DOUT', '300'))
+EDGE_W = -(SPIRAL_DOUT / 2 + 36.0 + SPIRAL_GAP) - SPIRAL_DOUT / 2 - 25.0
 
 
 def asm(coretag='2', tag=''):
@@ -777,7 +780,8 @@ def asm(coretag='2', tag=''):
     cw = WORK / ('top' + coretag)
     for f in cw.glob('*.mag'):
         shutil.copy(f, work / f.name)
-    shutil.copy(tf.GENERATED / 'lcvco' / 'pt_spiral_ind.mag', work / 'pt_spiral_ind.mag')
+    shutil.copy(_os.environ.get('QSPIRAL_MAG', str(tf.GENERATED / 'lcvco' / 'pt_spiral_ind.mag')), work / 'pt_spiral_ind.mag')
+    hd = SPIRAL_DOUT / 2                                   # r9: spiral geometry follows its outer diameter (300 um: 150)
     res = json.loads((cw / 'result.json').read_text())
     rftag = res.get('rftag')
     info = json.loads((WORK / ('rf' + rftag) / 'info.json').read_text())
@@ -790,11 +794,11 @@ def asm(coretag='2', tag=''):
         P, N = core + 'P', core + 'N'
         nj = d['njoin']
         sy = (nj[0] + nj[1]) / 2
-        sxp = -(186.0 + SPIRAL_GAP)                       # spiral origin, local x (rotated: x' = -y)
+        sxp = -(hd + 36.0 + SPIRAL_GAP)                       # spiral origin, local x (rotated: x' = -y)
         gx = ox + sx * sxp
         L.cmds += [f'getcell pt_spiral_ind {"270" if sx > 0 else "90v"} child 0 0 parent {R.s(gx)} {R.s(sy)}']
-        xa, ya = sxp + 137.5, sy - 157.5                   # A (outer turn) -> P1 bus
-        xb, yb = sxp + 170.0, sy                           # B (centre underpass) -> N join
+        xa, ya = sxp + hd - 12.5, sy - hd - 7.5                   # A (outer turn) -> P1 bus
+        xb, yb = sxp + hd + 20.0, sy                           # B (centre underpass) -> N join
         p1 = min(d['bus'][P])
         L.rect('metal5', xa - 5.0, ya - 5.0, p1, ya + 5.0)
         L.rect('metal5', xb - 4.0, nj[0], min(d['bus'][N]), nj[1])
@@ -846,7 +850,8 @@ for inst in top.each_inst():
         b = inst.bbox()
         b = db.Box(b.left, b.bottom + int(%(stub)s / dbu), b.right, b.top)     # outer-turn metal (the bbox reaches lower only at the feed stub)
         b = b.enlarged(int(%(halo)s / dbu), int(%(halo)s / dbu))     # NOT clipped: the halo beyond the old outline is part of the cell (review asm8 gap 1)
-        b = db.Box(b.left, max(b.bottom, bb.bottom), b.right, b.top)
+        g = lambda v: int(round(v / 10.0)) * 10      # r9: 0.01 um grid (OFFGRID) for any spiral size
+        b = db.Box(g(b.left), g(max(b.bottom, bb.bottom)), g(b.right), g(b.top))
         reg.insert(b); rec.setdefault('spiral_um', []).append([b.left * dbu, b.bottom * dbu, b.right * dbu, b.top * dbu])
 def find(cell, tr, name):
     for inst in cell.each_inst():
@@ -864,7 +869,7 @@ reg.insert(b); rec['core_um'] = [b.left * dbu, b.bottom * dbu, b.right * dbu, b.
 b = db.Box(min(rf.left, aux.left), aux.top, max(rf.right, aux.right), rf.bottom) & bb      # tank-track channel, full width
 reg.insert(b); rec['channel_um'] = [b.left * dbu, b.bottom * dbu, b.right * dbu, b.top * dbu]
 for x, y in %(stubs)s:                   # feed stubs of the outer turn (below the outer-turn edge): +-45 um, 25 um below the stub end
-    b = db.Box(int((x - 45.0) / dbu), int((y - %(stub)s - %(halo)s - 15.0) / dbu), int((x + 45.0) / dbu), int(y / dbu))
+    b = db.Box(int(round((x - 45.0) / dbu / 10)) * 10, int(round((y - %(stub)s - %(halo)s - 15.0) / dbu / 10)) * 10, int(round((x + 45.0) / dbu / 10)) * 10, int(round(y / dbu / 10)) * 10)
     reg.insert(b); rec.setdefault('stub_um', []).append([b.left * dbu, b.bottom * dbu, b.right * dbu, b.top * dbu])
 for x in %(tankx)s:                      # tank-net trunks inside the aux block (PRE taps): +-6 um columns (review asm8 gap 2)
     x = round(x, 1)

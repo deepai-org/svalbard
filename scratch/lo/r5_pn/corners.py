@@ -4,11 +4,14 @@
 Patches run_qvco_r5_ext: CORNERS += PFULL (ss, L+10 %, Q4) and PFULLLO (ss, L-10 %, Q4), spiral variants made by
 scaling the series R of the *_lowq models until Q_eff(diff) = 4.0 at 2.45 GHz."""
 import math, re, sys
+from pathlib import Path
 import numpy as np
 sys.path.insert(0, '/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/timing/lcvco')
 import run_qvco_r5_ext as rx
 import run_lcvco as rl
-SRC = (rx.HERE / 'spiral.spice').read_text()
+import os
+_SP = Path(os.environ.get('SPIRAL_SPICE', str(rx.HERE / 'spiral.spice')))   # 2026-11-20: staged spiral (sp290)
+SRC = _SP.read_text()
 
 
 def block(name):
@@ -59,7 +62,15 @@ for base, new in (('pt_spiral_l115_lowq', 'pt_spiral_l115_q4'), ('pt_spiral_l85_
     VAR[new] = nb
     VAR[new + '_info'] = dict(base=base, q_eff_base=q0, rs_scale=m)
 
-_orig = rl.spiral_file
+def _orig(variant):
+    blocks = re.findall(r'(\* \S+:.*?\n.*?\.ends \S+\n)', SRC, re.S)
+    for b in blocks:
+        name = re.search(r'\.subckt (\S+)', b).group(1)
+        if name == variant:
+            p = rl.WORK / f'spiral_{variant}.spice'
+            p.write_text(re.sub(rf'\b{variant}\b', 'pt_spiral', b))
+            return p.name
+    raise KeyError(variant)
 
 
 def spiral_file(variant):

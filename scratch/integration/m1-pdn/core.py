@@ -110,4 +110,5 @@ def dc(n, info, case, level, vsrc=3.267, x_feed=0.0):
         Va = V[n.idx[a]] if n.idx[a] >= 0 else 0.0; Vb = V[n.idx[b]] if n.idx[b] >= 0 else 0.0
         ib[pos] = float(abs(Vb-Va)/r*1e3)    # mA magnitude per bond
     ring = [float(V[n.idx[M.vn(i, j)]]-V[n.idx[M.gn(i, j)]]) for i in range(M.NX) for j in range(M.NY) if i in (0, M.NX-1) or j in (0, M.NY-1)]
+    info['V_dc'] = V
     return dict(blocks=res, bond_mA=ib, ring_rail_min=min(ring), ring_rail_max=max(ring), total_mA=sum(x[3] for x in out)+idig+ihost, mode=m)

@@ -156,7 +156,7 @@ worst in-window currents.
 
 | ID | Requirement | Value |
 | --- | --- | --- |
-| G1 | Raw VDD and VSS mesh over the whole analog core, over blocks too | Metal5 vertical and Metal4 horizontal straps, >= 15 % coverage per net on each layer, 20 % wanted; via4 at every same-net crossing |
+| G1 | Raw VDD and VSS mesh over the whole analog core, over blocks too | Metal5 vertical and Metal4 horizontal straps, >= 15 % coverage per net on each layer (minimum that passes, section 4.1: pt_rf M4 10 / M5 13 %, pt_wired M4 12 / M5 15 %), 20 % wanted; via4 at every same-net crossing |
 | G2 | Strap pattern | VDD and VSS straps paired, pair pitch <= 70 um (loop <= 0.4 nH per 250 um square) |
 | G3 | Blocks that use Metal4 or Metal5 inside | VDD/VSS ring of the same cross-section around them; no mesh gap wider than 250 um |
 | G4 | Island switch position | VDD edge bar within 150 um of the core ring, as the die-fit packing places them (`scratch/reviews/die-fit/run/<chip>/fit-s.json`, `switches`) |
@@ -191,6 +191,28 @@ the macro at 81.8 mA):
 - The model sets every strap to exactly 15 mV (G5); the widths in the last column are what that costs at the packed
   distances. `wrx_cap` (1.5 mm from `isw_wired_cap`), `pt_wiredtx8` and `lo_mmd` / `lo_ext` need the switch moved
   toward the load or a raw-VDD trunk that is not in the model.
+
+### 4.1 The grid as drawn (ASM-9)
+
+The assembly draws the core ring at 2 x 14 um (Metal4 + Metal5) and the mesh at Metal4 7.3-7.8 % / Metal5 10.5-11.0 %
+per net (pt_rf) and 8.0-8.5 % / 11.5-11.9 % (pt_wired) (`integration/assembly/README.md`). Checked with those values
+(`scratch/integration/m1-pdn/asm9_drawn.py`): pessimistic set, worst currents, digital at the unscaled 81.8 mA (pt_wired
+W 432 mA with POST on), all bonds and each single open supply bond. EM at 85 C: core ring 14 um x (2.09 + 4.5) mA/um =
+92 mA per net; supply cell 125 mA.
+
+| Chip | Grid M4 / M5 per net | Worst tap, all bonds (mV) | Worst tap, one open supply bond | Worst bond (mA), all / one open | Core ring current (mA) | Result |
+| --- | --- | --- | --- | --- | ---: | --- |
+| pt_rf | 7.3 / 10.5 % (drawn) | 125.6 `lo_mmd` (also `lo_mmd_qdum` 121.0, `lo_ext` 119.5) | 128.9 | 50.0 / 61.6 | 3.5 | **IR fails**; EM passes |
+| pt_rf | 10 / 13 % | 109.8 | 113.1 | 46.0 / 55.2 | 2.9 | passes |
+| pt_wired | 8.0 / 11.5 % (drawn) | 129.0 `wrx_cap` (also `ptrim` 120.7, `pt_wiredtx8` 118.9) | 149.1 (`dvdd_pads[0]` open) | 101.2 / **126.7** (`dvdd_pads[1]` open) | 6.1 | **IR fails; EM fails by 1.7 mA with one open bond** |
+| pt_wired | 12 / 15 % | 114.0 | 132.4 (`dvdd_pads[0]` open), 119.7 (`dvdd_pads[1]`) | 98.7 / 122.9 | 5.5 | passes with all bonds |
+| pt_wired | 15 / 15 % | 109.5 | 127.4 | 97.7 / 121.0 | 5.3 | passes with all bonds |
+
+- **Required coverage per net: pt_rf Metal4 >= 10 %, Metal5 >= 13 %; pt_wired Metal4 >= 12 %, Metal5 >= 15 %** (G1).
+- The core ring is not the limit: 2 x 14 um carries 3-6 mA (the provider rails carry the ring current); 2 x 25 um changes
+  the worst tap by 0.1-0.4 mV. G8 stays at >= 2 x 12 um.
+- With `dvdd_pads[0]` open, pt_wired misses 117 mV at any coverage up to 15 % (127 mV): an open bond is a yield /
+  bring-up case, not an operating point; EM holds at >= 12 / 15 %.
 
 ## 5. Decap
 

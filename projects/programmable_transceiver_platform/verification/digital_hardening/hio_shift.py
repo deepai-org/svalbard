@@ -25,6 +25,12 @@ CLOCK_ROOTS = [
     (1580.0, 0.871, [('digital.fcb.fjc.cell', 'dffrnq_4'), ('digital.fcb.blk_clock_buf.cell', 'clkbuf_8')]),      # counter b prescaler
 ]
 
+# Output-stage flops fixed next to their macro pins (west edge), y in um per chip outline: the pin positions come from
+# pin_order.cfg for that outline (routed DEFs of 33bba1e3: c_cdr_fup / fdn at y = 1133.7 / 1130.4 um on pt_rf,
+# 1379.0 / 1374.5 um on pt_wired). Re-derive if the outline or the pin order changes.
+PIN_FLOPS = {'rf': 1120.0, 'wired': 1365.0}
+PIN_FLOP_CELLS = [('fup_out.cell', 'dffrnq_4'), ('fdn_out.cell', 'dffrnq_4')]
+
 def legal_x(row, x, width):
     """first site at or right of x in `row` where [x, x + width] misses the tap column"""
     t0 = TAP_EVEN if row % 2 == 0 else TAP_ODD
@@ -40,7 +46,8 @@ def main():
     chip, dst = sys.argv[1], Path(sys.argv[2])
     c = json.loads((H / chip / 'config.json').read_text())
     x0, y0, width, height = c['DIE_AREA']
-    assert (x0, y0, width) == (0, 0, 1716), 'the host-link blocks are generated for a 1716 um wide macro'
+    assert (x0, y0) == (0, 0) and 1600 <= width <= 1716, 'host-link blocks fit widths 1600-1716 um'
+    dx = 1716 - width   # narrower outline: cells right of mid-width (clock roots) move left with the east edge
     rows = round((height - 1640) / 7.84)
     dy = round(rows * 7.84, 2)
     assert abs(1640 + dy - height) < 0.01, f'height {height} is not 1640 + n x 7.84 um'
@@ -53,12 +60,17 @@ def main():
             p[2] = f'{float(p[2]) + dy:.2f}'; line = ' '.join(p)
         out.append(line)
     for x, yf, cells in CLOCK_ROOTS:
+        if x > 858: x -= dx
         r = round((yf * height - Y0) / ROW)
         for n, (inst, cell) in enumerate(cells):
             row = r + n
             out.append(f'{inst} {legal_x(row, x, WIDTH[cell]):.2f} {Y0 + row * ROW:.2f} {"N" if row % 2 == 0 else "FS"}')
+    r = round((PIN_FLOPS[chip] - Y0) / ROW)
+    for n, (inst, cell) in enumerate(PIN_FLOP_CELLS):
+        row = r + n
+        out.append(f'{inst} {legal_x(row, 12.0, WIDTH[cell]):.2f} {Y0 + row * ROW:.2f} {"N" if row % 2 == 0 else "FS"}')
     dst.write_text('\n'.join(out) + '\n')
-    print(f'{chip}: outline 1716 x {height} um = {round(1716 * height / 1e6, 4)} mm2; {len(out)} fixed cells -> {dst}')
+    print(f'{chip}: outline {width} x {height} um = {round(width * height / 1e6, 4)} mm2; {len(out)} fixed cells -> {dst}')
 
 if __name__ == '__main__':
     main()

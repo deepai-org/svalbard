@@ -241,3 +241,4 @@ Resume each by SendMessage to its ID (do not start new agents). State at the pau
 - RF RX a6e1dd7a8217d3b6f: hand-placed LNA relayout next.
 - Assembly a67ba37dcfd1a2abb: pt_rf precheck on the 164-violation layout; pin isw_wired_tx_a/_b beside pt_wiredtx8; pt_wired 183 violations.
 - Bring-up a17b557baf31977af: idle (done).
+- Wired TX island current limit 56 mA (coordinator 2026-11-21): pt_wired supply tap closes IR at 56 mA with a ~180 um bar; 60 mA needs ASM-8 (Metal5 freed in wrx_cap / ptrim / wiredtx8, ME/SE VSS >= 16 %). On resume, wired TX must confirm every mode (100BASE-TX with raised cascode especially) stays <= 56 mA average, else ASM-8 becomes mandatory.

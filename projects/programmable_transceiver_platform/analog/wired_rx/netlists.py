@@ -950,6 +950,20 @@ PTRIM_CH0_TA_K = (1, 1, 1.24, 1.175, 1.145)      # channel 0 ta unit width = PTR
 # bit b: (units on tn, units on ta, capacitor W um, capacitor L um, switch W um)
 PTRIM_UNITS = ((1, 0, 1.27, 0.45, 0.6), (2, 0, 1.47, 0.45, 0.6), (2, 2, 0.36, 0.45, 0.6), (4, 4, 0.535, 0.45, 0.6),
                (8, 8, 0.595, 0.45, 0.6))
+# r12 (TIM-17 / TIM-19): per-channel FIXED delay offsets that cancel the systematic phase-position pattern of the RX ring
+# pt_pll_ring r12.  Channel k carries PTRIM_FIX[k] always-on unit pairs (one bit-4 unit on tn + one on ta, switch gate =
+# ptrim_en), i.e. the same devices as the trim units (they track corner / supply like the trim) worth ~2 LSB each;
+# laid out as wide fingers of the same cap / switch W ratio (ptrim_fix_fingers).
+PTRIM_FIX = (0, 2, 4, 5, 0, 4, 8, 8)        # r12: scratch/wired_rx/r12/ptrim/pickfix.json
+PTRIM_FIX_MAXW = 4.8              # um: a fixed offset is laid out as ceil(W / this) wide fingers (no taller than inv3 5 um)
+
+
+def ptrim_fix_fingers(n, wk=1.0):
+    """n bit-4 units (x wk) as wide fingers: [(cap W, switch W)] per finger, W on the 5 nm grid (layout = netlist)."""
+    cw, sw = PTRIM_UNITS[4][2] * wk * n, PTRIM_UNITS[4][4] * wk * n
+    nf = max(1, -(-int(round(max(cw, sw) * 1000)) // int(PTRIM_FIX_MAXW * 1000)))
+    g = lambda w: round(round(w / nf / 0.005) * 0.005, 3)
+    return [(g(cw), g(sw))] * nf
 
 
 def ptrim():
@@ -964,6 +978,9 @@ tn only (1 and 2 units), bits 2..4 split 2+2 / 4+4 / 8+8 units between tn and ta
 alike (duty independent of the code); unit widths per bit are tuned on the extraction for binary weights.
 Channel 0 carries the capture's main clock: inv1 / inv2 / inv3 doubled and its ta units twice as wide; channels
 1..7 carry a dummy inv1 gate (MOS capacitors to the rails) on tn instead.  ptrim_en=0: every CKPk low.
+r12: channel k also carries PTRIM_FIX[k] always-on unit pairs (bit-4 type, switch gate ptrim_en) = a fixed delay
+offset cancelling the systematic phase-position pattern of the RX ring pt_pll_ring r12 (TIM-19), so the 5-bit trim
+only has to cover the residual, the channel / sampler spread and die mismatch.
 Calibrated per board from edge-sampler histograms (digital).  Requirement: step <= 1 deg, monotonic, range
 covering the ring's static phase position error plus the channel spread (spec AC-3: residual <= 3 deg).""")
     V = 'VDD_WIRE_SW'
@@ -983,6 +1000,13 @@ covering the ring's static phase position error plus the channel spread (spec AC
                     tc = f'tc{k}_{b}{tag}'
                     c.n(tc, f'T{k}_{b}', node, w=round(sw * wk, 3), m=cnt)      # switch: the unit floats when T = 0
                     c.ncap(tc, round(cw * wk, 3), cl, m=cnt)
+        if PTRIM_FIX[k]:                                  # r12 fixed offset: always-on bit-4-type units on tn and ta
+            ntn, nta, cw, cl, sw = PTRIM_UNITS[4]
+            for node, tag, wk in ((tn, 'a', 1), (ta, 'b', m0 * PTRIM_CH0_TA_K[4] if k == 0 else 1)):
+                tc = f'tc{k}_f{tag}'
+                for fw in ptrim_fix_fingers(PTRIM_FIX[k], wk):       # wide fingers = n units each (same W ratio)
+                    c.n(tc, 'ptrim_en', node, w=fw[1])
+                    c.ncap(tc, fw[0], cl)
         for a, y, (w_n, w_p, nf) in ((tn, ta, PTRIM_INV1), (ta, tb, PTRIM_INV2), (tb, f'CKP{k}', PTRIM_INV3)):
             c.inv(a, y, wn=w_n, wp=w_p, m=nf * m0)
         if k:                                             # dummy inv1 gate on tn: the same tn load as channel 0

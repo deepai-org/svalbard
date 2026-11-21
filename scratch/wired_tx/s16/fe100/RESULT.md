@@ -205,3 +205,65 @@ Result files: `results/O_*.json`, runs `jobs2.sh` / `jobs3.sh` / `jobs4.sh` (`*.
   * The SUM limit binds at the **lowest code used**: re-check SUM after any per-board code calibration.
   * The held leg is 42-43 mA at the calibrated codes and 49 mA at ff code 255. WT52 / PC-63 need a re-basis.
 * **Versus option 1 (W x2):** about 15 mV less margin at ss-pess, no pad C, but it needs the mode-switched cascode bias source (charge pump / regulator above VDD) plus the 4.5 V CT rail. RL is unchanged from the base network (the same 79-80 MHz board-filter miss).
+
+## Options (CT <= 3.6 V)
+**Pads ruling (via owner):** CT 4.5 V is impossible. The pad up-diodes to VDD conduct > 100 mA above about VDD + 0.5 V, so the DC pad level must stay <= 3.6 V at VDD 3.15 V. Options 1 and 1b above are therefore void.
+* **Model mismatch:** the pad model used here (`txr/models/tx_rt.spice`) has **no** PAD-to-VDD diode, only `diode_pd2nw_06v0` to the isolated ESD_RAIL. Pads should check which netlist holds the up-diodes. The rows below follow the ruling: pin max is reported and kept <= 3.6 V.
+* Bench: `opts.py` (bias-path, raw; cal. = raw x 0.967). Runs: `jobs6.sh` (code 255) and `jobs7.sh` (lower codes). Gate levels at tt/ff are scaled from the ss full chain (assumption).
+* Pass criteria:
+  * ss-pess cal. >= 950 mV;
+  * **raw** <= 1050 mV at every corner (conservative);
+  * symmetry 0.98-1.02;
+  * pin max <= 3.6 V;
+  * SUM max <= 3.3 V.
+
+### Code 255 (W = pad switch + cascode width scale)
+| CT | option | ss-pess raw (cal.) | ss | tt | ff | sym worst (ss / ff) | held leg ss-pess / ff mA | pin min / max V | SUM min / max V | cascode Vgs / Vgd / Vds max V |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 3.6 | CAS 4.2 | 903 (873) | 903 | 961 | 944 | 0.984 / 0.952 | 36.3 / 40.9 | 1.69 / 3.50 | 0.62 / 2.68 | 3.59 / 3.13 / 1.26 |
+| 3.6 | CAS 4.5 | 930 (899) | 930 | 981 | 960 | 0.981 / 0.949 | 37.4 / 41.5 | 1.67 / 3.48 | 0.63 / 2.92 | 3.88 / 3.45 / 1.05 |
+| 3.6 | CAS 4.8 | 949 (918) | 949 | 996 | 973 | 0.978 / 0.948 | 38.2 / 41.9 | 1.66 / 3.46 | 0.63 / 3.13 | 4.17 / 3.77 / 0.86 |
+| 3.6 | W x1.5 + CAS 4.5 | 1045 (1010) | 1044 | 1086 | 1061 | 0.973 / 0.944 | 42.0 / 44.7 | 1.56 / 3.45 | 0.60 / 3.02 | 3.90 / 3.60 / 0.75 |
+| 3.6 | W x2 + CAS 4.2 | 1090 (1054) | 1090 | 1128 | 1108 | 0.972 / 0.945 | 43.9 / 46.2 | 1.52 / 3.45 | 0.59 / 2.83 | 3.61 / 3.37 / 0.94 |
+| 3.6 | W x2 + CAS 4.5 | 1100 (1064) | 1100 | 1136 | 1113 | 0.971 / 0.944 | 44.3 / 46.4 | 1.51 / 3.44 | 0.59 / 3.06 | 3.91 / 3.67 / 0.67 |
+| 3.45 | CAS 4.2 / 4.5 / 4.8 | 879 / 903 / 920 (850 / 873 / 890) | same | 924 / 941 / 956 | 892 / 907 / 919 | >= 0.978 / 0.946 | 35.3-37.0 / 39.4-40.3 | 1.58 / 3.34 | 0.58 / 3.10 | 4.21 / 3.83 / 1.10 |
+| 3.45 | W x1.5 + CAS 4.5 | 1011 (978) | 1011 | 1043 | 999 | 0.971 / 0.939 | 40.7 / 43.0 | 1.49 / 3.29 | 0.57 / 2.95 | 3.93 / 3.65 / 0.63 |
+| 3.45 | W x2 + CAS 4.2 / 4.5 | 1055 / 1065 (1021 / 1030) | same | 1086 / 1093 | 1040 / 1047 | 0.970 / 0.936 | 42.4-42.8 / 44.3-44.5 | 1.44 / 3.30 | 0.55 / 3.00 | 3.94 / 3.72 / 0.77 |
+
+At code 255 every option that reaches 950 mV fails symmetry (0.94-0.97). The asymmetry falls when the code is lowered, so the rows below use lower codes.
+
+### Lower codes (the <= 1050 mV raw code at tt/ff; ss-pess at the code that keeps symmetry)
+| CT | option | corner | code | raw (cal.) mV | sym | held leg mA | pin min / max V | SUM min / max V | cascode Vgs / Vgd / Vds V |
+|---|---|---|---|---|---|---|---|---|---|
+| 3.6 | **W x2 + CAS 4.2** | ss-pess | **215** | 1019 (**986**) | **0.991** | 41.0 | 1.73 / 3.48 | 0.70 / 2.84 | 3.49 / 3.16 / 0.98 |
+| 3.6 | W x2 + CAS 4.2 | ss-pess | 230 | 1056 (1021) | 0.980 | 42.5 | 1.66 / 3.47 | 0.65 / 2.83 | 3.55 / 3.22 / 0.94 |
+| 3.6 | W x2 + CAS 4.2 | tt | **215** | 1036 (1002) | **0.995** | 42.0 | 1.72 / 3.44 | 0.73 / 2.94 | 3.47 / 3.20 / 0.81 |
+| 3.6 | W x2 + CAS 4.2 | tt | 225 | 1077 | 0.989 | 43.4 | 1.67 / 3.43 | 0.67 / 2.91 | - |
+| 3.6 | W x2 + CAS 4.2 | ff | **210** | 1027 (993) | **0.997** | 41.8 | 1.74 / 3.44 | 0.79 / 3.04 | 3.41 / 3.18 / 0.62 |
+| 3.6 | W x2 + CAS 4.2 | ff | 220 | 1072 | 0.993 | 43.5 | 1.68 / 3.43 | 0.71 / 3.02 | - |
+| 3.6 | W x1.5 + CAS 4.5 | ss-pess | 240 | 1030 (996) | 0.975 | 41.4 | 1.68 / 3.46 | 0.64 / 3.04 | 3.86 / 3.46 / 0.79 |
+| 3.6 | W x1.5 + CAS 4.5 | tt | 225 / 235 | 1055 / 1070 | 0.980 / 0.973 | 42.5 / 43.1 | 1.68 / 3.43 | 0.67 / 3.07 | 3.83 / 3.51 / 0.62 |
+| 3.6 | W x1.5 + CAS 4.5 | ff | 220 / 230 | 1062 / 1072 | 0.983 / 0.964 | 43.0 / 43.8 | 1.69 / 3.43 | 0.70 / 3.12 | 3.80 / 3.52 / 0.48 |
+| 3.45 | W x2 + CAS 4.2 | ss-pess | 240 | 1041 (1006) | 0.973 | 41.9 | 1.54 / 3.31 | 0.59 / 2.80 | 3.61 / 3.30 / 0.78 |
+| 3.45 | W x2 + CAS 4.2 | tt | 225 / 235 | 1055 / 1070 | 0.979 / 0.972 | 42.5 / 43.1 | 1.55 / 3.28 | 0.62 / 2.88 | - |
+| 3.45 | W x2 + CAS 4.2 | ff | 225 / 235 | 1059 / 1058 | 0.967 / 0.950 | 43.2 / 43.7 | 1.54 / 3.26 | 0.64 / 2.88 | - |
+
+Added pad C (single-ended PAD_P at 50 MHz, `padc`): x1 1.484 pF; **x1.5 1.596 pF (+0.11)**; **x2 1.708 pF (+0.22)**.
+
+### Verdict
+* **Pass: CT 3.6 V + pad switch and cascode W x2 + CASCODE 4.2 V in 100BASE-TX mode, code 210-215 at every corner.**
+  * ss-pess, code 215: 986 mV cal. (1019 raw), symmetry 0.991.
+  * tt, code 215: 1036 mV raw, symmetry 0.995.
+  * ff, code 210: 1027 mV raw, symmetry 0.997.
+  * Pin 1.66-3.48 V, SUM <= 3.04 V, cascode <= 3.6 V Vgs.
+  * Held leg 41-42 mA, peak about 43 mA. That needs the WT52 / PC-63 re-basis.
+  * **Margin is thin:** 36 mV (cal.) at ss-pess. One code (about 4.5 mV per code) of calibration, plus the unverified gate-level scaling at tt/ff.
+* W x1.5 + CAS 4.5 V at CT 3.6 V: amplitude OK (996 mV cal. at 240) but symmetry 0.975 at ss-pess fails. Lowering the code would fix symmetry but costs amplitude. Marginal fail.
+* CT 3.45 V: amplitude is reachable (W x2: 1006 mV cal.), but symmetry stays < 0.98 at every corner at the codes that meet amplitude. **Fail on symmetry.**
+* **W unchanged (CASCODE alone, 4.2-4.8 V): best 918 mV cal.** (CAS 4.8, CT 3.6 V, ss-pess). It does **not** reach 950 mV.
+
+**Why W unchanged is limited** (ss-pess, CAS 4.8, CT 3.6 V):
+* **Not pin compliance.** The network gives V_pin = CT - 37.4 ohm x I (49.9 || 149.9). At the measured 38.2 mA the pin sits at 2.17 V nominal, 1.80 V measured with the held-level ripple. The pin floor for saturation is about SUM + the cascode's Vds,sat (~0.6 V), i.e. about 1.3 V. The pin alone would allow (3.6 - 1.3) / 37.4 = 61 mA, i.e. 1.54 V.
+* **Not SUM max.** SUM max is 3.13 V <= 3.3 V. CASCODE 4.8 V is about the highest it can go: SUM max = CAS - Vt, and that sits above 3.3 V at ff once the code is lowered.
+* **It is the tail + switch headroom at the bottom of the SUM node.** SUM min falls to 0.65 V at 38 mA. The 3.3 V switch (W 20 um x 8 slices per bank, L 0.28 um) in series with the tail (W 20 um, L 1 um) runs out of Vds. Two banks (MAIN + POST) sharing one SUM node at 2 x 19 mA need more W, not more gate voltage.
+* With CASCODE capped at about 4.8 V by the switch rating, the bound with unchanged W is I_max of about 38 mA, i.e. 38 mA x 25 ohm = 955 mV raw, 918 mV cal. W x1.5 lifts it to about 42 mA (1045 / 1010 mV); W x2 to about 44 mA (1090 / 1054 mV).

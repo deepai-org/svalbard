@@ -1,0 +1,85 @@
+{
+ "tag": "P3.6_w1.5_cas4.5_ssp",
+ "mode": "tran",
+ "corner": "ss",
+ "pess": true,
+ "vdd": 3.15,
+ "vct": 3.6,
+ "vcas": 4.5,
+ "wscale": 1.5,
+ "ratio": 1.0,
+ "main_code": 255,
+ "post_code": 255,
+ "pad": "RT",
+ "gate_v": [
+  1.04,
+  2.671
+ ],
+ "sec": 88,
+ "scaled": {
+  "nfet_06v0_cascodes": 32,
+  "nfet_03v3_switches": 32
+ },
+ "meas": {
+  "lag_ns": 5.0,
+  "fit_rms_mv": 19.2,
+  "polarity": 1,
+  "scored": 20,
+  "p1": {
+   "mean_mv": 1044.7,
+   "min_mv": 1038.2,
+   "max_mv": 1049.6,
+   "n": 13,
+   "pos2_mv": 1049.5
+  },
+  "m1": {
+   "mean_mv": -1063.9,
+   "min_mv": -1079.2,
+   "max_mv": -1048.7,
+   "n": 2,
+   "pos2_mv": -1079.2
+  },
+  "longest_hold": {
+   "symbols": 12,
+   "level": 1,
+   "first_mv": 1049.6,
+   "last_mv": 1038.2
+  },
+  "amp_mv": 1044.7,
+  "symmetry": 0.9725,
+  "pad_lead_ns": 5.0,
+  "ILP": {
+   "peak_ma": 44.4,
+   "avg_ma": 9.94,
+   "held_p1_ma": 0.01,
+   "held_m1_ma": 43.24
+  },
+  "ILN": {
+   "peak_ma": 43.13,
+   "avg_ma": 33.31,
+   "held_p1_ma": 42.02,
+   "held_m1_ma": 0.01
+  },
+  "pad_min_v": {
+   "P": 1.656,
+   "N": 1.716
+  },
+  "bias_v": {
+   "MAIN_BIAS": 1.6327,
+   "POST_BIAS": 1.6328
+  },
+  "i_vdd_avg_ma": 3.17,
+  "pad_max_v": 3.452,
+  "sum_max_v": 3.022,
+  "sum_min_v": 0.615,
+  "cascode_max_v": {
+   "vgs": 3.89,
+   "vgd": 3.49,
+   "vds": 0.75,
+   "vg": 4.59,
+   "vd": 3.42
+  },
+  "esd_rail_v": 2.496,
+  "ct_minus_legs_ua": -3.2
+ }
+}

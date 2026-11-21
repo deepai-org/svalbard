@@ -61,6 +61,15 @@ module tb_linecode_stream;
    if(ref_i>0&&rx_syms==0)begin ref_i=ref_i+1;rx_syms=1;end   // the placing symbol itself
   end
  end
+ // Egress margin (H2D bank in front of pt_lc_tx, write-side occupancy on the host clock): admission
+ // stops above DEPTH-SPARE (ready low); the peak and the ready-low clocks are reported and the peak is
+ // checked against DEPTH-SPARE (a guard that the bank never back-pressures; SPARE itself prevents overflow).
+ // Peak 20 of 20 before and after DG9-LC-TX (steady state 18..20 after the start-up fill).
+ integer occ_peak=0,ready_low=0;
+ always @(posedge hclk)if(source_on)begin
+  if(core.core.egress.occupancy>occ_peak)occ_peak=core.core.egress.occupancy;
+  if(!core.core.egress_ready)ready_low=ready_low+1;
+ end
  always @(posedge hclk)if(source_on&&((status&16'h1dd6)!=0||peer_fault))begin
   errors=errors+1;$display("ERROR status %h fault %b at %t",status,peer_fault,$time);$finish;end
  initial begin
@@ -70,8 +79,9 @@ module tb_linecode_stream;
   #100;@(negedge hclk)begin source_on=1;peer_tx_reset=1;end
   #(RUN_NS);
   if(rx_syms<0.8*RUN_NS*0.3125)begin errors=errors+1;$display("ERROR only %0d symbols received",rx_syms);end
+  if(occ_peak>core.core.EGRESS_DEPTH-4)begin errors=errors+1;$display("ERROR egress peak %0d above DEPTH-SPARE: the bank applied backpressure (ready low)",occ_peak);end
   if(!status[5])begin errors=errors+1;$display("ERROR 8b/10b receiver not aligned");end
-  if(errors==0)$display("LINECODE_STREAM_PASS symbols=%0d host_words=%0d status=%h",rx_syms,taken,status);
+  if(errors==0)$display("LINECODE_STREAM_PASS symbols=%0d host_words=%0d status=%h egress_peak=%0d/%0d ready_low=%0d",rx_syms,taken,status,occ_peak,core.core.EGRESS_DEPTH-4,ready_low);
   else $display("LINECODE_STREAM_FAIL %0d",errors);
   $finish;
  end

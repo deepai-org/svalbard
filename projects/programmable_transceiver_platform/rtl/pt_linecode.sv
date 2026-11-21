@@ -159,8 +159,8 @@ endmodule
 // TX (wire_tx_clk): 40 -> 36 unpacking of the egress head (FWFT), then two stages: (A) the 36-bit
 // group is taken with the running disparity at each of its four symbols (a code group's disparity
 // class does not depend on the disparity it is encoded with, so RD before symbol s is
-// rd ^ u_0 ^ .. ^ u_(s-1), from cheap per-symbol flags); (B) four independent 9b->10b encoders.
-// The encoded quad q is a registered FWFT head: `take` consumes it.
+// rd ^ u_0 ^ .. ^ u_(s-1), from cheap per-symbol flags); (B) four independent 9b->10b encoders,
+// registered in stage E (DG9-LC-TX). The encoded quad q is a registered FWFT head: `take` consumes it.
 // Kept enable replica (identical copies must not be merged by synthesis).
 `ifndef FORMAL
 (* keep_hierarchy = "yes" *)
@@ -237,7 +237,14 @@ module pt_lc_tx(input wire clk, rst_n, en, input wire [39:0] head, input wire he
     // consumer's late `take` steers just the 40-bit head reload (AC1_R4: take -> advB -> advA -> pop
     // -> one-hot flags was 16 levels, wtx -8.1 ns). The output stream is unchanged.
     reg [39:0] q2; reg qv2;
-    wire advB = sAv && !qv2;
+    // Stage E (DG9-LC-TX, routed wtx sA -> 8b/10b tables -> q/q2 queue mux -> q was -3.3 ns): the encoder
+    // output is registered (eE / eEv) before the output queue, so the table lookups end at a plain
+    // register and the queue mux starts from one. E -> queue advances when the second queue slot is free
+    // (advE, registers only); B -> E advances when E is empty or moves on (advB, registers only). One more
+    // WORD_CLK40 of latency, one group per clock at full rate, the encoded stream is unchanged.
+    reg [39:0] eE; reg eEv;
+    wire advE = eEv && !qv2;
+    wire advB = sAv && (!eEv || !qv2);
     // Stage P (timing TC9, wtx: ures -> flip / decode -> running-disparity XOR -> rdA / dA was the
     // worst wtx path): the group taken from ures is registered with its per-symbol flip flags and
     // decodes (sP / fP / dP); stage A then only XORs the registered flags into the running disparity.
@@ -248,9 +255,11 @@ module pt_lc_tx(input wire clk, rst_n, en, input wire [39:0] head, input wire he
     // is free -- a register -- and the 72-bit ures / insert / skid fanout no longer waits on the B/A
     // readies. advB and advP2A stay short (registers -> two gates -> stage A registers only). A second
     // slot in A as well held two extra groups after a stall and the H2D egress margin in
-    // tb_linecode_stream (peak 14 of ~15) did not absorb it; one extra group does. Same encoded stream.
+    // tb_linecode_stream did not absorb it; one extra group does. Same encoded stream. (DG9-LC-TX: stage E
+    // below adds one group; tb_linecode_stream now reports the egress bank peak: 20 of DEPTH-SPARE 20
+    // before and after, never back-pressured.)
     reg [35:0] sP2; reg [3:0] fP2; reg [15:0] dP2; reg sPv2;
-    wire advP2A = sPv && (!sAv || advB);   // short: registers sAv, qv2, sPv (no wide fanout behind it)
+    wire advP2A = sPv && (!sAv || advB);   // short: registers sAv, eEv, qv2, sPv (no wide fanout behind it)
     // u-derived flags and one-hot insert positions are registers (computed from the next u), so no
     // compare on u sits in front of the 72-bit insert fanout (AC-1 ss32 timing at 12.3 ns).
     reg uge36, ult72; reg [8:0] oh_n, oh_a;   // oh_n[i]: u == 4i; oh_a[i]: u == 4i + 36
@@ -359,17 +368,19 @@ module pt_lc_tx(input wire clk, rst_n, en, input wire [39:0] head, input wire he
             sAv <= advP2A || (sAv && !advB);
         end
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin q <= 40'd0; q_valid <= 1'b0; q2 <= 40'd0; qv2 <= 1'b0; end
-        else if (!en_c) begin q_valid <= 1'b0; qv2 <= 1'b0; end
+        if (!rst_n) begin q <= 40'd0; q_valid <= 1'b0; q2 <= 40'd0; qv2 <= 1'b0; eE <= 40'd0; eEv <= 1'b0; end
+        else if (!en_c) begin q_valid <= 1'b0; qv2 <= 1'b0; eEv <= 1'b0; end
         else begin
-            if (q_valid && take) begin          // head consumed: second entry or the new group moves up
-                if (qv2) q <= q2; else if (advB) q <= enc;
-                q_valid <= qv2 || advB; qv2 <= 1'b0;
+            if (advB) eE <= enc;
+            eEv <= advB || (eEv && !advE);
+            if (q_valid && take) begin          // head consumed: second entry or the E group moves up
+                if (qv2) q <= q2; else if (advE) q <= eE;
+                q_valid <= qv2 || advE; qv2 <= 1'b0;
             end else if (!q_valid) begin        // (qv2 is 0 here)
-                if (advB) q <= enc;
-                q_valid <= advB;
-            end else if (advB) begin            // head held, second slot free
-                q2 <= enc; qv2 <= 1'b1;
+                if (advE) q <= eE;
+                q_valid <= advE;
+            end else if (advE) begin            // head held, second slot free
+                q2 <= eE; qv2 <= 1'b1;
             end
         end
 endmodule

@@ -6,7 +6,7 @@
 //      -> rx_out.hex (decoded 40-bit output quads), rx_status.txt (aligned, code_error).
 module tb_linecode;
  reg clk=0,rst_n=0;always #5 clk=~clk;
- reg[39:0]tx_in[0:4095];reg[39:0]rx_in[0:4095];integer ntx,nrx,ti=0,ri=0,fo,fr,cycles=0,seed=7;
+ reg[39:0]tx_in[0:4095];reg[39:0]rx_in[0:4095];integer ntx,nrx,ti=0,ri=0,fo,fr,cycles=0,seed=7,full_stall=0;
  wire pop,qv,aligned,cerr,dv;wire[39:0]q,dout;reg take=0,din_valid=0;reg[39:0]din=0;
  pt_lc_tx tx(.clk(clk),.rst_n(rst_n),.en(1'b1),.head(tx_in[ti]),.head_valid(ti<ntx),.pop(pop),.q(q),.q_valid(qv),.take(take));
  pt_lc_rx rx(.clk(clk),.rst_n(rst_n),.en(1'b1),.din(din),.din_valid(din_valid),.dout(dout),.dout_valid(dv),.aligned(aligned),.code_error(cerr));
@@ -20,13 +20,14 @@ module tb_linecode;
   cycles<=cycles+1;
   if(pop)ti<=ti+1;
   if(take&&qv)$fdisplay(fo,"%h",q);
+  if(!take&&tx.eEv&&tx.qv2&&tx.sAv)full_stall<=full_stall+1;   // stall coverage: B, E and both queue slots held
   if(dv)$fdisplay(fr,"%h",dout);
   if(din_valid)ri<=ri+1;
  end
  always @(negedge clk)if(rst_n)begin
-  take<=($random(seed)%5)!=0;
+  take<=($random(seed)%5)!=0&&(cycles%97)>=6;   // random stalls plus a 6-clock stall every 97 clocks
   din_valid<=(ri<nrx)&&(($random(seed)%7)!=0);
   din<=rx_in[ri];
-  if(cycles>3*(ntx+nrx)+200)begin $fdisplay(fr,"S %0d %0d",aligned,cerr);$fclose(fo);$fclose(fr);$display("LC_BENCH_DONE");$finish;end
+  if(cycles>3*(ntx+nrx)+200)begin $fdisplay(fr,"S %0d %0d %0d",aligned,cerr,full_stall);$fclose(fo);$fclose(fr);$display("LC_BENCH_DONE");$finish;end
  end
 endmodule

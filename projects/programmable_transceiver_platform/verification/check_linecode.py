@@ -51,6 +51,7 @@ def run(work, tx_quads, rx_quads):
     lines = (work / 'rx_out.hex').read_text().splitlines()
     st = [l for l in lines if l.startswith('S')][0].split()
     rx = [int(l, 16) for l in lines if not l.startswith('S')]
+    run.full_stall = int(st[3])
     return tx, rx, int(st[1]), int(st[2])
 
 def main():
@@ -68,6 +69,8 @@ def main():
     ref_q = pack(ref, 10)
     assert len(tx) >= len(ref_q) - 2, (len(tx), len(ref_q))
     assert tx == ref_q[:len(tx)], 'TX encoded stream mismatch'
+    assert run.full_stall > 0, 'TX stall corner (stage B, stage E and both queue slots held) not covered'
+    tx_full_stall = run.full_stall
     cases = 0
     for slip in range(40):
         for bad in ((False, True) if slip in (0, 13, 27) else (False,)):
@@ -106,7 +109,7 @@ def main():
     stream = [l for l in r.stdout.splitlines() if 'LINECODE_STREAM' in l or 'ERROR' in l]
     assert any('LINECODE_STREAM_PASS' in l for l in stream), stream
     print(stream[-1])
-    print(f'LINECODE_PASS tx_symbols={len(syms)} rx_cases={cases} slips=0..39 stream=3.125Gb/s')
+    print(f'LINECODE_PASS tx_full_stall_clocks={tx_full_stall} tx_symbols={len(syms)} rx_cases={cases} slips=0..39 stream=3.125Gb/s')
 
 if __name__ == '__main__':
     main()

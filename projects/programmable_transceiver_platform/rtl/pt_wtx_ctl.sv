@@ -165,27 +165,41 @@ module pt_wtx_ctl #(
     // r9 (ref timing: want_r -> want_r != committed -> commit -> pad_seq left / last, and -> pad_live -> ser_q,
     // were the ref worst paths): one more request stage want_q, and the compare is a register,
     // neq_q == (want_q != committed) at every edge. One REF_CLK more request latency.
+    // DG9-WTX-SEQ (ref timing: state -> hold -> commit -> pad_seq left / last / pending was the ref worst path):
+    // the commit decision is a register, commit_q, so pad_seq sees only flops at its commit input. commit_q is
+    // decided one edge early from registered terms; it takes effect (pad_seq snapshot of want_q, committed
+    // update) only where pad_seq is still idle (commit_eff). One REF_CLK more request latency.
+    //   - no commit while payload may be on the line: commit_q needs !hold and neq_q one edge before; RUN is
+    //     entered only on pad_live, which needs !neq_q and !commit_q, so RUN never coincides with commit_q;
+    //     DRAIN is reachable only from RUN.
+    //   - no double commit: commit_q is not set again on the edge after it is high (neq_q is one edge stale).
     reg  [4:0] want_r, want_q, committed;
-    reg        neq_q;
+    // rdy_q: the sequencer's readiness input (TERM requested ? filtered txpad_ready : 1) is a register too
+    // (active_request -> mux -> pad_seq left was the next path). It lags active_request by one edge; the
+    // change of active_request is followed by POST_CYCLES (>= 1) of blanking in which readiness is not used,
+    // and a ready loss reaches the sequencer one REF_CLK later (the sync + 3-sample filter already take ~5).
+    reg        neq_q, commit_q, rdy_q;
     wire [4:0] seq_active;
     wire seq_cmd_ready, seq_traffic_ready, seq_fault, seq_qualified, seq_buffer_request;
-    wire commit = seq_cmd_ready && !hold && neq_q;
+    wire commit_eff = commit_q && seq_cmd_ready;
     always @(posedge ref_clk or negedge rst_n)
-        if (!rst_n) begin want_r <= 5'd0; want_q <= 5'd0; committed <= 5'd0; neq_q <= 1'b0; end
+        if (!rst_n) begin want_r <= 5'd0; want_q <= 5'd0; committed <= 5'd0; neq_q <= 1'b0; commit_q <= 1'b0; rdy_q <= 1'b1; end
         else begin
+            rdy_q <= seq_active[4] ? f_rdy : 1'b1;
             want_r <= want; want_q <= want_r;
-            if (commit) committed <= want_q;
-            neq_q <= want_r != (commit ? want_q : committed);
+            if (commit_eff) committed <= want_q;
+            neq_q <= want_r != (commit_eff ? want_q : committed);
+            commit_q <= seq_cmd_ready && !hold && neq_q && !commit_q;
         end
     pt_tx_pad_sequence #(.PRE_CYCLES(PAD_PRE_CYCLES), .POST_CYCLES(PAD_POST_CYCLES), .LOAD_CYCLES(PAD_LOAD_CYCLES),
         .CLK_PS(REF_PS), .READY_TIMEOUT_CYCLES(PAD_TIMEOUT_CYCLES)) pad_seq(
-        .clk(ref_clk), .rst_n(rst_n), .supply_ok(1'b1), .commit(commit), .request(want_q),
-        .analog_ready(seq_active[4] ? f_rdy : 1'b1),   // as the pads replay (transmit_sequence_connected.py)
+        .clk(ref_clk), .rst_n(rst_n), .supply_ok(1'b1), .commit(commit_q), .request(want_q),
+        .analog_ready(rdy_q),   // as the pads replay (transmit_sequence_connected.py), one REF_CLK registered
         .command_ready(seq_cmd_ready), .active_request(seq_active), .qualified(seq_qualified),
         .traffic_ready(seq_traffic_ready), .buffer_request(seq_buffer_request), .fault(seq_fault));
     assign st_seq_fault = seq_fault;
-    wire pad_live = seq_traffic_ready && seq_active[0] && committed[0] && !neq_q;
-    wire pad_down = seq_cmd_ready && !seq_active[0] && !committed[0] && !want_q[0];
+    wire pad_live = seq_traffic_ready && seq_active[0] && committed[0] && !neq_q && !commit_q;
+    wire pad_down = seq_cmd_ready && !seq_active[0] && !committed[0] && !want_q[0] && !commit_q;
 
     // ------------------------------------------------------------------ launch state machine
     wire go    = f_act & ~f_ext & on_ok & ring_rdy;

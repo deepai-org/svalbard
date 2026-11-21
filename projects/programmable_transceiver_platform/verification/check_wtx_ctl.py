@@ -4,6 +4,7 @@ Runs sim/tb_pt_wtx_ctl.sv on the RTL (must pass) and on mutated copies that must
   ser_before_ready   SER_EN released without the ring-ready flag
   fault_ignored      pad requests not dropped by fault
   pll_en_island      c_pll_tx_en ignores the pll island state
+  commit_during_run  the registered pad commit (DG9-WTX-SEQ) ignores hold: pads re-sequenced while payload runs
 """
 import re, subprocess, sys, tempfile
 from pathlib import Path
@@ -13,6 +14,7 @@ MUTANTS = {
     'ser_before_ready': None,
     'fault_ignored': None,
     'pll_en_island': ('assign c_pll_tx_en      = cfg_ring_en & island_on_pll & vreg_tx_ok;', 'assign c_pll_tx_en      = cfg_ring_en & vreg_tx_ok;'),
+    'commit_during_run': ('commit_q <= seq_cmd_ready && !hold && neq_q && !commit_q;', 'commit_q <= seq_cmd_ready && neq_q && !commit_q;'),
 }
 
 

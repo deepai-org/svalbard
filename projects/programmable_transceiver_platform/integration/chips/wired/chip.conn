@@ -225,10 +225,10 @@ inst attached_tx_interlock tx_interlock wired_tx
 inst term_buffer term_buffer wired_tx
   VDD~RAIL_wired_tx VSS~VSS REF~TX_BUF_REF BIAS~TX_BUF_BIAS OUT~TX_TERM_VCM ENABLE=TX_EN_TERM
 # buffer reference / bias are ideal sources in every pads bench (MW walk 6.3): build demand, D-TXTERM.
-# DETECT_PBIAS = RAIL_wired (detect source off) until pads state a bias source (wired TX INTEGRATION.md section 4)
+# DETECT_PBIAS = RAIL_wired (detect source off) until pads state a bias source (wired TX README.md section 3)
 inst txpad_bias pt_txpad_bias wired_tx demand
   BUF_REF~TX_BUF_REF BUF_BIAS~TX_BUF_BIAS EN_TERM=TX_EN_TERM VDD~RAIL_wired_tx VSS~VSS
-# USB line pre-driver (analog/wired_tx/USB-INTEGRATION.md): HS data = the serializer CMD_MAIN pair; FS/LS and chirp from the macro
+# USB line pre-driver (analog/wired_tx/README.md section 4): HS data = the serializer CMD_MAIN pair; FS/LS and chirp from the macro
 inst usb_txdrv pt_usb_txdrv wired_tx
   CMD_P=CMD_MAIN_P CMD_N=CMD_MAIN_N HS_EN=c_usb_hs_en HS_DRV=c_usb_hs_drv FS_EN=c_usb_fs_en TX_DP=c_usb_tx_dp TX_DN=c_usb_tx_dn
   TX_OE=c_usb_tx_oe ISLAND_OFF=island_off[0] HS_STR{0:1}=c_usb_hs_str[\1] HS_PBIAS~HS_PBIAS HS_P>USB_HS_P HS_N>USB_HS_N

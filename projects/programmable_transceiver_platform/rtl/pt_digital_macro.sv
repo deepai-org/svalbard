@@ -739,7 +739,7 @@ module pt_digital_macro(
  // stopped clock cannot leave the line driven after the request is withdrawn or an island is switched off.
  wire usb_req = (f_usbdrive_state__state == 2'd2) & (f_usbdrive_select__branch != 2'd0) & ion[2] & island_on[0];
  wire usb_hs_en, usb_hs_drv, usb_fs_en, usb_tx_dp, usb_tx_dn, usb_tx_oe;
- // HS / FS enables of the pre-driver: the static decode of ctl_ports.txt (USB-INTEGRATION.md), so attach, idle and
+ // HS / FS enables of the pre-driver: the static decode of ctl_ports.txt (wired_tx/README.md section 4), so attach, idle and
  // receive do not need the TX word clock; both fields are fault-forced to 0 and gated by the wired island in the
  // register file, and the branch enum makes them exclusive. pt_usb's sequenced copies are status only.
  assign c_usb_hs_en = (f_usbdrive_select__branch == 2'd1) & f_usbhs_config__tx_enable;

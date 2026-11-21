@@ -177,7 +177,7 @@ Each mode's register sequence is the block owner's; the generic rules are:
   network (B17) is confirmed.
 - pt_wired: rings (`ring_l`, `ring_c`), then termination (`termination.config`), CTLE, slicer, capture
   (`status.wired.rx_*`); TX through the pad interlock (`txpad.config.branch`, `status.wired.tx_state`); USB per
-  `analog/wired_tx/USB-INTEGRATION.md` with B11 amplitude calibration; fallback first (tapeout-plan), e.g. the
+  `analog/wired_tx/README.md` section 4 with B11 amplitude calibration; fallback first (tapeout-plan), e.g. the
   WTX_EXT → WIRE_TX route (`debug.wtx_ext.enable`, verification/check_chip_fallback.py).
 - Fault monitor (`monitor.config.*`) armed only after the requirements it watches are running; clear with
   `monitor.reset.clear_fault` 1 then 0.

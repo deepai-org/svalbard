@@ -209,7 +209,7 @@ c_wiredtx_post_pol | 1 | 0 | direct | wiredtx.config.post_polarity | (was: new f
 c_wiredtx_main_code | 8 | 109 | direct | wiredtx.config.current_code |
 c_wiredtx_post_code | 8 | 0 | direct | wiredtx.config.postcursor_code |
 c_wiredtx_bias_en | 1 | 0 | any c_txpad_req_* & island_on[0] | txpad.config.branch | core_bias EN_wiredtx
-c_txpad_req_main | 1 | 0 | (wiredtx.state == active) & (branch != off) & !idle, OR the fallback request (branch == 2 & debug.wtx_ext & state active & !idle) | txpad.config.branch+wiredtx.state.state+wiredtx.idle.idle+debug.wtx_ext.enable | interlock REQ_MAIN (wired TX INTEGRATION.md section 4, WT28); dropping the request is a power-down, not a protocol idle (WT30)
+c_txpad_req_main | 1 | 0 | (wiredtx.state == active) & (branch != off) & !idle, OR the fallback request (branch == 2 & debug.wtx_ext & state active & !idle) | txpad.config.branch+wiredtx.state.state+wiredtx.idle.idle+debug.wtx_ext.enable | interlock REQ_MAIN (wired TX README.md section 3, WT28); dropping the request is a power-down, not a protocol idle (WT30)
 c_txpad_req_post | 1 | 0 | req_main & (postcursor_code != 0 or post_polarity) | txpad.config.branch+wiredtx.config.postcursor_code |
 c_txpad_req_detect | 1 | 0 | branch == detect | txpad.config.branch |
 c_txpad_req_term | 1 | 0 | txpad.config.term_request through the pad sequencer (rtl/pt_wtx_ctl.sv) | txpad.config.term_request | (was: new field (no TX termination enable exists))
@@ -220,7 +220,7 @@ c_wtxfb_state | 2 | 0 | direct | wiredtx.state.state |
 c_wtxfb_idle | 1 | 1 | direct | wiredtx.idle.idle |
 c_wtxfb_stage_tmds | 1 | 0 | direct | consolidation.wiredtx_stage.stage |
 # ---- USB pad (data path: D-USB)
-c_usb_hs_en | 1 | 0 | (usbdrive.select.branch == hs) & usbhs.config.tx_enable | usbdrive.select.branch+usbhs.config.tx_enable | USB-INTEGRATION.md; never with c_usb_fs_en
+c_usb_hs_en | 1 | 0 | (usbdrive.select.branch == hs) & usbhs.config.tx_enable | usbdrive.select.branch+usbhs.config.tx_enable | wired_tx/README.md section 4; never with c_usb_fs_en
 c_usb_fs_en | 1 | 0 | (usbdrive.select.branch == fsls) & usbfs.config.drive_enable | usbdrive.select.branch+usbfs.config.drive_enable |
 c_usb_hs_drv | 1 | 0 | rtl/pt_usb.sv: 1 while an HS packet is in the serializer (word-granular) | usbdrive.select.branch+usbhs.config.tx_enable | dynamic (word-granular); USB logic does not exist in the macro (USB-D1)
 c_usb_tx_dp | 1 | 0 | rtl/pt_usb.sv: FS/LS line level D+ / chirp from the direct-stream symbols or usb.config.force_symbol | usb.config.force_symbol+digital.transport_config.direct_stream_enable | dynamic

@@ -351,7 +351,7 @@ MEASURED = [
   'T = 0.85 x W (TMDS / 2.5 Gb/s of the previous block)'),
  ('wtx_post', 'wired_tx', {'W': (22.0, 24.0)}, (), 'est', 'pt_wiredtx8 with the POST tap on: +20-24 mA (README, WT40)'),
  ('wtx_padtail', 'wired_tx', {'W': (9.05, 21.0), 'T': (10.4, 10.4)}, ('txpad',), 'lim',
-  'TX pad MAIN tail on the island rail (WT40): DAC reset code 109 = 9.05 mA, code 255 = 21 mA (wired_tx/INTEGRATION.md); TMDS code 125 = 10.4 mA'),
+  'TX pad MAIN tail on the island rail (WT40): DAC reset code 109 = 9.05 mA, code 255 = 21 mA (wired_tx/README.md section 3); TMDS code 125 = 10.4 mA'),
  ('usbhs', 'wired_tx', {'U': (18.2, 20.0)}, ('usbhs',), 'ext', 'analog/pads/README.md 16.9-18.2 mA after trim; worst assumed 1.1 x'),
  # ---- raw ring (never switched)
  ('bias', None, {'ACT': (0.40, 0.52), 'stopped': (0.40, 0.52)}, ('bias', 'monitor'), 'sch', 'core_support/README.md 0.30-0.52 over the function window'),

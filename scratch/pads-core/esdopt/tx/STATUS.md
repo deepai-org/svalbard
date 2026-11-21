@@ -785,3 +785,28 @@ Total cascode + switch W is x2. Queue `sec/hd/q100.sh`.
 - Area: 16 more 16/0.7 cascodes and 16 more 20/0.28 switches per leg, plus new SUM100 straps. Estimated +30-40 % of the driver block (driver about 120 x 200 um),
   so the cell grows in y by about 25-40 um. Not laid out.
 - High-speed pad C over the limit by 0.2 pF either way, so this option still needs the 3.223 pF limit relaxed by about 0.2 pF (vs about 1.2 pF for a plain W x2).
+
+# WT53-c judgement (2026-11-21): txpad as it will publish (a16 geometry, no pad change); CASCODE raised by a wired TX pump in 100BASE-TX only, 1:0.9 magnetics, CT <= 3.6 V.
+Wired TX's committed pump limits (agent ad4984d8): peak <= 4.6 V absolute incl. start-up / ripple, with a clamp; 4.2 V target at ss/tt, 4.0-4.2 V at ff;
+2-10 kohm while boosting, 100-300 ohm through the VDD select; CASCODE = VDD by default and never leads VDD; 0 V when unpowered. Models: a16_rh (stress, ESD),
+a16_rt (diodes). Benches `sec/hd/idle.py` (`bench/w53-idle.json`), `sec/hd/ctdc2.py` (`bench/ct16b-ctdc.json`), ESD `tb2.py` with new TB2_CASDRV="V,R"
+(`bench/w53e_*`, `bench/w53l_*`).
+| Item | Result | Verdict |
+|---|---|---|
+| (1) Cascode nfet_06v0 at CASCODE 4.2 / 4.6 V, pads 1.0 / 2.3 / 3.6 V, idle and drive, ss/tt/ff/ff85 (DC) | max gate-x 4.60 V (gate vs bulk), Vds 3.45 V | PASS (6.0 V DC) |
+| (1') 3.3 V steering switches (MAIN / POST / TMDS) when CASCODE > VDD | the cascode no longer limits the SUM node: SUM follows the pad, up to 3.60 V (pad 3.6, CASCODE 4.6, ff). nfet_03v3 Vds up to 3.51 V, gate-x 3.60 V, vs the 3.63 V DC screen | **MARGINAL (0.03 V)**: holds only while the pad stays <= 3.6 V. With CT 3.6 V +tolerance it is over; the PC-68 limit must be tightened for this mode (below) |
+| (1) ESD, CASCODE from the pump at 4.6 V / 10 kohm (wired TX's worst source) | CDM 2 A vss+ 6.92, pp+ 7.25, pp- 7.25, vdd+ 3.92, vdd- 1.80, vss- 1.81 (tanh); HBM 1 kV <= 5.54 V (6 V gate vs pad- with 4.6 V on the gate); n03 <= 3.18 V | PASS |
+| (1) ESD, bounding stiff source 4.6 V / 100 ohm | CDM vss+ 6.92 (n03 3.44), pp+ / pp- 7.25 (n03 Vds 3.74 transient), HBM pp+ 5.58; vdd- stops early (values reached <= 2.4 V) | PASS (n03 3.74 vs 5.0 transient) |
+| (1) Unpowered | CASCODE = 0 V (wired TX): the published a16 ESD set applies (CASCODE behind 100 ohm to ground) | PASS (as a16) |
+| (2) Up-diode current at pad 3.6 V (DC, ring powered) | VDD 3.15: 0.7 uA (ss 85 C), 0.9 uA (ff 85 C), 10.8 uA (tt 125 C); VDD 3.0 (-5 %): 73 uA at 3.6 V, 0.33 mA at 3.65, 1.46 mA at 3.70 | info |
+| (2) 1 mA through the up-diodes (if it happens) | 9 pd2nw fingers per pad, pj 51.8 um: about 2 uA/um per finger, metal far below its rating. The forward pd2nw (p+ in the DVDD nwell) injects into its nwell; the parasitic substrate PNP collects a fraction in the psub next to the site; the site is tapped (latch-up check 0 um2 at 15 um) and there is no NPN of opposite polarity nearby, so latch-up risk at 1 mA is low (not simulated) | info / low risk |
+| (2) Back-feed into DVDD (powered) | 1 mA into the ring supply: the ring's own load (clamps, core) absorbs it; no rail rise | negligible |
+| (2) Back-feed with the chip unpowered and the CT powered | the CT drives the pad, and the up-diodes charge the ring DVDD to about CT - 0.6 V = 3.0 V; current is set only by the magnetics' DC resistance and the ring load (tens of mA possible). Same class as PC-31 | **FAIL unless the CT is switched with the chip** (e.g. fed from the same island rail, or through a series R that limits it to < 1 mA) |
+| (2) PC-68 rule margin | at VDD -5 % (3.0 V) and 85 C a 3.6 V CT draws 73 uA, and 3.70 V draws 1.5 mA. Tie the limit to VDD: CT <= VDD + 0.30 V (3.45 V at 3.15 V) keeps < 10 uA at 125 C and VDD -5 %, and also keeps the 3.3 V switches <= 3.45 V | **tighten** |
+| (3) Termination off state with CASCODE 4.2-4.6 V | the native switches' gates are TERM_TRIM / TERM_ENABLE_LOCAL (core), the disconnect gate is TERM_ENABLE_LOCAL: untouched. Pad 3.6 V, gate 0: native Vgd 3.6 V; bus floats; off-leak path unchanged (< 0.01 uA) | PASS |
+| (3) Discharge path, detect / DETECT_PBIAS | TERM_DISCHARGE is behind the disconnect (pin side); DETECT_ISOLATE (nfet_06v0, gate DETECT_ENABLE_LOCAL) sees the pad only: unchanged | PASS |
+| (3) Delivered current (a16, MAIN+POST one leg, termination off, 50 ohm to VDD; earlier sweep) | CASCODE 4.0 / 4.5 V: 34.6 / 36.4 mA ss, 38.9 / 40.3 mA tt; about 35.5 mA ss at 4.2 V. The 950 mV at the RJ45 with 1:0.9 magnetics is wired TX's result on its network | not checked by pads (wired TX's bench) |
+Conditions for WT53-c from the pad side:
+(a) the CT (and any DC level on WIRE_TX_P/N) <= VDD + 0.30 V while boosting (tightens PC-68 from VDD + 0.45 V for this mode);
+(b) the CT must not be powered while the chip is unpowered (PC-31 class back-feed), or must be limited to < 1 mA;
+(c) the pump limits as committed by wired TX (<= 4.6 V incl. transients, never ahead of VDD, 0 V unpowered).

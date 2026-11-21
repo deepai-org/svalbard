@@ -288,6 +288,12 @@ Block `wiredtx` (pt_wiredtx8) at x 1494-2238, y 2482-2884; the conn's switch pai
   x 2683-3214 (266 um from the ring): 104.6 mV before the strap, plus about 3 mV of bar: fails by about 2 mV. **(B) pair on
   the edge x 2938-3469, y 2209-2452, block x 1935-2679, y 2209-2611: 98.5 mV before the strap; the 259 um bar may drop
   7.0 mV at 60 mA: Metal5 >= 160 um wide (both nets paired per G2). Chosen.**
+- Option B as placed (assembly ea04a04a; pt_wiredtx8 x 1914-2658, pair x 2938-3470, y 2209-2452, bar gap 280 um) with
+  the grid as drawn (ME Metal4 13.0 / 11.4 %, Metal5 14.8 / 12.0 %; SE 13.6 / 11.3, 14.1 / 12.8, VDD / VSS):
+  high-R 102.7 mV before the strap at 60 mA (2.8 mV left: 420 um bar, does not fit), 99.4 mV at 56 mA (6.1 mV: 180 um
+  bar). VSS rise is 46 mV of it: ME / SE VSS coverage >= 16 % (ASM-8) or the block at <= 56 mA closes it.
+  Rest of pt_wired on that placement (`out/wired/asm9_regions_optB.txt`): `wrx_cap` 106.4 mV (pass); worst supply cell
+  94.7 mA with all bonds, 112.1 mA with `dvdd_pads[1]` open (< 125, above the 106 target).
 - The switch must stay at the east edge by the supply bonds: moving it inward raises the drop to the switch by 17-21 mV
   (raw grid), more than any strap saves.
 - The block goes to the switch: abutting the pair (the area the stale `wtx_ser8d` entry holds; `wtx_ser8d` is inside

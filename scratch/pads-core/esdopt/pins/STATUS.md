@@ -19,9 +19,9 @@ Pin-move only: same devices, same netlist. Added metal + moved labels in the top
 ## Pins (all flush with the top edge; y = bbox top)
 | Family | GDS | Top | sha256 | Pins: name, layer, x range (um), y (um) |
 |---|---|---|---|---|
-| pad_rf_pair | `scratch/pads-core/esdopt/pins/b/pad_rf_pair.gds` | pad_rf_pair | 56d1e67ae7d3e3462824f041c833229eaf0c6d69660f6cdb70628a3beee0dcb1 | ATB_ESD_RAIL Metal4 1.0-3.0; VSS Metal4 8.0-18.0; PAD_P Metal5 286-290 (published); PAD_N Metal5 302-306 (published); all at 912.91 |
-| pad_rftxpad | `scratch/pads-core/esdopt/pins/b/pad_rftxpad.gds` | pad_rftxpad | 5bb3e71335d67b94f5763c1efd8934f2f88c29fc2369934a3aad793579d01f66 | same as pad_rf_pair (published geometry is identical, XOR 0) |
-| pad_single_leg | `scratch/pads-core/esdopt/pins/b/pad_single_leg.gds` | pad_single_leg | 0a7b97d7d257963ed2c736a5fcae9a1ac5a7aa552b856d01b58af66906417f28 | ATB_ESD_RAIL Metal4 1.0-3.0; VSS Metal4 8.0-18.0; PAD_P Metal5 286-290 (published); at 912.91 |
+| pad_rf_pair | `scratch/pads-core/esdopt/pins/b/pad_rf_pair.gds` | pad_rf_pair | 7abefbebc611b635463d85e0ed18a50d9e32184512e453e9c6113eb49f978a91 | ATB_ESD_RAIL Metal4 1.0-3.0; VSS Metal4 8.0-18.0; ESD_RAIL Metal4 24.0-54.0 (Metal5 over it); PAD_P Metal5 286-290 (published); PAD_N Metal5 302-306 (published); all at 912.91 |
+| pad_rftxpad | `scratch/pads-core/esdopt/pins/b/pad_rftxpad.gds` | pad_rftxpad | 72ca66a130cbea8b8dc3b3963d929ad7a78c7f7fd4fa04cce3d7d3c0b8631389 | same as pad_rf_pair (published geometry is identical, XOR 0) |
+| pad_single_leg | `scratch/pads-core/esdopt/pins/b/pad_single_leg.gds` | pad_single_leg | 819a7bec6fbbc064d049b4ac1db7e231f81f911aaf907462b4a73caa49f8e5e7 | ATB_ESD_RAIL Metal4 1.0-3.0; VSS Metal4 8.0-18.0; ESD_RAIL Metal4 24.0-54.0 (Metal5 over it); PAD_P Metal5 286-290 (published); at 912.91 |
 | pad_hspad (a6 + pins) | `scratch/pads-core/esdopt/pins/b/pad_hspad.gds` | pad_hspad | 4d7fae991dc43e632d2847cafde64400228a35e54a2dc2d4f675269103ecbec5 | Metal4 at 912.91: TERM_TRIM0 418.0-419.0, TERM_TRIM1 420.6-421.6, TERM_TRIM2 423.2-424.2, TERM_TRIM3 425.8-426.8, VSS 428.4-431.4, RX_P 435.9-436.5, RX_N 441.0-441.6, VDD 446.1-449.1, TERM_ENABLE 450.7-451.7, TERM_VCM 453.3-456.3, VBIAS 457.9-458.9; PAD_P / PAD_N Metal5 286-290 / 302-306 (published); DVDD stays on the ring landings (Metal3, y 141.4) |
 
 Routing:
@@ -65,3 +65,27 @@ PAD limit (<= about 10 fF): PASS for every family.
 `sub.py` (published shapes kept), `free.py` / `occ.py` / `nets*.py` / `probe.py` (free-space and net analysis used to place the routes).
 Extractions: `x/<fam>_{pub,new}/*_flat.spice`. Build: `docker run ... python3 top_pins.py <family> <published gds> b/<cell>.gds`.
 The GDS sha includes KLayout write timestamps, so a rebuild is geometrically identical but has a new sha.
+
+## Update 2 (2026-11-21): ESD_RAIL top pin on the rf shells (request from the coordinator: the conn binds ESD_RAIL between pads)
+- ESD_RAIL: the network's Metal5 ESD_RAIL plate (x 20-245, top 908.37) -> Via4 array (x 24-54, y 902-908) -> 30 um Metal4 pin x 24-54, y 902-912.91,
+  with Metal5 continued flush over it. The inner Metal3 ESD_RAIL label (130, 444) is deleted. Rebuilt GDS: shas in the table above.
+- Rechecked all three: Magic DRC 0; KLayout precheck 0 / 0; read-back LVS match + unique, control VSS<->ESD_RAIL mismatch; latch-up identical;
+  rail_site_check unchanged (pre-existing 132 / 88 at the ring stack).
+- C vs published: PAD_P / PAD_N 0.00 fF; VSS +38.0, ESD_RAIL +38.6, ATB_ESD_RAIL +65.5 fF.
+- Conn coverage: rf_pair / rftxpad / single_leg bind PAD_P, PAD_N, VSS, ESD_RAIL (ATB_ESD_RAIL ~ -). All four are top-edge pins.
+  pad_hspad binds VSS, DVDD, VDD, TERM_*, VBIAS, RX_P/N, PAD_P/N. All are top-edge pins except DVDD, which is a ring landing (Metal3 under the rail cell's DVDD band, y 134-148.5).
+- pad_refpad (reference/combined.gds, published): PAD_N 17.22-21.22, PAD_P 22.22-26.22, VCM 27.22-27.66, VSS (x about 31-34): all Metal5 on the top edge y 912.91 already.
+  Nothing to move, so no variant was made.
+
+## Router-short diagnosis (pt_wired, scratch/integration/assembly-wired, drt.rpt)
+- pad_wmon (single_leg) and pad_ref (refpad): the DEF orientation is wrong, not the cells. placed.gds puts both with KLayout m45, (x,y) -> (y,x):
+  the top edge faces the core (chip x 939). In DEF this transform is FW. design.def says FE, which is (x,y) -> (-y,-x) + offset, so the router
+  sees the pin edge at the die side (chip x ~ 26-60) and the pins mirrored along y. Every pad_ref / pad_wmon short is at local x 12-345,
+  and the y positions match the pin x-ranges mirrored. Fix (assembly): write FW for m45 instances.
+  Also, the published LEF in the run still has the old inner ESD_RAIL pin; the new cell fixes that.
+- pad_hs_rx: all 11 shorts are on VDD__HK77 = DVDD -> pdn HK77. DVDD is a ring landing (Metal3 at local y 134-148.5, under the rail cell's DVDD band).
+  It connects to the ring, not to core routing. Fix (assembly): treat DVDD as ring-connected (do not route it); no pad change.
+- pad_wire_tx: the run's abstract is the OLD published pad_txpad (281.5 x 699.76). Its PAD_P / PAD_N are interior Metal5 (y 389-409), and the conn routes
+  WIRE_TX_P / N to detect, hence the Metal4 / Metal5 shorts. The staged a12 (--top-pins) also keeps PAD_P / PAD_N interior. That is for the txpad owner
+  (tx_pad_layout.py is off-limits here). The 3 RAIL_wired_tx spacing / short markers are at the cell's top edge on the narrow VDD / DETECT_PBIAS / CASCODE pins
+  (0.4-1 um, all on the same net): minor, pin access.

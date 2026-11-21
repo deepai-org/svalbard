@@ -38,6 +38,10 @@ NETS = dict(
     r10=dict(lo_ext=AP / 'loext3/lay/a4/lo_ext/stage/lo_ext.ext.spice', mmd=AP / 'rc/lo_mmd_v7/pt_lo_mmd_flat.rcfix.spice',
              qdum=AP / 'run_lo_mmd_qdum_ap4/lo_mmd_qdum/stage/lo_mmd_qdum.ext.spice',
              obs=AP / 'run_lo_obs_ap4/lo_obs/stage/lo_obs.ext.spice'),
+    # r17 (2026-11-21, coordinator: published lo_mmd stays the candidate, v7 dropped): published lo_mmd (fixcap16) +
+    # published lo_mmd_qdum, lo_ext n4 (a4), staged lo_obs
+    r17=dict(lo_ext=AP / 'loext3/lay/a4/lo_ext/stage/lo_ext.ext.spice', mmd=AP / 'rc/lo_mmd_old/pt_lo_mmd_flat.rcfix16.spice',
+             qdum=GEN / 'lo_mmd_qdum.ext.spice', obs=AP / 'run_lo_obs_ap4/lo_obs/stage/lo_obs.ext.spice'),
     # r16: as r10 with the divider repaired by fixcap16 (ground C and dropped coupling vs C-only; port nets LP/LN)
     r16=dict(lo_ext=AP / 'loext3/lay/a4/lo_ext/stage/lo_ext.ext.spice', mmd=AP / 'rc/lo_mmd_v7/pt_lo_mmd_flat.rcfix16.spice',
              qdum=AP / 'run_lo_mmd_qdum_ap4/lo_mmd_qdum/stage/lo_mmd_qdum.ext.spice',

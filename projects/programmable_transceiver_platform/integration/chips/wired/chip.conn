@@ -133,7 +133,7 @@ inst clockmux pt_clockmux pll
   HS_INT=c_clockmux_hs[0] HS_HF=c_clockmux_hs[1]
   PREF>PREF WIRE>WIRE_CK WSMP>WSMP_CK CONV_CLK>- HOST_CLK>HOST_CLK VDD~RAIL_pll VSS~VSS      # CONV_CLK: converters are on pt_rf
 inst pll_tx pt_pll_ring_core pll
-  REF=PREF EN=c_pll_tx_en N4=c_pll_tx_n4 N8=c_pll_tx_n8 HOLD=VSS IBIAS~BIAS_pll_ring_tx PH{0,1,2,4,6}>TXPH[\1] PH{3,5,7}>-
+  REF=PREF EN=c_pll_tx_en N4=c_pll_tx_n4 N8=c_pll_tx_n8 HOLD=VSS IBIAS~BIAS_pll_ring_tx PH{0:7}>TXPH[\1]
   LOCK>PLL_TX_LOCK FBCK>PLL_TX_FBCK REFO>- ATB_VCTRL~ATBN_pll_vctrl BAND=c_pll_tx_band VDD~VREG_TX VSS~VSS
 inst pll_cdr pt_pll_ring pll
   REF=CDR_REF EN=c_pll_cdr_en N4=c_pll_cdr_n4 N8=c_pll_cdr_n8 N5=c_pll_cdr_n5 N10=c_pll_cdr_n10 HOLD=CDR_HOLD
@@ -202,20 +202,24 @@ inst wrx_cap pt_wrx_cap wired_cap
   DX{0:39}>WRX_DX[\1] WCLK40>WRX_WCLK40 VDD~RAIL_wired_cap VSS~VSS
 
 # ================= wired transmit (wired island) =================
-# ring phases PH0/2/4/6 go straight to the serializer (analog/wired_tx/INTEGRATION.md section 2, WT25/WT26/WT29:
-# benched from the extracted ring at the regulated swing). No clamp: the macro must hold c_pll_tx_en = 0 while the
-# pll island is off (ring EN clamps its phase outputs).  PH1/3/5/7: matched dummy routes (D-PHLOAD)
-waive wiredtx.WTX_PH\d+ first gate in pt_wiredtx is NAND(PH, serializer enable) (analog/wired_tx/wiredtx.spice:89-96); the macro must hold c_wiredtx_ser_en = 0 while the pll island is off (no clamp, per the wired TX owner, WT25). A floating phase input is then harmless; not benched
-inst wiredtx pt_wiredtx wired_tx
-  WTX_PH0=TXPH[0] WTX_PH90=TXPH[2] WTX_PH180=TXPH[4] WTX_PH270=TXPH[6] MODE_H=c_wiredtx_mode_h MODE_F=c_wiredtx_mode_f
-  D{0:39}=wire_tx_data[\1] WORD_CLK>- WORD_CLK40>WTX_WCLK40 SER_EN=c_wiredtx_ser_en WTX_EXT=c_wiredtx_ext DX=WTX_DX
+# all eight ring phases go straight to pt_wiredtx8 (analog/wired_tx/README.md section 2; WT47 / TIM-23 matched
+# routes). No clamp: the macro must hold c_pll_tx_en = 0 while the pll island is off (ring EN clamps its phase outputs).
+# pt_wiredtx8 is bound as a STAGED master (WT49 ruling, row WT50); it replaces pt_wiredtx, steer_0..3 and the
+# pre-drivers: MAIN_P/N, POST_P/N drive the pad inputs TX_{MAIN,POST}_{P,N} directly. MODE_H / MODE_F are gone.
+waive wiredtx.PH\d first gate in pt_wiredtx8 is NAND2(PH, SER_EN) in wtx8_phbuf (commit 3e90f876, <= 7 nA per buffer at 125 C with PH floating); the macro must hold c_wiredtx_ser_en = 0 while the pll island is off (no clamp, owner ruling)
+inst wiredtx pt_wiredtx8 wired_tx
+  PH{0:7}=TXPH[\1]
+  D{0:39}=wire_tx_data[\1] WORD_CLK40>WTX_WCLK40 SER_EN=c_wiredtx_ser_en WTX_EXT=c_wiredtx_ext DX=WTX_DX
+  IDLE=VSS            # staged: digital field per WT40 (wire_idle)
+  IDLE_MODE=VSS       # staged: digital field per WT40 (wtx.idle_mode)
+  TAP_EN=VSS          # staged: digital field per WT40 (USB HS transmit request)
+  TR{0:7}_{0:3}=VSS   # staged: digital field per WT40 (wtx.phase_trim[31:0], reset 0)
   POST_POL=c_wiredtx_post_pol EN_MAIN=TX_EN_MAIN EN_POST=TX_EN_POST ISLAND_OFF=island_off[0] IBIAS~BIAS_wiredtx
   MAIN_CODE{0:7}=c_wiredtx_main_code[\1] POST_CODE{0:7}=c_wiredtx_post_code[\1]
-  CMD_MAIN_P>CMD_MAIN_P CMD_MAIN_N>CMD_MAIN_N CMD_POST_P>CMD_POST_P CMD_POST_N>CMD_POST_N
+  MAIN_P>TX_MAIN_P MAIN_N>TX_MAIN_N POST_P>TX_POST_P POST_N>TX_POST_N TAP_P>WTX_TAP_P TAP_N>WTX_TAP_N
+  TX_RUN>- ATB_AVGP~- ATB_AVGN~-      # staged: TX_RUN status bit and ATB_AVGP/N leaves not bound yet (WT50)
   MAIN_BIAS~TX_MAIN_BIAS POST_BIAS~TX_POST_BIAS WTX_EXT_DATA>WTX_EXT_DATA ATB_NBIAS~ATBN_wiredtx_bias ATB_PBIAS~- VDD~RAIL_wired_tx VSS~VSS
-# pad attachment cells (pads owner; floorplan steer_0..5, attached_tx_interlock, term_buffer)
-inst steer_{0:3} tx_steer wired_tx
-  VDD~RAIL_wired_tx VSS~VSS IN=CMD_{MAIN_P,MAIN_N,POST_P,POST_N} OUT>TX_{MAIN_P,MAIN_N,POST_P,POST_N}
+# pad attachment cells (pads owner; floorplan steer_4..5, attached_tx_interlock, term_buffer). steer_0..3 removed (WT50)
 inst steer_{4:5} tx_steer wired_tx
   VDD~RAIL_wired_tx VSS~VSS IN=VSS OUT>-      # TMDS steering buffers: no source since WT22 (D-TMDS)
 inst attached_tx_interlock tx_interlock wired_tx
@@ -223,14 +227,14 @@ inst attached_tx_interlock tx_interlock wired_tx
   REQ_TERM=c_txpad_req_term RESET=island_off[0] QUALIFIED=island_on[0] SUPPLY_OK=s_pg_wired_tx CONFLICT>- VALID>-
   EN_MAIN>TX_EN_MAIN EN_POST>TX_EN_POST EN_TMDS>- EN_DETECT>TX_EN_DETECT EN_TERM>TX_EN_TERM
 inst term_buffer term_buffer wired_tx
-  VDD~RAIL_wired_tx VSS~VSS REF~TX_BUF_REF BIAS~TX_BUF_BIAS OUT~TX_TERM_VCM ENABLE=TX_EN_TERM
+  VDD~RAIL_wired_tx VSS~VSS REF~TX_BUF_REF BIAS~TX_BUF_BIAS OUT~TX_TERM_VCM ENABLE=island_on[0]   # on whenever wired_tx is on (WT51 ruling); switches gated by TX_EN_TERM
 # buffer reference / bias are ideal sources in every pads bench (MW walk 6.3): build demand, D-TXTERM.
 # DETECT_PBIAS = RAIL_wired (detect source off) until pads state a bias source (wired TX README.md section 3)
 inst txpad_bias pt_txpad_bias wired_tx demand
   BUF_REF~TX_BUF_REF BUF_BIAS~TX_BUF_BIAS EN_TERM=TX_EN_TERM VDD~RAIL_wired_tx VSS~VSS
-# USB line pre-driver (analog/wired_tx/README.md section 4): HS data = the serializer CMD_MAIN pair; FS/LS and chirp from the macro
+# USB line pre-driver (analog/wired_tx/README.md section 4): HS data = the pt_wiredtx8 CMOS tap TAP_P/N; FS/LS and chirp from the macro
 inst usb_txdrv pt_usb_txdrv wired_tx
-  CMD_P=CMD_MAIN_P CMD_N=CMD_MAIN_N HS_EN=c_usb_hs_en HS_DRV=c_usb_hs_drv FS_EN=c_usb_fs_en TX_DP=c_usb_tx_dp TX_DN=c_usb_tx_dn
+  CMD_P=WTX_TAP_P CMD_N=WTX_TAP_N HS_EN=c_usb_hs_en HS_DRV=c_usb_hs_drv FS_EN=c_usb_fs_en TX_DP=c_usb_tx_dp TX_DN=c_usb_tx_dn
   TX_OE=c_usb_tx_oe ISLAND_OFF=island_off[0] HS_STR{0:1}=c_usb_hs_str[\1] HS_PBIAS~HS_PBIAS HS_P>USB_HS_P HS_N>USB_HS_N
   FS_HIGH_P>USB_FS_HIGH_P FS_HIGH_N>USB_FS_HIGH_N FS_LOW_P>USB_FS_LOW_P FS_LOW_N>USB_FS_LOW_N VDD~RAIL_wired_tx VSS~VSS
 inst hsbias pt_wtx_hsbias wired_tx

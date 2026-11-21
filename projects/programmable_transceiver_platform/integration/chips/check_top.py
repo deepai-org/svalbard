@@ -48,7 +48,7 @@ ALWAYS_ON = ('core', 'chip')
 CHIPS = json.load(open(P+'/spec/chips.json'))['chips']
 FP6 = ROOT+'/scratch/chip-assembly-v6/run/floorplan-v6.json'
 # floorplan name -> instance name where they differ; floorplan entries that are not blocks
-FP_ALIAS = {'clk_obs16': 'clk_obs', 'obs_pre4': 'obs_pre4_wire', 'wordclk': 'wordclk_rx', 'isw_wired': 'isw_wired_cap', 'isw_rf': 'isw_rf_rx', 'atb0_pad': 'atb0_pad', 'atb1_pad': 'atb1_pad'}
+FP_ALIAS = {'clk_obs16': 'clk_obs', 'obs_pre4': 'obs_pre4_wire', 'wordclk': 'wordclk_rx', 'isw_wired': 'isw_wired_cap', 'isw_rf': 'isw_rf_rx', 'atb0_pad': 'atb0_pad', 'atb1_pad': 'atb1_pad', 'steer_0': 'wiredtx', 'steer_1': 'wiredtx', 'steer_2': 'wiredtx', 'steer_3': 'wiredtx'}
 FP_SKIP = re.compile(r'^(leaf_[fs]\d+|atb_grp\d+|.*_rsv|digital|polyphase|rx_wclk_in)$')     # deleted by user decisions CP4-2 / CP4-3 (2026-11-14)
 
 

@@ -163,8 +163,6 @@
  input wire c_wiredtx_bias_en,
  input wire c_wiredtx_ext,
  input wire [7:0] c_wiredtx_main_code,
- input wire c_wiredtx_mode_f,
- input wire c_wiredtx_mode_h,
  input wire [7:0] c_wiredtx_post_code,
  input wire c_wiredtx_post_pol,
  input wire c_wiredtx_ser_en,

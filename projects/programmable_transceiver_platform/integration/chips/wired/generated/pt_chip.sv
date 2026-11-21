@@ -862,12 +862,12 @@ module pt_chip(
   .c_term_hs_term_en(c_term_hs_term_en), .c_term_hs_trim(c_term_hs_trim), .c_term_mode(c_term_mode), .c_txpad_req_detect(c_txpad_req_detect), .c_txpad_req_main(c_txpad_req_main), .c_txpad_req_post(c_txpad_req_post), .c_txpad_req_term(c_txpad_req_term), .c_usb_fs_en(c_usb_fs_en),
   .c_usb_hs_drv(c_usb_hs_drv), .c_usb_hs_en(c_usb_hs_en), .c_usb_hs_str(c_usb_hs_str), .c_usb_ls_slow(c_usb_ls_slow), .c_usb_pulldown_n(c_usb_pulldown_n), .c_usb_pulldown_p(c_usb_pulldown_p), .c_usb_pullup_n(c_usb_pullup_n), .c_usb_pullup_p(c_usb_pullup_p),
   .c_usb_term_trim(c_usb_term_trim), .c_usb_tx_dn(c_usb_tx_dn), .c_usb_tx_dp(c_usb_tx_dp), .c_usb_tx_oe(c_usb_tx_oe), .c_vco_replica_en(c_vco_replica_en), .c_vthdac_a(c_vthdac_a), .c_vthdac_b(c_vthdac_b), .c_vthdac_en(c_vthdac_en),
-  .c_wiredtx_bias_en(c_wiredtx_bias_en), .c_wiredtx_ext(c_wiredtx_ext), .c_wiredtx_main_code(c_wiredtx_main_code), .c_wiredtx_mode_f(c_wiredtx_mode_f), .c_wiredtx_mode_h(c_wiredtx_mode_h), .c_wiredtx_post_code(c_wiredtx_post_code), .c_wiredtx_post_pol(c_wiredtx_post_pol), .c_wiredtx_ser_en(c_wiredtx_ser_en),
-  .c_wmon_en(c_wmon_en), .c_wmon_obs_en(c_wmon_obs_en), .c_wmon_sel(c_wmon_sel), .c_wordclk_d10(c_wordclk_d10), .c_wordclk_d20(c_wordclk_d20), .c_wordclk_en(c_wordclk_en), .c_wrx_cap_b1(c_wrx_cap_b1), .c_wrx_cap_b2(c_wrx_cap_b2),
-  .c_wrx_cap_en(c_wrx_cap_en), .c_wrx_cap_psel(c_wrx_cap_psel), .c_wrx_cap_rcs(c_wrx_cap_rcs), .c_wrx_cap_slipm(c_wrx_cap_slipm), .c_wrx_cap_slipp(c_wrx_cap_slipp), .c_wtxfb_branch(c_wtxfb_branch), .c_wtxfb_idle(c_wtxfb_idle), .c_wtxfb_stage_tmds(c_wtxfb_stage_tmds),
-  .c_wtxfb_state(c_wtxfb_state), .clk_obs(clk_obs), .ct_det_clk(ct_det_clk), .fc_src(fc_src), .h2d_clk(h2d_clk), .host_word_clk(host_word_clk), .island_en(island_en), .island_off(island_off),
-  .island_on(island_on), .por_n(por_n), .ref_clk(ref_clk), .rx_en_aux(rx_en_aux), .rx_en_wtx_ext(rx_en_wtx_ext), .s_pg_debug(s_pg_debug), .s_pg_pll(s_pg_pll), .s_pg_wired_cap(s_pg_wired_cap),
-  .s_pg_wired_rx(s_pg_wired_rx), .s_pg_wired_tx(s_pg_wired_tx), .s_ref_present(s_ref_present), .wire_rx_ptrim_en(wire_rx_ptrim_en), .wire_tx_data(wire_tx_data), .wired_on_ext(wired_on_ext));
+  .c_wiredtx_bias_en(c_wiredtx_bias_en), .c_wiredtx_ext(c_wiredtx_ext), .c_wiredtx_main_code(c_wiredtx_main_code), .c_wiredtx_post_code(c_wiredtx_post_code), .c_wiredtx_post_pol(c_wiredtx_post_pol), .c_wiredtx_ser_en(c_wiredtx_ser_en), .c_wmon_en(c_wmon_en), .c_wmon_obs_en(c_wmon_obs_en),
+  .c_wmon_sel(c_wmon_sel), .c_wordclk_d10(c_wordclk_d10), .c_wordclk_d20(c_wordclk_d20), .c_wordclk_en(c_wordclk_en), .c_wrx_cap_b1(c_wrx_cap_b1), .c_wrx_cap_b2(c_wrx_cap_b2), .c_wrx_cap_en(c_wrx_cap_en), .c_wrx_cap_psel(c_wrx_cap_psel),
+  .c_wrx_cap_rcs(c_wrx_cap_rcs), .c_wrx_cap_slipm(c_wrx_cap_slipm), .c_wrx_cap_slipp(c_wrx_cap_slipp), .c_wtxfb_branch(c_wtxfb_branch), .c_wtxfb_idle(c_wtxfb_idle), .c_wtxfb_stage_tmds(c_wtxfb_stage_tmds), .c_wtxfb_state(c_wtxfb_state), .clk_obs(clk_obs),
+  .ct_det_clk(ct_det_clk), .fc_src(fc_src), .h2d_clk(h2d_clk), .host_word_clk(host_word_clk), .island_en(island_en), .island_off(island_off), .island_on(island_on), .por_n(por_n),
+  .ref_clk(ref_clk), .rx_en_aux(rx_en_aux), .rx_en_wtx_ext(rx_en_wtx_ext), .s_pg_debug(s_pg_debug), .s_pg_pll(s_pg_pll), .s_pg_wired_cap(s_pg_wired_cap), .s_pg_wired_rx(s_pg_wired_rx), .s_pg_wired_tx(s_pg_wired_tx),
+  .s_ref_present(s_ref_present), .wire_rx_ptrim_en(wire_rx_ptrim_en), .wire_tx_data(wire_tx_data), .wired_on_ext(wired_on_ext));
 endmodule
 
 // Declarations for interface-only checks. Define PT_EXTERNAL_IO and compile pt_provider_io.sv to bind the provider
@@ -1054,8 +1054,6 @@ endmodule
  input wire c_wiredtx_bias_en,
  input wire c_wiredtx_ext,
  input wire [7:0] c_wiredtx_main_code,
- input wire c_wiredtx_mode_f,
- input wire c_wiredtx_mode_h,
  input wire [7:0] c_wiredtx_post_code,
  input wire c_wiredtx_post_pol,
  input wire c_wiredtx_ser_en,

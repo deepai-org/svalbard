@@ -287,7 +287,7 @@ module tb_top_modes;
   setf(`F_CONSOLIDATION_WIREDTX_STAGE__RATE_MODE, 2); setf(`F_WIREDTX_STATE__STATE, 2); commit(1, "wired TX active, ring still disabled");
   #20000;
   chk(analog.p_wiredtx__SER_EN === 0 && analog.p_attached_tx_interlock__REQ_MAIN === 0 && analog.p_pll_tx__EN === 0, "serializer or pad request on with the TX ring disabled (negative control)");
-  chk({analog.p_wiredtx__MODE_H, analog.p_wiredtx__MODE_F} === 2'b01 && {analog.p_pll_tx__N8, analog.p_pll_tx__N4} === 2'b10, "serializer mode pins (x4 = 01) or ring modulus one-hot (N8)");
+  chk({analog.p_pll_tx__N8, analog.p_pll_tx__N4} === 2'b10, "ring modulus one-hot (N8)");   // pt_wiredtx8 has no MODE_H / MODE_F pins (WT50)
   t_en = 0; t_ser = 0; t_main = 0; setf(`F_RING_L_CONFIG__ENABLE, 1); commit(1, "TX ring on"); #700000;
   chk(t_en != 0 && t_ser != 0 && t_main != 0, "wired TX bring-up did not complete (ring EN, SER_EN, REQ_MAIN)");
   chk(t_en <= t_ser && t_ser < t_main, "wired TX order: ring EN, then SER_EN, then REQ_MAIN");

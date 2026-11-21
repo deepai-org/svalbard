@@ -164,8 +164,6 @@ module pt_analog_top_stub(
  input wire c_wiredtx_bias_en,
  input wire c_wiredtx_ext,
  input wire [7:0] c_wiredtx_main_code,
- input wire c_wiredtx_mode_f,
- input wire c_wiredtx_mode_h,
  input wire [7:0] c_wiredtx_post_code,
  input wire c_wiredtx_post_pol,
  input wire c_wiredtx_ser_en,
@@ -253,7 +251,7 @@ module pt_analog_top_stub(
  wire OBS4_wsmp;
  wire OBS4_ref;
  wire OBS4_aux;
- wire [6:0] TXPH;
+ wire [7:0] TXPH;
  wire OBS4_pll;
  wire OBS4_cdr;
  wire CLK_OBS_DBG;
@@ -357,10 +355,8 @@ module pt_analog_top_stub(
  wire [7:0] SLS;
  wire TX_EN_MAIN;
  wire TX_EN_POST;
- wire CMD_MAIN_P;
- wire CMD_MAIN_N;
- wire CMD_POST_P;
- wire CMD_POST_N;
+ wire WTX_TAP_P;
+ wire WTX_TAP_N;
  wire ATBN_wiredtx_bias;
  wire TX_BUF_REF;
  wire TX_BUF_BIAS;
@@ -635,8 +631,11 @@ module pt_analog_top_stub(
  assign TXPH[0] = 1'b0;
  assign TXPH[1] = 1'b0;
  assign TXPH[2] = 1'b0;
+ assign TXPH[3] = 1'b0;
  assign TXPH[4] = 1'b0;
+ assign TXPH[5] = 1'b0;
  assign TXPH[6] = 1'b0;
+ assign TXPH[7] = 1'b0;
  assign PLL_TX_LOCK = 1'b0;
  assign PLL_TX_FBCK = 1'b0;
  wire p_pll_tx__BAND = c_pll_tx_band;
@@ -1079,12 +1078,14 @@ module pt_analog_top_stub(
  assign WRX_DX[38] = 1'b0;
  assign WRX_DX[39] = 1'b0;
  assign WRX_WCLK40 = 1'b0;
- wire p_wiredtx__WTX_PH0 = TXPH[0];
- wire p_wiredtx__WTX_PH90 = TXPH[2];
- wire p_wiredtx__WTX_PH180 = TXPH[4];
- wire p_wiredtx__WTX_PH270 = TXPH[6];
- wire p_wiredtx__MODE_H = c_wiredtx_mode_h;
- wire p_wiredtx__MODE_F = c_wiredtx_mode_f;
+ wire p_wiredtx__PH0 = TXPH[0];
+ wire p_wiredtx__PH1 = TXPH[1];
+ wire p_wiredtx__PH2 = TXPH[2];
+ wire p_wiredtx__PH3 = TXPH[3];
+ wire p_wiredtx__PH4 = TXPH[4];
+ wire p_wiredtx__PH5 = TXPH[5];
+ wire p_wiredtx__PH6 = TXPH[6];
+ wire p_wiredtx__PH7 = TXPH[7];
  wire p_wiredtx__D0 = wire_tx_data[0];
  wire p_wiredtx__D1 = wire_tx_data[1];
  wire p_wiredtx__D2 = wire_tx_data[2];
@@ -1129,6 +1130,41 @@ module pt_analog_top_stub(
  wire p_wiredtx__SER_EN = c_wiredtx_ser_en;
  wire p_wiredtx__WTX_EXT = c_wiredtx_ext;
  wire p_wiredtx__DX = WTX_DX;
+ wire p_wiredtx__IDLE = VSS;
+ wire p_wiredtx__IDLE_MODE = VSS;
+ wire p_wiredtx__TAP_EN = VSS;
+ wire p_wiredtx__TR0_0 = VSS;
+ wire p_wiredtx__TR0_1 = VSS;
+ wire p_wiredtx__TR0_2 = VSS;
+ wire p_wiredtx__TR0_3 = VSS;
+ wire p_wiredtx__TR1_0 = VSS;
+ wire p_wiredtx__TR1_1 = VSS;
+ wire p_wiredtx__TR1_2 = VSS;
+ wire p_wiredtx__TR1_3 = VSS;
+ wire p_wiredtx__TR2_0 = VSS;
+ wire p_wiredtx__TR2_1 = VSS;
+ wire p_wiredtx__TR2_2 = VSS;
+ wire p_wiredtx__TR2_3 = VSS;
+ wire p_wiredtx__TR3_0 = VSS;
+ wire p_wiredtx__TR3_1 = VSS;
+ wire p_wiredtx__TR3_2 = VSS;
+ wire p_wiredtx__TR3_3 = VSS;
+ wire p_wiredtx__TR4_0 = VSS;
+ wire p_wiredtx__TR4_1 = VSS;
+ wire p_wiredtx__TR4_2 = VSS;
+ wire p_wiredtx__TR4_3 = VSS;
+ wire p_wiredtx__TR5_0 = VSS;
+ wire p_wiredtx__TR5_1 = VSS;
+ wire p_wiredtx__TR5_2 = VSS;
+ wire p_wiredtx__TR5_3 = VSS;
+ wire p_wiredtx__TR6_0 = VSS;
+ wire p_wiredtx__TR6_1 = VSS;
+ wire p_wiredtx__TR6_2 = VSS;
+ wire p_wiredtx__TR6_3 = VSS;
+ wire p_wiredtx__TR7_0 = VSS;
+ wire p_wiredtx__TR7_1 = VSS;
+ wire p_wiredtx__TR7_2 = VSS;
+ wire p_wiredtx__TR7_3 = VSS;
  wire p_wiredtx__POST_POL = c_wiredtx_post_pol;
  wire p_wiredtx__EN_MAIN = TX_EN_MAIN;
  wire p_wiredtx__EN_POST = TX_EN_POST;
@@ -1149,19 +1185,13 @@ module pt_analog_top_stub(
  wire p_wiredtx__POST_CODE5 = c_wiredtx_post_code[5];
  wire p_wiredtx__POST_CODE6 = c_wiredtx_post_code[6];
  wire p_wiredtx__POST_CODE7 = c_wiredtx_post_code[7];
- assign CMD_MAIN_P = 1'b0;
- assign CMD_MAIN_N = 1'b0;
- assign CMD_POST_P = 1'b0;
- assign CMD_POST_N = 1'b0;
- assign WTX_EXT_DATA = 1'b0;
- wire p_steer_0__IN = CMD_MAIN_P;
  assign TX_MAIN_P = 1'b0;
- wire p_steer_1__IN = CMD_MAIN_N;
  assign TX_MAIN_N = 1'b0;
- wire p_steer_2__IN = CMD_POST_P;
  assign TX_POST_P = 1'b0;
- wire p_steer_3__IN = CMD_POST_N;
  assign TX_POST_N = 1'b0;
+ assign WTX_TAP_P = 1'b0;
+ assign WTX_TAP_N = 1'b0;
+ assign WTX_EXT_DATA = 1'b0;
  wire p_steer_4__IN = VSS;
  wire p_steer_5__IN = VSS;
  wire p_attached_tx_interlock__REQ_MAIN = c_txpad_req_main;
@@ -1176,10 +1206,10 @@ module pt_analog_top_stub(
  assign TX_EN_POST = 1'b0;
  assign TX_EN_DETECT = 1'b0;
  assign TX_EN_TERM = 1'b0;
- wire p_term_buffer__ENABLE = TX_EN_TERM;
+ wire p_term_buffer__ENABLE = island_on[0];
  wire p_txpad_bias__EN_TERM = TX_EN_TERM;
- wire p_usb_txdrv__CMD_P = CMD_MAIN_P;
- wire p_usb_txdrv__CMD_N = CMD_MAIN_N;
+ wire p_usb_txdrv__CMD_P = WTX_TAP_P;
+ wire p_usb_txdrv__CMD_N = WTX_TAP_N;
  wire p_usb_txdrv__HS_EN = c_usb_hs_en;
  wire p_usb_txdrv__HS_DRV = c_usb_hs_drv;
  wire p_usb_txdrv__FS_EN = c_usb_fs_en;

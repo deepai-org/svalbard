@@ -309,6 +309,26 @@ Block `wiredtx` (pt_wiredtx8) at x 1494-2238, y 2482-2884; the conn's switch pai
   `out/wired/asm9_regions_fixc.txt`) has `wrx_cap` at 120.0 mV with all bonds and the worst supply cell at 115.2 mA with one
   open bond (> 106 target): to be rerun on the final grid.
 
+### 4.1d pt_wired option (3) as placed (assembly)
+
+Grid as drawn: ME VDD / VSS Metal4 10.5 / 10.1 %, Metal5 8.9 / 6.8 %; SE 10.4 / 8.5, 11.1 / 9.7; MC 8.7 / 8.1, 11.1 / 11.8.
+`RAIL_wired_tx` Metal5 bar 0.234 mm2 (x 2514-3450, y 2265-2611) merged with the pair's VISL: about 0.1 ohm, 5.5 mV at
+56 mA. pt_wiredtx8 tap at 56 mA (`out/wired/wt44_tap_opt3_cov.txt`), without the bar / with the bar, budget 105.5 mV high-R:
+
+| Coverage (every net and layer, region minimum) | Nominal | High-R | Result |
+| --- | --- | --- | --- |
+| as drawn | 92.5 / 98 | 108.8 / 114.3 | fails by 8.8 mV |
+| ME, SE >= 12 % | | 102.4 / 107.9 | fails by 2.4 mV |
+| MC, ME, SE >= 12 % | 84.1 / 89.6 | 98.9 / 104.4 | pass, 1.1 mV |
+| ME, SE >= 14 % | 83.5 / 89.0 | 98.2 / 103.7 | pass, 1.8 mV |
+
+60 mA (reference): 127.6 mV high-R with the 15 mV allowance as drawn; it needs the >= 16 % of PDS-13.
+
+Decap as placed: 26 bank + 29 of 43 tiles: **4.57 nF, 0.84 nF short of 5.4** (14 tiles, about 0.21 mm2). Macro two-phase
+148 mV at residual 0.15 (limit 150, no margin; single-phase 298). CDM reach (section 5.1a, 150 / 450 MHz fit, high-R):
+`bidir[14]` 0.78 ohm, **misses 0.7**; `bidir[21]` 0.62, passes. The 0.84 nF placed inboard of `pad_hs_rx` (x about
+2870-2990, y 940-1440) gives `bidir[14]` 0.50 ohm. One open supply bond: worst cell 113.2 mA (all bonds 95.4).
+
 ### 4.2 pt_wired bonds with one open supply bond
 
 Target: worst supply cell <= 106 mA (15 % margin to 125 mA) in every single-open-supply-bond case at W 432 mA with POST on

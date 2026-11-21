@@ -537,3 +537,52 @@ HBM stress is below the CDM 2 A stress. a10's identical case completed at 1.90 V
 CDM 2 A vdd+ history: a10 stopped at 2.251 ns with PULSE, tanh, cshunt, series R in the provider diodes (TB2_DSER), trap/gear reltol 1e-4. a11 completes with PULSE.
 The difference is the disconnect geometry; there is no bench change.
 Cleaned: a10 build / r10 / models / benches, CDM vdd+ trial benches, w18 what-ifs.
+
+# CANDIDATE a12 (2026-11-21): review-a11 conditions (GO with conditions). NOT published, NOT committed. a11 build / netres / models / benches deleted.
+Changes vs a11 (generator sha 9b8ee504; new --nvt keys "disch" and "riser_wide"):
+- (2) EM, TERM_DISCHARGE: the control cell's discharge resistor goes from ppolyf_u_1k 2 x 2 to 2 x 20 um (about 10x the resistance). DC current through its
+  single-cut path drops from 1.2-1.7 mA to 0.135 (ss) / 0.160 (tt) / 0.199 (ff) mA: 0.34x the 0.58 mA/cut rating and 0.52 mA/um in the 0.38 um Metal1 (2.09). The
+  ctl cell grows 7.5 um, so the top edge moves from 692.26 to 699.76 (inside the 1226.72 outline). INTEGRATION.md states no discharge-time requirement; the new
+  time constant is about 10 kohm x the TERM_VCM node C. Deviation from circuits.wired_transmit sizes (TERM_DISCHARGE 2 x 2): needs wired TX's ack.
+- (3) Bus EM: the 0.100 /um peak was the 10 um riser (Metal2 alone across the Metal3 breaks at the PAD_N line and the two gate lines). Riser now x 9.6-21.9
+  (12.3 um) with Metal2 + Metal3 + Metal4, every height covered by >= 2 layers; Metal4 is broken only at the PAD_P jog. netres peak 0.0529 /um -> 1.11 mA/um
+  at 21 mA vs 2.09: 47 % margin (>= 25 % asked).
+- (5) Latch-up rerun on the right path: `sec/checks/a12/lu.json` names `sec/b/a12/pad_txpad.gds`; 0.0 um2 at 15 um. GDS sha 4fbb84f4 (sha256 of the file listed below).
+Files: GDS 4fbb84f41e98..., netres `sec/r12/res.json` 9a352870, models `sec/models/a12_rh` 9a37c571 / `a12_rt` 81504b3d / `a12_c`, tb2.py d9dcd500 (+ kinds
+`tlp`, `dcs`; TB2_HBMSMOOTH; TB2_DSER; TB2_TSTEP applies to HBM too), fixspec11.py bdbdb6d2 (pin box from the layout-info top edge). Queue `sec/q12.sh`.
+Build: `python3 $P/analog/pads/tx_pad_layout.py sec/b/a12 --nvt '{"wb": 23.5, "wt": 23.5, "lb": 2.2, "lt": 1.0, "merged": true, "disc2": [24, 0.28, 64, 2],
+"disch": 20, "riser_wide": true}' --upx '{"x": [63, 69], "yu": 107}' --top-pins`.
+
+| Limit | a12 | Result |
+|---|---|---|
+| CM1 pin -> bus <= 5 ohm (ss/3.15/32, high metal) | 3.34 ohm (tt 2.63, ff 2.37; typ metal 2.74 / 2.00 / 1.73) | PASS |
+| TERM_VCM source impedance pads assumes (condition 1 report) | ideal / 2 ohm source at the pin; inside the pad 2.4-3.3 ohm (disconnect + wiring, high metal) + 1.6-2.9 ohm (bus to the natives) | stated for wired TX |
+| CM bench pads at 10.5 + 10.5 mA, rh ss / tt / ff | 0.90 / 1.11 / 1.24 V; via 25 ohm: 0.47 / 0.63 / 0.74 V | info (interface item, coordinator) |
+| EM discharge path | 0.20 mA max per single cut (0.58), 0.52 mA/um M1 (2.09) | PASS |
+| EM bus | 1.11 mA/um at 21 mA (2.09) | PASS (47 %) |
+| Off leak TERM_VCM 0 / 1.65 V, equal pads | < 0.01 uA (model 81504b3d); pads 1 V apart <= 0.16 uA | PASS |
+| Termination +-10 %, 23 corners rt / rh | worst 4.24 / 4.19 %; ss rh codes 12-15; ff/22/3.35 rt code 3 | PASS (as a11) |
+| Off control | >= 1.0e10 ohm | PASS |
+| Pad C <= 3.223 pF | rt 3.081, c 2.992 | PASS |
+| Gate C | max 0.299 pF | PASS |
+| Drop 21 mA (simulated, high) | 53.9 mV | PASS |
+| CDM 2 A all 6 | vss+ 6.92, vdd+ 3.92, vdd- 0.99, pp+ 7.27, pp- 7.25 (PULSE); vss- 0.99 (tanh, stated) | PASS |
+| HBM 1 kV vss+/vss-/vdd-/pp+/pp- | <= 4.35 V | PASS |
+| HBM 1 kV vdd+ (tier case) | transient: not converged (below); quasi-static bound: see below | BOUNDED, not simulated to completion |
+| Junctions | <= 7.05 V | PASS |
+| Layout: Magic DRC / netgen / KLayout (NAT) / rb LVS + control / latch-up / rail_site / railconn / default path | 0 / unique / 0+0 / match + mismatch / 0.0 / PASS / clean / 3a706943 == a4 | PASS |
+HBM 1 kV vdd+ (WIRE_TX tier case). Every transient stops before current flows (t 5.05-5.15 ns, pad <= 0.26 V; ngspice "timestep too small" at
+`d.xpad.d0#internal`, the pad's own up-diode turning on). Attempts, all failing, on a11 / a12:
+1. EXP PULSE with the 3 standard retry sets.
+2. cshunt 1e-15.
+3. tanh-smoothed EXP (TB2_HBMSMOOTH).
+4. tanh EXP with a 2 ps step.
+5. TLP-style 0.67 A 100 ns rectangle with 2 ns tanh edges (kind `tlp`; stops at 3.3 ns).
+6. series 0.05 ohm in every provider-cell diode (TB2_DSER) with gmin 1e-10 and the tanh EXP.
+Bound (coordinator method): quasi-static DC sweep of the injected current, pad vs ring DVDD, exact a12_rh model, all capacitors open (no decap credit), kind
+`dcs` (`bench/a12d_dcs_1_vdd_pos-esd.json`). It converged to 0.650 A (97.5 % of the 0.667 A HBM 1 kV peak; the last 2.5 % step did not converge). At 0.650 A: every
+MOS <= 1.85 V (nvt 1.85, n06 1.85, n03 0.36), junctions <= 1.85 V, pad-DVDD 2.16 V, primary up-diodes 1.62 mA/um. Extrapolated to 0.667 A: about 1.9 V,
+against 8.0 / 5.0 V limits. Consistent with:
+- a10's completed transient HBM 1 kV vdd+ (MOS <= 1.90 V; that json was deleted with a10);
+- CDM 2 A vdd+ on a12 (same path, 3x the current, completed): 3.92 V;
+- the a4 / a6 FINAL tables (HBM 2 kV vdd cases on the same up-diode path, PASS).

@@ -114,7 +114,7 @@ def run(tag, corner='ss', pess=False, vdd=3.15, code=255, post_code=None, pol=1,
         vgs = np.maximum(a['CAS'] - a['SUMP0'], a['CAS'] - a['SUMN0'])
         vgd = np.maximum(np.abs(a['CAS'] - a['DP']), np.abs(a['CAS'] - a['DN']))
         ileg = -(a['ILP'] + a['ILN'])
-        m.update(sum_max_v=round(float(max(a['SUMP0'][s].max(), a['SUMN0'][s].max())), 3), sum_min_v=round(float(min(a['SUMP0'][s].min(), a['SUMN0'][s].min())), 3),
+        m.update(pad_max_v=round(float(max(a['PAD_P'][s].max(), a['PAD_N'][s].max())), 3), sum_max_v=round(float(max(a['SUMP0'][s].max(), a['SUMN0'][s].max())), 3), sum_min_v=round(float(min(a['SUMP0'][s].min(), a['SUMN0'][s].min())), 3),
                  cascode_max_v=dict(vgs=round(float(vgs[s].max()), 2), vgd=round(float(vgd[s].max()), 2), vds=round(float(vds[s].max()), 2),
                                     vg=round(float(a['CAS'][s].max()), 2), vd=round(float(max(a['DP'][s].max(), a['DN'][s].max())), 2)),
                  esd_rail_v=round(float(a['ESDR'][s].mean()), 3),

@@ -740,3 +740,8 @@ driver-unit paths now screened as review-a16 asked):
 - P100 = 40 mA held as static (<= 1.0, conservative for 96 ns): 12 over, all termination-path: TU_x_B 1.68, PAD bond -> heads 1.47, T1 1.37, bus 1.29, T2 1.26.
 - These apply only if the termination is on in 100BASE-TX. Wired TX's bench runs it off, and then the drive path carries the current instead: per driver unit
   bond -> cascodes 0.44 (cut) / 0.18 (run) at 5 mA per unit. The shared bond trunk at 40 mA is not separated by the per-unit paths (to be added).
+Update (wired TX, agent ad4984d8): 100BASE-TX runs with the pad termination OFF (interface-requirements 1.14; the validator will forbid TX_EN_TERM at 100BASE-TX codes).
+So the P100 termination-path overs above do not apply; the 100BASE-TX current is on the drive path (bond -> neck -> PAD buses -> cascodes).
+Shared drive trunk at 40 mA, hand check from the a16 geometry: the narrowest shared section is the 30 um Metal2 neck (with Metal3-5 above y 372), 1.33 mA/um
+if Metal2 alone (0.64 of 2.09). The PAD buses are Metal3+4+5, >= 20 um. Per driver unit (5 mA): cuts 0.44, runs 0.18 (netres). PASS by hand; a
+multi-terminal netres path (bond -> all 16 cascode drains) is still to be added to em_check.

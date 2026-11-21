@@ -204,3 +204,9 @@ fixcap16 (C-only reference of the same GDS): ground C 6.52 -> 4.34 pF, 2209 drop
 PASS: 1.90 GHz everywhere (ss 0.29 V at CM 0.89 / 1.63, tt 0.5 V, ff/3.50 0.54 V at CM 1.32 / 2.2); 2.90 GHz at tt 0.5 V and ff/3.50 0.54 V; ff 2.90 GHz 1.36 V; tt 2.45 GHz 1.36 V; ff/3.35 2.30 / 2.40 GHz 0.54 V; ss 2.45 GHz 0.29 V; must-fail 0.02 V fails.
 FAIL: ss/3.15 2.70 GHz 0.29 V (N 48), ss/3.15 2.90 GHz 0.29 V (53.99) and 0.87 V (52.67), ss/3.50 2.90 GHz 0.29 V (48.0), ss/3.15 3.8 GHz (no output; was a pass on the s14 netlist).
 Reading: with the restored coupling the divider's maximum input frequency at ss/32 is between 2.45 and 2.70 GHz at low swing and below 2.9 GHz even at 0.87 V. The earlier "3.8 GHz at ss" was an artefact of the dropped coupling caps. v7 is NOT publishable. The published lo_mmd has not been checked with fixcap16 either (likely the same direction). Needed: a faster prescaler (CML /2 latch current or load R) or an operating-range ruling (LO 2.3-2.7 GHz per die + margin vs the full tank range 1.97-2.93 GHz).
+
+## 2026-11-21: divider at the per-corner top of the QVCO range (ruling: full tank range + 5 %, real swing/CM from q7/r12)
+Cases `mmd7/cases_top.json` (12: tt/ss/ff/sf/fs x 3.15/3.50 V at top-band f x 1.05, plus the pessimistic PF115 tops; swing = r12 diff peak / 2, CM = r12).
+Published lo_mmd, fixcap16 netlist (ground 9.30 -> 6.97 pF, +3.07 pF coupling restored): FAIL ss/3.15 2.99 GHz (N 48.0), sf/3.15 3.01 GHz (48.0); 10 pass.
+v7, fixcap16: FAIL ss/3.15 2.99 (51.8), ss/3.50 2.96 (48.0), sf/3.15 3.01 (57.2), PF115 ss/3.15 2.76 (48.0); 8 pass.
+Prescaler current sensitivity on the extracted v7 (tails x1.5 / x2, loads /1.5 / /2: same swing, tank load unchanged, +1.3 / +2.6 mA): all four failing cases still FAIL, with larger miscounts (N 47.9-62.9). The prescaler latch current is not the limiter; which stage miscounts (prescaler, cell A 2/3 at f/2, the follower between them) is not yet identified (needs probed waveforms).

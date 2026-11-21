@@ -586,3 +586,31 @@ against 8.0 / 5.0 V limits. Consistent with:
 - a10's completed transient HBM 1 kV vdd+ (MOS <= 1.90 V; that json was deleted with a10);
 - CDM 2 A vdd+ on a12 (same path, 3x the current, completed): 3.92 V;
 - the a4 / a6 FINAL tables (HBM 2 kV vdd cases on the same up-diode path, PASS).
+
+# CANDIDATE a13 (2026-11-21): review-a12 F1 (trim-strap EM) + per-net EM check. NOT published, NOT committed. a12 build / netres / models / benches deleted.
+Correction to a12 (review-a12 F3): the bus peak is 0.065 /um (to TU_P_T0, 11 um Metal3), not 0.0529: 1.37 mA/um at 21 mA, 34 % margin (a13: same, 0.065 /um).
+Changes vs a12 (generator sha f4d70b81, new --nvt key "em": true; all in leg_nat / nat_post):
+- TU straps: every TU column of the native devices carries 1.2 um Metal2 (was 0.4) from the diffusion to its track. Via2 at the track is a
+  0.9 x 1.7 um array (6 cuts). The two TU tracks are 2.0 um Metal3 (was 0.5). Each resistor drop is 0.8 um Metal2 (0.6 where a TU column is near) with 3 cuts, and
+  the head-B pad is widened to 3.2 um. The resistor row moves up 4.4 um (ytop 398.51), so the PAD buses follow.
+- Latch-up: the taller tracks moved the resistor-ring taps away (42 um2 uncovered at 15 um on the first a13 build), so a second p-tap strip sits just above the NAT
+  row. The DUALGATE box extends 0.9 um over it (DV.2). Result: 0 um2.
+- Per-net EM screen `sec/em_check.py` (sha 93226060). Inputs: netres high corner, worst code in 2..13, 10.5 mA per pad. TU_x_g gets 10.5 x n_g / (8 + code) with
+  bit g on; the bus path disconnect -> group g gets that group's share; the TERM_VCM pin -> disconnect path gets 21 mA; the discharge path gets 0.2 mA. It flags
+  every path over 0.58 mA/cut or 2.09 mA/um. It runs in the queue (`sec/q13.sh`), and the json is `sec/r13/em.json`. a12 under the same screen: 44 paths over.
+
+| Limit | a13 | Result |
+|---|---|---|
+| EM per net (0.58 mA/cut, 2.09 mA/um, 85 C) | 0 over; worst TU_x_T1 1.75 mA/um (0.84) at the 1.2 um column, per cut <= 0.37 mA (0.64, TU_x_B); T0 0.32 mA/cut (0.55), T2 0.30 (0.51), T3 0.23 (0.40); bus 0.21; pin 0.58 | PASS (16 % margin worst). Columns are 1.2 um, not the 2.5 um suggested: a wider column (1.8 um) leaves no room for the resistor drops next to the base-device columns |
+| Termination +-10 %, 23 corners rt / rh | worst 4.83 / 4.83 %; ss/32/3.15 codes 11-14 (rt and rh); ff/22/3.35 rt 2-3, rh 3; a4 +-5 % PASS | PASS (the strap R drop moved the window by about 1 code toward low codes; ss margin now 2 codes inside 13) |
+| P-N | -0.42..-0.18 ohm | PASS |
+| Off control / leak (TERM_VCM 0 V) | >= 1.0e10 ohm / < 0.01 uA (model 6f1b314c) | PASS |
+| Pad C <= 3.223 pF | rt 3.105, c 3.015 (+0.024 vs a12: wider TU metal) | PASS |
+| CM1 <= 5 ohm (ss, high) | 3.35 ohm; pads 0.93 V at 10.5 + 10.5 mA | PASS |
+| CDM 2 A spot cases (exact a13_rh) | vss+ 6.92, pp+ 7.27, pp- 7.27 V | PASS |
+| HBM 1 kV pp+ (spot) | 4.35 V | PASS |
+| Layout: Magic DRC / netgen / KLayout (NAT) / rb LVS + control / latch-up / rail_site / railconn / default path | 0 / unique / 0+0 / match + mismatch / 0.0 um2 (lu.json names sec/b/a13, GDS 72af3d5a) / PASS / clean / 3a706943 == a4 | PASS |
+Not rerun on a13 (untouched by the strap change, a12 values stand): CDM 2 A vdd+/vdd-/vss-, HBM 1 kV other cases (vdd+ bounded as a12), gate C, drop, CM via 25 ohm, off
+leak at 1.65 V / pads apart, CDM 1/3 A.
+Files: GDS 72af3d5aa644..., netres `sec/r13/res.json` 483511e6, models `sec/models/a13_rh` 3536551e / `a13_rt` 6f1b314c / `a13_c`.
+Build: `python3 $P/analog/pads/tx_pad_layout.py sec/b/a13 --nvt '{"wb": 23.5, "wt": 23.5, "lb": 2.2, "lt": 1.0, "merged": true, "disc2": [24, 0.28, 64, 2], "disch": 20, "riser_wide": true, "em": true}' --upx '{"x": [63, 69], "yu": 107}' --top-pins`.

@@ -187,3 +187,14 @@ RF cell rft9f (bank MIM 9.0 um, straps/Q origin moved out 1.2 um, LVS unique), l
 Q-I -83.7 ... -88.6 deg everywhere (limit 90 +- 10); all start.
 Decomposition at PF115 3.15 V (r11): rft6 + old core top + n6 lo_ext 2.5296 (the 12-unit pair gains ~nothing over cand2: the -60 fF hand estimate was wrong); + MIM 9.0 2.5175 (-0.48 %); + port tracks 2.4995 (-0.71 %, mostly the larger IP-IN / IN-QP / QP-QN mutuals); cand2 instead of n6 2.5013.
 Conclusion: 0.5 % at the pessimistic top is not reachable without the spiral change. The range sits ~3.5 % low at the pessimistic ends while the bottom has 4.8 %: an upward shift of ~3.5 % (L about -7 %) gives about +0.6 % top / +1.3 % bottom (estimate). Cheaper partial levers: tank port tracks at wider spacing (recover part of the 0.7 %), bank back to 8.4 (+0.5 %).
+
+## 2026-11-21: range fix round 3 = QVCO r9 candidate, all extracted (`q7/r12`, `q12.sh`)
+Spiral 290 um (`sp290/`), bank MIM 9.0 (`scratch/lo/r4_qvco2/rft9f`), tank tracks spaced 3 um (core top `top9h`/`asm9h`, C `topc9g.json`: mutuals 11.5 fF), lo_ext n4 extracted (20-unit, `loext3/lay/a4`), v7 divider (fixcap s14 netlist: LP 11.5 fF light vs fixcap16; rerun of the pessimistic top on `r16` loads pending), route 40 / 0 fF.
+| case | 3.15 V | 3.50 V | limit | margin (worst) |
+|---|---|---|---|---|
+| top TT / SS / FF / SF / FS | 2.884 / 2.845 / 2.926 / 2.864 / 2.903 | 2.858 / 2.820 / 2.899 / 2.837 / 2.880 | >= 2.635 | SS 3.50 V +7.0 % (vs 2.635), +10.2 % vs 2.558 |
+| bottom TT / SS / FF / SF / FS | 2.045 / 1.976 / 2.123 / 2.041 / 2.048 | 2.045 / 1.974 / 2.123 / 2.041 / 2.048 | <= 2.262 | FF +6.1 % (vs 2.262), 8.9 % vs 2.330 |
+| top pessimistic PF115 | 2.6246 | 2.6070 | >= 2.571 (0.5 %) | +1.9 % over 2.558 |
+| bottom pessimistic OPT85 | 2.3104 | 2.3104 | <= 2.318 (0.5 %) | 0.84 % under 2.330 |
+All start; Q-I -81.8 ... -87.4 deg (worst 8.2 deg off, PF115 3.50 V; limit +-10). PASS on all ruling criteria. Not yet: phase noise, Kvco/band overlap, mismatch, the fixcap16 rerun, review.
+Cleanup 2026-11-21: superseded QVCO variants (asm1-8, asm9g, rft-rft5, rft9a-e/y/z, top2-6, top9f/g, auxf1-4), divider ap4 runs and netlists, lo_ext 12-unit variants, round-1/2 run dirs and all waveform dumps > 1 MB deleted (scratch/lo + scratch/lo-ap4: 5.1 GB -> 0.95 GB). Kept: rft6 / asm9 / top7 / top9 (published r8), rft9f / top9h / asm9h (candidate), loext3 n4 / a4, mmd7 + rc/lo_mmd_v7 + rc/lo_mmd_old, q7/r12, result JSONs.

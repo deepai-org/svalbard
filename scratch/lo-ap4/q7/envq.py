@@ -34,19 +34,12 @@ GEN = Path(T_) / 'generated'
 NETS = dict(
     pub=dict(lo_ext=GEN / 'lo_ext.ext.spice', mmd=AP / 'rc/lo_mmd_old/pt_lo_mmd_flat.rc.spice',
              qdum=GEN / 'lo_mmd_qdum.ext.spice', obs=GEN / 'lo_obs.ext.spice'),
-    stg=dict(lo_ext=AP / 'cand/run2/lo_ext/stage/lo_ext.ext.spice', mmd=AP / 'rc/lo_mmd_new/pt_lo_mmd_flat.rc.spice',
-             qdum=AP / 'run_lo_mmd_qdum_ap4/lo_mmd_qdum/stage/lo_mmd_qdum.ext.spice',
-             obs=AP / 'run_lo_obs_ap4/lo_obs/stage/lo_obs.ext.spice'),
     # 2026-11-20 range fix r10: extracted lo_ext n4 (20-unit pair, loext3/lay/a4) + v7 divider (fixcap)
     r10=dict(lo_ext=AP / 'loext3/lay/a4/lo_ext/stage/lo_ext.ext.spice', mmd=AP / 'rc/lo_mmd_v7/pt_lo_mmd_flat.rcfix.spice',
              qdum=AP / 'run_lo_mmd_qdum_ap4/lo_mmd_qdum/stage/lo_mmd_qdum.ext.spice',
              obs=AP / 'run_lo_obs_ap4/lo_obs/stage/lo_obs.ext.spice'),
-    # 2026-11-20 range fix r9: extracted lo_ext n6 (12-unit internal pair, loext3/lay/a6) + v7 divider (fixcap)
-    r9=dict(lo_ext=AP / 'loext3/lay/a6/lo_ext/stage/lo_ext.ext.spice', mmd=AP / 'rc/lo_mmd_v7/pt_lo_mmd_flat.rcfix.spice',
-            qdum=AP / 'run_lo_mmd_qdum_ap4/lo_mmd_qdum/stage/lo_mmd_qdum.ext.spice',
-            obs=AP / 'run_lo_obs_ap4/lo_obs/stage/lo_obs.ext.spice'),
-    # 2026-11-20: stg with the v7 divider, substrate C corrected (fixcap)
-    fix=dict(lo_ext=AP / 'cand/run2/lo_ext/stage/lo_ext.ext.spice', mmd=AP / 'rc/lo_mmd_v7/pt_lo_mmd_flat.rcfix.spice',
+    # r16: as r10 with the divider repaired by fixcap16 (ground C and dropped coupling vs C-only; port nets LP/LN)
+    r16=dict(lo_ext=AP / 'loext3/lay/a4/lo_ext/stage/lo_ext.ext.spice', mmd=AP / 'rc/lo_mmd_v7/pt_lo_mmd_flat.rcfix16.spice',
              qdum=AP / 'run_lo_mmd_qdum_ap4/lo_mmd_qdum/stage/lo_mmd_qdum.ext.spice',
              obs=AP / 'run_lo_obs_ap4/lo_obs/stage/lo_obs.ext.spice'),
 )

@@ -51,13 +51,13 @@ named `asm-<chip>-<pid>`: stop a run only by that name (`docker kill asm-...`) o
 | Grid straps (`strap_widths.json`) | 10.5 um everywhere: M4 7.5-8.0 %, M5 10.8-11.2 % per net (passes IR, PDS-8) | 16 um in ME / SE, 10.5 um elsewhere: M4 8.6-8.9 %, M5 12.1-12.7 %; ME 7.1-11.0 %, SE 10.1-12.6 % (below 12 %: own Metal4/5 of wrx_cap / ptrim / wired TX, ASM-8) |
 | Nets routed (signal / clock / hs / rf / rail) | all | all |
 | Hooks routed | 227 / 275 | 228 / 265 |
-| Detailed-route violations (20 iterations); baselines 467 / 742 (rf), 1035 / 2919 (wired) | **681** (574 shorts: QVCO 158, RF/BB pads 145) | **1938** (1413 shorts: pads 544, macro 35) |
+| Detailed-route violations (20 iterations); baselines 467 / 742 (rf), 1035 / 2919 (wired) | **468** (396 shorts: RF/BB pads 145, lna_deg_n 28; QVCO r8: 0) — old pad cells | **464** (391 shorts: pad_ref 74, pad_wmon 45, pad_wire_tx 19, pad_hs_rx 11) — staged pads with core-edge pins except refpad |
 | pt_wiredtx8 grid ties | | VSS landings 4 of 6, channel tabs 3 of 6 (the others sit on VDD axes, untied by design); 10 old pins unconnected until the conn binds the new cell |
 | DRC main deck (shuttle 792ef67) | **3375** (was 641 347): V4.2a 1914 + M4.1 77 + MT.1 40 in the grid vias / metal, 586 V3/V4 in the provider ring at the custom pad sites (SO-1), ~200 in the top wiring, 36 M2.2a inside `pt_lc_qvco5`; **GR.4 0** (the 9928 of the first run are gone) | not run |
 | Antenna | 111 (ANT.16 via ANT.4/5/6/12) | not run |
 | Density after fill | not run | every global rule passes; 48 DCF.1a inside blocks |
 | LVS (black boxes, by name; first run) | 572 match, 150 short+internal | 741 match, 138 short |
 
-Not yet picked up: QVCO r8 (ASM-1 done by LO, all ports on the west edge, 898 x 661.3 um, committed 2 min after the
-pt_rf abstract); pad pin moves (ASM-2 / PC-51) except `pad_hspad` a6. Open: V4.2a / M4.1 / MT.1 in the grid, full precheck.
+Picked up: QVCO r8 (ASM-1) on pt_rf; staged pad cells with core-edge pins (`common.STAGED_PADS`: txpad a12, wirepad b7,
+pin-moved rf_pair / rftxpad / single_leg / hspad) on pt_wired; pt_rf reroute with them pending. `pad_refpad` not yet moved. Open: V4.2a / M4.1 / MT.1 in the grid, full precheck.
 Owner rows ASM-1..9 in `scratch/reviews/interface-changes.md`.

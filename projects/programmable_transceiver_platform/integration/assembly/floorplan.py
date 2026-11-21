@@ -90,7 +90,9 @@ for n, v in C.STAGED.get(chip, {}).items():
     for k, q in pj.items(): pk3.fixed(k, q)
     for k, b in blocks.items(): pk3.fixed(k, [b['rect']], halo=10.0 if not k.startswith('decap') else 0.0)
     for k, q in reserves.items(): pk3.fixed(k, [q])
-    best = pk3.place(n, w, h, halo=10.0, rot=False, anchor=((r0[0]+r0[2])/2, (r0[1]+r0[3])/2, 1.0), lam=0.0, step=2)
+    # the packer booked the old instance at the staged outline + 70 um in x: the staged cell goes inside that rectangle
+    best = (r0[0], r0[1], r0[0]+w, r0[1]+h) if (r0[2]-r0[0] >= w+69.9 and r0[3]-r0[1] >= h-0.1) else \
+        pk3.place(n, w, h, halo=10.0, rot=False, anchor=((r0[0]+r0[2])/2, (r0[1]+r0[3])/2, 1.0), lam=0.0, step=2)
     if not best:                          # decap tiles give way
         pk3 = Packer(C.CORE, G=2.0)
         for k, q in pj.items(): pk3.fixed(k, q)
@@ -113,9 +115,9 @@ for n, v in C.STAGED.get(chip, {}).items():
     def free(rr): return all(not ov([rr[0]-10, rr[1]-10, rr[2]+10, rr[3]+10], b['rect']) for k, b in blocks.items() if not k.startswith('decap_tile')) and \
         all(not ov(rr, q) for qs in pj.values() for q in qs) and rr[0] >= C.CORE[0] and rr[2] <= C.CORE[2]
     dx = (m0-best[0]) % mod
-    for d in sorted([dx, dx-mod], key=abs):
+    for d in ([dx] if best[0] == r0[0] else sorted([dx, dx-mod], key=abs)):
         rr = [round(best[0]+d, 3), best[1], round(best[2]+d, 3), best[3]]
-        if free(rr):
+        if best[0] == r0[0] or free(rr):      # inside its own booked rectangle it is legal by construction
             for k in [k for k in blocks if k.startswith('decap_tile') and ov(rr, blocks[k]['rect'])]: dropped.append(k); del blocks[k]
             blocks[n] = dict(master=v['master'], rect=rr, rot=False, in_conn=True, gds=True, staged_for=old['master'])
             staged[n] = dict(master=v['master'], rect=rr, x_origin_mod=round(rr[0] % mod, 3)); break

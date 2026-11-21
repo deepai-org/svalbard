@@ -41,6 +41,15 @@ SPECIAL = {
     'pad_wirepad': [(AN+'pads/generated/stress-safe-families/wired-receive-usb/combined.gds', None)],
     'pad_txpad': [(AN+'pads/generated/stress-safe-families/wired-transmit/combined.gds', None)],
 }
+# staged pad cells with the ASM-2 core-edge pins (pads owner, 2026-11-21), used before the published ones until they publish
+STAGED_PADS = {'pad_txpad': ('scratch/pads-core/esdopt/tx/sec/b/a12/pad_txpad.gds', 'pad_txpad'),
+               'pad_wirepad': ('scratch/pads-core/esdopt/usb/build/b7/pad/combined.gds', 'tx_with_primary'),
+               # pin-move-only variants of the published cells (core pins on the top edge, Metal4)
+               'pad_rf_pair': ('scratch/pads-core/esdopt/pins/b/pad_rf_pair.gds', 'pad_rf_pair'),
+               'pad_rftxpad': ('scratch/pads-core/esdopt/pins/b/pad_rftxpad.gds', 'pad_rftxpad'),
+               'pad_single_leg': ('scratch/pads-core/esdopt/pins/b/pad_single_leg.gds', 'pad_single_leg'),
+               'pad_hspad': ('scratch/pads-core/esdopt/pins/b/pad_hspad.gds', 'pad_hspad')}
+for _m, (_g, _c) in STAGED_PADS.items(): SPECIAL[_m] = [(_g, _c)]+SPECIAL[_m]
 for _n in ('isw_wired', 'isw_rf', 'isw_pll', 'isw_conv', 'isw_debug', 'atb_leaf_s', 'atb_leaf_f', 'atb_grp', 'atb_pad'):
     SPECIAL[_n] = [(IS+f'layout/{_n}.gds', _n)]
 # staged blocks that replace a conn instance's master in the layout before the conn changes (coordinator, 2026-11-20):

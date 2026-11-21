@@ -1,6 +1,6 @@
 #!/bin/bash
 # Chip assembly of one chip, stage by stage, one heavy job at a time:   run.sh <rf|wired> [stage ...]
-#   stages: abstract floorplan place route stream report drc lvs fill      (default: abstract .. report)
+#   stages: abstract floorplan place route stream report drc lvs fill precheck      (default: abstract .. report)
 # Run directory scratch/integration/assembly-<chip> (ASM_RUN overrides); only the latest run is kept (each stage
 # overwrites its outputs). The sign-off flows (integration/signoff, SIGNOFF_CHIP=<chip>) read chip/pt_chip_top.gds from it.
 set -e
@@ -35,6 +35,9 @@ for S in $STAGES; do
                tail -5 "$RUN/lvs/lvs.log" ;;
     fill)      "$A/../signoff/fill/run_fill.sh" rf 2 chip/pt_chip_top.gds
                "$A/../signoff/drc/run_drc.sh" fill/rf_filled.gds pt_chip_top density chip_filled_density live 2 ;;
+    precheck)  rm -rf "$RUN/precheck"      # the shuttle's own precheck on the filled chip (about 3 h, 4 threads)
+               env -u OMP_NUM_THREADS "$A/../signoff/precheck/run_precheck.sh" "$RUN/fill/rf_filled.gds" pt_chip_top "$RUN/precheck" 4 > "$RUN/precheck.out" 2>&1 || true
+               python3 "$A/../signoff/precheck/summarise.py" "$RUN/precheck" | tail -25 ;;
     *) echo "unknown stage $S"; exit 2 ;;
   esac
   echo "   ($(( $(date +%s)-T0 )) s)"

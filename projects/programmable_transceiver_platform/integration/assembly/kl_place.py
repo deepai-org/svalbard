@@ -218,18 +218,17 @@ for net in ('VDD', 'VSS'):
         rg = ring[net]
         if net == 'VSS': rg = rg - straps[('VDD', ln)].sized(um(2))
         rg = rg - (blkmetal[ln] if ln == 'Metal5' else blk4)
-        metal[(net, ln)] = (rg + straps[(net, ln)]).merged()
+        m_ = (rg + straps[(net, ln)]).merged()
+        metal[(net, ln)] = m_.sized(-um(0.6)).sized(um(0.6)).merged()     # no piece narrower than 1.2 um (M4.1 / MT.1)
 def via_fill(cell, lay, region, inset=0.5):
     vc = ly.cell('via_'+str(lay)) or ly.create_cell('via_'+str(lay))
     if vc.shapes(lay).is_empty(): vc.shapes(lay).insert(db.Box(0, 0, 260, 260))
     n = 0
     for poly in region.merged().sized(-um(inset)).each():
         for t in poly.decompose_trapezoids(1):
-            b = t.bbox(); nx = int((b.width()-260)//620)+1; ny = int((b.height()-260)//620)+1
-            if b.width() < 260 or b.height() < 260: continue
-            ox = (b.left+(b.width()-((nx-1)*620+260))//2+9)//10*10; oy = (b.bottom+(b.height()-((ny-1)*620+260))//2+9)//10*10   # 10 nm grid
-            if ox+(nx-1)*620+260 > b.right: nx -= 1
-            if oy+(ny-1)*620+260 > b.top: ny -= 1
+            # cuts on one global 620 nm lattice, so arrays of neighbouring rectangles keep the array spacing (V4.2a)
+            b = t.bbox(); ox = -(-b.left//620)*620; oy = -(-b.bottom//620)*620
+            nx = (b.right-260-ox)//620+1; ny = (b.top-260-oy)//620+1
             if nx < 1 or ny < 1: continue
             cell.insert(db.CellInstArray(vc.cell_index(), db.Trans(db.Vector(ox, oy)), db.Vector(620, 0), db.Vector(0, 620), nx, ny)); n += nx*ny
     return n

@@ -415,7 +415,7 @@ transceiver-core-bias-observation-negative:
 
 .PHONY: transceiver-chip-assembly
 transceiver-chip-assembly:
-	$(PYTHON) projects/programmable_transceiver_platform/verification/run_chip_assembly.py --output-dir scratch/chip-assembly-$$(date -u +%Y%m%d-%H%M%S)
+	for c in rf wired; do projects/programmable_transceiver_platform/integration/assembly/run.sh $$c || exit 1; done
 
 .PHONY: transceiver-core-bias-routing
 transceiver-core-bias-routing:

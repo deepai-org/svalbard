@@ -770,3 +770,18 @@ WT53-b follow-up (wired TX asks; a16_rt, tb2 ac with the CASCODE pin forced; `be
   No gain without more total cascode W; adding W costs pad C as above.
 - Models with the PAD -> DVDD up-diodes: the candidate R+C models `sec/models/a16_rt.spice` / `a16_rh.spice` (pd2nw cathodes on SVDD_x -> DVDD_x ports). The
   published `tx_rt.spice` is the old pad (ESD_RAIL network) and has no PAD -> DVDD diodes.
+Option "parallel 100BASE-TX leg" (coordinator, model-level what-if, no layout). `sec/hd/mk100.py` adds to the a16 R+C model a twin of every PAD-side
+cascode (gate = new port CASCODE100, drain = the same PAD node) and of every MAIN / POST steering switch, on new summing nodes S100_<leg>_<unit>, with ideal wiring.
+Total cascode + switch W is x2. Queue `sec/hd/q100.sh`.
+| Item | Result |
+|---|---|
+| Pad C, high-speed modes (CASCODE100 = 0 V, twin off) | 3.438 pF (+0.224 vs a16 3.214; limit 3.223: over by 0.215); RL 6.9 dB at 1.25 GHz (a16 7.6) |
+| Pad C, 100BASE-TX (twin on at 4.2 V) | 4.451 pF (no limit declared for 100BASE-TX; RL 5.3 dB at 1.25 GHz, information) |
+| Drive, MAIN+POST in one leg, termination off, 50 ohm to VDD, 38 mA demand | main CASCODE at VDD + CASCODE100 4.2 V: 41.3 mA ss / 45.1 tt; both at 4.2 V: 42.6 / 45.8 (a16 alone 26.9 / 34.5) |
+| CDM 2 A vss+ / pp+, HBM 1 kV pp+ (CASCODE100 behind 100 ohm to ground, like CASCODE) | 6 V devices incl. the twins <= 6.92 / 7.52 / 4.38 V (8.0); twin is the worst at pp+ (Vds 7.52, X363x) | PASS (0.48 V margin) |
+- Gate control: one new top-edge pin CASCODE100. It is driven from wired TX's replica / pump (4.2 V) in 100BASE-TX only and held at VSS otherwise (a pull-down in
+  the pad would also hold it off when unpowered). DC gate load only (about 0.3 pF).
+- Margin to scale down: 41.3 mA vs 38 needed at ss, so a twin of about 0.75x W would do (high-speed pad C about +0.17 pF instead of +0.22, estimate).
+- Area: 16 more 16/0.7 cascodes and 16 more 20/0.28 switches per leg, plus new SUM100 straps. Estimated +30-40 % of the driver block (driver about 120 x 200 um),
+  so the cell grows in y by about 25-40 um. Not laid out.
+- High-speed pad C over the limit by 0.2 pF either way, so this option still needs the 3.223 pF limit relaxed by about 0.2 pF (vs about 1.2 pF for a plain W x2).

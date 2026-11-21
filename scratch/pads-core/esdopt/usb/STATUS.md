@@ -167,3 +167,95 @@ Not run: ss/ff device corners and hot in ESD; low-metal corner; ring R beyond th
 EM of the HS and FS current paths; VDD / WELL / gate metal in the R model (the FS block's are local wide metal now). HS current shortfall not traced.
 Open for review: the 6 V pad-side PMOS (device change), F3 basis ruling (MISS like for like, below published with its metal fixed), CDM 2 A 6 V
 margin 0.41 V, termination high-metal ss 0.7 ohm from the edge, PC-31 item 4 back-feed unchanged.
+
+## CANDIDATE b7 (2026-11-21). NOT published, NOT committed. b6's build and R extraction deleted (its models / bench json kept as the reference).
+GDS `build/b7/pad/combined.gds` (top `tx_with_primary`) sha256 e3298c47f3f3...; physical.spice fbaf1c32ad06; models `models/b7_r_{typ,high}.spice`
+73d0ef6d / 9a97caa7, `_rail` b6405fae / dacd08e9 (CRAIL 206 fF per leg; b6 151, published 91). Generators (uncommitted, defaults unchanged, L7 XOR 0):
+layout.py 59155f60 (new `tb.pad_trunk_fill`), wired_protection_layout_ss.py dbfaac63, stress_safe_compact_layout.py a849f82d, pad_site_primary.py 4a3b087f.
+New tools: hsdiag.py 5276086d (HS current split, OP), hseye.py 784180d1 (HS eye / RL / TDR bench), hstab.py, q7.sh 9c208d8f (= q6.sh + hsdiag + hseye),
+diag/whatif.py (model what-if: PAD resistors scaled), diag/hsdiag-b6*.txt / hsdiag-b7.txt.
+Command: `build.sh b7 '--esd-a={"term_poly": [16, 1.16], "trim_poly": [4, 1.2], "fs_pad_6v": true, "site": {"n_up_left": 3}, "tb": {"fs": {"bus_w2": 4},
+"top_pins": true, "pad_trunk_fill": true}}'`, then `q7.sh b7`. Note: esd_usb.py resumes from an existing esd/<tag>.json, so delete esd/b7*.json before
+a rerun (the ESD rows below come from a clean rerun on the final models). Tables: `ttab.py b7rt b7rh`, `esdtab.py b7rh b7rt b7rh_nosite`,
+`padcmp.py bench/b7rt_rail-padc.json bench/pubrt_rail-padc.json`, `hstab.py ka_ideal ka_ctrl ka_ideal30 b7rt_tt ... b6rt_tt ...`.
+Rulings applied: (1) fs_pad_6v accepted. (2) PC-50: pad C judged by USB HS eye / return loss through COB + test board (F3 delta rule not applied).
+
+### (a) HS shortfall: cause (hsdiag.py, op at the hs_term point; source current = I(far 45) + I(termination at TERM_VCM))
+| b6 point | V(pad) | I far / I term | I source | HS drains | reading |
+|---|---|---|---|---|---|
+| typ metal tt, code 4 | 343 mV | 7.62 / 9.84 mA | 17.46 mA | 0.93-1.05 V | the source is fine; the current splits 44/56 |
+| ideal 17.78 mA forced at the pad pin (same model) | 395 mV | 8.78 / 8.91 | 17.78 | - | split even: the termination measured at the pin is right |
+| 1 % metal, code 4 | 354 mV | 7.88 / 9.81 | 17.68 | 0.61 | "x0.01 metal 15.8-16.3 mA" was the BENCH: typ-metal code used on a 36 ohm termination |
+| high metal ss 22 C 3.15 V, code 7 | 308 mV | 6.85 / 8.34 | **15.19** | 1.65-1.98 | source out of saturation (bias gate at -0.16 V, VSD 1.2-1.5 V) |
+| same, PAD trunk R x0.2 (what-if) | 368 mV | 8.18 / 9.18 | 17.36 | 0.90-0.93 | compliance restored |
+Two cell causes, both PAD-net metal (not bias, not current-source sizing, not the 6 V FS change, not the bench except the x0.01 row):
+1. Split: the termination taps the neck at y 352, between the bond opening (y 2-62) and the HS cells (grid). The bond-to-tap metal (b6: 5.75 / 7.07 ohm
+   typ / high, 4 um Metal2 neck above y 150 = pad-C lever (b) of b6) sits in series with the line. With trimming to 45 ohm at the pin, the far end sees
+   I x (45 - Rc) / 2: -13 % at typ.
+2. Compliance: the PAD grid trunk is 0.44 um Metal5 fed by ONE via4 at the bond transverse (y 426): 16.2 / 34.9 ohm tap-to-switches typ / high. With
+   the published bias (replica 20/1 at 1/14, VSG about 3.1 V, Vov about 2.3 V) the cells have almost no headroom. At ss / 3.15 V / high metal they drop to
+   15.2 mA.
+Fix (b7, behind options): (i) neck back to 8 um + Metal1 (neck_hi / neck_m1 defaults): bond-to-termination 2.21 / 3.08 ohm. (ii) `pad_trunk_fill`: PAD_P / PAD_N
+Metal5 trunks widened in a staircase into the free trunk slots beside them (at most 5 slots, track x unchanged, so the RX 98/97 access and ports stay).
+The bond transverse lands on a Metal4/Metal5 plate with a via4 array: tap to switches 5.2 / 11.8 ohm. Termination re-centred for the lower metal
+(base poly 16 x 1.16, trim bit 0 4 x 1.2: the b5 values).
+Result: hs_term delivered 16.78-17.14 mA typ / high (target 17.78 +-10 % = 16.0-19.56) PASS. Source current 17.56 mA tt / 17.30 mA ss-high (hsdiag-b7.txt).
+The remaining -4..-6 % is the residual bond-to-tap metal (about 2.2-3 ohm).
+
+### (b) HS eye / RL bench (hseye.py; docstring has the full definition)
+Driver = the pad's HS cells (b7 / b6 R+C model WITH the rail C) with mirror bias + 20 pF HS_PBIAS bypass. Gates are driven by an ideal 1.2 ns ramp, a stand-in for
+pt_usb_txdrv. Termination code per corner from the term table. Channel per leg: COB of USB_DP / USB_DN (package-channel-wired.json: bond L nom|max + R, finger,
+F / B microstrip, via, land, connector), then tb_land + tb_line50 30 mm (50 mm case) at f0 0.24 GHz, then TVS 0.5 pF (B46), then receptacle 0.5 nH + 0.3 pF
+(estimate) = TP, then a 45 ohm per leg 5 ns cable, then the host 45 ohm + 1 pF. Template 1 (Fig 7-13, the sim_usbdrv.py limits) at TP. Data: J/K preamble +
+PRBS7. --cal = B11 board calibration: the bias DAC is scaled until the static J level is 400 mV at TP. RL / TDR are taken at TP with the cable removed
+(90 ohm reference, 400 ps TDR).
+Proofs: ideal source + ideal 90 ohm channel: levels +400.1 / -400.1 mV, inner 100.1 mV, outer 74.9 mV (known 100 / 75), jitter 0.1 ps. Failing control
+(5 pF + 2.5 ns edges): inner -65 mV, FAIL. RL known answers: 45 ohm per leg > 180 dB, 30 ohm per leg 13.98 dB (hand 13.98), TDR 60.0 ohm.
+
+### (c) Eye / RL results (b7 vs b6, rail models)
+| Case | b7 | b6 (reference) |
+|---|---|---|
+| tt, nominal bias (no cal): TP level | 362 / -363 mV (in 360-440), tpl1 PASS inner 45 outer 34 mV | 331 / -333 mV **MISS** level, tpl1 PASS inner 20 mV |
+| bias scale B11 needs for 400 mV (tt / ff / ss-high / tt-50 mm) | 1.10 / 1.09 / 1.12 / 1.12 | 1.22 / 1.20 / **2.53** / 1.26 |
+| tt cal, 30 mm | tpl1 PASS inner 80 / outer 13.5 mV, jit 33 ps, edges 536-705 ps | PASS 82 / 55 mV |
+| ss 22 C 3.15 V high metal, bond max, cal | PASS 78 / 56 mV, level 397 / -391 | **FAIL** inner -23 mV, level 295 mV (current source in triode; scale 2.5 not reachable) |
+| ff 32 C 3.35 V, cal | PASS 81 / **0.6** mV, edges 498-667 ps | PASS 83 / 51 mV |
+| tt, 50 mm board, bond max, cal | PASS 87 / 25 mV | PASS 83 / 56 mV |
+| RL (90 ohm) min to 480 MHz, tt / ss-high / ff | 21.1 / 19.3 / 22.0 dB (10 dB at 1 GHz) | 20.3 / 19.0 / 20.7 dB |
+| TDR Zdiff min-max (400 ps) | 82.8-117.3 ohm | 85.1-117.7 ohm; published (1 % metal, rail) 84.7-113.6 |
+Pad C judgement (PC-50): b7 pad C per leg is up to 3.45 pF typ (b6 3.14, published-with-metal 2.80; +0.10 pF CTEST reads +0.100). Through the channel
+it costs about 2 ohm of TDR dip and no RL: RL to 480 MHz is 19-22 dB in every case and equals b6 and the published cell within 1-2 dB. The 1 GHz RL and the
+TDR maximum (113-118 ohm) are set by the bond / connector inductance (same in all three). Pad C is ACCEPTABLE on the eye and RL. The outer-template
+margin (overshoot) shrinks at fast edges (ff 0.6 mV, tt 13.5 mV). That depends on the line edge rate, which the stand-in gate ramp sets, not on pad C:
+b7's lower PAD metal gives faster edges (min 496-536 ps vs b6 580-710). The real pt_usb_txdrv strength trim (857-873 ps at tt) must keep it.
+
+| Limit | b7 | Result |
+|---|---|---|
+| L1 Magic DRC base / combined | 0 / 0 | PASS |
+| L2 read-back LVS pos / composer; controls RX swap / site diode missing | match / match (371); mismatch / mismatch | PASS |
+| L3 KLayout precheck main / antenna; sliver control | 0 / 0 (first b7 pass: MSLOT5.1, N fill 32 um wide, fixed by the 5-slot cap); control reports | PASS |
+| L4 latch-up uncovered at 15 um; control | 0.0; 6.4 um2 | PASS |
+| L5 rail_site_check / selftest / pad-on-rail precheck / railconn | PASS / OK / 0 / clean | PASS |
+| L6 floating lines | 0 | PASS |
+| L7 default path XOR (generators at the final shas) | 0.0 um2 | PASS |
+| L8 outline / ports | bbox (2.78, 0)-(384.18, 1434.72) = b6; ports as b6 | PASS |
+| E1 HBM 2 kV high / typ | 5.65 / 5.13 V, 0 over | PASS |
+| E1 CDM 2 A high / typ | 7.658 / 6.897 V, 0 over | PASS (0.34 V margin; b6 0.41) |
+| CDM 1 A / 3 A; HBM 1 kV (report) | 4.99 V; 10.26 V high (43 over); 4.13 V | report |
+| E2 / E3 / E4 | 0 V; HBM 4.01 / 0.009, CDM 2 A 6.07 / 0.043 mA/um; MIM 5.03 V | PASS |
+| ESD control (sites stripped) | HBM 75.4 V / CDM 65.3 V, 104 / 132 over | PASS (fails) |
+| F1 termination 23 corners typ / high | all in window; P-N 0.8 / 0.95 ohm; high ss 32 C 3.15 V only code 7 at 47.9 (1.6 ohm to the edge; b6 0.7) | PASS |
+| F2 FS edges 50 pF typ / high | rise 9.0-16.7 / 10.0-17.7 ns, fall 6.0-8.9 / 6.2-9.1 | PASS |
+| F2 VOH / VOL; LS_SLOW 50 / 450 pF; pull-up | 3.28 / 0 V; 103-128 / 147-236 ns; 2.78-3.07 V | PASS |
+| HS delivered current (hs_term) vs 17.78 +-10 % | typ 16.86-17.14, high 16.78-17.04 mA | **PASS** (b6 13.7-15.7) |
+| F3 pad C vs published + 0.3 pF (declared rule) | worst delta +0.71 typ / +1.02 high | superseded by PC-50: judged on F4 |
+| F4 HS eye template 1 (calibrated, tt / ss-high-bond-max / ff / 50 mm) | PASS all; outer margin 0.6 mV at ff (edge-rate, see above) | PASS (ff outer margin thin) |
+| F4 RL / TDR (no numeric USB limit, WR-USB-RL) | RL >= 19.3 dB to 480 MHz; Zdiff 82.8-117.3 ohm | report (= b6 / published) |
+| DIFF termination (dbench, report) | typ 348, high 474 ohm at tt (b6 330-370 / 456-500) | report |
+
+Not run: RX sensitivity / template 4: the receiver is not in this cell, and template 4 values were not checked against the USB text. Template 1
+values are the repo's (sim_usbdrv.py) Figure 7-13 transcription. Eye with the real pt_usb_txdrv (the stand-in ramp gives 496-906 ps edges; THSR >= 500 ps is
+touched at ff / tt nominal). P-N coupling in the channel (legs uncoupled). Cable loss (lossless 5 ns line). ss / ff ESD corners, low metal, EM (the
+HS path now has the plate + via4 array), DIFF mode limits. The 70-110 ohm TDR window is from memory, not applied as a limit.
+Open for review: CDM 2 A margin 0.34 V (8 um neck + Metal1 back); pad C up to 3.45 pF accepted only on the F4 evidence; template 1 outer margin at fast edges
+(a pt_usb_txdrv strength-rule item); B11 calibration scale 1.09-1.12 must be inside the hsbias DAC range (not checked here); PC-31 item 4 unchanged.

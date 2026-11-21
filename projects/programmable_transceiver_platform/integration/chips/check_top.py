@@ -681,7 +681,7 @@ if __name__ == '__main__':
         print('(analog top ports written)', write_outputs(inst, masters, nets, ports, chip))
     mw = ROOT+'/scratch/reviews/mode-walk'; bad = 0
     if '--no-modewalk' not in sys.argv and os.path.isdir(mw):
-        for s in ('top_pins.py', 'cfg_map.py', 'bias_sum.py'):
+        for s in ('cfg_map.py', 'bias_sum.py'):   # top_pins.py retired with the single-die assembly netlist (83abe951); check_top covers pins itself
             r = subprocess.run([sys.executable, s, '--selftest'], cwd=mw, capture_output=True, text=True)
             print(f'(mode-walk {s} --selftest) {"PASS" if r.returncode == 0 else "FAIL"}'); bad += r.returncode != 0
     total = sum(len(v) for v in R.values())+bad

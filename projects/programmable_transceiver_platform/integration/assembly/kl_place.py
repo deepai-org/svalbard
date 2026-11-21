@@ -163,12 +163,25 @@ for ln in ('Metal4', 'Metal5'):
 digi = man['blocks'].get('digital', {}).get('bbox')
 blk4 = blkmetal['Metal4'] + (db.Region(db.Box(*[um(x) for x in digi]).enlarged(um(2), um(2))) if digi else db.Region())
 avoid = {'Metal4': (blk4 + noover + padreg.sized(um(3))).merged(), 'Metal5': (blkmetal['Metal5'] + noover + padreg.sized(um(3))).merged()}
+def pin_shapes_die0(n, p):
+    m = man['blocks'][n]['master']; t = db.Trans.from_s(man['blocks'][n]['trans']); info = MJ.get(m, {}); o = info.get('origin', [0, 0])
+    return [(ln, t*db.Box(um(r[0]+o[0]), um(r[1]+o[1]), um(r[2]+o[0]), um(r[3]+o[1]))) for ln, r in info.get('pins', {}).get(p, [])]
 bars = []          # island supply bars (common.ISLAND_BARS)
 for bd in C.ISLAND_BARS.get(CHIP, []):
     reg = db.Region([db.Box(*[um(v) for v in r]) for r in bd['rects']]).merged()
-    reg = (reg - blkmetal['Metal5'] - padreg.sized(um(3))).merged()
+    # same-net Metal5 of the listed cells (the polygons over their pin, e.g. the isw VISL plate) is joined, not cut
+    same = db.Region(); other = db.Region(); cells_ = db.Region()
+    for i_, p_ in bd['vias']:
+        b_ = man['blocks'][i_]; c_ = ly.cell(b_['master']); t_ = db.Trans.from_s(b_['trans'])
+        m5 = db.Region(c_.begin_shapes_rec(LI['Metal5'])).merged().transformed(t_)
+        pins_ = db.Region([b for ln, b in pin_shapes_die0(i_, p_)])
+        same += m5.interacting(pins_); other += m5.not_interacting(pins_)
+        cells_ += db.Region(db.Box(*[um(v) for v in b_['bbox']]))
+    # cut: every other block's Metal5 (2.5 um), and the listed cells' other-net Metal5 (2.5 um); their same-net Metal5 is joined
+    cut = (blkmetal['Metal5'] - cells_.sized(um(2.5))) + other.sized(um(2.5))
+    reg = (reg - cut - padreg.sized(um(3))).merged() + (same & reg.sized(um(50)))
     reg = db.Region([p for p in reg.each() if p.area() > um(20)*um(20)])
-    bars.append(dict(bd, region=reg))
+    bars.append(dict(bd, region=reg, merged=not same.is_empty()))
     avoid['Metal5'] = (avoid['Metal5'] + reg.sized(um(2.5))).merged()
 PITCH, SW = 70.0, float(os.environ.get('STRAP_W', '10.5'))   # G1 15 % nominal; wider per region from strap_widths.json
 core = C.CORE
@@ -340,8 +353,8 @@ for bd in bars:
     for i_, p_ in bd['vias']:
         for ln, b in pin_shapes_die(i_, p_):
             land = db.Region(b) & bd['region']
-            if ln == 'Metal4': nv += via_fill(barcell, VIA['Via4'], land, inset=0.3)
-    man['island_bars'].append(dict(net=bd['net'], area_mm2=round(bd['region'].area()/1e12, 4), via4=nv,
+            if ln == 'Metal4' and not bd.get('merged'): nv += via_fill(barcell, VIA['Via4'], land, inset=0.3)
+    man['island_bars'].append(dict(net=bd['net'], merged_with_cell_metal5=bd['merged'], area_mm2=round(bd['region'].area()/1e12, 4), via4=nv,
                                    bbox=[fu(v) for v in (bd['region'].bbox().left, bd['region'].bbox().bottom, bd['region'].bbox().right, bd['region'].bbox().top)]))
 if barcell: top.insert(db.CellInstArray(barcell.cell_index(), db.Trans()))
 # grid LEF: hook pieces are pins, everything else of the grid is an obstruction

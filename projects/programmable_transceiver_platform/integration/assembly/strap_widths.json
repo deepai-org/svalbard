@@ -1,11 +1,12 @@
 {
- "comment": "Grid strap width (um) per 3 x 3 core region, keys SW..NE as in place.json pdn_regions_pct. From the power owner's per-region IR/EM rerun (PDS-8, scratch/integration/m1-pdn/out/<chip>/asm9_regions_*.txt): pt_rf passes at 10.5 um everywhere; pt_wired needs >= 12 % in middle-east and south-east (with the PDS-9 supply bond at bidir[22]). pt_wired ME/SE raised to 24 um for >= 16 % drawn per net and layer (power delivery 4.1c, pt_wiredtx8 beside the switch pair).",
+ "comment": "Grid strap width (um) per 3 x 3 core region (power owner PDS-8 / PDS-16). pt_rf 10.5 um everywhere; pt_wired 22 um in MC/ME/SE for >= 12 % per net and layer at the pt_wiredtx8 tap (56 mA). The durable fix is ASM-8 (blocks free Metal5).",
  "rf": {
   "default": 10.5
  },
  "wired": {
   "default": 10.5,
-  "ME": 24.0,
-  "SE": 24.0
+  "MC": 22.0,
+  "ME": 22.0,
+  "SE": 22.0
  }
 }

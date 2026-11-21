@@ -27,11 +27,15 @@ for n, v in C.STAGED.get(chip, {}).items():
     if MJ.get(v['master'], {}).get('w') and n in inst0:      # the ledger may still book the old master for the instance
         for m_ in {inst0[n]['master'], led.get(n, inst0[n]['master'])}: sizes[m_] = [round(MJ[v['master']]['w']+70, 2), round(MJ[v['master']]['h'], 2)]
 json.dump(pj, open(RUN+'/fp_pads.json', 'w')); json.dump(sizes, open(RUN+'/fp_sizes.json', 'w'))
+SPREAD = float(os.environ.get('SPREAD', '40'))     # routing margin the packer keeps round fixed placements (coordinator 2026-11-21)
 def fixed_rects():
     out = {}
     for m, (x, y) in C.FIXED_PLACE.get(chip, {}).items():
         w, h = msize(m); w -= 70 if m in C.STAGED.get(chip, {}) else 0
-        out['fix_'+m] = [x, y, round(x+w, 2), round(y+h, 2)]
+        out['fix_'+m] = [x-SPREAD, y-SPREAD, round(x+w+SPREAD, 2), round(y+h+SPREAD, 2)]
+    if C.FIXED_DECAP.get(chip): out['decapslot'] = list(C.FIXED_DECAP[chip]['slot'])
+    for k, bd in enumerate(C.ISLAND_BARS.get(chip, [])):          # island bars: no block under them
+        for j, r in enumerate(bd['rects']): out[f'bar_{k}_{j}'] = list(r)
     return out
 def msize(m):
     """outline of a group member: a staged block is booked 70 um wider (grid-phase shift)"""
@@ -56,8 +60,18 @@ for n, v in F['placed_rects'].items():
     blocks[n] = dict(master=m, rect=v['rect'], rot=v['rot'], in_conn=n in inst, gds=bool(MJ.get(m, {}).get('w')))
 # fixed placements (common.FIXED_PLACE): the packer kept their slots free (EXTRA_RSV)
 for k_, r_ in fixed_rects().items():
-    m = k_[4:]
+    if not k_.startswith('fix_'): continue
+    m = k_[4:]; r_ = [r_[0]+SPREAD, r_[1]+SPREAD, r_[2]-SPREAD, r_[3]-SPREAD]
     blocks[m] = dict(master=(C.STAGED[chip][m]['master'] if m in C.STAGED.get(chip, {}) else inst0[m]['master']), rect=r_, rot=False, in_conn=True, gds=True, fixed=True)
+# fixed decap tiles (common.FIXED_DECAP): rows of 125 x 120 um tiles in the reserved slot, abutted
+fd = C.FIXED_DECAP.get(chip)
+if fd:
+    x0, y0, x1, y1 = fd['slot']; k = 0; y = y0
+    while y+120 <= y1 and k < fd['count']:
+        x = x0
+        while x+125 <= x1 and k < fd['count']:
+            blocks[f'decap_fix_{k:02d}'] = dict(master='decap', rect=[x, y, x+125, y+120], rot=False, in_conn=False, gds=False); k += 1; x += 125
+        y += 120
 # group bookings (common.GROUP_BOOK): the packer placed one rectangle; its members go into it side by side, 4 um apart
 for bk, ms in C.GROUP_BOOK.get(chip, {}).items():
     if bk not in blocks: continue
@@ -68,7 +82,7 @@ for bk, ms in C.GROUP_BOOK.get(chip, {}).items():
         blocks[m] = dict(master=inst0[m]['master'], rect=[round(x, 2), r0[1], round(x+w, 2), round(r0[1]+h, 2)], rot=(r0[2]-r0[0] < r0[3]-r0[1]), in_conn=True, gds=True, group=bk)
         x += w+4
 blocks['digital'] = dict(master='pt_digital_macro', rect=F['fixed']['digital'], rot=False, in_conn=True, gds=False)
-reserves = {n: r for n, r in F['fixed'].items() if n != 'digital' and not n.startswith('fix_')}
+reserves = {n: r for n, r in F['fixed'].items() if n != 'digital' and not n.startswith(('fix_', 'bar_', 'decapslot'))}
 core_blocks = {n for n, i in inst.items() if not i['master'].startswith(C.PROVIDER) and n not in pads['pads']}
 missing = sorted(core_blocks-set(blocks))
 # conn blocks the ledger does not book (new or retiring instances): second pass of the same packer into what is left,
@@ -165,7 +179,7 @@ for i, a in enumerate(names):
     for p, rp in padr:
         if ov(ra, rp): bad.append((a, p))
 out = dict(chip=chip, die=C.DIE, core=C.CORE, macro=F['macro'], blocks=blocks, reserves=reserves, unplaced=F['unplaced'],
-           relaxed=F['relaxed'], rule_audit=F['rule_audit'], rule_fails=F['rule_fails'], conn_not_placed=missing, second_pass=second, staged=staged, groups=C.GROUP_BOOK.get(chip, {}), decap_tiles_given_up=dropped, decap_tiles_unplaced=[u[0] for u in F['unplaced'] if u[0].startswith('decap')],
+           relaxed=F['relaxed'], rule_audit=F['rule_audit'], rule_fails=F['rule_fails'], conn_not_placed=missing, second_pass=second, staged=staged, groups=C.GROUP_BOOK.get(chip, {}), decap_tiles_given_up=dropped, decap_tiles_unplaced=[u[0] for u in F['unplaced'] if u[0].startswith('decap')], decap_fixed=sum(1 for n in blocks if n.startswith('decap_fix')),
            overlaps=bad, switches=F['switches'], pad_clear_um=g)
 json.dump(out, open(RUN+'/floorplan.json', 'w'), indent=0)
 print(f"{chip}: placed {len(blocks)} (conn blocks without a place: {missing}), unplaced {F['unplaced']}, relaxed {len(F['relaxed'])}, "

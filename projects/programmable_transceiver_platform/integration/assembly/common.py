@@ -70,6 +70,9 @@ FIXED_PLACE = {'wired': {'isw_wired_tx_a': (2938.0, 2209.0), 'isw_wired_tx_b': (
 # blocks between them where they draw no Metal5, and enters the block's free corner (block x >= 598.7, y >= 236.1)
 ISLAND_BARS = {'wired': [dict(net='RAIL_wired_tx', rects=[(2658.5, 2265.0, 3400.0, 2611.0), (2512.95, 2445.6, 2658.5, 2610.2)],
                               vias=[('isw_wired_tx_a', 'VISL'), ('isw_wired_tx_b', 'VISL')])]}
+# decap tiles the assembly places itself before the other blocks (power delivery 4.1d / PDS-16: the 14 tiles that did not
+# place go inboard of pad_hs_rx, within 500 um of bidir[14], restoring 5.4 nF and the CDM reach): slot, count
+FIXED_DECAP = {'wired': dict(slot=(2453.0, 960.0, 2953.0, 1440.0), count=14)}
 TWIN = {'pt_adc_q': 'pt_adc_i', 'pt_dac_q': 'pt_dac_i'}
 # provider-ring instances of the conn (not core blocks): their pins are on the template's IO cells
 PROVIDER = ('pt_host_physical', 'pt_debug_physical', 'atb_provider_pad', 'pad_strap', 'prov_supply', 'prov_supply_sig')

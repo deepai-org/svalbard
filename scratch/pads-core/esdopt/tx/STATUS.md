@@ -705,3 +705,38 @@ not fit. Options: (1) B100 judged at the in-window codes (base at code 2: 1.26 x
 is lower than 30 mA in one leg (wired TX's numbers pending); (3) trade termination C elsewhere (return to two up-diodes x 1 -> -21 fF, CDM margin 0.4 V less).
 Files: GDS 131af869..., netres `sec/r16/res.json` 83c2795b, EM `sec/r16/em.json`, models `sec/models/a16_rh` 0047a3d7 / `a16_rt` 5e0a7322 / `a16_c`.
 Build: `python3 $P/analog/pads/tx_pad_layout.py sec/b/a16 --nvt '{"wb": 23.5, "wt": 23.5, "lb": 2.2, "lt": 1.0, "merged": true, "disc2": [24, 0.28, 64, 2], "disch": 20, "riser_wide": true, "em": 2, "t0_shift": 2.5, "b_col_hw": 1.8, "t_col_hw": 1.45, "bus_h": 22, "pad_pins": true, "disc_m3": true, "drop_m3": true, "head3": true}' --upx '{"x": [63, 69], "yu": 107}' --top-pins`.
+
+# STUDY (2026-11-21): 100BASE-TX drive headroom on the a16 model (coordinator / wired TX request; no redesign yet). Publishing on hold.
+Bench `sec/hd/drv100.py` (exact a16_rh R+C model). MAIN + POST both steered to PAD_P, termination off, 50 ohm from each pad to VDD (the out-bench load),
+tail demand 38 mA (MAIN 3/4, POST 1/4 through the normal mirrors). What-ifs scale the cascodes / steering switches / tails with m=, or swap the cascodes to
+nfet_06v0_nvt. Results in `bench/hd*-drv100.json`; pad C from `tb2.py ac` on the matching rt what-if.
+
+| Case (CASCODE gate, scaling) | delivered I ss/32/3.15 | tt/27/3.3 | pad V (ss) | SUM node min (ss) | tail min (ss) | pad C (rt, 100 MHz) |
+|---|---|---|---|---|---|---|
+| a16 as is, gate = VDD | 26.9 mA | 34.5 | 1.80 V | 0.41 V | 0.23 V | 3.214 pF |
+| gate 3.6 V | 32.1 | 37.0 | 1.55 | 0.51 | 0.29 | same |
+| gate 4.0 V | 34.6 | 38.9 | 1.42 | 0.57 | 0.32 | same |
+| gate 4.5 V | 36.4 | 40.3 | 1.33 | 0.61 | 0.34 | same |
+| gate 5.0 V | 37.5 | 41.2 | 1.28 | 0.63 | 0.36 | same |
+| cascode W x2 (gate VDD) | 36.5 | 41.8 | 1.32 | 0.61 | 0.35 | +0.87 pF (cascode x1.5: +0.44) |
+| switches W x2 | 28.8 | 36.5 | 1.71 | 0.34 | 0.25 | (switch drains are not on the pad) |
+| tails W x2 | 28.2 | 36.1 | 1.74 | 0.36 | 0.18 | (not on the pad) |
+| all x1.5 | 36.0 | 42.0 | 1.35 | 0.44 | 0.28 | about +0.44 (cascodes) |
+| all x2 | 41.0 | 45.7 | 1.10 | 0.44 | 0.30 | about +0.87 |
+| native nvt cascodes 16/1.8 (x1 / x1.5 / 24 um x1.5) | 27.5 / 32.3 / 36.1 | 35.3 / 39.2 / 42.0 | | | | 3.835 / 4.580 / 5.694 pF |
+Findings:
+- The cascode is the main limiter. At ss / 3.15 V it needs about 5 V on its gate, or about 2x its width, to hold about 37-38 mA. Switches and tails alone give 2 mA.
+- The cascode gate above VDD: nfet_06v0 gate-to-source / drain DC <= 6.0 V (DRM), 8.0 V transient. A 5.0 V gate is inside, but there is no on-chip supply above
+  VDD and no spare pad, so the reachable level is VDD (3.15 V at ss). A charge-pumped bias is possible in principle (gate load only; the 16 cascode gates are
+  about 0.3 pF to charge), but it is a new block outside the pad.
+- Any width increase on the pad side costs pad C far beyond the 9 fF left: cascode x1.5 +0.44 pF, x2 +0.87 pF. Native cascodes are worse (gate area). On-pad
+  scaling is not viable within 3.223 pF unless the high-speed modes accept a much larger pad C (WT39 / return loss).
+- Load-set limit: with 50 ohm to VDD, 38 mA puts the pad at 3.15 - 1.9 = 1.25 V at ss, and the whole stack (cascode + switch + tail) must fit in that. The
+  in-pad options buy only about 0.2-0.3 V. The board / magnetics side sets the pad DC level (e.g. a transformer centre tap above the pad's operating
+  point, or a different turns ratio for the 950 mV at the RJ45) and is the lever that costs no pad C.
+EM bases for the fixed 100BASE-TX case (WT52-c planning: 40 mA held per leg for 96 ns, 20 mA long-stream average) on a16 (`em_check.py`, PAD bond -> heads and bond ->
+driver-unit paths now screened as review-a16 asked):
+- A100 = 20 mA per pad average (k_pin 2, <= 0.86): worst 0.84 (TU_x_B). PASS.
+- P100 = 40 mA held as static (<= 1.0, conservative for 96 ns): 12 over, all termination-path: TU_x_B 1.68, PAD bond -> heads 1.47, T1 1.37, bus 1.29, T2 1.26.
+- These apply only if the termination is on in 100BASE-TX. Wired TX's bench runs it off, and then the drive path carries the current instead: per driver unit
+  bond -> cascodes 0.44 (cut) / 0.18 (run) at 5 mA per unit. The shared bond trunk at 40 mA is not separated by the per-unit paths (to be added).

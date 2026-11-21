@@ -79,7 +79,7 @@ wired 13, of them 11 / 9 supply cells on signal sites) and staged (rf 4) instanc
 (per-chip `core_bias`, supply cells at signal sites, `bias_ext` split, pad generator site map, RF ground model, dead checks), D-LOVREG, D-ANA, D-PWR bias-bank rails;
 `netlist.py` (chip assembly) not switched to the conns.
 
-**Wired RX** — `analog/wired_rx/README.md` (Resume 9), `PINS.md`, STATUS files in `scratch/wired_rx/*`.
+**Wired RX** — `analog/wired_rx/README.md` (incl. pins section), STATUS files in `scratch/wired_rx/*`.
 Published: `pt_cdr` r13 (0.083 mm²). Capture r7c (0.294 mm², −0.66) fails one case (LDE edge on the capture
 clock edge: `scratch/wired_rx/r7cap/STATUS.md`); CTLE follower not built; ptrim real-load fix not built;
 detect needs threshold redesign; interleaved >2.5 Gb/s path (R8-ARCH) not designed; chain rate × corner ×
@@ -88,10 +88,10 @@ Sub-work stopped mid-flight: CTLE follower + chain requal, ptrim redesign, detec
 AUX clock receiver checks: inspect `scratch/wired_rx/` for partial results.
 
 **Wired TX / USB** — agent running (fresh). `analog/wired_tx/README.md`, `INTEGRATION.md`,
-`USB-INTEGRATION.md`, `scratch/wired_tx/`. 2.5 Gb/s fails at ss on real ring duty; no >2.5 Gb/s path survives
+`scratch/wired_tx/`. 2.5 Gb/s fails at ss on real ring duty; no >2.5 Gb/s path survives
 extraction; `pt_usb_txdrv` rev 3 unreviewed (HS level 351 mV at ss/3.15 V; 400 mV from 3.33 V).
 
-**LO / timing** — `scratch/lo-ap4/NOTES.md`, `analog/timing/LO-INTEGRATION.md`, rows LO20..28.
+**LO / timing** — `scratch/lo-ap4/NOTES.md`, `analog/timing/README.md` (LO section), rows LO20..28.
 Staged, unpublished: lo_mmd 0.146 (max frequency regressed, review NO-GO), qdum, lo_obs, clk_obs16, lo_ext
 candidate (mixer loss 1.5/3.8 dB tt/ss vs 3.3/9.8 published). Open: QVCO with real tank loads and fill
 keep-outs, QVCO top netlist/LVS, regulator vs the −60 dBc limit, loop (preset, lock 60–65 µs at slow filter

@@ -153,3 +153,4 @@ Current work status is in `SESSION-STATE.md`, not here.
   push; the coordinator pushes. No GDS uploads until a block is really finished.
 - Keep a notes/status file current so a successor can resume; write long reports incrementally.
 - State plainly what was rerun versus only read, and what failed.
+- **Commits on the shared tree (coordinator, 2026-11-21).** Always commit with a pathspec, `git commit -m "..." -- <paths>`, which records only the named paths even if other agents have staged work in the shared index; never a bare `git commit` after `git add`. Do not rewrite pushed history.

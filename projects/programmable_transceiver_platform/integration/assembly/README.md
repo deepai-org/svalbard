@@ -43,21 +43,21 @@ named `asm-<chip>-<pid>`: stop a run only by that name (`docker kill asm-...`) o
 - **Net classes** (`kl_place.cls`): island rails / regulator outputs 3 um wide; hooks 1.2 um; clock, high-speed and RF
   nets twice the minimum spacing (no drawn shields). Booked ledger items without a conn instance are Metal1-3 blockages.
 
-## Results (run of 2026-11-19/20)
+## Results (current: commit 21bbb5e5; pt_rf route 2026-11-20 10:34, pt_wired route 14:17, pt_rf DRC 2026-11-21)
 
 | | `pt_rf` | `pt_wired` |
 |---|---|---|
-| Floorplan (`report/floorplan.png`) | all 190 conn blocks placed, 0 overlaps, 0 keep-away fails (QVCO rule kept); 16 decap tiles (0.24 mm2) do not fit | all 213 placed (isw_wired_tx_a/b, steer_0..3 by the second pass), 0 overlaps, 0 keep-away fails |
-| Nets routed (signal / clock / hs / rf / rail) | 402 / 402, every pin reached | 424 / 424 |
-| Hooks routed | 238 / 275 | 220 / 264 |
-| Wire length | 1383 mm | 1372 mm |
-| Global-route overflow gcells | 558 (QVCO interior pins, pad cells, macro south edge) | 1494 (macro SE corner against pad_wire_tx, pad_aux_clk / pad_hs_rx, macro south edge over the decap row) |
-| Detailed-route violations (20 iterations) | 467 (379 shorts: 221 inside the QVCO, 61 in pad cells) | 1035 (822 shorts: 520 inside pad cells, 68 at the macro) |
-| LVS (black boxes, by name) | 572 match, 150 short+internal, 6 open, 64 not checkable | 741 match, 105 short+internal, 33 short, 56 not checkable |
-| DRC main deck (shuttle 792ef67) | 641 347 before the via-grid fix: 627 636 via4_OFFGRID + 1922 V4.2a in the grid vias (fixed: 10 nm grid, not rerun), 9928 GR.4 in the provider ring, 165 in the top wiring (GR.2 near the seal: wiring outside the ring) | not run |
-| Antenna | 175 (ANT.16 via ANT.5 / ANT.6) | not run |
-| Density after fill (`rf` keep-outs) | not run | every global rule passes (COMP 44.0, Poly2 37.1, M1 41.2, M2 39.1, M3 40.2, M4 48.8, M5 51.4 %); 48 DCF.1a inside blocks |
-| Power grid coverage per net | M4 7.3-7.8 %, M5 10.5-11.0 % (G1: >= 15 %) | M4 8.0-8.5 %, M5 11.5-11.9 % |
+| Floorplan (`report/floorplan.png`) | all conn blocks placed, 0 overlaps, 0 keep-away fails; 40 um channels south / east of the macro; island blocks pulled to their switch | same; `isw_wired_rx` beside `dvdd_pads[1]` (PDS-9); `pt_wiredtx8` (staged, for instance `wiredtx`) R0 at cell x0 = 1493.75 (23.75 mod 70) |
+| Grid straps (`strap_widths.json`) | 10.5 um everywhere: M4 7.5-8.0 %, M5 10.8-11.2 % per net (passes IR, PDS-8) | 16 um in ME / SE, 10.5 um elsewhere: M4 8.6-8.9 %, M5 12.1-12.7 %; ME 7.1-11.0 %, SE 10.1-12.6 % (below 12 %: own Metal4/5 of wrx_cap / ptrim / wired TX, ASM-8) |
+| Nets routed (signal / clock / hs / rf / rail) | all | all |
+| Hooks routed | 227 / 275 | 228 / 265 |
+| Detailed-route violations (20 iterations); baselines 467 / 742 (rf), 1035 / 2919 (wired) | **681** (574 shorts: QVCO 158, RF/BB pads 145) | **1938** (1413 shorts: pads 544, macro 35) |
+| pt_wiredtx8 grid ties | | VSS landings 4 of 6, channel tabs 3 of 6 (the others sit on VDD axes, untied by design); 10 old pins unconnected until the conn binds the new cell |
+| DRC main deck (shuttle 792ef67) | **3375** (was 641 347): V4.2a 1914 + M4.1 77 + MT.1 40 in the grid vias / metal, 586 V3/V4 in the provider ring at the custom pad sites (SO-1), ~200 in the top wiring, 36 M2.2a inside `pt_lc_qvco5`; **GR.4 0** (the 9928 of the first run are gone) | not run |
+| Antenna | 111 (ANT.16 via ANT.4/5/6/12) | not run |
+| Density after fill | not run | every global rule passes; 48 DCF.1a inside blocks |
+| LVS (black boxes, by name; first run) | 572 match, 150 short+internal | 741 match, 138 short |
 
-Open in the flow: routing blockage outside the core-ring band (wires reached the seal ring); hook nets that are not routed;
-main deck rerun after the via-grid fix; full precheck on one chip. Owner rows ASM-1..7 in `scratch/reviews/interface-changes.md`.
+Not yet picked up: QVCO r8 (ASM-1 done by LO, all ports on the west edge, 898 x 661.3 um, committed 2 min after the
+pt_rf abstract); pad pin moves (ASM-2 / PC-51) except `pad_hspad` a6. Open: V4.2a / M4.1 / MT.1 in the grid, full precheck.
+Owner rows ASM-1..9 in `scratch/reviews/interface-changes.md`.

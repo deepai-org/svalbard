@@ -148,9 +148,10 @@ def build(work=None, bare=False):
     xm = [top_t[f'PH{k}'][0] for k in range(8)]
     xs_ = [bot_t[f'PS{k}'][0] for k in range(8)]
     # ------------------------------------------------------------------ phase buffer cell (built once, painted eight times)
+    # session 17: first gate NAND2(PH, SER_EN), PH next to the output (wtx8_top.PHBUF), then the 6 / 12 inverter
     b1, b2 = T.PHBUF
     cols, bnet = [], []
-    for c_, n_ in (L.g_inv('b', 'PB', 'PS', b2[0], b2[1], BWN, BWP), L.g_inv('a', 'PH', 'PB', b1[0], b1[1], BWN, BWP)):
+    for c_, n_ in (L.g_inv('b', 'PB', 'PS', b2[0], b2[1], BWN, BWP), L.g_nand2('a', 'PH', 'SER_EN', 'PB', b1[0], b1[1], BWN, BWP)):
         L.join(cols, c_)
         bnet += n_
     brow = XRow('pb', cols, BWN, BWP, tracks=AX.solve_tracks(cols))
@@ -168,6 +169,15 @@ def build(work=None, bare=False):
         if not ok:
             raise RuntimeError(f'no Metal3 drop for PS{k}')
         psx.append(ok[0])
+    # SER_EN: one Metal3 drop per buffer from the cell's SER_EN track straight down to the net's Metal2 track in zone B, at the
+    # same x inside every cell (equal stubs); clear of the Metal3 verticals from above and of the PS drops
+    se_lo, se_hi = brow.ext['SER_EN'][0] + 0.2, brow.ext['SER_EN'][1] - 0.2
+    rels = [s(se_hi - 0.05 * i) for i in range(int((se_hi - se_lo) / 0.05) + 1)]
+    okr = [r for r in rels if all(min([abs(xm[k] - bx['PH'] + r - q) for q in v3] + [abs(xm[k] - bx['PH'] + r - psx[k])]) >= 0.4 + 0.3 for k in range(8))]
+    if not okr:
+        raise RuntimeError('no common Metal3 drop for SER_EN in the phase buffers')
+    sex = [s(xm[k] - bx['PH'] + okr[0]) for k in range(8)]
+    top_t['SER_EN'] = top_t['SER_EN'] + sex                # the SER_EN Metal2 track then spans every drop
     psn = {f'PS{k}': (min(psx[k], xs_[k]) - 0.3, max(psx[k], xs_[k]) + 0.3) for k in range(8)}
     tF, tP = pack(m4nets), pack(psn)
     nF, nP = max(tF.values()) + 1, max(tP.values()) + 1
@@ -223,6 +233,10 @@ def build(work=None, bare=False):
         y = s(yB0 + t2[n] * P2)
         g.rect('metal2', lo - 0.1, y - 0.2, hi + 0.1, y + 0.2)
         for x in top_t[n]:
+            if n == 'SER_EN' and x in sex:
+                g.via(x, y, 2, 3)                          # SER_EN drop to a phase buffer (Metal3 drawn with the buffers)
+                y_se = y
+                continue
             down(x, y, 2)
         if side:
             pins[n] = ('metal2', 0.6 if side == 'L' else s(Wb - 0.6), y)
@@ -373,6 +387,11 @@ def build(work=None, bare=False):
             g.rect('metal2', dx, yr, dx + brow.width, yr + RAIL_W)
             g.rect('via1', dx + 0.3, yr + 0.1, dx + brow.width - 0.3, yr + RAIL_W - 0.1)
         typ, tys = fy(brow.track['PH']), fy(brow.track['PS'])
+        tse = fy(brow.track['SER_EN'])
+        g.via(sex[k], tse, 2, 3)                           # SER_EN: Metal3 from the cell's track down to its Metal2 track (zone B)
+        g.rect('metal3', sex[k] - 0.2, y_se - 0.2, sex[k] + 0.2, tse + 0.2)
+        m3.append(sex[k])
+        tab[f'SER_EN_{k}'] = dict(x=sex[k], stub_metal3_um=round(tse - y_se, 2))
         # PH: Metal3 stub from the mux pin down to the buffer's PH track.  The block pin is the mux's PH window above the
         # output buses (WT43: Metal4 pad, VSS-guarded; the ring router's Metal5 lane lands on it from the top edge)
         g.rect('metal3', xm[k] - 0.2, typ - 0.2, xm[k] + 0.2, Ym + 0.4)
@@ -627,7 +646,8 @@ def reference():
 
 def negatives(sch):
     """references that must NOT match: two phases swapped at the mux, stream rotation off by one, OVP / OVN swapped at the mux,
-    the outputs of the phase buffers 0 and 1 swapped at ser8d, two trim pins (TR6_0 / TR7_3, right-side Metal4) swapped at the mux."""
+    the outputs of the phase buffers 0 and 1 swapped at ser8d, two trim pins (TR6_0 / TR7_3, right-side Metal4) swapped at the mux,
+    SER_EN replaced by PH2 at the NAND of phase buffer 3 (session 17)."""
     xm = next(l for l in sch.splitlines() if l.startswith('XMUX '))
     tk = xm.split()
     a = list(tk)
@@ -646,7 +666,8 @@ def negatives(sch):
     e[i0], e[i1] = e[i1], e[i0]
     return {'neg_ph0_ph1_swapped_at_mux': sch.replace(xm, ' '.join(a)), 'neg_stream_rotation_plus_one': sch.replace(xm, ' '.join(b)),
             'neg_ovp_ovn_swapped_at_mux': sch.replace(xm, ' '.join(c)), 'neg_buffer_outputs_ps0_ps1_swapped_at_ser8d': sch.replace(xs, ' '.join(d)),
-            'neg_trim_pins_tr6_0_tr7_3_swapped_at_mux': sch.replace(xm, ' '.join(e))}
+            'neg_trim_pins_tr6_0_tr7_3_swapped_at_mux': sch.replace(xm, ' '.join(e)),
+            'neg_ser_en_replaced_by_ph2_at_buffer_3': re.sub(r'^(XA3n?p?b_\d+ \S+) SER_EN ', r'\1 PH2 ', sch, flags=re.M)}
 
 
 def cval(x):

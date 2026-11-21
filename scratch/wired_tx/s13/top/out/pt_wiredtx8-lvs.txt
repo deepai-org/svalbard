@@ -510,7 +510,7 @@ Device classes wtx8_aux and wtx8_aux are equivalent.
 Flattening unmatched subcell wtx8_phbuf in circuit pt_wiredtx8 (1)(1 instance)
 Flattening unmatched subcell wtx8_decap in circuit pt_wiredtx8 (1)(1 instance)
 
-Class pt_wiredtx8 (0):  Merged 781 parallel devices.
+Class pt_wiredtx8 (0):  Merged 861 parallel devices.
 Class pt_wiredtx8 (1):  Merged 693 parallel devices.
 Subcircuit summary:
 Circuit 1: pt_wiredtx8                     |Circuit 2: pt_wiredtx8                     
@@ -518,16 +518,17 @@ Circuit 1: pt_wiredtx8                     |Circuit 2: pt_wiredtx8
 wtx_ser8d (1)                              |wtx_ser8d (1)                              
 wtx_mux8 (1)                               |wtx_mux8 (1)                               
 wtx8_aux (1)                               |wtx8_aux (1)                               
-nfet_03v3 (750->17)                        |nfet_03v3 (702->17)                        
-pfet_03v3 (64->16)                         |pfet_03v3 (24->16)                         
-Number of devices: 36                      |Number of devices: 36                      
-Number of nets: 155                        |Number of nets: 155                        
+nfet_03v3 (798->25)                        |nfet_03v3 (710->25)                        
+pfet_03v3 (112->24)                        |pfet_03v3 (32->24)                         
+Number of devices: 52                      |Number of devices: 52                      
+Number of nets: 163                        |Number of nets: 163                        
 ---------------------------------------------------------------------------------------
 Netlists match uniquely.
 
 Subcircuit pins:
 Circuit 1: pt_wiredtx8                     |Circuit 2: pt_wiredtx8                     
 -------------------------------------------|-------------------------------------------
+SER_EN                                     |SER_EN                                     
 VSS                                        |VSS                                        
 VDD                                        |VDD                                        
 MAIN_P                                     |MAIN_P                                     
@@ -619,7 +620,6 @@ ATB_AVGP                                   |ATB_AVGP
 ATB_AVGN                                   |ATB_AVGN                                   
 POST_N                                     |POST_N                                     
 POST_P                                     |POST_P                                     
-SER_EN                                     |SER_EN                                     
 IDLE                                       |IDLE                                       
 IDLE_MODE                                  |IDLE_MODE                                  
 WTX_EXT                                    |WTX_EXT                                    

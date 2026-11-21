@@ -1,14 +1,14 @@
 {
  "gds": "/home/ubuntu/svalbard/scratch/wired_tx/s13/top/build/pt_wiredtx8.gds",
- "sha256": "sha256:101f600240dca15d36be521414d1e0641659980a35404543a623a58c2eaf3cd3",
+ "sha256": "sha256:62e25b01a85befbe5e58cf9369a945b01cda17ac8889e23788497b4b05bffaf2",
  "magic_drc": 0,
  "lvs": {
   "unique_match": true,
   "summary": "Final result: Circuits match uniquely.\n.",
   "report": "/home/ubuntu/svalbard/scratch/wired_tx/s13/top/verify/lvs.txt",
   "counts": [
-   "Number of devices: 36 |Number of devices: 36",
-   "Number of nets: 155 |Number of nets: 155"
+   "Number of devices: 52 |Number of devices: 52",
+   "Number of nets: 163 |Number of nets: 163"
   ],
   "property_errors": 0
  },
@@ -32,6 +32,10 @@
   "neg_trim_pins_tr6_0_tr7_3_swapped_at_mux": {
    "fails_as_required": true,
    "summary": "Final result: Top level cell failed pin matching."
+  },
+  "neg_ser_en_replaced_by_ph2_at_buffer_3": {
+   "fails_as_required": true,
+   "summary": "Final result: Netlists do not match.\nPort matching may fail to disambiguate symmetries."
   }
  },
  "antenna_magic": {

@@ -2,8 +2,12 @@
 
     pt_wiredtx8 = wtx_ser8d (40-bit word -> 8 streams) + wtx_mux8 (8-phase muxing pre-driver, drives the pad's
                   MAIN / POST switch gates) + wtx8_aux (control glue, two tail-bias DACs, CMOS tap, EXT / idle drivers)
-                  + wtx8_phbuf (two inverters per phase in front of wtx_ser8d: the ring drives only the mux and
-                  a 3 um gate per phase; the stream macro's clocks are about two gate delays late) + wtx8_decap
+                  + wtx8_phbuf (per phase NAND2(PH, SER_EN) + inverter in front of wtx_ser8d: the ring drives only
+                  the mux and one NAND input per phase; the stream macro's clocks are about two gate delays late)
+                  + wtx8_decap
+  PH gating (session 17): the first gate on each PH input is NAND2(PH k, SER_EN), PH on the input next to the output,
+  identical for all eight; SER_EN = 1 inverts like the former inverter.  The digital holds SER_EN low while the pll
+  island is off, so floating PH inputs then draw no crowbar current in the buffers.
 
 Control glue (static CMOS, all inputs are gates on the wired rail):
     on      = !ISLAND_OFF
@@ -84,7 +88,7 @@ def aux(name='wtx8_aux', tap=None):
 # supply decoupling of the block: NMOS gate capacitors between VDD and VSS, laid out by pt_wiredtx8_layout.py in the free
 # area left of the mux.  n = number of fingers the layout holds (the layout generator asserts it places exactly n).
 DECAP = dict(w=8.0, l=2.0, n=686)
-PHBUF = ((2, 4), (6, 12))      # two inverters per phase in front of wtx_ser8d (the ring then drives only the mux stub)
+PHBUF = ((3, 4), (6, 12))      # NAND2(PH, SER_EN) wn / wp (series NMOS 3 um each), then an inverter 6 / 12, per phase
 
 
 def decap(name='wtx8_decap'):
@@ -94,15 +98,15 @@ def decap(name='wtx8_decap'):
 
 
 def phbuf(name='wtx8_phbuf'):
-    L = [f'.subckt {name} ' + ' '.join(PH) + ' ' + ' '.join(f'PS{k}' for k in range(8)) + ' VDD VSS']
+    L = [f'.subckt {name} ' + ' '.join(PH) + ' ' + ' '.join(f'PS{k}' for k in range(8)) + ' SER_EN VDD VSS']
     for k in range(8):
-        L += inv(f'A{k}', f'PH{k}', f'PB{k}', *PHBUF[0]) + inv(f'B{k}', f'PB{k}', f'PS{k}', *PHBUF[1])
+        L += nand2(f'A{k}', f'PH{k}', 'SER_EN', f'PB{k}', *PHBUF[0]) + inv(f'B{k}', f'PB{k}', f'PS{k}', *PHBUF[1])
     return '\n'.join(L + [f'.ends {name}']) + '\n'
 
 
 def top(name=NAME):
     L = ([decap().rstrip('\n'), ''] if DECAP['n'] else []) + [phbuf().rstrip('\n'), '', f'.subckt {name} ' + ' '.join(PORTS)]
-    L.append('XPB ' + ' '.join(PH) + ' ' + ' '.join(f'PS{k}' for k in range(8)) + ' VDD VSS wtx8_phbuf')
+    L.append('XPB ' + ' '.join(PH) + ' ' + ' '.join(f'PS{k}' for k in range(8)) + ' SER_EN VDD VSS wtx8_phbuf')
     if DECAP['n']:
         L.append('XDEC VDD VSS wtx8_decap')
     L.append('XSER ' + ' '.join(f'D{i}' for i in range(40)) + ' ' + ' '.join(f'PS{k}' for k in range(8)) + ' SERQ ' + ' '.join(f'F{k}' for k in range(8))

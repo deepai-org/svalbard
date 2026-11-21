@@ -7,6 +7,41 @@ Generator `analog/wired_tx/pt_wiredtx8_layout.py`. Reference: `wtx8_top.netlist(
 
 Every check below was run on the final GDS read back from disk (`top/verify`). Nothing is committed.
 
+## 0. Session 17: PH inputs gated by SER_EN (supersedes the buffer / PH figures below where they differ)
+
+Why: with the pll island off and wired_tx on, the eight PH inputs float into powered gates. The first gate of each
+`wtx8_phbuf` stage is now **NAND2(PH k, SER_EN)**, PH on the input next to the output, identical in all eight; then the
+6 / 12 inverter as before. SER_EN = 1: inverts like the old inverter (downstream unchanged). The digital must hold
+SER_EN low while the pll island is off (INTEGRATION.md section 7).
+
+- **Sizing** (`s17/size`, schematic bench, 30 ohm source, inverter 6/12 + 70 fF load): NAND wn 3 (each series NMOS) /
+  wp 4. PH input charge-equivalent C 10.6 fF vs 9.1 fF for the inverter 2/4 (+1.4 fF); delay PH -> PS at ss 3.15 V
+  32 C: rise 212 / fall 213 ps vs 191 / 198 (+21 / +15 ps); ff 3.35 V 22 C: 140 / 142 vs 127 / 134 ps. Rejected: 2/4
+  (rise +75 ps), 4/4 (+3.1 fF).
+- **Layout**: one cell for all eight, 16.88 x 9.45 um (was 9.92 x 8.7); 4 fingers. SER_EN: its Metal2 track in zone B
+  now spans the eight buffers, one Metal3 drop per buffer at the same x in every cell, 14.24 um each (equal stubs).
+  Outline 744.5 x 401.4, seam y 197.68..236.96 (39.28 um, unchanged), ties, lanes, Metal5 plan, windows unchanged;
+  Metal2 tracks 18 -> 19 (seam height set by the Metal4 tracks, no change); VSS Metal2 above each buffer 8.0 -> 7.25 um;
+  rail stitches VSS 18 -> 13, VDD 9 -> 8 (wider holes).
+- **Checks from disk**: Magic DRC 0, KLayout DRC 0, LVS unique (52 / 52 devices, 163 / 163 nets, 0 property errors),
+  antenna 0, **6 / 6 negative controls fail**, new one: SER_EN replaced by PH2 at the NAND of buffer 3 (Netlists do not match).
+  GDS sha256:62e25b01a85befbe5e58cf9369a945b01cda17ac8889e23788497b4b05bffaf2, copied to generated/fast.
+- **PH C (block extraction)**: 36.0 / 37.0 / 37.3 / 37.5 / 37.6 / 37.0 / 37.0 / 36.6 fF, spread 1.6 fF (was 33.7-35.3,
+  +2.3 fF avg). PH to each output bus <= 0.07 fF, pair differences <= 0.07 fF (unchanged).
+- **IR phase O** (rerun, rail band changed): nominal 6.28 mV PASS (VDD 3.34 / VSS 2.94), high R 11.10 mV: unchanged;
+  ser8d logic VDD 22.15 -> 22.39 mV, mux logic 7.01 -> 7.37 mV. Raster EM worst 55.9 % (unchanged); block EM table unchanged (worst 17.1 %).
+- **ser8d hop probe with the buffers in** (`s17/probe`: p16 decks, ring -> buffers -> PS R + top-level C -> ser8d R+C):
+  min set-up ssp 672.9 ps (old buffer 673.8), ff 883.6 ps (884.5); hold >= 689 ps; stream-change window violations 0
+  (all four runs). PASS (>= 100 ps). (These numbers are below the session-16 698.6 / 901.3 ps because those decks had no buffers at all.)
+- **Eye**: the fu16b / m9 bench drives the mux with ideal phases and does not contain the buffers (they only feed
+  ser8d), so the eye (0.2063 V) is unaffected. Buffer delay PH -> ser8d pin per phase (ssp, rise): 271 / 272 / 264 / 264 /
+  251 / 261 / 283 / 305 ps; spread 53.6 ps (old buffers 50.8 ps), ff 36.0 (34.3). The spread is set by the PS wiring
+  (41-104 fF), not by the cell: the NAND's added delay per phase is 14.4-17.1 ps (ssp rise, spread 2.7 ps), 15.2-16.0
+  (ssp fall, 0.8 ps), ff 10.1-12.0 / 9.7-10.2 ps. **The <= 2 ps spread target is not met in absolute terms** (it was not
+  met by the old buffers either); the NAND adds 2.7 ps worst.
+- **Floating input** (`s17/float`, ff 3.63 V, SER_EN = 0, PH swept 0..3.63 V): buffer stage supply current max 1.2 nA
+  per buffer at 85 C, 7.0 nA at 125 C (limit 1 uA). The old inverter drew 1.5 mA at mid-rail.
+
 ## 1. Outline, area, seam
 
 | part | um | um2 |

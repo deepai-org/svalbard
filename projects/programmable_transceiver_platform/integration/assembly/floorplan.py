@@ -27,9 +27,20 @@ for n, v in C.STAGED.get(chip, {}).items():
     if MJ.get(v['master'], {}).get('w') and n in inst0:      # the ledger may still book the old master for the instance
         for m_ in {inst0[n]['master'], led.get(n, inst0[n]['master'])}: sizes[m_] = [round(MJ[v['master']]['w']+70, 2), round(MJ[v['master']]['h'], 2)]
 json.dump(pj, open(RUN+'/fp_pads.json', 'w')); json.dump(sizes, open(RUN+'/fp_sizes.json', 'w'))
+def fixed_rects():
+    out = {}
+    for m, (x, y) in C.FIXED_PLACE.get(chip, {}).items():
+        w, h = msize(m); w -= 70 if m in C.STAGED.get(chip, {}) else 0
+        out['fix_'+m] = [x, y, round(x+w, 2), round(y+h, 2)]
+    return out
+def msize(m):
+    """outline of a group member: a staged block is booked 70 um wider (grid-phase shift)"""
+    st = C.STAGED.get(chip, {}).get(m)
+    mm = st['master'] if st else inst0[m]['master']
+    return (MJ[mm]['w']+(70 if st else 0), MJ[mm]['h'])
 macro = {'rf': '1716:1108', 'wired': '1676:971'}[chip]      # wired: DG9-11 outline 1676 x 1592.96, 32 um to pad_ref (west, x 939) and pad_wire_tx (east, x 2679)
 env = dict(os.environ, CHIP=chip, SCEN='S', TAG='s', TRIES=os.environ.get('TRIES', '6'), PADS_JSON=RUN+'/fp_pads.json',
-           SIZES_JSON=RUN+'/fp_sizes.json', RUNDIR=RUN+'/fit', CHANNEL=os.environ.get('CHANNEL', '40'), ISLAND_W=os.environ.get('ISLAND_W', '0.3'), NOROT=','.join(C.STAGED.get(chip, {})), POCKET='1' if chip == 'wired' else '0', ITEM_SIZES=json.dumps({b: [sum(MJ[inst0[m]['master']]['w'] for m in ms)+4*(len(ms)-1), max(MJ[inst0[m]['master']]['h'] for m in ms)] for b, ms in C.GROUP_BOOK.get(chip, {}).items()}),
+           SIZES_JSON=RUN+'/fp_sizes.json', RUNDIR=RUN+'/fit', CHANNEL=os.environ.get('CHANNEL', '40'), ISLAND_W=os.environ.get('ISLAND_W', '0.3'), NOROT=','.join(list(C.STAGED.get(chip, {}))+list(C.GROUP_BOOK.get(chip, {}))), POCKET='1' if chip == 'wired' else '0', DROP=','.join(C.STALE_BOOK.get(chip, [])+list(C.FIXED_PLACE.get(chip, {}))+['isw_wired_tx']), EXTRA_RSV=json.dumps(fixed_rects()), ITEM_SIZES=json.dumps({b: [sum(msize(m)[0] for m in ms)+4*(len(ms)-1), max(msize(m)[1] for m in ms)] for b, ms in C.GROUP_BOOK.get(chip, {}).items()}),
            **({'MACRO_MM2': '2.669801'} if chip == 'wired' else {}), OMP_NUM_THREADS='1', MACRO=os.environ.get('MACRO', macro))
 fit = C.ROOT+'/scratch/reviews/die-fit'
 r = subprocess.run(['true'] if os.environ.get('REUSE_FIT') else ['nice', '-n', '10', 'python3', 'fit.py'], cwd=fit, env=env, capture_output=True, text=True)
@@ -43,17 +54,21 @@ for n, v in F['placed_rects'].items():
     m = 'decap' if n.startswith(('decap_bank', 'decap_tile')) else L.get(n, {}).get('master', n)
     if m == '(booked)': m = n
     blocks[n] = dict(master=m, rect=v['rect'], rot=v['rot'], in_conn=n in inst, gds=bool(MJ.get(m, {}).get('w')))
+# fixed placements (common.FIXED_PLACE): the packer kept their slots free (EXTRA_RSV)
+for k_, r_ in fixed_rects().items():
+    m = k_[4:]
+    blocks[m] = dict(master=(C.STAGED[chip][m]['master'] if m in C.STAGED.get(chip, {}) else inst0[m]['master']), rect=r_, rot=False, in_conn=True, gds=True, fixed=True)
 # group bookings (common.GROUP_BOOK): the packer placed one rectangle; its members go into it side by side, 4 um apart
 for bk, ms in C.GROUP_BOOK.get(chip, {}).items():
     if bk not in blocks: continue
     r0 = blocks.pop(bk)['rect']; x = r0[0]
     for m in ms:
-        w, h = MJ[inst0[m]['master']]['w'], MJ[inst0[m]['master']]['h']
+        w, h = msize(m)
         if r0[2]-r0[0] < r0[3]-r0[1]: w, h = h, w      # booked turned: members turned too
         blocks[m] = dict(master=inst0[m]['master'], rect=[round(x, 2), r0[1], round(x+w, 2), round(r0[1]+h, 2)], rot=(r0[2]-r0[0] < r0[3]-r0[1]), in_conn=True, gds=True, group=bk)
         x += w+4
 blocks['digital'] = dict(master='pt_digital_macro', rect=F['fixed']['digital'], rot=False, in_conn=True, gds=False)
-reserves = {n: r for n, r in F['fixed'].items() if n != 'digital'}
+reserves = {n: r for n, r in F['fixed'].items() if n != 'digital' and not n.startswith('fix_')}
 core_blocks = {n for n, i in inst.items() if not i['master'].startswith(C.PROVIDER) and n not in pads['pads']}
 missing = sorted(core_blocks-set(blocks))
 # conn blocks the ledger does not book (new or retiring instances): second pass of the same packer into what is left,
@@ -96,7 +111,7 @@ missing = sorted(core_blocks-set(blocks))
 # packer put the old block, then moved along x (<= half the modulus) so its x origin meets the owner's grid rule
 staged = {}
 for n, v in C.STAGED.get(chip, {}).items():
-    if n not in blocks or not MJ.get(v['master'], {}).get('w'): continue
+    if n not in blocks or not MJ.get(v['master'], {}).get('w') or blocks[n].get('fixed'): continue
     old = blocks.pop(n); r0 = old['rect']; w, h = MJ[v['master']]['w'], MJ[v['master']]['h']
     pk3 = Packer(C.CORE, G=2.0)
     for k, q in pj.items(): pk3.fixed(k, q)

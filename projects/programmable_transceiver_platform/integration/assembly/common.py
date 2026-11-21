@@ -58,7 +58,12 @@ STAGED = {'wired': {'wiredtx': dict(master='pt_wiredtx8', gds=AN+'wired_tx/gener
                                     x_mod=(20.75, 35.0), report='scratch/wired_tx/s13/top/out/report.json')}}
 # ledger bookings that stand for a group of conn instances placed side by side on one bar (coordinator CB8-11: both
 # wired_tx switch masters on one VISL bar beside pt_wiredtx8): booking -> members
-GROUP_BOOK = {'wired': {'isw_wired_tx': ['isw_wired_tx_a', 'isw_wired_tx_b']}}
+# die-fit ledger bookings that no longer stand for anything (parts of pt_wiredtx8, power delivery 4.1c)
+STALE_BOOK = {'wired': ['wtx_ser8d', 'wtx_mux8']}
+GROUP_BOOK = {}
+# blocks the assembly places itself at fixed lower-left corners, R0 (power delivery 4.1c option B, commit c4276fd1):
+# the wired_tx switch pair on the east edge beside the supply bonds, pt_wiredtx8 west of it, fed by a Metal5 bar
+FIXED_PLACE = {'wired': {'isw_wired_tx_a': (2938.0, 2209.0), 'isw_wired_tx_b': (3206.0, 2209.0), 'wiredtx': (1913.95, 2209.0)}}
 TWIN = {'pt_adc_q': 'pt_adc_i', 'pt_dac_q': 'pt_dac_i'}
 # provider-ring instances of the conn (not core blocks): their pins are on the template's IO cells
 PROVIDER = ('pt_host_physical', 'pt_debug_physical', 'atb_provider_pad', 'pad_strap', 'prov_supply', 'prov_supply_sig')

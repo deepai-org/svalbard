@@ -188,6 +188,8 @@ def run(mw, mx0, rng=None, strat=0):
     # pad_wire_tx, so blocks there pull their nets through the corner gap
     if os.environ.get('POCKET') == '1':
         rsv['pocket_e'] = (dig[2]+HALO, dig[1]-HALO, CORE[2], CORE[3])
+    for n_, r_ in json.loads(os.environ.get('EXTRA_RSV', '{}')).items():   # assembly: slots of blocks it places itself
+        rsv[n_] = tuple(r_)
     if CORRIDOR:
         cx = min(max(2281.2, dig[0]+100), dig[2]-150)
         rsv['corridor_s_rsv'] = (cx, CORE[1]+34.0, cx+46.5, dig[1]-HALO)

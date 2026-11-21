@@ -1,0 +1,73 @@
+{
+ "tag": "S_ff_230",
+ "bench": "bias-path (schematic aux DAC + pad + ideal gate drive)",
+ "aux": "/home/ubuntu/svalbard/scratch/wired_tx/s16/net/pt_wiredtx8.spice",
+ "corner": "ff",
+ "pess": false,
+ "temp": 22,
+ "vdd": 3.45,
+ "vct": 3.3,
+ "main_code": 230,
+ "post_code": 230,
+ "post_pol": 1,
+ "pad": "pad=RC-typ",
+ "gate_v": [
+  1.139,
+  2.926
+ ],
+ "core_rate": 2500000000.0,
+ "n": 20,
+ "board": "COB bond 0.23 ohm + 2.82 nH (pess.), COB package chain + 50 mm 50-ohm carrier (s13 P4), B39 49.9 ohm to CT 3.3 V, 2 x 98 nH + 19.6 pF diff (Butterworth 115 MHz), magnetics 1:1 OCL 350 uH, 100 ohm at RJ45; on-die TX termination off",
+ "sec": 79,
+ "meas": {
+  "lag_ns": 5.0,
+  "fit_rms_mv": 20.6,
+  "polarity": 1,
+  "scored": 20,
+  "p1": {
+   "mean_mv": 796.7,
+   "min_mv": 791.4,
+   "max_mv": 801.4,
+   "n": 13,
+   "pos2_mv": 799.7
+  },
+  "m1": {
+   "mean_mv": -815.3,
+   "min_mv": -835.4,
+   "max_mv": -795.2,
+   "n": 2,
+   "pos2_mv": -835.4
+  },
+  "longest_hold": {
+   "symbols": 12,
+   "level": 1,
+   "first_mv": 801.4,
+   "last_mv": 791.4
+  },
+  "amp_mv": 796.7,
+  "symmetry": 0.9573,
+  "pad_lead_ns": 4.6,
+  "ILP": {
+   "peak_ma": 37.29,
+   "avg_ma": 11.17,
+   "held_p1_ma": 3.42,
+   "held_m1_ma": 36.48
+  },
+  "ILN": {
+   "peak_ma": 36.16,
+   "avg_ma": 28.84,
+   "held_p1_ma": 35.45,
+   "held_m1_ma": 3.01
+  },
+  "pad_min_v": {
+   "P": 1.611,
+   "N": 1.64
+  },
+  "bias_v": {
+   "MAIN_BIAS": 1.2923,
+   "POST_BIAS": 1.2924
+  },
+  "i_vdd_avg_ma": 2.92
+ },
+ "ok": true
+}

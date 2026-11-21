@@ -1,0 +1,112 @@
+{
+ "tag": "A_ssp_255_pol1",
+ "bench": "full chain",
+ "net": "/home/ubuntu/svalbard/scratch/wired_tx/s16/net/pt_wiredtx8.fullfix16.rc.spice",
+ "net_sha256": "08338a4c60733a3b5b58ef3b28afcdf10ea87e955440c7dd4b263285eb4f1df5",
+ "net_label": "pt_wiredtx8.fullfix16.rc.spice (s16 snapshot, Magic extresist + fixcap16; pre NAND phase-buffer change)",
+ "ring": "real ring: extracted pt_pll_ring_core layout-11Nov pess., open loop vctrl 1.3562, route 30 ohm/75 fF",
+ "ring_hz": 312430000.0,
+ "core_rate": 2499440000.0,
+ "n": 20,
+ "symbol_rate": 124972000.0,
+ "corner": "ss",
+ "pess": true,
+ "temp": 32,
+ "vdd": 3.15,
+ "vring": 2.69,
+ "main_code": 255,
+ "post_code": 255,
+ "post_pol": 1,
+ "pad": "pad=RC-typ",
+ "board": "COB bond 0.23 ohm + 2.82 nH (pess.), COB package chain + 50 mm 50-ohm carrier (s13 P4), B39 49.9 ohm to CT 3.3 V, 2 x 98 nH + 19.6 pF diff (Butterworth 115 MHz), magnetics 1:1 OCL 350 uH, 100 ohm at RJ45; on-die TX termination off",
+ "stream": {
+  "source": "scrambled idle, x^11+x^9+1, MLT-3",
+  "start": 1100,
+  "symbols": [
+   0,
+   -1,
+   -1,
+   0,
+   1,
+   1,
+   1,
+   0,
+   -1,
+   -1,
+   -1,
+   0,
+   1,
+   1
+  ]
+ },
+ "sec": 8428,
+ "t_run_ns": 32.8,
+ "meas": {
+  "lag_ns": 11.0,
+  "fit_rms_mv": 6.5,
+  "polarity": 1,
+  "scored": 12,
+  "p1": {
+   "mean_mv": 615.2,
+   "min_mv": 614.8,
+   "max_mv": 615.7,
+   "n": 3,
+   "pos2_mv": 615.4
+  },
+  "m1": {
+   "mean_mv": -613.6,
+   "min_mv": -615.6,
+   "max_mv": -610.3,
+   "n": 3,
+   "pos2_mv": -615.2
+  },
+  "longest_hold": {
+   "symbols": 3,
+   "level": 1,
+   "first_mv": 615.7,
+   "last_mv": 614.8
+  },
+  "amp_mv": 613.6,
+  "symmetry": 1.0003,
+  "ILP": {
+   "peak_ma": 26.64,
+   "avg_ma": 12.83,
+   "held_p1_ma": 3.91,
+   "held_m1_ma": 21.45
+  },
+  "ILN": {
+   "peak_ma": 26.74,
+   "avg_ma": 17.07,
+   "held_p1_ma": 25.38,
+   "held_m1_ma": 11.67
+  },
+  "pad_min_v": {
+   "P": 1.989,
+   "N": 1.986
+  },
+  "gate_v": {
+   "MAIN_P": [
+    1.041,
+    2.672
+   ],
+   "MAIN_N": [
+    1.061,
+    2.67
+   ],
+   "POST_P": [
+    1.021,
+    2.671
+   ],
+   "POST_N": [
+    1.032,
+    2.671
+   ]
+  },
+  "bias_v": {
+   "MAIN_BIAS": 1.6801,
+   "POST_BIAS": 1.6791
+  },
+  "i_vdd_avg_ma": 63.51
+ },
+ "ok": true
+}

@@ -278,8 +278,7 @@ DBG-02, MT-03. LO-01 is listed there as closed but applies again (the QVCO runs 
    file. `lo_ext-evidence.json`, `lo_ext-pad-evidence.json` and `lcvco-evidence.json` describe superseded cells
    (netlist and GDS hashes differ) and are not quoted here. The GDS hash differs from the evidence record for
    `aosc`, `clockmux`, `prescale`, `vco_replica`, `wordclk` (GDS re-exported; `.mag` and extraction unchanged)
-   and `ring_osc` (layout rebuilt after the evidence). `generated/polyphase.ext.spice` is a leftover of the
-   deleted block.
+   and `ring_osc` (layout rebuilt after the evidence).
 2. No evidence JSON exists for `pll_ring_core`, `clk_obs16`, `obs_pre4`, `lo_mmd`, `lo_mmd_qdum`, `lo_pfdcp`,
    `lo_lf`, `lo_obs` or the QVCO; their bench results are in `scratch/` only.
 3. `pll_ring`: safe test fails (87-162 uA at reset); no corner, cold-start or HOLD runs on r9v; phase error

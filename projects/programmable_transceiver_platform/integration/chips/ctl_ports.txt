@@ -134,7 +134,7 @@ c_pll_cdr_band | 1 | 1 | direct | ring_c.config.band | (was: new field ring_c.ba
 c_cdr_en | 1 | 0 | ((cdr.state == active) OR ring_c.config.line_pll) & island_on[2] | cdr.state.state+ring_c.config.line_pll | today en_eff[12]; also the cdr bias enable
 c_cdr_pfd_mode | 1 | 0 | direct | ring_c.config.line_pll | (was: new field (0 = wired CDR, 1 = line PLL / host_follow); cdr.ac3.integral_enable is not this)
 c_cdr_ref_sel | 1 | 0 | direct | cdr.ac3.fll_ref_wck |
-c_cdr_g | 3 | 2 | direct | cdr.ac3.loop_bw | reset value open (2 vs 3, PINS.md)
+c_cdr_g | 3 | 2 | direct | cdr.ac3.loop_bw | reset value open (2 vs 3, analog/wired_rx/README.md Pins)
 c_cdr_otr | 6 | 0 | direct | cdr.ac3.otr | (was: new field: OTA offset trim otr[4:0] + sign (bit 5), 1/8 vote LSB, per-die calibration (pt_cdr r13))
 c_cdr_fup | 1 | 0 | rtl/pt_wrx_ctl.sv frequency loop: FUP pulse (automatic from frequency counter b, or manual by register) | wrx.loop.fll_auto+wrx.loop.fll_manual_trigger | dynamic; RTL FLL does not exist in the macro (MW-10)
 c_cdr_fdn | 1 | 0 | rtl/pt_wrx_ctl.sv frequency loop: FDN pulse | wrx.loop.fll_auto+wrx.loop.fll_manual_trigger | dynamic; as above
@@ -165,8 +165,8 @@ c_rxselect_direct | 1 | 0 | direct | rxselect.select.branch |
 c_wmon_en | 1 | 0 | wmon_select != off | debug.wmon_select.select |
 c_wmon_sel | 2 | 0 | select - 1 | debug.wmon_select.select |
 c_detect_en | 1 | 0 | (state == active) & island_on[0] | detect.state.state | today en_eff[6]
-c_detect_thr | 2 | 0 | direct | detect.config.low_threshold_code | per analog/wired_rx/PINS.md section 4
-c_detect_se | 2 | 0 | direct | detect.config.high_threshold_code | per analog/wired_rx/PINS.md section 4
+c_detect_thr | 2 | 0 | direct | detect.config.low_threshold_code | per analog/wired_rx/README.md Pins section 4
+c_detect_se | 2 | 0 | direct | detect.config.high_threshold_code | per analog/wired_rx/README.md Pins section 4
 c_detect_src_tx | 1 | 0 | direct | consolidation.detect.src_tx |
 c_detect_inject | 1 | 0 | direct | detect.config.test_current_enable |
 c_vthdac_en | 1 | 0 | direct | slicer.threshold.vth_enable | (was: new field cdr.vth_en (IX-10))

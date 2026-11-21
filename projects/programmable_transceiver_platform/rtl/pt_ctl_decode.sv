@@ -296,7 +296,7 @@ module pt_ctl_decode(
  assign c_rxselect_en = (f_rxselect_state__state == ACTIVE) & on_wired;
  assign c_rxselect_direct = f_rxselect_select__branch;
  assign c_detect_en = (f_detect_state__state == ACTIVE) & on_wired;
- assign c_detect_thr = f_detect_config__low_threshold_code;    // analog/wired_rx/PINS.md section 4
+ assign c_detect_thr = f_detect_config__low_threshold_code;    // analog/wired_rx/README.md Pins section 4
  assign c_detect_se = f_detect_config__high_threshold_code;
  assign c_detect_src_tx = f_consolidation_detect__src_tx;
  assign c_detect_inject = f_detect_config__test_current_enable;

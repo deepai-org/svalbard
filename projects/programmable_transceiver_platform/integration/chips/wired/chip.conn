@@ -181,7 +181,7 @@ inst detect pt_detect wired_rx
   VDD_WIRE_SW~RAIL_wired_rx VSS~VSS IBIAS~BIAS_detect det_en=c_detect_en det_clk=ct_det_clk RX_P~URX_P RX_N~URX_N TX_P~WIRE_TX_P TX_N~WIRE_TX_N
   det_thr{0:1}=c_detect_thr[\1] det_se{0:1}=c_detect_se[\1] det_src_tx=c_detect_src_tx det_inject=c_detect_inject
   DIFF_POS>DET_DIFF_POS DIFF_NEG>DET_DIFF_NEG SE_P>DET_SE_P SE_N>DET_SE_N atb_det_vref~ATBN_detect_vref
-# RX word divider (MW-11, analog/wired_rx/PINS.md: `wordclk_rx` on CKP[0], same island as the capture). The single
+# RX word divider (MW-11, analog/wired_rx/README.md Pins: `wordclk_rx` on CKP[0], same island as the capture). The single
 # pt_wordclk of the floorplan is used here; the wired TX has its own dividers. D-WORDCLK
 inst wordclk_rx pt_wordclk wired_cap
   CK=CKP[0] EN=c_wordclk_en D10=c_wordclk_d10 D20=c_wordclk_d20 WORD_CLK>- LDE>WRX_LDE LD>- LDB>- VDD~RAIL_wired_cap VSS~VSS

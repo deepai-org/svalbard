@@ -705,8 +705,9 @@ module pt_digital_macro(
  // REF_CLK after fc_upd, not the 9 of the pt_wrx_ctl header); the island-off gating stays
  // asynchronous after it, so isolation timing is unchanged.
  wire fup_q, fdn_q;
- pt_rep_dff fup_out(.clk(ref_clk), .rst_n(rst_n), .d(wrx_fup), .q(fup_q));
- pt_rep_dff fdn_out(.clk(ref_clk), .rst_n(rst_n), .d(wrx_fdn), .q(fdn_q));
+ // kept library flops (stable names fup_out.cell / fdn_out.cell) fixed next to their pins by hio_shift.py
+ pt_clock_dff fup_out(.clk(ref_clk), .rst_n(rst_n), .d(wrx_fup), .q(fup_q));
+ pt_clock_dff fdn_out(.clk(ref_clk), .rst_n(rst_n), .d(wrx_fdn), .q(fdn_q));
  assign c_cdr_fup = fup_q & ion[2], c_cdr_fdn = fdn_q & ion[2];
  assign c_wrx_cap_psel = wrx_psel & {3{ion[0]}}, c_wrx_cap_slipp = wrx_slipp & ion[0], c_wrx_cap_slipm = wrx_slipm & ion[0];
  pt_wrx_ctl wrx(.ref_clk(ref_clk), .wire_rx_clk(wire_rx_clk_c), .rst_n(rst_n), .cfg_en(wrx_en), .cfg_restart(f_wrx_loop__restart),

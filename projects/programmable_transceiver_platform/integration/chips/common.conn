@@ -86,12 +86,12 @@ inst refvcm pt_refvcm pll demand
   VCM~REF_VCM EN=c_refvcm_en VDD~RAIL_pll VSS~VSS      # refpad VCM (VDD/2 in the LO bench) has no source (MW-6), D-REFVCM
 
 # ================= clocks (pll island) =================
-# REF_IN receiver on the always-on core rail, OUTN -> ref_clk (LO-INTEGRATION.md section 5, MW-2a); not in the v6 floorplan
+# REF_IN receiver on the always-on core rail, OUTN -> ref_clk (analog/timing/README.md (LO integration) LO.5, MW-2a); not in the v6 floorplan
 inst rx_ref_in pt_diff_clk_rx core
   INP~REF_IN INN~REF_IN_N EN=c_rx_ref_en SE=VSS OUTP>- OUTN>ref_clk PRESENT>s_ref_present ATB_DET~- VDD~VDD VSS~VSS
 inst iso_host_clk iso_clamp_x4 core
   A=HOST_CLK ISO=island_off[2] Y>host_word_clk VDD~VDD VSS~VSS
-# three prescalers (LO-INTEGRATION.md section 5): line ring -> HOST_INT (+ macro ct_wclk), line ring -> CONV_INT,
+# three prescalers (analog/timing/README.md (LO integration) LO.5): line ring -> HOST_INT (+ macro ct_wclk), line ring -> CONV_INT,
 # host_follow (CDR) ring -> HF.  One is in the v6 floorplan.  D-CLK
 inst prescale pt_prescale pll
   CK_IN=WIRE_CK EN=c_prescale_en D2=c_prescale_d[0] D4=c_prescale_d[1] D8=c_prescale_d[2] D16=c_prescale_d[3] CK_OUT>PRE_CK VDD~RAIL_pll VSS~VSS

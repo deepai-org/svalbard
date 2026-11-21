@@ -84,5 +84,5 @@ Risks: `spec/risk-register.md` PDN-04, LO-02.
 * `ATB_OUT` / `ATB_G` are unbound at chip top; the enable terms `vreg_tx_ok` / `vreg_rx_ok` of the rings
   (`integration/chips/ctl_ports.txt`) have no source in this cell.
 * This cell does not meet the QVCO rail requirement; the QVCO needs its own regulator
-  (`../timing/LO-INTEGRATION.md` section 3).
+  (`../timing/README.md` "LO integration" LO.3).
 * `pll_vreg.py` has an uncommitted one-line bench edit (ring port list).

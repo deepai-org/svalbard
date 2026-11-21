@@ -171,7 +171,7 @@ MODES = {
             {'lna.bias.lo': 1, 'txmix_i.state.state': 2, 'txmix_q.state.state': 2, 'txsum.state.state': 2,
              'rfdriver.state.state': 2, 'dac_i.state.state': 2, 'dac_q.state.state': 2},
             {'rfdriver.mute.mute': 0, 'dac_i.config.hold_zero': 0, 'dac_q.config.hold_zero': 0}], False),
-        ('on-chip LO synthesizer (LO-INTEGRATION 4.2)', [
+        ('on-chip LO synthesizer (analog/timing/README.md (LO integration) LO.4.2)', [
             {'core.refchain.dist_en_rf': 1},
             {'rfpll.config.lo_mode': 2, 'rfpll.state.state': 2, 'rfpll.config.lo_n': 24, 'rfpll.config.vco_coarse': 9,
              'rfpll.config.lo_icp': 3, 'rfpll.config.lo_preset': 1},

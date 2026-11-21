@@ -88,11 +88,11 @@ c_rfdriver_bypass | 1 | 0 | direct | debug.rf_tx_bypass.rfdriver |
 c_rfdriver_g | 4 | 12 | direct | rfdriver.gain.code | field default 192 -> 12
 c_rfdriver_se | 1 | 0 | direct | rfdriver.gain.single_ended |
 # ---- LO
-c_lo_ext | 1 | 0 | lo_mode == 1 or 3 | rfpll.config.lo_mode | (was: new field rfpll.config.lo_mode[1:0] {0 off, 1 passive ext, 2 on-chip, 3 ext through CML = die-1 baseline} (MW-1a, LO-INTEGRATION.md 4.1))
+c_lo_ext | 1 | 0 | lo_mode == 1 or 3 | rfpll.config.lo_mode | (was: new field rfpll.config.lo_mode[1:0] {0 off, 1 passive ext, 2 on-chip, 3 ext through CML = die-1 baseline} (MW-1a, analog/timing/README.md (LO integration) LO.4.1))
 c_lo_int | 1 | 0 | lo_mode == 2 or 3 | rfpll.config.lo_mode | as above
 c_lo_cmlsel | 1 | 0 | lo_mode == 3 | rfpll.config.lo_mode | as above; one net to lo_ext.CMLSEL and qvco.CMLSEL
 c_qvco_en | 1 | 0 | (rfpll.state == active) & (lo_mode == 2) & island_on[1] | rfpll.state.state+rfpll.config.lo_mode | consumers (qvco, lo_mmd, lo_pfdcp, lo_vreg, their bias) are on the lo / lod islands = rf enable group since PD2, NOT pll (review 2026-11-14: rtl/pt_ctl_decode.sv gates with on_pll); EN-to-ready 1.5 ms
-c_qvco_band | 4 | 0 | direct | rfpll.config.vco_coarse | (was: new field rfpll.config.vco_coarse[3:0] (was dropped); 15 = lowest frequency; software band search (LO-INTEGRATION.md 4.2))
+c_qvco_band | 4 | 0 | direct | rfpll.config.vco_coarse | (was: new field rfpll.config.vco_coarse[3:0] (was dropped); 15 = lowest frequency; software band search (analog/timing/README.md (LO integration) LO.4.2))
 c_qvco_atb_en | 1 | 0 | direct | rfpll.config.atb_enable | (was: new debug field)
 c_lo_pre | 1 | 0 | direct | rfpll.config.lo_preset | (was: new field rfpll.config.lo_preset: lo_pfdcp.PRE (1 = PFD in reset, VTUNE at the preset). NOT qvco.PRE (an output))
 c_lo_mmd_en | 1 | 0 | same as c_qvco_en | rfpll.state.state+rfpll.config.lo_mode | lo_mmd and its Q dummy

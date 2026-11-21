@@ -51,7 +51,7 @@ SPI mode 0, 32 clocks per transaction, ≤ 1 MHz at bring-up, ≤ 5 MHz after (B
    first proof that the core rail, the macro and a clock work.
 2. `refinput.state` = active (0x80; pt_rf: `rfpll.config.lo_mode` not 1/3, ctl_ports `c_rx_ref_en`) with the board
    REF_IN oscillator on (B23(3): 25 MHz class on pt_wired; pt_rf uses the LO reference, 50.0-51.74 MHz,
-   LO-INTEGRATION 4.2). DBG_OBS0 sel 11 (ref_present) = 1.
+   analog/timing/README.md "LO integration" LO.4.2). DBG_OBS0 sel 11 (ref_present) = 1.
 3. Frequency counter a: source 5 (aosc), window 1 (1024), commit; read 0xF4 twice ≥ 2 windows apart. Count =
    f_aosc / f_ref × 1024 (aosc 42.7-54.3 MHz over corners, table in section 6). This proves `ref_clk` and the counter.
 
@@ -163,7 +163,7 @@ minimum passing supplies):**
 
 Walk [observation.md](observation.md) for the chip: ATB codes, CLK_OBS sources, DBG_OBS selects and counter sources
 per block, each with its island on. Ring PLL: counter a source 1 (TX ring FBCK) locks to target; CDR ring: counter b
-source 2. pt_rf LO: counter source 6 (LO_FB = f_VCO/2N) per band, LO-INTEGRATION 4.2.
+source 2. pt_rf LO: counter source 6 (LO_FB = f_VCO/2N) per band, analog/timing/README.md "LO integration" LO.4.2.
 
 ## 9. Per-mode enable sequences
 
@@ -171,7 +171,7 @@ Each mode's register sequence is the block owner's; the generic rules are:
 - Shadow writes then one commit; `CONFIG_ERROR` 0x05 and `ERROR_INFO` 0x0C after every commit.
 - Break-before-make: a field never goes from one non-zero code to another in one commit (register-map rules).
 - Islands first (section 5), then `dist_en`, then block states warm → active.
-- pt_rf: on-chip LO = LO-INTEGRATION 4.2 (band search on counter source 6, `lo_icp` = 3); external LO = B3/B19/B31
+- pt_rf: on-chip LO = analog/timing/README.md "LO integration" LO.4.2 (band search on counter source 6, `lo_icp` = 3); external LO = B3/B19/B31
   after power-up (B26); RX = LNA → mixers → bbfilter → ADC, calibration in register-map "Per-board calibration
   sequence" steps 2-7; TX = DAC → bbfilter tx → txmix → txsum → rfdriver with `rfdriver.mute` until the board
   network (B17) is confirmed.
@@ -214,7 +214,7 @@ range widened only where the evidence has no corner data (marked ±30 %, a scree
 | R1 | Current steps per block enable (rf island) | LNA 18.9-21.4 mA (19.0 limit), rxmix 3.01-3.09 each, bbfilter 5.22-5.32 each (power_budget.py MEASURED, extracted) | ±30 % of nominal; LNA ≤ 21.4 mA |
 | R2 | conv island: ADC, DAC, refbuf | ADC 5.73 / 5.72 mA, DAC 2.07 each, refbuf 0.55 mA (+1 mA delivered) | ±30 %; DBG_OBS 13 refbuf_ready = 1; ATB1 36 VREF_CONV recorded |
 | R3 | Converter loopback DAC → bbfilter rx_direct → ADC (MEMORY capture) | tone at the programmed frequency | SNDR recorded; the published ADC FFT is ENOB 4.9 (MOD-04): screening pass ≥ 4 ENOB |
-| R4 | On-chip LO band search, counter source 6 (LO_FB = f_VCO / 2N) | count = f_ref × 1024 / 1024 at lock for the band chosen (LO-INTEGRATION 4.2) | a band locks for 2.400-2.4835 GHz; CLK_OBS 1 = f_LO / 8 / 2^N agrees |
+| R4 | On-chip LO band search, counter source 6 (LO_FB = f_VCO / 2N) | count = f_ref × 1024 / 1024 at lock for the band chosen (analog/timing/README.md "LO integration" LO.4.2) | a band locks for 2.400-2.4835 GHz; CLK_OBS 1 = f_LO / 8 / 2^N agrees |
 | R5 | RX tone at BB_I/Q taps, then ADC | gain per the rf_rx README chain rows | recorded; I/Q 90° ± 10° before trim |
 | R6 | RF_TX output (spectrum analyser, B17) | per rf_tx README matched powers minus placement loss (test-board-models 3) | recorded; mute drops it > 30 dB |
 | R7 | ATB1 15-21, 33, 38, 39 bias nodes | no published node values (OBS row gap) | record; flag a node at a rail (< 0.1 V or > VDD − 0.1 V) |

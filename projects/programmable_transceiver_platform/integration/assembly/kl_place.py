@@ -107,8 +107,8 @@ def import_cell(m):
     return t
 
 comps = []          # (name, macro, x, y, orient)
-# KLayout rotation/mirror -> DEF orientation (OpenDB: FE = MXR90 = (y, x), FW = MYR90 = (-y, -x))
-ORIENT = {'r0': 'N', 'r90': 'W', 'r180': 'S', 'r270': 'E', 'm0': 'FS', 'm90': 'FN', 'm45': 'FE', 'm135': 'FW'}
+# KLayout rotation/mirror -> DEF orientation
+ORIENT = {'r0': 'N', 'r90': 'W', 'r180': 'S', 'r270': 'E', 'm0': 'FS', 'm90': 'FN', 'm45': 'FW', 'm135': 'FE'}   # checked in OpenDB: FW = (y, x)
 booked = {}
 for n, b in FP['blocks'].items():
     m = b['master']; r = b['rect']; W, H = r[2]-r[0], r[3]-r[1]
@@ -311,6 +311,7 @@ for net in ('VDD', 'VSS'):
     for n, p in nets.get(net, []):
         if n in man['blocks'] and man['blocks'][n]['master'] == 'decap': continue
         if n == 'digital': man['digital_ties_not_hooked'] += 1; continue      # tie-offs belong inside the macro (tie cells)
+        if n in PADS['pads']: continue      # pad-family supply pins land on the provider ring rails (DVDD / VSS bands), not on the grid
         sh = pin_shapes_die(n, p)
         if not sh:
             if n in man['blocks'] or n in PADS['pads']: man['unconnectable'].append(dict(inst=n, pin=p, net=net, why='no pin shape (label) in the abstract'))

@@ -25,7 +25,7 @@ inst0, _p, _m = C.load(chip)
 for n, v in C.STAGED.get(chip, {}).items():
     if MJ.get(v['master'], {}).get('w') and n in inst0: sizes[inst0[n]['master']] = [round(MJ[v['master']]['w']+70, 2), round(MJ[v['master']]['h'], 2)]
 json.dump(pj, open(RUN+'/fp_pads.json', 'w')); json.dump(sizes, open(RUN+'/fp_sizes.json', 'w'))
-macro = {'rf': '1716:1108', 'wired': '1716:1108,1716:1262'}[chip]
+macro = {'rf': '1716:1108', 'wired': '1716:959'}[chip]      # wired: 20 um to pad_ref (west) and to pad_wire_tx (east); see README
 env = dict(os.environ, CHIP=chip, SCEN='S', TAG='s', TRIES=os.environ.get('TRIES', '6'), PADS_JSON=RUN+'/fp_pads.json',
            SIZES_JSON=RUN+'/fp_sizes.json', RUNDIR=RUN+'/fit', CHANNEL=os.environ.get('CHANNEL', '40'), ISLAND_W=os.environ.get('ISLAND_W', '0.3'), NOROT=','.join(C.STAGED.get(chip, {})), OMP_NUM_THREADS='1', MACRO=os.environ.get('MACRO', macro))
 fit = C.ROOT+'/scratch/reviews/die-fit'

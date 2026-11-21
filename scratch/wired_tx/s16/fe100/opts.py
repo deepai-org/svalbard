@@ -16,6 +16,11 @@ import sweep, anchor, stream
 from chain13 import tools
 
 RES = H / 'results'; RUNS = H / 'runs'
+A16 = H / 'a16_bench.spice'      # a16_wrap.spice + pads-core/esdopt/tx/sec/models/a16_rt.spice
+sweep.C13.PADFILE['A16'] = A16; sweep.C13.PADLABEL['A16'] = 'pad=a16_rt (up-diodes, DVDD=VDD)'
+A16MAP = {'xpad.xphysical.sum_p_d_0)': 'xpad.xphysical.sum_p_d_0__3)', 'xpad.xphysical.sum_n_d_0)': 'xpad.xphysical.sum_n_d_0__3)',
+          'xpad.xphysical.pad_p__2)': 'xpad.xphysical.pad_p__37)', 'xpad.xphysical.pad_n__2)': 'xpad.xphysical.pad_n__37)',
+          'v(xpad.esd_rail)': 'v(ATBPAD)'}
 SW = ('MAIN_P', 'MAIN_N', 'POST_P', 'POST_N')
 
 
@@ -68,6 +73,14 @@ def deck(w, *, vcas=None, wscale=1.0, ratio=1.0, mode='tran', **kw):
         if l.startswith(('save ', 'wrdata ')):
             out[i] = l.replace('v(RJ_P) v(RJ_N)', f'v({rj[0]}) v({rj[1]})') + extra
     names = names + ['CAS', 'DP', 'DN', 'ESDR', 'ICT']
+    if kw.get('pad_model') == 'A16':
+        out = ['VDVD VDD ATBPAD 0' if l.startswith('RATB ') else l for l in out]
+        for i, l in enumerate(out):
+            if l.startswith(('save ', 'wrdata ')):
+                for a_, b_ in A16MAP.items():
+                    l = l.replace(a_, b_)
+                out[i] = l + ' i(VDVD)'
+        names = names + ['IDVD']
     if mode == 'ac':
         out = [l for l in out if not l.startswith(('save ', 'wrdata ', 'set wr_', 'run'))]
         out = [l for l in out if not (l.startswith('RLINE'))]
@@ -114,6 +127,8 @@ def run(tag, corner='ss', pess=False, vdd=3.15, code=255, post_code=None, pol=1,
         vgs = np.maximum(a['CAS'] - a['SUMP0'], a['CAS'] - a['SUMN0'])
         vgd = np.maximum(np.abs(a['CAS'] - a['DP']), np.abs(a['CAS'] - a['DN']))
         ileg = -(a['ILP'] + a['ILN'])
+        if 'IDVD' in a:
+            m['updiode_ma_max'] = round(float(np.max(-a['IDVD'][s])) * 1e3, 3)
         m.update(pad_max_v=round(float(max(a['PAD_P'][s].max(), a['PAD_N'][s].max())), 3), sum_max_v=round(float(max(a['SUMP0'][s].max(), a['SUMN0'][s].max())), 3), sum_min_v=round(float(min(a['SUMP0'][s].min(), a['SUMN0'][s].min())), 3),
                  cascode_max_v=dict(vgs=round(float(vgs[s].max()), 2), vgd=round(float(vgd[s].max()), 2), vds=round(float(vds[s].max()), 2),
                                     vg=round(float(a['CAS'][s].max()), 2), vd=round(float(max(a['DP'][s].max(), a['DN'][s].max())), 2)),

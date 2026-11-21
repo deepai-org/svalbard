@@ -267,3 +267,87 @@ Added pad C (single-ended PAD_P at 50 MHz, `padc`): x1 1.484 pF; **x1.5 1.596 pF
 * **Not SUM max.** SUM max is 3.13 V <= 3.3 V. CASCODE 4.8 V is about the highest it can go: SUM max = CAS - Vt, and that sits above 3.3 V at ff once the code is lowered.
 * **It is the tail + switch headroom at the bottom of the SUM node.** SUM min falls to 0.65 V at 38 mA. The 3.3 V switch (W 20 um x 8 slices per bank, L 0.28 um) in series with the tail (W 20 um, L 1 um) runs out of Vds. Two banks (MAIN + POST) sharing one SUM node at 2 x 19 mA need more W, not more gate voltage.
 * With CASCODE capped at about 4.8 V by the switch rating, the bound with unchanged W is I_max of about 38 mA, i.e. 38 mA x 25 ohm = 955 mV raw, 918 mV cal. W x1.5 lifts it to about 42 mA (1045 / 1010 mV); W x2 to about 44 mA (1090 / 1054 mV).
+
+## Options (boost + 1:n)
+**Setup:**
+* W unchanged.
+* CASCODE raised in 100BASE-TX mode to 4.2 or 4.5 V.
+* B39 CT 3.6 V.
+* Carrier magnetics chip:line = 1:n, network rescaled so the line sees 100 ohm: R_b = 49.9/n^2 per leg, L = 98 nH/n^2 per leg, C = 19.6 pF x n^2 differential, OCL 350 uH/n^2 referred to the chip side, ideal transformer (E/F).
+
+**Pad model: a16** (`pads-core/esdopt/tx/sec/models/a16_rt.spice`, with up-diodes), through `a16_wrap.spice` (old port order).
+* DVDD_P/N are tied to VDD (the pad-ring supply) through the 0 V source VDVD, so the up-diode current is measured ("up mA" = max DVDD current in the window).
+* TERM_TRIM0..3 and DVSS are tied to VSS.
+* Probes: SUM = `sum_x_d_0__3` (cascode source); cascode drain = `pad_x__37`.
+
+**Calibration:** the bias-path base point (ss-pess, CAS = VDD, CT 3.3 V, 1:1) reads 640.7 mV with a16 against 635.4 mV with RT (+0.8 %). The cal. factor 0.967 is kept, and the full-chain anchor was not rerun with a16 (2.3 h).
+
+Runs: `jobs8.sh` (code 255), `jobs9.sh` / `jobs10.sh` (lower codes, RL), plus `Q_n0.90_cas4.2_tt_200`. Gate levels at tt/ff are scaled from the ss full chain (assumption). Pass criteria as before; the owner adds pin min >= ~1.3 V.
+
+### Code 255
+| n | CAS V | ss-pess raw (cal.) | tt | ff | sym | held leg ssp / tt / ff mA | pin min (ssp / tt / ff) / max V | SUM min / max V | up mA | cascode Vgs / Vgd / Vds max V |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 0.80 | 4.2 | 1093 (1057) | 1159 | 1128 | 0.999-1.000 | 35.3 / 38.0 / 39.2 | **1.22 / 1.09 / 1.02** / 3.42 | 0.57 / 2.63 | <= 1.03 | 3.63 / 3.22 / 1.11 |
+| 0.80 | 4.5 | 1123 (1086) | 1182 | 1148 | 0.999-1.000 | 36.2 / 38.7 / 39.7 | **1.18 / 1.06 / 1.00** / 3.41 | 0.58 / 2.86 | <= 0.92 | 3.92 / 3.55 / 0.87 |
+| 0.85 | 4.2 | 1072 (1037) | 1163 | 1175 | 0.999-1.000 | 36.7 / 40.2 / 42.0 | 1.36 / **1.22 / 1.14** / 3.48 | 0.63 / 2.66 | <= 1.17 | 3.58 / 3.11 / 1.17 |
+| 0.85 | 4.5 | 1108 (1072) | 1190 | 1198 | 0.999-1.000 | 37.9 / 41.0 / 42.6 | 1.31 / **1.18 / 1.11** / 3.47 | 0.64 / 2.91 | <= 0.99 | 3.86 / 3.44 / 0.97 |
+| 0.90 | 4.2 | 1042 (1008) | 1151 | 1196 | 1.000 | 37.8 / 41.9 / 44.3 | 1.49 / 1.33 / **1.25** / 3.56 | 0.68 / 2.71 | <= 1.25 | 3.52 / 3.00 / 1.31 |
+| 0.90 | 4.5 | 1085 (1049) | 1181 | 1222 | 1.000 | 39.3 / 42.9 / 45.1 | 1.44 / 1.30 / **1.22** / 3.53 | 0.70 / 2.95 | <= 1.13 | 3.80 / 3.33 / 1.11 |
+
+ss (n 0.90, code 255): 1042 mV (CAS 4.2), 1084 mV (CAS 4.5). Identical to ss-pess within 0.5 mV.
+
+### Codes for <= 1050 mV at tt/ff
+At code 255 the leg is compliance-limited at tt/ff: amplitude moves only about 1-2.5 mV per code until the current falls to about 38 mA.
+
+| n | CAS | corner | code | raw (cal.) mV | sym | held leg mA | pin min / max V | SUM min / max V | up mA | cascode Vgs / Vgd / Vds V |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 0.90 | 4.2 | tt | 230 / 205 | 1122 / 1060 | 1.001 | 40.7 / 38.4 | 1.39-1.47 / 3.57 | 0.72-0.80 / 2.89 | 1.1 | 3.48 / 2.86 / 1.17 |
+| 0.90 | 4.2 | **tt** | **200** | **1040** (1006) | 1.001 | 37.7 | 1.50 / 3.58 | 0.82 / 2.92 | 1.14 | 3.37 / 2.75 / 1.18 |
+| 0.90 | 4.2 | ff | 220 | 1150 | 1.001 | 41.7 | 1.34 / 3.58 | 0.77 / 2.88 | 1.15 | 3.43 / 2.91 / 0.97 |
+| 0.90 | 4.2 | **ff** | **195** | **1037** (1002) | 1.001 | 37.5 | 1.50 / **3.59** | 0.93 / 3.04 | 1.22 | 3.27 / 2.75 / 1.01 |
+| 0.90 | 4.5 | tt | 225 / 205 | 1136 / 1069 | 1.001 | 41.1 / 38.7 | 1.37-1.45 / 3.55 | 0.76-0.84 / 3.04 | 1.3 | 3.74 / 3.18 / 0.97 |
+| 0.90 | 4.5 | ff | 215 / **195** | 1135 / **1038** | 1.001 | 41.1 / 37.6 | 1.34-1.49 / 3.56 | 0.82-0.97 / **3.16** | 1.4 | 3.68 / 3.21 / 0.79 |
+| 0.85 | 4.5 | tt | 225 / 195 | 1162 / 1077 | 1.000-1.002 | 39.8 / 36.8 | 1.24-1.35 / 3.51 | 0.69-0.80 / 3.03 | 1.3 | 3.81 / 3.31 / 0.87 |
+| 0.85 | 4.5 | ff | 215 / **185** | 1181 / **1044** | 1.001-1.002 | 40.5 / 35.7 | 1.21-1.41 / 3.51 | 0.73-0.93 / 3.16 | 1.4 | 3.76 / 3.34 / 0.71 |
+
+### Return loss at the RJ45 (2-80 MHz; limit declared above)
+* "held" = the -1 state at the code shown; "0" = MAIN in one leg and POST in the other (POST_POL 0, static).
+* Worst margin is at 79.4 MHz in every case. 2-60 MHz has >= 5 dB margin.
+
+| n | CAS | ss-pess 255 held / 0 | tt 225 held / 0 | ff 215 held / 0 |
+|---|---|---|---|---|
+| 0.80 | 4.5 | 12.0 / 11.9 dB (+2.0 / +1.9) | 12.0 / 12.1 (+2.0 / +2.1) | 12.2 / 12.3 (+2.2 / +2.3) |
+| 0.85 | 4.5 | 11.1 / 11.1 (+1.1 / +1.1) | 10.9 / 11.2 (+0.9 / +1.2) | 11.1 / 11.3 (+1.1 / +1.3) |
+| 0.90 | 4.2 | 10.2 / 10.3 (+0.2 / +0.3) | 10.1 / 10.3 (+0.1 / +0.3) | 10.3 / 10.4 (+0.3 / +0.4) |
+| 0.90 | 4.5 | 10.3 / 10.4 (+0.3 / +0.4) | 10.2 / 10.5 (+0.2 / +0.5) | 10.4 / 10.6 (+0.4 / +0.6) |
+
+* The earlier 1:n failure (n 0.65-0.75, CT 3.3 V, CAS = VDD) was the held state with the pad out of saturation (pin 0.94-1.35 V). Here the pin stays >= 1.0 V even at 255, and RL passes in both states.
+* The 80 MHz margin improves as n falls, because the rescaled filter interacts less with the pad C.
+* RL at the final tt/ff codes (200 / 195) was not run separately. Those codes keep the leg further in saturation than 225 / 215 (higher pin), so RL should be no worse.
+
+### Verdict
+**PASS: n = 0.90, CASCODE 4.2 V (100BASE-TX mode), CT 3.6 V, W unchanged (no added pad C).** Codes ss-pess / ss 255, tt 200, ff 195.
+
+| corner | code | raw mV | cal. mV | symmetry |
+|---|---|---|---|---|
+| ss-pess | 255 | 1042 | **1008** | 1.000 |
+| ss | 255 | 1042 | - | 1.000 |
+| tt | 200 | 1040 | - | 1.001 |
+| ff | 195 | 1037 | - | 1.001 |
+
+* Held leg 37.5-37.8 mA.
+* Pin 1.48-1.50 V min. **3.59 V max at ff: 10 mV under the 3.6 V ceiling.** The off leg sits at about CT, so CT must not exceed 3.6 V with its +-2 % tolerance (use 3.53 V nominal, or a tighter regulator).
+* SUM 0.68-0.93 / <= 3.04 V. Cascode <= 3.52 / 3.00 / 1.32 V (6 V device).
+* Up-diode (DVDD) current about 1.1-1.3 mA in every row. Pads must judge whether that is acceptable (the pin is above VDD at tt/ss).
+* RL margin only +0.1-0.4 dB at 79 MHz.
+* **Margin at ss-pess: 58 mV cal.**
+
+**Alternative: n = 0.85, CAS 4.5 V.**
+* ss-pess 1072 mV cal. (more margin) and RL +0.9-1.3 dB.
+* But the pin goes to 1.11-1.18 V at tt/ff at code 255 (below the owner's ~1.3 V) until the code is lowered. At tt 195 / ff 185 it reads 1.35 / 1.41 V, 1077 / 1044 mV raw. tt still needs a code of about 190.
+* SUM max 3.16 V.
+
+Physical check of the owner's estimate:
+* Needed current I = 38 x n mA. At n = 0.90 that is 34.2 mA for 950 mV; the measured 37.8 mA gives 1042 mV raw.
+* The pin estimate CT - (37.4/n^2) x I = 3.6 - 46.2 x 0.0378 = 1.85 V nominal; measured 1.49 V with the held-level ripple and bond drop.
+* Inside the 38 mA SUM-headroom bound (SUM min 0.68 V).

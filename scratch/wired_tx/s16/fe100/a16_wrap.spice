@@ -1,0 +1,6 @@
+* fe100 wrapper: a16 pad (pads-core/esdopt/tx/sec/models/a16_rt.spice) in the tx_protected_pad port order.
+* ATB_ESD_RAIL position = DVDD_P/N (up-diode rail); the bench ties it to VDD through VDVD (current measured).
+* TERM_TRIM0..3 = VSS (termination off), DVSS_P/N = VSS.
+.subckt tx_protected_pad PAD_P PAD_N VDD VSS CASCODE MAIN_P MAIN_N MAIN_BIAS POST_P POST_N POST_BIAS TMDS_P TMDS_N TMDS_BIAS DETECT_ENABLE DETECT_PBIAS TERM_ENABLE TERM_VCM ATB_ESD_RAIL
+XPHYSICAL CASCODE TMDS_P TMDS_N POST_P POST_N MAIN_P MAIN_N MAIN_BIAS POST_BIAS TMDS_BIAS VSS ATB_ESD_RAIL PAD_P ATB_ESD_RAIL PAD_N VDD TERM_ENABLE DETECT_ENABLE DETECT_PBIAS VSS VSS VSS VSS TERM_VCM VSS VSS pad_txpad
+.ends tx_protected_pad

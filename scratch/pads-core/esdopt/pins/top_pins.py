@@ -26,7 +26,7 @@ V = {3: 40, 4: 41}
 #    from y 444 to the top; below 444 the nearest Metal4 is the return route at x >= 6).
 #  VSS: the network's Metal3 VSS band (x 7.2-300.3, y 770.7-799.9) -> Metal3 x 8-18 up to the top (Metal3 free above
 #    800 for x < 262) -> via3 array -> Metal4 pin x 8-18 (Metal4 free above 800 for x < 58.8; Metal5 ESD_RAIL starts at x 20).
-RF = dict(remove=['VSS', 'ATB_ESD_RAIL', 'PAD_P', 'PAD_N'],      # the inner Metal3 labels; PAD_P / PAD_N keep their top Metal5 pins
+RF = dict(remove=['VSS', 'ATB_ESD_RAIL', 'ESD_RAIL', 'PAD_P', 'PAD_N'],      # the inner Metal3 labels; PAD_P / PAD_N keep their top Metal5 pins
           remove_layers=[42])
 
 # hspad: the eleven channel straps (Metal5, y 598.75-630.25, x trunk..492) are tapped in the free column x 417-461,
@@ -82,6 +82,12 @@ def main(family, src, dst):
         box(M[3], 8.0, 790.0, 18.0, ytop)
         box(M[4], 8.0, 903.0, 18.0, ytop); cuts(3, 8.0, 903.0, 18.0, 911.0, pitch=.7)
         label('VSS', 4, 13.0, ytop - .5); pins.append(('VSS', 'Metal4', 8.0, 18.0))
+        # ESD_RAIL (conn binds it between pads; ESD current): the network's Metal5 ESD_RAIL plate (x 20-245, top y 908.37) ->
+        # Via4 array -> 30 um Metal4 pin x 24-54 (Metal4 free above y 800 for x < 58.8; no MIM top plate at x < 59.4),
+        # plus the Metal5 continued flush to the edge over the pin.
+        box(M[4], 24.0, 902.0, 54.0, ytop); box(M[5], 24.0, 902.0, 54.0, ytop)
+        cuts(4, 24.0, 902.0, 54.0, 908.0, pitch=.7)
+        label('ESD_RAIL', 4, 39.0, ytop - .5); pins.append(('ESD_RAIL', 'Metal4 (+Metal5 over it)', 24.0, 54.0))
         for nm, x1, x2 in (('PAD_P', 286., 290.), ('PAD_N', 302., 306.)):
             if family == 'single_leg' and nm == 'PAD_N': continue
             pins.append((nm, 'Metal5 (published, unchanged)', x1, x2))

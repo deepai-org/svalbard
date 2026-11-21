@@ -61,3 +61,24 @@ and rerun CDM 2 A at that value; or show CDM passes with the cap at the bounded 
 HBM is insensitive (far 2 ohm: gate 5.36, RX 3.25 V). Near clamps only (far + cap at 100 ohm): CDM gate 10.61 V, RX 8.42 V; HBM P+N gate 6.36, RX 4.83 V (`f100_*`). A run with the cap at 0.46/0.57 and far clamps at 100 ohm did not converge (not used).
 
 **N2 INFO** - designer's E3 table lists only the worst diode; non-protection junctions were not shown separately. Reviewer scan above fills it (PASS).
+
+## Addendum: PC-45 site decap rerun (SITECAP) and a6 publication verdict
+Implementation (`esd3.py` l.113): CSITE 1 nF between DVDDSC/VSSSC, 0.7 ohm on EACH rail to the site landing nodes DVDDS/VSSS
+(1.4 ohm loop, pessimistic reading of PC-45), far-node CDIE off (cdie None in every sc json), ring at the bound, far 5+7, a6 high model, RX gate on. Correct.
+Reviewer rerun CDM 2 A P-N with SITECAP via `rr_sc.py` (`sc_cdm_PN.json`): gate 6.519 V, RX 4.37 V, MIM 4.71 V, primary nd2ps 9.956 V,
+worst non-primary 4.44 V (secondary pd2nw): reproduces `ring/esd/sc_cdm2_P-N.json` exactly.
+Recomputed from `ring/esd/sc_*.json` (16 runs, all complete):
+| set | gate (8.0) | RX (5.0) | MIM (6.0) | primary rev | primary fwd / aval mA/um (10 / 1) |
+|---|---|---|---|---|---|
+| CDM 2 A, 10 cases | max 6.52 | max 4.52 (P/N-VDD) | max 4.77 | max 9.96 (now < bv too) | 7.24 / 0.052 |
+| HBM 2 kV P+N / P-N | 4.81 / 4.90 | 3.33 | 4.02 | 7.16 | 4.79 / 0.012 |
+| CDM 1 A pad-to-pad | 4.45 | 3.18 | 2.23 | 6.17 | 3.61 / 0.035 |
+| CDM 3 A pad-to-pad (info, beyond req.) | 7.99 | **5.42** | **6.62** | 12.49 | **10.5 / 1.12** |
+Non-primary junctions max 0.50 of bv (3 A), 0.42 (2 A). N1 is CLOSED conditional on PC-45 being met by the assembly.
+
+**Verdict for a6 publication: GO with conditions.**
+1. PC-45 (>= 1 nF within 0.7 ohm incl. ESR of each east wired site) is an assembly requirement; a6 CDM evidence is void without it. Must be verified on the assembled GDS before tapeout.
+2. Primary-diode rating is a literature figure; CDM density (7.2 mA/um) exceeds the HBM reference: TLP/vf-TLP site measurement stays required.
+3. CDM headroom is small: 3 A misses (RX, MIM, diode density); 2 A is the declared requirement.
+4. Return loss: SATA2 remains a recorded fail (separate ruling; a6 deepens it by 0.7 dB at the die).
+5. INFO carried: bidir[14]/[15] RX_P/N disagreement between bond_map.txt and provider-sites.json to be reconciled.

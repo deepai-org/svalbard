@@ -13,7 +13,8 @@ HERE = Path(__file__).resolve().parent
 VCM, DV = 1.65, 0.01
 CORNERS = [(p, t, v) for p in ('typical', 'ss', 'ff', 'sf', 'fs') for t in (22, 32) for v in (3.15, 3.35)] + [('ss', 22, 3.5), ('ss', 32, 3.5), ('typical', 27, 3.3)]
 QUICK = [('typical', 27, 3.3), ('ss', 32, 3.15), ('ff', 22, 3.35), ('sf', 32, 3.15), ('fs', 22, 3.35)]
-HIGH = ('CASCODE', 'DETECT_PBIAS', 'DVDD_P', 'DVDD_N')
+HIGH = ('CASCODE', 'DETECT_PBIAS', 'DVDD_P', 'DVDD_N', 'DVDDS_P', 'DVDDS_N')
+PMAP = {'DVSS_P': 'SP', 'DVSS_N': 'SN', 'DVDD_P': 'DP', 'DVDD_N': 'DN', 'VSS': 'RS', 'PAD_P': 'PAD_P', 'PAD_N': 'PAD_N', 'DVDDS_P': 'DSP', 'DVDDS_N': 'DSN'}
 
 
 def header(pr, t):
@@ -76,7 +77,32 @@ def term(model, tag, mode, loader=load):
 # ----------------------------------------------------------------------------------------------------------------- ESD
 IO = '/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/gf180mcu_fd_io.spice'   # read on the host, pasted into the deck
 RING = dict(r_site=0.025, r_ring=0.5)      # ohm: site landing -> ring node at the pad; ring node -> the lumped clamp set (each rail)
-MOSM = ('nfet_03v3', 'pfet_03v3', 'nfet_06v0', 'pfet_06v0')
+MOSM = ('nfet_03v3', 'pfet_03v3', 'nfet_06v0', 'pfet_06v0', 'nfet_06v0_nvt')   # nvt (a8): 6 V native, judged 8.0 V transient / 6.0 V DC like the 6 V devices
+import os as _os
+# TB2_RINGV=RND,RNS,RFD,RFS (DVDD near, DVSS near, DVDD far, DVSS far ohm) + TB2_FAR=D,S: extracted ring bound (2026-11-20 ruling:
+# 0.155,0.189,0.46,0.57 and 5,7; corner cells left out as in ../ring/esd3.py). Unset = the old lumped ring (RING, 8+10+4 cells).
+RINGV = tuple(map(float, _os.environ['TB2_RINGV'].split(','))) if _os.environ.get('TB2_RINGV') else None
+FAR = tuple(map(int, _os.environ.get('TB2_FAR', '5,7').split(',')))
+DBV = {'diode_nd2ps_06v0': 11.0, 'diode_pd2nw_06v0': 10.5, 'diode_nd2ps_03v3': None, 'diode_pd2nw_03v3': None}   # model bv (ruling)
+MOS_BV = {'nfet_03v3': 10.0, 'pfet_03v3': 10.0, 'nfet_06v0': 11.0, 'pfet_06v0': 10.5, 'nfet_06v0_nvt': 10.5}   # junction bv (see E3 in esd())
+PRIM_LIM = dict(fwd_ma_um=10.0, rev_ma_um=1.0, energy_nj=78.0)   # primary site fingers (../ring/REPORT.md, literature, 100 ns, no CDM credit)
+
+
+def other_devices(text, cell, ports):
+    """diodes (name, model, anode vec, cathode vec, pj um, primary?) and MIM caps (name, model, a vec, b vec) of the pad subckt."""
+    body = text[text.index('.subckt ' + cell):]; body = body[:body.index('.ends')]
+    m = PMAP
+    def vec(n): return (m.get(n, 'c_' + n) if n in ports else 'xpad.' + n).lower()
+    di, mim = [], []
+    for l in body.splitlines():
+        w = l.split()
+        if not w: continue
+        if w[0][0] == 'D' and len(w) >= 4:
+            pj = re.search(r'pj=([\d.e+-]+)(u?)', l); pj = float(pj.group(1)) * (1 if pj.group(2) else 1e6) if pj else float('nan')
+            prim = any(x.startswith(('SVDD_', 'SVSS_')) for x in w[1:3])
+            di.append((w[0], w[3], vec(w[1]), vec(w[2]), pj, prim))
+        elif w[0][0] == 'X' and any(x.startswith('cap_mim') for x in w): mim.append((w[0], next(x for x in w if x.startswith('cap_mim')), vec(w[1]), vec(w[2])))
+    return di, mim
 
 
 def clamp_cells():
@@ -98,6 +124,8 @@ def clamp_cells():
             a, bn, mult, cl, cw = mm.group(2), mm.group(3), float(mm.group(4)), float(mm.group(5)), float(mm.group(6))
             return f'C{mm.group(1)} {a} {bn} {mult * cl * cw * 2.177e-3:.4g}'
         b = re.sub(r'(?m)^X(\S+) (\S+) (\S+) cap_nmos_06v0 m=(\S+) c_length=(\S+) c_width=(\S+)', lin, b)
+        if _os.environ.get('TB2_DSER'):   # bench what-if (CDM vdd+ convergence): series R in every provider-cell diode (removes the stiff #internal node corner)
+            b = re.sub(r'(?m)^D(\S+) (\S+) (\S+) ', lambda mm: f"RDS{mm.group(1)} {mm.group(2)} dser_{mm.group(1)} {_os.environ['TB2_DSER']}\nD{mm.group(1)} dser_{mm.group(1)} {mm.group(3)} ", b)
         out += b + '\n'
     return out
 
@@ -106,28 +134,45 @@ def esd_deck(text, cell, ports, case, src, clamps=True):
     """Unpowered die. Ring: RD (DVDD at the pad), RS (DVSS at the pad), clamp nodes CD / CS behind r_ring.
     case: vss = zap PAD_P against the ring ground (CS = 0); vdd = against the ring supply (CD = 0); pp = PAD_P against PAD_N."""
     d = f'.include {f.PDK}/design.ngspice\n' + ''.join(f'.lib {f.PDK}/sm141064.ngspice {x}\n' for x in ('typical', 'res_typical', 'diode_typical', 'mimcap_typical', 'moscap_typical')) + '.temp 27\n'
-    d += '.option method=gear reltol=1e-3 rshunt=1e12 cshunt=1e-17\n' + text + (clamp_cells() if clamps else '')
-    m = {'DVSS_P': 'SP', 'DVSS_N': 'SN', 'DVDD_P': 'DP', 'DVDD_N': 'DN', 'VSS': 'RS', 'PAD_P': 'PAD_P', 'PAD_N': 'PAD_N'}
+    d += '.option method=gear reltol=1e-3 rshunt=1e12 cshunt=1e-17' + _os.environ.get('TB2_OPT', '') + '\n' + text + (clamp_cells() if clamps else '')
+    m = PMAP
     d += 'Xpad ' + ' '.join(m.get(p, 'c_' + p) for p in ports) + f' {cell}\n'
     for p in ports:
-        if p not in m: d += f'Rc_{p} c_{p} RS 100\n'                  # every core-side pin (controls, VDD, TERM_VCM) held at the pad ground
+        if p == 'CASCODE' and _os.environ.get('TB2_CASDRV'):     # WT53-c: CASCODE from the pump: TB2_CASDRV="V,R" (e.g. 4.2,10k) referenced to the pad ground
+            v_, r_ = _os.environ['TB2_CASDRV'].split(','); d += f'VCASD c_CASx RS {v_}\nRc_CASCODE c_CASCODE c_CASx {r_}\n'; continue
+        if p not in m: d += f'Rc_{p} c_{p} RS ' + (_os.environ.get('TB2_RGATE', '100') if p.startswith('TERM_TRIM') else '100') + '\n'   # TB2_RGATE: what-if gate series R on the trim pins                  # every core-side pin (controls, VDD, TERM_VCM) held at the pad ground
     r = RING
-    d += f'Rsp SP RS {r["r_site"]}\nRsn SN RS {r["r_site"]}\nRdp DP RD {r["r_site"]}\nRdn DN RD {r["r_site"]}\nRrs RS CS {r["r_ring"]}\nRrd RD CD {r["r_ring"]}\n'
     import os
-    if float(os.environ.get('TB2_CDIE', '0')) > 0: d += f"Cdie CD CS {float(os.environ['TB2_CDIE']):g}\n"      # die capacitance on the ring (rail-to-rail)
-    if clamps:
-        d += ''.join(f'Xdvdd{k} CD CS CS gf180mcu_fd_io__dvdd\n' for k in range(8)) + ''.join(f'Xdvss{k} CD CS CD gf180mcu_fd_io__dvss\n' for k in range(10))
-        d += ''.join(f'Xcor{k} CD CS CD CS gf180mcu_fd_io__cor\n' for k in range(4))
+    d += f'Rsp SP RS {r["r_site"]}\nRsn SN RS {r["r_site"]}\nRdp DP RD {r["r_site"]}\nRdn DN RD {r["r_site"]}\n'
+    if RINGV:      # extracted ring bound (../ring/REPORT.md): RS/RD -> near dvss+dvdd cell (CS/CD) -> far group (FS/FD); 1 nF at the far node behind 0.5 ohm
+        rnd, rns, rfd, rfs = RINGV
+        d += f'Rrs RS CS {rns}\nRrd RD CD {rnd}\nRfs CS FS {rfs}\nRfd CD FD {rfd}\nRfl4 FS 0 1g\n'
+        if 'DVDDS_P' in ports:   # --sec cathode landings: ring DVDD bands 206-341 only (60 of 124 um band width) -> own path to the near cell
+            rds = float(os.environ.get('TB2_RDS', str(round(rnd * 124 / 60, 3))))
+            d += f'Rdsp DSP DS {r["r_site"]}\nRdsn DSN DS {r["r_site"]}\nRds DS CD {rds}\n'
+        if float(os.environ.get('TB2_CDIE', '0')) > 0:
+            if os.environ.get('TB2_CDIEAT') == 'site':   # a6 ruling: decap at the site ring node (RD-RS) behind TB2_RDIE (total, incl. its own ESR)
+                d += f"Cdie RD DIEX {float(os.environ['TB2_CDIE']):g}\nRdie DIEX RS {float(os.environ.get('TB2_RDIE', '0.7')):g}\n"
+            else: d += f"Cdie FD DIEX {float(os.environ['TB2_CDIE']):g}\nRdie DIEX FS 0.5\n"
+        if clamps:
+            d += 'Xdvddn CD CS CS gf180mcu_fd_io__dvdd\nXdvssn CD CS CD gf180mcu_fd_io__dvss\n'
+            d += ''.join(f'Xdvdd{k} FD FS FS gf180mcu_fd_io__dvdd\n' for k in range(FAR[0])) + ''.join(f'Xdvss{k} FD FS FD gf180mcu_fd_io__dvss\n' for k in range(FAR[1]))
+    else:
+        d += f'Rrs RS CS {r["r_ring"]}\nRrd RD CD {r["r_ring"]}\n'
+        if float(os.environ.get('TB2_CDIE', '0')) > 0: d += f"Cdie CD CS {float(os.environ['TB2_CDIE']):g}\n"      # die capacitance on the ring (rail-to-rail)
+        if clamps:
+            d += ''.join(f'Xdvdd{k} CD CS CS gf180mcu_fd_io__dvdd\n' for k in range(8)) + ''.join(f'Xdvss{k} CD CS CD gf180mcu_fd_io__dvss\n' for k in range(10))
+            d += ''.join(f'Xcor{k} CD CS CD CS gf180mcu_fd_io__cor\n' for k in range(4))
     ref = dict(vss='CS', vdd='CD', pp='PAD_N')[case]
     d += f'Vref {ref} 0 0\nRfl1 CS 0 1g\nRfl2 CD 0 1g\nRfl3 PAD_N 0 1g\n'
-    d += f'IINJECT 0 PAD_P {src}\n'
+    d += (f'BINJECT 0 PAD_P {src}\n' if src.startswith('I=') else f'IINJECT 0 PAD_P {src}\n')
     return d
 
 
 def mos_nodes(text, cell, ports):
     """(name, model, d, g, s, b) of every MOS of the pad subckt with ngspice vector names."""
     body = text[text.index('.subckt ' + cell):]; body = body[:body.index('.ends')]
-    m = {'DVSS_P': 'SP', 'DVSS_N': 'SN', 'DVDD_P': 'DP', 'DVDD_N': 'DN', 'VSS': 'RS', 'PAD_P': 'PAD_P', 'PAD_N': 'PAD_N'}
+    m = PMAP
     def vec(n): return (m.get(n, 'c_' + n) if n in ports else 'xpad.' + n).lower()
     out = []
     for l in body.splitlines():
@@ -143,7 +188,9 @@ def run_dock(W, name, deck, timeout_s=5000):
     W.mkdir(parents=True, exist_ok=True); rel = '/work/' + str(W.relative_to(HERE.parents[1]))
     deck = deck.replace(str(f.PDK), '/foss/pdks/gf180mcuD/libs.tech/ngspice').replace(str(W), rel)
     (W / f'{name}.spice').write_text(deck); (W / f'{name}.dat').unlink(missing_ok=True)
-    subprocess.run([str(HERE.parents[1] / 'dock.sh'), f'cd {rel} && ngspice -b {name}.spice > {name}.log 2>&1'], capture_output=True, text=True, timeout=timeout_s)
+    lim = int(_os.environ.get('TB2_TIMEOUT', '0'))      # per-attempt wall limit inside the container (0 = none); no output -> incomplete row
+    subprocess.run([str(HERE.parents[1] / 'dock.sh'), f'cd {rel} && ' + (f'timeout {lim} ' if lim else '') + f'ngspice -b {name}.spice > {name}.log 2>&1'], capture_output=True, text=True, timeout=timeout_s)
+    if lim and not (W / f'{name}.dat').exists(): return np.zeros((1, 1 + deck.split('wrdata', 1)[1].split('\n')[0].count(' ') - 1))
     return np.loadtxt(W / f'{name}.dat', skiprows=1)
 
 
@@ -151,18 +198,39 @@ def esd(model, tag, cases, clamps=True, sim='dock'):
     """cases: list of 'hbm:<kV>:<vss|vdd|pp>:<pos|neg>' or 'cdm:<A>:<vss|vdd|pp>:<pos|neg>'."""
     text, cell, ports = load(model)
     W = HERE / 'bench' / tag; mos = mos_nodes(text, cell, ports)
-    nodes = sorted({n for d in mos for n in d[2:]} | {'pad_p', 'pad_n', 'rs', 'rd', 'cs', 'cd', 'sp', 'dp'})
-    fn = HERE / 'bench' / f'{tag}-esd.json'; out = json.loads(fn.read_text()) if fn.exists() else dict(model=str(model), model_sha256=s.sha(Path(model)), ring=RING, clamps=clamps, simulator=sim, c_die_F=float(__import__('os').environ.get('TB2_CDIE', '0')), runs={})
+    dis, mims = other_devices(text, cell, ports)
+    nodes = sorted({n for d in mos for n in d[2:]} | {n for d in dis for n in d[2:4]} | {n for d in mims for n in d[2:]} | {'pad_p', 'pad_n', 'rs', 'rd', 'cs', 'cd', 'sp', 'dp'})
+    ivec = [f'@d.xpad.{d[0].lower()}[id]' for d in dis] if RINGV else []
+    fn = HERE / 'bench' / f'{tag}-esd.json'; out = json.loads(fn.read_text()) if fn.exists() else dict(model=str(model), model_sha256=s.sha(Path(model)), ring=RING if not RINGV else dict(dvdd_near=RINGV[0], dvss_near=RINGV[1], dvdd_far=RINGV[2], dvss_far=RINGV[3], far_cells=FAR, r_site=RING['r_site']), clamps=clamps, simulator=sim, c_die_F=float(__import__('os').environ.get('TB2_CDIE', '0')), c_die_at=_os.environ.get('TB2_CDIEAT', 'far'), r_die=float(_os.environ.get('TB2_RDIE', '0.7')) if _os.environ.get('TB2_CDIEAT') == 'site' else 0.5, cdm_stop=_os.environ.get('TB2_CDMSTOP', '12n'), hbm_stop=_os.environ.get('TB2_HBMSTOP', '400n'), runs={})
     for c in cases:
         kind, lvl, ref, pol = c.split(':'); sg = 1 if pol == 'pos' else -1
-        if kind == 'hbm': ipk = float(lvl) / 1.5; src = f'EXP(0 {sg * ipk:.4f} 5n 2n 15n 150n)'; tran = 'tran .1n 400n uic'
-        else: ipk = float(lvl); src = f'PULSE(0 {sg * ipk} 2n 0.2n 0.5n 1n 1)'; tran = 'tran .01n 12n uic'
+        if kind == 'hbm': ipk = float(lvl) / 1.5; src = (f'I={sg * ipk:.4f}*(0.5*(1+tanh((time-5.2e-9)/0.1e-9))*(1-exp(-max(time-5e-9,0)/2e-9))-0.5*(1+tanh((time-15e-9)/0.3e-9))*(1-exp(-max(time-15e-9,0)/150e-9)))' if _os.environ.get('TB2_HBMSMOOTH') else f'EXP(0 {sg * ipk:.4f} 5n 2n 15n 150n)');   # TB2_HBMSMOOTH: same EXP 2 ns / 150 ns, tanh-smoothed corners at 5 / 15 ns
+        if kind == 'hbm': tran = f"tran .1n {_os.environ.get('TB2_HBMSTOP', '400n')} uic"   # TB2_HBMSTOP=60n: peak current at ~5-7 ns
+        else: ipk = float(lvl); src = (f'I={sg * ipk}*0.25*(1+tanh((time-2.1e-9)/0.091e-9))*(1-tanh((time-3.45e-9)/0.2276e-9))' if _os.environ.get('TB2_CDMSMOOTH') else f'PULSE(0 {sg * ipk} 2n 0.2n 0.5n 1n 1)');   # TB2_CDMSMOOTH: same 10-90 % rise 0.2 ns / fall 0.5 ns / 1 ns top, tanh edges (no corner)
+        if kind == 'cdm': tran = f"tran .01n {_os.environ.get('TB2_CDMSTOP', '12n')} uic"   # TB2_CDMSTOP=3.6n: stop after the flat top (a5 R model stalls in the fall)
+        if kind == 'dcs':   # quasi-static DC sweep of the injected current 0 .. lvl/1.5 A (coordinator bound for HBM vdd+; all capacitors open = no decap credit)
+            ipk = float(lvl) / 1.5; src = 'DC 0'; tran = f'dc IINJECT 0 {sg * ipk:.4f} {sg * ipk / 40:.5f}'
+        if kind == 'tlp':   # TLP-style rectangle (coordinator time-box, HBM vdd+): lvl = kV-equivalent, I = lvl / 1.5 A for 100 ns, tanh edges 2 ns
+            ipk = float(lvl) / 1.5; src = f'I={sg * ipk:.4f}*0.25*(1+tanh((time-6e-9)/0.9e-9))*(1-tanh((time-106e-9)/0.9e-9))'
+            tran = "tran .1n 112n uic"
         name = c.replace(':', '_')
-        d = esd_deck(text, cell, ports, ref, src, clamps) + s.control(W, name, tran, ' '.join(f'v({n})' for n in nodes))
-        x = np.atleast_2d((run_dock if sim == 'dock' else s.run)(W, name, d, timeout_s=5000)); col = {n: x[:, 1 + i] for i, n in enumerate(nodes)}
+        if _os.environ.get('TB2_TSTEP'): tran = tran.replace('tran .01n', f"tran {_os.environ['TB2_TSTEP']}").replace('tran .1n', f"tran {_os.environ['TB2_TSTEP']}")   # smaller step -> smaller default max step (CDM vss:neg convergence)
+        an = (f'save all {" ".join(ivec)}\n' if ivec else '') + tran
+        d = esd_deck(text, cell, ports, ref, src, clamps) + s.control(W, name, an, ' '.join([f'v({n})' for n in nodes] + ivec))
+        x = np.atleast_2d((run_dock if sim == 'dock' else s.run)(W, name, d, timeout_s=5000))
+        tend = (float(_os.environ['TB2_HBMSTOP'].rstrip('n')) * 1e-9 - 1e-9 if _os.environ.get('TB2_HBMSTOP') else 399e-9) if kind == 'hbm' else (float(_os.environ['TB2_CDMSTOP'].rstrip('n')) * 1e-9 - 0.05e-9 if _os.environ.get('TB2_CDMSTOP') else 11.9e-9); retry = None
+        if kind == 'tlp': tend = 111e-9
+        if kind == 'dcs': tend = ipk * 0.99
+        for opt, mx in ((' abstol=1e-9 vntol=1e-4', None), (' gmin=1e-10 itl4=200', '2p'), (' gmin=1e-9 itl4=500 method=trap', '1p')):    # incomplete ('timestep too small'): retry, recorded
+            if np.isfinite(x).all() and x[-1, 0] >= tend: break
+            d2 = d.replace('.option method=gear reltol=1e-3', '.option method=gear reltol=1e-3' + opt).replace(tran, tran.replace(' uic', f' 0 {mx} uic') if mx else tran)
+            x = np.atleast_2d((run_dock if sim == 'dock' else s.run)(W, name, d2, timeout_s=5000)); retry = opt + (' maxstep ' + mx if mx else '')
+        col = {n: x[:, 1 + i] for i, n in enumerate(nodes)}
         refn = dict(vss='cs', vdd='cd', pp='pad_n')[ref]
-        tend = 399e-9 if kind == 'hbm' else 11.9e-9
-        res = dict(ipk=ipk, complete=bool(np.isfinite(x).all() and x[-1, 0] >= tend), t_end=float(x[-1, 0]),
+        tend = (float(_os.environ['TB2_HBMSTOP'].rstrip('n')) * 1e-9 - 1e-9 if _os.environ.get('TB2_HBMSTOP') else 399e-9) if kind == 'hbm' else (float(_os.environ['TB2_CDMSTOP'].rstrip('n')) * 1e-9 - 0.05e-9 if _os.environ.get('TB2_CDMSTOP') else 11.9e-9)
+        if kind == 'tlp': tend = 111e-9
+        if kind == 'dcs': tend = ipk * 0.99
+        res = dict(retry_options=retry, ipk=ipk, complete=bool(np.isfinite(x).all() and x[-1, 0] >= tend), t_end=float(x[-1, 0]),
                    pad_vs_ref_peak=float(np.max(np.abs(col['pad_p'] - col[refn]))), pad_vs_local_vss_peak=float(np.max(np.abs(col['pad_p'] - col['rs']))),
                    pad_vs_local_vdd_peak=float(np.max(np.abs(col['pad_p'] - col['rd']))), rail_dvdd_minus_dvss_peak=float(np.max(np.abs(col['rd'] - col['rs']))))
         worst = {}
@@ -174,9 +242,34 @@ def esd(model, tag, cases, clamps=True, sim='dock'):
             if vg > w['gate_max']: w['gate_max'], w['gate_dev'] = round(vg, 3), nm
             if vds > w['ds_max']: w['ds_max'], w['ds_dev'] = round(vds, 3), nm
             w['over_transient'] += v > lim; w['over_dc'] += v > dc
-        res['mos'] = worst; out['runs'][c] = res
+            # E3 (review a8 F4): drain / source junction reverse voltage vs the model bv (sm141064: n06 / nvt bvs 11 (nvt bvd 10.5 in one bin),
+            # p06 10.5; 3.3 V cards set none -> BSIM4 default 10 V)
+            jr = max(float(np.max(col[k] - col[b])) for k in (dd, ss_)) if mdl.startswith('n') else max(float(np.max(col[b] - col[k])) for k in (dd, ss_))
+            bv = MOS_BV[mdl]; w.setdefault('junc_rev_max', 0.); w.setdefault('junc_dev', ''); w.setdefault('junc_bv', bv); w.setdefault('junc_over', 0)
+            if jr > w['junc_rev_max']: w['junc_rev_max'], w['junc_dev'] = round(jr, 3), nm
+            w['junc_over'] += jr >= bv
+        res['mos'] = worst
+        if RINGV:
+            t_ = x[:, 0]; dj = dict(n=len(dis), worst_rev_v=0., worst_dev='', over_bv=0, worst_margin_v=1e9, prim_fwd_ma_um=0., prim_rev_ma_um=0., prim_energy_nj=0., prim_dev='', sec_fwd_ma_um=0., sec_energy_nj=0.)
+            for k, (nm, mdl, an_, ca, pj, prim) in enumerate(dis):
+                vrev = float(np.max(col[ca] - col[an_])); i = x[:, 1 + len(nodes) + k]
+                bv = DBV.get(mdl)
+                if not prim and bv:
+                    if vrev > dj['worst_rev_v']: dj['worst_rev_v'], dj['worst_dev'] = round(vrev, 3), f'{nm} {mdl}'
+                    dj['over_bv'] += vrev >= bv; dj['worst_margin_v'] = round(min(dj['worst_margin_v'], bv - vrev), 3)
+                jf = float(i.max()) * 1e3 / pj; jr = float(-i.min()) * 1e3 / pj; e = float(np.trapezoid(np.abs((col[an_] - col[ca]) * i), t_)) * 1e9
+                if prim:
+                    if jf > dj['prim_fwd_ma_um']: dj['prim_fwd_ma_um'], dj['prim_dev'] = round(jf, 3), nm
+                    dj['prim_rev_ma_um'] = round(max(dj['prim_rev_ma_um'], jr), 4); dj['prim_energy_nj'] = round(max(dj['prim_energy_nj'], e), 3)
+                    dj.setdefault('prim_rev_v_max', 0.); dj['prim_rev_v_max'] = round(max(dj['prim_rev_v_max'], vrev), 3)
+                else:
+                    dj['sec_fwd_ma_um'] = round(max(dj['sec_fwd_ma_um'], jf), 3); dj['sec_energy_nj'] = round(max(dj['sec_energy_nj'], e), 4)
+            dj['prim_pass'] = dj['prim_fwd_ma_um'] <= PRIM_LIM['fwd_ma_um'] and dj['prim_rev_ma_um'] <= PRIM_LIM['rev_ma_um'] and dj['prim_energy_nj'] <= PRIM_LIM['energy_nj']
+            res['diodes'] = dj; res['mim'] = dict(n=len(mims), worst_v=round(max([float(np.max(np.abs(col[a_] - col[b_]))) for _, _, a_, b_ in mims] or [0.]), 3), limit=6.0)
+        out['runs'][c] = res
         print(c, 'COMPLETE' if res['complete'] else 'INCOMPLETE', 'pad-ref %.2f pad-vss %.2f pad-vdd %.2f rail %.2f' % (res['pad_vs_ref_peak'], res['pad_vs_local_vss_peak'], res['pad_vs_local_vdd_peak'], res['rail_dvdd_minus_dvss_peak']),
-              ' | '.join(f"{k}: g {v['gate_max']} ds {v['ds_max']} over {v['over_transient']}/{v['over_dc']}" for k, v in worst.items()), flush=True)
+              ' | '.join(f"{k}: g {v['gate_max']} ds {v['ds_max']} over {v['over_transient']}/{v['over_dc']} jr {v.get('junc_rev_max')}/{v.get('junc_bv')} jo {v.get('junc_over')}" for k, v in worst.items()),
+              ('| diode rev %.2f (%s) over_bv %d prim %.2f mA/um %.1f nJ sec %.2f mA/um | mim %d %.2f' % (res['diodes']['worst_rev_v'], res['diodes']['worst_dev'], res['diodes']['over_bv'], res['diodes']['prim_fwd_ma_um'], res['diodes']['prim_energy_nj'], res['diodes']['sec_fwd_ma_um'], res['mim']['n'], res['mim']['worst_v'])) if RINGV else '', flush=True)
         fn.write_text(json.dumps(out, indent=1))
         for q in list(W.glob('*.dat')) + list(W.glob('*.spice')): q.unlink()
     return out
@@ -210,10 +303,11 @@ def gatec(model, tag, loader=load, pr='typical', temp=27, vdd=3.3, code=6):
     """Small-signal capacitance at each steering-switch gate pin (MAIN/POST/TMDS _P/_N: all unit gates + wiring of that pin), 100 MHz,
     gate DC 0 V (switch off) and VDD (switch on); termination on (code `code` if trimmed), bias pins 0, pads held by the termination."""
     text, cell, ports = loader(model); W = HERE / 'bench' / tag; out = dict(model=str(model), model_sha256=s.sha(Path(model)), corner=[pr, temp, vdd], code=code, c_pF={})
-    for pin in ('MAIN_P', 'MAIN_N', 'POST_P', 'POST_N', 'TMDS_P', 'TMDS_N'):
+    for pin in (_os.environ['TB2_GATEPINS'].split(',') if _os.environ.get('TB2_GATEPINS') else ('MAIN_P', 'MAIN_N', 'POST_P', 'POST_N', 'TMDS_P', 'TMDS_N')):   # TB2_GATEPINS: e.g. trim gates (info)
         for lvl in (0, vdd):
             over = {'TERM_ENABLE': 'VTERM_ENABLE TERM_ENABLE VDD 0\n', pin: f'VG {pin} 0 DC {lvl} AC 1\n'}
-            for k in range(4): over[f'TERM_TRIM{k}'] = f'VT{k} TERM_TRIM{k} ' + ('VDD 0' if code >> k & 1 else '0 0') + '\n'
+            for k in range(4):
+                if pin != f'TERM_TRIM{k}': over[f'TERM_TRIM{k}'] = f'VT{k} TERM_TRIM{k} ' + ('VDD 0' if code >> k & 1 else '0 0') + '\n'
             d = header(pr, temp) + text + controls(ports, vdd, over) + 'Xpad ' + ' '.join(ports) + f' {cell}\nRPP PAD_P TERM_VCM 1g\nRPN PAD_N TERM_VCM 1g\n'
             name = f'g_{pin}_{lvl:g}'; d += s.control(W, name, 'ac lin 1 1e8 1e8', 'i(VG)')
             x = np.atleast_2d(s.run(W, name, d, timeout_s=3000)); ig = -(x[0, 1] + 1j * x[0, 2])
@@ -235,11 +329,11 @@ def drive(model, tag, mode, i_ma, pr='typical', temp=27, vdd=3.3, code=6):
                      'POST_BIAS': f'IREFP VDD POST_BIAS {i_ma * 1e-3 / 48}\nXREFC POST_BIAS POST_BIAS 0 0 nfet_03v3 w=20u l=1u\nXREFD POST_BIAS POST_BIAS 0 0 nfet_03v3 w=20u l=1u\n'})
     d = header(pr, temp) + text + controls(ports, vdd, over) + 'Xpad ' + ' '.join(ports) + f' {cell}\nVdum dum 0 0\nRdum dum 0 1k\n'
     d += 'VLP LP VDD 0\nVLN LN VDD 0\n' + ('RLP LP PAD_P 1e9\nRLN LN PAD_N 1e9\n' if idle else 'RLP LP PAD_P 50\nRLN LN PAD_N 50\n')
-    mos = [(a, b) + tuple(v if v.startswith('xpad.') else v[2:] for v in c) for a, b, *c in mos_nodes(text, cell, ports)]
+    mos = [(a, b) + tuple(v if v.startswith('xpad.') else (v[2:] if v.startswith('c_') else v) for v in c) for a, b, *c in mos_nodes(text, cell, ports)]
     fix = {'rs': '0', 'sp': '0', 'sn': '0', 'dp': 'vdd', 'dn': 'vdd'}
     mos = [(a, b) + tuple(fix.get(v, v) for v in c) for a, b, *c in mos]
     nm = Path(str(model) + '.nodes.json'); nmap = json.loads(nm.read_text()) if nm.exists() else {}
-    want = sorted({v for dv in mos for v in dv[2:] if v not in ('0',)} | {'pad_p', 'pad_n'} | {'xpad.' + v.lower() for v in nmap.values() if '__' in v})
+    want = sorted({v for dv in mos for v in dv[2:] if v not in ('0',)} | {'pad_p', 'pad_n'} | {(v.lower() if v in ports else 'xpad.' + v.lower()) for v in nmap.values()})
     name = f'{mode}_{i_ma:g}'; d += s.control(W, name, 'dc Vdum 0 0.5 1', ' '.join(f'v({n})' for n in want) + ' i(VLP) i(VLN) i(VTERM_VCM)')
     x = np.atleast_2d(s.run(W, name, d, timeout_s=3000))[0]; col = {n: float(x[1 + i]) for i, n in enumerate(want)}; col['0'] = 0.
     ilp, iln, ivcm = (-float(v) for v in x[1 + len(want):1 + len(want) + 3])
@@ -253,7 +347,7 @@ def drive(model, tag, mode, i_ma, pr='typical', temp=27, vdd=3.3, code=6):
         w['over'] += v > w['dc_screen']
     out['mos_dc'] = worst
     if nmap and not idle:
-        g = lambda net, pre: [col['xpad.' + v.lower()] for k, v in nmap.items() if k.startswith(net + '|' + pre) and '__' in v]
+        g = lambda net, pre: [col[v.lower() if v in ports else 'xpad.' + v.lower()] for k, v in nmap.items() if k.startswith(net + '|' + pre) and ('__' in v or v == net)]   # the pin node itself has no __ suffix
         mean = lambda v: float(np.mean(v)) if v else float('nan')
         vd = mean(g('PAD_P', 'nmos:SUM_')); ds = [mean(g(f'SUM_P_D_{u}', 'nmos:PAD_P')) - mean(g(f'SUM_P_D_{u}', f'nmos:MAIN_TAIL_{u}')) for u in range(8)]
         dt = [mean(g(f'MAIN_TAIL_{u}', f'nmos:SUM_P_D_{u}')) - mean(g(f'MAIN_TAIL_{u}', 'nmos:VSS')) for u in range(8)]; vs = mean(g('VSS', 'nmos:MAIN_TAIL_'))
@@ -290,7 +384,8 @@ if __name__ == '__main__':
         ka = HERE / 'bench' / 'esdka_cell.spice'
         ka.write_text('.subckt kacell PAD_P PAD_N VSS DVSS_P DVSS_N DVDD_P DVDD_N\nRK PAD_P VSS 10\nR1 PAD_N VSS 1meg\nR2 DVSS_P VSS 1meg\nR3 DVSS_N VSS 1meg\nR4 DVDD_P VSS 1meg\nR5 DVDD_N VSS 1meg\n.ends kacell\n')
         o = esd(ka, sys.argv[2], ['hbm:1:vss:pos']); r = o['runs']['hbm:1:vss:pos']['pad_vs_ref_peak']
-        print('ESD KNOWN ANSWER pad-ref', r, 'expected about 6.95 V', 'PASS' if abs(r - 6.95) < 0.15 else 'FAIL')
+        exp = 0.66667 * 0.99326 * (10 + (RING['r_site'] + RINGV[1] if RINGV else 0.5))
+        print('ESD KNOWN ANSWER pad-ref', r, 'expected %.3f V' % exp, 'PASS' if abs(r - exp) < 0.15 else 'FAIL')
     elif part == 'gatec':
         gatec(Path(sys.argv[2]).resolve(), sys.argv[3])
     elif part == 'gatecpub':

@@ -614,3 +614,33 @@ Not rerun on a13 (untouched by the strap change, a12 values stand): CDM 2 A vdd+
 leak at 1.65 V / pads apart, CDM 1/3 A.
 Files: GDS 72af3d5aa644..., netres `sec/r13/res.json` 483511e6, models `sec/models/a13_rh` 3536551e / `a13_rt` 6f1b314c / `a13_c`.
 Build: `python3 $P/analog/pads/tx_pad_layout.py sec/b/a13 --nvt '{"wb": 23.5, "wt": 23.5, "lb": 2.2, "lt": 1.0, "merged": true, "disc2": [24, 0.28, 64, 2], "disch": 20, "riser_wide": true, "em": true}' --upx '{"x": [63, 69], "yu": 107}' --top-pins`.
+
+# CANDIDATE a14 (2026-11-21): review-a13 conditions (resistor-head landing bar EM, em_check fix, design basis). NOT published, NOT committed. a13 deleted.
+Correction (review-a13): under the a13 screen, a12 had 10 paths over (worst 3.74), not 44.
+Changes vs a13 (generator sha a342b6b3; --nvt "em": 2; the a13 path "em": true is unchanged):
+- Head B landing: the Metal1 pad is extended over the poly body (x +-1.35, 0.94 um), with a 2-row x 1.15 um via1 array (was 3 cuts in one row). The Metal2
+  landing bar is 1.0-1.2 um (was 0.46).
+- TU columns 1.9 um Metal2 (was 1.2), via2 arrays 1.6 x 2.7 um; TU tracks 3.0 um Metal3 (was 2.0).
+- Each resistor drop is as wide as the other-net columns allow (up to 1.8 um, at least 0.6 um, kept inside its own landing bar). Own-group TU columns
+  within reach are merged into the drop at the track. Resistor row +2.0 um vs a13 (ytop 400.5); the second tap strip (a13) is kept.
+- em_check.py (sha d9ed7a08):
+  - netres runs TU_* / TERM_VCM* at path_fraction 0.02 (fixspec11.py bdb9e80c), so per-unit straps are seen.
+  - Each element takes the worse of typ and high; codes 0..15.
+  - Design basis: (A) 10.5 mA per pad, ratio <= 0.86; (B) 15.75 mA static in one leg (far end terminated), ratio <= 1.0; (C) 21 mA, far end open: information.
+
+| Limit | a14 | Result |
+|---|---|---|
+| EM basis A (10.5 mA/pad, codes 0..15, <= 0.86) | worst 0.70 (TU_x_B run, code 0); cuts <= 0.39 (B); bus 0.65; pin 0.59; T0..T3 <= 0.53 | PASS (30 % margin) |
+| EM basis B (15.75 mA static, <= 1.0) | worst **1.05: TU_x_B, code 0 only** (all 15.75 mA in the base group). Location: the drop of the outermost base unit next to the T0 device (1.0 um Metal2, x 107.98 / mirror), where the T0 columns limit the width. Codes 1..15: B <= 0.93; T0..T3 <= 0.79; bus 0.97; pin 0.44; cuts <= 0.58 | MISS by 5 % at code 0 (outside the trim window 2..13); PASS for codes 1..15 |
+| EM basis C (21 mA, information) | worst 1.40 (B, code 0); T1 1.06, bus 1.30 | info |
+| Termination +-10 %, 23 corners rt / rh | worst 5.57 / 3.97 %; ss/32/3.15 codes 11-14; ff/22/3.35 codes 2-3 | PASS (a4 +-5 %: rt misses ff/22/3.35 only: report) |
+| P-N / off control | -0.43..-0.18 ohm / >= 1.0e10 ohm | PASS |
+| Pad C <= 3.223 pF | rt 3.131, c 3.041 (+0.026 vs a13) | PASS |
+| CM1 <= 5 ohm (ss, high) | 3.35 ohm | PASS |
+| CDM 2 A spot (exact a14_rh) | vss+ 6.92, pp+ 7.27 V | PASS |
+| Layout: Magic DRC / netgen / KLayout (NAT) / rb LVS + control / latch-up / rail_site / railconn / default path | 0 / unique / 0+0 / match + mismatch / 0.0 um2 / PASS / clean / 3a706943 == a4 | PASS |
+Not rerun (untouched): other ESD cases, gate C, drop, off leak (the off path is unchanged), CM via 25 ohm.
+Files: GDS b392d829994b..., netres `sec/r14/res.json` d3e96226, EM `sec/r14/em.json`, models `sec/models/a14_rh` 655c2039 / `a14_rt` fe66c801 / `a14_c`.
+Build: `python3 $P/analog/pads/tx_pad_layout.py sec/b/a14 --nvt '{"wb": 23.5, "wt": 23.5, "lb": 2.2, "lt": 1.0, "merged": true, "disc2": [24, 0.28, 64, 2], "disch": 20, "riser_wide": true, "em": 2}' --upx '{"x": [63, 69], "yu": 107}' --top-pins`.
+Open for a ruling: basis B at code 0 (1.05x on one ~1 um drop). Options: the digital clamps the trim code to >= 1 (or to the 2..13 window), or accept it. Widening that
+one drop needs the T0 device moved by about 1 um.

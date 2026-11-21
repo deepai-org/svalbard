@@ -182,6 +182,10 @@ def run(mw, mx0, rng=None, strat=0):
     if CH > 0:
         rsv['chan_macro_s'] = (dig[0], dig[1]-HALO-CH, dig[2], dig[1]-HALO)
         rsv['chan_macro_e'] = (dig[2]+HALO, dig[1]-HALO-CH, min(dig[2]+HALO+CH, CORE[2]), CORE[3])
+    # assembly: keep the pocket east of the macro free of blocks (POCKET=1): on pt_wired it is walled off by the macro and
+    # pad_wire_tx, so blocks there pull their nets through the corner gap
+    if os.environ.get('POCKET') == '1':
+        rsv['pocket_e'] = (dig[2]+HALO, dig[1]-HALO, CORE[2], CORE[3])
     if CORRIDOR:
         cx = min(max(2281.2, dig[0]+100), dig[2]-150)
         rsv['corridor_s_rsv'] = (cx, CORE[1]+34.0, cx+46.5, dig[1]-HALO)

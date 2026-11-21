@@ -377,7 +377,7 @@ D += ['END NETS']
 # routing channels and corridors of the floorplan stay open; booked items are Metal1-3 blockages; nothing is routed in the
 # provider-ring band outside the IO cells' inner edge (5 um short of it, so the IO pins stay reachable) or over the seal ring
 blk = [(n, r, ('Metal1', 'Metal2', 'Metal3')) for n, r in list(booked.items())+list(FP['reserves'].items())
-       if n != 'd2h_strip' and not n.startswith(('chan_', 'corridor'))]
+       if n != 'd2h_strip' and not n.startswith(('chan_', 'corridor', 'pocket'))]
 e = C.IO_INNER-5; W_, H_ = C.DIE[2], C.DIE[3]; ML = tuple(n for n, *_ in C.METALS)
 for r in ((0, 0, W_, e), (0, H_-e, W_, H_), (0, 0, e, H_), (W_-e, 0, W_, H_)): blk.append(('ring_band', r, ML))
 D.append(f'BLOCKAGES {sum(len(l) for n, r, l in blk)} ;')

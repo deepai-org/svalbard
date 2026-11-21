@@ -15,7 +15,7 @@ The connectivity source of truth is `integration/chips/{rf,wired}/chip.conn` (sh
 Open disagreements between neighbouring blocks are the D-rows of `integration/chips/decisions.md`; supplies, islands,
 grid and decap are in `power-delivery.md`; registers are in `register-map.md`; risks are in `risk-register.md`.
 
-`pt_rf` has 191 instances, `pt_wired` 184; the macro presents 216 control ports (531 bits), each chip uses the ports of
+`pt_rf` has 190 instances, `pt_wired` 184; the macro presents 216 control ports (531 bits), each chip uses the ports of
 its own blocks.
 
 ## 1. Signal chains
@@ -58,7 +58,7 @@ Clocks [pll, core, debug]            see section 4
 Host [chip]
   SPI, RESET_N, H2D[9:0] + H2D_CLK, D2H[9:0] + D2H_CLK <-> host (provider pads) <-> digital
 Always-on [core]
-  por, aosc, core_bias (+ bias_ext), island switches isw_*, ATB tree, outside clamps, characterization structures
+  por, aosc, core_bias, island switches isw_*, ATB tree, outside clamps, characterization structures
 ```
 
 ## 2. Instances
@@ -84,10 +84,8 @@ contract, published netlist still differs.
 |---|---|---|
 | `por` | `por` | Power-on reset; `porb` -> macro `por_n` |
 | `aosc` | `pt_aosc` | Management oscillator -> `fc_src[4]` |
-| `core_bias` | `pt_core_bias` | Bandgap, bias generator and per-block bias outputs with enables; bank rails for rf, conv, pll, wired, debug; references VREF0, VCM |
-| `bias_ext` | `pt_bias_ext` (demand) | Bias outputs for `qvco`, `lo_pfdcp`, `hsbias` |
+| `core_bias` | `pt_core_bias_rf` / `pt_core_bias_wired` (one generator, `integration/core_bias.py`) | Bandgap, bias generator and per-block bias outputs with enables; bank rails per chip (`pt_rf`: rf_rx, conv, pll, lo, debug; `pt_wired`: pll, wired_rx, wired_tx, debug); references VREF0, VCM |
 | `isw_{wired_rx,wired_cap,wired_tx,rf_rx,rf_tx,lod,lo,pll,conv,debug}` | `isw_debug`, `isw_wired`, `isw_rf`, `isw_conv` | Island switches (section 5) |
-| `agnd_tie` | `pt_agnd_tie` (demand) | The one AGND_RX to VSS connection |
 | `rx_ref_in` | `pt_diff_clk_rx` | REF_IN receiver -> `ref_clk`, `s_ref_present` |
 | `iso_rf_rx_clk`, `iso_host_clk`, `iso_pll_tx_fbck`, `iso_clk_obs` | `iso_clamp_x4` | Outside clamps on CONV_CLK -> `rf_rx_clk`, HOST_CLK -> `host_word_clk`, TX ring FBCK -> `fc_src[0]`, CLK_OBS |
 | `pd_clk_obs` | `iso_pd` | Pull-down on the CLK_OBS node while `clk_obs` is not driving |
@@ -100,8 +98,7 @@ contract, published netlist still differs.
 
 | Instance | Cell | Island | Function |
 |---|---|---|---|
-| `pad_rf_rx` | `pad_rf_pair` | rf_rx | RF_RX_P/N pad pair, ground AGND_RX |
-| `pad_agnd_rx_{0:1}` | `pad_downbond` (demand) | rf_rx | AGND_RX ground sites |
+| `pad_rf_rx` | `pad_rf_pair` | rf_rx | RF_RX_P/N pad pair, ground die VSS |
 | `lna` | `pt_lna` | rf_rx | LNA with gain step, bypass, attenuator, tuning and single-ended option; I and Q outputs |
 | `lna_ind_{p,n}` | `pt_lna_ind` (demand) | rf_rx | Tank load inductors |
 | `lna_deg_{p,n}` | `pt_lna_deg` (demand) | rf_rx | Source degeneration inductors |
@@ -260,8 +257,8 @@ switch from the always-on rail and reports its own power-good. Islands in one en
 |---|---|---|---|---|
 | wired_rx | `RAIL_wired_rx` | `isw_wired_rx` (`isw_debug`) | wired (0) | `pad_hs_rx`, `termination`, `rxlevel`, `ctle`, `rxselect`, `wmon_sel`, `detect`, `vthdac`, `slicer` |
 | wired_cap | `RAIL_wired_cap` | `isw_wired_cap` (`isw_wired`) | wired (0) | `wordclk_rx`, `ptrim`, `wrx_cap` |
-| wired_tx | `RAIL_wired_tx` | `isw_wired_tx` (`isw_debug`) | wired (0) | `pad_usb`, `pad_wire_tx`, `wiredtx`, `steer_*`, `attached_tx_interlock`, `term_buffer`, `txpad_bias`, `usb_txdrv`, `hsbias`, `wtx_fallback_control`, `iso_wtx_dx` |
-| rf_rx | `RAIL_rf_rx` | `isw_rf_rx` (`isw_rf`) | rf (1) | `pad_rf_rx`, `pad_agnd_rx_*`, `lna`, `lna_ind_*`, `lna_deg_*`, `rxmix_*`, `bbfilter_*` |
+| wired_tx | `RAIL_wired_tx` | `isw_wired_tx_a`, `isw_wired_tx_b` (`isw_wired`) | wired (0) | `pad_usb`, `pad_wire_tx`, `wiredtx`, `steer_*`, `attached_tx_interlock`, `term_buffer`, `txpad_bias`, `usb_txdrv`, `hsbias`, `wtx_fallback_control`, `iso_wtx_dx` |
+| rf_rx | `RAIL_rf_rx` | `isw_rf_rx` (`isw_rf`) | rf (1) | `pad_rf_rx`, `lna`, `lna_ind_*`, `lna_deg_*`, `rxmix_*`, `bbfilter_*` |
 | rf_tx | `RAIL_rf_tx` | `isw_rf_tx` (`isw_debug`) | rf (1) | `pad_rf_tx`, `txmix_*`, `txsum`, `rfdriver` |
 | lod | `RAIL_lod` | `isw_lod` (`isw_wired`) | rf (1) | `lo_ext`, `lo_mmd`, `lo_mmd_qdum`, `lo_obs`, `lo_obs_q`, QVCO buffer supply |
 | lo | `RAIL_lo` -> `lo_vreg` -> `VDD_LO` | `isw_lo` (`isw_conv`) | rf (1) | `lo_vreg`, `qvco`, `lo_pfdcp`, `lo_lf` |
@@ -269,7 +266,7 @@ switch from the always-on rail and reports its own power-good. Islands in one en
 | conv | `RAIL_conv` | `isw_conv` (`isw_conv`) | conv (4) | `adc_*`, `dac_*`, `refbuf`, `iso_conv_clk` |
 | debug | `RAIL_debug` | `isw_debug` (`isw_debug`) | debug (5) | section 2 "Debug island" |
 
-Enable bit 3 is reserved. The LNA ground is AGND_RX, joined to VSS once through `agnd_tie`. Island currents, switch
+Enable bit 3 is reserved. The LNA ground is die VSS (no down-bonds on the fixed bond layout). Island currents, switch
 sizing, grid and decap: `power-delivery.md`.
 
 Isolation between islands and the always-on logic: macro inputs are clamped inside the macro (section 3); 16 clamp
@@ -280,8 +277,10 @@ without isolation (ADC inputs, DAC outputs, baseband observe/inject) are decisio
 
 ## 6. Pads
 
-57 pad nets: 55 signals, VDD and VSS. The conn does not state pad sides or bond sites; the bond map is in
-`spec/contract.json` and `package-channel.md`.
+Pad nets of both chips together; each chip carries the host, SPI, strap, debug and ATB pads plus its own signal
+pads (`pt_rf`: REF_IN, AUX_CLK, RF_RX, RF_TX, BB_I, BB_Q; `pt_wired`: REF_IN, AUX_CLK, WIRE_RX, WIRE_TX, USB, WTX_EXT,
+WMON, TLP_TEST). Sides and bond sites are in `integration/chips/<chip>/bond_map.txt`; free signal sites are extra VDD /
+VSS bonds (`pad_xvdd_*`, `pad_xvss_*`).
 
 | Pad nets | Pad instance (family) | Island | Function |
 |---|---|---|---|
@@ -303,10 +302,8 @@ without isolation (ADC inputs, DAC outputs, baseband observe/inject) are decisio
 | USB_DP, USB_DN | `pad_usb` (`pad_wirepad`) | wired_tx | USB; the pair also feeds `rxselect` directly, `detect` and `wmon_sel` |
 | WTX_EXT_P, WTX_EXT_N | `pad_wtx_ext` (`pad_rf_pair`) | debug | External serial data for the TX pad |
 | WMON | `pad_wmon` (`pad_single_leg`) | debug | Wired monitor output |
-| VDD | `pad_dvdd_{0:5}`, `pad_vdd_{0:1}` | chip | Supply, 8 pads |
-| VSS | `pad_dvss_{0:7}`, `pad_vss_{0:1}` | chip | Ground, 10 pads |
-
-AGND_RX is not a pad net of the conn; it is bound to two `pad_downbond` sites (section 9).
+| VDD | `pad_dvdd_{0:5}`, `pad_vdd_{0:1}`, `pad_xvdd_*` | chip | Supply: 8 provider sites plus 2 (`pt_rf`) / 3 (`pt_wired`) signal sites |
+| VSS | `pad_dvss_{0:7}`, `pad_vss_{0:1}`, `pad_xvss_*` | chip | Ground: 10 provider sites plus 9 (`pt_rf`) / 6 (`pt_wired`) signal sites |
 
 ## 7. Modes
 
@@ -412,12 +409,10 @@ Codes 4, 13, 25 and 41 are tied to VSS; codes 5 and 6 read VDD.
 
 ## 9. Not yet built
 
-From the `check_top.py` regression (`demand=12 staged=4`; every other check is at zero):
+From the `check_top.py` regression of each chip (every other check is at zero); open items are in
+`integration/chips/decisions.md`:
 
-- No cell exists for 12 instances: `pad_por_bypass`, `bias_ext`, `pad_agnd_rx_0`, `pad_agnd_rx_1`, `agnd_tie`,
-  `refvcm`, `lna_ind_p`, `lna_ind_n`, `lna_deg_p`, `lna_deg_n`, `lo_vreg`, `txpad_bias`.
-- `adc_i`, `adc_q`, `dac_i`, `dac_q` are bound to the converters owner's staged pin contract; the published
-  netlists still differ.
-- The AGND_RX sites are bound as `pad_downbond`, which the fixed bond layout does not offer; the LNA ground has to be
-  re-planned on standard bond fingers.
-- TLP_TEST is a conn pad net that is not in the bond map.
+- `pt_rf`: demand 18, staged 4. No cell exists for `pad_por_bypass`, `refvcm`, `lna_ind_p/n`, `lna_deg_p/n`, `lo_vreg`
+  and the provider supply cells at the signal sites (`pad_xvdd_*`, `pad_xvss_*`). `adc_i`, `adc_q`, `dac_i`, `dac_q` are
+  bound to the converters owner's staged pin contract; the published netlists still differ.
+- `pt_wired`: demand 12: `pad_por_bypass`, `refvcm`, `txpad_bias` and the supply cells at the signal sites.

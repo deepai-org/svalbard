@@ -4,11 +4,11 @@ One document for what must be true before the GDS is submitted and how far the
 design is from it. Rules are in `scratch/reviews/MANDATE.md`; work status is in
 `scratch/reviews/SESSION-STATE.md`; risks are in [risk-register.md](risk-register.md).
 
-- **Target:** wafer.space GF180MCU Run 3, 1x1 slot, die 3.932 × 5.122 mm, chip-on-board
-  ([package-channel.md](package-channel.md)). Precheck-clean GDS by **16 December 2026**.
+- **Target:** two chips, `pt_rf` and `pt_wired` (`chips.json`), each on its own wafer.space GF180MCU Run 3
+  1x1 slot, die 3.932 × 5.122 mm, chip-on-board ([package-channel.md](package-channel.md)). Precheck-clean GDS by **16 December 2026**.
 - **Scope:** every capability, mode and rate, including the 2.7–3.24 Gb/s wired paths.
   Off-chip only passives, the FPGA and a fallback LNA.
-- **Acceptance:** the die is worth fabricating if it is safe, diagnosable and gives a second
+- **Acceptance:** each die is worth fabricating if it is safe, diagnosable and gives a second
   route to every function. Per-capability performance is tracked in
   [performance-requirements.md](performance-requirements.md) and does not gate a block's freeze.
 - **Machine-readable block state:** `tapeout-readiness.json`, checked by
@@ -86,23 +86,22 @@ forwarded wire clock uses the `AUX_CLK` pair (`integration/chips/{rf,wired}/chip
 
 ## Debug and test pads
 
-From `integration/chips/{rf,wired}/chip.conn` and `package-channel.json`.
+From `integration/chips/{rf,wired}/bond_map.txt`. Both chips: `ATB0`, `ATB1` (analog test bus force and sense),
+`CLK_OBS`, `DBG_OBS0`, `DBG_OBS1` (divided clock observation and digital status) on the north edge, and the
+`POR_BYPASS` reset strap.
 
-| Edge | Pads | Use |
+| Chip | Pads | Use |
 | --- | --- | --- |
-| West | `BB_I_P/N`, `BB_Q_P/N` | Bidirectional analog baseband taps |
-| West | `AUX_CLK_P/N` | Second clock input: external-LO Q phase, forwarded wire clock, independent sample clock |
-| North | `ATB0`, `ATB1` | Analog test bus force and sense |
-| North | `CLK_OBS`, `DBG_OBS0`, `DBG_OBS1` | Divided clock observation and digital status |
-| East | `POR_BYPASS` | Reset strap |
-| East | `WTX_EXT_P/N` | External serial data into the wired TX output stage |
-| East | `WMON` | Buffered wired analog monitor |
-| East | `TLP_TEST` | TLP/ESD test site |
-| East | `bidir[17]` | Bonded spare |
+| `pt_rf` | `BB_I_P/N`, `BB_Q_P/N` (west) | Bidirectional analog baseband taps |
+| `pt_rf` | `AUX_CLK_P/N` (east) | External-LO Q phase, auxiliary / external converter clock |
+| `pt_wired` | `AUX_CLK_P/N` (east) | Forwarded wire clock, auxiliary clock |
+| `pt_wired` | `WTX_EXT_P/N` (east) | External serial data into the wired TX output stage |
+| `pt_wired` | `WMON` (west) | Buffered wired analog monitor |
+| `pt_wired` | `TLP_TEST` (west) | TLP/ESD test site |
 
 Characterization structures (`analog/characterization`): device replicas and matching arrays
 on the analog test bus, ring oscillators and a CML divider on `CLK_OBS`, RF FET with
-open/short de-embedding. They are in the conn but not in the last floorplan.
+open/short de-embedding (`pt_rf`).
 
 ## Before submission
 
@@ -110,20 +109,20 @@ Each line is a gate. "Gap" is the state today.
 
 | Gate | Requirement | Gap |
 | --- | --- | --- |
-| Die fit | Every block placed inside 3.932 × 5.122 mm with routing channels, supply grid and decap | Does not fit: 0.03–0.18 mm² short if every repack target is met, 0.65–0.73 mm² short with cells as staged, after the area levers taken so far (`scratch/reviews/die-fit.md`). No floorplan newer than v6 |
-| Connectivity | chip-top regression of both chips at zero; every instance bound to a published layout | 0 unbound pins; 12 instances unbuilt and 4 converters staged (`integration/chips/check_top.py`: `demand=12 staged=4`) |
-| Blocks | Four tests passed per block, at every in-window corner, against real neighbours | Open blocks listed in `SESSION-STATE.md` section 4 |
-| Digital macro | Hardened; setup, hold with on-chip variation, 3.5 V and ff views closed; gate-level simulation; clamp cells intact | Not hardened on the current RTL; setup not closed |
-| Chip-level analysis | Extracted critical nets resimulated per chain; substrate and supply coupling; supply drop and decap response ([power-delivery.md](power-delivery.md)); power-up, reset and isolation | Models exist; nothing run on a routed top |
-| Top routing | Signal, supply and LO routing complete | Not started |
-| Fill | Top-level fill run by us, with block-owned keep-out markers; density and DCF.1a clean; fill-aware re-extraction of the inductors and other sensitive blocks | No fill step in the flow; no block GDS carries a keep-out marker; stock fill lands in the QVCO spirals (`scratch/reviews/signoff-gap.md`) |
-| Read-back LVS | Every published GDS and the top re-extracted from disk and matched, device parameters compared | 84 block GDS match the netlists the chip top binds (18 Nov); `pt_pll_ring_core` and the rf_rx cells in rework do not match their committed schematics; the QVCO top cell cannot be compared (spirals extract as shorts); no top-level LVS; not a gate in the flows |
-| Top-level DRC and antenna | KLayout and Magic clean on the filled top, antenna included | Not run on a routed top; `adc_i` has 7 antenna violations |
-| Precheck | wafer.space precheck 1.7.4 with PDK `792ef67` passes in one work directory on the submitted file | Project flows use an older deck without DCF.1a; the live image is amd64-only and has not been run |
+| Die fit | Every block placed inside 3.932 × 5.122 mm with routing channels, supply grid and decap | Both chips place every conn block with the 5.4 nF decap plan (`integration/assembly`, `INT-03` in the risk register) |
+| Connectivity | chip-top regression of both chips at zero; every instance bound to a published layout | 0 unbound pins on both chips; `pt_rf` demand 18, staged 4 (the converters); `pt_wired` demand 12 (`integration/chips/<chip>/run.sh`) |
+| Blocks | Four tests passed per block, at every in-window corner, against real neighbours | Block state in each `analog/<family>/README.md`; most ambitious blocks are staged or failing |
+| Digital macro | Hardened; setup, hold with on-chip variation, 3.5 V and ff views closed; gate-level simulation; clamp cells intact | Both configurations routed clean; setup does not close (DIG-01) |
+| Chip-level analysis | Extracted critical nets resimulated per chain; substrate and supply coupling; supply drop and decap response ([power-delivery.md](power-delivery.md)); power-up, reset and isolation | Models exist; nothing run on the routed tops |
+| Top routing | Signal, supply and LO routing complete | Both tops place, grid and route with detailed-route violations left (`integration/assembly/README.md`) |
+| Fill | Top-level fill run by us, with block-owned keep-out markers; density and DCF.1a clean; fill-aware re-extraction of the inductors and other sensitive blocks | Fill step with keep-outs exists (`integration/signoff/fill`); DCF.1a items remain inside blocks; no fill-aware re-extraction |
+| Read-back LVS | Every published GDS and the top re-extracted from disk and matched, device parameters compared | Block GDS match the netlists the chip tops bind except blocks in rework; the QVCO top cell cannot be compared (spirals extract as shorts); top-level LVS with black boxes runs but does not match (`integration/assembly/README.md`) |
+| Top-level DRC and antenna | KLayout and Magic clean on the filled top, antenna included | `pt_rf` filled top: KLayout DRC and antenna items open, most at the custom pad via stacks; `pt_wired` not run (`integration/assembly/README.md`) |
+| Precheck | wafer.space precheck with PDK `792ef67` passes in one work directory on the submitted file, for each chip | Runs (`integration/signoff/precheck`); `pt_rf` exits 1, `pt_wired` not run |
 | Process options | Every layer used is in the wafer.space mask set | ESD implant layer 24/0, deep n-well and SAB devices unconfirmed |
-| Evidence | A hash-matched evidence record for every published GDS | Audit of 18 Nov: published status not supported for 31 of 83 blocks; 21 GDS without a precheck DRC record (`scratch/reviews/evidence-audit.md`) |
-| Package and board | Bond map and per-pin channel fixed ([package-channel.md](package-channel.md)); board obligations complete ([board-requirements.md](board-requirements.md)) | B18 and B25 not met; carrier, gateware and bring-up software not started |
-| Slot | A Run 3 slot is held | Open with the user |
+| Evidence | A hash-matched evidence record for every published GDS | Not met for every block (`scratch/reviews/evidence-audit.md`) |
+| Package and board | Bond map and per-pin channel fixed ([package-channel.md](package-channel.md)); board obligations complete ([board-requirements.md](board-requirements.md)) | B18 and B25 not met; carrier and gateware not started; bring-up reference software in `tools/bringup` (simulation only) |
+| Slot | A Run 3 slot is held for each chip | Open with the user |
 | Submission package | Immutable GDS with checksums, bond map, bring-up board checklist, bring-up script | Not started |
 
 ## Bring-up order on silicon

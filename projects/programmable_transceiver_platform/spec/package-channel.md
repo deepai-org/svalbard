@@ -51,12 +51,16 @@ carrier puts it.
 
 ## 3. Bond map and channel per pin
 
-West edge: `RF_RX_P/N` (bonds 70/69, contacts 12/13), `BB_I_P/N` (68/67, 14/15), `BB_Q_P/N`
-(66/65, 16/17), `AUX_CLK_P/N` (62/61, 20/21), `REF_IN`/`REF_IN_N` (60/59, 22/23), `RF_TX_P/N`
-(56/55, 26/27). East edge: `WIRE_RX_N/P` (20/21, 60/59), `POR_BYPASS` (22, 58), spare
-`bidir[17]` (23, 57), `USB_DN/DP` (24/25, 56/55), `WIRE_TX_N/P` (28/29, 52/51), `WTX_EXT_P/N`
-(30/31, 50/49), `WMON` (32, 48), `TLP_TEST` (33, 47). South: D2H, SPI, `RESET_N`. North: H2D,
-`CLK_OBS`, `DBG_OBS0/1`, `ATB0/1`. The LNA has no pad of its own for ground: it uses die VSS.
+Each chip has its own bond map (`integration/chips/<chip>/bond_map.txt`); the south (D2H, SPI, `RESET_N`) and north
+(H2D, `CLK_OBS`, `DBG_OBS0/1`, `ATB0/1`) rows are the same on both. Signal pins, as bond pad / connector contact:
+
+- **`pt_rf`.** West: `BB_I_P/N` (70/69, 12/13), `RF_RX_P/N` (68/67, 14/15), `BB_Q_P/N` (66/65, 16/17), `RF_TX_P/N`
+  (56/55, 26/27). East: `POR_BYPASS` (22, 58), `REF_IN`/`REF_IN_N` (28/29, 52/51), `AUX_CLK_P/N` (31/32, 49/48).
+- **`pt_wired`.** East: `WIRE_RX_P/N` (20/21, 60/59), `AUX_CLK_P/N` (22/23, 58/57), `USB_DP/DN` (24/25, 56/55),
+  `WIRE_TX_P/N` (28/29, 52/51), `WTX_EXT_P/N` (31/32, 49/48). West: `REF_IN`/`REF_IN_N` (60/59, 22/23), `POR_BYPASS`
+  (62, 20), `TLP_TEST` (66, 16), `WMON` (68, 14).
+
+Free signal sites of each chip are VDD / VSS bonds. The LNA has no pad of its own for ground: it uses die VSS.
 
 Model chain: pad C → bond wire → finger 0.08 pF → front microstrip → via (0.26–0.49 nH,
 0.1 pF) → back microstrip → land 0.06 pF → connector (0.85–1.22 nH, 0.25 pF) → carrier line.
@@ -76,16 +80,18 @@ shift of ±0.1 mm and ±1° varied):
 The S-parameter and crosstalk entries use the generator's plan length (2.21–3.16 mm) at
 0.83 nH/mm.
 
-| Class (bond pads) | Plan bond mm | Trace mm | Interconnect loss at 156 M / 1.25 G / 2.45 G (dB) | Return loss with the die load | Worst neighbour crosstalk |
-|---|---|---|---|---|---|
-| RF_RX (70/69) | 2.69 / 2.60 | 4.97 / 6.01 | 0.12 / 0.74 / 1.64 | 8.3 dB at 2.45 G (0.5 pF ∥ 50 Ω, before the match) | P to N −12 dB |
-| RF_TX (56/55) | 3.02 / 3.16 | 5.68 / 5.39 | 0.13 / 0.80 / 1.78 | 6.7 dB at 2.45 G (1 pF ∥ 50 Ω) | → ATB1 −13.3 dB |
-| LO I = REF_IN (60/59) | 2.60 / 2.69 | 3.12 / 3.06 | 0.11 / 0.61 / 1.40 | 8.5 dB at 2.45 G | → AUX_CLK_N −17.5 dB |
-| LO Q = AUX_CLK (62/61) | 2.47 / 2.53 | 5.22 / 5.46 | 0.12 / 0.72 / 1.58 | 7.3 dB at 2.45 G | → REF_IN −17.6 dB |
-| WIRE_RX (21/20) | 2.79 / 2.90 | 5.20 / 5.34 | 0.12 / 0.77 / 1.71 | 10.0 dB at 1.25 G for a 2.35 pF pad and 50 Ω | → POR_BYPASS −23.5 dB at 1.25 G |
-| WIRE_TX (29/28) | 2.44 / 2.42 | 5.16 / 3.14 | 0.12 / 0.70 / 1.53 | 13.0 dB at 1.25 G (1.8 pF) | → WTX_EXT_P −24.7 dB at 1.25 G |
-| WTX_EXT (30/31) | 2.47 / 2.53 | 3.04 / 5.12 | 0.11 / 0.60–0.74 / 1.40–1.61 | 15–18 dB at 1.25 G | → WMON −21.4 dB |
-| Host D2H / H2D | 2.21–2.79 | 2.88–6.91 | 0.11–0.14 / — / — | unterminated CMOS | −24 dB at 1.25 G to the next lane |
+| Chip: class (bond pads) | Plan bond mm | Trace mm | Interconnect loss at 156 M / 1.25 G / 2.45 G (dB) | Worst neighbour at 1.25 G |
+|---|---|---|---|---|
+| rf: RF_RX (68/67) | 2.53 / 2.47 | 3.37 / 5.09 | 0.11–0.12 / 0.65–0.73 / 1.49–1.59 | → BB_I_N −20.8 dB |
+| rf: RF_TX (56/55) | 3.02 / 3.16 | 5.68 / 5.39 | 0.13 / 0.80–0.84 / 1.78–1.87 | → ATB1 −18.9 dB |
+| rf: LO I = REF_IN (28/29) | 2.42 / 2.44 | 3.14 / 5.16 | 0.11–0.12 / 0.57–0.70 / 1.31–1.53 | P to N −20.0 dB |
+| rf: LO Q = AUX_CLK (31/32) | 2.53 / 2.60 | 5.12 / 3.19 | 0.11–0.12 / 0.64–0.74 / 1.48–1.61 | P to N −21.4 dB |
+| wired: WIRE_RX (20/21) | 2.90 / 2.79 | 5.34 / 5.20 | 0.12 / 0.76–0.77 / 1.69–1.71 | P to N −19.1 dB |
+| wired: AUX_CLK (22/23) | 2.69 / 2.60 | 3.12 / 5.21 | 0.11–0.12 / 0.65–0.78 / 1.51–1.70 | → WIRE_RX_N −21.7 dB |
+| wired: USB (24/25) | 2.53 / 2.47 | 3.18 / 5.41 | 0.11–0.12 / 0.62–0.74 / 1.44–1.62 | P to N −22.0 dB |
+| wired: WIRE_TX (28/29) | 2.42 / 2.44 | 3.14 / 5.16 | 0.11–0.12 / 0.57–0.70 / 1.31–1.53 | P to N −20.0 dB |
+| wired: WTX_EXT (31/32) | 2.53 / 2.60 | 5.12 / 3.19 | 0.11–0.12 / 0.64–0.74 / 1.48–1.61 | P to N −21.4 dB |
+| both: host D2H / H2D | 2.21–2.79 | 2.88–6.91 | 0.11–0.14 / — / — | −17 to −24 dB to the next lane |
 
 The WIRE_RX entries in the JSON were computed with a 2.35 pF pad. The published `pad_hspad`
 extracts at 1.11–1.16 pF per leg without metal resistance (`analog/pads/README.md`); the
@@ -111,9 +117,9 @@ The package costs about 1 dB at 1.25 GHz and a 7 % post-cursor at 2.5 Gb/s. It d
 the eye; wired return loss is the binding package quantity. The pulse response has not been
 computed at 2.7–3.24 Gb/s on this bond map.
 
-**Skew** (5.9 ps/mm, P minus N): WIRE_TX +11.9 ps, WTX_EXT −12.3, BB_Q −14.7, BB_I −10.2,
-RF_RX −6.1, RF_TX +1.7, AUX_CLK −1.4, WIRE_RX −0.8, REF_IN +0.4. Host groups: D2H spread
-22.5 ps, H2D 23.8 ps; both clocks are on the shortest traces.
+**Skew** (5.9 ps/mm, P minus N): `pt_rf` RF_RX −10.2 ps, RF_TX +1.7, REF_IN −11.9, AUX_CLK +11.4, BB_I −6.1,
+BB_Q −14.7; `pt_wired` WIRE_RX +0.8, WIRE_TX −11.9, WTX_EXT +11.4, AUX_CLK −12.4, REF_IN +0.4. Host groups (both): D2H
+spread 22.5 ps, H2D 23.8 ps; both clocks are on the shortest traces.
 
 **Host simultaneous switching** (11 outputs): 486 mV ground bounce at 0.76 ns edges, 308 mV
 at 1.0 ns, 189 mV at 1.4 ns; a two-group launch stagger halves it.

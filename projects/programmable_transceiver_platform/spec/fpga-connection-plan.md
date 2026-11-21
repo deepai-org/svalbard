@@ -12,7 +12,7 @@ directions. Reversible banks (HL-DIR, "RX2"/"TX2" below), L = 256 frames and ind
 
 ## 1. Chip-to-FPGA signals
 
-The die sits on the 70-pin mezzanine COB board. A carrier board takes the mezzanine connector and fans the
+Each chip (`pt_rf`, `pt_wired`) sits on its own 70-pin mezzanine COB board with the same host link, SPI and debug pins. A carrier board takes the mezzanine connector and fans the
 signals below out to the FPGA board connector. Nothing else on the mezzanine goes to the FPGA.
 
 | Group | Chip signals | Direction, FPGA view: current / RX2 / TX2 | FPGA pin requirement |

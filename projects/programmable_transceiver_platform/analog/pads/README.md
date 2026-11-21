@@ -2,35 +2,47 @@
 
 Custom pad cells for the wired, USB, reference/clock, RF and analog debug pins, plus the pad-attached
 buffers and the TLP test site. Host-link, observe, ATB, supply and strap pads are unmodified provider cells
-(`gf180mcu_fd_io`). No cell is silicon-qualified: every ESD figure below is a SPICE surrogate on the extracted
-netlist (capacitance-only extraction), not an HBM/CDM/TLP rating.
+(`gf180mcu_fd_io`). No cell is silicon-qualified: every ESD figure below is a SPICE surrogate, not an HBM/CDM/TLP rating.
+`pad_hspad` figures use R+C extraction with the ring model; the other published families' figures are
+capacitance-only and are not evidence until their option-A rebuilds (section 8 item 1).
 
 Operating conditions (`scratch/reviews/MANDATE.md` section 2): performance at 22–32 °C junction and
 3.15–3.35 V; per-chip supply trim up to a 3.50 V setpoint for slow dies; safety at 0–3.63 V and 0–85 °C.
 
 ## 1. Pad set
 
-Bindings are from `integration/chips/{rf,wired}/chip.conn`, sites from `spec/contract.json`
-`assembly_policy.bond_map_current`, tiers from MANDATE section 6.
+Two chips (`pt_rf`, `pt_wired`), one cell library. Bindings are in `integration/chips/{common,rf/chip,wired/chip}.conn`,
+sites in the per-chip bond maps (the generator resolves them with `design.resolve(chip=...)`), tiers from MANDATE
+section 6. Each pad family has `PAD_P` on its first (lower-numbered) site; families are placed unmirrored. Supply and
+ground bonds on signal sites are provider `dvdd` / `dvss` cells (`pad_xvdd_*`, `pad_xvss_*`; PC-35).
 
-| Instance | Master | Pins | Site | HBM tier |
-|---|---|---|---|---|
-| `pad_rf_rx` | `pad_rf_pair` | RF_RX_P/N | west `inputs[9]`/`[8]` (bonds 68/67) | 2 kV |
-| `pad_bb_i` | `pad_rf_pair` | BB_I_P/N | west `inputs[11]`/`[10]` (bonds 70/69) | 2 kV |
-| `pad_bb_q` | `pad_rf_pair` | BB_Q_P/N | west `inputs[7]`/`[6]` | 2 kV |
-| `pad_aux_clk` | `pad_refpad` | AUX_CLK_P/N (external-LO Q leg, auxiliary clock, forwarded wire clock) | west `inputs[5]`/`[4]` | 2 kV simulated (1 kV allowed) |
-| `pad_ref` | `pad_refpad` | REF_IN, REF_IN_N (reference, external-LO I leg) | west `inputs[3]`/`[2]` | 2 kV simulated (1 kV allowed) |
-| `pad_rf_tx` | `pad_rftxpad` | RF_TX_P/N | west `inputs[1]`/`[0]` | 1 kV |
-| `pad_hs_rx` | `pad_hspad` (mirrored) | WIRE_RX_P/N | east `bidir[15]`/`[14]` | 2 kV |
-| `pad_por_bypass` | provider `gf180mcu_fd_io__in_c` | POR_BYPASS strap | east `bidir[16]` | provider cell |
-| spare | provider `bi_24t`, bonded | none | east `bidir[17]` | provider cell |
-| `pad_usb` | `pad_wirepad` | USB_DP/DN | east `bidir[19]`/`[18]` | 2 kV |
-| `pad_wire_tx` | `pad_txpad` (mirrored) | WIRE_TX_P/N | east `bidir[21]`/`[20]` | 1 kV |
-| `pad_wtx_ext` | `pad_rf_pair` | WTX_EXT_P/N | east `bidir[22]`/`[23]` | 2 kV |
-| `pad_wmon` | `pad_single_leg` | WMON | east `bidir[24]` | 2 kV |
-| `pad_tlp` | `pad_tlp_flat` | TLP_TEST | east `bidir[25]` | test site |
+**`pt_rf`** (`integration/chips/rf/bond_map.txt`):
 
-CDM target is ≥ 250 V chip-wide and is not verified. Nothing is below 500 V HBM. Board TVS on the antenna and
+| Instance | Master | Pins and sites | HBM tier |
+|---|---|---|---|
+| `pad_bb_i` | `pad_rf_pair` | west: BB_I_P `inputs[11]`, BB_I_N `inputs[10]` | 2 kV |
+| `pad_rf_rx` | `pad_rf_pair` | west: RF_RX_P `inputs[9]`, RF_RX_N `inputs[8]` | 2 kV |
+| `pad_bb_q` | `pad_rf_pair` | west: BB_Q_P `inputs[7]`, BB_Q_N `inputs[6]` | 2 kV |
+| `pad_rf_tx` | `pad_rftxpad` | west: RF_TX_P `inputs[1]`, RF_TX_N `inputs[0]` | 1 kV |
+| `pad_por_bypass` | provider `gf180mcu_fd_io__in_c` (strap) | east: POR_BYPASS `bidir[16]` | provider cell |
+| `pad_ref` | `pad_refpad` | east: REF_IN `bidir[20]`, REF_IN_N `bidir[21]` | 2 kV |
+| `pad_aux_clk` | `pad_refpad` | east: AUX_CLK_P `bidir[23]`, AUX_CLK_N `bidir[24]` | 2 kV |
+
+**`pt_wired`** (`integration/chips/wired/bond_map.txt`):
+
+| Instance | Master | Pins and sites | HBM tier |
+|---|---|---|---|
+| `pad_wmon` | `pad_single_leg` | west: WMON `inputs[9]` | 2 kV |
+| `pad_tlp` | `pad_tlp_flat` | west: TLP_TEST `inputs[7]` | test site |
+| `pad_por_bypass` | provider `gf180mcu_fd_io__in_c` (strap) | west: POR_BYPASS `inputs[5]` | provider cell |
+| `pad_ref` | `pad_refpad` | west: REF_IN `inputs[3]`, REF_IN_N `inputs[2]` | 2 kV |
+| `pad_hs_rx` | `pad_hspad` | east: WIRE_RX_P `bidir[14]`, WIRE_RX_N `bidir[15]` | 2 kV |
+| `pad_aux_clk` | `pad_refpad` | east: AUX_CLK_P `bidir[16]`, AUX_CLK_N `bidir[17]` | 2 kV |
+| `pad_usb` | `pad_wirepad` | east: USB_DP `bidir[18]`, USB_DN `bidir[19]` | 2 kV |
+| `pad_wire_tx` | `pad_txpad` | east: WIRE_TX_P `bidir[20]`, WIRE_TX_N `bidir[21]` | 1 kV |
+| `pad_wtx_ext` | `pad_rf_pair` | east: WTX_EXT_P `bidir[23]`, WTX_EXT_N `bidir[24]` | 2 kV |
+
+CDM requirement: 2 A surrogate with the east-edge ring decap (PC-37, PC-45); 250 V on silicon is not verified. Nothing is below 500 V HBM. Board TVS on the antenna and
 USB connectors is mandatory (`spec/board-requirements.md` B36, B46; B47, B48 for the other connectors and
 handling). `VCM` of both `pad_refpad` instances comes from `pt_refvcm` (`analog/core_support`).
 
@@ -282,7 +294,7 @@ budget-sized ideal capacitors on top of extracted capacitance.
    isolated rail; the tester polarity is not known.
 8. **LNA ground and RF input.** The LNA ground is die VSS on the standard fingers; there is no AGND_RX pad and no
    ground-pad generator. RF_RX sits on bonds 68/67 and BB_I on 70/69 (PC-26 decided, PC-29): bond model and numbers
-   in `scratch/reviews/pads-core/LNA-GROUND.md`. The sign-off skeleton floorplan still has to be regenerated for it.
+   in `scratch/reviews/pads-core/LNA-GROUND.md`.
 9. **Consumer-gate HBM screen is stale.** `pd48-esd-tiering.json` `core_screen` was run on consumer netlists
    of its date, including an unpublished LNA and the deleted forwarded-clock receiver; rerun after the
    consumers settle. (ESD-02, ESD-06)

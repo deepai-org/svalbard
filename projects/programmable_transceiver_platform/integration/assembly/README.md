@@ -59,6 +59,9 @@ named `asm-<chip>-<pid>`: stop a run only by that name (`docker kill asm-...`) o
 
 Ruling (2026-11-21): on pt_wired the macro sits at x0 = 951 with 12 um clearance to `pad_ref` and `pad_wire_tx` (the 1740 um between them; accepted for
 that corner; digital is asked for a ~40 um narrower outline).
+Agreed, not yet built (no GDS staged): `pt_ptrim` r12 goes R0 with x0 = 313.05 (mod 70) so a grid VSS Metal5 strap lies on
+its VSS Metal4 strap (block x 186.7-191.7, Via4 full height); that strap is 10.5 um wide over ptrim (16 um would reach
+VDD_WIRE_SW); grid VDD never lands on the block.
 Picked up: QVCO r8 (ASM-1) on pt_rf; staged pad cells with core-edge pins (`common.STAGED_PADS`: txpad a12, wirepad b7,
 pin-moved rf_pair / rftxpad / single_leg / hspad) on pt_wired; pt_rf reroute with them pending. `pad_refpad` not yet moved. Open: V4.2a / M4.1 / MT.1 in the grid, full precheck.
 Owner rows ASM-1..9 in `scratch/reviews/interface-changes.md`.

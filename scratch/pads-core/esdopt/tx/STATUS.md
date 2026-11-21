@@ -745,3 +745,16 @@ So the P100 termination-path overs above do not apply; the 100BASE-TX current is
 Shared drive trunk at 40 mA, hand check from the a16 geometry: the narrowest shared section is the 30 um Metal2 neck (with Metal3-5 above y 372), 1.33 mA/um
 if Metal2 alone (0.64 of 2.09). The PAD buses are Metal3+4+5, >= 20 um. Per driver unit (5 mA): cuts 0.44, runs 0.18 (netres). PASS by hand; a
 multi-terminal netres path (bond -> all 16 cascode drains) is still to be added to em_check.
+WT53 option 1b check (wired TX: CT 4.5 V on the board, CASCODE gate about 4.5 V from a replica / pump, termination off). `sec/hd/ctdc.py` on a16_rt:
+DC pad current vs pad voltage with the ring powered (DVDD = VDD), driver and termination off (`bench/ct16-ctdc.json`):
+| corner | 3.6 V | 3.8 V | 4.0 V | 4.2 V | 4.5 V |
+|---|---|---|---|---|---|
+| tt 32 C 3.3 V | 0 | 0.1 uA | 0.09 mA | 28.7 mA | 198 mA |
+| ss 32 C 3.15 V | 0 | 13 uA | 10.1 mA | 98.8 mA | 273 mA |
+| ff 32 C 3.45 V | 0 | 0 | 0.4 uA | 0.6 mA | 116 mA |
+| tt 85 C 3.15 V | 0.8 uA | 0.39 mA | 35.7 mA | 137 mA | 314 mA |
+The pad's primary up-diodes (PAD -> DVDD, pd2nw, 4 + 3 + 2 fingers) forward-bias above about VDD + 0.5 V. A 4.5 V centre tap would put 0.1-0.3 A
+per pad into the ring supply. Pad DC level <= VDD + 0.45 V (about 3.6 V at 3.15 V) keeps it below 1 uA at 85 C. Raising it needs the up-diodes referenced to a higher
+rail (not available) or removed (ESD: CDM 2 A cascodes 8.24 V without the extra ones (a6 what-if), and the 4 base pd2nw are the primary positive path).
+Other devices at 4.5 V: native switch drains 4.5 V vs gate 0 (<= 6.0 V DC OK); cascode drains vs gate 4.5 V OK; detect isolate (nfet_06v0) source = PAD OK.
+The CASCODE input exists already: CASCODE is a pad port on the top edge (two Metal3 pins). A VDD / external-bias select lives outside the pad (wired TX). Gate load is about 0.3 pF.

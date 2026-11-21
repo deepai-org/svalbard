@@ -1,5 +1,5 @@
 """Expected port values from ctl_ports.txt / owners' files. F = active field values, all islands on, no fault, reset seen."""
-GAIN = [(2,0,0),(3,0,0),(4,0,0),(6,0,0),(8,0,0),(12,0,0),(17,0,0),(24,0,0),(35,0,0),(12,1,0),(17,1,0),(24,1,0),(35,1,0),(12,1,1),(17,1,1),(25,1,1),(36,1,1)]  # chip-top-pins.md LUT: k, gainc0, gainc1
+GAIN = [(2,0,0),(3,0,0),(4,0,0),(6,0,0),(8,0,0),(12,0,0),(17,0,0),(24,0,0),(35,0,0),(12,1,0),(17,1,0),(24,1,0),(35,1,0),(12,1,1),(17,1,1),(25,1,1),(36,1,1)]  # analog/rf_rx/README.md section 7.3 LUT: k, gainc0, gainc1
 def onehot(code, codes): return sum((code == c) << i for i, c in enumerate(codes))
 def expect(F, D, O):
     """O: observed outputs used as inputs of the model where the contract refers to another macro output (rx_en_aux)."""

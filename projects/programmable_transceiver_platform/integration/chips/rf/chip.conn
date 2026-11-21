@@ -118,7 +118,7 @@ inst lna pt_lna rf_rx
   att{0:4}=c_lna_att[\1] lobias=c_lna_lobias island_off=island_off[1]
   atb_nbias~ATBN_lna_bias atb_vdcm~ATBN_rf_vcm src_p~LNA_SRC_P src_n~LNA_SRC_N tank_p~LNA_TANK_P tank_n~LNA_TANK_N
   tail~LNA_TAIL vtk~LNA_VTK VDD~RAIL_rf_rx VSS~VSS
-# LNA spirals (analog/rf_rx/chip-top-pins.md, RQ-1): unpublished candidates. LNA_VTK and LNA_TAIL connect to nothing else
+# LNA spirals (analog/rf_rx/README.md section 7, RQ-1): unpublished candidates. LNA_VTK and LNA_TAIL connect to nothing else
 # (no decap, ESD or other block); each carries the full 18-19 mA: short wide top metal.
 inst lna_ind_{p,n} pt_lna_ind rf_rx demand
   A~LNA_VTK B~LNA_TANK_\U1            # tank load, 2.01 nH, from the LNA's tank centre tap
@@ -186,7 +186,7 @@ inst lo_ext pt_lo_ext lod
   EXT=c_lo_ext INT=c_lo_int CMLSEL=c_lo_cmlsel LO_IP~LO_IP LO_IN~LO_IN LO_QP~LO_QP LO_QN~LO_QN ATB_VB~ATBN_quadrature_bias
   VDD~RAIL_lod VSS~VSS
 # no iso_pd on LO_*: lo_ext (lod) and the mixers (rf_rx, rf_tx) are in one enable group since PD2 (D-ISO)
-# on-chip LO synthesizer (MW-7): cells exist, instanced per analog/timing/LO-INTEGRATION.md; D-LO.
+# on-chip LO synthesizer (MW-7): cells exist, instanced per analog/timing/README.md (LO integration); D-LO.
 # VDD_LO = quiet rail for the QVCO core and the charge pump (LO21/LO22: regulator not built): build demand
 inst lo_vreg pt_lo_vreg lo demand
   VIN~RAIL_lo VOUT~VDD_LO EN=c_lo_vreg_en VSS~VSS

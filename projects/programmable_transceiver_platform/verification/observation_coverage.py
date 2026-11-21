@@ -33,8 +33,8 @@ PATH_CATALOG = {'atb1', 'dbg_obs', 'wdbg_obs', 'clk_obs', 'wclk_obs', 'wmon', 'b
                 'host_data', 'pad'}
 SUPPLY_PORTS = {'vdd', 'vss'}
 # Independent audits of mixed-level fixtures that measured real source nets.
-FIXTURE_AUDITS = [ROOT/'scratch/core-bias-observation-checkpointed/core-bias-audit.json',
-                  ROOT/'scratch/core-bias-idac1-observation-current/spec-independent-audit.json']
+FIXTURE_AUDITS = [ROOT/f'scratch/core-bias-observation-{chip}{mode}/core-bias-audit.json'
+                  for chip in ('rf', 'wired') for mode in ('', '-idac1')]     # check_core_bias_observation.py per chip
 
 
 def validate_mapping(controls, ledger, arch, read):

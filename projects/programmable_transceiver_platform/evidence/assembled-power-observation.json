@@ -2,6 +2,19 @@
   "status": "pass",
   "test": "core_blocks.power.tests.observable",
   "scope": "Nominal assembled physical island power-good to real SPI pad, all five islands",
+  "superseded_by": {
+    "note": "Single-die record (pre-split). Its artifacts under scratch/core-bias-observation-checkpointed were deleted after the per-chip reruns (D-SPLIT-DEADCHK); git history is the archive. Current evidence, per chip:",
+    "island_power_good_to_spi": [
+      "scratch/chip-power-rf/report.json",
+      "scratch/chip-power-wired/report.json"
+    ],
+    "core_bias_atb_observation": [
+      "scratch/core-bias-observation-rf/report.json",
+      "scratch/core-bias-observation-wired/report.json",
+      "scratch/core-bias-observation-rf-idac1/report.json",
+      "scratch/core-bias-observation-wired-idac1/report.json"
+    ]
+  },
   "criterion": "tapeout-plan.md: internal state visible through SPI status plus simulation",
   "observations": [
     {

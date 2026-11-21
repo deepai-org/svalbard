@@ -91,19 +91,44 @@
    "status": "pass"
   },
   {
-   "path": "scratch/core-bias-idac1-observation-current/report.json",
-   "sha256": "ea87185be916af8f3b78c5bc961c4e2f55ebd626608f392f65267ac10621f202",
+   "path": "scratch/core-bias-observation-rf/report.json",
+   "sha256": "98b83161e9952577c9276a0710e7f339e47c6a8baf5c390498ce0d58df298e16",
    "status": "pass"
   },
   {
-   "path": "scratch/core-bias-idac1-observation-current/checkpoint-2-audit.json",
-   "sha256": "9d348f9b223a3c18c82f4a7a500cc287e3f67388f8dcc0108e7181da0922964f",
+   "path": "scratch/core-bias-observation-rf/core-bias-audit.json",
+   "sha256": "b33a38f8125d9b879033a3b5c140f101abe001c1031897f6594c07ca27dd0d89",
    "status": "pass"
   },
   {
-   "path": "scratch/core-bias-observation-checkpointed/checkpoint-2-audit.json",
-   "sha256": "14e2550231a78b821e3882f76a3c66020e58588efe976cd4b0626df9d9788bfc",
-   "status": "partial_diagnostic"
+   "path": "scratch/core-bias-observation-rf-idac1/report.json",
+   "sha256": "791baa9dc9223b7acb95c26b625edf8aead97438eee391a6300943ea23d3472f",
+   "status": "pass"
+  },
+  {
+   "path": "scratch/core-bias-observation-rf-idac1/core-bias-audit.json",
+   "sha256": "24940d6f11c6f40dcfd01b11d1110e260bdf89d3b769c2617679f30c6e30d8a9",
+   "status": "pass"
+  },
+  {
+   "path": "scratch/core-bias-observation-wired/report.json",
+   "sha256": "bca27a42b29e1e2cfba02325b82077a83b7f52bad65adf022cc9082b59a5457f",
+   "status": "pass"
+  },
+  {
+   "path": "scratch/core-bias-observation-wired/core-bias-audit.json",
+   "sha256": "df9e69f3b34847c940772209bcbe8d96d1a9341fad513b7cc51b4f151ef5a658",
+   "status": "pass"
+  },
+  {
+   "path": "scratch/core-bias-observation-wired-idac1/report.json",
+   "sha256": "48168b9cb36145430b426d0518285138d565376161e503c197f121c3e993bff7",
+   "status": "pass"
+  },
+  {
+   "path": "scratch/core-bias-observation-wired-idac1/core-bias-audit.json",
+   "sha256": "aa256c1308b09eb795778a51a44d7002736de0918991421b7dfa31fc78f7cb9f",
+   "status": "pass"
   },
   {
    "path": "scratch/cleanup-final-reference-regfile-current/report.json",
@@ -119,44 +144,51 @@
    "path": "scratch/digital-hardening-decoded-read-tt/checkpoint-report.json",
    "sha256": "0259ed4ac326e6708c89b69b1e85be9eb77eedc99559a9b05317f53f9b9dfe42",
    "status": "intermediate_timing_not_closed"
-  },
-  {
-   "path": "scratch/core-bias-observation-checkpointed/core-bias-audit.json",
-   "sha256": "02bb6b0896467a87de0f425a04c7eb11112961546cdead892a322d9debe6d66a",
-   "status": "pass"
-  },
-  {
-   "path": "scratch/core-bias-observation-checkpointed/report.json",
-   "sha256": "42e8618557f9dfde33005075525058af89cffa411147a5370b75c4e690c28e72",
-   "status": "pass"
   }
  ],
  "background_jobs": [
   {
-   "name": "core bias voltage/force observation",
-   "pid": 1220393,
+   "name": "core bias voltage/force observation (pt_rf)",
    "live_at_handoff": false,
-   "output": "scratch/core-bias-observation-checkpointed",
-   "last_phase": "Completed; producer and independent full-wave audit both pass at 514.4 µs.",
+   "output": "scratch/core-bias-observation-rf",
+   "last_phase": "Per-chip rerun after the split (D-SPLIT-DEADCHK): producer and independent audit pass.",
    "collect": [
-    "Review core-bias-audit.json and report.json. No rerun is needed to collect this campaign.",
-    "Keep frozen-circuit fixture scope; IDAC1 and full-chip observation gates remain open."
+    "report.json and core-bias-audit.json; fixture scope only."
    ],
    "process_state": "terminal",
    "terminal_status": "pass"
   },
   {
-   "name": "spare IDAC1 current observation",
-   "pid": 1953280,
+   "name": "core bias voltage/force observation (pt_wired)",
    "live_at_handoff": false,
-   "output": "scratch/core-bias-idac1-observation-current",
-   "last_phase": "Simulation completed; producer crashed in assess() (audit() returned None). Fixed; --assess-only re-assessment and independent checkpoint-2 audit pass.",
+   "output": "scratch/core-bias-observation-wired",
+   "last_phase": "Per-chip rerun after the split (D-SPLIT-DEADCHK): producer and independent audit pass.",
    "collect": [
-    "report.json and checkpoint-2-audit.json pass; fixture scope only."
+    "report.json and core-bias-audit.json; fixture scope only."
    ],
    "process_state": "terminal",
-   "process_start_ticks": "1202148506",
-   "executable": "/home/ubuntu/svalbard/scratch/pad-ngspice47/ngspice-47/src/ngspice",
+   "terminal_status": "pass"
+  },
+  {
+   "name": "spare IDAC1 current observation (pt_rf)",
+   "live_at_handoff": false,
+   "output": "scratch/core-bias-observation-rf-idac1",
+   "last_phase": "Per-chip rerun after the split (D-SPLIT-DEADCHK): producer and independent audit pass.",
+   "collect": [
+    "report.json and core-bias-audit.json; fixture scope only."
+   ],
+   "process_state": "terminal",
+   "terminal_status": "pass"
+  },
+  {
+   "name": "spare IDAC1 current observation (pt_wired)",
+   "live_at_handoff": false,
+   "output": "scratch/core-bias-observation-wired-idac1",
+   "last_phase": "Per-chip rerun after the split (D-SPLIT-DEADCHK): producer and independent audit pass.",
+   "collect": [
+    "report.json and core-bias-audit.json; fixture scope only."
+   ],
+   "process_state": "terminal",
    "terminal_status": "pass"
   },
   {

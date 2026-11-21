@@ -195,7 +195,7 @@
     "observable": {
      "state": "open",
      "evidence": [],
-     "note": "Fixture-only evidence (state stays open): scratch/core-bias-observation-checkpointed passes 15 sense codes and VBG force; scratch/core-bias-idac1-observation-current passes IDAC1 via ATB code 57 into a 1 V SMU (off -0.76 nA, code 4 3.753 uA, code 8 7.506 uA, 0.938 uA/LSB) with independent audit checkpoint-2-audit.json. Warm reset, diode loads and unbound payload nodes; full-chip observation not done."
+     "note": "Fixture-only evidence (state stays open), per chip (verification/check_core_bias_observation.py, PT_CHIP=rf|wired): scratch/core-bias-observation-<chip> passes 18 ATB1 sense codes each and VBG force-and-sense (1.1998 V; open loop 1.1879 V, pt_bias_vref divider ~5 uA); scratch/core-bias-observation-<chip>-idac1 passes IDAC1 via ATB code 57 into a 1 V SMU (off -1 nA, code 4 3.753 uA, code 8 7.506 uA, 0.938 uA/LSB); independent audit core-bias-audit.json passes on all four. Warm reset, diode loads and unbound payload nodes; full-chip observation not done."
     },
     "fallback": {
      "state": "waived_core",

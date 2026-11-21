@@ -678,3 +678,30 @@ Top-edge pins (y 699.76, measured on the GDS):
 - B100 (30 mA static, one leg): 8 over. Bus 1.86, T1 1.51, B 1.41 (run) / 1.07 (cut), T2 1.28; T0 0.89, T3 0.98.
 - Size of the fix: about 1.9x on the TERM_VCM bus (Metal3/4 11 um -> about 21 um, or a Metal5 strap over it), 1.5x on the T1 / T2 / base straps, more cuts on the
   pin strap's via4. It is a leg / bus redesign of the a13-a15 kind, plus a pad-C cost (a guess of 20-40 fF), not a tweak.
+
+# CANDIDATE a16 (2026-11-21): EM sized for the 100BASE-TX estimate (2 x 20 mA). NOT published, NOT committed. a15 deleted.
+Basis (coordinator, ahead of wired TX's numbers): A100 20 mA per pad average <= 0.86; B100 30 mA static in one leg <= 1.0; plus A / B / C as before.
+Rescreen when the real numbers arrive: `python3 sec/em_check.py sec/r16/res.json --basis NAME=I_pad,k_pin,limit ...`.
+Changes vs a15 (generator sha ebc3c65a; new --nvt keys "bus_h", "t_col_hw", "disc_m3", "drop_m3", "head3"):
+- TERM_VCM bus Metal3+4 22 um tall (was 11) over the switch row; native-source via2 along the whole column.
+- Switch-side TU columns: base 3.6 um, trims 2.9 um (were 2.8 / 1.9). T0 moved 2.5 um outward (was 1.5).
+- Disconnect: Metal3 strip over every bus-side column (edge columns widened outward); pin-side columns 2 via2 + 2 via3 cuts.
+- Lower-track resistor drops carry Metal3 + Metal4 in parallel where no upper-track bar is crossed.
+- Base-unit head B: 3 via1 rows.
+
+| Limit | a16 | Result |
+|---|---|---|
+| EM A (10.5 mA/pad, <= 0.86) / B (15.75 static, <= 1.0) / C (21, info) | 0.44 / 0.66 / 0.88 | PASS |
+| EM A100 (20 mA/pad, <= 0.86) | worst 0.84 (TU_x_B run); pin cut 0.59, bus 0.64 | PASS |
+| EM B100 (30 mA static, <= 1.0) | **4 over: TU_x_B run 1.26 (base drops / column at code 0), TU_x_T1 run 1.03**; B cut 0.75, bus 0.97, T2 0.94, pin 0.44 | MISS (B100) |
+| Termination +-10 %, 23 corners rt / rh | worst 5.80 / 4.42 %; ss/32/3.15 codes 11-14; ff/22/3.35 codes 2-3; a4 +-5 % rt misses ff/22/3.35 (report) | PASS |
+| P-N / off control | -0.23..-0.08 ohm / >= 1.0e10 ohm | PASS |
+| Pad C <= 3.223 pF | **rt 3.214** (+76 fF vs a15), c 3.124 | PASS (9 fF left) |
+| CM1 <= 5 ohm | 2.95 ohm | PASS |
+| CDM 2 A spot (exact a16_rh) | vss+ 6.92, pp+ 7.27 V | PASS |
+| Layout: Magic DRC / netgen / KLayout (NAT) / rb LVS + control / latch-up / rail_site / railconn / default path | 0 / unique / 0+0 / match + mismatch / 0.0 um2 / PASS / clean / 3a706943 == a4 | PASS |
+B100 residual: the base group at code 0 (all 30 mA in the base, 3.75 mA per unit) and T1 (6 mA). The pad-C headroom is now 9 fF, so more metal on the switch row does
+not fit. Options: (1) B100 judged at the in-window codes (base at code 2: 1.26 x 0.8 = 1.01; T1 at code 2 unchanged 1.03); (2) the real 100BASE-TX static case
+is lower than 30 mA in one leg (wired TX's numbers pending); (3) trade termination C elsewhere (return to two up-diodes x 1 -> -21 fF, CDM margin 0.4 V less).
+Files: GDS 131af869..., netres `sec/r16/res.json` 83c2795b, EM `sec/r16/em.json`, models `sec/models/a16_rh` 0047a3d7 / `a16_rt` 5e0a7322 / `a16_c`.
+Build: `python3 $P/analog/pads/tx_pad_layout.py sec/b/a16 --nvt '{"wb": 23.5, "wt": 23.5, "lb": 2.2, "lt": 1.0, "merged": true, "disc2": [24, 0.28, 64, 2], "disch": 20, "riser_wide": true, "em": 2, "t0_shift": 2.5, "b_col_hw": 1.8, "t_col_hw": 1.45, "bus_h": 22, "pad_pins": true, "disc_m3": true, "drop_m3": true, "head3": true}' --upx '{"x": [63, 69], "yu": 107}' --top-pins`.

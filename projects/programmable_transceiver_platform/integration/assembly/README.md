@@ -57,6 +57,8 @@ named `asm-<chip>-<pid>`: stop a run only by that name (`docker kill asm-...`) o
 | Density after fill | not run | every global rule passes; 48 DCF.1a inside blocks |
 | LVS (black boxes, by name; first run) | 572 match, 150 short+internal | 741 match, 138 short |
 
+Ruling (2026-11-21): on pt_wired the macro sits at x0 = 959 with 20 um clearance to `pad_ref` and `pad_wire_tx` (accepted for
+that corner; digital is asked for a ~40 um narrower outline).
 Picked up: QVCO r8 (ASM-1) on pt_rf; staged pad cells with core-edge pins (`common.STAGED_PADS`: txpad a12, wirepad b7,
 pin-moved rf_pair / rftxpad / single_leg / hspad) on pt_wired; pt_rf reroute with them pending. `pad_refpad` not yet moved. Open: V4.2a / M4.1 / MT.1 in the grid, full precheck.
 Owner rows ASM-1..9 in `scratch/reviews/interface-changes.md`.

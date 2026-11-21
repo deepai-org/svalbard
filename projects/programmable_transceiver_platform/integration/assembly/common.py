@@ -64,6 +64,12 @@ GROUP_BOOK = {}
 # blocks the assembly places itself at fixed lower-left corners, R0 (power delivery 4.1c option B, commit c4276fd1):
 # the wired_tx switch pair on the east edge beside the supply bonds, pt_wiredtx8 west of it, fed by a Metal5 bar
 FIXED_PLACE = {'wired': {'isw_wired_tx_a': (2938.0, 2209.0), 'isw_wired_tx_b': (3206.0, 2209.0), 'wiredtx': (1913.95, 2209.0)}}
+# island supply bars drawn by the assembly (Metal5, union of rectangles, die um), Via4 onto the listed instance pins under
+# them; the grid gives way. pt_wired: RAIL_wired_tx from the isw_wired_tx_a/_b VISL bars to pt_wiredtx8's east edge
+# (power delivery 4.1c option B, coordinator 2026-11-21: >= 180 um wide, IR closed at 56 mA); the run passes over the small
+# blocks between them where they draw no Metal5, and enters the block's free corner (block x >= 598.7, y >= 236.1)
+ISLAND_BARS = {'wired': [dict(net='RAIL_wired_tx', rects=[(2658.5, 2265.0, 3400.0, 2611.0), (2512.95, 2445.6, 2658.5, 2610.2)],
+                              vias=[('isw_wired_tx_a', 'VISL'), ('isw_wired_tx_b', 'VISL')])]}
 TWIN = {'pt_adc_q': 'pt_adc_i', 'pt_dac_q': 'pt_dac_i'}
 # provider-ring instances of the conn (not core blocks): their pins are on the template's IO cells
 PROVIDER = ('pt_host_physical', 'pt_debug_physical', 'atb_provider_pad', 'pad_strap', 'prov_supply', 'prov_supply_sig')

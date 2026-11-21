@@ -163,6 +163,13 @@ for ln in ('Metal4', 'Metal5'):
 digi = man['blocks'].get('digital', {}).get('bbox')
 blk4 = blkmetal['Metal4'] + (db.Region(db.Box(*[um(x) for x in digi]).enlarged(um(2), um(2))) if digi else db.Region())
 avoid = {'Metal4': (blk4 + noover + padreg.sized(um(3))).merged(), 'Metal5': (blkmetal['Metal5'] + noover + padreg.sized(um(3))).merged()}
+bars = []          # island supply bars (common.ISLAND_BARS)
+for bd in C.ISLAND_BARS.get(CHIP, []):
+    reg = db.Region([db.Box(*[um(v) for v in r]) for r in bd['rects']]).merged()
+    reg = (reg - blkmetal['Metal5'] - padreg.sized(um(3))).merged()
+    reg = db.Region([p for p in reg.each() if p.area() > um(20)*um(20)])
+    bars.append(dict(bd, region=reg))
+    avoid['Metal5'] = (avoid['Metal5'] + reg.sized(um(2.5))).merged()
 PITCH, SW = 70.0, float(os.environ.get('STRAP_W', '10.5'))   # G1 15 % nominal; wider per region from strap_widths.json
 core = C.CORE
 straps = {('VDD', 'Metal4'): db.Region(), ('VSS', 'Metal4'): db.Region(), ('VDD', 'Metal5'): db.Region(), ('VSS', 'Metal5'): db.Region()}
@@ -325,13 +332,25 @@ for net in ('VDD', 'VSS'):
         d, sl = best; sl[2] = True; ln, cb = sl[0], sl[1]
         hn = f'HK{k}'; k += 1; hook_pins[hn] = (ln, cb, net)
         man['hooks'].append(dict(net=f'{net}__{hn}', inst=n, pin=p, layer=ln, piece=[fu(cb.left), fu(cb.bottom), fu(cb.right), fu(cb.top)], dist_um=round(fu(d), 1)))
+barcell = ly.create_cell('pt_island_bar') if bars else None
+man['island_bars'] = []
+for bd in bars:
+    barcell.shapes(LI['Metal5']).insert(bd['region'])
+    nv = 0
+    for i_, p_ in bd['vias']:
+        for ln, b in pin_shapes_die(i_, p_):
+            land = db.Region(b) & bd['region']
+            if ln == 'Metal4': nv += via_fill(barcell, VIA['Via4'], land, inset=0.3)
+    man['island_bars'].append(dict(net=bd['net'], area_mm2=round(bd['region'].area()/1e12, 4), via4=nv,
+                                   bbox=[fu(v) for v in (bd['region'].bbox().left, bd['region'].bbox().bottom, bd['region'].bbox().right, bd['region'].bbox().top)]))
+if barcell: top.insert(db.CellInstArray(barcell.cell_index(), db.Trans()))
 # grid LEF: hook pieces are pins, everything else of the grid is an obstruction
 Lp = ['MACRO pt_pdn', '  CLASS BLOCK ;', '  ORIGIN 0 0 ;', '  FOREIGN pt_pdn 0 0 ;', f'  SIZE {C.DIE[2]:.3f} BY {C.DIE[3]:.3f} ;', '  SYMMETRY X Y ;']
 for hn, (ln, cb, net) in hook_pins.items():
     Lp += [f'  PIN {hn}', '    DIRECTION INOUT ;', '    USE SIGNAL ;', '    PORT', f'      LAYER {ln} ; RECT {fu(cb.left):.3f} {fu(cb.bottom):.3f} {fu(cb.right):.3f} {fu(cb.top):.3f} ;', '    END', f'  END {hn}']
 Lp.append('  OBS')
 for ln in ('Metal2', 'Metal3', 'Metal4', 'Metal5'):
-    reg = db.Region(pdn.begin_shapes_rec(LI[ln])).merged() - db.Region([cb for hn, (l2, cb, net) in hook_pins.items() if l2 == ln])
+    reg = (db.Region(pdn.begin_shapes_rec(LI[ln])) + (db.Region(barcell.begin_shapes_rec(LI[ln])) if barcell else db.Region())).merged() - db.Region([cb for hn, (l2, cb, net) in hook_pins.items() if l2 == ln])
     Lp.append(f'    LAYER {ln} ;')
     for poly in reg.merged().each():
         for tz in poly.decompose_trapezoids(1):

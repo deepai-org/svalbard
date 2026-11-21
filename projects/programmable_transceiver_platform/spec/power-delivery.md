@@ -284,6 +284,10 @@ Block `wiredtx` (pt_wiredtx8) at x 1494-2238, y 2482-2884; the conn's switch pai
 | **pair east, block moved east to abut it (x 2190-2934, y 2222-2624), ME / SE >= 16 % every net and layer** | 93.4 | 12.1 | pass with an edge bar; 56 mA: 90.6 |
 | same, ME / SE at 12 % | 105.1 | 0.4 | about 2.5 mV over with a 3 mV edge bar |
 
+- What fits the east notch (assembly, core ring round the pads, 40 um clearance): (A) block x 1935-2679, pair abutted at
+  x 2683-3214 (266 um from the ring): 104.6 mV before the strap, plus about 3 mV of bar: fails by about 2 mV. **(B) pair on
+  the edge x 2938-3469, y 2209-2452, block x 1935-2679, y 2209-2611: 98.5 mV before the strap; the 259 um bar may drop
+  7.0 mV at 60 mA: Metal5 >= 160 um wide (both nets paired per G2). Chosen.**
 - The switch must stay at the east edge by the supply bonds: moving it inward raises the drop to the switch by 17-21 mV
   (raw grid), more than any strap saves.
 - The block goes to the switch: abutting the pair (the area the stale `wtx_ser8d` entry holds; `wtx_ser8d` is inside

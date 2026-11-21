@@ -644,3 +644,37 @@ Files: GDS b392d829994b..., netres `sec/r14/res.json` d3e96226, EM `sec/r14/em.j
 Build: `python3 $P/analog/pads/tx_pad_layout.py sec/b/a14 --nvt '{"wb": 23.5, "wt": 23.5, "lb": 2.2, "lt": 1.0, "merged": true, "disc2": [24, 0.28, 64, 2], "disch": 20, "riser_wide": true, "em": 2}' --upx '{"x": [63, 69], "yu": 107}' --top-pins`.
 Open for a ruling: basis B at code 0 (1.05x on one ~1 um drop). Options: the digital clamps the trim code to >= 1 (or to the 2..13 window), or accept it. Widening that
 one drop needs the T0 device moved by about 1 um.
+
+# CANDIDATE a15 (2026-11-21): EM basis B at code 0 (ruling: no code clamp), PAD_P/N top-edge pins, em_check bases as parameters. NOT published, NOT committed.
+a14 build / netres / models / benches deleted.
+Changes vs a14 (generator sha 5d604b02; new --nvt keys "t0_shift", "b_col_hw", "pad_pins"):
+- The T0 device moves 1.5 um outward ("t0_shift": 1.5), giving room for the outermost base unit's drop. The jloc rerun of netres (review-a13 tool) put the real
+  basis-B peak on the base device's TU columns (fraction 0.27 of the base current in one 1.9 um column), so the base-device TU columns are now 2.8 um
+  ("b_col_hw": 1.4). Drop / column clearances are computed per group edge.
+- PAD_P / PAD_N top-edge sense pins ("pad_pins", needs --top-pins): Metal4 port labels on the control cell's existing PAD_P / PAD_N trunks (x 7.6-8.0 /
+  8.6-9.0, y 699.76 edge), which are already on the pad nets. No new metal, so the pad-C delta from the pins is 0. The 0.4 um trunks run through the
+  control cell only. Ports now include PAD_P / PAD_N at the top edge as well as at the bond pads (same nets); netgen and read-back LVS match.
+- em_check.py (sha c7b5ab5e) takes `--basis NAME=I_pad,k_pin,limit` (repeatable; limit `info` = no limit). The defaults are A/B/C.
+
+| Limit | a15 | Result |
+|---|---|---|
+| EM basis A (10.5 mA/pad, codes 0..15, <= 0.86) | worst 0.65 (bus); TU_x_B 0.49; cuts <= 0.37 | PASS |
+| EM basis B (15.75 mA static, codes 0..15, <= 1.0) | worst 0.975 (bus); TU_x_B 0.74 at code 0; T1 0.79; cuts <= 0.56 | PASS |
+| EM basis C (21 mA, info) | worst 1.30 (bus); B 0.99; T1 1.06 | info |
+| Termination +-10 %, 23 corners rt / rh | worst 5.63 / 4.06 %; ss/32/3.15 codes 11-14; ff/22/3.35 codes 2-3; a4 +-5 % rt misses ff/22/3.35 (report) | PASS |
+| P-N / off control | -0.43..-0.17 ohm / >= 1.0e10 ohm | PASS |
+| Pad C <= 3.223 pF | rt 3.138 (model 8f1a0801), c 3.048 (+7 fF vs a14: wider base columns; PAD pins 0) | PASS |
+| CM1 <= 5 ohm | 3.34 ohm | PASS |
+| CDM 2 A spot (exact a15_rh) | vss+ 6.92, pp+ 7.27 V; junctions <= 7.05 V | PASS |
+| Layout: Magic DRC / netgen / KLayout (NAT) / rb LVS + control / latch-up / rail_site / railconn / default path | 0 / unique / 0+0 / match + mismatch / 0.0 um2 / PASS / clean / 3a706943 == a4 | PASS |
+Top-edge pins (y 699.76, measured on the GDS):
+- RAIL_wired_tx pins: VDD Metal4 x 14.0-15.0 (1.0 um; neighbour VSS 12.0-13.0, gap 1.0); DETECT_PBIAS Metal4 9.6-10.0 (0.4 um; neighbours PAD_N 8.6-9.0 and
+  DETECT_ENABLE 10.6-11.0, gaps 0.6); CASCODE Metal3 120.59-120.99 and 165.01-165.41 (0.4 um each; nearest TMDS_P / TMDS_N 4.2 um away).
+- Others: TERM_ENABLE 6.6-7.0, PAD_P 7.6-8.0, PAD_N 8.6-9.0, DETECT_ENABLE 10.6-11.0, VSS 12.0-13.0 (Metal4, 1.0 pitch); TERM_VCM Metal4 25-75;
+  driver gate lines Metal3 0.4 um (2.18-4.4 pitch); TERM_TRIM0..3 Metal4 1.0 um at 266.0-274.8.
+- The 0.4 um rail pins (DETECT_PBIAS, CASCODE) carry DC only (gate / bias nodes). VDD is 1.0 um.
+100BASE-TX estimate (coordinator: about 2 x 20 mA): `em_check.py sec/r15/res.json --basis A100=20,2,0.86 --basis B100=30,1,1.0` on a15:
+- A100 (20 mA/pad average): 7 over. Bus 1.24, TERM_VCM pin cut 1.12 (via4 into the strap), TU_x_T1 1.01; B 0.94.
+- B100 (30 mA static, one leg): 8 over. Bus 1.86, T1 1.51, B 1.41 (run) / 1.07 (cut), T2 1.28; T0 0.89, T3 0.98.
+- Size of the fix: about 1.9x on the TERM_VCM bus (Metal3/4 11 um -> about 21 um, or a Metal5 strap over it), 1.5x on the T1 / T2 / base straps, more cuts on the
+  pin strap's via4. It is a leg / bus redesign of the a13-a15 kind, plus a pad-C cost (a guess of 20-40 fF), not a tweak.

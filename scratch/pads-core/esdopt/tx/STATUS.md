@@ -758,3 +758,15 @@ per pad into the ring supply. Pad DC level <= VDD + 0.45 V (about 3.6 V at 3.15 
 rail (not available) or removed (ESD: CDM 2 A cascodes 8.24 V without the extra ones (a6 what-if), and the 4 base pd2nw are the primary positive path).
 Other devices at 4.5 V: native switch drains 4.5 V vs gate 0 (<= 6.0 V DC OK); cascode drains vs gate 4.5 V OK; detect isolate (nfet_06v0) source = PAD OK.
 The CASCODE input exists already: CASCODE is a pad port on the top edge (two Metal3 pins). A VDD / external-bias select lives outside the pad (wired TX). Gate load is about 0.3 pF.
+WT53-b follow-up (wired TX asks; a16_rt, tb2 ac with the CASCODE pin forced; `bench/hdcs*-ac.json`):
+| a16 variant | pad C, cascode gate at VDD (normal ac bench) | pad C, cascode gate at 0 V |
+|---|---|---|
+| as is | 3.214 pF | 1.769 pF |
+| cascodes + MAIN/POST switches W x2 (m=2) | 4.439 pF (+1.225) | 1.993 pF (+0.224) |
+- With the cascode on (gate at VDD, as in operation and in the published-pad comparison), the pad sees the cascode channel and the SUM node behind it:
+  1.44 pF of the 3.21. Wired TX's +0.22 pF is the cascode-off (junction-only) delta; the like-for-like delta is +1.2 pF.
+- Option C (separate MAIN and POST summing nodes, each with its own switch / cascode share, same total W): each bank's cascode share carries its own
+  bank's current at the same current density, so the SUM-node level, and therefore the headroom, is unchanged. Pad C and area are about the same as today.
+  No gain without more total cascode W; adding W costs pad C as above.
+- Models with the PAD -> DVDD up-diodes: the candidate R+C models `sec/models/a16_rt.spice` / `a16_rh.spice` (pd2nw cathodes on SVDD_x -> DVDD_x ports). The
+  published `tx_rt.spice` is the old pad (ESD_RAIL network) and has no PAD -> DVDD diodes.

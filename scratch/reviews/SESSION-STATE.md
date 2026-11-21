@@ -228,3 +228,16 @@ Every brief requires current-state docs and deletion of superseded files and run
 | LO synthesis (QVCO, regulator, dividers, PFD/CP, filter, external LO) on pt_rf | ab699c0348c88d032 | LO cells in analog/timing (not the ring cells) |
 
 Machine rule given to all agents: at most one waiting loop each, ending with its job or a timeout; kill only processes you started.
+
+### Paused by the weekly usage limit (2026-11-21; resets 2026-11-24 21:00 UTC)
+
+Resume each by SendMessage to its ID (do not start new agents). State at the pause:
+- Pads a0b585bf24a7dee4f: txpad a16 = candidate (EM sized for 100BASE-TX; conditions PC-71 / B54); waiting wired TX's WT53-c confirmation + PC-61; then publish txpad, USB b7 review (reviewer ad5099ba76b60f43a stopped mid-review), option-A rebuilds of rf_pair / rftxpad / single_leg / refpad (905 of the pt_rf precheck DRC errors), DOC-1, SATA2 return loss.
+- Wired TX ad4984d8f6a49e79c: WT53-c 100BASE-TX (pump ~4.2 V cascode, 1:0.88-0.90 magnetics, CT <= VDD+0.30 V) confirmation run; NAND phase-buffer rebuild -> bind pt_wiredtx8 (binding sub-agent a6bbf50dab68d5e32, prepared conn in scratch/wired_tx/s16/bind); s16 publishing queue (6-9 days); DOC-4/DOC-6 folds.
+- Wired RX / timing ae237ae42062df4de: ptrim r12 (grid-entry modelling, Metal5 trunk option, ch 6/7), capture r7f, CTLE r5 fails; then CDR loop (WRX-01) and >2.5 Gb/s architecture proposal (WRX-06); scratch cleanup.
+- Digital aa4a00476697338c3: merge line-code and pad-sequencer branches (worktrees under .claude/worktrees), re-harden both chips (pt_wired at 1676 x 1592.96), sign-off STA / GLS; runaway-guard RTL row from LO.
+- Bias/power a19eb0e38a50aaf24: IR rerun with isw_wired_tx moved and the switch pair beside pt_wiredtx8; ATB leaves; DEADCHK repair (sub-agent ab2d1660ea32363b7 stopped); D9 model sub-agent a9bba44f9db39f474 stopped.
+- LO ab699c0348c88d032 (may still run): divider probe on published lo_mmd, runaway guard (VTUNE comparator + band-search limits), QVCO r9 rerun on fixcap16 netlist, review/publish.
+- RF RX a6e1dd7a8217d3b6f: hand-placed LNA relayout next.
+- Assembly a67ba37dcfd1a2abb: pt_rf precheck on the 164-violation layout; pin isw_wired_tx_a/_b beside pt_wiredtx8; pt_wired 183 violations.
+- Bring-up a17b557baf31977af: idle (done).

@@ -351,3 +351,70 @@ Physical check of the owner's estimate:
 * Needed current I = 38 x n mA. At n = 0.90 that is 34.2 mA for 950 mV; the measured 37.8 mA gives 1042 mV raw.
 * The pin estimate CT - (37.4/n^2) x I = 3.6 - 46.2 x 0.0378 = 1.85 V nominal; measured 1.49 V with the held-level ripple and bond drop.
 * Inside the 38 mA SUM-headroom bound (SUM min 0.68 V).
+
+### Confirmation set: CT per PC-71 / B54 (CT <= VDD + 0.30 V per corner, <= 3.6 V absolute), CASCODE 4.2 V, a16_rt
+**Setup:**
+* ss / ss-pess at CT 3.45 V; tt and ff at CT 3.60 V (ff capped at 3.6 V absolute).
+* n = 0.88 and 0.90, network rescaled as above. cal. = raw x 0.967.
+* Runs: `jobs11.sh` (partial, CT 3.50 / 3.45 first pass), `jobs12.sh`, `jobs13.sh`.
+* Process notes:
+  * jobs12 accidentally repeated the jobs11 first pass (those rows are valid extra data).
+  * One 3 s AC run overlapped a running simulation (operator error, result identical when rerun by the queue).
+
+**ss / ss-pess, CT 3.45 V, code 255 (reported first):**
+
+| n | corner | raw (cal.) mV | sym | held leg mA | pin min / max V | SUM min / max V | up-diode mA | RL held / 0, min over 2-80 MHz (margin) |
+|---|---|---|---|---|---|---|---|---|
+| 0.88 | ss-pess | 1032 (**998**) | 0.999 | 36.6 | 1.36 / 3.34 | 0.63 / 2.65 | 1.12 | 10.70 / 10.56 dB (+0.70 / +0.56) at 79 MHz |
+| 0.88 | ss | 1032 | 1.000 | 36.6 | 1.35 / 3.36 | 0.63 / 2.64 | 1.27 | as ss-pess (network) |
+| 0.90 | ss-pess | 1021 (**988**) | 1.000 | 37.0 | 1.40 / 3.36 | 0.65 / 2.66 | 1.15 | 10.42 / 10.35 dB (+0.42 / +0.35) |
+| 0.90 | ss | 1021 | 1.000 | 37.0 | 1.39 / 3.39 | 0.65 / 2.65 | 1.29 | - |
+
+**tt / ff, CT 3.60 V, at the per-board codes:**
+
+| n | corner | code | raw (cal.) mV | sym | held leg mA | pin min / max V | SUM min / max V | up-diode mA | cascode Vgs / Vgd / Vds V | RL held / 0 (margin) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 0.88 | tt | 200 | 1060 (1025) | 1.001 | 37.5 | 1.44 / 3.53 | 0.79 / 2.89 | 1.13 | - | 10.18 / 10.38 (+0.18 / +0.38) |
+| 0.88 | **tt** | **196** | **1044** (1009) | 1.001 | 36.9 | 1.46 / 3.53 | 0.81 / 2.92 | 1.15 | 3.39 / 2.78 / 1.15 | **10.15 / 10.36 (+0.15 / +0.36)** |
+| 0.88 | ff | 195 | 1059 (1024) | 1.001 | 37.5 | 1.43 / 3.53 | 0.88 / 3.01 | 1.22 | - | 10.37 / 10.51 (+0.37 / +0.51) |
+| 0.88 | **ff** | **191** | **1039** (1005) | 1.001 | 36.8 | 1.47 / 3.53 | 0.91 / 3.02 | 1.23 | 3.28 / 2.78 / 0.97 | **10.33 / 10.48 (+0.33 / +0.48)** |
+| 0.90 | tt | 200 | 1040 (1006) | 1.001 | 37.7 | 1.50 / 3.58 | 0.82 / 2.92 | 1.14 | 3.37 / 2.75 / 1.18 | **9.96 / 10.17 (-0.04 / +0.17): held FAILS** |
+| 0.90 | ff | 195 | 1037 (1002) | 1.001 | 37.5 | 1.50 / 3.59 | 0.93 / 3.04 | 1.22 | 3.27 / 2.75 / 1.01 | 10.12 / 10.27 (+0.12 / +0.27) |
+
+Extra data, the CT 3.45 / 3.50 V tt and ff rows (`R_ct3.45_*`, `R_ct3.50_*`; not allowed for ff and tt by PC-71 only above 3.6 V):
+* n 0.88 at CT 3.45: tt 205 gives 1063 mV, ff 195 gives 1055 mV.
+* n 0.90 at CT 3.45: tt 205 gives 1048 mV, ff 195 gives 1034 mV.
+* Pin max <= 3.48 V in all of them.
+
+**Final pick: n = 0.88**, CASCODE 4.2 V in 100BASE-TX mode, CT 3.45 V at ss (VDD 3.15) and 3.60 V at tt/ff, W unchanged.
+
+| corner | code | raw mV | cal. mV | sym |
+|---|---|---|---|---|
+| ss-pess | 255 | 1032 | **998** (+48 mV over 950) | 0.999 |
+| ss | 255 | 1032 | - | 1.000 |
+| tt | 196 | 1044 | - | 1.001 |
+| ff | 191 | 1039 | - | 1.001 |
+
+Worst-case margins:
+
+| quantity | n = 0.88 | n = 0.90 |
+|---|---|---|
+| amplitude at ss-pess (cal.) | +48 mV | +38 mV |
+| RL held | **+0.15 dB** (tt) | **-0.04 dB** (tt, fails) |
+| pin max | 3.53 V (+0.07 V to 3.6) | 3.59 V (+0.01 V) |
+| up-diode | <= 1.27 mA | <= 1.29 mA |
+| SUM max | 3.02 V (+0.28 V to 3.3) | 3.04 V (+0.26 V) |
+| symmetry | 0.999-1.001 | 0.999-1.001 |
+
+n = 0.88 is better or equal on every worst case. Its RL margin is small (+0.15 dB at 79 MHz, tt held). That margin comes from the scaled B39 filter (98 nH / 0.88^2 = 127 nH per leg, 19.6 pF x 0.774 = 15.2 pF), so the board filter (fc / Bessel) is still the lever for more RL margin.
+
+Network for n = 0.88:
+
+| element | value |
+|---|---|
+| R_b | 64.4 ohm per leg (1 %) |
+| L | 127 nH per leg |
+| C | 15.2 pF differential |
+| magnetics OCL at the line side | >= 350 uH (452 uH referred to the chip side) |
+
+Per-board code calibration: about 255 at ss, 196 at tt, 191 at ff. Leg current at those codes: held 36.6-36.9 mA, peak one leg about 37.5 mA, carried for <= 96 ns (12 symbols). WT52 / PC-63 need the re-basis.

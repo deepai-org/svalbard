@@ -79,6 +79,8 @@ def apply(chip=None):
     FIT = fit
     M.RECTS.clear()
     for k, v in fit['placed_rects'].items(): M.RECTS[k] = v['rect']
+    if asm and fp['blocks'].get('wiredtx', {}).get('master') == 'pt_wiredtx8':   # the merged block: its rect is the tap of the
+        M.RECTS['wtx_mux8'] = fp['blocks']['wiredtx']['rect']                     # wiredtx8 rows (stale wtx_mux8 entry ignored)
     for k, v in fit['fixed'].items(): M.RECTS[k] = v
     for k, v in fit['pads'].items(): M.RECTS[k] = v[0]
     M.DIG[:] = fit['fixed']['digital']
@@ -92,6 +94,9 @@ def apply(chip=None):
     for isl in ISLANDS:
         m, n = pb.ISLAND_SWITCH[chip][isl]
         M.ISW[isl] = pb.SWITCH_MASTER[m][1]/n; M.ISL_C[isl] = ISL_C[isl]
+        if f'isw_{isl}' not in M.RECTS and f'isw_{isl}_a' in M.RECTS:     # n masters in parallel: the pair's bounding box
+            a, b = M.RECTS[f'isw_{isl}_a'], M.RECTS.get(f'isw_{isl}_b', M.RECTS[f'isw_{isl}_a'])
+            M.RECTS[f'isw_{isl}'] = [min(a[0], b[0]), min(a[1], b[1]), max(a[2], b[2]), max(a[3], b[3])]
         if f'isw_{isl}' not in M.RECTS: raise SystemExit(f'no isw_{isl} in the {chip} packing')
     LD.MAP.clear()
     for r in pb.MEASURED:

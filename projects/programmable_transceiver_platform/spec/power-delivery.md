@@ -270,6 +270,28 @@ needed (36 mV of the high-R drop is ground rise). Moving `isw_wired_rx` does not
 assume the east switch slot beside the block (with the switch at the drawn position and the strap still at 15 mV:
 104.2 mV high-R); the real strap from the north-west would be far over 15 mV: the pair belongs in the east slot.
 
+### 4.1c pt_wiredtx8 on the assembly's fix (c) placement
+
+Block `wiredtx` (pt_wiredtx8) at x 1494-2238, y 2482-2884; the conn's switch pair `isw_wired_tx_a` / `_b` (2 x
+`isw_wired`) booked at x 2938-3469, y 2334-2577 beside the east supply bonds. Budget at the tap: <= 105.5 mV high-R
+(117 - 11.5 mV in-block, WT47). Model `wt44_tap.py` (`out/wired/wt44_tap_slots.txt`), 60 mA block, chip 432 mA, high-R:
+
+| Placement | Tap without the strap (mV) | Strap allowed (mV) | Metal5 strap width needed |
+| --- | ---: | ---: | --- |
+| pair east, block as placed (1.6 mm apart), ME / SE 12 % | 104.6 | 0.9 | impossible (7.4 mm) |
+| option (a): pair moved beside the block (x about 2505) | 121.5 | none | impossible |
+| option (b): pair in the macro's south channel | 125.3 | none | impossible |
+| **pair east, block moved east to abut it (x 2190-2934, y 2222-2624), ME / SE >= 16 % every net and layer** | 93.4 | 12.1 | pass with an edge bar; 56 mA: 90.6 |
+| same, ME / SE at 12 % | 105.1 | 0.4 | about 2.5 mV over with a 3 mV edge bar |
+
+- The switch must stay at the east edge by the supply bonds: moving it inward raises the drop to the switch by 17-21 mV
+  (raw grid), more than any strap saves.
+- The block goes to the switch: abutting the pair (the area the stale `wtx_ser8d` entry holds; `wtx_ser8d` is inside
+  pt_wiredtx8) with ME / SE >= 16 % passes; at 12 % it does not.
+- On the same placement and the current `place.json`, the rest of pt_wired (84 mA booking, `asm9_drawn.py`,
+  `out/wired/asm9_regions_fixc.txt`) has `wrx_cap` at 120.0 mV with all bonds and the worst supply cell at 115.2 mA with one
+  open bond (> 106 target): to be rerun on the final grid.
+
 ### 4.2 pt_wired bonds with one open supply bond
 
 Target: worst supply cell <= 106 mA (15 % margin to 125 mA) in every single-open-supply-bond case at W 432 mA with POST on

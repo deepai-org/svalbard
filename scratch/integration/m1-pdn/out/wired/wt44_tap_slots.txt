@@ -1,0 +1,33 @@
+# pair at the booked east slot (x 2938-3469, y 2334-2577), block as placed (x 1494-2238)
+nom  rx=east tx=slot block 60 mA, chip 432 mA: tap drop 103.2 mV (to switch 41.0, switch 10.1, strap 15.0, VSS rise 37.1)
+     switch-to-block 1565 um; for <= 105.5 mV at the tap the strap may drop 17.3 mV: Metal5 (0.070 ohm/sq) 379 um wide
+pess rx=east tx=slot block 60 mA, chip 432 mA: tap drop 119.6 mV (to switch 46.5, switch 12.6, strap 15.0, VSS rise 45.5)
+     switch-to-block 1565 um; for <= 105.5 mV at the tap the strap may drop 0.9 mV: Metal5 (0.070 ohm/sq) 7427 um wide
+nom  rx=east tx=slot block 56 mA, chip 432 mA: tap drop 99.5 mV (to switch 40.0, switch 9.6, strap 14.0, VSS rise 35.9)
+     switch-to-block 1565 um; for <= 105.5 mV at the tap the strap may drop 20.0 mV: Metal5 (0.070 ohm/sq) 307 um wide
+pess rx=east tx=slot block 56 mA, chip 432 mA: tap drop 115.4 mV (to switch 45.4, switch 12.0, strap 14.0, VSS rise 44.1)
+     switch-to-block 1565 um; for <= 105.5 mV at the tap the strap may drop 4.1 mV: Metal5 (0.070 ohm/sq) 1508 um wide
+# option (a): pair beside the block
+nom  rx=east tx=2505,2683 block 60 mA, chip 432 mA: tap drop 116.7 mV (to switch 54.6, switch 10.1, strap 15.0, VSS rise 37.1)
+     switch-to-block 639 um; for <= 105.5 mV at the tap the strap may drop 3.8 mV: Metal5 (0.070 ohm/sq) 715 um wide
+pess rx=east tx=2505,2683 block 60 mA, chip 432 mA: tap drop 136.5 mV (to switch 63.4, switch 12.6, strap 15.0, VSS rise 45.5)
+     switch-to-block 639 um; for <= 105.5 mV at the tap the strap may drop -16.0 mV: Metal5 (0.070 ohm/sq) impossible (rest alone exceeds the budget)
+# option (b): pair in the macro south channel
+nom  rx=east tx=1866,2985 block 60 mA, chip 432 mA: tap drop 118.1 mV (to switch 56.0, switch 10.1, strap 15.0, VSS rise 37.1)
+     switch-to-block 302 um; for <= 105.5 mV at the tap the strap may drop 2.4 mV: Metal5 (0.070 ohm/sq) 533 um wide
+pess rx=east tx=1866,2985 block 60 mA, chip 432 mA: tap drop 140.3 mV (to switch 67.2, switch 12.6, strap 15.0, VSS rise 45.5)
+     switch-to-block 302 um; for <= 105.5 mV at the tap the strap may drop -19.8 mV: Metal5 (0.070 ohm/sq) impossible (rest alone exceeds the budget)
+# recommended: pair stays east, block abuts it (x 2190-2934, y 2222-2624), ME/SE >= 16 %
+nom  rx=east tx=slot block 60 mA, chip 432 mA: tap drop 94.5 mV (to switch 36.2, switch 10.1, strap 15.0, VSS rise 33.2)
+     switch-to-block 674 um; for <= 105.5 mV at the tap the strap may drop 26.0 mV: Metal5 (0.070 ohm/sq) 109 um wide
+pess rx=east tx=slot block 60 mA, chip 432 mA: tap drop 108.4 mV (to switch 41.0, switch 12.6, strap 15.0, VSS rise 39.8)
+     switch-to-block 674 um; for <= 105.5 mV at the tap the strap may drop 12.1 mV: Metal5 (0.070 ohm/sq) 233 um wide
+nom  rx=east tx=slot block 56 mA, chip 432 mA: tap drop 91.2 mV (to switch 35.5, switch 9.6, strap 14.0, VSS rise 32.1)
+     switch-to-block 674 um; for <= 105.5 mV at the tap the strap may drop 28.3 mV: Metal5 (0.070 ohm/sq) 93 um wide
+pess rx=east tx=slot block 56 mA, chip 432 mA: tap drop 104.6 mV (to switch 40.1, switch 12.0, strap 14.0, VSS rise 38.6)
+     switch-to-block 674 um; for <= 105.5 mV at the tap the strap may drop 14.9 mV: Metal5 (0.070 ohm/sq) 177 um wide
+# same, ME/SE 12 %
+nom  rx=east tx=slot block 60 mA, chip 432 mA: tap drop 104.4 mV (to switch 41.0, switch 10.1, strap 15.0, VSS rise 38.3)
+     switch-to-block 674 um; for <= 105.5 mV at the tap the strap may drop 16.1 mV: Metal5 (0.070 ohm/sq) 176 um wide
+pess rx=east tx=slot block 60 mA, chip 432 mA: tap drop 120.1 mV (to switch 46.5, switch 12.6, strap 15.0, VSS rise 46.0)
+     switch-to-block 674 um; for <= 105.5 mV at the tap the strap may drop 0.4 mV: Metal5 (0.070 ohm/sq) 6459 um wide

@@ -4,6 +4,7 @@
 * Peak differential amplitude of the settled +1 and -1 levels at the RJ45 (100 ohm, after B39 and magnetics): **950-1050 mV**.
 * Amplitude symmetry |V+1| / |V-1|: **0.98-1.02**.
 * Negative control: with POST_POL = 0 and the same stream, the +-1 levels must NOT appear (MAIN and POST cancel).
+* (added 2026-11-21 for the Options section, before the option runs) Return loss at the RJ45, line side, 100 ohm reference (WR-100TX-RL): **>= 16 dB 2-30 MHz, >= 16 - 20 log10(f/30 MHz) dB 30-60 MHz, >= 10 dB 60-80 MHz**.
 * Pad leg compliance at the highest current: PAD_P/N >= 1.7 V (IX-9), and leg current that tracks the code (no tail collapse).
 
 ## State (2026-11-21): FAIL. Full scale does not reach 950 mV at any corner
@@ -111,3 +112,96 @@ The bias-path `_pol0` rows are not a valid control. Their level fit locks onto t
 
 ## Files (scratch/wired_tx/s16/fe100)
 `RESULT.md`, `RESULT.json`, `stream.py`, `net100.py`, `anchor.py`, `sweep.py`, `jobs.sh` (+ `jobs.out`, `A_ssp_255_pol1.out`), `results/*.json`, `runs/*/tb.sp` (+ logs).
+
+## Options (request from the coordinator via wired-TX owner, 2026-11-21)
+**Bench:** `opts.py` (wraps `sweep.py`, the bias-path bench). It reads +3.4 % against the full chain at the base point. The "cal." column is the ss-pess value x 0.967; the factor was checked only at the base point.
+* The RL limit (WR-100TX-RL, declared above) is checked at the RJ45, line side, 100 ohm reference, 2-80 MHz, at tt. Two pad states:
+  * "held": the -1 state at code 255/255, the worst case because the conducting leg may leave saturation;
+  * "off": tails off (code 0), the network alone.
+* Gate levels are scaled from the ss full chain (0.330 / 0.848 x VDD; an assumption at tt/ff, see the State section). Code 255/255 unless stated.
+* **Run log:**
+  * The first transient pass failed on a wrong probe name (`xpad.esd_rail`) and was rerun.
+  * The ss-pess W rows of that rerun were void: the pess pass renames the pad gate nodes before scaling. Fixed (the pad is now scaled before pess) and rerun.
+  * Rows below are final.
+
+### Cascode device and limits read from the pad netlist (tx_rt)
+* **Cascode:** 16 x `nfet_06v0` (W 16 um, L 0.7 um) per leg, gate `CASCODE`, drain `PAD_x`, source `SUM_x_D_k`. Rated 6.0 V (GF180 6 V device).
+* **Switches:** `nfet_03v3` (W 20 um, L 0.28 um), rated 3.3 V (max 3.63 V). Their drains sit on `SUM_x_D_k`, so **SUM max must stay <= 3.63 V**.
+* **ESD:** PAD to `diode_pd2nw_06v0` to an **isolated ESD_RAIL**, with an RC-triggered `nfet_06v0` clamp to VSS (304 fingers). There is **no diode to VDD**, so a pad above VDD only charges ESD_RAIL to about PAD - 0.9 V.
+  * CT 4.0 / 4.5 / 5.0 V: ESD_RAIL 3.0 / 3.5 / 4.0 V. CT current minus the leg currents: **|leakage| < 1 uA** at every corner. The clamp stays off.
+  * **CT ceiling** = 6 V device rating, not ESD. At CT 5.0 V the cascode drain sees 4.87 V (19 % margin to 6.0 V). Recommended CT <= 4.5 V (drain 4.33 V, 28 % margin; it leaves room for overshoot at line connect/ESD events).
+  * Not checked here: the other devices on PAD (termination switches, detect). Pads must confirm they are 6 V devices.
+
+### Ranked table (ss-pess decides; "max" = maximum over the 4 corners)
+| rank | option | ss-pess mV (cal.) | ss | tt | ff | symmetry worst | held leg mA (ss-pess / ff) | pad pin min V | SUM min / max V | cascode max Vgs / Vgd / Vds / Vd V | RL tt held / off, worst margin | verdict |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | **pad switch + cascode W x2, B39 CT 4.5 V** | 1031 (**997**) | 1039 | 1210 | 1232 | 0.996 | 41.9 / 50.7 | 2.14 | 0.61 / 2.45 | 2.64 / 2.21 / 2.64 / 4.33 | not run with CT 4.5 V; W x2 alone +0.3 dB held / -0.8 off (79 MHz), CT 4.5 alone -0.8 / -0.9 | **meets 950 with 47 mV (cal.) margin at ss-pess.** tt/ff over 1050 at 255; by code: **ff 215 gives 1048 mV** (200 gives 978), **tt 215 gives 1046 mV**, symmetry 1.000. Per-board code calibration (B11). Needs a 4.5 V board rail and pad re-layout. Pad C 1.48 -> **1.71 pF per pin (+0.22 pF)**, measured at 50 MHz |
+| 2 | W x2 + CASCODE 4.5 V + CT 4.5 V | 1217 (1177) | 1225 | 1232 | 1245 | 0.997 | 49.3 / 51.0 | 2.17 | 0.88 / 3.35 | 3.62 / 3.23 / 1.73 / 4.31 | -0.6 / -0.9 (79 MHz) | meets at ss-pess with large margin. Needs a 4.5 V cascode source as well. SUM max 3.35 V is close to the 3.63 V switch limit. 51 mA in one leg = the IX-9 limit |
+| 3 | CASCODE 5.0 V + CT 4.5 V | 1101 (1065) | 1101 | 1187 | 1224 | 0.984 | 44.3 / 49.9 | 2.19 | 0.86 / **3.68** | 4.15 / 3.63 / 1.66 / 4.33 | -0.6 / -0.9 | amplitude OK, but **SUM max 3.68 V at ff exceeds the 3.63 V switch rating**: reject unless CASCODE is 4.5 V |
+| 4 | W x2 + CASCODE 4.5 V | 1027 (994) | 1027 | 1045 | 976 | **0.930** | 41.3 / 42.6 | **1.37** | 0.53 / 2.91 | 3.97 / 3.76 / 1.48 / 3.11 | not run | amplitude meets at ss-pess, but **symmetry fails (0.93-0.97) and the pad pin is at 1.37 V** |
+| 5 | W x2 (CT 3.3, CASCODE = VDD) | 943 (912) | 943 | 1000 | 949 | 0.934 | 38.0 / 41.6 | 1.40 | 0.48 / 2.16 | 2.92 / 2.67 / 1.73 / 3.14 | +0.3 / -0.8 | short by 38 mV (cal.); symmetry fails at tt/ff |
+| 6 | CASCODE 5.0 V | 898 (868) | 898 | 921 | 871 | 0.943 | 36.1 / 38.8 | 1.49 | 0.58 / 3.09 | 4.45 / 4.10 / 1.73 / 3.16 | +0.5 / -0.4 | short |
+| 7 | CASCODE 4.5 V / 4.0 V | 874 / 833 | 873 / 832 | 901 / 871 | 853 / 828 | 0.945 / 0.949 | 35.1 / 33.5 | 1.51 / 1.53 | 0.57 / 2.83 (4.5) | 3.96 / 3.58 / 0.81 / 3.14 (4.5) | +0.4 / -0.9 (4.5) | short |
+| 8 | W x1.5 | 842 (814) | 841 | 927 | 893 | 0.941 | 34.0 / 39.7 | 1.46 | 0.47 / 2.11 | 2.92 / 2.58 / 1.57 / 3.15 | -0.05 / -0.8 | short |
+| 9 | magnetics 1:n, n = 0.75 / 0.70 / 0.65 | 781 / 790 / 779 | 780 / 787 / 771 | 776 / 737 / 683 | 644 / 573 / **486** | 0.994-1.040 | 24.4 / 23.2 / 21.6 | **1.15 / 1.05 / 0.94** | 0.31-0.41 / 1.70 | 3.14 / 2.89 / 1.47 / 2.83 | **held -4.1 / -6.3 / -8.2 dB (at 2 MHz)**; off +1.1 / +1.9 / +3.0 | **reject.** The leg drop grows as 37.4 I / n^2, the tails collapse (ff worst) and the held-state RL fails |
+| 10 | rail gates (0..VDD) | 670 (648) | 669 | 830 | 927 | 0.971 | 27.1 / 38.6 | 1.49 | - | - | - | short |
+| 11 | B39 CT 5.0 / 4.5 / 4.0 V alone | 662 / 656 / 650 | 661 / 656 / 650 | 847 / 837 / 824 | 1028 / 992 / 954 | 0.978 | 27.2 / 43.4 | 2.60-3.57 | 0.44 / 1.69 | 2.74 / 1.72 / 3.39 / **4.87** (5.0) | -0.8 / -0.9 | no help at ss. The SUM node (cascode at VDD) limits there, not the pin |
+
+**Magnetics network derivation** (option 9, chip:line = 1:n, n < 1):
+* The line load reflects to the chip side as 100 / n^2.
+* Back-termination R_b = 49.9 / n^2 per leg to the CT. The line then sees n^2 x 2 R_b = 100 ohm.
+* Filter impedance-scaled: L = 98 nH / n^2 per leg, C = 19.6 pF x n^2 differential. OCL referred to the chip side: 350 uH / n^2.
+* Result: V_line = 25 I / n, leg drop = 37.4 I / n^2. At n = 0.70: R_b = 101.8 ohm, L = 200 nH, C = 9.6 pF.
+* Model: ideal transformer as an E/F pair.
+
+**RL notes:**
+* The base B39 network fails WR-100TX-RL by 0.5-0.9 dB at **79-80 MHz** (9.1-9.5 dB against 10 dB) in every non-1:n variant, including tails off. This is the 115 MHz Butterworth roll-off, a **board item for B39** (raise fc, use Bessel values, or retune C), independent of the on-chip options.
+* 2-60 MHz passes with >= 8 dB margin, except for the 1:n options.
+
+**Recommendation:** option 1 (pad switch + cascode W x2, B39 CT 4.5 V).
+* Pads: re-layout of the txpad switch and cascode slices at 2x W (+0.22 pF per pin).
+* Board: 4.5 V TX centre-tap rail in place of 3.3 V.
+* Digital and board: per-board code calibration, about 215 at tt/ff and 255 at ss.
+
+It needs:
+* confirmation by pads that every device on PAD tolerates 4.5 V;
+* a full-chain run on the re-laid-out pad;
+* a WT52 / PC-63 update: held leg about 42 mA at ss-pess and up to 51 mA at ff at 255, about 43 mA at code 215.
+
+**100BASE-TX is therefore not impossible, but it does not close without a pad change.** Board-only options (CT alone, 1:n magnetics) do not reach 950 mV at ss.
+
+Result files: `results/O_*.json`, runs `jobs2.sh` / `jobs3.sh` / `jobs4.sh` (`*.out`), bench `opts.py`.
+
+### Option 1b: CASCODE raised only in 100BASE-TX mode (W unchanged, no added pad C) + B39 CT 4.5 V
+* Requirement: **SUM max <= 3.3 V** (switch rating). SUM max sits on the OFF leg, about CASCODE - Vt at low current, so it **rises when the code is lowered**.
+* "cal." = raw x 0.967 (ss-pess only).
+* Runs: `jobs5.sh` plus the single runs `O_cas4.2_ct4.5_ff_{212,220,230}`.
+
+| CASCODE V | corner | code | amp raw mV (cal.) | sym | held leg mA | pad pin min V | SUM min / max V | cascode max Vgs / Vgd / Vds V | verdict |
+|---|---|---|---|---|---|---|---|---|---|
+| 4.5 | ss-pess | 255 | 1046 (**1012**) | 0.994 | 42.1 | 2.42 | 0.82 / 3.02 | 3.68 / 2.77 / 1.98 | pass, 62 mV margin (cal.) |
+| 4.5 | ss | 255 | 1046 | 0.994 | 42.1 | 2.40 | 0.82 / 3.01 | 3.69 / 2.78 / 1.99 | pass |
+| 4.5 | tt | 255 | 1153 | 0.984 | 46.6 | 2.29 | 0.82 / 3.11 | 3.68 / 2.97 / 1.75 | over 1050: lower the code |
+| 4.5 | tt | 230 | 1104 | 0.995 | 44.4 | 2.39 | 0.89 / 3.18 | 3.61 / 2.89 / 1.80 | over 1050 |
+| 4.5 | tt | **215** | **1044** | 0.999 | 42.1 | 2.46 | 0.97 / **3.21** | 3.53 / 2.80 / 1.82 | **pass** |
+| 4.5 | ff | 255 | 1210 | 0.982 | 49.2 | 2.21 | 0.83 / 3.20 | 3.67 / 3.09 / 1.56 | over 1050 |
+| 4.5 | ff | 230 | 1113 | 0.998 | 45.7 | 2.35 | 0.94 / **3.31** | 3.56 / 2.97 / 1.61 | SUM > 3.3 V |
+| 4.5 | ff | 215 | 1045 | 0.999 | 42.9 | 2.44 | 1.07 / **3.33** | 3.43 / 2.83 / 1.63 | **SUM > 3.3 V: 4.5 V not allowed at ff** |
+| 4.2 | tt | 255 | 1112 | 0.988 | 45.3 | 2.33 | 0.78 / 2.80 | 3.42 / 2.62 / 1.92 | - |
+| 4.0 | tt | 255 | 1082 | 0.992 | 43.8 | 2.34 | 0.75 / 2.59 | 3.25 / 2.37 / 2.03 | - |
+| 4.2 | ff | 255 | 1190 | 0.979 | 48.5 | 2.23 | 0.80 / 2.90 | 3.40 / 2.75 / 1.74 | over 1050 |
+| 4.2 | ff | 230 | 1126 | 0.997 | 45.5 | 2.36 | 0.89 / 3.04 | 3.31 / 2.65 / 1.81 | over 1050 |
+| 4.2 | ff | 220 | 1083 | 0.999 | 43.8 | 2.41 | 0.96 / 3.06 | 3.24 / 2.57 / 1.83 | over 1050 |
+| 4.2 | ff | **212** | **1046** | 0.999 | 42.3 | 2.47 | 1.02 / **3.07** | 3.18 / 2.50 / 1.84 | **pass, SUM 0.23 V under the limit** |
+| 4.0 | ff | 255 | 1164 | 0.979 | 47.7 | 2.25 | 0.78 / 2.68 | 3.22 / 2.52 / 1.85 | - |
+| 5.0 | ss-pess / ss / tt / ff | 255 | 1101 (1065) / 1101 / 1187 / 1224 | >= 0.984 | 44-50 | >= 2.19 | - / **3.47-3.68** | 4.15 / 3.63 / 1.66 | **reject: SUM > 3.3 V at every corner** |
+
+* **Result:** CASCODE about 4.5 V at ss and tt and 4.2 V at ff closes the gap without added pad C. This is roughly a corner-tracking level: about VDD + 1.35 V at ss, VDD + 1.2 V at tt, VDD + 0.75 V at ff. Better still, a replica that holds CASCODE = 3.3 V + Vt(6 V nfet at about 0.5 mA) + about 0.2 V, which tracks the off-leg SUM level directly.
+  * ss-pess, code 255: **1012 mV cal.**, symmetry 0.994, SUM max 3.02 V.
+  * tt, code 215: 1044 mV, SUM max 3.21 V.
+  * ff, code 212: 1046 mV, SUM max 3.07 V.
+  * All cascode voltages are <= 3.7 V Vgs, 3.1 V Vgd and 2.0 V Vds, well inside the 6 V rating. The cascode drain reaches 4.33 V (it sits at the CT).
+* **Constraints:**
+  * The SUM limit binds at the **lowest code used**: re-check SUM after any per-board code calibration.
+  * The held leg is 42-43 mA at the calibrated codes and 49 mA at ff code 255. WT52 / PC-63 need a re-basis.
+* **Versus option 1 (W x2):** about 15 mV less margin at ss-pess, no pad C, but it needs the mode-switched cascode bias source (charge pump / regulator above VDD) plus the 4.5 V CT rail. RL is unchanged from the base network (the same 79-80 MHz board-filter miss).

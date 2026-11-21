@@ -294,6 +294,13 @@ Block `wiredtx` (pt_wiredtx8) at x 1494-2238, y 2482-2884; the conn's switch pai
   bar). VSS rise is 46 mV of it: ME / SE VSS coverage >= 16 % (ASM-8) or the block at <= 56 mA closes it.
   Rest of pt_wired on that placement (`out/wired/asm9_regions_optB.txt`): `wrx_cap` 106.4 mV (pass); worst supply cell
   94.7 mA with all bonds, 112.1 mA with `dvdd_pads[1]` open (< 125, above the 106 target).
+- **Requirement for 60 mA (PDS-13):** ME / SE VSS coverage >= 16 % on Metal4 and Metal5 (with ASM-8) plus the Metal5 bar
+  >= 180 um wide from the pair to the block. Fallback: more grid VSS ties through the mux (wired TX), since 46 mV of the
+  high-R drop is ground rise. Booking stays 60 mA + POST 24 mA (WT40) until extracted worst-corner evidence with POST on
+  exists (PDS-14).
+- One open supply bond on pt_wired: worst cell 112.1 mA (10 % margin to 125, target 15 %). No east or south site is free
+  for another supply bond (east signals all used, `bidir[22]` already VDD, south row is the host link and SPI); recommended:
+  accept 10 % for this yield case (PDS-15).
 - The switch must stay at the east edge by the supply bonds: moving it inward raises the drop to the switch by 17-21 mV
   (raw grid), more than any strap saves.
 - The block goes to the switch: abutting the pair (the area the stale `wtx_ser8d` entry holds; `wtx_ser8d` is inside

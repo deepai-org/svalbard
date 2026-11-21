@@ -488,3 +488,52 @@ tb2.py d0f52dc6, offleak.py 4a3b79a3 (OFF_VCM env). Queue `sec/q10.sh`.
 | Default path | normalised GDS 3a706943 == b/a4, schematic identical | PASS |
 | ASM-2 | all core pins on the top edge; TERM_VCM now on the control-cell trunk (x 4.4-5.2, 0.4 um Metal4 trunk) | PASS (stated) |
 Not run: low-metal termination (no netres variant), ss/ff ESD corners, idle bench.
+
+# CANDIDATE a11 (2026-11-20): wide TERM_VCM disconnect (review-a10 F1). NOT published, NOT committed.
+## Limits declared BEFORE the a11 runs (a10 list otherwise unchanged)
+- CM1 (new, from agent a0b585bf): TERM_VCM pin -> native source bus, disconnect + its wiring <= 5 ohm at ss / 3.15 V / 32 C, high metal (R+C rh model incl. the
+  pin strap): measured as disc drop / I_VCM with the termination on at code 8, TERM_VCM ideal 1.65 V, 10.5 + 10.5 mA and 21 + 0 mA sinks at the pads
+  (review-a10/cmdrop.py, copied to sec/dis/cmdrop.py). Reported also at tt / ff and with a 25 ohm TERM_VCM source (wired TX's I x 25 ohm assumption).
+- Off leak per pad (TERM_VCM 0 / 1.65 V, 5 corners, pads equal and 1 V apart) < 0.01 uA; json records the model sha.
+- All a10 limits; CDM 2 A all 6 cases to completion where the bench allows (any stop stated with what it reached and a stand-in json kept on disk).
+## a11 results (2026-11-21). NOT published, NOT committed. a10 build / netres / models / benches deleted.
+Design: a9 + `"disc2": [24, 0.28, 64, 2]` (generator sha 7ec89584, `disconnect2()`): TERM_VCM disconnect nfet_03v3, 2 rows x 64 fingers x 24/0.28 = 3072 um,
+west of the driver (x 25-77, rows at y 427-506). Bus side: Metal3(+4) bars under each row, a Metal2+3 riser (x 10.5-20.5) down to the TERM_VCM_BUS bus. Pin side:
+Metal4+5 bars over each row, two 24 um Metal4+5 strips (MSLOT.1 <= 30 um; one 50 um strap failed it) to a 50 um Metal4 TERM_VCM pin pad at the top edge (x 25-75).
+The control cell's TERM_VCM trunk (TERM_DISCHARGE) joins on Metal5 at the top. Gate TERM_ENABLE_LOCAL per row via Metal3 to its trunk. Rows are kept short
+for the 15 um latch-up rule: one 64 x 40 um row left 175 um2 uncovered.
+Build: `python3 $P/analog/pads/tx_pad_layout.py sec/b/a11 --nvt '{"wb": 23.5, "wt": 23.5, "lb": 2.2, "lt": 1.0, "merged": true, "disc2": [24, 0.28, 64, 2]}' --upx '{"x": [63, 69], "yu": 107}' --top-pins`.
+GDS a52eec43..., netres `sec/r11/res.json` 54481a88 (`sec/rflow11.sh` + `sec/fixspec11.py` cbf26080: TERM_VCM pin = the top pad), models `sec/models/a11_rh` 31c52342 /
+`a11_rt` fecf675e / `a11_c`. Benches: tb2.py 27efaa37, `sec/dis/cmdrop.py` 0316b7d4 (reviewer's, + CM_RS source R and the drop measured from the TERM_VCM pin node),
+`sec/dis/offleak.py` b93b91c4 (records model sha / VCM / offset). Queue `sec/q11.sh`.
+
+| Limit | a11 | Result |
+|---|---|---|
+| CM1 TERM_VCM pin -> bus (disconnect + wiring) <= 5 ohm, ss/3.15/32, high metal, 10.5 + 10.5 mA | 75.6 mV / 21 mA = 3.60 ohm (tt 2.89, ff 2.63; typ metal 2.92 / 2.19 / 1.92) | PASS |
+| CM bench pads at 10.5 + 10.5 mA, ideal 1.65 V (rh ss / tt / ff) | 0.90 / 1.10 / 1.23 V (a10: 0.07 V at ss) | info |
+| Same via a 25 ohm TERM_VCM source | pads 0.45 / 0.60 / 0.71 V; disconnect 2.4-2.7 ohm | info for wired TX |
+| Remaining CM path not inside CM1 | the bus from its reference (riser) to the native sources: netres 1.6-2.9 ohm high (in the models and benches above) | stated |
+| Off leak per pad, TERM_VCM 0 / 1.65 V, pads equal, 5 corners | < 0.01 uA (model fecf675e) | PASS |
+| Off leak, pads 1 V apart | <= 0.16 uA (ff 32) | info (limit < 0.01 uA was stated for TERM_VCM 0 V, equal pads) |
+| TERM_ENABLE 0 off control (1.65 V) | >= 1.0e10 ohm | PASS |
+| Termination +-10 %, 23 corners, rt / rh | worst 4.24 / 4.19 %; ss/32/3.15 rh codes 12-15; ff/22/3.35 rt code 3 only (97.3), rh 3-4; a4 +-5 % PASS | PASS |
+| P-N | -0.42..-0.20 ohm | PASS |
+| Pad C per leg <= 3.223 pF | rt 3.076, c 2.986 (+0.4 fF vs a9) | PASS |
+| Gate C MAIN/POST/TMDS | max 0.299 pF | PASS |
+| Drop at 21 mA (simulated) | 37.6 / 53.9 mV | PASS |
+| CDM 2 A, all 6 cases | vss+ 6.92, vdd+ 3.92 (**now complete with PULSE**), vdd- 0.99, pp+ 7.27, pp- 7.25 V; vss- 0.99 V with tanh edges (PULSE stops at the provider diode; tanh vs PULSE on vss+ 6.922 / 6.917 V); disconnect (n03) <= 0.84 V | PASS (0.73 V margin) |
+| HBM 1 kV | 5 cases complete: nvt 4.08, n06 4.35, n03 0.70 V. vdd+ stops at 5.05 ns (the EXP source start, before current flows; cshunt 1e-15 no help) | 5 PASS; vdd+ see bound |
+| HBM 2 kV vss+ / pp+ (report) | 4.99 / 5.73 V | PASS |
+| CDM 1 A vss+ / pp+ (report) | 4.56 / 5.04 V | PASS |
+| CDM 3 A vss+ / pp+ (report) | 9.28 / 9.62 V (23 nvt + 17 n06 over) | MISS (report) |
+| Junctions vs bv | worst 7.05 V (CDM 2 A), 9.48 V (CDM 3 A), 0 over | PASS |
+| Primary fingers | 5.0 mA/um 1.1 nJ (CDM 2 A); 3.3 mA/um 18.6 nJ (HBM 2 kV) | PASS |
+| ESD known answer | 6.747 V | PASS |
+| Layout: Magic DRC / netgen / KLayout main+antenna (NAT) / rb LVS + control / latch-up / rail_site / railconn | 0 / unique / 0+0 / match + mismatch / 0.0 um2 / PASS / clean | PASS |
+| Default path | normalised 3a706943 == b/a4 (checked on the a11 generator run before the row split; the default path code is untouched by disconnect2) | PASS |
+HBM 1 kV vdd+ bound: HBM 1 kV is a 0.67 A peak on the same pad -> up-diodes -> DVDD path as CDM 2 A vdd+, which completed here with every MOS <= 3.92 V and
+primary 5.0 mA/um. The quasi-static pad-to-DVDD drop scales with the current (0.67 vs 2 A) and the HBM rise (2 ns tau) is slower than CDM's 0.2 ns, so the
+HBM stress is below the CDM 2 A stress. a10's identical case completed at 1.90 V (that json was deleted with a10); vss+ HBM 1 kV here: 3.73 V.
+CDM 2 A vdd+ history: a10 stopped at 2.251 ns with PULSE, tanh, cshunt, series R in the provider diodes (TB2_DSER), trap/gear reltol 1e-4. a11 completes with PULSE.
+The difference is the disconnect geometry; there is no bench change.
+Cleaned: a10 build / r10 / models / benches, CDM vdd+ trial benches, w18 what-ifs.

@@ -45,7 +45,7 @@ scratch copies by `flow/clean_flow.sh`:
 | --- | --- |
 | URL / commit | Same repository and commit as the bias generator: https://github.com/RTimothyEdwards/gf180mcu_ocd_ip__biasgen @ `96a93f811a10c0b63111a5bd862e3173300802d4` |
 | License | Apache License 2.0 (`bandgap/LICENSE`, unchanged) |
-| Taken | `gds/`, `lef/`, `verilog/`, `netlist/{schematic,layout,rcx}/` and `doc/` for the bandgap; `cace/gf180mcu_ocd_ip__bandgap.yaml`; the `magic/` cells reachable from `gf180mcu_ocd_ip__bandgap.mag` (`bandgap_unbuffered`, `bg_trim`, class-AB buffer, folded-cascode amplifiers, `via_1x3y`, paramcells); the `xschem/` hierarchy (including `bg_res`); the extraction/GDS/DRC/LVS scripts and the upstream LVS report. |
+| Taken | `gds/`, `lef/`, `verilog/`, `netlist/{schematic,layout,rcx}/` for the bandgap (upstream `doc/` pages not kept: their plots were not vendored); `cace/gf180mcu_ocd_ip__bandgap.yaml`; the `magic/` cells reachable from `gf180mcu_ocd_ip__bandgap.mag` (`bandgap_unbuffered`, `bg_trim`, class-AB buffer, folded-cascode amplifiers, `via_1x3y`, paramcells); the `xschem/` hierarchy (including `bg_res`); the extraction/GDS/DRC/LVS scripts and the upstream LVS report. |
 
 Apache-2.0 allows reuse, modification and redistribution, provided the license text is kept and changes are
 stated (this file and `patches/`).

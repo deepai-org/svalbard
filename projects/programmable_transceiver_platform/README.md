@@ -9,7 +9,7 @@ port configures each chip; a ten-bit parallel link per direction carries payload
 
 This is a pre-silicon design. Nothing here is demonstrated silicon or protocol compliance.
 
-## What the chip must do
+## What the chips do
 
 | Use | Target interfaces | Stays in the FPGA / on the board |
 | --- | --- | --- |
@@ -37,7 +37,7 @@ Requirements with their IDs are in [`spec/interface-requirements.md`](spec/inter
   and fallback routes (external LO, external LNA, forwarded clocks, bypasses) for the risky blocks.
 - **Package:** the wafer.space chip-on-board only, one per chip. Fixed die 3.932 × 5.122 mm, one fixed 74-wire bond
   layout (no custom, double or down-bonds; the free signal sites of each chip carry extra supply / ground bonds), 14 × 16 mm board with a 70-pin mezzanine connector. The nearest signal passive is
-  on the carrier board, 5–6 mm of trace plus the connector away.
+  on the carrier board, 3–7 mm of COB trace plus the connector away.
 - **Operating window:** junction 22–32 °C, die supply 3.15–3.35 V, all process corners. The board sets each die's
   supply at bring-up from its measured speed, up to a 3.50 V setpoint for slow dies. Safety (no damage, latch-up or
   lock-up) holds over 0–3.63 V and 0–85 °C.
@@ -53,7 +53,8 @@ Requirements with their IDs are in [`spec/interface-requirements.md`](spec/inter
 - **Clocks (both):** two ring PLLs. The TX ring makes the host word clock and (on `pt_rf`) the converter clock
   (host_follow); the CDR ring recovers the wire clock on `pt_wired` and is the second host-clock route on `pt_rf`.
 - **Digital:** one standard-cell macro per chip from one RTL (`rtl/pt_digital_macro.sv`, parameter `PT_CHIP`: 1 = `pt_rf`,
-  2 = `pt_wired`; hardening configurations `verification/digital_hardening/{rf,wired}/`) with SPI, the generated register file, the
+  2 = `pt_wired`; hardening configurations `verification/digital_hardening/{rf,wired}/`, outlines 1716 × 1365.6 µm and
+  1676 × 1592.96 µm) with SPI, the generated register file, the
   control decode for every analog pin, the framed host transport, capture/playback memory, pattern
   generator/checker, frequency counters, USB FS/LS line logic and the supply/clock monitor.
 - **Infrastructure:** POR with a strap-selected bypass, bandgap and bias distribution, supply islands behind
@@ -62,19 +63,48 @@ Requirements with their IDs are in [`spec/interface-requirements.md`](spec/inter
 
 [`spec/block-diagram.md`](spec/block-diagram.md) describes the chains, instances, clocks, islands, pads and modes.
 
+## Decisions in force
+
+Standing rules are in `scratch/reviews/MANDATE.md`; these are the ones that shape the design files.
+
+- **Two chips** (`scratch/reviews/SPLIT-PLAN.md`): one block library and one RTL, instanced per chip, never copied.
+  One register map with a per-chip view (fields of the other chip are not stored and read 0; `status.chip.id`).
+- **Packaging:** wafer.space chip-on-board per chip; its 70-pin connector plugs into a test board that carries all test
+  circuitry ([`spec/package-channel.md`](spec/package-channel.md), [`spec/test-board-models.md`](spec/test-board-models.md)).
+- **Pad ESD, option A:** primary diodes inside every custom pad site, tied straight to the ring rails. Back-feed into
+  an unpowered die is accepted; the board sequences supplies (B53 in [`spec/board-requirements.md`](spec/board-requirements.md)).
+  Pad evidence uses R+C extraction with the return path modelled.
+- **Per-chip supply trim:** slow dies run at a raised supply up to a 3.50 V setpoint, set at bring-up from the measured
+  speed; slow-corner results are reported untrimmed and trimmed.
+- **Metal5 belongs to the top power grid:** blocks draw Metal5 only as declared exceptions; top routing crosses a block on
+  Metal4/5 only where it declares them free ([`integration/assembly/README.md`](integration/assembly/README.md)).
+- **Evidence:** extracted netlists with real neighbours (pad, package, ring, regulator) at every in-window corner incl.
+  sf/fs; a block is published only with a hash-matched evidence record and an independent review.
+
 ## Current status
 
-- The control plane exists in RTL: the macro presents one decoded port per analog control pin group, and every
-  mode family closes in a chip-level simulation of each chip against its stub analog top.
-- Nothing is hardened, routed or signed off at chip level. The digital macro does not yet meet setup timing.
-- Each chip fits its die with the full decap plan in a packer placement (no wiring): margin after routing about
-  +0.8 mm2 on `pt_rf` and +2.2 mm2 on `pt_wired` as built (`scratch/reviews/die-fit.md`). Sign-off skeletons per chip in
-  `integration/signoff/` (`SIGNOFF_CHIP`).
-- Several blocks are not built or not closed (the chip-top regression counts them as demand and staged
-  instances); block state is in each `analog/<family>/README.md`.
-- Open risks: [`spec/risk-register.md`](spec/risk-register.md). Open chip-top items:
-  [`integration/chips/decisions.md`](integration/chips/decisions.md). Work state and standing rules:
-  `scratch/reviews/SESSION-STATE.md` and `scratch/reviews/MANDATE.md`.
+Pre-silicon. Nothing is qualified. One line per area; the owning document has the numbers.
+
+| Area | State | Owner doc |
+| --- | --- | --- |
+| Chip connectivity | Both conns bind every pin (unbound 0). `pt_rf` has 18 build demands and 4 staged converters, `pt_wired` 12 demands (strap pad, `refvcm`, `txpad_bias`, LNA spirals, `lo_vreg`, supply cells at signal sites) | [`integration/chips/decisions.md`](integration/chips/decisions.md) |
+| Control plane (RTL) | Every mode family closes in a chip-level simulation of each chip against its stub analog top | `sim/`, `integration/chips/` |
+| Digital macro | Both configurations routed clean (DRC, LVS, antenna 0); setup does not close (about −4 ns `pt_rf`, −5 ns `pt_wired` at ss/3.15 V); no sign-off STA or GLS | `spec/risk-register.md` DIG-01 |
+| Chip assembly | Both chips floorplanned on real geometry with power grid and top routing; detailed-route violations left (`pt_rf` 164, `pt_wired` 1180 at the macro / `pad_wire_tx` corner) | [`integration/assembly/README.md`](integration/assembly/README.md) |
+| Sign-off | Fill, DRC, LVS and the shuttle precheck read the assembled GDS; `pt_rf` precheck exits 1 (mostly custom-pad via stacks on the provider ring), `pt_wired` not run | [`integration/signoff/README.md`](integration/signoff/README.md) |
+| RF receive (`pt_rf`) | Baseband filter and BB tap published; mixers candidate; LNA candidate, not publishable (noise figure, input match, common-mode stability) | [`analog/rf_rx/README.md`](analog/rf_rx/README.md) |
+| RF transmit (`pt_rf`) | Mixers, summer and driver published | [`analog/rf_tx/README.md`](analog/rf_tx/README.md) |
+| LO (`pt_rf`) | Every cell published; published QVCO misses the pessimistic tuning range (r9 candidate passes); feedback divider relayout fails ss above 2.45 GHz; LO regulator not built | [`analog/timing/README.md`](analog/timing/README.md), [`LO-INTEGRATION.md`](analog/timing/LO-INTEGRATION.md) |
+| Converters (`pt_rf`) | ADC, DAC, reference buffer published with the old pin contract; the conn binds the staged one; ADC over its area ceiling; DAC fails `clean` | [`analog/converters/README.md`](analog/converters/README.md) |
+| Rings and clocks (both) | Published; the RX ring's duty at 810 MHz fails 3.24 Gb/s at ss; phase-trim r12 staged | [`analog/timing/README.md`](analog/timing/README.md), [`analog/wired_rx/README.md`](analog/wired_rx/README.md) |
+| Wired receive (`pt_wired`) | Published chain does not receive at 2.5 Gb/s or above with real neighbours; fixes staged, none published; CDR closed loop unproven | [`analog/wired_rx/README.md`](analog/wired_rx/README.md) |
+| Wired transmit and USB (`pt_wired`) | Published `pt_wiredtx` fails the real chain; new block `pt_wiredtx8` staged (placed by assembly); USB driver published | [`analog/wired_tx/README.md`](analog/wired_tx/README.md) |
+| Pads (both) | Option A pad families with core-edge pins staged; provider-ring via-stack DRC at the custom sites open | [`analog/pads/README.md`](analog/pads/README.md) |
+| Power, bias, islands (both) | Ten islands on four switch masters, per-chip core bias from one generator, 5.4 nF decap plan per chip | [`spec/power-delivery.md`](spec/power-delivery.md), [`analog/core_support/README.md`](analog/core_support/README.md), [`analog/island_support/README.md`](analog/island_support/README.md) |
+| Observation and bring-up (both) | Per-block observation paths and one bring-up sequence per chip; reference software runs against the RTL | [`spec/observation.md`](spec/observation.md), [`spec/bring-up.md`](spec/bring-up.md), [`tools/bringup/README.md`](tools/bringup/README.md) |
+
+Risks: [`spec/risk-register.md`](spec/risk-register.md) (the only list). Gates before submission:
+[`spec/tapeout-plan.md`](spec/tapeout-plan.md). Work state: `scratch/reviews/SESSION-STATE.md`.
 
 ## Source of truth
 
@@ -101,21 +131,24 @@ Requirements with their IDs are in [`spec/interface-requirements.md`](spec/inter
 | --- | --- |
 | `rtl/` | Digital macro RTL; `rtl/gen/` holds the register generator and its outputs |
 | `sim/` | RTL test benches and the FPGA-side reference transport |
-| `integration/` | Chip-level netlist generator, provider pad wrapper, timing constraints, macro contract |
+| `integration/` | Chip-level netlist generator, core-bias generator, provider pad wrapper, macro SDC, macro contract |
 | `integration/chips/` | Per-chip connectivity, bond maps and `run.sh` (`rf/`, `wired/`), the shared part (`common.conn`), the checker, isolation audit, boundary and mode simulations |
+| `integration/assembly/` | Full-chip floorplan, power grid, top routing and GDS per chip (`run.sh <rf\|wired>`) |
+| `integration/signoff/` | Fill, DRC, LVS and shuttle precheck on the assembled GDS |
 | `analog/<family>/` | Schematics, layout generators, extracted netlists and evidence per block family: `core_support`, `island_support`, `pads`, `timing`, `pll_vreg`, `rf_rx`, `rf_tx`, `converters`, `wired_rx`, `wired_tx`, `decap`, `characterization` |
-| `spec/` | Requirements, register map, power, package, board and tapeout documents; machine-readable inventories (`*.json`) |
-| `verification/` | Check scripts, formal jobs, the digital hardening flow, chip assembly tools |
+| `spec/` | Requirements, register map, power, package, board, observation, bring-up and tapeout documents; machine-readable inventories (`*.json`) |
+| `tools/bringup/` | Bring-up reference software over an abstract SPI and board ([note](tools/bringup/README.md)) |
+| `verification/` | Check scripts, formal jobs, the digital hardening flow (`digital_hardening/`); `reference_afe/` is a paused reverse analysis of a published GF180 AFE, not evidence |
 | `system_model/` | Behavioural Python model of the architecture ([guide](system_model/README.md)) |
 | `evidence/` | Stored reports of checks |
-| `docs/diagrams/` | Generated block diagram ([note](docs/diagrams/README.md)) |
+| `docs/diagrams/` | Generated block diagram from `spec/analog-architecture.json`; out of date (its `--check` fails); the current structure is [`spec/block-diagram.md`](spec/block-diagram.md) |
 
 ## Running the main checks
 
 From the repository root:
 
 ```sh
-make transceiver-chip-top          # per chip (-rf / -wired): connectivity, bond map, isolation audit, boundary sim
+make transceiver-chip-top          # both chips (or -rf / -wired): connectivity, bond map, isolation audit, boundary sim
 make transceiver-top-modes         # per chip: generated pt_chip.sv is current; register map vs cell pins; per-mode chip sim
 make transceiver-chip-io           # per chip: SPI and pads through the provider pad models
 make transceiver-ctl-blocks        # monitor, USB, wired TX/RX control, POR path, SPI race
@@ -127,5 +160,6 @@ make transceiver-block-kldrc BLOCK=<name>   # precheck-deck KLayout DRC and ante
 ```
 
 `run.sh` rewrites `integration/chips/<chip>/generated/`; it exits non-zero while demand and staged instances remain.
-`make transceiver-digital-hardening-rf` / `-wired` run the place-and-route flow of one chip configuration and are heavy;
-`make transceiver-digital-synth-area` synthesizes both configurations for cell area.
+Heavy jobs: `make transceiver-digital-hardening-rf` / `-wired` (place and route of one macro configuration),
+`make transceiver-digital-synth-area` (cell area of both configurations), `make transceiver-chip-assembly` (floorplan,
+grid and top routing of both chips, about 1 h each; sign-off stages in `integration/assembly/README.md`).

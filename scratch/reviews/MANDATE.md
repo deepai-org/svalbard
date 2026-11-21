@@ -154,3 +154,4 @@ Current work status is in `SESSION-STATE.md`, not here.
 - Keep a notes/status file current so a successor can resume; write long reports incrementally.
 - State plainly what was rerun versus only read, and what failed.
 - **Commits on the shared tree (coordinator, 2026-11-21).** Always commit with a pathspec, `git commit -m "..." -- <paths>`, which records only the named paths even if other agents have staged work in the shared index; never a bare `git commit` after `git add`. Do not rewrite pushed history.
+  Caveat: the pathspec form takes the whole working-tree content of each named file. If a file you need also holds another agent's uncommitted edits, either ask that owner to commit first, or commit only your hunks with a private index (`GIT_INDEX_FILE=$(mktemp) git read-tree HEAD; git add -p <file>; git commit`), never the shared index.

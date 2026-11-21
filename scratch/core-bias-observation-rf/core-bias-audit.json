@@ -1,0 +1,326 @@
+{
+  "status": "pass",
+  "waveform_stop_s": 0.0006290499999999595,
+  "scope": "exact frozen mixed-level core reference / bank / ATB fixture",
+  "completed_checks": [
+    {
+      "check": "physical SPI reads",
+      "reads": [
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 8,
+          "value": 3
+        },
+        {
+          "address": 9,
+          "value": 28352
+        },
+        {
+          "address": 10,
+          "value": 13878
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 5,
+          "value": 0
+        },
+        {
+          "address": 5,
+          "value": 0
+        }
+      ]
+    },
+    {
+      "check": "normal reference and bank currents over 5 us",
+      "vbg_min_v": 1.2119627657392729,
+      "vbg_max_v": 1.211962777648458,
+      "currents": {
+        "lna": {
+          "min_a": 9.490515863568061e-06,
+          "max_a": 9.49051589659599e-06
+        },
+        "rxmix_i": {
+          "min_a": 9.490515863578781e-06,
+          "max_a": 9.490515896599051e-06
+        },
+        "rxmix_q": {
+          "min_a": 9.490515863568194e-06,
+          "max_a": 9.490515896599714e-06
+        },
+        "bbfilter_i": {
+          "min_a": 9.490515863577538e-06,
+          "max_a": 9.490515896598174e-06
+        },
+        "bbfilter_q": {
+          "min_a": 9.490515863578006e-06,
+          "max_a": 9.490515896598208e-06
+        },
+        "txmix_i": {
+          "min_a": 9.490515863577753e-06,
+          "max_a": 9.49051589659782e-06
+        },
+        "txmix_q": {
+          "min_a": 9.490515863567651e-06,
+          "max_a": 9.49051589660004e-06
+        },
+        "rfdriver": {
+          "min_a": 9.490515863574968e-06,
+          "max_a": 9.490515896598375e-06
+        },
+        "adc_i": {
+          "min_a": 9.49050253005055e-06,
+          "max_a": 9.490502562733435e-06
+        },
+        "adc_q": {
+          "min_a": 9.490502530051957e-06,
+          "max_a": 9.490502562733252e-06
+        },
+        "dac_i": {
+          "min_a": 9.490502530042375e-06,
+          "max_a": 9.490502562735802e-06
+        },
+        "dac_q": {
+          "min_a": 9.490502530048006e-06,
+          "max_a": 9.490502562731035e-06
+        },
+        "refbuf": {
+          "min_a": 9.490502530044196e-06,
+          "max_a": 9.490502562731164e-06
+        },
+        "pll_ring_tx": {
+          "min_a": 9.49051168845763e-06,
+          "max_a": 9.490511720888993e-06
+        },
+        "pll_ring_rx": {
+          "min_a": 9.490510134608598e-06,
+          "max_a": 9.490510167037639e-06
+        },
+        "cdr": {
+          "min_a": 9.490510134599176e-06,
+          "max_a": 9.490510167039443e-06
+        },
+        "qvco": {
+          "min_a": 9.490501892740022e-06,
+          "max_a": 9.490501925154435e-06
+        },
+        "lo_pfdcp": {
+          "min_a": 9.490501725467573e-06,
+          "max_a": 9.490501757920483e-06
+        },
+        "bb_tap_i": {
+          "min_a": 9.490510482497032e-06,
+          "max_a": 9.49051051491998e-06
+        },
+        "bb_tap_q": {
+          "min_a": 9.490510315224608e-06,
+          "max_a": 9.490510347686014e-06
+        }
+      }
+    },
+    {
+      "check": "ATB sense",
+      "code": 1,
+      "net": "ATBN_master_ibias",
+      "max_error_v": 7.313464495450894e-06,
+      "source_v": 0.9146899988992935,
+      "pad_v": 0.9146832156334007
+    },
+    {
+      "check": "ATB sense",
+      "code": 2,
+      "net": "VREF0_MASTER",
+      "max_error_v": 9.130792725242642e-06,
+      "source_v": 1.009932002253866,
+      "pad_v": 1.009923538571912
+    },
+    {
+      "check": "ATB sense",
+      "code": 3,
+      "net": "VCM_MASTER",
+      "max_error_v": 1.4819009294120278e-05,
+      "source_v": 1.647488023988517,
+      "pad_v": 1.6474732049793623
+    },
+    {
+      "check": "ATB sense",
+      "code": 5,
+      "net": "VDD",
+      "max_error_v": 2.9402520370425123e-05,
+      "source_v": 3.295116142461959,
+      "pad_v": 3.295086739942016
+    },
+    {
+      "check": "ATB sense",
+      "code": 6,
+      "net": "VDD",
+      "max_error_v": 2.9328713213594426e-05,
+      "source_v": 3.295116142463977,
+      "pad_v": 3.295086813772472
+    },
+    {
+      "check": "ATB sense",
+      "code": 8,
+      "net": "RAIL_rf_rx",
+      "max_error_v": 2.932891170948082e-05,
+      "source_v": 3.2949261616717007,
+      "pad_v": 3.2948968328998136
+    },
+    {
+      "check": "ATB sense",
+      "code": 9,
+      "net": "RAIL_pll",
+      "max_error_v": 2.9328996770328075e-05,
+      "source_v": 3.294856033871171,
+      "pad_v": 3.2948267049053976
+    },
+    {
+      "check": "ATB sense",
+      "code": 11,
+      "net": "RAIL_conv",
+      "max_error_v": 2.9329064483718525e-05,
+      "source_v": 3.294762979117144,
+      "pad_v": 3.294733650082236
+    },
+    {
+      "check": "ATB sense",
+      "code": 12,
+      "net": "RAIL_debug",
+      "max_error_v": 2.9328984294085814e-05,
+      "source_v": 3.294858415933626,
+      "pad_v": 3.2948290869646066
+    },
+    {
+      "check": "ATB sense",
+      "code": 13,
+      "net": "VSS",
+      "max_error_v": 4.5231602658872003e-07,
+      "source_v": 0,
+      "pad_v": 4.523157841334314e-07
+    },
+    {
+      "check": "ATB sense",
+      "code": 14,
+      "net": "ATBN_rf_ibias",
+      "max_error_v": 2.1435976696571046e-05,
+      "source_v": 1.9925616565474118,
+      "pad_v": 1.9925402205715137
+    },
+    {
+      "check": "ATB sense",
+      "code": 29,
+      "net": "ATBN_pll_ibias",
+      "max_error_v": 2.199054920337673e-05,
+      "source_v": 1.9924929761843977,
+      "pad_v": 1.9924718694061132
+    },
+    {
+      "check": "ATB sense",
+      "code": 31,
+      "net": "BIAS_pll_ring_tx",
+      "max_error_v": 6.178344924778756e-06,
+      "source_v": 0.8424373236371121,
+      "pad_v": 0.8424312946255711
+    },
+    {
+      "check": "ATB sense",
+      "code": 35,
+      "net": "ATBN_conv_ibias",
+      "max_error_v": 2.1588943138306504e-05,
+      "source_v": 1.9923984177102607,
+      "pad_v": 1.9923768287671224
+    },
+    {
+      "check": "ATB sense",
+      "code": 37,
+      "net": "VCM_MASTER",
+      "max_error_v": 1.516823997937955e-05,
+      "source_v": 1.6474909355257392,
+      "pad_v": 1.647476733183691
+    },
+    {
+      "check": "ATB sense",
+      "code": 41,
+      "net": "VSS",
+      "max_error_v": 3.1371921904056177e-07,
+      "source_v": 0,
+      "pad_v": 3.137190840650778e-07
+    },
+    {
+      "check": "ATB sense",
+      "code": 55,
+      "net": "ATBN_vbg",
+      "max_error_v": 1.0192856096491454e-05,
+      "source_v": 1.2119630670040404,
+      "pad_v": 1.211952874147944
+    },
+    {
+      "check": "ATB sense",
+      "code": 56,
+      "net": "ATBN_debug_ibias",
+      "max_error_v": 2.1480305851140358e-05,
+      "source_v": 1.9924949439845847,
+      "pad_v": 1.9924737198651077
+    },
+    {
+      "check": "VBG external force-and-sense over 5 us"
+    }
+  ],
+  "pending_checks": [],
+  "current_sources_changed": [
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_digital_macro.sv",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_fifo.sv"
+  ],
+  "fixture_boundaries": [
+    "external reset/POR at 2 us, not the real cold-start POR",
+    "every consumer enable tied on (LOAD_EN), diode load on every bank output",
+    "nets of blocks outside the fixture terminate through 1 Gohm",
+    "per-island block capacitance and 1 mA load (check_chip_power.py)",
+    "one supply net VDD as in the conn; 80 mA host load on it",
+    "ATB cells with a select made outside the macro held open: []"
+  ],
+  "artifact_hashes": {
+    "experiment.json": "c45ca5308dfb789eb6470516fe8649a061eb08a977d26a2896f2c3427c9d18ed",
+    "runtime-snapshot.json": "2dc5d771de99c97ec0bbc507c248afa7668caa22267b67c1dd31a407d99bac94",
+    "frozen-sources/manifest.json": "9493478c3b566379a2a57c9f969927e1215f96a51c909126a8f4002b3cf2147e",
+    "wave.txt": "a0fe95d52fdb68dcf31d3d2461f6a3509c3523e889b910e8fe849da5f188741a"
+  },
+  "auditor_sha256": "e6cc2c750ccf5cfd56e8b4ef6fae06bf899a97eb22fc6c7ec8aa5e617bf9138a"
+}

@@ -1,0 +1,275 @@
+{
+  "status": "pass",
+  "waveform_stop_s": 0.0006290499999999595,
+  "scope": "exact frozen mixed-level core reference / bank / ATB fixture",
+  "completed_checks": [
+    {
+      "check": "physical SPI reads",
+      "reads": [
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 8,
+          "value": 3
+        },
+        {
+          "address": 9,
+          "value": 28352
+        },
+        {
+          "address": 10,
+          "value": 9509
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 0,
+          "value": 21334
+        },
+        {
+          "address": 5,
+          "value": 0
+        },
+        {
+          "address": 5,
+          "value": 0
+        }
+      ]
+    },
+    {
+      "check": "normal reference and bank currents over 5 us",
+      "vbg_min_v": 1.211962900711813,
+      "vbg_max_v": 1.211962912375247,
+      "currents": {
+        "pll_ring_tx": {
+          "min_a": 9.490524329016625e-06,
+          "max_a": 9.490524380280899e-06
+        },
+        "pll_ring_rx": {
+          "min_a": 9.490522775119715e-06,
+          "max_a": 9.490522826383887e-06
+        },
+        "cdr": {
+          "min_a": 9.490522775111585e-06,
+          "max_a": 9.490522826375848e-06
+        },
+        "ctle": {
+          "min_a": 9.490523123020276e-06,
+          "max_a": 9.490523174245783e-06
+        },
+        "detect": {
+          "min_a": 9.490522955732999e-06,
+          "max_a": 9.490523006999548e-06
+        },
+        "wiredtx": {
+          "min_a": 9.490537341719496e-06,
+          "max_a": 9.490537392940168e-06
+        },
+        "hsbias": {
+          "min_a": 9.490538728354858e-06,
+          "max_a": 9.490538779616584e-06
+        },
+        "bb_tap_wmon": {
+          "min_a": 9.490523314884111e-06,
+          "max_a": 9.490523366110386e-06
+        }
+      }
+    },
+    {
+      "check": "ATB sense",
+      "code": 1,
+      "net": "ATBN_master_ibias",
+      "max_error_v": 7.237161021578231e-06,
+      "source_v": 0.9146902244470748,
+      "pad_v": 0.914683476127224
+    },
+    {
+      "check": "ATB sense",
+      "code": 2,
+      "net": "VREF0_MASTER",
+      "max_error_v": 9.119790575606856e-06,
+      "source_v": 1.009932096078092,
+      "pad_v": 1.0099236292428628
+    },
+    {
+      "check": "ATB sense",
+      "code": 3,
+      "net": "VCM_MASTER",
+      "max_error_v": 1.4500566022812578e-05,
+      "source_v": 1.6475133433001903,
+      "pad_v": 1.647498842734369
+    },
+    {
+      "check": "ATB sense",
+      "code": 5,
+      "net": "VDD",
+      "max_error_v": 2.937240107181438e-05,
+      "source_v": 3.2951637759335872,
+      "pad_v": 3.2951344036333796
+    },
+    {
+      "check": "ATB sense",
+      "code": 6,
+      "net": "VDD",
+      "max_error_v": 2.9298409676581372e-05,
+      "source_v": 3.2951637759358205,
+      "pad_v": 3.2951344776083267
+    },
+    {
+      "check": "ATB sense",
+      "code": 7,
+      "net": "RAIL_wired_rx",
+      "max_error_v": 2.9298694297352768e-05,
+      "source_v": 3.2949060479006613,
+      "pad_v": 3.294876749293463
+    },
+    {
+      "check": "ATB sense",
+      "code": 9,
+      "net": "RAIL_pll",
+      "max_error_v": 2.929865176737323e-05,
+      "source_v": 3.294903666156994,
+      "pad_v": 3.2948743675625103
+    },
+    {
+      "check": "ATB sense",
+      "code": 10,
+      "net": "RAIL_wired_tx",
+      "max_error_v": 2.9328911250736667e-05,
+      "source_v": 3.295099343947564,
+      "pad_v": 3.2950700151038195
+    },
+    {
+      "check": "ATB sense",
+      "code": 12,
+      "net": "RAIL_debug",
+      "max_error_v": 2.929866184508967e-05,
+      "source_v": 3.2949084300166143,
+      "pad_v": 3.2948791314149717
+    },
+    {
+      "check": "ATB sense",
+      "code": 13,
+      "net": "VSS",
+      "max_error_v": 4.349986318518864e-07,
+      "source_v": 0,
+      "pad_v": 4.349983806477797e-07
+    },
+    {
+      "check": "ATB sense",
+      "code": 22,
+      "net": "ATBN_wire_ibias",
+      "max_error_v": 2.143002718590914e-05,
+      "source_v": 1.9925416390424986,
+      "pad_v": 1.992520209016569
+    },
+    {
+      "check": "ATB sense",
+      "code": 25,
+      "net": "VSS",
+      "max_error_v": 4.523249016421794e-07,
+      "source_v": 0,
+      "pad_v": 4.5232473401656096e-07
+    },
+    {
+      "check": "ATB sense",
+      "code": 29,
+      "net": "ATBN_pll_ibias",
+      "max_error_v": 2.1409279649997615e-05,
+      "source_v": 1.9925393255898909,
+      "pad_v": 1.9925179163112496
+    },
+    {
+      "check": "ATB sense",
+      "code": 31,
+      "net": "BIAS_pll_ring_tx",
+      "max_error_v": 6.1438717429140866e-06,
+      "source_v": 0.8424374138072586,
+      "pad_v": 0.842431374083352
+    },
+    {
+      "check": "ATB sense",
+      "code": 40,
+      "net": "BIAS_hsbias",
+      "max_error_v": 5.942970534800196e-06,
+      "source_v": 0.8424377209231153,
+      "pad_v": 0.8424317779525805
+    },
+    {
+      "check": "ATB sense",
+      "code": 41,
+      "net": "VSS",
+      "max_error_v": 4.5232543514157005e-07,
+      "source_v": 0,
+      "pad_v": 4.523253306033168e-07
+    },
+    {
+      "check": "ATB sense",
+      "code": 55,
+      "net": "ATBN_vbg",
+      "max_error_v": 1.0192500690564543e-05,
+      "source_v": 1.2119632024243345,
+      "pad_v": 1.211953009923644
+    },
+    {
+      "check": "ATB sense",
+      "code": 56,
+      "net": "ATBN_debug_ibias",
+      "max_error_v": 2.1524790069005206e-05,
+      "source_v": 1.9925451355806743,
+      "pad_v": 1.9925240595847435
+    },
+    {
+      "check": "VBG external force-and-sense over 5 us"
+    }
+  ],
+  "pending_checks": [],
+  "current_sources_changed": [],
+  "fixture_boundaries": [
+    "external reset/POR at 2 us, not the real cold-start POR",
+    "every consumer enable tied on (LOAD_EN), diode load on every bank output",
+    "nets of blocks outside the fixture terminate through 1 Gohm",
+    "per-island block capacitance and 1 mA load (check_chip_power.py)",
+    "one supply net VDD as in the conn; 80 mA host load on it",
+    "ATB cells with a select made outside the macro held open: ['atb0_leaf22']"
+  ],
+  "artifact_hashes": {
+    "experiment.json": "8b016f737ec6ac91dd8b49ceece6c972809c245299451772c7085eb99e5e5d1b",
+    "runtime-snapshot.json": "d08916e508306ab3baa018a2315a765259c3acbcaf330dbe367c812dd81e5bbc",
+    "frozen-sources/manifest.json": "0d1032454524b8314b781f5f9bb9fb37027e01de07f93569d3f98b166d5e2575",
+    "wave.txt": "a530e10be3bc6e0dbff1730851ac98d43174b97c8b1401ca6cbef28c36a24ec0"
+  },
+  "auditor_sha256": "e6cc2c750ccf5cfd56e8b4ef6fae06bf899a97eb22fc6c7ec8aa5e617bf9138a"
+}

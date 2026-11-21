@@ -1,0 +1,400 @@
+{
+  "chip": "rf",
+  "status": "pass",
+  "failures": [],
+  "negative": null,
+  "scope": "pt_rf: SPI-controlled extracted core bias and the chip ATB tree of the conn",
+  "spi_reads": [
+    {
+      "address": 0,
+      "value": 21334,
+      "expected": 21334
+    },
+    {
+      "address": 8,
+      "value": 3,
+      "expected": 3
+    },
+    {
+      "address": 9,
+      "value": 28352,
+      "expected": 28352
+    },
+    {
+      "address": 10,
+      "value": 13878,
+      "expected": 13878
+    },
+    {
+      "address": 0,
+      "value": 21334,
+      "expected": 21334
+    },
+    {
+      "address": 0,
+      "value": 21334,
+      "expected": 21334
+    },
+    {
+      "address": 0,
+      "value": 21334,
+      "expected": 21334
+    },
+    {
+      "address": 0,
+      "value": 21334,
+      "expected": 21334
+    },
+    {
+      "address": 0,
+      "value": 21334,
+      "expected": 21334
+    },
+    {
+      "address": 0,
+      "value": 21334,
+      "expected": 21334
+    },
+    {
+      "address": 0,
+      "value": 21334,
+      "expected": 21334
+    },
+    {
+      "address": 0,
+      "value": 21334,
+      "expected": 21334
+    },
+    {
+      "address": 0,
+      "value": 21334,
+      "expected": 21334
+    },
+    {
+      "address": 5,
+      "value": 0,
+      "expected": 0
+    },
+    {
+      "address": 5,
+      "value": 0,
+      "expected": 0
+    }
+  ],
+  "nominal_vbg_v": 1.2119627776480772,
+  "nominal_bias_currents_a": {
+    "lna": 9.490515893800743e-06,
+    "rxmix_i": 9.49051589380662e-06,
+    "rxmix_q": 9.490515893801388e-06,
+    "bbfilter_i": 9.490515893805527e-06,
+    "bbfilter_q": 9.490515893807332e-06,
+    "txmix_i": 9.49051589380677e-06,
+    "txmix_q": 9.490515893803373e-06,
+    "rfdriver": 9.490515893809697e-06,
+    "adc_i": 9.49050255988306e-06,
+    "adc_q": 9.490502559889043e-06,
+    "dac_i": 9.490502559887533e-06,
+    "dac_q": 9.490502559887303e-06,
+    "refbuf": 9.490502559890827e-06,
+    "pll_ring_tx": 9.490511718002765e-06,
+    "pll_ring_rx": 9.490510164157835e-06,
+    "cdr": 9.490510164155843e-06,
+    "qvco": 9.490501922279733e-06,
+    "lo_pfdcp": 9.490501755045485e-06,
+    "bb_tap_i": 9.49051051204189e-06,
+    "bb_tap_q": 9.490510344806109e-06
+  },
+  "observations": [
+    {
+      "code": 1,
+      "net": "ATBN_master_ibias",
+      "pad_v": 0.9146832156334007,
+      "source_v": 0.9146899988992935,
+      "error_v": 6.783265892762458e-06,
+      "time_s": 0.00018835000000000154
+    },
+    {
+      "code": 2,
+      "net": "VREF0_MASTER",
+      "pad_v": 1.009923538571912,
+      "source_v": 1.009932002253866,
+      "error_v": 8.463681953951863e-06,
+      "time_s": 0.00020985000000000188
+    },
+    {
+      "code": 3,
+      "net": "VCM_MASTER",
+      "pad_v": 1.6474732049793623,
+      "source_v": 1.647488023988517,
+      "error_v": 1.4819009154676266e-05,
+      "time_s": 0.0002313500000000022
+    },
+    {
+      "code": 5,
+      "net": "VDD",
+      "pad_v": 3.295086739942016,
+      "source_v": 3.295116142461959,
+      "error_v": 2.9402519942767213e-05,
+      "time_s": 0.0002528500000000021
+    },
+    {
+      "code": 6,
+      "net": "VDD",
+      "pad_v": 3.295086813772472,
+      "source_v": 3.295116142463977,
+      "error_v": 2.932869150518158e-05,
+      "time_s": 0.00027434999999999515
+    },
+    {
+      "code": 8,
+      "net": "RAIL_rf_rx",
+      "pad_v": 3.2948968328998136,
+      "source_v": 3.2949261616717007,
+      "error_v": 2.932877188710492e-05,
+      "time_s": 0.0002958499999999882
+    },
+    {
+      "code": 9,
+      "net": "RAIL_pll",
+      "pad_v": 3.2948267049053976,
+      "source_v": 3.294856033871171,
+      "error_v": 2.9328965773345317e-05,
+      "time_s": 0.00031734999999998123
+    },
+    {
+      "code": 11,
+      "net": "RAIL_conv",
+      "pad_v": 3.294733650082236,
+      "source_v": 3.294762979117144,
+      "error_v": 2.9329034908265328e-05,
+      "time_s": 0.0003388499999999743
+    },
+    {
+      "code": 12,
+      "net": "RAIL_debug",
+      "pad_v": 3.2948290869646066,
+      "source_v": 3.294858415933626,
+      "error_v": 2.932896901919335e-05,
+      "time_s": 0.0003603499999999673
+    },
+    {
+      "code": 13,
+      "net": "VSS",
+      "pad_v": 4.523157841334314e-07,
+      "source_v": 0,
+      "error_v": 4.523157841334314e-07,
+      "time_s": 0.00038184999999996036
+    },
+    {
+      "code": 14,
+      "net": "ATBN_rf_ibias",
+      "pad_v": 1.9925402205715137,
+      "source_v": 1.9925616565474118,
+      "error_v": 2.1435975898098647e-05,
+      "time_s": 0.0004033499999999534
+    },
+    {
+      "code": 29,
+      "net": "ATBN_pll_ibias",
+      "pad_v": 1.9924718694061132,
+      "source_v": 1.9924929761843977,
+      "error_v": 2.1106778284485372e-05,
+      "time_s": 0.00042484999999994644
+    },
+    {
+      "code": 31,
+      "net": "BIAS_pll_ring_tx",
+      "pad_v": 0.8424312946255711,
+      "source_v": 0.8424373236371121,
+      "error_v": 6.029011541008877e-06,
+      "time_s": 0.0004463499999999395
+    },
+    {
+      "code": 35,
+      "net": "ATBN_conv_ibias",
+      "pad_v": 1.9923768287671224,
+      "source_v": 1.9923984177102607,
+      "error_v": 2.1588943138306504e-05,
+      "time_s": 0.0004678499999999325
+    },
+    {
+      "code": 37,
+      "net": "VCM_MASTER",
+      "pad_v": 1.647476733183691,
+      "source_v": 1.6474909355257392,
+      "error_v": 1.4202342048186267e-05,
+      "time_s": 0.0004893499999999256
+    },
+    {
+      "code": 41,
+      "net": "VSS",
+      "pad_v": 3.137190840650778e-07,
+      "source_v": 0,
+      "error_v": 3.137190840650778e-07,
+      "time_s": 0.0005108499999999331
+    },
+    {
+      "code": 55,
+      "net": "ATBN_vbg",
+      "pad_v": 1.211952874147944,
+      "source_v": 1.2119630670040404,
+      "error_v": 1.0192856096491454e-05,
+      "time_s": 0.0005323499999999406
+    },
+    {
+      "code": 56,
+      "net": "ATBN_debug_ibias",
+      "pad_v": 1.9924737198651077,
+      "source_v": 1.9924949439845847,
+      "error_v": 2.1224119477025738e-05,
+      "time_s": 0.0005538499999999481
+    }
+  ],
+  "not_observed": {
+    "4": "hardware=false (dead code, leaf tied on purpose)",
+    "43": "CHAR_RN_LNA: driven by a block outside this fixture",
+    "44": "CHAR_RP_LNA: driven by a block outside this fixture",
+    "25": "node island wired is not on this chip: the leaf can never close",
+    "58": "VCO_REPLICA_VCTRL: driven by a block outside this fixture",
+    "30": "ATBN_pll_vctrl: driven by a block outside this fixture",
+    "32": "REF_VCM: driven by a block outside this fixture",
+    "34": "ATBN_cdr_bias: driven by a block outside this fixture",
+    "47": "CHAR_RN_SMP: driven by a block outside this fixture",
+    "48": "CHAR_RP_SMP: driven by a block outside this fixture",
+    "42": "ATBN_debug_buffer_bias: driven by a block outside this fixture",
+    "45": "CHAR_RN_MIX: driven by a block outside this fixture",
+    "46": "CHAR_RP_MIX: driven by a block outside this fixture",
+    "49": "CHAR_RN_DRV: driven by a block outside this fixture",
+    "50": "CHAR_RP_DRV: driven by a block outside this fixture",
+    "51": "CHAR_RES_A: driven by a block outside this fixture",
+    "52": "CHAR_RES_B: driven by a block outside this fixture",
+    "53": "CHAR_MIM_A: driven by a block outside this fixture",
+    "54": "CHAR_MIM_B: driven by a block outside this fixture",
+    "57": "IDAC1 current source: measured by --idac1-smu",
+    "15": "ATBN_rf_vcm: driven by a block outside this fixture",
+    "16": "ATBN_lna_bias: driven by a block outside this fixture",
+    "17": "ATBN_rxmix_bias: driven by a block outside this fixture",
+    "18": "ATBN_pga_bias: driven by a block outside this fixture",
+    "19": "ATBN_bbfilter_bias: driven by a block outside this fixture",
+    "20": "ATBN_txmix_bias: driven by a block outside this fixture",
+    "21": "ATBN_rfdriver_bias: driven by a block outside this fixture",
+    "33": "ATBN_quadrature_bias: driven by a block outside this fixture",
+    "36": "VREF_CONV: driven by a block outside this fixture",
+    "38": "ATBN_adc_bias: driven by a block outside this fixture",
+    "39": "ATBN_dac_bias: driven by a block outside this fixture"
+  },
+  "forced_vbg_v": 1.1998252210208895,
+  "forced_open_loop_info": {
+    "vbg_v": 1.1878754830828702,
+    "atb0_v": 1.1995207078713588,
+    "atb1_v": 1.187865541634271
+  },
+  "idac1_smu": false,
+  "current_observations": [],
+  "frozen_source_manifest": "frozen-sources/manifest.json",
+  "excluded": [
+    "physical placement/routing of the core bias and ATB tree",
+    "real cold-start POR",
+    "actual payload consumer macros",
+    "PVT, mismatch and external board qualification"
+  ],
+  "source_hashes": {
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/integration/chips/rf/chip.conn": "c21d8d2725adbd1bbcaaf207a078c2c7f80014b94a41524840161de3ccc2f811",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/integration/models/core_bias/manifest.json": "7cb73eca3b640873bcedb28bcbcf9911a1d63d21666dfa3798bfc8d5144824a1",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/integration/models/core_bias/biasgen_patched.pex.spice": "434f3841cf2f51508c519f9bcea0e09f1fe6b552037e218a57c8f973aaad146d",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/integration/models/core_bias/bandgap.pex.spice": "29ea6edf3ad4c728a3f2a5fafce44949f60e0ab3472a1a80d7044e627c87fd76",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/core_support/distribution/generated/pt_bias_root.ext.spice": "ba314f2516f82897d44ef7fb0f787cf5461ac0faf35e34a2d5f7409e260cbc93",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/core_support/distribution/generated/pt_bias_vref.ext.spice": "c1a768be615874b9b48195939c24f621a6cf710db47eaf7c3b8bfe2710bf6d5c",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/core_support/distribution/generated/pt_bias_bank3.ext.spice": "68fcd9bbc16d56369cf1fb9dbdac12108117009c8e94fb565fc9480c13ba7d6c",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/core_support/distribution/generated/pt_bias_bank5.ext.spice": "cf70968b499ab75b25721962bb50430ec8fa5301808bf7b1b7bafb8ed1e158b9",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/core_support/distribution/generated/pt_bias_bank8.ext.spice": "ddfbe529b19c8b3e409cd8388c4411786c52fdbcd82f277a9c91b4da018de440",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/bringup_control/generated/pt_wtx_fallback_control.ext.spice": "584a7112f82ce9785b9363feec1789d01947ae95ff5426cfb6743d5b776ff348",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/register-map.json": "e80acb1066147d0230ab8a152e101cd1b181dbb5bf13e3e74790e2fec9216edb",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/integration/core_bias.py": "6378d470bad5c40fa81f43fbca46eb1deb9456d682a7adac0bebb9898c01536b",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/verification/check_core_bias_observation.py": "241114d9fc91510fe702b3f722b43cf43098e2da1ae808769f71c7408d103acb",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/verification/check_chip_power.py": "c010fec64245a625e81ce22bec86fc8efa71f6cafe6307a91dfd7e3f9a9a54bd",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/verification/audit_core_bias_observation.py": "e6cc2c750ccf5cfd56e8b4ef6fae06bf899a97eb22fc6c7ec8aa5e617bf9138a",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/verification/audit_chip_bringup.py": "bb2860a73e89ee7ab91876538413fbad06ef2d378e7e9c3ee22d18b1af141532",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/chips.json": "eb1f60ad438f2a1839ba92bf11e78b50a0599fe117bbeafa2a559bddb2b244e7",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec/debug-controls.json": "bbecdd1edf658d7bb6af143c3c9102cb84d45c15bff4631a99516388eeae83ef",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/gen/pt_regmap.py": "1ec07b5ccc1b33ea7997b67b73bb3a51fa3c1fd1a1816f85d81c67107faacc18",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/integration/chips/rf/generated/pt_chip.sv": "566106ec73c88f5478f13928dcc29a36172344d007ad685aac797779a5db68a0",
+    "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/gf180mcu_fd_io.spice": "710732fd6a69e165caa2c29e4cdf81b11af41da32705fcd860b7ecfb09630dd1",
+    "/home/ubuntu/svalbard/scratch/island-support-20261108-075605/pex/isw_debug/isw_debug.pex.spice": "95b29febe09a2eeadc6ece4f335c6857b3b51f64808047c92874e184b7c766c2",
+    "/home/ubuntu/svalbard/scratch/island-support-20261108-075605/pex/isw_wired/isw_wired.pex.spice": "0a49552c25c95877faea1c6ee12a22aad65b455116a6b99a1c94447bc4fb008a",
+    "/home/ubuntu/svalbard/scratch/island-support-20261108-075605/pex/isw_rf/isw_rf.pex.spice": "864c56e25650aa77dd930068d920fe85840fae1425519d64cb7fe4d6e91080b6",
+    "/home/ubuntu/svalbard/scratch/island-support-20261108-075605/pex/isw_conv/isw_conv.pex.spice": "b8124423caf0991d2d9402c801e684e4fd3f4199204818ad52456162b9b0f362",
+    "/home/ubuntu/svalbard/scratch/island-support-20261108-075605/pexd/atb_grp/atb_grp.pex.spice": "81ca49632d63b269e2b250b15da9d33d9075d2a2bd02a16a2b7981b1ef14503d",
+    "/home/ubuntu/svalbard/scratch/island-support-20261108-075605/pexd/atb_leaf_f/atb_leaf_f.pex.spice": "529fe37812d161dbd59daf8477df635e2ad6f0794e1d34c9f08d42a1bccb21d4",
+    "/home/ubuntu/svalbard/scratch/island-support-20261108-075605/pexd/atb_leaf_s/atb_leaf_s.pex.spice": "fb86b163f4a3729f061b5d6be808907f78e6b0a98091414b0c0140f5efc67024",
+    "/home/ubuntu/svalbard/scratch/island-support-20261108-075605/pexd/atb_pad/atb_pad.pex.spice": "a42bc58c422a8a2e7b3861662747b2011fc569f3e146e0a195583436a88129e0",
+    "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/.spiceinit": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/sm141064_mim.ngspice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+    "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/sm141064.spice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+    "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/smbb000149.spice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+    "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/sm141064.ngspice": "f6f4a96e18fc5ad11270ad3451aaecc7ac37fc81eb61e15b0d7d94c7bc594a24",
+    "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/design.spice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+    "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/sm141064_mim.spice": "9b85cd009968d9aeb6b61046b24a63f39d6a463c4e4aee3949c8fd183c06666f",
+    "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/smbb000149.ngspice": "8a8d44d5f13d4a097e86fab598e97e82bb726af1cc01eb6d500739766dfd9363",
+    "/home/ubuntu/svalbard/scratch/transceiver-pad-pdk/ngspice/design.ngspice": "7e222f050318388f37543a64fbd0be55cc15e4b93f57501a09f7c159c4c9e561",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_block_elastic.sv": "d8f85860178d7b124215c0b233aef633386b287c50b7d3f6b279192af6f2bd99",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_block_fifo.sv": "f13f801248743598db862040d47eac0144d6772ab153b2d0ed83cd42109615ae",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_block_header.sv": "c209a40f9bfb5e8391da2d84e8f4f26578ba60c0c39efa3d9ba3a328958e15fa",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_block_route.sv": "424a27b9c2a3f73d44309661412ab6434e28cbe470f1d0f11940f2bb61c66141",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_block_route_mask.sv": "cf639ba7137d8b091bc28a4aab196d0cb7c2711a4c5e471473cec483997e92d3",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_block_route_prefix.sv": "5a1cac1284536e2ee2c425c7d4fb55836b33f1eb01df4a4ad1fe39639b9a6e88",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_block_route_rank.sv": "f1e8f980abc11ea32d8d05978bfc8c97be4e6a48d61b53868b603d01fec50015",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_block_rx.sv": "10a9004b47f4c606ae4428813241bb055dccf6b6c66eaa7c4e801a958a44fea8",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_block_rx_commit.sv": "bb163909e561003d37949f1fc6d870518d5a49f96dbefab300074b96d83af457",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_block_rx_mask.sv": "c9f01d1b409dab04e921fae27dd848df047d160d196020354e36ae015783f8f1",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_block_rx_pipe.sv": "b16c2dd2001d324ef74526c5b0406eccf30d7585599400a504a6771d87764789",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_block_rx_prefix.sv": "c3cb4ada0fa108ba89aa26ddce4b136ce5e32de5f1e533284bfed1c177f76afa",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_block_rx_rank.sv": "1497dbd4abe891791616a8d9cfd464bfbed24673d8c942036106b4bb321bf7f5",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_block_staged.sv": "f5a165e0119d68828119551fd144cc4362cf1e6c3eb22a46b938d75c94b3ee7a",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_boundary.sv": "d3814e9f7d3ec9c04102aaaca945ed229e546ce7e80a4141c45b06991a9a99a9",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_cells.sv": "869b7ac8aedd302b1e8607e5eb08a0ae6877c684c9629851fa192e7e06f212d4",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_clocktree_slow.sv": "af82639cbf40ad574178aa95863c62305d82b6af6e5339f3d2fb1ca4688c00db",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_core.sv": "e10d03cba0a5a8932bc95ef9cdbe8c697fe476ea6561c16f275e4a28eef2ae53",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_ctl_decode.sv": "e809c44eb5d2c7ba8d200875cc258d4a72e9df514de07bfbf3f2af47e99ca20c",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_dense_header.sv": "4d5de18110ef4496284c38285be70e01847775f1e70f59eefc2570eb3cae0e78",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_digital.sv": "508af6298f1cfe712362084d84daa715f0ca557c350480a7abf94e63f0f9aeb9",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_digital_macro.sv": "066f451df836c4080b45e9827771f72a905b4d84f0a42142a01c998fde4c2f44",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_fifo.sv": "56c90d0467c949eb9f662e2c0d889a92d309455e2c8267ad3e1119c7548d0f4d",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_freq_count.sv": "e806461e077733890eb4e9ba81d867503cfc6897e34331b87a5d94cb5f685d05",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_helpers.sv": "2cf77deecb992c0a535bb69d45474b4592e11e142a29f4bf02573bed39e79831",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_host_link.sv": "f4d524684c4f866c6d99e8a4ac288d35e522d5f256111167537a761f5ce0d864",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_interp2x.sv": "186c95628249b72657a3abba5ecf5b31bc0507066eeba3e1face935e5f74f0fe",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_lane_compact.sv": "177039ea39062c139c08127af565743075e204954711e7ba04be00d280201e69",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_lane_compact_rank.sv": "66900019f931e55dd1560182315296897d16a3bf48a25861552a5f7785ad7136",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_linecode.sv": "88d753cac2a02b740e82a3e3cd82c57fc9727bd6445689a0d5f90d573d119890",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_monitor.sv": "ee31186f928aa15681e5084ad065cf98a4a9b6c35ee0870499fb68ede48c6c2a",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_pattern.sv": "4bd3803b044ef126c5ae41c572b0988daf55602aafb8be9ec9632d005b3eebf7",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_por_path.sv": "f962434319aa7dd59cefe0fc0c8149a7699db468ae966aec58a32e0dd61644f8",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_quad_gearbox.sv": "d2ddd72b758026c8c4ae840dfbef35bcd89fc7a5376817de76df1a085e476236",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_quad_link.sv": "5d87aaa494fe8b21c03d23423608f735f8fd5c72800358f773473834268cce49",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_regfile.sv": "5affd7af2571286f4c34c2076432f9e0c10d2fc3c7b08f90e8dca9606b7ae59b",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_spi.sv": "c37fc327a8d553f33754f2beb5854ea462bf24bf61cae172263381d4b385c9b5",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_tx_pad_sequence.sv": "1efad6d49e53e2b40a7cce72e420dbd0dff16d60f90e865913e7189cc48240e1",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_usb.sv": "7dd0e57f701d96aecb1428de9826ec0ef39f6c76e7452a81a30c38eb7d44da59",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_vreg_seq.sv": "b3c45be2115d8c003dc166723305657d2867e31816e532db0faf0870947e82d0",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_wrx_ctl.sv": "07184dd695d1ac0ceffb189a97baacc285a4dd80c198bc9ecc2ba417167109c9",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_wtx_ctl.sv": "f9a644604967061c5028e301b088f73b29c94b40a5e39507c800eca94e78484c",
+    "/home/ubuntu/svalbard/scratch/core-bias-observation-rf/bridge/boundary.sv": "4a218be0fe78e7f52bf0b32fcb5c6c801b40a8b325f7a77a20971845905f0bb0",
+    "/home/ubuntu/svalbard/scratch/core-bias-observation-rf/bridge/bridge.cpp": "7e56bece45fe5577bd0a61ace52f6b89f313c715190a6b34db6f9c0bceddd080",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/verification/cosim_bridge.py": "a49809930e3385c72c4161e44729b36bcc1f36efad1762db96113dd425ddd0ac",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_linecode_tables.svh": "da8591333b2da99e1bdf4f1d2e0a1e005e24de1dbbb7b99c682dcd68af6a8294",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_regmap_fields.svh": "1e17f535b9416eadc29915bfb81b31a8b9286d2ac2e744689cf038afa26707dd",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_regmap_defs.svh": "bba9d6d20ff1a871e5bc2c668ff1335953833a94cf7f6b18b22fb4e1cad6ed81",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_block_rx_routed.vh": "1b2308e3ebb816241705fcf758d47217712d465568e33ba666406bff9257f585",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/rtl/pt_schedule.vh": "24e094b3aa966473e5470d29dd1a0f53378fdf9eb5424b7612e8c444b23464d5",
+    "/home/ubuntu/svalbard/scratch/pad-ngspice47/ngspice-47/src/include/ngspice/cmtypes.h": "268ca5c099d9d2e19bef436abc81261195c4ac5e237a5489786331de8d22b371",
+    "/home/ubuntu/svalbard/scratch/pad-ngspice47/ngspice-47/src/include/ngspice/cosim.h": "1fdf5e534cdc4a6f77b5d8177152107722f192a2b9e3e7a7fa007d093e13a425"
+  },
+  "artifact_hashes": {
+    "pt_chip.spice": "43b31a7c647d4231ae22f27cac698e5c4d321c18b72165bccf0997c860aab30e",
+    "experiment.json": "c45ca5308dfb789eb6470516fe8649a061eb08a977d26a2896f2c3427c9d18ed",
+    "wave.txt": "a0fe95d52fdb68dcf31d3d2461f6a3509c3523e889b910e8fe849da5f188741a",
+    "ngspice.log": "5995d34b3ea0bc5a1a2059e7feac8e9a38d95574deddbba28e2744d580a17b6d"
+  },
+  "analog_runtime_s": 24583.21518902108
+}

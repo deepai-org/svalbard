@@ -22,28 +22,19 @@ at 320 ps. Streams 1-4 are captured at phases 5, 6, 7, 0 and have 0.24-1.3 ns.
 Fix: new hop plan in `ser8d_macro.py` (first capture at phase 6 or 7, final hop 6 slots before the slice window),
 see "Hop plan" below. Not yet laid out.
 
-## RESUME HERE (state at 2026-11-21; nothing published)
-- Layout, all from disk DRC 0/0, LVS unique, antenna 0, negative controls fail; report `s13/top/REPORT.md`, `out/report.json`:
-  - `pt_wiredtx8` 744.5 x 401.4 um, placed on pt_wired at R0, x0 = 1493.75 (rule x0 = 23.75 mod 70; rows WT48 / WT49).
-  - Metal5 exception with ser8d grid channels, grid VSS landings through the mux (4 tie at phase O), eight shielded PH lanes
-    from the top edge (WT47).
-  - In-block IR at 60 mA with 10.5 um straps: 6.28 mV nominal (pass, 6.6), 11.10 high-R. The chip high-R total closes only with
-    the `isw_wired_tx` switches in the east slot (CB8-11).
-  - EM: all rows pass, worst 17.1 %.
-  - Bus C 114.3 / 121.1 / 128.2 / 132.2 fF. POST pair difference 4.0 fF (target 3.5, accepted); mux eye 0.2063 V vs 0.2112.
-  - ser8d hop set-up >= 699 ps (ssp) / 901 ps (ff).
-- Interlock (`s14/ilk/`): every case passes, with a valid negative control.
-- Extraction: the C-inflation fault (WT42); use `s14/chain/fixcap.py`.
-- Rows: qE / qF in `s14/` are running. The block calibrations converge to a worst slot of 8.0-8.4 ps. See `s14/QUEUE.md` and
-  `python3 s14/table14.py`.
-  - Their netlist snapshots predate the PH lanes and grid ties (bus C +9-14 fF, about -5 mV eye). The final table must be
-    rerun on a fixcap'd full-coverage extraction of the current block, with ring route 30 ohm + 75 fF per phase
-    (bound 45 ohm / 110 fF; TIM-23).
-- Next:
-  - Limiter attribution per failing row.
-  - Reworked pad (option A): rows at S = 1.0 / 0.6, plus the 0.6x cost in 100BASE-TX, USB and low rates.
-  - Rest of the table; supply impedance; Monte Carlo; independent review; publish.
-  - Quarter-rate retirement decision: needed for the conn binding (WT49).
+## RESUME HERE (state at 2026-11-22; nothing published; several agents at the weekly usage limit until Nov 24 21:00 UTC)
+- **Block:** `pt_wiredtx8` final for the table at commit 3e90f876.
+  - PH inputs gated by NAND2(PH, SER_EN); placed R0, x0 = 23.75 mod 70.
+  - Moved by assembly to x 1913.95-2658.05, y 2209.0-2610.7 (ea04a04a).
+  - Report: `s13/top/REPORT.md`. The s17 NAND benches were lost to the clean-up; results are in the 3e90f876 message and REPORT.
+- **Running / pending:**
+  - **Publishing table** (`s16/QUEUE.md`): re-extract of 3e90f876, then two runners.
+  - **Conn bind** (prepared in `s16/bind/`): term_buffer ENABLE = island_on[0]; PH waiver; FP_ALIAS steer_0..3; acceptance set; row WT50 to digital. The bind worker has edited `integration/chips/*` in the working tree, not yet committed.
+  - **100BASE-TX** (`s16/fe100/RESULT.md`, rows WT53-c / WT54): the confirmation at CT = VDD + 0.30 V (PC-71 / B54) with 1:0.88-0.90 magnetics is running. Then update WT53-c with the final combination.
+  - **Doc fold:** INTEGRATION.md + USB-INTEGRATION.md into README (DOC-4 / DOC-6) NOT started; the worker stopped at the usage limit. Phase rows for README are in the 3e90f876 notes (PH load 36.0-37.6 fF; SER_EN low while pll is off).
+  - **Assembly:** east-facing island VDD (y 318-401) and VSS (y 236-318) landings on the L's inner edge x = 598.2, then an IR rerun (in-block budget 6.6 mV) and report.json ties east_island / east. Promised to assembly; not built.
+  - **Not designed yet:** CASCODE pump + replica (limits in WT54).
+- **Rules:** commit with a pathspec (`git commit -m ... -- <paths>`). Extraction flow: `s16/net/fixcap16.py` (WT42-b).
 
 ## State at 2026-11-18 07:05 UTC
 - `wtx_ser8d` rebuilt with the final hop plan (`ser8d_macro.HOPS`, docstring = timing data): 744.12 x 197.68 um

@@ -105,7 +105,7 @@
    "id": "PWR-DIG-WIRED",
    "chip": "wired",
    "requirement": "Digital macro <= 60 mA in wired/USB modes (SAIF-based)",
-   "source": "spec/power-partition.md",
+   "source": "spec/power-delivery.md",
    "owner": "digital",
    "evidence": [
     "evidence/digital-hardening-evidence.json",
@@ -120,7 +120,7 @@
    "id": "PWR-DIG-RF",
    "chip": "rf",
    "requirement": "Digital macro <= 40 mA in RF modes",
-   "source": "spec/power-partition.md",
+   "source": "spec/power-delivery.md",
    "owner": "digital",
    "evidence": [
     "evidence/digital-hardening-evidence.json",
@@ -135,7 +135,7 @@
    "id": "PWR-HOST-RF",
    "chip": "rf",
    "requirement": "RF modes run the host link at div2 (D2H always); exception: H2D full rate for GX-2 80 MS/s 12-bit TX, with D2H <= div2 (needs HB-4), else MODE8 at div2",
-   "source": "spec/power-partition.md",
+   "source": "spec/power-delivery.md",
    "owner": "digital (recipe)",
    "evidence": [
     "spec/budgets/power-budget.json"
@@ -149,7 +149,7 @@
    "id": "PWR-MODE-CEIL",
    "chip": "both",
    "requirement": "Every primary mode within its current ceiling (240 RF / 292 wired-USB)",
-   "source": "spec/power-partition.md",
+   "source": "spec/power-delivery.md",
    "owner": "spec (power)",
    "evidence": [
     "spec/budgets/power-budget.json"
@@ -163,7 +163,7 @@
    "id": "PWR-DROP",
    "chip": "both",
    "requirement": "Rail >= 3.15 V at die: total drop <= 117 mV",
-   "source": "spec/power-partition.md",
+   "source": "spec/power-delivery.md",
    "owner": "spec (power) + integration",
    "evidence": [
     "spec/budgets/power-budget.json",
@@ -180,7 +180,7 @@
    "id": "PWR-THERM",
    "chip": "both",
    "requirement": "Tj 22-32 C over stopped-to-max mode step",
-   "source": "spec/power-partition.md",
+   "source": "spec/power-delivery.md",
    "owner": "board + spec",
    "evidence": [
     "spec/budgets/power-budget.json"

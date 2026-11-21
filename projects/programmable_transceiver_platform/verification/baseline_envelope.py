@@ -2393,7 +2393,7 @@ def baseline_source_hashes():
              'system_model/connected/protocol_signals.py','system_model/connected/tx_output_stage.py',
              'system_model/connected/tx_output_candidate.py',
              'system_model/connected/wired_blocks.py','system_model/architecture_fast/behavioral.py','spec/contract.json',
-             'spec/block-diagram.md','spec/power-partition.md','spec/analog-architecture.json']
+             'spec/block-diagram.md','spec/power-delivery.md','spec/analog-architecture.json']
     # Transitive project imports observed in the package-validation runner.
     sources += [
         'system_model/connected/autonomous_pll.py',

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Mode current, supply-drop and thermal budget for the operating envelope.
 
-Spec-level budget owned by spec/power-partition.md. It reads the per-block
+Spec-level budget owned by spec/power-delivery.md. It reads the per-block
 allocations in spec/analog-architecture.json, applies the branch overrides
 exactly once, then substitutes evidence where evidence exists for the two
 blocks that are still allocations (digital core, host IO). It writes
@@ -39,7 +39,7 @@ NATIVE_CELL_MA = 60           # GF180 IO supply cell DC capacity per cell
 # Thermal: COB on FR4. No measured theta; range is a planning bound.
 THETA_JA_COB = (40.0, 100.0)  # C/W, glob-top COB, still air, no heatsink (typical class, not measured)
 TJ_WINDOW = (22.0, 32.0)
-# Requirements this budget sets (spec/power-partition.md PWR-DIG-*, PWR-HOST-RF)
+# Requirements this budget sets (spec/power-delivery.md PWR-DIG-*, PWR-HOST-RF)
 DIG_REQ_MA = {'rf': 40.0, 'wired_usb': 60.0}
 HOST_RF_RATE_FACTOR = 0.5
 T_CTRL_TOL = 2.0              # C, plate controller tolerance (requirement on board)
@@ -311,11 +311,11 @@ MEASURED = [
  ('refbuf', 'conv', {'RF': (1.56, 1.56)}, ('refbuf',), 'ext', 'refbuf-evidence.json quiescent 0.553 (0.556 ff) + 1.0 mA delivered-reference allowance'),
  # ---- lo island (VDD_LO: regulated QVCO rail) and lod island (VDD_LOD)
  ('qvco', 'lo', {'A': (23.5, 25.0)}, ('rfpll',), 'ext', 'scratch/lo/r5_pn/ext12.json i_vdd_ma 22.11-25.01 over four tank cases (no tt/27 run of r6b)'),
- ('lo_pfdcp', 'lo', {'A': (1.0, 1.5)}, (), 'est', 'LO-INTEGRATION.md section 3: order 1 mA, not measured'),
+ ('lo_pfdcp', 'lo', {'A': (1.0, 1.5)}, (), 'est', 'analog/timing/README.md (LO integration) LO.3: order 1 mA, not measured'),
  ('lo_vreg', 'lo', {'A': (0.5, 1.0)}, (), 'est', 'VDD_LO regulator quiescent: allowance (PD2-11), no design yet'),
  ('lo_mmd', 'lod', {'A': (26.3, 34.8)}, (), 'ext', 'scratch/lo/r4_loop/f/mmdxA.json, mmdxB.json idd_ma at 3.1 GHz: tt 25.8-26.3, ff/22/3.35 34.76, ss 18.8-19.3 (24.3-25.1 tt at 2.4-2.45 GHz in the logs)'),
- ('qvco_pre', 'lod', {'A': (3.0, 4.0)}, (), 'est', 'LO-INTEGRATION.md section 3: lo_qvco.VDDB PRE buffer, "a few mA" of 2.4 GHz CMOS current, not measured'),
- ('lo_mmd_qdum', 'lod', {'A': (8.0, 10.0)}, (), 'est', 'LO-INTEGRATION.md: ~8 mA by design (two 2.6 mA latches + followers), not measured'),
+ ('qvco_pre', 'lod', {'A': (3.0, 4.0)}, (), 'est', 'analog/timing/README.md (LO integration) LO.3: lo_qvco.VDDB PRE buffer, "a few mA" of 2.4 GHz CMOS current, not measured'),
+ ('lo_mmd_qdum', 'lod', {'A': (8.0, 10.0)}, (), 'est', 'analog/timing/README.md (LO integration): ~8 mA by design (two 2.6 mA latches + followers), not measured'),
  ('lo_ext', 'lod', {'RF': (11.3, 13.74)}, ('quadrature',), 'ext',
   'scratch/timing/lo_ext/results.json internal 11.05 / 13.65; scratch/lo/r4_lo11/results.json external via the CML driver 11.2-11.3 / 13.74 (published lo_ext-evidence.json 16.02 is stale)'),
  # ---- pll island (ring PLLs behind pt_pll_vreg2, clock mux / word clock, reference receiver)
@@ -327,7 +327,7 @@ MEASURED = [
  ('clockmux', 'pll', {'WUT': (1.35, 1.55), 'RF': (0.32, 0.40)}, ('clockmux',), 'ext', 'timing/generated/clockmux-evidence.json (9.67 mA budget is not in the current file)'),
  ('wordclk', 'pll', {'WUT': (2.30, 2.42), 'RF': (1.36, 2.42)}, ('clocktree',), 'ext', 'timing/generated/wordclk-evidence.json 1.18-2.30, 2.42 ff/32/3.35 (no clocktree evidence exists)'),
  ('rx_ref_in', None, {'WUT': (3.49, 4.63), 'A': (3.49, 4.63)}, ('refinput',), 'ext',
-  'timing/generated/diff_clk_rx-evidence.json 3.49 at 100 MHz, 4.63 ff/32/3.35; on the always-on core rail at the REF pad (LO-INTEGRATION.md), not on the pll island; off in the external-LO cases (REF_IN carries the LO)'),
+  'timing/generated/diff_clk_rx-evidence.json 3.49 at 100 MHz, 4.63 ff/32/3.35; on the always-on core rail at the REF pad (analog/timing/README.md (LO integration)), not on the pll island; off in the external-LO cases (REF_IN carries the LO)'),
  ('prescale', 'pll', {'RF': (1.99, 2.40)}, (), 'ext', 'timing/generated/prescale-evidence.json 1.99 at 2.5 GHz /16, tt only: worst assumed 1.2 x'),
  # ---- wired_rx island
  ('ctle', 'wired_rx', {'W': (4.91, 5.31)}, ('ctle',), 'ext', 'wired_rx/generated/ctle-evidence.json'),
@@ -387,7 +387,7 @@ ISLAND_SWITCH = {
     'wired': {'wired_rx': ('isw_debug', 1), 'wired_cap': ('isw_wired', 1), 'wired_tx': ('isw_wired', 2), 'pll': ('isw_debug', 1),
               'debug': ('isw_debug', 1)}}
 # Loads that are on only for debug but sit on a functional island rail: counted for the switch, not in the mode sums.
-ISLAND_EXTRA_WORST_MA = {'lod': 8.03}   # lo_obs (VDD_LOD, LO-INTEGRATION.md), scratch/timing/lo_obs/results.json ff/22/3.35
+ISLAND_EXTRA_WORST_MA = {'lod': 8.03}   # lo_obs (VDD_LOD, analog/timing/README.md (LO integration)), scratch/timing/lo_obs/results.json ff/22/3.35
 SWITCH_DROP_LIMIT_MV = 20.0
 # Switch design current of an island = sum of the worst in-envelope currents, with 1.25 x on every contribution that
 # is not a measurement of the cell that will be built (views est and lim, and the rfdriver die-rail share, which comes

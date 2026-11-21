@@ -56,7 +56,18 @@ Mode totals (mA), worst in-window analog:
 | pt_wired | U | 186.7 | 380.8 | 385.4 | 363.6 | 0 | 430 | +66.4 | +44.6 |
 | pt_wired | T | 79.0 | 273.1 | 277.6 | 255.8 | 0 | 430 | +174.2 | +152.4 |
 
-Requirements (traced in `performance-requirements.json`; IDs in [power-partition.md](power-partition.md)):
+Requirement IDs (traced in `performance-requirements.json`; the numbers come from `spec/budgets/power_budget.py`):
+
+| ID | Requirement |
+| --- | --- |
+| PWR-MODE-CEIL | Total chip current stays within 430 mA in wired and USB modes (pt_wired; set by PWR-THERM with the B2a cold finger), 260 mA in RF modes with the external LO and 340 mA in RF modes with the on-chip LO, at worst in-window analog currents, including the 37.5 mA rfdriver board feed. |
+| PWR-DIG-WIRED | The digital macro draws at most 60 mA in wired and USB modes, with unused domains clock-gated, signed off with activity-annotated power. |
+| PWR-DIG-RF | The digital macro draws at most 40 mA in RF modes, same sign-off. |
+| PWR-HOST-RF | RF modes run the host link at div2 (`debug.host_link.rate`). |
+| PWR-DROP | Total drop from the source (3.3 V - 1 %) to any block tap is at most 117 mV, so the die stays at or above 3.15 V. |
+| PWR-THERM | Junction temperature stays within 22-32 C across the stopped-to-maximum mode step (board requirement B2a). |
+
+Notes on the requirements:
 
 - **PWR-MODE-CEIL:** total current per chip, including the 37.5 mA rfdriver board feed, within 430 mA (pt_wired, POST
   allowed), 260 mA (pt_rf, external LO), 340 mA (pt_rf, on-chip LO) at worst in-window analog currents, digital at PWR-DIG.
@@ -547,7 +558,7 @@ given, not a pass or fail: the supply-rejection evidence is the demand (PD2-14..
 - The digital macro's current per chip: area-scaled, no per-chip power run; its pulse shape and two-phase split (PD2-6).
 - `pt_wiredtx8` current (unpublished, ss only, ff by ratio), POST and pad tail on the island rail as WT40 states.
 - The supply / ground bonds on signal sites (D-SPLIT-SUPSITE) are modelled as present; bond lengths are the supply-bond
-  range for every bond, not the per-bond values of `package-channel.json`.
+  range for every bond, not the per-bond values of `package-channel-rf.json` / `package-channel-wired.json`.
 - The two-master wired_tx switch: current sharing, soft start and EM not run.
 - The per-rail split of the loop inductance seen from the rf_rx switch.
 - The rfdriver die-rail share (one bench) and the PA envelope current (assumption).

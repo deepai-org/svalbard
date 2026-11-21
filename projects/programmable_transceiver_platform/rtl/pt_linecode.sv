@@ -12,8 +12,9 @@
 // four parallel 10b->9b decoders, 36 -> 40 repacking. Invalid code groups decode to {K=1, 0x00}
 // (not a valid control character) and, once aligned, set the sticky `code_error`. Running
 // disparity is not checked (protocol checks belong to the FPGA).
-// Pipeline (five quad clocks; decode split in three, 2026-11-11 / TC9): (1) the window {din, previous quad} is barrel-shifted by the
-// registered offset and searched for commas; (2) decode; (3) repack. The quad whose commas change
+// Pipeline (six quad clocks; decode split in three, 2026-11-11 / TC9; alignment decision stage DG9-LC-RX):
+// (1) the window {din, previous quad} is searched for commas and registered; (1b) it is barrel-shifted
+// by the registered offset while the hits are priority-encoded; (2) decode; (3) repack. The quad whose commas change
 // the offset was shifted with the old one and is not delivered.
 module pt_lc_rx(input wire clk, rst_n, en, input wire [39:0] din, input wire din_valid,
     output wire [39:0] dout, output wire dout_valid, output reg aligned, code_error);
@@ -40,29 +41,40 @@ module pt_lc_rx(input wire clk, rst_n, en, input wire [39:0] din, input wire din
         end
         assign hit_n[k] = |at;
     end endgenerate
+    // Stage 1b (DG9-LC-RX, routed wrx hit -> priority encoder -> compares -> adopt -> cand / off was
+    // -3.3 ns): the hits and the raw window (w1 = wn[48:0], all that the shift reads) are registered
+    // first (s0v); one clock later the priority-encoded offset and |hit are registered (hr / hany)
+    // together with the window shifted by the registered offset (sym, s1v, s1ok), so the decision
+    // sees registers and the quad whose commas change the offset is still the one in sym, exactly as
+    // before. Same decoded stream and alignment behaviour, one more wire_rx_clk of latency.
+    reg [48:0] w1; reg s0v;
     reg [39:0] sym_n;
     always @* case (off)
-        4'd0: sym_n = wn[39:0];  4'd1: sym_n = wn[40:1];  4'd2: sym_n = wn[41:2];  4'd3: sym_n = wn[42:3];
-        4'd4: sym_n = wn[43:4];  4'd5: sym_n = wn[44:5];  4'd6: sym_n = wn[45:6];  4'd7: sym_n = wn[46:7];
-        4'd8: sym_n = wn[47:8];  default: sym_n = wn[48:9];
+        4'd0: sym_n = w1[39:0];  4'd1: sym_n = w1[40:1];  4'd2: sym_n = w1[41:2];  4'd3: sym_n = w1[42:3];
+        4'd4: sym_n = w1[43:4];  4'd5: sym_n = w1[44:5];  4'd6: sym_n = w1[45:6];  4'd7: sym_n = w1[46:7];
+        4'd8: sym_n = w1[47:8];  default: sym_n = w1[48:9];
     endcase
-    reg [39:0] sym; reg [9:0] hit; reg s1v, s1ok;
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin hit <= 10'd0; s1v <= 1'b0; s1ok <= 1'b0; end
-        else if (!en_r) begin s1v <= 1'b0; hit <= 10'd0; end
-        else begin
-            s1v <= din_valid; s1ok <= aligned;
-            if (din_valid) hit <= hit_n;
-        end
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin cur <= 40'd0; sym <= 40'd0; end
-        else if (din_valid) begin cur <= din; sym <= sym_n; end
-    // offset decision on the registered hits (lowest hit offset)
+    // offset decision input: the lowest hit offset of the registered hits, registered (hr)
     reg [3:0] hit_off;
     integer h;
     always @* begin hit_off = 4'd0; for (h = 9; h >= 0; h = h - 1) if (hit[h]) hit_off = h[3:0]; end
+    reg [39:0] sym; reg [9:0] hit; reg s1v, s1ok; reg [3:0] hr; reg hany;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin hit <= 10'd0; s0v <= 1'b0; s1v <= 1'b0; s1ok <= 1'b0; hr <= 4'd0; hany <= 1'b0; end
+        else if (!en_r) begin s0v <= 1'b0; s1v <= 1'b0; hit <= 10'd0; hany <= 1'b0; end
+        else begin
+            s0v <= din_valid; s1v <= s0v; s1ok <= aligned;
+            if (din_valid) hit <= hit_n;
+            if (s0v) begin hr <= hit_off; hany <= |hit; end
+        end
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin cur <= 40'd0; w1 <= 49'd0; sym <= 40'd0; end
+        else begin
+            if (din_valid) begin cur <= din; w1 <= wn[48:0]; end
+            if (s0v) sym <= sym_n;
+        end
     reg [3:0] cand; reg cand_v;
-    wire adopt = s1v && |hit && (!aligned || hit_off != off) && cand_v && cand == hit_off;
+    wire adopt = s1v && hany && (!aligned || hr != off) && cand_v && cand == hr;
     wire deliver = s1v && s1ok && aligned && !adopt;
     // ---- stage 2: decode four symbols, split in two clocks (timing closure 2026-11-11, wrx at 12.3 ns):
     // 2a registers the per-symbol table lookups (k28, 5b/6b {ok, EDCBA}, K28 3b/4b, 3b/4b, the 4b group),
@@ -139,9 +151,9 @@ module pt_lc_rx(input wire clk, rst_n, en, input wire [39:0] din, input wire din
             v2 <= 1'b0; v2a <= 1'b0; v2b <= 1'b0;
         end else if (!en_r2) begin R <= 72'd0; koh <= 10'd1; emit <= 1'b0; aligned <= 1'b0; cand_v <= 1'b0; v2 <= 1'b0; v2a <= 1'b0; v2b <= 1'b0; end
         else begin
-            if (adopt) begin off <= hit_off; aligned <= 1'b1; cand_v <= 1'b0; end
-            else if (s1v && |hit && aligned && hit_off == off) cand_v <= 1'b0;
-            else if (s1v && |hit) begin cand <= hit_off; cand_v <= 1'b1; end
+            if (adopt) begin off <= hr; aligned <= 1'b1; cand_v <= 1'b0; end
+            else if (s1v && hany && aligned && hr == off) cand_v <= 1'b0;
+            else if (s1v && hany) begin cand <= hr; cand_v <= 1'b1; end
             v2a <= deliver; v2b <= v2a; v2 <= v2b;
             R <= kept | (v2 ? ins : 72'd0);
             emit <= v2 && !koh[0];

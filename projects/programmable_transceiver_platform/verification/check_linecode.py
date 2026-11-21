@@ -8,7 +8,8 @@ RX: the reference-encoded stream (K28.5 commas sprinkled), slipped by every bit 
 with random valid gaps, through pt_lc_rx; the decoded symbols must be a contiguous run of the
 original symbols from the second K28.5 on (two agreeing commas align), with no code error; one case injects an
 invalid code group and must flag code_error and decode it as {K=1, 0x00}.
-Then sim/tb_linecode_stream.sv: 3.125 Gb/s wired loopback with the offload in both directions through
+RX re-timing (DG9-LC-RX): sim/tb_lc_rx_retime_equiv.sv lock-step against sim/reference/pt_lc_rx_ref.sv, with
+a negative control. Then sim/tb_linecode_stream.sv: 3.125 Gb/s wired loopback with the offload in both directions through
 the host link and core at 97.6 % host load. Prints LINECODE_PASS."""
 import random, subprocess, sys, tempfile
 from pathlib import Path
@@ -98,6 +99,41 @@ def main():
             if bad:
                 assert 0x100 in out
             cases += 1
+    # realignment while aligned (DG9-LC-RX corner): the line slips by `step` bits after 300 symbols; the
+    # receiver must re-adopt (two agreeing commas) and deliver the second segment contiguously
+    for slip, step in ((0, 3), (17, 7), (31, 9)):
+        segs = []
+        for n in (300, 300):
+            syms = symbols(rng, n)
+            rd, codes = -1, []
+            for v in syms:
+                c, rd = encode(v & 255, bool(v >> 8), rd)
+                codes.append(c)
+            segs.append(codes)
+        bits = sum(c << (10 * i) for i, c in enumerate(segs[0])) << slip
+        nb = 10 * len(segs[0]) + slip + step
+        bits |= sum(c << (10 * i) for i, c in enumerate(segs[1])) << nb
+        nb += 10 * len(segs[1])
+        quads = [(bits >> (40 * i)) & ((1 << 40) - 1) for i in range(nb // 40)]
+        _, rx, aligned, _ = run(work, [], quads)
+        out = unpack(rx, 9)
+        want = [decode(c) for c in segs[1]]
+        first = [i for i, v in enumerate(want) if v == 0x1BC][1]
+        ok = next((st for st in range(len(out)) if any(want[j:j + len(out) - st] == out[st:] for j in range(first + 8))), None)
+        assert aligned == 1 and ok is not None and len(out) - ok >= len(want) - 28, ('realign', slip, step, ok, len(out))
+        cases += 1
+    # DG9-LC-RX lock-step: new pt_lc_rx = reference (pre-change) RTL delayed by one clock; -DNEG must fail
+    eq = {}
+    for neg in (False, True):
+        exe = work / ('eqn.vvp' if neg else 'eq.vvp')
+        subprocess.run(['iverilog', '-g2012', '-I', str(P / 'rtl'), *(['-DNEG'] if neg else []), '-s', 'tb_lc_rx_retime_equiv',
+                        '-o', str(exe), str(P / 'sim/tb_lc_rx_retime_equiv.sv'), str(P / 'sim/reference/pt_lc_rx_ref.sv'),
+                        str(P / 'rtl/pt_linecode.sv')], check=True)
+        r = subprocess.run(['vvp', '-n', str(exe)], cwd=work, capture_output=True, text=True)
+        eq[neg] = [l for l in r.stdout.splitlines() if l.startswith('EQ ')]
+    assert eq[False] and eq[False][-1].startswith('EQ PASS'), eq[False]
+    assert eq[True] and eq[True][-1].startswith('EQ FAIL'), ('negative control not detected', eq[True])
+    print(eq[False][-1])
     # end to end: 3.125 Gb/s wired loopback through the host link and core with the offload on
     rtl = ['pt_host_link.sv', 'pt_core.sv', 'pt_quad_link.sv', 'pt_quad_gearbox.sv', 'pt_linecode.sv',
            'pt_dense_header.sv', 'pt_fifo.sv', 'pt_cells.sv', 'pt_pattern.sv']

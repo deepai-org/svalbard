@@ -18,13 +18,14 @@ Table: `python3 table16.py`. Queue: `q16.py q16.jobs` (one simulation at a time,
 ## Bench (chain16.py / cal16.py on s14 chain14 + blkcal, unchanged methods)
 Ring route per phase: 30 ohm + 75 fF (TIM-23 nominal), split C/2 on each side of the R. One bound row at 45 ohm + 110 fF (`R_ssp3125_RT_bound`).
 The ring tune (vctrl) comes from s12/tune.json; scoring and calibration use the measured period.
-Corners: ss 32 C 3.15 V, ss pess. the same, tt 27 C 3.3 V, ff 22 C 3.35 V, sf/fs 27 C 3.3 V (vring per tune.json).
+Corners: ss 32 C 3.15 V, ss pess. the same, tt 27 C 3.3 V, ff 22 C 3.45 V (owner), sf/fs 27 C 3.3 V (vring per tune.json).
 Calibration per condition: `_0` starts from the s14 codes. If its residual is > 8 ps, `_1` runs with its next codes. Rows take the codes that a cal verified <= 8 ps (`codes_verified`). If the residual is still > 8 ps after `_1`, rows take its next codes and are marked unverified.
 0.48 Gb/s (2.4 core, n=5) and 1.25 Gb/s (2.5 core, n=2) use the 2.5 Gb/s cal of the same corner (labelled with `codes_cal`).
 Pad option A: not published (txr/models holds only tx_rt/rh/zero; esdopt/tx a4/a5 are candidates). Before each job the runner logs a NOTICE if a new model or a txpad commit appears. Then add rows with `"pad_file": <path>` and `"S_": 1.0 / 0.6`.
 
 ## Queue order (q16.jobs, 34 cal lines of which about half run only if needed, 47 rows)
 1. Step 3: ssp 3.125 (cal, C, RT, RT bound) -> ss 3.24 Gb/s -> tt 3.24 -> ss 2.7 (cal, C, RT each).
+1b. Attribution (from s14 qF): ss pess. 3.125, ideal phases with codes 0 (pad C / RT), and S=0.6 (pad C / RT).
 2. Step 4, pad=RT: 2.5 / 3.0 at tt/ss/ssp; 0.48 and 1.25 at ss/ssp/ff; 3.125 / 3.24 at ff/sf/fs.
 3. Negative controls (pad=C, ssp 3.125): kill=3, stuck=2 (both must FAIL).
 4. pad=C duplicates of the step-4 rows.
@@ -38,4 +39,6 @@ When the new GDS commit arrives:
 2. Run `python3 net/extfull16.py pt_wiredtx8`, then the C-only run (xk/conly/c.tcl).
 3. Rename `_flat` in the netlists, then run `fixcap16.py` and `check16.py`.
 4. Run the sanity: `chain16.py sanity <tag>`.
-5. Delete STOPQ and start q16.py.
+5. Delete STOPQ and start TWO runners (the owner allows two slots): `nohup python3 q16.py q16.jobs >> q16.out 2>&1 &`, run twice.
+   The runners share the job file. Each claims a job with an empty file claims/<tag>; to rerun a failed job, delete its claim.
+Owner confirmed: 3.24 / 2.7 are line rates in Gb/s.

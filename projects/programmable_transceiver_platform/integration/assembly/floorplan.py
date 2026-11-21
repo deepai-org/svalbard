@@ -23,11 +23,14 @@ sizes = {m: [round(v['w'], 2), round(v['h'], 2)] for m, v in MJ.items() if v.get
 # staged replacement: the packer books the old master at the staged outline plus 70 um in x (room for the grid-phase shift)
 inst0, _p, _m = C.load(chip)
 for n, v in C.STAGED.get(chip, {}).items():
-    if MJ.get(v['master'], {}).get('w') and n in inst0: sizes[inst0[n]['master']] = [round(MJ[v['master']]['w']+70, 2), round(MJ[v['master']]['h'], 2)]
+    led = {x['item']: x['master'] for x in json.load(open(f"{C.ROOT}/scratch/reviews/die-fit/{chip}/ledger.json"))['rows']}
+    if MJ.get(v['master'], {}).get('w') and n in inst0:      # the ledger may still book the old master for the instance
+        for m_ in {inst0[n]['master'], led.get(n, inst0[n]['master'])}: sizes[m_] = [round(MJ[v['master']]['w']+70, 2), round(MJ[v['master']]['h'], 2)]
 json.dump(pj, open(RUN+'/fp_pads.json', 'w')); json.dump(sizes, open(RUN+'/fp_sizes.json', 'w'))
 macro = {'rf': '1716:1108', 'wired': '1676:971'}[chip]      # wired: DG9-11 outline 1676 x 1592.96, 32 um to pad_ref (west, x 939) and pad_wire_tx (east, x 2679)
 env = dict(os.environ, CHIP=chip, SCEN='S', TAG='s', TRIES=os.environ.get('TRIES', '6'), PADS_JSON=RUN+'/fp_pads.json',
-           SIZES_JSON=RUN+'/fp_sizes.json', RUNDIR=RUN+'/fit', CHANNEL=os.environ.get('CHANNEL', '40'), ISLAND_W=os.environ.get('ISLAND_W', '0.3'), NOROT=','.join(C.STAGED.get(chip, {})), POCKET='1' if chip == 'wired' else '0', **({'MACRO_MM2': '2.669801'} if chip == 'wired' else {}), OMP_NUM_THREADS='1', MACRO=os.environ.get('MACRO', macro))
+           SIZES_JSON=RUN+'/fp_sizes.json', RUNDIR=RUN+'/fit', CHANNEL=os.environ.get('CHANNEL', '40'), ISLAND_W=os.environ.get('ISLAND_W', '0.3'), NOROT=','.join(C.STAGED.get(chip, {})), POCKET='1' if chip == 'wired' else '0', ITEM_SIZES=json.dumps({b: [sum(MJ[inst0[m]['master']]['w'] for m in ms)+4*(len(ms)-1), max(MJ[inst0[m]['master']]['h'] for m in ms)] for b, ms in C.GROUP_BOOK.get(chip, {}).items()}),
+           **({'MACRO_MM2': '2.669801'} if chip == 'wired' else {}), OMP_NUM_THREADS='1', MACRO=os.environ.get('MACRO', macro))
 fit = C.ROOT+'/scratch/reviews/die-fit'
 r = subprocess.run(['true'] if os.environ.get('REUSE_FIT') else ['nice', '-n', '10', 'python3', 'fit.py'], cwd=fit, env=env, capture_output=True, text=True)
 if not os.environ.get('REUSE_FIT'): open(RUN+'/fit/fit.log', 'w').write(r.stdout+r.stderr)
@@ -40,6 +43,15 @@ for n, v in F['placed_rects'].items():
     m = 'decap' if n.startswith(('decap_bank', 'decap_tile')) else L.get(n, {}).get('master', n)
     if m == '(booked)': m = n
     blocks[n] = dict(master=m, rect=v['rect'], rot=v['rot'], in_conn=n in inst, gds=bool(MJ.get(m, {}).get('w')))
+# group bookings (common.GROUP_BOOK): the packer placed one rectangle; its members go into it side by side, 4 um apart
+for bk, ms in C.GROUP_BOOK.get(chip, {}).items():
+    if bk not in blocks: continue
+    r0 = blocks.pop(bk)['rect']; x = r0[0]
+    for m in ms:
+        w, h = MJ[inst0[m]['master']]['w'], MJ[inst0[m]['master']]['h']
+        if r0[2]-r0[0] < r0[3]-r0[1]: w, h = h, w      # booked turned: members turned too
+        blocks[m] = dict(master=inst0[m]['master'], rect=[round(x, 2), r0[1], round(x+w, 2), round(r0[1]+h, 2)], rot=(r0[2]-r0[0] < r0[3]-r0[1]), in_conn=True, gds=True, group=bk)
+        x += w+4
 blocks['digital'] = dict(master='pt_digital_macro', rect=F['fixed']['digital'], rot=False, in_conn=True, gds=False)
 reserves = {n: r for n, r in F['fixed'].items() if n != 'digital'}
 core_blocks = {n for n, i in inst.items() if not i['master'].startswith(C.PROVIDER) and n not in pads['pads']}
@@ -138,7 +150,7 @@ for i, a in enumerate(names):
     for p, rp in padr:
         if ov(ra, rp): bad.append((a, p))
 out = dict(chip=chip, die=C.DIE, core=C.CORE, macro=F['macro'], blocks=blocks, reserves=reserves, unplaced=F['unplaced'],
-           relaxed=F['relaxed'], rule_audit=F['rule_audit'], rule_fails=F['rule_fails'], conn_not_placed=missing, second_pass=second, staged=staged, decap_tiles_given_up=dropped, decap_tiles_unplaced=[u[0] for u in F['unplaced'] if u[0].startswith('decap')],
+           relaxed=F['relaxed'], rule_audit=F['rule_audit'], rule_fails=F['rule_fails'], conn_not_placed=missing, second_pass=second, staged=staged, groups=C.GROUP_BOOK.get(chip, {}), decap_tiles_given_up=dropped, decap_tiles_unplaced=[u[0] for u in F['unplaced'] if u[0].startswith('decap')],
            overlaps=bad, switches=F['switches'], pad_clear_um=g)
 json.dump(out, open(RUN+'/floorplan.json', 'w'), indent=0)
 print(f"{chip}: placed {len(blocks)} (conn blocks without a place: {missing}), unplaced {F['unplaced']}, relaxed {len(F['relaxed'])}, "

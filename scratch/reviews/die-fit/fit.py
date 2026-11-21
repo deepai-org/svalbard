@@ -38,8 +38,10 @@ nc = json.load(open(f'{HERE}/netcounts.json'))
 # ---- shapes: measured W x H of the ledger row (scaled to the scenario area), unknown blocks square ----------------------
 SHAPE = {'tx_interlock': (139.4, 345.0), 'pt_ptrim': (190.0, 211.2), 'pt_lo_vreg': (407.4, 1081.6), 'pt_ctle': (194.0, 354.0), 'pt_wiredtx': (543.9, 152.0),
          'd2h_strip': (1312.3, 24.0), 'wtx_tcoil_rsv': (570.0, 120.0)}
-SIZES = json.load(open(os.environ['SIZES_JSON'])) if os.environ.get('SIZES_JSON') else {}   # master -> [w, h] measured on the GDS (assembly flow)
+SIZES = json.load(open(os.environ['SIZES_JSON'])) if os.environ.get('SIZES_JSON') else {}
+ITEM_SIZES = json.loads(os.environ.get('ITEM_SIZES', '{}'))   # item -> [w, h] (assembly: a booking that stands for a group)   # master -> [w, h] measured on the GDS (assembly flow)
 def shape(r, area):
+    if ITEM_SIZES.get(r['item']): return tuple(ITEM_SIZES[r['item']])
     if SIZES.get(r['master']): return tuple(SIZES[r['master']])
     w, h = (float(r['w']), float(r['h'])) if r['w'] else SHAPE.get(r['master'] if r['kind'] == 'conn' else r['item'], (1, 1))
     k = math.sqrt(area/(w*h)); k = 1.0 if abs(k-1) < 0.012 else k

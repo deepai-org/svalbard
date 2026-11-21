@@ -56,6 +56,9 @@ for _n in ('isw_wired', 'isw_rf', 'isw_pll', 'isw_conv', 'isw_debug', 'atb_leaf_
 # instance -> master, GDS, cell, placement rule (R0; x origin = x_mod[0] modulo x_mod[1] um), owner report with the grid ties
 STAGED = {'wired': {'wiredtx': dict(master='pt_wiredtx8', gds=AN+'wired_tx/generated/fast/pt_wiredtx8.gds', cell='pt_wiredtx8',
                                     x_mod=(20.75, 35.0), report='scratch/wired_tx/s13/top/out/report.json')}}
+# ledger bookings that stand for a group of conn instances placed side by side on one bar (coordinator CB8-11: both
+# wired_tx switch masters on one VISL bar beside pt_wiredtx8): booking -> members
+GROUP_BOOK = {'wired': {'isw_wired_tx': ['isw_wired_tx_a', 'isw_wired_tx_b']}}
 TWIN = {'pt_adc_q': 'pt_adc_i', 'pt_dac_q': 'pt_dac_i'}
 # provider-ring instances of the conn (not core blocks): their pins are on the template's IO cells
 PROVIDER = ('pt_host_physical', 'pt_debug_physical', 'atb_provider_pad', 'pad_strap', 'prov_supply', 'prov_supply_sig')

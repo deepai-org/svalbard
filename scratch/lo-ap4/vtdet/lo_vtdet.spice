@@ -8,9 +8,9 @@
 * ATB_DET: DET also driven onto a test-bus leaf (observation) through the macro's status path, no extra analog pin.
 .subckt pt_lo_vtdet VTUNE EN DET VDD VSS
 XEI EN ENB VDD VSS pt_t_inv1
-* reference divider (gated): VREF = 0.908 x VDD with DET = 0, 0.880 x VDD with DET = 1 (RH shorted: hysteresis)
+* reference divider (gated): VREF = 0.922 x VDD with DET = 0, 0.898 x VDD with DET = 1 (RH shorted: hysteresis)
 XSW VT ENB VDD VDD pfet_03v3 w=4u l=0.28u
-XR1 VT VREF VSS ppolyf_u_1k r_width=1u r_length=24u
+XR1 VT VREF VSS ppolyf_u_1k r_width=1u r_length=20u
 XR2 VREF VR2 VSS ppolyf_u_1k r_width=1u r_length=88u
 XR3 VR2 VR3 VSS ppolyf_u_1k r_width=1u r_length=88u
 XRH VR3 VSS VSS ppolyf_u_1k r_width=1u r_length=60u

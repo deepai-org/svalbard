@@ -790,6 +790,7 @@ CL obs 0 2p
 TB = dict(wordclk=tb_wordclk, prescale=tb_prescale, pll_ring=tb_pll_ring, lo_ext=tb_lo_ext, diff_clk_rx=tb_diff_clk_rx, clk_obs=tb_clk_obs, clk_obs16=tb_clk_obs16, ring_osc=tb_ring_osc, aosc=tb_aosc,
           clockmux=tb_clockmux, vco_replica=tb_vco_replica, obs_pre4=tb_obs_pre4, lo_obs=tb_lo_obs)
 WIDTH = dict()
+PORT_ANTENNA_UM = dict(clk_obs16=3000, clockmux=3000)   # ASM-10 (TIM-25)
 
 
 def simulate(block, name, tbfun, kwargs, extracted=True, corner='tt', temp=27, v=VDD):
@@ -1075,6 +1076,8 @@ def main():
             # blocks with a row plan in lo_rows.py (lo_ext, clk_obs16, lo_obs) are rebuilt with the plan they are
             # PUBLISHED with (lo_rows.PUBLISHED, else 'r4'); a staged 'ap4' plan is never picked up from here
             kw = lo_rows.plan(b) if (b, 'r4') in lo_rows.PLANS else dict(max_row_width=WIDTH.get(b, 200))
+            if b in PORT_ANTENNA_UM:    # ASM-10: diodes on gate-only ports fed by long top-level nets
+                kw['em'] = dict(kw.get('em') or {}, port_antenna_um=PORT_ANTENNA_UM[b])
             lay = tf.build_layout(b, publish='force' if a.publish == 'force' else 'never', **kw)
             if a.publish != 'force':
                 staged = lay['stage']

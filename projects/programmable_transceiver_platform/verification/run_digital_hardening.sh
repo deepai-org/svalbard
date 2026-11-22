@@ -56,7 +56,7 @@ pnr)
   cp "$PROJ/verification/digital_hardening/repair_design_pt.tcl" "$OUT/repair_design_pt.tcl"
   sha256sum "$OUT/repair_design_pt.tcl" > "$OUT/repair_design_pt.sha256"
   cp "$PROJ"/rtl/*.sv "$PROJ"/rtl/*.svh "$PROJ"/rtl/*.vh "$OUT/design/rtl/"
-  cp "$PROJ/integration/pt_digital_macro.sdc" "$PROJ/verification/digital_hardening/config.json" "$PROJ/verification/digital_hardening/pin_order.cfg" \
+  cp "$PROJ/integration/pt_digital_macro.sdc" "$PROJ/verification/digital_hardening/config.json" "$PROJ/verification/digital_hardening/pin_order.cfg" "$PROJ/verification/digital_hardening/pin_order_wired.cfg" \
      "$PROJ/integration/pt_cts_h2d.tcl" "$OUT/design/"
   # FIRM placements (host-link blocks, clock roots) for this chip's outline
   python3 "$PROJ/verification/digital_hardening/hio_shift.py" "$CHIP" "$OUT/design/hio_placement.cfg"

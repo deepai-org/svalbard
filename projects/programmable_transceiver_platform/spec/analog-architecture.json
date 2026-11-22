@@ -6021,6 +6021,23 @@
           "maximum": 1,
           "unit": "code",
           "description": "pt_lc_qvco5 ATB_EN (VTUNE / tail taps onto the analog test bus)."
+        },
+        "band_min": {
+          "bits": 4,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 15,
+          "unit": "code",
+          "base": "0xEF",
+          "description": "LO-DIG-1 per-die band-search limit table: lowest allowed vco_coarse code (15 = lowest frequency). Commit rule: band_min <= vco_coarse <= band_max; software band search and any hardware acquisition stay inside [band_min, band_max]. 0xEF (free tail): rfpll.config at 0x84 is full and no later address moves."
+        },
+        "band_max": {
+          "bits": 4,
+          "default": 15,
+          "minimum": 0,
+          "maximum": 15,
+          "unit": "code",
+          "description": "LO-DIG-1: highest allowed vco_coarse code (reset 15 = whole range). Set per die below the band where pt_lo_mmd miscounts (the QVCO top of range at ss / sf, 3.15 V)."
         }
       }
     },
@@ -12731,7 +12748,8 @@
         "lo_pfdcp",
         "lo_lf",
         "lo_mmd",
-        "lo_mmd_qdum"
+        "lo_mmd_qdum",
+        "lo_vtdet"
       ],
       "rftxpad": [
         "pad_rf_tx"

@@ -98,6 +98,7 @@ c_lo_pre | 1 | 0 | direct | rfpll.config.lo_preset | (was: new field rfpll.confi
 c_lo_mmd_en | 1 | 0 | same as c_qvco_en | rfpll.state.state+rfpll.config.lo_mode | lo_mmd and its Q dummy
 c_lo_mmd_n | 6 | 0 | direct | rfpll.config.lo_n | (was: new field rfpll.config.lo_n[5:0], valid 16..63; f_LO = 2 N f_ref)
 c_lo_pfdcp_en | 1 | 0 | same as c_qvco_en | rfpll.state.state+rfpll.config.lo_mode |
+c_lo_vtdet_en | 1 | 0 | same as c_lo_pfdcp_en | rfpll.state.state+rfpll.config.lo_mode | pt_lo_vtdet EN with the loop (LO-DIG-1)
 c_lo_icp | 2 | 0 | direct | rfpll.config.lo_icp | (was: new field rfpll.config.lo_icp[1:0] (LO18): Icp = 25 uA x (1 + ICP0 + 2 ICP1))
 c_lo_vreg_en | 1 | 0 | c_qvco_en OR c_lo_pfdcp_en (island_on[1]) | rfpll.state.state+rfpll.config.lo_mode | for the demanded quiet-rail regulator (LO22). OPEN (D-LOVREG): in LO modes 1 and 3 the QVCO tank is DC-biased by lo_ext while VDD_LO would be off; the LO owner states the required VDD_LO state
 c_lo_obs_en | 1 | 0 | clk_obs.source == rf_lo (1) | debug.clk_obs.source |

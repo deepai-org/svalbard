@@ -38,7 +38,7 @@ def expect(F, D, O):
     # LO
     m = f('rfpll.config.lo_mode'); E['c_lo_ext'] = int(m in (1, 3)); E['c_lo_int'] = int(m in (2, 3)); E['c_lo_cmlsel'] = int(m == 3)
     syn = int(f('rfpll.state.state') == A and m == 2)
-    for n in ('c_qvco_en', 'c_lo_mmd_en', 'c_lo_pfdcp_en', 'c_lo_vreg_en'): E[n] = syn
+    for n in ('c_qvco_en', 'c_lo_mmd_en', 'c_lo_pfdcp_en', 'c_lo_vtdet_en', 'c_lo_vreg_en'): E[n] = syn
     E['c_qvco_band'] = f('rfpll.config.vco_coarse'); E['c_qvco_atb_en'] = f('rfpll.config.atb_enable'); E['c_lo_pre'] = f('rfpll.config.lo_preset')
     E['c_lo_mmd_n'] = f('rfpll.config.lo_n'); E['c_lo_icp'] = f('rfpll.config.lo_icp')
     src = f('debug.clk_obs.source'); E['c_lo_obs_en'] = int(src == 1)

@@ -53,6 +53,7 @@ inst digital pt_digital_macro chip
   s_adc_i_done=ADCI_DONE s_adc_i_b_done=ADCI_DONEB s_adc_q_done=ADCQ_DONE s_adc_q_b_done=ADCQ_DONEB
   s_detect_{diff_pos,diff_neg,se_p,se_n}=VSS s_wrx_slp=VSS s_wrx_slm=VSS s_wtx_ext_data=VSS s_wtx_ext_present=VSS s_wtx_run=VSS      # wired status: not on this chip
   s_aux_present=AUX_PRESENT
+  s_lo_vtdet=LO_VTDET      # pt_lo_vtdet DET -> rfpll.status (LO-DIG-1), clamped inside the macro
   fault=VSS      # no monitor block exists (D-FAULT); floating high would force every TX path off
   # every c_* net is a macro output port of the same name (ctl_ports.txt); they are not repeated here. Ports of the
   # other chip's fields (spec/chips.json) have no consumer on this chip.
@@ -60,7 +61,7 @@ inst digital pt_digital_macro chip
 # macroclamp <island> <macro pin regex>: inputs the macro must AND with island_on[bit(island)] before any other gate
 macroclamp conv rf_rx_sample(_b)?\[([2-9]|1[01]|1[4-9]|2[0-3])\]|rf_rx_ph_[iq]|s_adc_\w+|s_refbuf_ready
 macroclamp pll ct_wclk|rf_tx_clk|fc_src\[1\]|s_pll_(tx|cdr)_lock
-macroclamp rf fc_src\[5\]
+macroclamp rf fc_src\[5\]|s_lo_vtdet
 macroclamp debug fc_src\[[23]\]|s_aux_present
 # per-chip core bias (D8, integration/core_bias.py TRUNKS): each bank on the rail of its consumers
 inst core_bias pt_core_bias_rf core
@@ -203,10 +204,9 @@ inst lo_pfdcp pt_lo_pfdcp lo
   REF=ref_clk FB=LO_FB EN=c_lo_pfdcp_en PRE=c_lo_pre IBIAS~BIAS_lo_pfdcp VTUNE~LO_CP VDD~VDD_LO VSS~VSS ICP{0:1}=c_lo_icp[\1]
 inst lo_lf pt_lo_lf lo
   CP~LO_CP VT~LO_VTUNE VSS~VSS
-# QVCO runaway guard (LO-DIG-1): gate-only tap on LO_VTUNE; EN rides on the CP enable until digital adds c_lo_vtdet_en;
-# DET -> s_lo_vtdet once the macro has the port (declared unconnected in the baseline)
+# QVCO runaway guard (row LO-DIG-1): DET = 1 while VTUNE > VDD_LO - 0.26..0.29 V; EN with the loop (c_lo_pfdcp_en)
 inst lo_vtdet pt_lo_vtdet lo
-  VTUNE~LO_VTUNE EN=c_lo_pfdcp_en DET>- VDD~VDD_LO VSS~VSS
+  VTUNE~LO_VTUNE EN=c_lo_vtdet_en DET>LO_VTDET VDD~VDD_LO VSS~VSS
 inst lo_obs pt_lo_obs lod
   LP~LOI_IP LN~LOI_IN EN=c_lo_obs_en OBS>LO_OBS VDD~RAIL_lod VSS~VSS
 inst lo_obs_q pt_lo_obs lod

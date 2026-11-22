@@ -59,7 +59,7 @@ module tb_top_boundary;
   .s_pll_tx_lock(1'b0), .s_pll_cdr_lock(1'b0), .s_ref_present(1'b0), .s_refbuf_ready(1'b0), .s_adc_i_ovl(1'b0), .s_adc_i_b_ovl(1'b0),
   .s_adc_q_ovl(1'b0), .s_adc_q_b_ovl(1'b0), .s_adc_i_done(1'b0), .s_adc_i_b_done(1'b0), .s_adc_q_done(1'b0), .s_adc_q_b_done(1'b0),
   .s_detect_diff_pos(1'b0), .s_detect_diff_neg(1'b0), .s_detect_se_p(1'b0), .s_detect_se_n(1'b0), .s_wrx_slp(1'b0), .s_wrx_slm(1'b0),
-  .s_wtx_ext_data(1'b0), .s_aux_present(1'b0), .s_wtx_ext_present(1'b0), .s_wtx_run(1'b0), `PT_CTL_CONNECT);
+  .s_wtx_ext_data(1'b0), .s_aux_present(1'b0), .s_wtx_ext_present(1'b0), .s_wtx_run(1'b0), .s_lo_vtdet(1'b0), `PT_CTL_CONNECT);
 `ifdef NEG_MISBIND
  // negative control: rotate the probe trim bus between the macro and the analog top; the bench must FAIL
  initial force `PROBE_PORT = {dut.`PROBE_PORT[`PROBE_W-2:0], dut.`PROBE_PORT[`PROBE_W-1]};

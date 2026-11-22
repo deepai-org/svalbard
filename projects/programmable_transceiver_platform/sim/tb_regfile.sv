@@ -17,20 +17,21 @@ module tb_regfile;
  wire rx_en_aux,rx_en_wclk,rx_en_wtx_ext,clk_obs_oe,atb0_en,atb1_en;
  wire[`PT_ATB0_GRP_W-1:0]atb0_grp;wire[`PT_ATB1_GRP_W-1:0]atb1_grp;
  wire dbg_obs0,dbg_obs0_oe,dbg_obs1,dbg_obs1_oe;
- localparam[15:0]STATUS=16'hA5C3;localparam[31:0]OBS=32'h9E37_79B9;localparam[15:0]WSTAT=16'h6A09;
+ wire vt_clr;
+ localparam[15:0]STATUS=16'hA5C3;localparam[31:0]OBS=32'h9E37_79B9;localparam[15:0]WSTAT=16'h6A09;localparam[1:0]OBSX=2'b10;
  localparam[23:0]CAPTURE=24'h5A_1234;
  pt_mgmt #(.PT_CHIP(`PT_CHIP_ID)) dut(.rst_n(rst_n),.por_n(por_n),.por_path(3'b0),.sclk(sclk),.cs_n(cs_n),.mosi(mosi),.miso(miso),.miso_oe(miso_oe),
   .status(STATUS),.enable(enable),.mode8(mode8),.rf_trim(rf_trim),.wire_trim(wire_trim),.clock_trim(clock_trim),
   .memory_write(memory_write),.memory_index(memory_index),.memory_wdata(memory_wdata),
   .capture_data(CAPTURE),.capture_done(1'b0),.playback_enable(playback_enable),.capture_enable(capture_enable),
-  .fault(fault),.island_pgood(pgood),.obs_status(OBS),.wire_status(WSTAT),
+  .fault(fault),.island_pgood(pgood),.obs_status(OBS),.wire_status(WSTAT),.obs_status_ext(OBSX),
   .analog_cfg(analog_cfg),.debug_cfg(debug_cfg),.island_en(island_en),.island_on(island_on),
   .atb0_sw(atb0_sw),.atb1_sw(atb1_sw),.atb0_grp(atb0_grp),.atb1_grp(atb1_grp),.atb0_en(atb0_en),.atb1_en(atb1_en),.rx_en_aux(rx_en_aux),.rx_en_wclk(rx_en_wclk),.rx_en_wtx_ext(rx_en_wtx_ext),
   .clk_obs_oe(clk_obs_oe),.dbg_obs0(dbg_obs0),.dbg_obs0_oe(dbg_obs0_oe),
   .dbg_obs1(dbg_obs1),.dbg_obs1_oe(dbg_obs1_oe),
   .commit_toggle(commit_toggle),.config_error(config_error),
   .pattern_locked(pat_locked),.pattern_lost_lock(pat_lost),.pattern_errors_gray(pat_err_gray),
-  .fca_locked(1'b0),.fca_lost(1'b0),.fca_diff(14'd0),.fca_count(16'd0),.fcb_locked(1'b0),.fcb_lost(1'b0),.fcb_diff(14'd0),.fcb_count(16'd0),.mon_cause(10'd0),.mon_cause_clk(1'd0),.mon_ready(1'd0),.mon_dead(1'd0),.mon_ref_alive(1'd0),.mon_in_alive(1'd0),.mon_fault(1'd0),.mon_qualified(10'd0),.wtx_state(3'd0),.wtx_seq_fault(1'd0),.wtx_ring_ready(1'd0),.wrx_state(3'd0),.wrx_flags(8'd0),.wrx_fll_err(14'd0),.wrx_viol(5'd0),.wrx_fll_win(8'd0),.wrx_pick_acc(8'd0),.wrx_slip_cnt(8'd0),.usb_line(2'd0),.usb_flags(7'd0),.usb_stream(5'd0),.chip_id(2'd`PT_CHIP_ID),.sw_pg(10'd0),.h2d_ovf(1'd0),.h2d_unf(1'd0),.wtx_run(1'd0));
+  .fca_locked(1'b0),.fca_lost(1'b0),.fca_diff(14'd0),.fca_count(16'd0),.fcb_locked(1'b0),.fcb_lost(1'b0),.fcb_diff(14'd0),.fcb_count(16'd0),.mon_cause(10'd0),.mon_cause_clk(1'd0),.mon_ready(1'd0),.mon_dead(1'd0),.mon_ref_alive(1'd0),.mon_in_alive(1'd0),.mon_fault(1'd0),.mon_qualified(10'd0),.wtx_state(3'd0),.wtx_seq_fault(1'd0),.wtx_ring_ready(1'd0),.wrx_state(3'd0),.wrx_flags(8'd0),.wrx_fll_err(14'd0),.wrx_viol(5'd0),.wrx_fll_win(8'd0),.wrx_pick_acc(8'd0),.wrx_slip_cnt(8'd0),.usb_line(2'd0),.usb_flags(7'd0),.usb_stream(5'd0),.chip_id(2'd`PT_CHIP_ID),.sw_pg(10'd0),.h2d_ovf(1'd0),.h2d_unf(1'd0),.wtx_run(1'd0),.lo_vt_high(1'd0),.lo_vt_runaway(vt_clr),.lo_vt_runaway_clr(vt_clr));   // W1C toggle looped back: 0xF2[1] reads it
 
  integer fd,log,code,op,a,b,c,i,ncmd;
  reg[15:0]rd;reg[31:0]frame;

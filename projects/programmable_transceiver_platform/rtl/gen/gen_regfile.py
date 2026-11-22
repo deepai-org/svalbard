@@ -90,6 +90,8 @@ def build_model():
                      decoded_bits=s.get('decoded_bits'), mantissa_bits=s.get('mantissa_bits'),
                      address_slots=s.get('address_slots', 1), direct=bool(s.get('direct', False)),
                      clear_when_running=s.get('clear_when_running'), range_text=s.get('range_text'))
+            if s.get('base') is not None:
+                f['base'] = s['base']      # LO-DIG-1: field placed at a fixed free address (see allocate)
             if f['direct'] and (not f['live'] or f['split']):
                 raise SpecError(f'{full}: a direct (no-shadow) field must be live and at most 16 bits')
             for i in f['islands']:
@@ -149,7 +151,14 @@ def build_model():
             if g.get('base') is not None:
                 saved, addr = addr, hexaddr(g['base'])
             g['registers'] = []
+            resume = None
             for f in g['fields']:
+                if f.get('base') is not None:
+                    # A field appended to a full group starts a register at a fixed free address (the rest of the
+                    # group follows it there), so no later group moves; allocation resumes where it was.
+                    if resume is None:
+                        resume = addr
+                    addr, cur = hexaddr(f['base']), None
                 if f['split']:
                     for i in range((f['bits'] + 15) // 16):
                         width = min(16, f['bits'] - 16 * i)
@@ -175,6 +184,8 @@ def build_model():
                     addr += 1
                 cur['chunks'].append([f['name'], 0, f['bits'], cur['used']])
                 cur['used'] += f['bits']
+            if resume is not None:
+                addr = resume
             if g.get('base') is not None:
                 addr = saved
         if addr - 1 > limit:
@@ -204,7 +215,10 @@ def build_model():
             name = f'{gname}.{fname}'
             if sf.get('sync', True) is False and sf.get('encoding', 'binary') != 'binary':
                 raise SpecError(f'{gname}.{fname}: an unsynchronized status field must be binary')
+            if sf.get('w1c') and (sf['bits'] != 1 or sf.get('sync', True) is False):
+                raise SpecError(f'{gname}.{fname}: a write-1-to-clear status bit is one synchronized bit')
             status_fields.append(dict(name=name, group=gname, field=fname, bits=sf['bits'], port=sf['port'],
+                                      w1c=bool(sf.get('w1c', False)),
                                       sync=sf.get('sync', True) is not False,
                                       reserved=bool(g.get('reserved', False)),
                                       encoding=sf.get('encoding', 'binary'), meaning=sf.get('meaning'),
@@ -213,6 +227,10 @@ def build_model():
             cur['used'] += sf['bits']
     for r in status_regs:
         del r['used']
+        # LO-DIG-1: write-1-to-clear bits. A write of only these bits toggles <port>_clr (SCLK domain) for each 1;
+        # any other bit set is an address error as before. The status value itself lives at the source.
+        r['w1c_mask'] = sum(1 << rl for n, _, _, rl in r['chunks']
+                            if next(x for x in status_fields if x['name'] == n)['w1c'])
     if status_regs and 'status_limit' not in policy:
         last_debug = addr - 1
     elif status_regs and addr - 1 > hexaddr(policy['status_limit']):
@@ -392,6 +410,7 @@ def build_model():
         generator='rtl/gen/gen_regfile.py',
         sources=dict(analog='spec/analog-architecture.json:control_fields', debug='spec/debug-controls.json'),
         spi_abi=dbg['spi_abi'], islands=islands, atb_nodes=atb_nodes, obs_status=dbg['obs_status'],
+        obs_status_ext=dbg.get('obs_status_ext', []),
         wire_status=dbg['wire_status'], fields=fields, groups=[dict(name=g['name'], kind=g['kind'],
             description=g['description'], update=g['update'], registers=g['registers'],
             fallback_routes=g['fallback_routes'], fields=[f['name'] for f in g['fields']]) for g in groups],
@@ -487,7 +506,10 @@ def validate(model, dbg, readiness):
         raise SpecError('expected 19 debug sites')
     if len(dbg['obs_status']) != 32 or len(dbg['wire_status']) != 16:
         raise SpecError('obs_status must list 32 and wire_status 16 signals')
-    if by_name['debug.dbg_obs.sel0']['maximum'] != 4 + 32 + 16 or by_name['debug.dbg_obs.sel1']['maximum'] != 4 + 32 + 16:
+    nobs = 4 + 32 + 16 + 1 + len(model['obs_status_ext'])     # codes 0..3, obs_status, rst_n, wire_status, extension
+    if nobs > 64:
+        raise SpecError('observation mux: more than 64 codes')
+    if by_name['debug.dbg_obs.sel0']['maximum'] != nobs - 1 or by_name['debug.dbg_obs.sel1']['maximum'] != nobs - 1:
         raise SpecError('observation mux maxima do not match the status vectors')
 
 
@@ -562,7 +584,7 @@ def sv_rule(r, prefix, by_name):
         trig.append('(' + '||'.join(sv_cond(c, prefix, by_name) for c in r['if_any']) + ')')
     trig += [sv_cond(c, prefix, by_name) for c in r['if_all']]
     then = '&&'.join(sv_cond(c, prefix, by_name) for c in r['then_all'])
-    return f"(!({'&&'.join(trig)})||({then}))"
+    return f"(!({'&&'.join(trig)})||({then}))" if trig else f'({then})'      # no trigger: always required
 
 
 def store_reg(f, prefix):
@@ -609,14 +631,16 @@ def emit_sv(model):
     a(' input wire[39:0]capture_data,input wire capture_done,output reg playback_enable,capture_enable,')
     a(' output reg memory_loop,output reg[4:0]memory_last, // MEMORY v3: playback loop / last quad index')
     a(' // Generated control boundary.')
-    a(f' input wire fault,input wire[{nisl - 1}:0]island_pgood,input wire[31:0]obs_status,input wire[15:0]wire_status,')
+    a(f' input wire fault,input wire[{nisl - 1}:0]island_pgood,input wire[31:0]obs_status,input wire[15:0]wire_status,' +
+      (f'input wire[{len(model["obs_status_ext"]) - 1}:0]obs_status_ext,' if model['obs_status_ext'] else ''))
     a(f' output wire[{aw - 1}:0]analog_cfg,output wire[{dw - 1}:0]debug_cfg,')
     a(f' output wire[{nisl - 1}:0]island_en,island_on,output wire[{natb - 1}:0]atb0_sw,atb1_sw,')
     a(f' output wire[{len(model["atb_groups"]["atb0"]) - 1}:0]atb0_grp,output wire[{len(model["atb_groups"]["atb1"]) - 1}:0]atb1_grp,output wire atb0_en,atb1_en,')
     a(' output wire rx_en_aux,rx_en_wclk,rx_en_wtx_ext,clk_obs_oe,')
     a(' output wire dbg_obs0,dbg_obs0_oe,dbg_obs1,dbg_obs1_oe,')
     a(' output reg commit_toggle,output wire config_error' +
-      ''.join(f',\n input wire[{sf["bits"] - 1}:0]{sf["port"]}' for sf in model['status_fields']) + ');')
+      ''.join(f',\n input wire[{sf["bits"] - 1}:0]{sf["port"]}' for sf in model['status_fields']) +
+      ''.join(f',\n output reg {sf["port"]}_clr' for sf in model['status_fields'] if sf['w1c']) + ');')
     a(f' localparam[15:0]ID=16\'h5356,ABI_VERSION=16\'h{0x0003:04X},MAP_HASH=16\'h{model["map_hash16"]:04X};')
     a(' // Per-chip field presence (spec/chips.json): PR_<field> = 1 when the field is stored on this chip.')
     a(" localparam[0:0]ON_RF=(PT_CHIP&1)!=0,ON_WIRED=(PT_CHIP&2)!=0;")
@@ -759,7 +783,12 @@ def emit_sv(model):
     a(' assign rx_en_wtx_ext=island_on[%d]&&o_debug_wtx_ext__enable[0]; // debug-pad receivers sit on the debug island' % islands['debug'])
     a(" assign clk_obs_oe=o_debug_clk_obs__source!=5'd0;")
     a(" // PD22: WDBG_OBS / WCLK_OBS pads are retired; wire_status is observed on DBG_OBS0/1 (codes 37+n).")
-    a(" wire[63:0]dbg_src={11'd0,wire_status,rst_n,obs_status,commit_toggle,1'b1,1'b0,1'b0};")
+    nx = len(model['obs_status_ext'])
+    if nx:
+        a(f" // LO-DIG-1: codes {4 + 32 + 1 + 16}.. = obs_status_ext ({', '.join(model['obs_status_ext'])}).")
+        a(f" wire[63:0]dbg_src={{{11 - nx}'d0,obs_status_ext,wire_status,rst_n,obs_status,commit_toggle,1'b1,1'b0,1'b0}};")
+    else:
+        a(" wire[63:0]dbg_src={11'd0,wire_status,rst_n,obs_status,commit_toggle,1'b1,1'b0,1'b0};")
     a(" assign dbg_obs0=dbg_src[o_debug_dbg_obs__sel0];assign dbg_obs0_oe=o_debug_dbg_obs__sel0!=6'd0;")
     a(" assign dbg_obs1=dbg_src[o_debug_dbg_obs__sel1];assign dbg_obs1_oe=o_debug_dbg_obs__sel1!=6'd0;")
     # Commit validation.
@@ -852,6 +881,8 @@ def emit_sv(model):
         if sf['reserved'] or not sf['sync']:
             continue
         a(f'   st1_{sf["port"]}<=0;st2_{sf["port"]}<=0;')
+        if sf['w1c']:
+            a(f'   {sf["port"]}_clr<=0;')
     for f in fields:
         if f['store'] is None:
             continue
@@ -916,6 +947,12 @@ def emit_sv(model):
                 src = f'({{{ih - il + 1}{{PR_{f["sv"]}}}}}&{src})'      # absent on this chip: the write is ignored
             a(f'       {dst}<={src};')
         a('      end else begin cfg_err[0]<=1;err_addr<=wr_addr;end')
+    for r in model['status_registers']:
+        if r['w1c_mask']:
+            clr = ''.join(f'if(wr_data[{rl}])begin {sf["port"]}_clr<=!{sf["port"]}_clr;end'
+                          for n, _, _, rl in r['chunks'] for sf in model['status_fields'] if sf['name'] == n and sf['w1c'])
+            a(f"     8'h{r['addr']:02X}:if((wr_data&16'h{~r['w1c_mask'] & 0xFFFF:04X})==16'h0000)begin {clr} end // write 1 to clear")
+            a('      else begin rejected<=1;cfg_err[1]<=1;err_addr<=wr_addr;end')
     a('     default:begin rejected<=1;cfg_err[1]<=1;err_addr<=wr_addr;end')
     a('    endcase')
     a('   end')
@@ -967,14 +1004,16 @@ def emit_sv(model):
     a(' output wire memory_write,output wire[4:0]memory_index,output wire[39:0]memory_wdata,')
     a(' input wire[39:0]capture_data,input wire capture_done,output wire playback_enable,capture_enable,')
     a(' output wire memory_loop,output wire[4:0]memory_last,')
-    a(f' input wire fault,input wire[{nisl - 1}:0]island_pgood,input wire[31:0]obs_status,input wire[15:0]wire_status,')
+    a(f' input wire fault,input wire[{nisl - 1}:0]island_pgood,input wire[31:0]obs_status,input wire[15:0]wire_status,' +
+      (f'input wire[{len(model["obs_status_ext"]) - 1}:0]obs_status_ext,' if model['obs_status_ext'] else ''))
     a(f' output wire[{aw - 1}:0]analog_cfg,output wire[{dw - 1}:0]debug_cfg,')
     a(f' output wire[{nisl - 1}:0]island_en,island_on,output wire[{natb - 1}:0]atb0_sw,atb1_sw,')
     a(f' output wire[{len(model["atb_groups"]["atb0"]) - 1}:0]atb0_grp,output wire[{len(model["atb_groups"]["atb1"]) - 1}:0]atb1_grp,output wire atb0_en,atb1_en,')
     a(' output wire rx_en_aux,rx_en_wclk,rx_en_wtx_ext,clk_obs_oe,')
     a(' output wire dbg_obs0,dbg_obs0_oe,dbg_obs1,dbg_obs1_oe,')
     a(' output wire commit_toggle,config_error' +
-      ''.join(f',\n input wire[{sf["bits"] - 1}:0]{sf["port"]}' for sf in model['status_fields']) + ');')
+      ''.join(f',\n input wire[{sf["bits"] - 1}:0]{sf["port"]}' for sf in model['status_fields']) +
+      ''.join(f',\n output wire {sf["port"]}_clr' for sf in model['status_fields'] if sf['w1c']) + ');')
     a(' wire wr_en;wire[7:0]wr_addr,rd_addr;wire[15:0]wr_data,rd_data,rd_data0,rd_data1;wire[6:0]rd_hi;')
     a(' pt_spi spi(.rst_n(rst_n),.sclk(sclk),.cs_n(cs_n),.mosi(mosi),.miso(miso),.miso_oe(miso_oe),')
     a('  .wr_en(wr_en),.wr_addr(wr_addr),.wr_data(wr_data),.rd_addr(rd_addr),.rd_data(rd_data),')
@@ -990,14 +1029,16 @@ def emit_sv(model):
     a('  .memory_index(memory_index),.memory_wdata(memory_wdata),.capture_data(capture_data),')
     a('  .capture_done(capture_done),.playback_enable(playback_enable),.capture_enable(capture_enable),')
     a('  .memory_loop(memory_loop),.memory_last(memory_last),')
-    a('  .fault(fault),.island_pgood(island_pgood),.obs_status(obs_status),.wire_status(wire_status),')
+    a('  .fault(fault),.island_pgood(island_pgood),.obs_status(obs_status),.wire_status(wire_status),' +
+      ('.obs_status_ext(obs_status_ext),' if model['obs_status_ext'] else ''))
     a('  .analog_cfg(analog_cfg),.debug_cfg(debug_cfg),.island_en(island_en),.island_on(island_on),')
     a('  .atb0_sw(atb0_sw),.atb1_sw(atb1_sw),.atb0_grp(atb0_grp),.atb1_grp(atb1_grp),.atb0_en(atb0_en),.atb1_en(atb1_en),')
     a('  .rx_en_aux(rx_en_aux),.rx_en_wclk(rx_en_wclk),')
     a('  .rx_en_wtx_ext(rx_en_wtx_ext),.clk_obs_oe(clk_obs_oe),')
     a('  .dbg_obs0(dbg_obs0),.dbg_obs0_oe(dbg_obs0_oe),.dbg_obs1(dbg_obs1),.dbg_obs1_oe(dbg_obs1_oe),')
     a('  .commit_toggle(commit_toggle),.config_error(config_error)' +
-      ''.join(f',.{sf["port"]}({sf["port"]})' for sf in model['status_fields']) + ');')
+      ''.join(f',.{sf["port"]}({sf["port"]})' for sf in model['status_fields']) +
+      ''.join(f',.{sf["port"]}_clr({sf["port"]}_clr)' for sf in model['status_fields'] if sf['w1c']) + ');')
     a('endmodule')
     a('`default_nettype wire')
     return '\n'.join(L) + '\n'
@@ -1278,7 +1319,8 @@ def emit_markdown(model):
     a('Class `pad` and `ownership` rules are in monotone form (their triggers are false and their')
     a('requirements true at code 0), so island isolation and fault release cannot break them; they')
     a('are proven on both the active registers and the pad-facing outputs. `legality` rules are')
-    a('proven on the active registers.')
+    a('proven on the active registers; transition rules ("commit changes ...") are commit-time checks of the shadow')
+    a('against the active configuration and are not proven on the active registers alone.')
     a('')
     a('| # | Rule | Class | Node | If any | Then all |')
     a('| --- | --- | --- | --- | --- | --- |')
@@ -1335,19 +1377,22 @@ def emit_markdown(model):
       ', '.join(f'{4 + i} {s}' for i, s in enumerate(model['obs_status'])) +
       f', {4 + len(model["obs_status"])} combined reset level rst_n (1 = released), ' +
       ', '.join(f'{5 + len(model["obs_status"]) + i} {s}' for i, s in enumerate(model['wire_status'])) +
-      ' (wired status, PD22: the WDBG_OBS pad is retired).')
+      ' (wired status, PD22: the WDBG_OBS pad is retired)' +
+      ''.join(f', {5 + len(model["obs_status"]) + len(model["wire_status"]) + i} {s}' for i, s in enumerate(model['obs_status_ext'])) +
+      '.')
     a('')
     if model['status_fields']:
         a('## Read-only status registers')
         a('')
         a('Inputs to `pt_regfile`, synchronized into SCLK by two flops per bit. Gray-coded counters are converted '
-          'to binary after synchronization. Writes to these addresses are rejected (CONFIG_ERROR b1).')
+          'to binary after synchronization. Writes to these addresses are rejected (CONFIG_ERROR b1), except a write '
+          'that sets only write-1-to-clear (W1C) bits: each 1 clears that sticky bit at its source.')
         a('')
         a('| Addr | Bits | Field | Port | Encoding | Meaning |')
         a('| --- | --- | --- | --- | --- | --- |')
         for sf in model['status_fields']:
             a(f"| 0x{sf['addr']:02X} | {sf['reg_lsb'] + sf['bits'] - 1}:{sf['reg_lsb']} | `{sf['name']}` | `{sf['port']}` | "
-              f"{sf['encoding']} at source, binary on read | {'**RESERVED, reads 0.** ' if sf['reserved'] else ''}{sf['meaning'] or ''} |")
+              f"{sf['encoding']} at source, binary on read | {'**RESERVED, reads 0.** ' if sf['reserved'] else ''}{'**W1C.** ' if sf['w1c'] else ''}{sf['meaning'] or ''} |")
         a('')
     a('## Debug, consolidation and core group notes')
     a('')
@@ -1472,7 +1517,7 @@ def emit_c(model):
     a('')
     for sf in model['status_fields']:
         p = 'PT_' + c_ident(sf['name'])
-        a(f'#define {p}_ADDR 0x{sf["addr"]:02X}u  /* read-only */')
+        a(f'#define {p}_ADDR 0x{sf["addr"]:02X}u  /* read-only' + (', write 1 to clear */' if sf['w1c'] else ' */'))
         a(f'#define {p}_SHIFT {sf["reg_lsb"]}u')
         a(f'#define {p}_WIDTH {sf["bits"]}u')
     for n in model['atb_nodes']:
@@ -1486,7 +1531,7 @@ def emit_py(model):
     data = dict(FIELDS=model['fields'], REGISTERS=model['registers'], RULES=model['rules'],
                 BREAK_BEFORE_MAKE=model['break_before_make'], SPLIT_FIELDS=model['split_fields'],
                 FORCED=model['fault_forced'], ISLANDS=model['islands'], ATB_NODES=model['atb_nodes'],
-                OBS_STATUS=model['obs_status'], STATUS_FIELDS=model['status_fields'], ATB_GROUPS=model['atb_groups'],
+                OBS_STATUS=model['obs_status'], OBS_STATUS_EXT=model['obs_status_ext'], STATUS_FIELDS=model['status_fields'], ATB_GROUPS=model['atb_groups'],
                 STATUS_REGISTERS=model['status_registers'], WIRE_STATUS=model['wire_status'], MAP_HASH=model['map_hash16'],
                 BUS_WIDTHS=model['bus_widths'], ATB_WIDTH=model['atb_width'], CHIP_ATB_NO_LEAF=model['chip_atb_no_leaf'])
     blob = json.dumps(data, sort_keys=True, separators=(',', ':'))
@@ -1498,7 +1543,7 @@ def emit_py(model):
             'BREAK_BEFORE_MAKE = _DATA["BREAK_BEFORE_MAKE"]\nSPLIT_FIELDS = _DATA["SPLIT_FIELDS"]\n'
             'FORCED = _DATA["FORCED"]\nISLANDS = _DATA["ISLANDS"]\nATB_NODES = _DATA["ATB_NODES"]\n'
             'ATB_GROUPS = _DATA["ATB_GROUPS"]\nSTATUS_FIELDS = _DATA["STATUS_FIELDS"]\nSTATUS_REGISTERS = _DATA["STATUS_REGISTERS"]\n'
-            'OBS_STATUS = _DATA["OBS_STATUS"]\nWIRE_STATUS = _DATA["WIRE_STATUS"]\nMAP_HASH = _DATA["MAP_HASH"]\n'
+            'OBS_STATUS = _DATA["OBS_STATUS"]\nOBS_STATUS_EXT = _DATA["OBS_STATUS_EXT"]\nWIRE_STATUS = _DATA["WIRE_STATUS"]\nMAP_HASH = _DATA["MAP_HASH"]\n'
             'BUS_WIDTHS = _DATA["BUS_WIDTHS"]\nATB_WIDTH = _DATA["ATB_WIDTH"]\nCHIP_ATB_NO_LEAF = _DATA["CHIP_ATB_NO_LEAF"]\n'
             'FIELD_BY_NAME = {f["name"]: f for f in FIELDS}\n'
             'REGISTER_BY_ADDR = {r["addr"]: r for r in REGISTERS}\n\n'

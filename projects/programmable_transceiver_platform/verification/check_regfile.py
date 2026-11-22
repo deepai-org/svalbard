@@ -36,6 +36,7 @@ if CHIP:
     M.chip_view(CHIP)
 
 STATUS, OBS, WSTAT, CAPTURE = 0xA5C3, 0x9E3779B9, 0x6A09, 0x5A1234
+OBSX = 0x2      # obs_status_ext (LO-DIG-1: lo_vt_high, lo_vt_runaway), tb_regfile.sv OBSX
 LEGACY_LOCKED = (0x02, 0x04, 0x10, 0x11, 0x12, 0x21, 0x22, 0x23)
 F = M.FIELD_BY_NAME
 NISL = len(M.ISLANDS)
@@ -62,6 +63,7 @@ class Model:
 
     def reset(self, por=False):
         self.rst_flag = 1
+        self.status_inputs["lo_vt_runaway"] = 0     # the W1C toggle (looped back in tb_regfile) resets with rst_n
         if por:
             self.por_flag = 1
         self.shadow = M.reset_config()
@@ -122,6 +124,12 @@ class Model:
             else:
                 self.cfg_err |= M.ERR_WRITE_RANGE
                 self.err_addr = a
+        elif M.status_w1c_mask(a) and not d & ~M.status_w1c_mask(a) & 0xFFFF:
+            # write-1-to-clear (LO-DIG-1): each 1 toggles <port>_clr; tb_regfile loops lo_vt_runaway_clr back into
+            # lo_vt_runaway, so the toggle reads back at 0xF2 bit 1
+            for sf in M.STATUS_FIELDS:
+                if sf['addr'] == a and sf.get('w1c') and d >> sf['reg_lsb'] & 1 and sf['port'] == 'lo_vt_runaway':
+                    self.status_inputs['lo_vt_runaway'] = self.status_inputs.get('lo_vt_runaway', 0) ^ 1
         elif M.register_at(a):
             reg = M.register_at(a)
             if M.reg_write_ok(reg, d):
@@ -166,7 +174,7 @@ class Model:
         aux = dbg_on and (any(v[n] == cs.index('aux_clk') for n in clk) or v['debug.clk_obs.source'] == obs_src.index('aux_clk'))
         wclk = dbg_on and (any(v[n] == cs.index('wclk_in') for n in clk) or v['debug.clk_obs.source'] == obs_src.index('wclk_in'))
         # PD22: wire_status is observed on DBG_OBS (codes 37+n); the WDBG_OBS / WCLK_OBS pads are retired.
-        dsrc = [0, 0, 1, self.toggle] + [(OBS >> i) & 1 for i in range(32)] + [int(not in_reset)] + [(WSTAT >> i) & 1 for i in range(16)]
+        dsrc = [0, 0, 1, self.toggle] + [(OBS >> i) & 1 for i in range(32)] + [int(not in_reset)] + [(WSTAT >> i) & 1 for i in range(16)] + [(OBSX >> i) & 1 for i in range(len(M.OBS_STATUS_EXT))]
         s0, s1 = v['debug.dbg_obs.sel0'], v['debug.dbg_obs.sel1']
         bits5 = f"{int(aux)}{int(wclk)}{int(bool(dbg_on and v['debug.wtx_ext.enable']))}{int(v['debug.clk_obs.source'] != 0)}"
         bits6 = f"{dsrc[s0]}{int(s0 != 0)}{dsrc[s1]}{int(s1 != 0)}"
@@ -201,7 +209,8 @@ class Stimulus:
         self.cmds.append(f'2 {pgood:02x} {fault:x} 0')
 
     def status(self, locked, lost, errors_gray):
-        self.m.status_inputs = dict(chip_id=CHIP_ID, pattern_locked=locked, pattern_lost_lock=lost, pattern_errors_gray=errors_gray)
+        self.m.status_inputs = dict(chip_id=CHIP_ID, pattern_locked=locked, pattern_lost_lock=lost, pattern_errors_gray=errors_gray,
+                                    lo_vt_runaway=self.m.status_inputs.get('lo_vt_runaway', 0))
         self.cmds.append(f'7 {locked | (lost << 1):x} {errors_gray:04x} 0')
 
     def snap(self):
@@ -559,6 +568,14 @@ def build(seed, n_random):
         s.read(0x05)
         s.read(0x0C)
         s.write(0x05, 0x7F)
+        if M.status_w1c_mask(a):        # only the write-1-to-clear bits: accepted, no error, toggle reads back
+            s.write(a, M.status_w1c_mask(a))
+            s.read(a)
+            s.write(a, M.status_w1c_mask(a))
+            s.read(a)
+            s.read(0x04)
+            s.read(0x05)
+            s.read(0x0C)
     # G. Reset in the middle of a transaction while everything is on.
     s.reset_mid(0x40, 0x003F)
     s.snap()

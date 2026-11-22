@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """pt_monitor check: bench (must pass), mutants (bench must fail on each), yosys structural check.
+Also the LO-DIG-1 QVCO runaway guard pt_lo_vtguard (same file): sim/tb_lo_vtguard.sv must pass, LO_MUTANTS must fail.
 
 Usage: python3 verification/check_monitor.py [--no-yosys]
 Exit status is non-zero on any failure. Light: iverilog only, one job at a time.
@@ -11,6 +12,7 @@ RTL = os.path.join(P, "rtl", "pt_monitor.sv")
 SYNC = os.path.join(P, "rtl", "pt_fifo.sv")          # pt_sync_bit
 CELLS = os.path.join(P, "rtl", "pt_cells.sv")       # pt_async_gate (behavioural branch)
 TB = os.path.join(P, "sim", "tb_pt_monitor.sv")
+TB_LO = os.path.join(P, "sim", "tb_lo_vtguard.sv")
 ENV = dict(os.environ, OMP_NUM_THREADS="1")
 
 # (name, exact text in rtl/pt_monitor.sv, replacement)
@@ -33,9 +35,18 @@ MUTANTS = [
 ]
 
 
-def sim(rtl, work):
+# pt_lo_vtguard (LO-DIG-1): sticky flag, 64-cycle window, preset hold, write-1-to-clear edge
+LO_MUTANTS = [
+    ("lo_preset_ignored", "if (!vt_high || pre_s || clr_s != clr_d) cnt <= {CW{1'b0}};", "if (!vt_high || clr_s != clr_d) cnt <= {CW{1'b0}};"),
+    ("lo_not_sticky", "else if (run) vt_runaway <= 1'b1;", "else vt_runaway <= run;"),
+    ("lo_short_window", "wire run = cnt == RUN_CYCLES;", "wire run = cnt == RUN_CYCLES - 2;"),
+    ("lo_clear_is_level", "if (clr_s != clr_d) vt_runaway <= 1'b0;", "if (clr_s) vt_runaway <= 1'b0;"),
+]
+
+
+def sim(rtl, work, top="tb_pt_monitor", tb=TB):
     out = os.path.join(work, "tb.vvp")
-    c = subprocess.run(["iverilog", "-g2012", "-Wall", "-s", "tb_pt_monitor", "-o", out, rtl, SYNC, CELLS, TB],
+    c = subprocess.run(["iverilog", "-g2012", "-Wall", "-s", top, "-o", out, rtl, SYNC, CELLS, tb],
                        capture_output=True, text=True, env=ENV)
     if c.returncode != 0:
         return None, c.stdout + c.stderr
@@ -53,6 +64,27 @@ def main():
             print(log)
             bad += 1
         src = open(RTL).read()
+        ok, log = sim(RTL, work, "tb_lo_vtguard", TB_LO)
+        print("lo_vtguard bench:", "PASS" if ok else "FAIL", "|", [l for l in log.splitlines() if l.startswith("TB_")])
+        if not ok:
+            print(log)
+            bad += 1
+        for name, old, new in LO_MUTANTS:
+            if src.count(old) != 1:
+                print(f"mutant {name}: pattern not found exactly once -> ERROR")
+                bad += 1
+                continue
+            mp = os.path.join(work, name + ".sv")
+            open(mp, "w").write(src.replace(old, new))
+            ok, log = sim(mp, work, "tb_lo_vtguard", TB_LO)
+            if ok is None:
+                print(f"mutant {name}: does not compile -> ERROR\n{log}")
+                bad += 1
+            elif ok:
+                print(f"mutant {name}: bench PASSED -> ERROR (bench cannot see this defect)")
+                bad += 1
+            else:
+                print(f"mutant {name}: killed")
         for name, old, new in MUTANTS:
             if src.count(old) != 1:
                 print(f"mutant {name}: pattern not found exactly once -> ERROR")

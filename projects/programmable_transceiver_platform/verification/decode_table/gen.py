@@ -51,7 +51,7 @@ def write_tb(nvec, settle, out='tb_dec.sv'):
           '  .fc_src(6\'b0), .wire_rx_data(40\'b0), .wire_rx_edge(20\'b0), .rf_rx_sample(24\'b0), .rf_rx_sample_b(24\'b0), .rf_rx_ph_i(1\'b0), .rf_rx_ph_q(1\'b0),',
           '  .s_pll_tx_lock(1\'b0), .s_pll_cdr_lock(1\'b0), .s_ref_present(1\'b1), .s_refbuf_ready(1\'b0), .s_adc_i_ovl(1\'b0), .s_adc_i_b_ovl(1\'b0), .s_adc_q_ovl(1\'b0), .s_adc_q_b_ovl(1\'b0),',
           '  .s_adc_i_done(1\'b0), .s_adc_i_b_done(1\'b0), .s_adc_q_done(1\'b0), .s_adc_q_b_done(1\'b0), .s_detect_diff_pos(1\'b0), .s_detect_diff_neg(1\'b0), .s_detect_se_p(1\'b0),',
-          '  .s_detect_se_n(1\'b0), .s_wrx_slp(1\'b0), .s_wrx_slm(1\'b0), .s_wtx_ext_data(1\'b0), .s_aux_present(1\'b0), .s_wtx_ext_present(1\'b0), .s_wtx_run(1\'b0),']
+          '  .s_detect_se_n(1\'b0), .s_wrx_slp(1\'b0), .s_wrx_slm(1\'b0), .s_wtx_ext_data(1\'b0), .s_aux_present(1\'b0), .s_wtx_ext_present(1\'b0), .s_wtx_run(1\'b0), .s_lo_vtdet(1\'b0),']
     L.append('  ' + ', '.join(f'.{n}({n})' for n, _, _ in PORTS) + ');')
     nin = len(FIELDS) + len(DYN) + len(BENCH)
     L += [f' reg [32:0] v [0:{nin-1}]; integer fi, fo, k, n, rc;', ' task apply; begin']   # 33 bits: iverilog cannot force a full 32-bit array word (wtx.phase_trim)

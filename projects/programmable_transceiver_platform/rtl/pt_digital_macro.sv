@@ -73,6 +73,7 @@ module pt_digital_macro(
  input  wire s_detect_diff_pos, s_detect_diff_neg, s_detect_se_p, s_detect_se_n,
  input  wire s_wrx_slp, s_wrx_slm, s_wtx_ext_data, s_aux_present, s_wtx_ext_present,
  input  wire s_wtx_run,                         // pt_wiredtx8 TX_RUN (ring-run detector) -> status.health.wtx_run (WT50)
+ input  wire s_lo_vtdet,                        // pt_lo_vtdet DET (VTUNE high) -> rfpll.status.vt_high / vt_runaway (LO-DIG-1)
  // decoded analog control ports (integration/chips/ctl_ports.txt)
  output wire c_aosc_en,
  output wire c_biasgen_ena,
@@ -162,6 +163,7 @@ module pt_digital_macro(
  output wire c_lo_mmd_en,
  output wire[5:0] c_lo_mmd_n,
  output wire c_lo_pfdcp_en,
+ output wire c_lo_vtdet_en,              // pt_lo_vtdet EN = c_lo_pfdcp_en (LO-DIG-1)
  output wire[1:0] c_lo_icp,
  output wire c_lo_vreg_en,
  output wire c_lo_obs_en,
@@ -353,6 +355,8 @@ module pt_digital_macro(
  wire ct_wclk_c, rf_tx_clk_c, pll_cdr_lock, pll_tx_lock;
  pt_iso_and #(1, 1) iso_ct_wclk(.a(ct_wclk), .on(island_on[2]), .y(ct_wclk_c));
  pt_iso_and #(1, 1) iso_fc_src_1(.a(fc_src[1]), .on(island_on[2]), .y(fc[1]));
+ wire lo_vtdet;   // pt_lo_vtdet DET, lo island = rf enable group (LO-DIG-1)
+ pt_iso_and #(1, 0, ON_RF) iso_s_lo_vtdet(.a(s_lo_vtdet), .on(island_on[1]), .y(lo_vtdet));
  pt_iso_and #(1, 1, ON_RF) iso_fc_src_5(.a(fc_src[5]), .on(island_on[1]), .y(fc[5]));   // lo_mmd.FB: lo island = rf enable group
  pt_iso_and #(1, 1, ON_RF) iso_rf_tx_clk(.a(rf_tx_clk), .on(island_on[2]), .y(rf_tx_clk_c));
  pt_iso_and #(2) iso_s_pll(.a({s_pll_tx_lock, s_pll_cdr_lock}), .on(island_on[2]), .y({pll_tx_lock, pll_cdr_lock}));
@@ -418,6 +422,7 @@ module pt_digital_macro(
  // status.health (OBS-3, OBS-IMPL): raw power-good of every island switch (a switch absent on this chip reads 0)
  // and the sticky H2D FIFO flags (pt_host_link; synchronized into SCLK by the register file).
  wire h2d_ovf, h2d_unf;
+ wire lo_vt_high, lo_vt_runaway, lo_vt_runaway_clr;   // LO-DIG-1 guard (below): rfpll.status, DBG_OBS codes 53 / 54
  wire[9:0] sw_pg = {s_pg_debug, s_pg_conv, s_pg_pll, s_pg_wired_tx & ON_WIRED, s_pg_wired_cap & ON_WIRED, s_pg_wired_rx & ON_WIRED,
   s_pg_lo & ON_RF, s_pg_lod & ON_RF, s_pg_rf_tx & ON_RF, s_pg_rf_rx & ON_RF};
  pt_digital #(.PT_CHIP(PT_CHIP)) digital(.rst_n(rst_n), .ref_clk(ref_clk), .host_sclk(spi_sclk), .host_cs_n(spi_cs_n), .host_mosi(spi_mosi),
@@ -445,7 +450,8 @@ module pt_digital_macro(
   .wrx_fll_win(wrx_fll_win), .wrx_pick_acc(wrx_pick_acc), .wrx_slip_cnt(wrx_slip_cnt), .wrx_fll_err(wrx_fll_err), .wrx_viol(wrx_viol),
   .usb_line(usb_line), .usb_flags({usb_disconnect, usb_squelch, usb_diff, usb_se1, usb_se0, usb_k, usb_j}),
   .usb_stream({usb_tx_armed, usb_tx_blocked, usb_tx_underrun, usb_tx_busy, usb_rx_active}),
-  .sw_pg(sw_pg), .h2d_ovf(h2d_ovf), .h2d_unf(h2d_unf), .wtx_run(wtx_run));
+  .sw_pg(sw_pg), .h2d_ovf(h2d_ovf), .h2d_unf(h2d_unf), .wtx_run(wtx_run),
+  .lo_vt_high(lo_vt_high), .lo_vt_runaway(lo_vt_runaway), .lo_vt_runaway_clr(lo_vt_runaway_clr));
  assign rx_en_wclk = 1'b0;   // CP4-3: the forwarded wire clock uses the AUX_CLK pair (rx_en_aux); no WCLK_IN receiver
  pt_toggle_div aosc_dv(fc[4], rst_n, aosc_div);
  pt_host_link host(.rst_n(host_rst_n), .mode(f_debug_host_link__mode), .d2h_enable(f_hostio_controls__d2h_enable),
@@ -580,6 +586,7 @@ module pt_digital_macro(
   .c_lo_mmd_en(c_lo_mmd_en),
   .c_lo_mmd_n(c_lo_mmd_n),
   .c_lo_pfdcp_en(c_lo_pfdcp_en),
+  .c_lo_vtdet_en(c_lo_vtdet_en),
   .c_lo_icp(c_lo_icp),
   .c_lo_vreg_en(c_lo_vreg_en),
   .c_lo_obs_en(c_lo_obs_en),
@@ -684,6 +691,10 @@ module pt_digital_macro(
   .c_usb_ls_slow(c_usb_ls_slow),
   .c_usb_term_trim(c_usb_term_trim),
   .c_usb_hs_str(c_usb_hs_str));
+
+ // ---------------- QVCO runaway guard (row LO-DIG-1, software-only variant; rtl/pt_monitor.sv pt_lo_vtguard)
+ pt_lo_vtguard #(.RUN_CYCLES(64)) lo_guard(.rst_n(rst_n), .ref_clk(ref_clk), .det(lo_vtdet),
+  .cfg_preset(f_rfpll_config__lo_preset[0]), .clr_tgl(lo_vt_runaway_clr), .vt_high(lo_vt_high), .vt_runaway(lo_vt_runaway));
 
  // ---------------- wired TX launch (rtl/pt_wtx_ctl.sv): ring enable, SER_EN, pad requests, wire_tx_request
  wire wire_tx_up;

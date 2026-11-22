@@ -26,6 +26,7 @@ module pt_analog_top_stub(
  inout wire BB_Q_P,
  output wire CONV_CLK,
  output wire LO_FB,
+ output wire LO_VTDET,
  output wire PLL_CDR_FBCK,
  output wire PLL_CDR_LOCK,
  output wire PLL_TX_LOCK,
@@ -129,6 +130,7 @@ module pt_analog_top_stub(
  input wire c_lo_pfdcp_en,
  input wire c_lo_pre,
  input wire c_lo_vreg_en,
+ input wire c_lo_vtdet_en,
  input wire [5:0] c_obs_pre4_en,
  input wire c_pll_cdr_band,
  input wire c_pll_cdr_en,
@@ -837,6 +839,8 @@ module pt_analog_top_stub(
  wire p_lo_pfdcp__PRE = c_lo_pre;
  wire p_lo_pfdcp__ICP0 = c_lo_icp[0];
  wire p_lo_pfdcp__ICP1 = c_lo_icp[1];
+ wire p_lo_vtdet__EN = c_lo_vtdet_en;
+ assign LO_VTDET = 1'b0;
  wire p_lo_obs__EN = c_lo_obs_en;
  assign LO_OBS = 1'b0;
  wire p_lo_obs_q__EN = VSS;

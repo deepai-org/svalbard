@@ -48,7 +48,7 @@ module pt_ctl_decode(
  output wire c_rfdriver_bypass, output wire[3:0] c_rfdriver_g, output wire c_rfdriver_se,
  // ---- LO
  output wire c_lo_ext, c_lo_int, c_lo_cmlsel, c_qvco_en, output wire[3:0] c_qvco_band, output wire c_qvco_atb_en,
- output wire c_lo_pre, c_lo_mmd_en, output wire[5:0] c_lo_mmd_n, output wire c_lo_pfdcp_en, output wire[1:0] c_lo_icp,
+ output wire c_lo_pre, c_lo_mmd_en, output wire[5:0] c_lo_mmd_n, output wire c_lo_pfdcp_en, c_lo_vtdet_en, output wire[1:0] c_lo_icp,
  output wire c_lo_vreg_en, c_lo_obs_en, c_refvcm_en,
  // ---- clocks
  output wire c_rx_ref_en, output wire[2:0] c_clockmux_ps, output wire[3:0] c_clockmux_ws, output wire[2:0] c_clockmux_ss,
@@ -213,6 +213,7 @@ module pt_ctl_decode(
  assign c_qvco_en = lo_synth_en;
  assign c_lo_mmd_en = lo_synth_en;
  assign c_lo_pfdcp_en = lo_synth_en;
+ assign c_lo_vtdet_en = c_lo_pfdcp_en;      // pt_lo_vtdet EN with the loop (LO-DIG-1)
  assign c_lo_vreg_en = lo_synth_en;
  assign c_qvco_band = f_rfpll_config__vco_coarse;
  assign c_qvco_atb_en = f_rfpll_config__atb_enable;

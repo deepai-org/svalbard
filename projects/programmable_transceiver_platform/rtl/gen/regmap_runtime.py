@@ -269,6 +269,11 @@ def gray_to_binary(g):
     return b
 
 
+def status_w1c_mask(addr):
+    """Write-1-to-clear bits of a status register (0: read-only). A write that sets only these bits is accepted."""
+    return sum(1 << sf['reg_lsb'] for sf in STATUS_FIELDS if sf['addr'] == addr and sf.get('w1c'))
+
+
 def status_read(addr, inputs):
     """Read value of a read-only status register; inputs maps port name -> raw source value."""
     value = None

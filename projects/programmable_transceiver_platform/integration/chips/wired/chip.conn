@@ -53,6 +53,7 @@ inst digital pt_digital_macro chip
   s_wrx_slp=WRX_SLP s_wrx_slm=WRX_SLM s_wtx_ext_data=WTX_EXT_DATA
   s_aux_present=AUX_PRESENT s_wtx_ext_present=WTX_EXT_PRESENT
   s_wtx_run=WTX_RUN      # pt_wiredtx8 TX_RUN -> status.health.wtx_run (WT50), clamped inside the macro
+  s_lo_vtdet=VSS      # LO VTUNE detector: not on this chip
   fault=VSS      # no monitor block exists (D-FAULT); floating high would force every TX path off
   # every c_* net is a macro output port of the same name (ctl_ports.txt); they are not repeated here. Ports of the
   # other chip's fields (spec/chips.json) have no consumer on this chip.

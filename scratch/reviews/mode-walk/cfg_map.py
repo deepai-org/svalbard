@@ -85,6 +85,7 @@ INTERNAL={
  'usbhs.config.term_enable':'pt_regfile gate_and of usbhs.config.term_trim (pad TERM_TRIM = trim AND enable); also a rule input',
  'txpad.config.branch':'pt_wtx_ctl -> interlock requests','wiredtx.idle.idle':'pt_wtx_ctl','consolidation.wiredtx_stage.stage':'pt_wtx_ctl -> fallback control',
  'wtx.cascode_boost':'commit rules only (WT50 / WT53-c / WT54): the pad_txpad CASCODE pump that will read it is not built yet',
+ 'rfpll.config.band_min':'commit rule rfpll_band_limits only (LO-DIG-1, software-only guard)','rfpll.config.band_max':'commit rule rfpll_band_limits only (LO-DIG-1)',
 }
 PER_CHANNEL={}   # bbfilter trims are per channel since 2026-11-14 (bbfilter_i.trim / bbfilter_q.trim)
 def run(fields,pins):

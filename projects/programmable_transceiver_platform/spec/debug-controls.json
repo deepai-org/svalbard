@@ -1186,14 +1186,14 @@
           "bits": 6,
           "default": 0,
           "minimum": 0,
-          "maximum": 52,
+          "maximum": 54,
           "unit": "code"
         },
         "sel1": {
           "bits": 6,
           "default": 0,
           "minimum": 0,
-          "maximum": 52,
+          "maximum": 54,
           "unit": "code"
         }
       }
@@ -3106,6 +3106,27 @@
           "active"
         ]
       ]
+    },
+    {
+      "id": "rfpll_band_limits",
+      "class": "legality",
+      "node": "QVCO band inside the per-die limit table (LO-DIG-1 item 3)",
+      "then_all": [
+        [
+          "rfpll.config.vco_coarse",
+          "ge_field",
+          [
+            "rfpll.config.band_min"
+          ]
+        ],
+        [
+          "rfpll.config.vco_coarse",
+          "le_field",
+          [
+            "rfpll.config.band_max"
+          ]
+        ]
+      ]
     }
   ],
   "break_before_make": [
@@ -3234,10 +3255,21 @@
           }
         }
       },
-      "status.pll_lock": {
-        "description": "RESERVED slot (0xF2, reads 0): the counter-based PLL lock check was superseded by status.freq_count_a (P3-7). Kept as an empty slot so later status addresses do not move.",
-        "reserved_registers": 1,
-        "fields": {}
+      "rfpll.status": {
+        "description": "LO-DIG-1 QVCO runaway guard (pt_lo_vtguard in rtl/pt_monitor.sv, software-only variant: no hardware preset / band-step / retry). Source: pt_lo_vtdet DET (VTUNE above VDD_LO - 0.26..0.29 V, release 82-93 mV lower), macro input s_lo_vtdet, clamped with the rf enable group (lo island) and two-flop synchronized on REF_CLK. Takes the 0xF2 slot that was reserved since the counter PLL lock check was retired (status.pll_lock), so no status address moves. Both bits are also on DBG_OBS (debug.dbg_obs codes 53 / 54).",
+        "fields": {
+          "vt_high": {
+            "bits": 1,
+            "port": "lo_vt_high",
+            "meaning": "live: VTUNE above the detector threshold (synchronized DET; 0 while the rf group is off)"
+          },
+          "vt_runaway": {
+            "bits": 1,
+            "port": "lo_vt_runaway",
+            "w1c": true,
+            "meaning": "sticky: vt_high persisted >= 64 REF cycles with rfpll.config.lo_preset = 0. Write 1 to clear (a runaway still present sets it again 64 REF cycles later); the clear acts through REF_CLK (one clear per write, REF_CLK running)"
+          }
+        }
       },
       "status.freq_count_a": {
         "description": "Frequency counter a results, held by a req/ack handshake in RTL (no tearing; plain binary). The values are already SCLK-domain registers (pt_freq_count req/ack handshake copy), so they are read directly without the two-flop status synchronizer (sync=false; FF reclaim, scratch/reviews/interface-changes.md).",
@@ -5659,5 +5691,9 @@
         }
       ]
     }
-  }
+  },
+  "obs_status_ext": [
+    "lo_vt_high",
+    "lo_vt_runaway"
+  ]
 }

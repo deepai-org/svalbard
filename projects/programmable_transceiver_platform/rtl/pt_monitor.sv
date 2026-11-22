@@ -261,3 +261,41 @@ module pt_monitor #(
     assign ready = arm_any & ready_m & ~mon_lost;
 endmodule
 `default_nettype wire
+
+// ---------------------------------------------------------------------------------------------------------------
+// pt_lo_vtguard: QVCO runaway guard, software-only variant (row LO-DIG-1 items 1-3; DG9-LO-DIG-1). REF_CLK domain.
+// pt_lo_vtdet DET (1 while VTUNE is above VDD_LO - 0.26..0.29 V) arrives through the macro's island clamp (CP4-1,
+// lo island = rf enable group), is two-flop synchronized here and reported live as vt_high. vt_runaway is sticky:
+// set when vt_high has been high for >= RUN_CYCLES consecutive REF cycles while rfpll.config.lo_preset = 0, cleared
+// by a write-1 to rfpll.status.vt_runaway (clr_tgl: an SCLK-domain toggle from pt_regfile, synchronized here and
+// edge-detected). A runaway that is still present sets the bit again RUN_CYCLES later. No hardware response: the
+// software sees vt_runaway (status register or DBG_OBS) and does the preset / band step / retry itself.
+`default_nettype none
+module pt_lo_vtguard #(parameter integer RUN_CYCLES = 64)(
+    input  wire rst_n,
+    input  wire ref_clk,
+    input  wire det,          // pt_lo_vtdet DET after the island clamp (asynchronous)
+    input  wire cfg_preset,   // rfpll.config.lo_preset (SCLK-domain static level)
+    input  wire clr_tgl,      // pt_regfile write-1-to-clear toggle of rfpll.status.vt_runaway (SCLK domain)
+    output wire vt_high,      // synchronized DET (live)
+    output reg  vt_runaway    // sticky runaway flag
+);
+    localparam integer CW = $clog2(RUN_CYCLES) + 1;
+    wire pre_s, clr_s;
+    pt_sync_bit s_det(.clk(ref_clk), .rst_n(rst_n), .d(det), .q(vt_high));
+    pt_sync_bit s_pre(.clk(ref_clk), .rst_n(rst_n), .d(cfg_preset), .q(pre_s));
+    pt_sync_bit s_clr(.clk(ref_clk), .rst_n(rst_n), .d(clr_tgl), .q(clr_s));
+    reg clr_d;
+    reg [CW-1:0] cnt;         // consecutive REF cycles with vt_high and no preset, saturating at RUN_CYCLES
+    wire run = cnt == RUN_CYCLES;
+    always @(posedge ref_clk or negedge rst_n)
+        if (!rst_n) begin cnt <= {CW{1'b0}}; vt_runaway <= 1'b0; clr_d <= 1'b0; end
+        else begin
+            clr_d <= clr_s;
+            if (!vt_high || pre_s || clr_s != clr_d) cnt <= {CW{1'b0}};   // a clear restarts the count
+            else if (!run) cnt <= cnt + 1'b1;
+            if (clr_s != clr_d) vt_runaway <= 1'b0;
+            else if (run) vt_runaway <= 1'b1;
+        end
+endmodule
+`default_nettype wire

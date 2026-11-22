@@ -594,7 +594,7 @@
  ],
  "break_before_make_rule": "A commit may not change one of these fields directly from one non-zero code to a different non-zero code; it must commit the zero (stopped/off/open) code first. Two SPI transactions separate the commits, far exceeding the 4 ns switch dead time in control_semantics.switch_dead_time_s.",
  "bus_widths": {
-  "analog": 610,
+  "analog": 618,
   "debug": 256
  },
  "cdc_semantics": "The register file is clocked only by SPI SCLK and asynchronously reset by RESET_N AND POR. Active fields are quasi-static: they change only on a successful commit, which also toggles commit_toggle. A consuming clock domain that must see a coherent multi-bit value synchronizes commit_toggle through two flops and reloads its local copy on a toggle edge; the next commit cannot occur for at least one more 32-clock SPI transaction. Purely analog consumers see each field change once per commit; stopped-only fields are changed only while their outputs are isolated.",
@@ -2333,7 +2333,7 @@
    "kind": "debug",
    "live": true,
    "mantissa_bits": null,
-   "maximum": 52,
+   "maximum": 54,
    "meaning": null,
    "minimum": 0,
    "name": "debug.dbg_obs.sel0",
@@ -2382,7 +2382,7 @@
    "kind": "debug",
    "live": true,
    "mantissa_bits": null,
-   "maximum": 52,
+   "maximum": 54,
    "meaning": null,
    "minimum": 0,
    "name": "debug.dbg_obs.sel1",
@@ -8580,6 +8580,107 @@
   },
   {
    "address_slots": 1,
+   "allowed": null,
+   "atb_bus": null,
+   "base": "0xEF",
+   "bits": 4,
+   "bus": "analog",
+   "bus_bits": 4,
+   "bus_lsb": 143,
+   "chips": [
+    "rf"
+   ],
+   "chunks": [
+    {
+     "addr": 239,
+     "field_lsb": 0,
+     "reg_lsb": 0,
+     "width": 4
+    }
+   ],
+   "clear_when_running": null,
+   "decode": null,
+   "decoded_bits": null,
+   "default": 0,
+   "direct": false,
+   "field": "band_min",
+   "gate_and": null,
+   "group": "rfpll.config",
+   "islands": [
+    "rf"
+   ],
+   "kind": "analog",
+   "live": false,
+   "mantissa_bits": null,
+   "maximum": 15,
+   "meaning": "LO-DIG-1 per-die band-search limit table: lowest allowed vco_coarse code (15 = lowest frequency). Commit rule: band_min <= vco_coarse <= band_max; software band search and any hardware acquisition stay inside [band_min, band_max]. 0xEF (free tail): rfpll.config at 0x84 is full and no later address moves.",
+   "minimum": 0,
+   "name": "rfpll.config.band_min",
+   "range_text": null,
+   "split": false,
+   "store": [
+    3,
+    0
+   ],
+   "store_mask": 15,
+   "sv": "rfpll_config__band_min",
+   "trim": null,
+   "unit": "code",
+   "update": "stopped",
+   "values": null
+  },
+  {
+   "address_slots": 1,
+   "allowed": null,
+   "atb_bus": null,
+   "bits": 4,
+   "bus": "analog",
+   "bus_bits": 4,
+   "bus_lsb": 147,
+   "chips": [
+    "rf"
+   ],
+   "chunks": [
+    {
+     "addr": 239,
+     "field_lsb": 0,
+     "reg_lsb": 4,
+     "width": 4
+    }
+   ],
+   "clear_when_running": null,
+   "decode": null,
+   "decoded_bits": null,
+   "default": 15,
+   "direct": false,
+   "field": "band_max",
+   "gate_and": null,
+   "group": "rfpll.config",
+   "islands": [
+    "rf"
+   ],
+   "kind": "analog",
+   "live": false,
+   "mantissa_bits": null,
+   "maximum": 15,
+   "meaning": "LO-DIG-1: highest allowed vco_coarse code (reset 15 = whole range). Set per die below the band where pt_lo_mmd miscounts (the QVCO top of range at ss / sf, 3.15 V).",
+   "minimum": 0,
+   "name": "rfpll.config.band_max",
+   "range_text": null,
+   "split": false,
+   "store": [
+    3,
+    0
+   ],
+   "store_mask": 15,
+   "sv": "rfpll_config__band_max",
+   "trim": null,
+   "unit": "code",
+   "update": "stopped",
+   "values": null
+  },
+  {
+   "address_slots": 1,
    "allowed": [
     0,
     1,
@@ -8589,7 +8690,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 143,
+   "bus_lsb": 151,
    "chips": [
     "rf"
    ],
@@ -8647,7 +8748,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 145,
+   "bus_lsb": 153,
    "chips": [
     "wired"
    ],
@@ -8705,7 +8806,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 147,
+   "bus_lsb": 155,
    "chips": [
     "rf"
    ],
@@ -8763,7 +8864,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 149,
+   "bus_lsb": 157,
    "chips": [
     "rf"
    ],
@@ -8820,7 +8921,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 151,
+   "bus_lsb": 159,
    "chips": [
     "wired"
    ],
@@ -8877,7 +8978,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 152,
+   "bus_lsb": 160,
    "chips": [
     "wired"
    ],
@@ -8931,7 +9032,7 @@
    "bits": 10,
    "bus": "analog",
    "bus_bits": 10,
-   "bus_lsb": 154,
+   "bus_lsb": 162,
    "chips": [
     "wired"
    ],
@@ -8981,7 +9082,7 @@
    "bits": 10,
    "bus": "analog",
    "bus_bits": 10,
-   "bus_lsb": 164,
+   "bus_lsb": 172,
    "chips": [
     "wired"
    ],
@@ -9031,7 +9132,7 @@
    "bits": 10,
    "bus": "analog",
    "bus_bits": 10,
-   "bus_lsb": 174,
+   "bus_lsb": 182,
    "chips": [
     "wired"
    ],
@@ -9081,7 +9182,7 @@
    "bits": 10,
    "bus": "analog",
    "bus_bits": 10,
-   "bus_lsb": 184,
+   "bus_lsb": 192,
    "chips": [
     "wired"
    ],
@@ -9131,7 +9232,7 @@
    "bits": 10,
    "bus": "analog",
    "bus_bits": 10,
-   "bus_lsb": 194,
+   "bus_lsb": 202,
    "chips": [
     "wired"
    ],
@@ -9181,7 +9282,7 @@
    "bits": 10,
    "bus": "analog",
    "bus_bits": 10,
-   "bus_lsb": 204,
+   "bus_lsb": 212,
    "chips": [
     "wired"
    ],
@@ -9231,7 +9332,7 @@
    "bits": 10,
    "bus": "analog",
    "bus_bits": 10,
-   "bus_lsb": 214,
+   "bus_lsb": 222,
    "chips": [
     "wired"
    ],
@@ -9281,7 +9382,7 @@
    "bits": 10,
    "bus": "analog",
    "bus_bits": 10,
-   "bus_lsb": 224,
+   "bus_lsb": 232,
    "chips": [
     "wired"
    ],
@@ -9335,7 +9436,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 234,
+   "bus_lsb": 242,
    "chips": [
     "wired"
    ],
@@ -9389,7 +9490,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 236,
+   "bus_lsb": 244,
    "chips": [
     "wired"
    ],
@@ -9443,7 +9544,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 237,
+   "bus_lsb": 245,
    "chips": [
     "wired"
    ],
@@ -9497,7 +9598,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 239,
+   "bus_lsb": 247,
    "chips": [
     "wired"
    ],
@@ -9547,7 +9648,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 240,
+   "bus_lsb": 248,
    "chips": [
     "wired"
    ],
@@ -9597,7 +9698,7 @@
    "bits": 4,
    "bus": "analog",
    "bus_bits": 4,
-   "bus_lsb": 241,
+   "bus_lsb": 249,
    "chips": [
     "wired"
    ],
@@ -9651,7 +9752,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 245,
+   "bus_lsb": 253,
    "chips": [
     "rf"
    ],
@@ -9709,7 +9810,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 247,
+   "bus_lsb": 255,
    "chips": [
     "rf"
    ],
@@ -9768,7 +9869,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 249,
+   "bus_lsb": 257,
    "chips": [
     "wired"
    ],
@@ -9823,7 +9924,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 251,
+   "bus_lsb": 259,
    "chips": [
     "wired"
    ],
@@ -9877,7 +9978,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 252,
+   "bus_lsb": 260,
    "chips": [
     "rf"
    ],
@@ -9935,7 +10036,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 254,
+   "bus_lsb": 262,
    "chips": [
     "wired"
    ],
@@ -9993,7 +10094,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 256,
+   "bus_lsb": 264,
    "chips": [
     "wired"
    ],
@@ -10047,7 +10148,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 258,
+   "bus_lsb": 266,
    "chips": [
     "wired"
    ],
@@ -10097,7 +10198,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 259,
+   "bus_lsb": 267,
    "chips": [
     "wired"
    ],
@@ -10147,7 +10248,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 260,
+   "bus_lsb": 268,
    "chips": [
     "wired"
    ],
@@ -10197,7 +10298,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 261,
+   "bus_lsb": 269,
    "chips": [
     "wired"
    ],
@@ -10247,7 +10348,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 262,
+   "bus_lsb": 270,
    "chips": [
     "wired"
    ],
@@ -10300,7 +10401,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 263,
+   "bus_lsb": 271,
    "chips": [
     "wired"
    ],
@@ -10353,7 +10454,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 264,
+   "bus_lsb": 272,
    "chips": [
     "wired"
    ],
@@ -10403,7 +10504,7 @@
    "bits": 8,
    "bus": "analog",
    "bus_bits": 8,
-   "bus_lsb": 265,
+   "bus_lsb": 273,
    "chips": [
     "wired"
    ],
@@ -10453,7 +10554,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 273,
+   "bus_lsb": 281,
    "chips": [
     "wired"
    ],
@@ -10554,7 +10655,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 274,
+   "bus_lsb": 282,
    "chips": [
     "wired"
    ],
@@ -10604,7 +10705,7 @@
    "bits": 3,
    "bus": "analog",
    "bus_bits": 3,
-   "bus_lsb": 275,
+   "bus_lsb": 283,
    "chips": [
     "wired"
    ],
@@ -10654,7 +10755,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 278,
+   "bus_lsb": 286,
    "chips": [
     "wired"
    ],
@@ -10704,7 +10805,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 279,
+   "bus_lsb": 287,
    "chips": [
     "wired"
    ],
@@ -10754,7 +10855,7 @@
    "bits": 8,
    "bus": "analog",
    "bus_bits": 8,
-   "bus_lsb": 281,
+   "bus_lsb": 289,
    "chips": [
     "wired"
    ],
@@ -10804,7 +10905,7 @@
    "bits": 8,
    "bus": "analog",
    "bus_bits": 8,
-   "bus_lsb": 289,
+   "bus_lsb": 297,
    "chips": [
     "wired"
    ],
@@ -10854,7 +10955,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 297,
+   "bus_lsb": 305,
    "chips": [
     "wired"
    ],
@@ -10904,7 +11005,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 298,
+   "bus_lsb": 306,
    "chips": [
     "wired"
    ],
@@ -10958,7 +11059,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 299,
+   "bus_lsb": 307,
    "chips": [
     "wired"
    ],
@@ -11012,7 +11113,7 @@
    "bits": 3,
    "bus": "analog",
    "bus_bits": 3,
-   "bus_lsb": 301,
+   "bus_lsb": 309,
    "chips": [
     "rf",
     "wired"
@@ -11063,7 +11164,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 304,
+   "bus_lsb": 312,
    "chips": [
     "rf",
     "wired"
@@ -11114,7 +11215,7 @@
    "bits": 6,
    "bus": "analog",
    "bus_bits": 6,
-   "bus_lsb": 305,
+   "bus_lsb": 313,
    "chips": [
     "rf",
     "wired"
@@ -11165,7 +11266,7 @@
    "bits": 5,
    "bus": "analog",
    "bus_bits": 5,
-   "bus_lsb": 311,
+   "bus_lsb": 319,
    "chips": [
     "wired"
    ],
@@ -11216,7 +11317,7 @@
    "bits": 5,
    "bus": "analog",
    "bus_bits": 5,
-   "bus_lsb": 316,
+   "bus_lsb": 324,
    "chips": [
     "wired"
    ],
@@ -11267,7 +11368,7 @@
    "bits": 5,
    "bus": "analog",
    "bus_bits": 5,
-   "bus_lsb": 321,
+   "bus_lsb": 329,
    "chips": [
     "wired"
    ],
@@ -11318,7 +11419,7 @@
    "bits": 5,
    "bus": "analog",
    "bus_bits": 5,
-   "bus_lsb": 326,
+   "bus_lsb": 334,
    "chips": [
     "wired"
    ],
@@ -11369,7 +11470,7 @@
    "bits": 5,
    "bus": "analog",
    "bus_bits": 5,
-   "bus_lsb": 331,
+   "bus_lsb": 339,
    "chips": [
     "wired"
    ],
@@ -11420,7 +11521,7 @@
    "bits": 5,
    "bus": "analog",
    "bus_bits": 5,
-   "bus_lsb": 336,
+   "bus_lsb": 344,
    "chips": [
     "wired"
    ],
@@ -11471,7 +11572,7 @@
    "bits": 5,
    "bus": "analog",
    "bus_bits": 5,
-   "bus_lsb": 341,
+   "bus_lsb": 349,
    "chips": [
     "wired"
    ],
@@ -11522,7 +11623,7 @@
    "bits": 5,
    "bus": "analog",
    "bus_bits": 5,
-   "bus_lsb": 346,
+   "bus_lsb": 354,
    "chips": [
     "wired"
    ],
@@ -11573,7 +11674,7 @@
    "bits": 4,
    "bus": "analog",
    "bus_bits": 4,
-   "bus_lsb": 351,
+   "bus_lsb": 359,
    "chips": [
     "rf"
    ],
@@ -11623,7 +11724,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 355,
+   "bus_lsb": 363,
    "chips": [
     "rf"
    ],
@@ -11673,7 +11774,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 356,
+   "bus_lsb": 364,
    "chips": [
     "rf"
    ],
@@ -11723,7 +11824,7 @@
    "bits": 5,
    "bus": "analog",
    "bus_bits": 5,
-   "bus_lsb": 357,
+   "bus_lsb": 365,
    "chips": [
     "rf"
    ],
@@ -11773,7 +11874,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 362,
+   "bus_lsb": 370,
    "chips": [
     "rf"
    ],
@@ -11823,7 +11924,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 363,
+   "bus_lsb": 371,
    "chips": [
     "rf",
     "wired"
@@ -11874,7 +11975,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 364,
+   "bus_lsb": 372,
    "chips": [
     "rf",
     "wired"
@@ -11925,7 +12026,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 365,
+   "bus_lsb": 373,
    "chips": [
     "rf"
    ],
@@ -11975,7 +12076,7 @@
    "bits": 6,
    "bus": "analog",
    "bus_bits": 6,
-   "bus_lsb": 366,
+   "bus_lsb": 374,
    "chips": [
     "rf"
    ],
@@ -12025,7 +12126,7 @@
    "bits": 6,
    "bus": "analog",
    "bus_bits": 6,
-   "bus_lsb": 372,
+   "bus_lsb": 380,
    "chips": [
     "rf"
    ],
@@ -12075,7 +12176,7 @@
    "bits": 6,
    "bus": "analog",
    "bus_bits": 6,
-   "bus_lsb": 378,
+   "bus_lsb": 386,
    "chips": [
     "rf"
    ],
@@ -12125,7 +12226,7 @@
    "bits": 6,
    "bus": "analog",
    "bus_bits": 6,
-   "bus_lsb": 384,
+   "bus_lsb": 392,
    "chips": [
     "rf"
    ],
@@ -12175,7 +12276,7 @@
    "bits": 7,
    "bus": "analog",
    "bus_bits": 7,
-   "bus_lsb": 390,
+   "bus_lsb": 398,
    "chips": [
     "rf"
    ],
@@ -12225,7 +12326,7 @@
    "bits": 5,
    "bus": "analog",
    "bus_bits": 5,
-   "bus_lsb": 397,
+   "bus_lsb": 405,
    "chips": [
     "rf"
    ],
@@ -12275,7 +12376,7 @@
    "bits": 4,
    "bus": "analog",
    "bus_bits": 4,
-   "bus_lsb": 402,
+   "bus_lsb": 410,
    "chips": [
     "rf"
    ],
@@ -12325,7 +12426,7 @@
    "bits": 9,
    "bus": "analog",
    "bus_bits": 9,
-   "bus_lsb": 406,
+   "bus_lsb": 414,
    "chips": [
     "rf"
    ],
@@ -12375,7 +12476,7 @@
    "bits": 7,
    "bus": "analog",
    "bus_bits": 7,
-   "bus_lsb": 415,
+   "bus_lsb": 423,
    "chips": [
     "rf"
    ],
@@ -12425,7 +12526,7 @@
    "bits": 5,
    "bus": "analog",
    "bus_bits": 5,
-   "bus_lsb": 422,
+   "bus_lsb": 430,
    "chips": [
     "rf"
    ],
@@ -12475,7 +12576,7 @@
    "bits": 4,
    "bus": "analog",
    "bus_bits": 4,
-   "bus_lsb": 427,
+   "bus_lsb": 435,
    "chips": [
     "rf"
    ],
@@ -12525,7 +12626,7 @@
    "bits": 9,
    "bus": "analog",
    "bus_bits": 9,
-   "bus_lsb": 431,
+   "bus_lsb": 439,
    "chips": [
     "rf"
    ],
@@ -12575,7 +12676,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 440,
+   "bus_lsb": 448,
    "chips": [
     "rf"
    ],
@@ -12625,7 +12726,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 441,
+   "bus_lsb": 449,
    "chips": [
     "rf"
    ],
@@ -12675,7 +12776,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 443,
+   "bus_lsb": 451,
    "chips": [
     "rf",
     "wired"
@@ -12730,7 +12831,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 444,
+   "bus_lsb": 452,
    "chips": [
     "rf",
     "wired"
@@ -12785,7 +12886,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 446,
+   "bus_lsb": 454,
    "chips": [
     "rf",
     "wired"
@@ -12836,7 +12937,7 @@
    "bits": 8,
    "bus": "analog",
    "bus_bits": 8,
-   "bus_lsb": 447,
+   "bus_lsb": 455,
    "chips": [
     "rf",
     "wired"
@@ -12892,7 +12993,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 455,
+   "bus_lsb": 463,
    "chips": [
     "rf",
     "wired"
@@ -12948,7 +13049,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 457,
+   "bus_lsb": 465,
    "chips": [
     "rf",
     "wired"
@@ -13005,7 +13106,7 @@
    "bits": 3,
    "bus": "analog",
    "bus_bits": 3,
-   "bus_lsb": 458,
+   "bus_lsb": 466,
    "chips": [
     "rf",
     "wired"
@@ -13062,7 +13163,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 461,
+   "bus_lsb": 469,
    "chips": [
     "rf",
     "wired"
@@ -13113,7 +13214,7 @@
    "bits": 3,
    "bus": "analog",
    "bus_bits": 3,
-   "bus_lsb": 462,
+   "bus_lsb": 470,
    "chips": [
     "rf",
     "wired"
@@ -13164,7 +13265,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 465,
+   "bus_lsb": 473,
    "chips": [
     "wired"
    ],
@@ -13214,7 +13315,7 @@
    "bits": 8,
    "bus": "analog",
    "bus_bits": 8,
-   "bus_lsb": 466,
+   "bus_lsb": 474,
    "chips": [
     "wired"
    ],
@@ -13264,7 +13365,7 @@
    "bits": 8,
    "bus": "analog",
    "bus_bits": 8,
-   "bus_lsb": 474,
+   "bus_lsb": 482,
    "chips": [
     "wired"
    ],
@@ -13314,7 +13415,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 482,
+   "bus_lsb": 490,
    "chips": [
     "wired"
    ],
@@ -13364,7 +13465,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 484,
+   "bus_lsb": 492,
    "chips": [
     "wired"
    ],
@@ -13414,7 +13515,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 486,
+   "bus_lsb": 494,
    "chips": [
     "wired"
    ],
@@ -13464,7 +13565,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 488,
+   "bus_lsb": 496,
    "chips": [
     "wired"
    ],
@@ -13514,7 +13615,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 490,
+   "bus_lsb": 498,
    "chips": [
     "wired"
    ],
@@ -13568,7 +13669,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 491,
+   "bus_lsb": 499,
    "chips": [
     "wired"
    ],
@@ -13626,7 +13727,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 493,
+   "bus_lsb": 501,
    "chips": [
     "wired"
    ],
@@ -13680,7 +13781,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 495,
+   "bus_lsb": 503,
    "chips": [
     "wired"
    ],
@@ -13730,7 +13831,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 496,
+   "bus_lsb": 504,
    "chips": [
     "wired"
    ],
@@ -13780,7 +13881,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 497,
+   "bus_lsb": 505,
    "chips": [
     "wired"
    ],
@@ -13830,7 +13931,7 @@
    "bits": 8,
    "bus": "analog",
    "bus_bits": 8,
-   "bus_lsb": 499,
+   "bus_lsb": 507,
    "chips": [
     "wired"
    ],
@@ -13880,7 +13981,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 507,
+   "bus_lsb": 515,
    "chips": [
     "wired"
    ],
@@ -13930,7 +14031,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 509,
+   "bus_lsb": 517,
    "chips": [
     "wired"
    ],
@@ -13980,7 +14081,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 510,
+   "bus_lsb": 518,
    "chips": [
     "wired"
    ],
@@ -14030,7 +14131,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 511,
+   "bus_lsb": 519,
    "chips": [
     "wired"
    ],
@@ -14080,7 +14181,7 @@
    "bits": 8,
    "bus": "analog",
    "bus_bits": 8,
-   "bus_lsb": 512,
+   "bus_lsb": 520,
    "chips": [
     "wired"
    ],
@@ -14130,7 +14231,7 @@
    "bits": 5,
    "bus": "analog",
    "bus_bits": 5,
-   "bus_lsb": 520,
+   "bus_lsb": 528,
    "chips": [
     "wired"
    ],
@@ -14180,7 +14281,7 @@
    "bits": 8,
    "bus": "analog",
    "bus_bits": 8,
-   "bus_lsb": 525,
+   "bus_lsb": 533,
    "chips": [
     "wired"
    ],
@@ -14230,7 +14331,7 @@
    "bits": 4,
    "bus": "analog",
    "bus_bits": 4,
-   "bus_lsb": 533,
+   "bus_lsb": 541,
    "chips": [
     "wired"
    ],
@@ -14280,7 +14381,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 537,
+   "bus_lsb": 545,
    "chips": [
     "wired"
    ],
@@ -14333,7 +14434,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 538,
+   "bus_lsb": 546,
    "chips": [
     "wired"
    ],
@@ -14386,7 +14487,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 540,
+   "bus_lsb": 548,
    "chips": [
     "wired"
    ],
@@ -14434,7 +14535,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 541,
+   "bus_lsb": 549,
    "chips": [
     "wired"
    ],
@@ -14482,7 +14583,7 @@
    "bits": 3,
    "bus": "analog",
    "bus_bits": 3,
-   "bus_lsb": 542,
+   "bus_lsb": 550,
    "chips": [
     "wired"
    ],
@@ -14530,7 +14631,7 @@
    "bits": 8,
    "bus": "analog",
    "bus_bits": 8,
-   "bus_lsb": 545,
+   "bus_lsb": 553,
    "chips": [
     "wired"
    ],
@@ -14578,7 +14679,7 @@
    "bits": 12,
    "bus": "analog",
    "bus_bits": 12,
-   "bus_lsb": 553,
+   "bus_lsb": 561,
    "chips": [
     "wired"
    ],
@@ -14626,7 +14727,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 565,
+   "bus_lsb": 573,
    "chips": [
     "wired"
    ],
@@ -14674,7 +14775,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 566,
+   "bus_lsb": 574,
    "chips": [
     "wired"
    ],
@@ -14722,7 +14823,7 @@
    "bits": 8,
    "bus": "analog",
    "bus_bits": 8,
-   "bus_lsb": 567,
+   "bus_lsb": 575,
    "chips": [
     "wired"
    ],
@@ -14770,7 +14871,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 575,
+   "bus_lsb": 583,
    "chips": [
     "wired"
    ],
@@ -14818,7 +14919,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 576,
+   "bus_lsb": 584,
    "chips": [
     "wired"
    ],
@@ -14866,7 +14967,7 @@
    "bits": 6,
    "bus": "analog",
    "bus_bits": 6,
-   "bus_lsb": 577,
+   "bus_lsb": 585,
    "chips": [
     "wired"
    ],
@@ -14914,7 +15015,7 @@
    "bits": 4,
    "bus": "analog",
    "bus_bits": 4,
-   "bus_lsb": 583,
+   "bus_lsb": 591,
    "chips": [
     "wired"
    ],
@@ -14962,7 +15063,7 @@
    "bits": 3,
    "bus": "analog",
    "bus_bits": 3,
-   "bus_lsb": 587,
+   "bus_lsb": 595,
    "chips": [
     "wired"
    ],
@@ -15010,7 +15111,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 590,
+   "bus_lsb": 598,
    "chips": [
     "wired"
    ],
@@ -15058,7 +15159,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 591,
+   "bus_lsb": 599,
    "chips": [
     "wired"
    ],
@@ -15106,7 +15207,7 @@
    "bits": 1,
    "bus": "analog",
    "bus_bits": 1,
-   "bus_lsb": 592,
+   "bus_lsb": 600,
    "chips": [
     "wired"
    ],
@@ -15154,7 +15255,7 @@
    "bits": 5,
    "bus": "analog",
    "bus_bits": 5,
-   "bus_lsb": 593,
+   "bus_lsb": 601,
    "chips": [
     "wired"
    ],
@@ -15202,7 +15303,7 @@
    "bits": 4,
    "bus": "analog",
    "bus_bits": 4,
-   "bus_lsb": 598,
+   "bus_lsb": 606,
    "chips": [
     "wired"
    ],
@@ -15250,7 +15351,7 @@
    "bits": 4,
    "bus": "analog",
    "bus_bits": 4,
-   "bus_lsb": 602,
+   "bus_lsb": 610,
    "chips": [
     "wired"
    ],
@@ -15298,7 +15399,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 606,
+   "bus_lsb": 614,
    "chips": [
     "wired"
    ],
@@ -15351,7 +15452,7 @@
    "bits": 2,
    "bus": "analog",
    "bus_bits": 2,
-   "bus_lsb": 608,
+   "bus_lsb": 616,
    "chips": [
     "wired"
    ],
@@ -16275,12 +16376,15 @@
     "rfpll.config.lo_n",
     "rfpll.config.lo_icp",
     "rfpll.config.lo_preset",
-    "rfpll.config.atb_enable"
+    "rfpll.config.atb_enable",
+    "rfpll.config.band_min",
+    "rfpll.config.band_max"
    ],
    "kind": "analog",
    "name": "rfpll.config",
    "registers": [
-    132
+    132,
+    239
    ],
    "update": "stopped"
   },
@@ -16892,7 +16996,7 @@
  },
  "last_analog": 183,
  "last_debug": 93,
- "map_hash16": 20126,
+ "map_hash16": 19521,
  "obs_status": [
   "island_pgood_wired",
   "island_pgood_rf",
@@ -16926,6 +17030,10 @@
   "payload_enable",
   "host_rx_clk_div",
   "aosc_div"
+ ],
+ "obs_status_ext": [
+  "lo_vt_high",
+  "lo_vt_runaway"
  ],
  "registers": [
   {
@@ -18481,6 +18589,27 @@
    "kind": "analog",
    "reset": 0,
    "writable_mask": 65535
+  },
+  {
+   "addr": 239,
+   "chunks": [
+    [
+     "rfpll.config.band_min",
+     0,
+     4,
+     0
+    ],
+    [
+     "rfpll.config.band_max",
+     0,
+     4,
+     4
+    ]
+   ],
+   "group": "rfpll.config",
+   "kind": "analog",
+   "reset": 240,
+   "writable_mask": 255
   },
   {
    "addr": 133,
@@ -21369,6 +21498,30 @@
   },
   {
    "cls": "legality",
+   "id": "rfpll_band_limits",
+   "if_all": [],
+   "if_any": [],
+   "node": "QVCO band inside the per-die limit table (LO-DIG-1 item 3)",
+   "source": "spec/debug-controls.json",
+   "then_all": [
+    [
+     "rfpll.config.vco_coarse",
+     "ge_field",
+     [
+      "rfpll.config.band_min"
+     ]
+    ],
+    [
+     "rfpll.config.vco_coarse",
+     "le_field",
+     [
+      "rfpll.config.band_max"
+     ]
+    ]
+   ]
+  },
+  {
+   "cls": "legality",
    "id": "atb0_force_conv_vref_needs_override",
    "if_all": [],
    "if_any": [
@@ -21450,7 +21603,8 @@
    "port": "pattern_locked",
    "reg_lsb": 0,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 240,
@@ -21463,7 +21617,8 @@
    "port": "pattern_lost_lock",
    "reg_lsb": 1,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 241,
@@ -21476,7 +21631,36 @@
    "port": "pattern_errors_gray",
    "reg_lsb": 0,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
+  },
+  {
+   "addr": 242,
+   "bits": 1,
+   "encoding": "binary",
+   "field": "vt_high",
+   "group": "rfpll.status",
+   "meaning": "live: VTUNE above the detector threshold (synchronized DET; 0 while the rf group is off)",
+   "name": "rfpll.status.vt_high",
+   "port": "lo_vt_high",
+   "reg_lsb": 0,
+   "reserved": false,
+   "sync": true,
+   "w1c": false
+  },
+  {
+   "addr": 242,
+   "bits": 1,
+   "encoding": "binary",
+   "field": "vt_runaway",
+   "group": "rfpll.status",
+   "meaning": "sticky: vt_high persisted >= 64 REF cycles with rfpll.config.lo_preset = 0. Write 1 to clear (a runaway still present sets it again 64 REF cycles later); the clear acts through REF_CLK (one clear per write, REF_CLK running)",
+   "name": "rfpll.status.vt_runaway",
+   "port": "lo_vt_runaway",
+   "reg_lsb": 1,
+   "reserved": false,
+   "sync": true,
+   "w1c": true
   },
   {
    "addr": 243,
@@ -21489,7 +21673,8 @@
    "port": "fca_locked",
    "reg_lsb": 0,
    "reserved": false,
-   "sync": false
+   "sync": false,
+   "w1c": false
   },
   {
    "addr": 243,
@@ -21502,7 +21687,8 @@
    "port": "fca_lost",
    "reg_lsb": 1,
    "reserved": false,
-   "sync": false
+   "sync": false,
+   "w1c": false
   },
   {
    "addr": 243,
@@ -21515,7 +21701,8 @@
    "port": "fca_diff",
    "reg_lsb": 2,
    "reserved": false,
-   "sync": false
+   "sync": false,
+   "w1c": false
   },
   {
    "addr": 244,
@@ -21528,7 +21715,8 @@
    "port": "fca_count",
    "reg_lsb": 0,
    "reserved": false,
-   "sync": false
+   "sync": false,
+   "w1c": false
   },
   {
    "addr": 245,
@@ -21541,7 +21729,8 @@
    "port": "fcb_locked",
    "reg_lsb": 0,
    "reserved": false,
-   "sync": false
+   "sync": false,
+   "w1c": false
   },
   {
    "addr": 245,
@@ -21554,7 +21743,8 @@
    "port": "fcb_lost",
    "reg_lsb": 1,
    "reserved": false,
-   "sync": false
+   "sync": false,
+   "w1c": false
   },
   {
    "addr": 245,
@@ -21567,7 +21757,8 @@
    "port": "fcb_diff",
    "reg_lsb": 2,
    "reserved": false,
-   "sync": false
+   "sync": false,
+   "w1c": false
   },
   {
    "addr": 246,
@@ -21580,7 +21771,8 @@
    "port": "fcb_count",
    "reg_lsb": 0,
    "reserved": false,
-   "sync": false
+   "sync": false,
+   "w1c": false
   },
   {
    "addr": 247,
@@ -21593,7 +21785,8 @@
    "port": "mon_cause",
    "reg_lsb": 0,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 247,
@@ -21606,7 +21799,8 @@
    "port": "mon_cause_clk",
    "reg_lsb": 10,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 247,
@@ -21619,7 +21813,8 @@
    "port": "mon_ready",
    "reg_lsb": 11,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 247,
@@ -21632,7 +21827,8 @@
    "port": "mon_dead",
    "reg_lsb": 12,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 247,
@@ -21645,7 +21841,8 @@
    "port": "mon_ref_alive",
    "reg_lsb": 13,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 247,
@@ -21658,7 +21855,8 @@
    "port": "mon_in_alive",
    "reg_lsb": 14,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 247,
@@ -21671,7 +21869,8 @@
    "port": "mon_fault",
    "reg_lsb": 15,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 248,
@@ -21684,7 +21883,8 @@
    "port": "mon_qualified",
    "reg_lsb": 0,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 249,
@@ -21697,7 +21897,8 @@
    "port": "wtx_state",
    "reg_lsb": 0,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 249,
@@ -21710,7 +21911,8 @@
    "port": "wtx_seq_fault",
    "reg_lsb": 3,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 249,
@@ -21723,7 +21925,8 @@
    "port": "wtx_ring_ready",
    "reg_lsb": 4,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 249,
@@ -21736,7 +21939,8 @@
    "port": "wrx_state",
    "reg_lsb": 5,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 249,
@@ -21749,7 +21953,8 @@
    "port": "wrx_flags",
    "reg_lsb": 8,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 250,
@@ -21762,7 +21967,8 @@
    "port": "wrx_fll_err",
    "reg_lsb": 0,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 251,
@@ -21775,7 +21981,8 @@
    "port": "wrx_viol",
    "reg_lsb": 0,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 251,
@@ -21788,7 +21995,8 @@
    "port": "wrx_fll_win",
    "reg_lsb": 5,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 252,
@@ -21801,7 +22009,8 @@
    "port": "wrx_pick_acc",
    "reg_lsb": 0,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 252,
@@ -21814,7 +22023,8 @@
    "port": "wrx_slip_cnt",
    "reg_lsb": 8,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 253,
@@ -21827,7 +22037,8 @@
    "port": "usb_line",
    "reg_lsb": 0,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 253,
@@ -21840,7 +22051,8 @@
    "port": "usb_flags",
    "reg_lsb": 2,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 253,
@@ -21853,7 +22065,8 @@
    "port": "usb_stream",
    "reg_lsb": 9,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 254,
@@ -21866,7 +22079,8 @@
    "port": "chip_id",
    "reg_lsb": 0,
    "reserved": false,
-   "sync": false
+   "sync": false,
+   "w1c": false
   },
   {
    "addr": 255,
@@ -21879,7 +22093,8 @@
    "port": "sw_pg",
    "reg_lsb": 0,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 255,
@@ -21892,7 +22107,8 @@
    "port": "h2d_ovf",
    "reg_lsb": 10,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 255,
@@ -21905,7 +22121,8 @@
    "port": "h2d_unf",
    "reg_lsb": 11,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   },
   {
    "addr": 255,
@@ -21918,7 +22135,8 @@
    "port": "wtx_run",
    "reg_lsb": 12,
    "reserved": false,
-   "sync": true
+   "sync": true,
+   "w1c": false
   }
  ],
  "status_registers": [
@@ -21939,7 +22157,8 @@
     ]
    ],
    "group": "status.pattern",
-   "kind": "status"
+   "kind": "status",
+   "w1c_mask": 0
   },
   {
    "addr": 241,
@@ -21952,7 +22171,28 @@
     ]
    ],
    "group": "status.pattern",
-   "kind": "status"
+   "kind": "status",
+   "w1c_mask": 0
+  },
+  {
+   "addr": 242,
+   "chunks": [
+    [
+     "rfpll.status.vt_high",
+     0,
+     1,
+     0
+    ],
+    [
+     "rfpll.status.vt_runaway",
+     0,
+     1,
+     1
+    ]
+   ],
+   "group": "rfpll.status",
+   "kind": "status",
+   "w1c_mask": 2
   },
   {
    "addr": 243,
@@ -21977,7 +22217,8 @@
     ]
    ],
    "group": "status.freq_count_a",
-   "kind": "status"
+   "kind": "status",
+   "w1c_mask": 0
   },
   {
    "addr": 244,
@@ -21990,7 +22231,8 @@
     ]
    ],
    "group": "status.freq_count_a",
-   "kind": "status"
+   "kind": "status",
+   "w1c_mask": 0
   },
   {
    "addr": 245,
@@ -22015,7 +22257,8 @@
     ]
    ],
    "group": "status.freq_count_b",
-   "kind": "status"
+   "kind": "status",
+   "w1c_mask": 0
   },
   {
    "addr": 246,
@@ -22028,7 +22271,8 @@
     ]
    ],
    "group": "status.freq_count_b",
-   "kind": "status"
+   "kind": "status",
+   "w1c_mask": 0
   },
   {
    "addr": 247,
@@ -22077,7 +22321,8 @@
     ]
    ],
    "group": "status.monitor",
-   "kind": "status"
+   "kind": "status",
+   "w1c_mask": 0
   },
   {
    "addr": 248,
@@ -22090,7 +22335,8 @@
     ]
    ],
    "group": "status.monitor",
-   "kind": "status"
+   "kind": "status",
+   "w1c_mask": 0
   },
   {
    "addr": 249,
@@ -22127,7 +22373,8 @@
     ]
    ],
    "group": "status.wired",
-   "kind": "status"
+   "kind": "status",
+   "w1c_mask": 0
   },
   {
    "addr": 250,
@@ -22140,7 +22387,8 @@
     ]
    ],
    "group": "status.wired",
-   "kind": "status"
+   "kind": "status",
+   "w1c_mask": 0
   },
   {
    "addr": 251,
@@ -22159,7 +22407,8 @@
     ]
    ],
    "group": "status.wired",
-   "kind": "status"
+   "kind": "status",
+   "w1c_mask": 0
   },
   {
    "addr": 252,
@@ -22178,7 +22427,8 @@
     ]
    ],
    "group": "status.wired",
-   "kind": "status"
+   "kind": "status",
+   "w1c_mask": 0
   },
   {
    "addr": 253,
@@ -22203,7 +22453,8 @@
     ]
    ],
    "group": "status.usb",
-   "kind": "status"
+   "kind": "status",
+   "w1c_mask": 0
   },
   {
    "addr": 254,
@@ -22216,7 +22467,8 @@
     ]
    ],
    "group": "status.chip",
-   "kind": "status"
+   "kind": "status",
+   "w1c_mask": 0
   },
   {
    "addr": 255,
@@ -22247,7 +22499,8 @@
     ]
    ],
    "group": "status.health",
-   "kind": "status"
+   "kind": "status",
+   "w1c_mask": 0
   }
  ],
  "wire_status": [

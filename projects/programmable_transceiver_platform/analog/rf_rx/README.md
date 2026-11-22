@@ -13,6 +13,7 @@ sources: section 7. Risks: IDs refer to `spec/risk-register.md`.
 | `bb_tap` | `pt_bb_tap` | published on disk | 19,511 (99.08 × 196.92) | 0 / 0, unique | current: matches netlist and GDS (20 corners) |
 | `rxmix_i`, `rxmix_q` | `pt_rxmix_i/q` | candidate, not published | 35,442 (192.73 × 183.9) | 0 / 0, unique | current (reduced 10-corner set); chain NF / IIP3 rows open |
 | `lna` | `pt_lna` | candidate, NOT publishable: layout round 3 fixes the current-carrying routes only in part; metal-aware results miss NF, S11, chain NF and common-mode stability (5a) | 129,592 (round 3; was 64,712), plus two 57.2k tank and two 14.0k degeneration spirals | 0 / 0, unique | section 5a (`scratch/rf_rx/close_rext/`, `scratch/rf_rx/r3/`) |
+| `lna_ind`, `lna_deg` | `pt_lna_ind`, `pt_lna_deg` | baseline to assembly (2026-11-22): spirals with pins at the edge (A west, B south, Metal5) and PMNDMY + IND_MK keep-out over the cell (`spiral_finish.py`) | 85,840 (290.0 × 296.0), 29,920 (170.0 × 176.0) | 0 / 0; A and B are one net (black-box at top LVS) | analytic models in `lna_spiral.py` |
 
 Areas and DRC/LVS are from `generated/<block>-layout.json`. `integration/chips/{rf,wired}/chip.conn` binds the cells in
 `generated/` (masters `generated/<block>.ext.spice`), including the candidate LNA and mixer pin lists. The

@@ -6,6 +6,11 @@ Current work status is in `SESSION-STATE.md`, not here.
 
 ## 1. Scope and priorities
 
+- **Baseline first (user, 2026-11-22).** Highest priority is a complete, finished-if-imperfect design of both chips:
+  every instance has real layout (no placeholders), both chips assemble, route, pass top-level LVS and the shuttle
+  precheck (or are close with each remaining item owned). Use each block's current best version with its known misses
+  recorded; performance work continues afterwards through many review passes before tapeout. Work that blocks the
+  baseline beats margin work.
 - **Two chips (user, 2026-11-19).** The design is split into two independent, self-sufficient chips on two
   shuttle slots: `pt_rf` (radio, LO, converters) and `pt_wired` (wired RX/TX, USB, Ethernet). Each has its own
   power-up, reset, SPI, host link, bias and debug; neither depends on the other. One block library and one RTL

@@ -202,7 +202,7 @@ nets (`lna_netres.py`, pads owner's mesh solver), cross-checked by Magic `extres
 
 | Row | Limit | Result | State |
 | --- | --- | --- | --- |
-| Layout | DRC 0 / 0, LVS unique | 129,592 µm²; 0 / 0; unique (read-back LVS not redone) | pass (area +64.9k) |
+| Layout | DRC 0 / 0, LVS unique | 129,592 µm²; 0 / 0; unique; read-back from the GDS unique, census 1116 = 1116 (`generated/readback-lvs.json`; negative control fails on the census) | pass (area +64.9k) |
 | Supply current, RX / `lobias`, 20 corners, rext | ≤ 19.0 / ≤ 11.8 mA | 14.5–15.5 / 9.9–10.3 mA (C-only 18.2: metal drops on VSS / tail cost 16 %) | pass, below design point |
 | Electromigration of the stage-current routes (85 °C, 2.09 mA/µm, 0.58 mA/cut) | pass | estimate only (`scratch/rf-lna-q/em3.py`, two-terminal mesh solves, no superposition): tracks 1.98–2.07 mA/µm (1–5 % margin); per cut ≤ 0.46 mA on the full-current paths, 0.25 mA on the small gain-step units at their own current | not signed off (old layout ~30× over) |
 | Stability, pt_rf bond model × 3 bounds, 38 rows + references, 5 MHz–30 GHz, rext | μ, K > 1; Re ≥ 1.0 Ω | μ ≥ 1.008, K ≥ 2.95, differential ≥ 1.17 Ω; common mode 0.74–1.34 Ω at 5–8 GHz (LNA off 0.90), 0.45 Ω at 30 GHz; ≥ 1.07 Ω below 1 GHz | **miss** (common mode) |
@@ -241,7 +241,7 @@ loses against `ext`.
    layout defect (stage current through 0.3 µm Metal2 and single PCell escapes; 4.2 mA instead of 18.3 on the old GDS with all nets
    extracted). Round 3 widened the routes (EM now passes) but source / tank / cascode routes still have 5–14 Ω: a placement-level
    layout is needed. Use `extresist simplify off` (the default writes resistance on a subset of nets) and only its resistors.
-   No Monte Carlo; IIP3 not rerun.
+   Read-back LVS of the round-3 LNA and the hib mixers: unique, census equal (2026-11-22).
 5. **External-LO leak into the RX pair at site B** (fallback LO only; computed from the pads owner's mutuals, 1 Vpp
    differential drive): −60.5 dBm in the pads owner's convention, −55.2 dBm into the matched port against −57 dBm
    (−65.8 / −47.8 at the bounds); 17 / 58 / 135 mV of static offset at the TIA output against a ±144 mV offset DAC.

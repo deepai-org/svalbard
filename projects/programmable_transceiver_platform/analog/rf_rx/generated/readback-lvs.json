@@ -1,0 +1,36 @@
+{
+ "lna": {
+  "gds_sha256": "6a0341513bd91929d9c868e58381a49600f98c0a8d097af9aa815af4f4e8d9db",
+  "devices_ref": 1116,
+  "devices_rb": 1116,
+  "census_exact_match": true,
+  "census_diff_n": 0,
+  "netgen_unique": true
+ },
+ "rxmix_i": {
+  "gds_sha256": "5a3d0feff93ca13b598212c4dad1093ee0c27c5e06e10ae0b0979c7393126608",
+  "devices_ref": 986,
+  "devices_rb": 986,
+  "census_exact_match": true,
+  "census_diff_n": 0,
+  "netgen_unique": true
+ },
+ "rxmix_q": {
+  "gds_sha256": "0de31fe5e309c374ccefc3f80d855cbf80cc8e4db18916e848a36fee6ab4d0e8",
+  "devices_ref": 986,
+  "devices_rb": 986,
+  "census_exact_match": true,
+  "census_diff_n": 0,
+  "netgen_unique": true
+ },
+ "lna_neg": {
+  "gds_sha256": "6a0341513bd91929d9c868e58381a49600f98c0a8d097af9aa815af4f4e8d9db",
+  "devices_ref": 1116,
+  "devices_rb": 1116,
+  "census_exact_match": false,
+  "census_diff_n": 2,
+  "netgen_unique": true
+ },
+ "negative_control": "lna_neg: one ppolyf r_length 10 -> 9.5 um in the reference: census fails (2 diffs); netgen alone still reports unique (property tolerance, WR11-7), so the census is the gate",
+ "tool": "scratch/evidence-audit/rb_lvs2.py (Magic gds read -> extract -> netgen + device census against <block>.ext.spice)"
+}

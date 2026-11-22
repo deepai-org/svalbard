@@ -93,7 +93,9 @@ for item in inputs['cells']:
     # Metal4 rule the router knows, so the plate grown by 1.2 um is Metal4
     # OBS (a Metal4 route 0.75 um from a biasgen C2 plate failed MIMTM.1).
     fi = layout.find_layer(75, 0)
-    mim_keepout = (pya.Region(cell.begin_shapes_rec(fi)).merged().sized(round(1.2/dbu))
+    # MIMTM.1 (mim_b.rb): Metal4 keeps 1.2 um from the virtual bottom plate = FuseTop sized 1.06 um, so the
+    # keep-out is FuseTop grown 2.26 um (2.3 used).
+    mim_keepout = (pya.Region(cell.begin_shapes_rec(fi)).merged().sized(round(2.3/dbu))
                    if fi is not None else pya.Region())
     count = 0
     for name in layers:
@@ -108,7 +110,8 @@ for item in inputs['cells']:
     obs.append('  END')
     text = text[:match.start()]+'\n'+'\n'.join(obs)+'\n'+text[match.end():]
     (out/item['lef']).write_text(text)
-    rows.append(dict(cell=item['cell'], obstruction_shapes=count, mim_keepout_polygons=mim_keepout.count(), supply_pins=sorted(supply_pins),
+    rows.append(dict(cell=item['cell'], obstruction_shapes=count, mim_keepout_polygons=mim_keepout.count(),
+                     mim_keepout_boxes_um=[[v*dbu for v in (p.bbox().left, p.bbox().bottom, p.bbox().right, p.bbox().top)] for p in mim_keepout.each()], supply_pins=sorted(supply_pins),
                      supply_owned_polygons=added, source_gds_sha256=item['gds_sha256'],
                      source_lef_sha256=item['lef_sha256'], precise_lef_sha256=hashlib.sha256(text.encode()).hexdigest()))
 (out/'manifest.json').write_text(json.dumps(dict(

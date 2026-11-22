@@ -133,6 +133,16 @@ if mode == 'power':
         bb = instances[inst_name].findITerm(pin_name).getBBox()
         ob = odb.dbObstruction.create(block, tech.findLayer('Metal4'), bb.xMin()-u, 0, bb.xMax()+u, bb.yMin())
         keepouts.append([inst_name, pin_name, bb.xMin()-u, 0, bb.xMax()+u, bb.yMin()])
+    # Supply wires must also stay 1.2 um from MIM top plates (FuseTop) outside the masters' own OBS: a 4 um
+    # VSS wire landing on the bandgap's top edge reached 0.96 um from a plate (MIMTM.1). Removed again before
+    # signal routing (signal wires are narrow and see the masters' Metal4 OBS).
+    for cell in json.loads((work/'precise'/'manifest.json').read_text())['cells']:
+        for inst in [i for i in block.getInsts() if i.getMaster().getName() == cell['cell']]:
+            ox, oy = inst.getOrigin()
+            for x0, y0, x1, y1 in cell.get('mim_keepout_boxes_um', []):
+                for lay in ('Metal4', 'Metal5'):
+                    odb.dbObstruction.create(block, tech.findLayer(lay), ox+round(x0*u), oy+round(y0*u), ox+round(x1*u), oy+round(y1*u))
+                keepouts.append([inst.getName(), 'mim', ox+round(x0*u), oy+round(y0*u), ox+round(x1*u), oy+round(y1*u)])
     odb.write_db(db, str(work/'power-placed.odb')); odb.write_def(block, str(work/'power-placed.def'))
     report = dict(status='power_database_prepared', dbu_per_um=u, instances=len(instances), nets=len(nets),
                   instance_terminals=checked, supply_terminals=sum(len(terminals['nets'][n]) for n in nets if SUPPLY(n)),

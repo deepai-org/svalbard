@@ -59,7 +59,7 @@ All under `generated/`. Every cell: Magic DRC 0, netgen LVS unique, independent 
 |---|---|---|---|---|---|
 | `pad_hspad` | `stress-safe-families/wired-receive-hs/` | 492 × 912.91 | 449,202 bbox | 554 (404) | `DVDD VSS VDD TERM_VCM TERM_ENABLE TERM_TRIM0..3 VBIAS RX_P RX_N PAD_P PAD_N` |
 | `pad_wirepad` | `stress-safe-families/wired-receive-usb/` | 2.78..524 × 0..1434.72 | 316,021 allocated (ceiling 340,000) | 739 (615) | `PAD_P PAD_N VDD VSS TERM_VCM TERM_ENABLE DIFF_ENABLE DIV_ENABLE BYPASS_ENABLE RX_P RX_N HS_PBIAS HS_P HS_N FS_HIGH_P/N FS_LOW_P/N PULLUP_P/N PULLDOWN_P/N TERM_TRIM0..2 LS_SLOW ATB_ESD_RAIL` |
-| `pad_txpad` | `stress-safe-families/wired-transmit/` | 2.78..484 × 0..1226.72 | 282,862 allocated (ceiling 300,000) | 595 (536) | `PAD_P PAD_N VDD VSS CASCODE MAIN_P/N MAIN_BIAS POST_P/N POST_BIAS TMDS_P/N TMDS_BIAS DETECT_ENABLE DETECT_PBIAS TERM_ENABLE TERM_VCM ATB_ESD_RAIL` |
+| `pad_txpad` | `stress-safe-families/wired-transmit/` (`combined.gds`) | 286 × 699.76 | 200,135 bbox | 409 (346) | `PAD_P PAD_N VDD VSS DVDD_P DVDD_N CASCODE MAIN_P/N MAIN_BIAS POST_P/N POST_BIAS TMDS_P/N TMDS_BIAS DETECT_ENABLE DETECT_PBIAS TERM_ENABLE TERM_TRIM0..3 TERM_VCM`; top-edge pins TERM_VCM, PAD_P, PAD_N |
 | `pad_refpad` | `stress-safe-families/reference/` | 2.78..404 × 0..912.91 | 176,476 allocated (ceiling 185,000) | 404 (348) | `PAD_P PAD_N VSS VCM ATB_ESD_RAIL` |
 | `pad_rf_pair` | `stress-safe-families/rf-pair/` | 310 × 912.91 | 176,900 allocated | 388 (348) | `PAD_P PAD_N VSS ATB_ESD_RAIL` |
 | `pad_rftxpad` | `stress-safe-families/rf-tx/` | 310 × 912.91 | 176,900 allocated | 388 | `PAD_P PAD_N VSS ATB_ESD_RAIL` |
@@ -68,7 +68,7 @@ All under `generated/`. Every cell: Magic DRC 0, netgen LVS unique, independent 
 | `tx_steering_buffer_flat` | `steering-buffer-compact/` | 54.58 × 158.98 | 8,677 bbox | 128 | `VDD VSS IN OUT` |
 | `buffer_compensated_flat` | `termination-buffer-candidate/compact-array/` | 156.8 × 479.57 | 75,196 bbox | 282 | `VDD VSS REF BIAS OUT ENABLE` |
 
-The extracted netlists also expose the isolated `ESD_RAIL`. The published `pad_rf_pair` and `pad_rftxpad`
+The extracted netlists of the older families also expose the isolated `ESD_RAIL` (`pad_hspad` and `pad_txpad` have none). The published `pad_rf_pair` and `pad_rftxpad`
 extracted netlists are identical (same sha256). LVS references for hspad, wirepad, txpad and refpad are
 `<folder>/lvs-reference.spice` (`lvs_reference.py`; regenerate after republishing a family).
 
@@ -78,7 +78,8 @@ Evidence files that belong to the published netlists:
 |---|---|
 | `pad_hspad` (GDS sha 07b6800d…; hashes in `pc47-hspad-a6.json`) | `geometry.json`, `layout-screen.json`, `independent-device-audit.json`, `site-primary.json`, `lu.json`, `pad_hspad-kldrc.json`, `pad-lvs.txt`, `pc47-hspad-a6.json`, models `physical-r-{low,typ,high}[-rail].spice` |
 | `pad_wirepad` (GDS sha 4e4b9d92…) | `placement-layout.json`, `layout-screen.json`, `model-audit.json`, `lu.json`, `pad_wirepad-kldrc.json`, `combined-lvs.txt`, `pd47-usb-ls-miller.json`; 1 kV HBM and CDM surrogate in `../pd48-esd-tiering.json` key `pd48c` |
-| `pad_txpad`, `pad_refpad`, `pad_rf_pair` | folder layout/audit/kldrc files; safe/HBM runs in `../pd13-family-sims.json` (model sha matches); 1 kV runs for txpad and rftxpad in `../pd48-esd-tiering.json` key `family` |
+| `pad_txpad` (GDS sha 131af869…; hashes in `pc72-txpad-a16.json`) | `layout-info.json`, `lu.json`, `marker-merge.json`, `pad_txpad-kldrc.json`, `pad-lvs.txt`, `pc72-txpad-a16.json`, models `physical.spice` (C-only, wrapper `tx_protected_pad`), `physical-r-{typ,high}.spice` (R+C; model-only ports `DVSS_P/N`, tie to VSS) |
+| `pad_refpad`, `pad_rf_pair` | folder layout/audit/kldrc files; safe/HBM runs in `../pd13-family-sims.json` (model sha matches); 1 kV runs for rftxpad in `../pd48-esd-tiering.json` key `family` |
 
 Files in `wired-receive-usb/` named `pd28-*` were produced on other
 netlists and are not evidence for the published cells; no flow reads them.
@@ -163,13 +164,40 @@ Rules for the controller: `LS_SLOW` must be 0 whenever the termination or HS is 
 driver off; LS needs the HS bias enabled. `HS_PBIAS` is a VSS-referenced gate voltage from `wtx_idac`. The HS
 level at ss/32 °C reaches 400 mV only from about 3.33 V upward (interface-changes row PC-13). (USB-02, PAD-03)
 
-### `pad_txpad`, `pad_rftxpad`, `pad_refpad`, `pad_rf_pair`
+### `pad_txpad` a16 BASELINE (`pc72-txpad-a16.json`; PC-72)
+
+Published as the baseline (MANDATE 1): finished, with the known misses below. Generator `tx_pad_layout.py` (build
+command in the json; no-option build = the older a4 cell). Native `nfet_06v0_nvt` termination switches with a
+4-bit trim (`TERM_TRIM0..3`, internal `TERM_ENABLE_LOCAL`), TERM_VCM disconnect, pad-site primary diodes to the ring
+(`DVDD_P/N`), 6 V cascodes on the pad (gate `CASCODE`).
+
+| Limit | a16 | Result |
+|---|---|---|
+| Pad C ≤ 3.223 pF (rt, 100 MHz) | 3.214 (C-only 3.124) | PASS, 9 fF left: no metal may be added on PAD / TU nets |
+| Termination ±10 %, 23 corners | worst 5.80 % (rt) / 4.42 % (rh); ff/22/3.35 only codes 2–3 | PASS |
+| CM1 ≤ 5 Ω; off | 2.95 Ω; ≥ 9.98e9 Ω, leak ≤ 1e-5 mA | PASS |
+| CDM 2 A, six cases ≤ 8.0 V | vss+ 6.92, pp+ 7.27, pp- 7.28 V; vdd+ 3.92 V incomplete under the PULSE source (bounded) | PASS, vdd+ bounded |
+| HBM 1 kV | pp+ 4.35 V; vdd+ bounded by a DC sweep | PASS, vdd+ bounded |
+| EM A / B / C; A100 (20 mA per pad average, ≤ 0.86) | 0.44 / 0.66 / 0.88; 0.84 | PASS |
+| EM B100 (30 mA static in one leg) | TU_x_B 1.26, T1 1.03, PAD trunk 1.10 | MISS, termination-on only |
+| KLayout / rail_site / latch-up / LVS + controls | 0 + 0 / PASS / 0.0 µm² at 15 µm / match, mismatch × 2 | PASS |
+
+Conditions and known misses:
+- 100BASE-TX amplitude needs WT53-c: `CASCODE` raised to about 4.2 V by wired TX's pump (≤ 4.6 V incl. transients,
+  never ahead of VDD, 0 V unpowered). The pad delivers 35.5 / 39.5 mA (ss / tt) at 4.2 V; 26.9 / 34.5 mA with the
+  gate at VDD. The 950 mV at the RJ45 is wired TX's open confirmation.
+- Board rule B54: centre tap (any DC level on WIRE_TX_P/N) ≤ VDD + 0.30 V; the CT is not powered while the chip is unpowered.
+- The termination must be off in 100BASE-TX (the static 30–40 mA one-leg EM overs apply only with it on), and no
+  static drive on one leg (PC-65).
+- `TERM_DISCHARGE` 2 × 20 µm `ppolyf_u_1k` waits for wired TX's ack.
+- The EM screen does not yet cover PAD bond → resistor heads per unit (review-a16 F1).
+
+### `pad_rftxpad`, `pad_refpad`, `pad_rf_pair`
 
 | Cell | Result | File |
 |---|---|---|
 | `pad_refpad`, `pad_rf_pair` | HBM 2 kV: 0 of 348 MOS over the screen, pad 6.18–6.91 V; ±100 mA pulse 2.51–2.77 V | `pd13-family-sims.json` |
 | `pad_rftxpad` | HBM 1 kV: 0 of 348, pad 4.52–4.70 V | `pd48-esd-tiering.json` |
-| `pad_txpad` | HBM 1 kV: pad 4.52–4.70 V; 8 termination `nfet_03v3` of 536 MOS are over the 3.63 V DC screen and inside the 5.0 V transient limit. At 2 kV: 25 exceedances (ESD-05, risk-accepted) | `pd48-esd-tiering.json`, `pd13-family-sims.json` |
 | Consumer gates on pad nets (`hbm_core_screen.py`) | 0 exceedances of the transient limits in all cases at the tier level; worst gate 4.72 V (LNA, 2 kV), 5.42 V (6 V devices on AUX_CLK), 4.18 V (rfdriver, 1 kV). The same screen fails at 3 kV (188–302 exceedances) | `pd48-esd-tiering.json` key `core_screen` |
 
 ### POR_BYPASS strap (`scratch/reviews/pads-core/STRAP.md`)
@@ -273,12 +301,10 @@ budget-sized ideal capacitors on top of extracted capacitance.
    family meets its HBM tier; every HBM / CDM number in section 4 except the `pad_hspad` rows is capacitance-only and
    is not evidence. Decided fix (PC-27): primary diodes at the bond pad tied to the ring rails, all families; back-feed is
    accepted and sequenced by the board (`spec/board-requirements.md` B53). `pad_hspad` is published with it (a6, PC-47,
-   conditions in section 4); `pad_txpad` a4 in evidence under `scratch/pads-core/esdopt/`; the other five families not started.
+   conditions in section 4), and so is `pad_txpad` (a16 baseline, PC-72); the other five families not started.
    `RF_TX` gets no diode to the supply (it swings above it). (PAD-11)
-2. **`pad_txpad` and `pad_wirepad` signal paths.** `pad_txpad` termination is 287 Ω differential at tt with metal
-   resistance (92 Ω without), 16–19 Ω sit between the bond pad and the output cascodes, and the termination is
-   untrimmed (152 / 58 Ω at ss / ff even without metal): `scratch/pads-core/txr/STATUS.md`. `pad_wirepad` has about
-   81 Ω of metal in series with its 45 Ω HS termination (survey only). Neither is fixed. Resistance-aware extraction
+2. **`pad_wirepad` signal path.** (`pad_txpad`: trimmed termination in a16, section 4.) `pad_wirepad` has about
+   81 Ω of metal in series with its 45 Ω HS termination (survey only), not fixed. Resistance-aware extraction
    is mandatory for all pad evidence from now on (`rextract/`).
 3. **CDM.** 250 V is a target only; die capacitance and CDM current are estimates.
 4. **Supply-clamp events.** Survivability of a fired clamp and the hot-plug waveform are not shown. The slew

@@ -1,0 +1,131 @@
+{
+ "model": "/home/ubuntu/svalbard/scratch/pads-core/esdopt/tx/sec/models/a16_rh.spice",
+ "model_sha256": "0047a3d7c9e1ddcd532c700b3cabf9672ac6bbaf7ad717ad1ab5f092b0d5ae8b",
+ "ring": {
+  "dvdd_near": 0.155,
+  "dvss_near": 0.189,
+  "dvdd_far": 0.46,
+  "dvss_far": 0.57,
+  "far_cells": [
+   5,
+   7
+  ],
+  "r_site": 0.025
+ },
+ "clamps": true,
+ "simulator": "dock",
+ "c_die_F": 1e-09,
+ "c_die_at": "site",
+ "r_die": 1.4,
+ "cdm_stop": "3.6n",
+ "hbm_stop": "60n",
+ "runs": {
+  "cdm:2:vdd:neg": {
+   "retry_options": " gmin=1e-9 itl4=500 method=trap maxstep 1p",
+   "ipk": 2.0,
+   "complete": false,
+   "t_end": 6.61160341e-11,
+   "pad_vs_ref_peak": 0.25028772,
+   "pad_vs_local_vss_peak": 0.25230106646,
+   "pad_vs_local_vdd_peak": 0.2501714768,
+   "rail_dvdd_minus_dvss_peak": 0.002148565102,
+   "mos": {
+    "nfet_03v3": {
+     "limit": 5.0,
+     "dc_screen": 3.63,
+     "gate_max": 0.278,
+     "gate_dev": "X138",
+     "ds_max": 0.284,
+     "ds_dev": "X53",
+     "over_transient": 0,
+     "over_dc": 0,
+     "n": 256,
+     "junc_rev_max": 0.302,
+     "junc_dev": "X132",
+     "junc_bv": 10.0,
+     "junc_over": 0
+    },
+    "nfet_06v0_nvt": {
+     "limit": 8.0,
+     "dc_screen": 6.0,
+     "gate_max": 0.2,
+     "gate_dev": "X98",
+     "ds_max": 0.198,
+     "ds_dev": "X83",
+     "over_transient": 0,
+     "over_dc": 0,
+     "n": 46,
+     "junc_rev_max": 0.224,
+     "junc_dev": "X360",
+     "junc_bv": 10.5,
+     "junc_over": 0
+    },
+    "nfet_06v0": {
+     "limit": 8.0,
+     "dc_screen": 6.0,
+     "gate_max": 2.434,
+     "gate_dev": "X404",
+     "ds_max": 0.243,
+     "ds_dev": "X290",
+     "over_transient": 0,
+     "over_dc": 0,
+     "n": 38,
+     "junc_rev_max": 0.302,
+     "junc_dev": "X78",
+     "junc_bv": 11.0,
+     "junc_over": 0
+    },
+    "pfet_06v0": {
+     "limit": 8.0,
+     "dc_screen": 6.0,
+     "gate_max": 0.021,
+     "gate_dev": "X251",
+     "ds_max": 0.027,
+     "ds_dev": "X251",
+     "over_transient": 0,
+     "over_dc": 0,
+     "n": 4,
+     "junc_rev_max": 0.0,
+     "junc_dev": "X259",
+     "junc_bv": 10.5,
+     "junc_over": 0
+    },
+    "pfet_03v3": {
+     "limit": 5.0,
+     "dc_screen": 3.63,
+     "gate_max": 0.01,
+     "gate_dev": "X407",
+     "ds_max": 0.011,
+     "ds_dev": "X407",
+     "over_transient": 0,
+     "over_dc": 0,
+     "n": 2,
+     "junc_rev_max": 0.0,
+     "junc_dev": "X255",
+     "junc_bv": 10.0,
+     "junc_over": 0
+    }
+   },
+   "diodes": {
+    "n": 26,
+    "worst_rev_v": 0.0,
+    "worst_dev": "",
+    "over_bv": 0,
+    "worst_margin_v": 1000000000.0,
+    "prim_fwd_ma_um": 0.002,
+    "prim_rev_ma_um": 0.0025,
+    "prim_energy_nj": 0.0,
+    "prim_dev": "D25",
+    "sec_fwd_ma_um": 0.0,
+    "sec_energy_nj": 0.0,
+    "prim_rev_v_max": 0.253,
+    "prim_pass": true
+   },
+   "mim": {
+    "n": 0,
+    "worst_v": 0.0,
+    "limit": 6.0
+   }
+  }
+ }
+}

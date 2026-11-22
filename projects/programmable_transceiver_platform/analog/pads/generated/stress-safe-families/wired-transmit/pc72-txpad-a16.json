@@ -1,0 +1,142 @@
+{
+ "row": "PC-72",
+ "cell": "pad_txpad",
+ "state": "BASELINE (MANDATE 1: finished-if-imperfect; known misses below)",
+ "candidate": "a16",
+ "build_command": "python3 $P/analog/pads/tx_pad_layout.py OUT --nvt '{\"wb\": 23.5, \"wt\": 23.5, \"lb\": 2.2, \"lt\": 1.0, \"merged\": true, \"disc2\": [24, 0.28, 64, 2], \"disch\": 20, \"riser_wide\": true, \"em\": 2, \"t0_shift\": 2.5, \"b_col_hw\": 1.8, \"t_col_hw\": 1.45, \"bus_h\": 22, \"pad_pins\": true, \"disc_m3\": true, \"drop_m3\": true, \"head3\": true}' --upx '{\"x\": [63, 69], \"yu\": 107}' --top-pins",
+ "rebuild_check": "2026-11-22 rebuild from the committed generator (646750f5, sha ebc3c65a): GDS with timestamps zeroed 395dfda2 == candidate sec/b/a16; DRC 0, LVS unique. No-option build normalises to 3a706943 == a4 baseline. The previously published combined.gds (ae75af97, normalised ded5b844) came from the pd12 stress-safe flow (scratch/pads-pd12/v2/wired_transmit, wired_protection_layout_ss.py); it is replaced, not reproduced (GDS is git-ignored; the pd12 build dir no longer exists).",
+ "sha256": {
+  "combined.gds": "131af8696accbd410948869dcd9e1524c0b3a528f3b0d49f6f6ec4b0c66cb297",
+  "physical.spice": "82958369ed9fd041da1b99472e479f8149dec8397d7fd55a1671841edadc687f",
+  "physical-r-typ.spice": "5e0a7322d732706bc005f815dc6daef2f5512898d15be149cf9d9b569339afd8",
+  "physical-r-high.spice": "0047a3d7c9e1ddcd532c700b3cabf9672ac6bbaf7ad717ad1ab5f092b0d5ae8b",
+  "lvs-reference.spice": "e4d722e33e0cc13a702ad8c182d7a8a66ef5849d968341997cf51b4cd5954174",
+  "layout-info.json": "96478a1b6d45edf08f46da7fe7c898522498effd8cbc4fbbe9f5cf786626fe34",
+  "lu.json": "6a3f7a5bc4ac5581f54f1418311f5c4b1fa475ef9b09ca4275e9ffa46e8e2906",
+  "pad-lvs.txt": "86a2f65abc0176ea53b1d703a6d84006d450ac03bbd0ca79c5bc0a9fe4e1dd71"
+ },
+ "generators_sha256_8": {
+  "tx_pad_layout.py": "ebc3c65a",
+  "em_check.py (scratch, now)": "f9563c12",
+  "em_check.py (as reviewed)": "c7b5ab5e"
+ },
+ "bbox_um": [
+  0,
+  0,
+  286.0,
+  699.76
+ ],
+ "ports": [
+  "CASCODE",
+  "TMDS_P",
+  "TMDS_N",
+  "POST_P",
+  "POST_N",
+  "MAIN_P",
+  "MAIN_N",
+  "MAIN_BIAS",
+  "POST_BIAS",
+  "TMDS_BIAS",
+  "VSS",
+  "DVDD_P",
+  "PAD_P",
+  "DVDD_N",
+  "PAD_N",
+  "VDD",
+  "TERM_ENABLE",
+  "DETECT_ENABLE",
+  "DETECT_PBIAS",
+  "TERM_TRIM0",
+  "TERM_TRIM1",
+  "TERM_TRIM2",
+  "TERM_TRIM3",
+  "TERM_VCM"
+ ],
+ "ports_note": "TERM_ENABLE_LOCAL is internal (not a port). ATB_ESD_RAIL removed. Top-edge pins: TERM_VCM, PAD_P, PAD_N (checked by the review-a16 label-move LVS control). R models add model-only ports DVSS_P / DVSS_N (tie to VSS).",
+ "models": {
+  "physical.spice": "C-only extraction (= a16_c, bdd207d5) inside wrapper tx_protected_pad",
+  "physical-r-typ.spice": "R+C typ (a16_rt 5e0a7322)",
+  "physical-r-high.spice": "R+C high-metal-R (a16_rh 0047a3d7)"
+ },
+ "limits": [
+  [
+   "EM A / B / C (10.5 / 15.75 / 21 mA)",
+   "0.44 / 0.66 / 0.88; PAD trunk 0.39 / 0.58 / 0.77",
+   "PASS"
+  ],
+  [
+   "EM A100 20 mA per pad average <= 0.86",
+   "0.84 (TU_x_B); PAD trunk 0.74",
+   "PASS"
+  ],
+  [
+   "EM B100 30 mA static one leg <= 1.0",
+   "TU_x_B 1.26, T1 1.03, PAD trunk 1.10",
+   "MISS (termination-on only; see misses)"
+  ],
+  [
+   "Termination +-10 %, 23 corners",
+   "rt 5.80 / rh 4.42 %; ff/22/3.35 codes 2-3 only",
+   "PASS"
+  ],
+  [
+   "Pad C <= 3.223 pF (rt, 100 MHz)",
+   "3.214 (C-only 3.124)",
+   "PASS, 9 fF left"
+  ],
+  [
+   "CM1 <= 5 ohm",
+   "2.95",
+   "PASS"
+  ],
+  [
+   "Off / off-leak",
+   ">= 9.98e9 ohm / <= 1e-5 mA",
+   "PASS"
+  ],
+  [
+   "CDM 2 A six cases <= 8.0 V",
+   "vss+ 6.92, pp+ 7.27, pp- 7.28, vdd- 0.99, vss- 0.99, vdd+ 3.92 (incomplete)",
+   "PASS with vdd+ bounded"
+  ],
+  [
+   "HBM 1 kV pp+",
+   "4.35 V; vdd+ bounded by DC sweep",
+   "PASS with vdd+ bounded"
+  ],
+  [
+   "KLayout main+antenna / rail_site / latch-up / Magic DRC / netgen / read-back LVS + 2 controls",
+   "0+0 / PASS / 0.0 um2 at 15 um / 0 / unique / match + mismatch x2",
+   "PASS"
+  ]
+ ],
+ "misses_and_conditions": [
+  "100BASE-TX amplitude needs WT53-c: CASCODE raised to about 4.2 V by a wired TX pump (<= 4.6 V incl. transients, never ahead of VDD, 0 V unpowered). Pad delivers 35.5 / 39.5 mA ss / tt at 4.2 V (26.9 / 34.5 with the gate at VDD). 950 mV at the RJ45 is wired TX's open confirmation.",
+  "Board rule B54: magnetics centre tap (and any DC level on WIRE_TX_P/N) <= VDD + 0.30 V; CT not powered while the chip is unpowered (or limited to < 1 mA) (PC-71).",
+  "Pad C 3.214 of 3.223 pF: 9 fF left; no metal may be added on PAD / TU nets.",
+  "CDM 2 A vdd+ (pad positive vs supply) incomplete under the PULSE source; bounded at 3.92 V by the partial run.",
+  "HBM 1 kV vdd+ bounded by a DC sweep, not a complete transient.",
+  "EM static 30-40 mA one-leg overs (B100 / P100) apply only with the termination on, which is forbidden in 100BASE-TX (validator forbids TX_EN_TERM at 100BASE-TX codes).",
+  "No-static-drive rule (PC-65): 100BASE-TX must not hold a static level on one leg; enforced by wired TX with a bounded timeout.",
+  "TERM_DISCHARGE 2 x 20 um ppolyf_u_1k (PC-61): pending wired TX's ack.",
+  "em_check does not yet cover PAD bond -> resistor heads or per-unit head-A straps (review-a16 F1; PAD trunk numbers above are from the reviewer's netres)."
+ ],
+ "review": {
+  "reviews": [
+   "scratch/pads-core/esdopt/tx/review-a8/REVIEW.md",
+   "scratch/pads-core/esdopt/tx/review-a10/REVIEW.md",
+   "scratch/pads-core/esdopt/tx/review-a11/REVIEW.md",
+   "scratch/pads-core/esdopt/tx/review-a12/REVIEW.md",
+   "scratch/pads-core/esdopt/tx/review-a13/REVIEW.md",
+   "scratch/pads-core/esdopt/tx/review-a16/REVIEW.md"
+  ],
+  "status": "scratch/pads-core/esdopt/tx/STATUS.md (CANDIDATE a16, STUDY, WT53-c judgement)",
+  "interface_rows": "scratch/reviews/interface-changes.md PC-57..PC-71"
+ },
+ "evidence": {
+  "em": "scratch/pads-core/esdopt/tx/sec/r16/em.json",
+  "em_check": "scratch/pads-core/esdopt/tx/sec/em_check.py",
+  "benches": "scratch/pads-core/esdopt/tx/bench/a16*.json, ct16b-ctdc.json, w53*.json, hd0-drv100.json",
+  "benches_scripts": "scratch/pads-core/esdopt/tx/sec/hd/{drv100,ctdc2,idle}.py"
+ }
+}

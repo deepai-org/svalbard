@@ -27,7 +27,7 @@ module tb_por_bypass;
   .s_pll_tx_lock(1'b0),.s_pll_cdr_lock(1'b0),.s_ref_present(1'b0),.s_refbuf_ready(1'b0),.s_adc_i_ovl(1'b0),.s_adc_i_b_ovl(1'b0),
   .s_adc_q_ovl(1'b0),.s_adc_q_b_ovl(1'b0),.s_adc_i_done(1'b0),.s_adc_i_b_done(1'b0),.s_adc_q_done(1'b0),.s_adc_q_b_done(1'b0),
   .s_detect_diff_pos(1'b0),.s_detect_diff_neg(1'b0),.s_detect_se_p(1'b0),.s_detect_se_n(1'b0),.s_wrx_slp(1'b0),.s_wrx_slm(1'b0),
-  .s_wtx_ext_data(1'b0),.s_aux_present(1'b0),.s_wtx_ext_present(1'b0));
+  .s_wtx_ext_data(1'b0),.s_aux_present(1'b0),.s_wtx_ext_present(1'b0),.s_wtx_run(1'b0));
  // enable / rf_trim are internal since the mode-walk rework (no analog consumer): observed hierarchically
  assign enable=dut.enable; assign rf_trim=dut.rf_trim;
  integer i,errors=0,checks=0;reg[31:0]frame;reg[15:0]rd;reg oe_seen;

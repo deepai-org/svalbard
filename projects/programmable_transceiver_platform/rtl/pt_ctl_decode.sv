@@ -73,6 +73,7 @@ module pt_ctl_decode(
  output wire c_wrx_cap_en, c_wrx_cap_rcs, c_wrx_cap_b2, c_wrx_cap_b1, wire_rx_ptrim_en,
  // ---- wired transmit (static part; the sequenced ports come from pt_wtx_ctl)
  output wire c_wiredtx_ext, c_wiredtx_post_pol, output wire[7:0] c_wiredtx_main_code, c_wiredtx_post_code,
+ output wire c_wiredtx_idle_mode, output wire[31:0] c_wiredtx_tr,      // pt_wiredtx8 IDLE_MODE, TR{k}_{b} (WT50)
  output wire c_hsbias_en, output wire[7:0] c_hsbias_c,
  // ---- USB pad static part
  output wire c_usb_pullup_p, c_usb_pullup_n, c_usb_pulldown_p, c_usb_pulldown_n, c_usb_ls_slow,
@@ -326,6 +327,8 @@ module pt_ctl_decode(
  assign c_wiredtx_post_pol = f_wiredtx_config__post_polarity;
  assign c_wiredtx_main_code = f_wiredtx_config__current_code;
  assign c_wiredtx_post_code = f_wiredtx_config__postcursor_code;
+ assign c_wiredtx_idle_mode = f_wtx__idle_mode;
+ assign c_wiredtx_tr = f_wtx__phase_trim;              // TR{k}_{b} = bit 4k+b
  assign c_hsbias_en = f_usbhs_bias__enable;
  assign c_hsbias_c = f_usbhs_bias__code;
  assign c_usb_pullup_p = f_usbfs_config__pullup_p;     assign c_usb_pullup_n = f_usbfs_config__pullup_n;

@@ -72,6 +72,7 @@ module pt_digital_macro(
  input  wire s_adc_i_ovl, s_adc_i_b_ovl, s_adc_q_ovl, s_adc_q_b_ovl, s_adc_i_done, s_adc_i_b_done, s_adc_q_done, s_adc_q_b_done,
  input  wire s_detect_diff_pos, s_detect_diff_neg, s_detect_se_p, s_detect_se_n,
  input  wire s_wrx_slp, s_wrx_slm, s_wtx_ext_data, s_aux_present, s_wtx_ext_present,
+ input  wire s_wtx_run,                         // pt_wiredtx8 TX_RUN (ring-run detector) -> status.health.wtx_run (WT50)
  // decoded analog control ports (integration/chips/ctl_ports.txt)
  output wire c_aosc_en,
  output wire c_biasgen_ena,
@@ -259,14 +260,15 @@ module pt_digital_macro(
  output wire[2:0] c_wrx_cap_psel,
  output wire c_wrx_cap_slipp,
  output wire c_wrx_cap_slipm,
- output wire c_wiredtx_mode_h,
- output wire c_wiredtx_mode_f,
  output wire c_wiredtx_ser_en,
  output wire c_wiredtx_ext,
  output wire c_wiredtx_post_pol,
  output wire[7:0] c_wiredtx_main_code,
  output wire[7:0] c_wiredtx_post_code,
  output wire c_wiredtx_bias_en,
+ output wire c_wiredtx_idle,            // pt_wiredtx8 IDLE: transport wire_idle, 0 with debug.wtx_ext or the wired island off (WT50)
+ output wire c_wiredtx_idle_mode,       // pt_wiredtx8 IDLE_MODE: wtx.idle_mode
+ output wire[31:0] c_wiredtx_tr,        // pt_wiredtx8 TR{k}_{b} = bit 4k+b: wtx.phase_trim
  output wire c_txpad_req_main,
  output wire c_txpad_req_post,
  output wire c_txpad_req_detect,
@@ -355,6 +357,8 @@ module pt_digital_macro(
  pt_iso_and #(1, 1, ON_RF) iso_rf_tx_clk(.a(rf_tx_clk), .on(island_on[2]), .y(rf_tx_clk_c));
  pt_iso_and #(2) iso_s_pll(.a({s_pll_tx_lock, s_pll_cdr_lock}), .on(island_on[2]), .y({pll_tx_lock, pll_cdr_lock}));
  wire det_diff_pos, det_diff_neg, det_se_p, det_se_n, wrx_slp, wrx_slm, wtx_ext_data, wire_rx_clk_c, wire_tx_clk_c;
+ wire wtx_run;     // pt_wiredtx8 TX_RUN (WT50)
+ pt_iso_and #(1, 0, ON_WIRED) iso_s_wtx_run(.a(s_wtx_run), .on(island_on[0]), .y(wtx_run));
  pt_iso_and #(7, 0, ON_WIRED) iso_s_wired(.a({s_wtx_ext_data, s_wrx_slm, s_wrx_slp, s_detect_se_n, s_detect_se_p, s_detect_diff_neg, s_detect_diff_pos}),
   .on(island_on[0]), .y({wtx_ext_data, wrx_slm, wrx_slp, det_se_n, det_se_p, det_diff_neg, det_diff_pos}));
  pt_iso_and #(1, 1, ON_WIRED) iso_wire_rx_clk(.a(wire_rx_clk), .on(island_on[0]), .y(wire_rx_clk_c));
@@ -441,7 +445,7 @@ module pt_digital_macro(
   .wrx_fll_win(wrx_fll_win), .wrx_pick_acc(wrx_pick_acc), .wrx_slip_cnt(wrx_slip_cnt), .wrx_fll_err(wrx_fll_err), .wrx_viol(wrx_viol),
   .usb_line(usb_line), .usb_flags({usb_disconnect, usb_squelch, usb_diff, usb_se1, usb_se0, usb_k, usb_j}),
   .usb_stream({usb_tx_armed, usb_tx_blocked, usb_tx_underrun, usb_tx_busy, usb_rx_active}),
-  .sw_pg(sw_pg), .h2d_ovf(h2d_ovf), .h2d_unf(h2d_unf));
+  .sw_pg(sw_pg), .h2d_ovf(h2d_ovf), .h2d_unf(h2d_unf), .wtx_run(wtx_run));
  assign rx_en_wclk = 1'b0;   // CP4-3: the forwarded wire clock uses the AUX_CLK pair (rx_en_aux); no WCLK_IN receiver
  pt_toggle_div aosc_dv(fc[4], rst_n, aosc_div);
  pt_host_link host(.rst_n(host_rst_n), .mode(f_debug_host_link__mode), .d2h_enable(f_hostio_controls__d2h_enable),
@@ -669,6 +673,8 @@ module pt_digital_macro(
   .c_wiredtx_post_pol(c_wiredtx_post_pol),
   .c_wiredtx_main_code(c_wiredtx_main_code),
   .c_wiredtx_post_code(c_wiredtx_post_code),
+  .c_wiredtx_idle_mode(c_wiredtx_idle_mode),
+  .c_wiredtx_tr(c_wiredtx_tr),
   .c_hsbias_en(c_hsbias_en),
   .c_hsbias_c(c_hsbias_c),
   .c_usb_pullup_p(c_usb_pullup_p),
@@ -685,15 +691,19 @@ module pt_digital_macro(
   .vreg_tx_ok(vreg_tx_ok), .fault(fault_eff), .fc_tx_in_tol(fca_locked_ref), .txpad_ready(1'b1),
   .cfg_ring_en(f_ring_l_config__enable), .cfg_ring_n(f_ring_l_config__modulus), .cfg_ring_band(f_ring_l_config__band),
   .cfg_ring_lock_time(f_ring_l_config__lock_time), .cfg_ring_ready_sel(f_ring_l_config__ready_select),
-  .cfg_wtx_state(f_wiredtx_state__state), .cfg_rate_mode(f_consolidation_wiredtx_stage__rate_mode), .cfg_branch(f_txpad_config__branch),
+  .cfg_wtx_state(f_wiredtx_state__state), .cfg_branch(f_txpad_config__branch),
   .cfg_idle(f_wiredtx_idle__idle), .cfg_wtx_ext(f_debug_wtx_ext__enable), .cfg_post_pol(f_wiredtx_config__post_polarity),
   .cfg_post_code(f_wiredtx_config__postcursor_code), .cfg_term_req(f_txpad_config__term_request),
   .cfg_stage_tmds(f_consolidation_wiredtx_stage__stage),
   .c_pll_tx_en(c_pll_tx_en), .c_pll_tx_n4(c_pll_tx_n4), .c_pll_tx_n8(c_pll_tx_n8), .c_pll_tx_band(c_pll_tx_band),
-  .c_wiredtx_ser_en(c_wiredtx_ser_en), .c_wiredtx_mode_h(c_wiredtx_mode_h), .c_wiredtx_mode_f(c_wiredtx_mode_f), .c_wiredtx_bias_en(c_wiredtx_bias_en),
+  .c_wiredtx_ser_en(c_wiredtx_ser_en), .c_wiredtx_bias_en(c_wiredtx_bias_en),
   .c_txpad_req_main(c_txpad_req_main), .c_txpad_req_post(c_txpad_req_post), .c_txpad_req_detect(c_txpad_req_detect), .c_txpad_req_term(c_txpad_req_term),
   .c_wtxfb_branch(c_wtxfb_branch), .c_wtxfb_state(c_wtxfb_state), .c_wtxfb_idle(c_wtxfb_idle), .c_wtxfb_stage_tmds(c_wtxfb_stage_tmds),
   .wire_tx_request(wire_tx_request_q), .wire_tx_up(wire_tx_up), .tx_ring_ready(tx_ring_ready), .st_state(wtx_state), .st_seq_fault(wtx_seq_fault));
+ // pt_wiredtx8 IDLE (WT50): the transport's wire_idle (wire_tx_clk domain, 1 while no payload word is launched;
+ // wiredtx.idle.idle forces it). Low with debug.wtx_ext (the fallback data DX must not be gated) and while the
+ // wired island is off (every port of a switched island reads 0 then).
+ assign c_wiredtx_idle = wire_idle & island_on[0] & ~f_debug_wtx_ext__enable[0];
 
  // ---------------- wired RX control plane (rtl/pt_wrx_ctl.sv): FLL pulses, phase picker, wire_rx_valid
  wire wrx_en = (f_cdr_state__state == 2'd2) & ion[2] & (f_slicer_state__state == 2'd2) & ion[0];

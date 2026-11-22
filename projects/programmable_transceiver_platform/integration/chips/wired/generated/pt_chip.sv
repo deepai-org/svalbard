@@ -55,13 +55,14 @@ module pt_chip(
  wire WRX_WCLK40;
  wire WTX_EXT_DATA;
  wire WTX_EXT_PRESENT;
+ wire WTX_RUN;
  wire WTX_WCLK40;
  wire atb0_en;
  wire[1:0] atb0_grp;
  wire[57:0] atb0_sw;
  wire atb1_en;
  wire[4:0] atb1_grp;
- wire[57:0] atb1_sw;
+ wire[59:0] atb1_sw;
  wire[1:0] c_adc_acq;
  wire c_adc_i_en;
  wire[1:0] c_adc_i_test;
@@ -256,12 +257,13 @@ module pt_chip(
  wire c_vthdac_en;
  wire c_wiredtx_bias_en;
  wire c_wiredtx_ext;
+ wire c_wiredtx_idle;
+ wire c_wiredtx_idle_mode;
  wire[7:0] c_wiredtx_main_code;
- wire c_wiredtx_mode_f;
- wire c_wiredtx_mode_h;
  wire[7:0] c_wiredtx_post_code;
  wire c_wiredtx_post_pol;
  wire c_wiredtx_ser_en;
+ wire[31:0] c_wiredtx_tr;
  wire c_wmon_en;
  wire c_wmon_obs_en;
  wire[1:0] c_wmon_sel;
@@ -585,7 +587,7 @@ module pt_chip(
  assign island_off[5] = m_island_off[5];
  wire m_wired_on_ext;
  assign m_wired_on_ext = wired_on_ext;
- wire[57:0] m_atb0_sw;
+ wire[59:0] m_atb0_sw;
  assign atb0_sw[0] = m_atb0_sw[0];
  assign atb0_sw[21] = m_atb0_sw[21];
  assign atb0_sw[28] = m_atb0_sw[28];
@@ -604,7 +606,7 @@ module pt_chip(
  assign atb0_sw[54] = m_atb0_sw[54];
  assign atb0_sw[55] = m_atb0_sw[55];
  assign atb0_sw[57] = m_atb0_sw[57];
- wire[57:0] m_atb1_sw;
+ wire[59:0] m_atb1_sw;
  assign atb1_sw[0] = m_atb1_sw[0];
  assign atb1_sw[1] = m_atb1_sw[1];
  assign atb1_sw[2] = m_atb1_sw[2];
@@ -648,6 +650,8 @@ module pt_chip(
  assign atb1_sw[55] = m_atb1_sw[55];
  assign atb1_sw[56] = m_atb1_sw[56];
  assign atb1_sw[57] = m_atb1_sw[57];
+ assign atb1_sw[58] = m_atb1_sw[58];
+ assign atb1_sw[59] = m_atb1_sw[59];
  wire[1:0] m_atb0_grp;
  assign atb0_grp[0] = m_atb0_grp[0];
  assign atb0_grp[1] = m_atb0_grp[1];
@@ -720,6 +724,8 @@ module pt_chip(
  assign m_s_aux_present = AUX_PRESENT;
  wire m_s_wtx_ext_present;
  assign m_s_wtx_ext_present = WTX_EXT_PRESENT;
+ wire m_s_wtx_run;
+ assign m_s_wtx_run = WTX_RUN;
  assign atb0_sw[1] = 1'b0;   // no macro driver in the conn
  assign atb0_sw[2] = 1'b0;   // no macro driver in the conn
  assign atb0_sw[3] = 1'b0;   // no macro driver in the conn
@@ -798,43 +804,43 @@ module pt_chip(
   .s_refbuf_ready(m_s_refbuf_ready), .s_adc_i_ovl(m_s_adc_i_ovl), .s_adc_i_b_ovl(m_s_adc_i_b_ovl), .s_adc_q_ovl(m_s_adc_q_ovl), .s_adc_q_b_ovl(m_s_adc_q_b_ovl), .s_adc_i_done(m_s_adc_i_done),
   .s_adc_i_b_done(m_s_adc_i_b_done), .s_adc_q_done(m_s_adc_q_done), .s_adc_q_b_done(m_s_adc_q_b_done), .s_detect_diff_pos(m_s_detect_diff_pos), .s_detect_diff_neg(m_s_detect_diff_neg), .s_detect_se_p(m_s_detect_se_p),
   .s_detect_se_n(m_s_detect_se_n), .s_wrx_slp(m_s_wrx_slp), .s_wrx_slm(m_s_wrx_slm), .s_wtx_ext_data(m_s_wtx_ext_data), .s_aux_present(m_s_aux_present), .s_wtx_ext_present(m_s_wtx_ext_present),
-  .c_aosc_en(c_aosc_en), .c_biasgen_ena(c_biasgen_ena), .c_biasgen_ref_sel_vbg(c_biasgen_ref_sel_vbg), .c_biasgen_ref_sel_coarse(c_biasgen_ref_sel_coarse), .c_biasgen_ref_sel_fine(c_biasgen_ref_sel_fine), .c_biasgen_idac2_source(c_biasgen_idac2_source),
-  .c_biasgen_idac1_source(c_biasgen_idac1_source), .c_biasgen_bandgap_sink1(c_biasgen_bandgap_sink1), .c_biasgen_bandgap_sink2(c_biasgen_bandgap_sink2), .c_biasgen_voltgen_source(c_biasgen_voltgen_source), .c_biasgen_voltgen_sink1(c_biasgen_voltgen_sink1), .c_biasgen_voltgen_sink2(c_biasgen_voltgen_sink2),
-  .c_bgap_ena(c_bgap_ena), .c_bgap_trim(c_bgap_trim), .c_bias_dist_en_rf(c_bias_dist_en_rf), .c_bias_dist_en_conv(c_bias_dist_en_conv), .c_bias_dist_en_pll(c_bias_dist_en_pll), .c_bias_dist_en_wire(c_bias_dist_en_wire),
-  .c_bias_dist_en_debug(c_bias_dist_en_debug), .c_lna_en(c_lna_en), .c_lna_gain_lo(c_lna_gain_lo), .c_lna_byp(c_lna_byp), .c_lna_ct(c_lna_ct), .c_lna_se(c_lna_se),
-  .c_lna_rt(c_lna_rt), .c_lna_att(c_lna_att), .c_lna_lobias(c_lna_lobias), .c_rxmix_i_en(c_rxmix_i_en), .c_rxmix_q_en(c_rxmix_q_en), .c_rxmix_i_ofs(c_rxmix_i_ofs),
-  .c_rxmix_q_ofs(c_rxmix_q_ofs), .c_rxmix_hib(c_rxmix_hib), .c_bbfilter_i_en(c_bbfilter_i_en), .c_bbfilter_q_en(c_bbfilter_q_en), .c_bbfilter_dir_tx(c_bbfilter_dir_tx), .c_bbfilter_inj(c_bbfilter_inj),
-  .c_bbfilter_obs_sel(c_bbfilter_obs_sel), .c_bbfilter_rx_direct(c_bbfilter_rx_direct), .c_bbfilter_byp_s1(c_bbfilter_byp_s1), .c_bbfilter_byp_s23(c_bbfilter_byp_s23), .c_bbfilter_i_cut(c_bbfilter_i_cut), .c_bbfilter_q_cut(c_bbfilter_q_cut),
-  .c_bbfilter_i_gain(c_bbfilter_i_gain), .c_bbfilter_q_gain(c_bbfilter_q_gain), .c_bbfilter_i_gainc(c_bbfilter_i_gainc), .c_bbfilter_q_gainc(c_bbfilter_q_gainc), .c_bbfilter_i_qt(c_bbfilter_i_qt), .c_bbfilter_q_qt(c_bbfilter_q_qt),
-  .c_bbfilter_i_dcf(c_bbfilter_i_dcf), .c_bbfilter_q_dcf(c_bbfilter_q_dcf), .c_bb_tap_obs_en(c_bb_tap_obs_en), .c_bb_tap_inj_en(c_bb_tap_inj_en), .c_bb_tap_i_bias_en(c_bb_tap_i_bias_en), .c_bb_tap_q_bias_en(c_bb_tap_q_bias_en),
-  .c_bb_tap_wmon_bias_en(c_bb_tap_wmon_bias_en), .c_wmon_obs_en(c_wmon_obs_en), .c_adc_i_en(c_adc_i_en), .c_adc_q_en(c_adc_q_en), .c_adc_i_test(c_adc_i_test), .c_adc_q_test(c_adc_q_test),
-  .c_adc_ilen(c_adc_ilen), .c_dac_i_en(c_dac_i_en), .c_dac_q_en(c_dac_q_en), .c_dac_i_hold_zero(c_dac_i_hold_zero), .c_dac_q_hold_zero(c_dac_q_hold_zero), .c_refbuf_en(c_refbuf_en),
-  .c_refbuf_ovr(c_refbuf_ovr), .c_adc_acq(c_adc_acq), .c_txmix_i_en(c_txmix_i_en), .c_txmix_q_en(c_txmix_q_en), .c_txmix_sel_dac(c_txmix_sel_dac), .c_txmix_sat(c_txmix_sat),
-  .c_txsum_en(c_txsum_en), .c_rfdriver_en(c_rfdriver_en), .c_rfdriver_mute(c_rfdriver_mute), .c_rfdriver_bypass(c_rfdriver_bypass), .c_rfdriver_g(c_rfdriver_g), .c_rfdriver_se(c_rfdriver_se),
-  .c_lo_ext(c_lo_ext), .c_lo_int(c_lo_int), .c_lo_cmlsel(c_lo_cmlsel), .c_qvco_en(c_qvco_en), .c_qvco_band(c_qvco_band), .c_qvco_atb_en(c_qvco_atb_en),
-  .c_lo_pre(c_lo_pre), .c_lo_mmd_en(c_lo_mmd_en), .c_lo_mmd_n(c_lo_mmd_n), .c_lo_pfdcp_en(c_lo_pfdcp_en), .c_lo_icp(c_lo_icp), .c_lo_vreg_en(c_lo_vreg_en),
-  .c_lo_obs_en(c_lo_obs_en), .c_refvcm_en(c_refvcm_en), .c_rx_ref_en(c_rx_ref_en), .c_clockmux_ps(c_clockmux_ps), .c_clockmux_ws(c_clockmux_ws), .c_clockmux_ss(c_clockmux_ss),
-  .c_clockmux_cs(c_clockmux_cs), .c_clockmux_hs(c_clockmux_hs), .c_prescale_en(c_prescale_en), .c_prescale_d(c_prescale_d), .c_prescale_conv_en(c_prescale_conv_en), .c_prescale_conv_d(c_prescale_conv_d),
-  .c_prescale_hf_en(c_prescale_hf_en), .c_prescale_hf_d(c_prescale_hf_d), .c_wordclk_en(c_wordclk_en), .c_wordclk_d10(c_wordclk_d10), .c_wordclk_d20(c_wordclk_d20), .c_pllvreg_byp_tx(c_pllvreg_byp_tx),
-  .c_pllvreg_byp_cdr(c_pllvreg_byp_cdr), .c_pll_tx_en(c_pll_tx_en), .c_pll_tx_n4(c_pll_tx_n4), .c_pll_tx_n8(c_pll_tx_n8), .c_pll_tx_band(c_pll_tx_band), .c_pll_cdr_en(c_pll_cdr_en),
-  .c_pll_cdr_n4(c_pll_cdr_n4), .c_pll_cdr_n8(c_pll_cdr_n8), .c_pll_cdr_n5(c_pll_cdr_n5), .c_pll_cdr_n10(c_pll_cdr_n10), .c_pll_cdr_kp(c_pll_cdr_kp), .c_pll_cdr_band(c_pll_cdr_band),
-  .c_cdr_en(c_cdr_en), .c_cdr_pfd_mode(c_cdr_pfd_mode), .c_cdr_ref_sel(c_cdr_ref_sel), .c_cdr_g(c_cdr_g), .c_cdr_otr(c_cdr_otr), .c_cdr_fup(c_cdr_fup),
-  .c_cdr_fdn(c_cdr_fdn), .c_char_en(c_char_en), .c_ring_osc_en(c_ring_osc_en), .c_vco_replica_en(c_vco_replica_en), .c_clk_obs_en(c_clk_obs_en), .c_clk_obs_off(c_clk_obs_off),
-  .c_clk_obs_s(c_clk_obs_s), .c_clk_obs_n(c_clk_obs_n), .c_obs_pre4_en(c_obs_pre4_en), .c_term_en(c_term_en), .c_term_mode(c_term_mode), .c_term_hs_en(c_term_hs_en),
-  .c_term_hs_term_en(c_term_hs_term_en), .c_term_hs_trim(c_term_hs_trim), .c_rxlevel_en(c_rxlevel_en), .c_rxlevel_half(c_rxlevel_half), .c_ctle_en(c_ctle_en), .c_ctle_bypass(c_ctle_bypass),
-  .c_ctle_peak(c_ctle_peak), .c_ctle_lf_zero(c_ctle_lf_zero), .c_rxselect_en(c_rxselect_en), .c_rxselect_direct(c_rxselect_direct), .c_wmon_en(c_wmon_en), .c_wmon_sel(c_wmon_sel),
-  .c_detect_en(c_detect_en), .c_detect_thr(c_detect_thr), .c_detect_se(c_detect_se), .c_detect_src_tx(c_detect_src_tx), .c_detect_inject(c_detect_inject), .c_vthdac_en(c_vthdac_en),
-  .c_vthdac_a(c_vthdac_a), .c_vthdac_b(c_vthdac_b), .c_slicer_en(c_slicer_en), .c_slicer_trim_d0(c_slicer_trim_d0), .c_slicer_trim_d1(c_slicer_trim_d1), .c_slicer_trim_d2(c_slicer_trim_d2),
-  .c_slicer_trim_d3(c_slicer_trim_d3), .c_slicer_trim_e0(c_slicer_trim_e0), .c_slicer_trim_e1(c_slicer_trim_e1), .c_slicer_trim_e2(c_slicer_trim_e2), .c_slicer_trim_e3(c_slicer_trim_e3), .c_slicer_vsel_e0(c_slicer_vsel_e0),
-  .c_slicer_vsel_e1(c_slicer_vsel_e1), .c_slicer_vsel_e2(c_slicer_vsel_e2), .c_slicer_vsel_e3(c_slicer_vsel_e3), .c_ptrim_t0(c_ptrim_t0), .c_ptrim_t1(c_ptrim_t1), .c_ptrim_t2(c_ptrim_t2),
-  .c_ptrim_t3(c_ptrim_t3), .c_ptrim_t4(c_ptrim_t4), .c_ptrim_t5(c_ptrim_t5), .c_ptrim_t6(c_ptrim_t6), .c_ptrim_t7(c_ptrim_t7), .c_wrx_cap_en(c_wrx_cap_en),
-  .c_wrx_cap_rcs(c_wrx_cap_rcs), .c_wrx_cap_b2(c_wrx_cap_b2), .c_wrx_cap_b1(c_wrx_cap_b1), .c_wrx_cap_psel(c_wrx_cap_psel), .c_wrx_cap_slipp(c_wrx_cap_slipp), .c_wrx_cap_slipm(c_wrx_cap_slipm),
-  .c_wiredtx_mode_h(c_wiredtx_mode_h), .c_wiredtx_mode_f(c_wiredtx_mode_f), .c_wiredtx_ser_en(c_wiredtx_ser_en), .c_wiredtx_ext(c_wiredtx_ext), .c_wiredtx_post_pol(c_wiredtx_post_pol), .c_wiredtx_main_code(c_wiredtx_main_code),
-  .c_wiredtx_post_code(c_wiredtx_post_code), .c_wiredtx_bias_en(c_wiredtx_bias_en), .c_txpad_req_main(c_txpad_req_main), .c_txpad_req_post(c_txpad_req_post), .c_txpad_req_detect(c_txpad_req_detect), .c_txpad_req_term(c_txpad_req_term),
-  .c_hsbias_en(c_hsbias_en), .c_hsbias_c(c_hsbias_c), .c_wtxfb_branch(c_wtxfb_branch), .c_wtxfb_state(c_wtxfb_state), .c_wtxfb_idle(c_wtxfb_idle), .c_wtxfb_stage_tmds(c_wtxfb_stage_tmds),
-  .c_usb_hs_en(c_usb_hs_en), .c_usb_fs_en(c_usb_fs_en), .c_usb_hs_drv(c_usb_hs_drv), .c_usb_tx_dp(c_usb_tx_dp), .c_usb_tx_dn(c_usb_tx_dn), .c_usb_tx_oe(c_usb_tx_oe),
-  .c_usb_hs_str(c_usb_hs_str), .c_usb_pullup_p(c_usb_pullup_p), .c_usb_pullup_n(c_usb_pullup_n), .c_usb_pulldown_p(c_usb_pulldown_p), .c_usb_pulldown_n(c_usb_pulldown_n), .c_usb_ls_slow(c_usb_ls_slow),
-  .c_usb_term_trim(c_usb_term_trim));
+  .s_wtx_run(m_s_wtx_run), .c_aosc_en(c_aosc_en), .c_biasgen_ena(c_biasgen_ena), .c_biasgen_ref_sel_vbg(c_biasgen_ref_sel_vbg), .c_biasgen_ref_sel_coarse(c_biasgen_ref_sel_coarse), .c_biasgen_ref_sel_fine(c_biasgen_ref_sel_fine),
+  .c_biasgen_idac2_source(c_biasgen_idac2_source), .c_biasgen_idac1_source(c_biasgen_idac1_source), .c_biasgen_bandgap_sink1(c_biasgen_bandgap_sink1), .c_biasgen_bandgap_sink2(c_biasgen_bandgap_sink2), .c_biasgen_voltgen_source(c_biasgen_voltgen_source), .c_biasgen_voltgen_sink1(c_biasgen_voltgen_sink1),
+  .c_biasgen_voltgen_sink2(c_biasgen_voltgen_sink2), .c_bgap_ena(c_bgap_ena), .c_bgap_trim(c_bgap_trim), .c_bias_dist_en_rf(c_bias_dist_en_rf), .c_bias_dist_en_conv(c_bias_dist_en_conv), .c_bias_dist_en_pll(c_bias_dist_en_pll),
+  .c_bias_dist_en_wire(c_bias_dist_en_wire), .c_bias_dist_en_debug(c_bias_dist_en_debug), .c_lna_en(c_lna_en), .c_lna_gain_lo(c_lna_gain_lo), .c_lna_byp(c_lna_byp), .c_lna_ct(c_lna_ct),
+  .c_lna_se(c_lna_se), .c_lna_rt(c_lna_rt), .c_lna_att(c_lna_att), .c_lna_lobias(c_lna_lobias), .c_rxmix_i_en(c_rxmix_i_en), .c_rxmix_q_en(c_rxmix_q_en),
+  .c_rxmix_i_ofs(c_rxmix_i_ofs), .c_rxmix_q_ofs(c_rxmix_q_ofs), .c_rxmix_hib(c_rxmix_hib), .c_bbfilter_i_en(c_bbfilter_i_en), .c_bbfilter_q_en(c_bbfilter_q_en), .c_bbfilter_dir_tx(c_bbfilter_dir_tx),
+  .c_bbfilter_inj(c_bbfilter_inj), .c_bbfilter_obs_sel(c_bbfilter_obs_sel), .c_bbfilter_rx_direct(c_bbfilter_rx_direct), .c_bbfilter_byp_s1(c_bbfilter_byp_s1), .c_bbfilter_byp_s23(c_bbfilter_byp_s23), .c_bbfilter_i_cut(c_bbfilter_i_cut),
+  .c_bbfilter_q_cut(c_bbfilter_q_cut), .c_bbfilter_i_gain(c_bbfilter_i_gain), .c_bbfilter_q_gain(c_bbfilter_q_gain), .c_bbfilter_i_gainc(c_bbfilter_i_gainc), .c_bbfilter_q_gainc(c_bbfilter_q_gainc), .c_bbfilter_i_qt(c_bbfilter_i_qt),
+  .c_bbfilter_q_qt(c_bbfilter_q_qt), .c_bbfilter_i_dcf(c_bbfilter_i_dcf), .c_bbfilter_q_dcf(c_bbfilter_q_dcf), .c_bb_tap_obs_en(c_bb_tap_obs_en), .c_bb_tap_inj_en(c_bb_tap_inj_en), .c_bb_tap_i_bias_en(c_bb_tap_i_bias_en),
+  .c_bb_tap_q_bias_en(c_bb_tap_q_bias_en), .c_bb_tap_wmon_bias_en(c_bb_tap_wmon_bias_en), .c_wmon_obs_en(c_wmon_obs_en), .c_adc_i_en(c_adc_i_en), .c_adc_q_en(c_adc_q_en), .c_adc_i_test(c_adc_i_test),
+  .c_adc_q_test(c_adc_q_test), .c_adc_ilen(c_adc_ilen), .c_dac_i_en(c_dac_i_en), .c_dac_q_en(c_dac_q_en), .c_dac_i_hold_zero(c_dac_i_hold_zero), .c_dac_q_hold_zero(c_dac_q_hold_zero),
+  .c_refbuf_en(c_refbuf_en), .c_refbuf_ovr(c_refbuf_ovr), .c_adc_acq(c_adc_acq), .c_txmix_i_en(c_txmix_i_en), .c_txmix_q_en(c_txmix_q_en), .c_txmix_sel_dac(c_txmix_sel_dac),
+  .c_txmix_sat(c_txmix_sat), .c_txsum_en(c_txsum_en), .c_rfdriver_en(c_rfdriver_en), .c_rfdriver_mute(c_rfdriver_mute), .c_rfdriver_bypass(c_rfdriver_bypass), .c_rfdriver_g(c_rfdriver_g),
+  .c_rfdriver_se(c_rfdriver_se), .c_lo_ext(c_lo_ext), .c_lo_int(c_lo_int), .c_lo_cmlsel(c_lo_cmlsel), .c_qvco_en(c_qvco_en), .c_qvco_band(c_qvco_band),
+  .c_qvco_atb_en(c_qvco_atb_en), .c_lo_pre(c_lo_pre), .c_lo_mmd_en(c_lo_mmd_en), .c_lo_mmd_n(c_lo_mmd_n), .c_lo_pfdcp_en(c_lo_pfdcp_en), .c_lo_icp(c_lo_icp),
+  .c_lo_vreg_en(c_lo_vreg_en), .c_lo_obs_en(c_lo_obs_en), .c_refvcm_en(c_refvcm_en), .c_rx_ref_en(c_rx_ref_en), .c_clockmux_ps(c_clockmux_ps), .c_clockmux_ws(c_clockmux_ws),
+  .c_clockmux_ss(c_clockmux_ss), .c_clockmux_cs(c_clockmux_cs), .c_clockmux_hs(c_clockmux_hs), .c_prescale_en(c_prescale_en), .c_prescale_d(c_prescale_d), .c_prescale_conv_en(c_prescale_conv_en),
+  .c_prescale_conv_d(c_prescale_conv_d), .c_prescale_hf_en(c_prescale_hf_en), .c_prescale_hf_d(c_prescale_hf_d), .c_wordclk_en(c_wordclk_en), .c_wordclk_d10(c_wordclk_d10), .c_wordclk_d20(c_wordclk_d20),
+  .c_pllvreg_byp_tx(c_pllvreg_byp_tx), .c_pllvreg_byp_cdr(c_pllvreg_byp_cdr), .c_pll_tx_en(c_pll_tx_en), .c_pll_tx_n4(c_pll_tx_n4), .c_pll_tx_n8(c_pll_tx_n8), .c_pll_tx_band(c_pll_tx_band),
+  .c_pll_cdr_en(c_pll_cdr_en), .c_pll_cdr_n4(c_pll_cdr_n4), .c_pll_cdr_n8(c_pll_cdr_n8), .c_pll_cdr_n5(c_pll_cdr_n5), .c_pll_cdr_n10(c_pll_cdr_n10), .c_pll_cdr_kp(c_pll_cdr_kp),
+  .c_pll_cdr_band(c_pll_cdr_band), .c_cdr_en(c_cdr_en), .c_cdr_pfd_mode(c_cdr_pfd_mode), .c_cdr_ref_sel(c_cdr_ref_sel), .c_cdr_g(c_cdr_g), .c_cdr_otr(c_cdr_otr),
+  .c_cdr_fup(c_cdr_fup), .c_cdr_fdn(c_cdr_fdn), .c_char_en(c_char_en), .c_ring_osc_en(c_ring_osc_en), .c_vco_replica_en(c_vco_replica_en), .c_clk_obs_en(c_clk_obs_en),
+  .c_clk_obs_off(c_clk_obs_off), .c_clk_obs_s(c_clk_obs_s), .c_clk_obs_n(c_clk_obs_n), .c_obs_pre4_en(c_obs_pre4_en), .c_term_en(c_term_en), .c_term_mode(c_term_mode),
+  .c_term_hs_en(c_term_hs_en), .c_term_hs_term_en(c_term_hs_term_en), .c_term_hs_trim(c_term_hs_trim), .c_rxlevel_en(c_rxlevel_en), .c_rxlevel_half(c_rxlevel_half), .c_ctle_en(c_ctle_en),
+  .c_ctle_bypass(c_ctle_bypass), .c_ctle_peak(c_ctle_peak), .c_ctle_lf_zero(c_ctle_lf_zero), .c_rxselect_en(c_rxselect_en), .c_rxselect_direct(c_rxselect_direct), .c_wmon_en(c_wmon_en),
+  .c_wmon_sel(c_wmon_sel), .c_detect_en(c_detect_en), .c_detect_thr(c_detect_thr), .c_detect_se(c_detect_se), .c_detect_src_tx(c_detect_src_tx), .c_detect_inject(c_detect_inject),
+  .c_vthdac_en(c_vthdac_en), .c_vthdac_a(c_vthdac_a), .c_vthdac_b(c_vthdac_b), .c_slicer_en(c_slicer_en), .c_slicer_trim_d0(c_slicer_trim_d0), .c_slicer_trim_d1(c_slicer_trim_d1),
+  .c_slicer_trim_d2(c_slicer_trim_d2), .c_slicer_trim_d3(c_slicer_trim_d3), .c_slicer_trim_e0(c_slicer_trim_e0), .c_slicer_trim_e1(c_slicer_trim_e1), .c_slicer_trim_e2(c_slicer_trim_e2), .c_slicer_trim_e3(c_slicer_trim_e3),
+  .c_slicer_vsel_e0(c_slicer_vsel_e0), .c_slicer_vsel_e1(c_slicer_vsel_e1), .c_slicer_vsel_e2(c_slicer_vsel_e2), .c_slicer_vsel_e3(c_slicer_vsel_e3), .c_ptrim_t0(c_ptrim_t0), .c_ptrim_t1(c_ptrim_t1),
+  .c_ptrim_t2(c_ptrim_t2), .c_ptrim_t3(c_ptrim_t3), .c_ptrim_t4(c_ptrim_t4), .c_ptrim_t5(c_ptrim_t5), .c_ptrim_t6(c_ptrim_t6), .c_ptrim_t7(c_ptrim_t7),
+  .c_wrx_cap_en(c_wrx_cap_en), .c_wrx_cap_rcs(c_wrx_cap_rcs), .c_wrx_cap_b2(c_wrx_cap_b2), .c_wrx_cap_b1(c_wrx_cap_b1), .c_wrx_cap_psel(c_wrx_cap_psel), .c_wrx_cap_slipp(c_wrx_cap_slipp),
+  .c_wrx_cap_slipm(c_wrx_cap_slipm), .c_wiredtx_ser_en(c_wiredtx_ser_en), .c_wiredtx_ext(c_wiredtx_ext), .c_wiredtx_post_pol(c_wiredtx_post_pol), .c_wiredtx_main_code(c_wiredtx_main_code), .c_wiredtx_post_code(c_wiredtx_post_code),
+  .c_wiredtx_bias_en(c_wiredtx_bias_en), .c_wiredtx_idle(c_wiredtx_idle), .c_wiredtx_idle_mode(c_wiredtx_idle_mode), .c_wiredtx_tr(c_wiredtx_tr), .c_txpad_req_main(c_txpad_req_main), .c_txpad_req_post(c_txpad_req_post),
+  .c_txpad_req_detect(c_txpad_req_detect), .c_txpad_req_term(c_txpad_req_term), .c_hsbias_en(c_hsbias_en), .c_hsbias_c(c_hsbias_c), .c_wtxfb_branch(c_wtxfb_branch), .c_wtxfb_state(c_wtxfb_state),
+  .c_wtxfb_idle(c_wtxfb_idle), .c_wtxfb_stage_tmds(c_wtxfb_stage_tmds), .c_usb_hs_en(c_usb_hs_en), .c_usb_fs_en(c_usb_fs_en), .c_usb_hs_drv(c_usb_hs_drv), .c_usb_tx_dp(c_usb_tx_dp),
+  .c_usb_tx_dn(c_usb_tx_dn), .c_usb_tx_oe(c_usb_tx_oe), .c_usb_hs_str(c_usb_hs_str), .c_usb_pullup_p(c_usb_pullup_p), .c_usb_pullup_n(c_usb_pullup_n), .c_usb_pulldown_p(c_usb_pulldown_p),
+  .c_usb_pulldown_n(c_usb_pulldown_n), .c_usb_ls_slow(c_usb_ls_slow), .c_usb_term_trim(c_usb_term_trim));
  // Host pads: provider cells only (integration/pt_provider_io.sv); the logical supply groups are one VDD / VSS here.
  pt_host_physical host(.RESET_N(RESET_N), .SPI_SCLK(SPI_SCLK), .SPI_CS_N(SPI_CS_N), .SPI_MOSI(SPI_MOSI), .SPI_MISO(SPI_MISO),
   .H2D(H2D), .H2D_CLK(H2D_CLK), .D2H(D2H), .D2H_CLK(D2H_CLK), .VDD_CORE(VDD), .VSS_CORE(VSS), .VDD_HOST_A(VDD), .VSS_HOST_A(VSS),
@@ -846,28 +852,28 @@ module pt_chip(
   .DET_SE_P(DET_SE_P), .PLL_CDR_FBCK(PLL_CDR_FBCK), .PLL_CDR_LOCK(PLL_CDR_LOCK), .PLL_TX_LOCK(PLL_TX_LOCK), .PRE_CK(PRE_CK), .REF_IN(REF_IN), .REF_IN_N(REF_IN_N), .RING_OSC_CK(RING_OSC_CK),
   .TLP_TEST(TLP_TEST), .USB_DN(USB_DN), .USB_DP(USB_DP), .VCO_REPLICA_CK(VCO_REPLICA_CK), .VDD(VDD), .VSS(VSS), .WIRE_RX_N(WIRE_RX_N), .WIRE_RX_P(WIRE_RX_P),
   .WIRE_TX_N(WIRE_TX_N), .WIRE_TX_P(WIRE_TX_P), .WMON(WMON), .WRX_DX(WRX_DX), .WRX_EW(WRX_EW), .WRX_SLM(WRX_SLM), .WRX_SLP(WRX_SLP), .WRX_WCLK40(WRX_WCLK40),
-  .WTX_EXT_DATA(WTX_EXT_DATA), .WTX_EXT_N(WTX_EXT_N), .WTX_EXT_P(WTX_EXT_P), .WTX_EXT_PRESENT(WTX_EXT_PRESENT), .WTX_WCLK40(WTX_WCLK40), .atb0_en(atb0_en), .atb0_grp(atb0_grp), .atb0_sw(atb0_sw),
-  .atb1_en(atb1_en), .atb1_grp(atb1_grp), .atb1_sw(atb1_sw), .c_aosc_en(c_aosc_en), .c_bb_tap_wmon_bias_en(c_bb_tap_wmon_bias_en), .c_bgap_ena(c_bgap_ena), .c_bgap_trim(c_bgap_trim), .c_bias_dist_en_debug(c_bias_dist_en_debug),
-  .c_bias_dist_en_pll(c_bias_dist_en_pll), .c_bias_dist_en_wire(c_bias_dist_en_wire), .c_biasgen_bandgap_sink1(c_biasgen_bandgap_sink1), .c_biasgen_bandgap_sink2(c_biasgen_bandgap_sink2), .c_biasgen_ena(c_biasgen_ena), .c_biasgen_idac1_source(c_biasgen_idac1_source), .c_biasgen_idac2_source(c_biasgen_idac2_source), .c_biasgen_ref_sel_coarse(c_biasgen_ref_sel_coarse),
-  .c_biasgen_ref_sel_fine(c_biasgen_ref_sel_fine), .c_biasgen_ref_sel_vbg(c_biasgen_ref_sel_vbg), .c_biasgen_voltgen_sink1(c_biasgen_voltgen_sink1), .c_biasgen_voltgen_sink2(c_biasgen_voltgen_sink2), .c_biasgen_voltgen_source(c_biasgen_voltgen_source), .c_cdr_en(c_cdr_en), .c_cdr_fdn(c_cdr_fdn), .c_cdr_fup(c_cdr_fup),
-  .c_cdr_g(c_cdr_g), .c_cdr_otr(c_cdr_otr), .c_cdr_pfd_mode(c_cdr_pfd_mode), .c_cdr_ref_sel(c_cdr_ref_sel), .c_char_en(c_char_en), .c_clk_obs_en(c_clk_obs_en), .c_clk_obs_n(c_clk_obs_n), .c_clk_obs_off(c_clk_obs_off),
-  .c_clk_obs_s(c_clk_obs_s), .c_clockmux_hs(c_clockmux_hs), .c_clockmux_ps(c_clockmux_ps), .c_clockmux_ss(c_clockmux_ss), .c_clockmux_ws(c_clockmux_ws), .c_ctle_bypass(c_ctle_bypass), .c_ctle_en(c_ctle_en), .c_ctle_lf_zero(c_ctle_lf_zero),
-  .c_ctle_peak(c_ctle_peak), .c_detect_en(c_detect_en), .c_detect_inject(c_detect_inject), .c_detect_se(c_detect_se), .c_detect_src_tx(c_detect_src_tx), .c_detect_thr(c_detect_thr), .c_hsbias_c(c_hsbias_c), .c_hsbias_en(c_hsbias_en),
-  .c_obs_pre4_en(c_obs_pre4_en), .c_pll_cdr_band(c_pll_cdr_band), .c_pll_cdr_en(c_pll_cdr_en), .c_pll_cdr_kp(c_pll_cdr_kp), .c_pll_cdr_n10(c_pll_cdr_n10), .c_pll_cdr_n4(c_pll_cdr_n4), .c_pll_cdr_n5(c_pll_cdr_n5), .c_pll_cdr_n8(c_pll_cdr_n8),
-  .c_pll_tx_band(c_pll_tx_band), .c_pll_tx_en(c_pll_tx_en), .c_pll_tx_n4(c_pll_tx_n4), .c_pll_tx_n8(c_pll_tx_n8), .c_pllvreg_byp_cdr(c_pllvreg_byp_cdr), .c_pllvreg_byp_tx(c_pllvreg_byp_tx), .c_prescale_d(c_prescale_d), .c_prescale_en(c_prescale_en),
-  .c_prescale_hf_d(c_prescale_hf_d), .c_prescale_hf_en(c_prescale_hf_en), .c_ptrim_t0(c_ptrim_t0), .c_ptrim_t1(c_ptrim_t1), .c_ptrim_t2(c_ptrim_t2), .c_ptrim_t3(c_ptrim_t3), .c_ptrim_t4(c_ptrim_t4), .c_ptrim_t5(c_ptrim_t5),
-  .c_ptrim_t6(c_ptrim_t6), .c_ptrim_t7(c_ptrim_t7), .c_refvcm_en(c_refvcm_en), .c_ring_osc_en(c_ring_osc_en), .c_rx_ref_en(c_rx_ref_en), .c_rxlevel_en(c_rxlevel_en), .c_rxlevel_half(c_rxlevel_half), .c_rxselect_direct(c_rxselect_direct),
-  .c_rxselect_en(c_rxselect_en), .c_slicer_en(c_slicer_en), .c_slicer_trim_d0(c_slicer_trim_d0), .c_slicer_trim_d1(c_slicer_trim_d1), .c_slicer_trim_d2(c_slicer_trim_d2), .c_slicer_trim_d3(c_slicer_trim_d3), .c_slicer_trim_e0(c_slicer_trim_e0), .c_slicer_trim_e1(c_slicer_trim_e1),
-  .c_slicer_trim_e2(c_slicer_trim_e2), .c_slicer_trim_e3(c_slicer_trim_e3), .c_slicer_vsel_e0(c_slicer_vsel_e0), .c_slicer_vsel_e1(c_slicer_vsel_e1), .c_slicer_vsel_e2(c_slicer_vsel_e2), .c_slicer_vsel_e3(c_slicer_vsel_e3), .c_term_en(c_term_en), .c_term_hs_en(c_term_hs_en),
-  .c_term_hs_term_en(c_term_hs_term_en), .c_term_hs_trim(c_term_hs_trim), .c_term_mode(c_term_mode), .c_txpad_req_detect(c_txpad_req_detect), .c_txpad_req_main(c_txpad_req_main), .c_txpad_req_post(c_txpad_req_post), .c_txpad_req_term(c_txpad_req_term), .c_usb_fs_en(c_usb_fs_en),
-  .c_usb_hs_drv(c_usb_hs_drv), .c_usb_hs_en(c_usb_hs_en), .c_usb_hs_str(c_usb_hs_str), .c_usb_ls_slow(c_usb_ls_slow), .c_usb_pulldown_n(c_usb_pulldown_n), .c_usb_pulldown_p(c_usb_pulldown_p), .c_usb_pullup_n(c_usb_pullup_n), .c_usb_pullup_p(c_usb_pullup_p),
-  .c_usb_term_trim(c_usb_term_trim), .c_usb_tx_dn(c_usb_tx_dn), .c_usb_tx_dp(c_usb_tx_dp), .c_usb_tx_oe(c_usb_tx_oe), .c_vco_replica_en(c_vco_replica_en), .c_vthdac_a(c_vthdac_a), .c_vthdac_b(c_vthdac_b), .c_vthdac_en(c_vthdac_en),
-  .c_wiredtx_bias_en(c_wiredtx_bias_en), .c_wiredtx_ext(c_wiredtx_ext), .c_wiredtx_main_code(c_wiredtx_main_code), .c_wiredtx_post_code(c_wiredtx_post_code), .c_wiredtx_post_pol(c_wiredtx_post_pol), .c_wiredtx_ser_en(c_wiredtx_ser_en), .c_wmon_en(c_wmon_en), .c_wmon_obs_en(c_wmon_obs_en),
-  .c_wmon_sel(c_wmon_sel), .c_wordclk_d10(c_wordclk_d10), .c_wordclk_d20(c_wordclk_d20), .c_wordclk_en(c_wordclk_en), .c_wrx_cap_b1(c_wrx_cap_b1), .c_wrx_cap_b2(c_wrx_cap_b2), .c_wrx_cap_en(c_wrx_cap_en), .c_wrx_cap_psel(c_wrx_cap_psel),
-  .c_wrx_cap_rcs(c_wrx_cap_rcs), .c_wrx_cap_slipm(c_wrx_cap_slipm), .c_wrx_cap_slipp(c_wrx_cap_slipp), .c_wtxfb_branch(c_wtxfb_branch), .c_wtxfb_idle(c_wtxfb_idle), .c_wtxfb_stage_tmds(c_wtxfb_stage_tmds), .c_wtxfb_state(c_wtxfb_state), .clk_obs(clk_obs),
-  .ct_det_clk(ct_det_clk), .fc_src(fc_src), .h2d_clk(h2d_clk), .host_word_clk(host_word_clk), .island_en(island_en), .island_off(island_off), .island_on(island_on), .por_n(por_n),
-  .ref_clk(ref_clk), .rx_en_aux(rx_en_aux), .rx_en_wtx_ext(rx_en_wtx_ext), .s_pg_debug(s_pg_debug), .s_pg_pll(s_pg_pll), .s_pg_wired_cap(s_pg_wired_cap), .s_pg_wired_rx(s_pg_wired_rx), .s_pg_wired_tx(s_pg_wired_tx),
-  .s_ref_present(s_ref_present), .wire_rx_ptrim_en(wire_rx_ptrim_en), .wire_tx_data(wire_tx_data), .wired_on_ext(wired_on_ext));
+  .WTX_EXT_DATA(WTX_EXT_DATA), .WTX_EXT_N(WTX_EXT_N), .WTX_EXT_P(WTX_EXT_P), .WTX_EXT_PRESENT(WTX_EXT_PRESENT), .WTX_RUN(WTX_RUN), .WTX_WCLK40(WTX_WCLK40), .atb0_en(atb0_en), .atb0_grp(atb0_grp),
+  .atb0_sw(atb0_sw), .atb1_en(atb1_en), .atb1_grp(atb1_grp), .atb1_sw(atb1_sw), .c_aosc_en(c_aosc_en), .c_bb_tap_wmon_bias_en(c_bb_tap_wmon_bias_en), .c_bgap_ena(c_bgap_ena), .c_bgap_trim(c_bgap_trim),
+  .c_bias_dist_en_debug(c_bias_dist_en_debug), .c_bias_dist_en_pll(c_bias_dist_en_pll), .c_bias_dist_en_wire(c_bias_dist_en_wire), .c_biasgen_bandgap_sink1(c_biasgen_bandgap_sink1), .c_biasgen_bandgap_sink2(c_biasgen_bandgap_sink2), .c_biasgen_ena(c_biasgen_ena), .c_biasgen_idac1_source(c_biasgen_idac1_source), .c_biasgen_idac2_source(c_biasgen_idac2_source),
+  .c_biasgen_ref_sel_coarse(c_biasgen_ref_sel_coarse), .c_biasgen_ref_sel_fine(c_biasgen_ref_sel_fine), .c_biasgen_ref_sel_vbg(c_biasgen_ref_sel_vbg), .c_biasgen_voltgen_sink1(c_biasgen_voltgen_sink1), .c_biasgen_voltgen_sink2(c_biasgen_voltgen_sink2), .c_biasgen_voltgen_source(c_biasgen_voltgen_source), .c_cdr_en(c_cdr_en), .c_cdr_fdn(c_cdr_fdn),
+  .c_cdr_fup(c_cdr_fup), .c_cdr_g(c_cdr_g), .c_cdr_otr(c_cdr_otr), .c_cdr_pfd_mode(c_cdr_pfd_mode), .c_cdr_ref_sel(c_cdr_ref_sel), .c_char_en(c_char_en), .c_clk_obs_en(c_clk_obs_en), .c_clk_obs_n(c_clk_obs_n),
+  .c_clk_obs_off(c_clk_obs_off), .c_clk_obs_s(c_clk_obs_s), .c_clockmux_hs(c_clockmux_hs), .c_clockmux_ps(c_clockmux_ps), .c_clockmux_ss(c_clockmux_ss), .c_clockmux_ws(c_clockmux_ws), .c_ctle_bypass(c_ctle_bypass), .c_ctle_en(c_ctle_en),
+  .c_ctle_lf_zero(c_ctle_lf_zero), .c_ctle_peak(c_ctle_peak), .c_detect_en(c_detect_en), .c_detect_inject(c_detect_inject), .c_detect_se(c_detect_se), .c_detect_src_tx(c_detect_src_tx), .c_detect_thr(c_detect_thr), .c_hsbias_c(c_hsbias_c),
+  .c_hsbias_en(c_hsbias_en), .c_obs_pre4_en(c_obs_pre4_en), .c_pll_cdr_band(c_pll_cdr_band), .c_pll_cdr_en(c_pll_cdr_en), .c_pll_cdr_kp(c_pll_cdr_kp), .c_pll_cdr_n10(c_pll_cdr_n10), .c_pll_cdr_n4(c_pll_cdr_n4), .c_pll_cdr_n5(c_pll_cdr_n5),
+  .c_pll_cdr_n8(c_pll_cdr_n8), .c_pll_tx_band(c_pll_tx_band), .c_pll_tx_en(c_pll_tx_en), .c_pll_tx_n4(c_pll_tx_n4), .c_pll_tx_n8(c_pll_tx_n8), .c_pllvreg_byp_cdr(c_pllvreg_byp_cdr), .c_pllvreg_byp_tx(c_pllvreg_byp_tx), .c_prescale_d(c_prescale_d),
+  .c_prescale_en(c_prescale_en), .c_prescale_hf_d(c_prescale_hf_d), .c_prescale_hf_en(c_prescale_hf_en), .c_ptrim_t0(c_ptrim_t0), .c_ptrim_t1(c_ptrim_t1), .c_ptrim_t2(c_ptrim_t2), .c_ptrim_t3(c_ptrim_t3), .c_ptrim_t4(c_ptrim_t4),
+  .c_ptrim_t5(c_ptrim_t5), .c_ptrim_t6(c_ptrim_t6), .c_ptrim_t7(c_ptrim_t7), .c_refvcm_en(c_refvcm_en), .c_ring_osc_en(c_ring_osc_en), .c_rx_ref_en(c_rx_ref_en), .c_rxlevel_en(c_rxlevel_en), .c_rxlevel_half(c_rxlevel_half),
+  .c_rxselect_direct(c_rxselect_direct), .c_rxselect_en(c_rxselect_en), .c_slicer_en(c_slicer_en), .c_slicer_trim_d0(c_slicer_trim_d0), .c_slicer_trim_d1(c_slicer_trim_d1), .c_slicer_trim_d2(c_slicer_trim_d2), .c_slicer_trim_d3(c_slicer_trim_d3), .c_slicer_trim_e0(c_slicer_trim_e0),
+  .c_slicer_trim_e1(c_slicer_trim_e1), .c_slicer_trim_e2(c_slicer_trim_e2), .c_slicer_trim_e3(c_slicer_trim_e3), .c_slicer_vsel_e0(c_slicer_vsel_e0), .c_slicer_vsel_e1(c_slicer_vsel_e1), .c_slicer_vsel_e2(c_slicer_vsel_e2), .c_slicer_vsel_e3(c_slicer_vsel_e3), .c_term_en(c_term_en),
+  .c_term_hs_en(c_term_hs_en), .c_term_hs_term_en(c_term_hs_term_en), .c_term_hs_trim(c_term_hs_trim), .c_term_mode(c_term_mode), .c_txpad_req_detect(c_txpad_req_detect), .c_txpad_req_main(c_txpad_req_main), .c_txpad_req_post(c_txpad_req_post), .c_txpad_req_term(c_txpad_req_term),
+  .c_usb_fs_en(c_usb_fs_en), .c_usb_hs_drv(c_usb_hs_drv), .c_usb_hs_en(c_usb_hs_en), .c_usb_hs_str(c_usb_hs_str), .c_usb_ls_slow(c_usb_ls_slow), .c_usb_pulldown_n(c_usb_pulldown_n), .c_usb_pulldown_p(c_usb_pulldown_p), .c_usb_pullup_n(c_usb_pullup_n),
+  .c_usb_pullup_p(c_usb_pullup_p), .c_usb_term_trim(c_usb_term_trim), .c_usb_tx_dn(c_usb_tx_dn), .c_usb_tx_dp(c_usb_tx_dp), .c_usb_tx_oe(c_usb_tx_oe), .c_vco_replica_en(c_vco_replica_en), .c_vthdac_a(c_vthdac_a), .c_vthdac_b(c_vthdac_b),
+  .c_vthdac_en(c_vthdac_en), .c_wiredtx_bias_en(c_wiredtx_bias_en), .c_wiredtx_ext(c_wiredtx_ext), .c_wiredtx_idle(c_wiredtx_idle), .c_wiredtx_idle_mode(c_wiredtx_idle_mode), .c_wiredtx_main_code(c_wiredtx_main_code), .c_wiredtx_post_code(c_wiredtx_post_code), .c_wiredtx_post_pol(c_wiredtx_post_pol),
+  .c_wiredtx_ser_en(c_wiredtx_ser_en), .c_wiredtx_tr(c_wiredtx_tr), .c_wmon_en(c_wmon_en), .c_wmon_obs_en(c_wmon_obs_en), .c_wmon_sel(c_wmon_sel), .c_wordclk_d10(c_wordclk_d10), .c_wordclk_d20(c_wordclk_d20), .c_wordclk_en(c_wordclk_en),
+  .c_wrx_cap_b1(c_wrx_cap_b1), .c_wrx_cap_b2(c_wrx_cap_b2), .c_wrx_cap_en(c_wrx_cap_en), .c_wrx_cap_psel(c_wrx_cap_psel), .c_wrx_cap_rcs(c_wrx_cap_rcs), .c_wrx_cap_slipm(c_wrx_cap_slipm), .c_wrx_cap_slipp(c_wrx_cap_slipp), .c_wtxfb_branch(c_wtxfb_branch),
+  .c_wtxfb_idle(c_wtxfb_idle), .c_wtxfb_stage_tmds(c_wtxfb_stage_tmds), .c_wtxfb_state(c_wtxfb_state), .clk_obs(clk_obs), .ct_det_clk(ct_det_clk), .fc_src(fc_src), .h2d_clk(h2d_clk), .host_word_clk(host_word_clk),
+  .island_en(island_en), .island_off(island_off), .island_on(island_on), .por_n(por_n), .ref_clk(ref_clk), .rx_en_aux(rx_en_aux), .rx_en_wtx_ext(rx_en_wtx_ext), .s_pg_debug(s_pg_debug),
+  .s_pg_pll(s_pg_pll), .s_pg_wired_cap(s_pg_wired_cap), .s_pg_wired_rx(s_pg_wired_rx), .s_pg_wired_tx(s_pg_wired_tx), .s_ref_present(s_ref_present), .wire_rx_ptrim_en(wire_rx_ptrim_en), .wire_tx_data(wire_tx_data), .wired_on_ext(wired_on_ext));
 endmodule
 
 // Declarations for interface-only checks. Define PT_EXTERNAL_IO and compile pt_provider_io.sv to bind the provider
@@ -927,13 +933,14 @@ endmodule
  inout wire WTX_EXT_N,
  inout wire WTX_EXT_P,
  output wire WTX_EXT_PRESENT,
+ output wire WTX_RUN,
  output wire WTX_WCLK40,
  input wire atb0_en,
  input wire [1:0] atb0_grp,
  input wire [57:0] atb0_sw,
  input wire atb1_en,
  input wire [4:0] atb1_grp,
- input wire [57:0] atb1_sw,
+ input wire [59:0] atb1_sw,
  input wire c_aosc_en,
  input wire c_bb_tap_wmon_bias_en,
  input wire c_bgap_ena,
@@ -1053,10 +1060,13 @@ endmodule
  input wire c_vthdac_en,
  input wire c_wiredtx_bias_en,
  input wire c_wiredtx_ext,
+ input wire c_wiredtx_idle,
+ input wire c_wiredtx_idle_mode,
  input wire [7:0] c_wiredtx_main_code,
  input wire [7:0] c_wiredtx_post_code,
  input wire c_wiredtx_post_pol,
  input wire c_wiredtx_ser_en,
+ input wire [31:0] c_wiredtx_tr,
  input wire c_wmon_en,
  input wire c_wmon_obs_en,
  input wire [1:0] c_wmon_sel,

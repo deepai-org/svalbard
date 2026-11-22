@@ -664,6 +664,22 @@
       "kind": "control_voltage",
       "force": "allowed",
       "note": "MOD-00 item 1 (model-uncertainty audit): vco_replica VCTRL sense/force, with CLK_OBS vco_replica gives the ring tuning curve f(VCTRL)."
+    },
+    {
+      "code": 59,
+      "name": "wiredtx_avgp",
+      "island": "wired",
+      "kind": "sense",
+      "force": "sense_only",
+      "note": "pt_wiredtx8 ATB_AVGP: DC average of MAIN_P through 100 kohm inside the block (phase-trim slot-width calibration, WT50). Sense only (ATB1, high impedance)."
+    },
+    {
+      "code": 60,
+      "name": "wiredtx_avgn",
+      "island": "wired",
+      "kind": "sense",
+      "force": "sense_only",
+      "note": "pt_wiredtx8 ATB_AVGN: DC average of MAIN_N through 100 kohm inside the block (WT50). On the ATB1 core_ref_supply local bus (ATB1_LOCAL0) because the wired group holds 12 leaves with code 59."
     }
   ],
   "atb_policy": "ATB0 is the force bus and ATB1 the sense bus. Each bus closes at most one switch (code 0 = all open). ATB1 may select any node. ATB0 may select only device replicas, matching structures and the six overridable bias/reference nodes; selecting an overridable node on ATB0 requires its bias_override bit, and setting a bias_override bit requires ATB0 to select that node, so the internal source and the bench never drive one node together and an overridden mirror is never left floating. Island nodes are disconnected while their island is off; supply monitor taps are not gated so a switched-off island can be confirmed dead. Nodes marked hardware=false have no tap: their codes are rejected on both buses. Core reference-chain nodes (VBG, ROOT_REF, TRK_<island>) carry the force preconditions of analog/core_support/README.md as commit rules instead of override bits. ATB all-off gap: >= 20 ns from deselect to the next select on one bus (atb_switch_dead_time_s; group/pad non-overlap up to 5.7 ns). The break-before-make rule puts a zero commit between two non-zero codes, i.e. at least one 32-clock SPI transaction, which exceeds 20 ns for any SCLK below 1.6 GHz. control_semantics.switch_dead_time_s (4 ns) remains the analog-switch figure for other selects.",
@@ -1086,7 +1102,7 @@
           "bits": 6,
           "default": 0,
           "minimum": 0,
-          "maximum": 58,
+          "maximum": 60,
           "unit": "code",
           "atb_bus": 0
         },
@@ -1094,7 +1110,7 @@
           "bits": 6,
           "default": 0,
           "minimum": 0,
-          "maximum": 58,
+          "maximum": 60,
           "unit": "code",
           "atb_bus": 1,
           "live": true
@@ -1815,6 +1831,37 @@
         "tia_hib": {
           "bits": 1,
           "default": 1,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        }
+      }
+    },
+    "wtx": {
+      "description": "pt_wiredtx8 static controls (rows WT40 / WT50, analog/wired_tx/README.md): phase_trim drives TR{k}_{b} (bit 4k+b = TRk_b, about 13 ps per code at ss, 8 ps at ff; set by the slot-width calibration on ATB codes 59 / 60); idle_mode drives IDLE_MODE (0: both pad gates of each pair at the supply, 1: both legs of the conducting slice on; the IDLE pin itself is the transport idle wire_idle, port c_wiredtx_idle); cascode_boost requests the 100BASE-TX CASCODE boost of pad_txpad (WT53-c / WT54; no macro port until the pump block exists: validator rules only). Commit rules (WT52 / WT53-c / WT54): wiredtx MAIN + POST codes <= 255 except in 100BASE-TX (post_polarity = 1, three-level MLT-3); with debug.wtx_ext or a test pattern MAIN <= 189 and POST off; no TX termination request in 100BASE-TX; cascode_boost only in 100BASE-TX, and a commit that changes cascode_boost or post_polarity needs wiredtx.state != active before and after it.",
+      "update": "stopped",
+      "islands": [
+        "wired"
+      ],
+      "live": false,
+      "fields": {
+        "phase_trim": {
+          "bits": 32,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 4294967295,
+          "unit": "code"
+        },
+        "idle_mode": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code"
+        },
+        "cascode_boost": {
+          "bits": 1,
+          "default": 0,
           "minimum": 0,
           "maximum": 1,
           "unit": "code"
@@ -2944,6 +2991,121 @@
         ]
       ],
       "reason": "CP4-3 / TOP-25: the AUX_CLK receiver (forwarded wire clock, auxiliary clock) is on the debug island."
+    },
+    {
+      "id": "wtx_main_post_sum",
+      "class": "legality",
+      "node": "pad_txpad MAIN + POST tail current <= 21 mA (WT52 b)",
+      "if_any": [
+        [
+          "wiredtx.config.post_polarity",
+          "eq",
+          0
+        ]
+      ],
+      "then_all": [
+        [
+          "wiredtx.config.postcursor_code",
+          "sum_le",
+          [
+            "wiredtx.config.current_code",
+            255
+          ]
+        ]
+      ]
+    },
+    {
+      "id": "wtx_static_drive_limit",
+      "class": "legality",
+      "node": "pad_txpad static one-leg current <= 15.75 mA in WTX_EXT and test-pattern modes (WT52 c)",
+      "if_any": [
+        [
+          "debug.wtx_ext.enable",
+          "eq",
+          1
+        ],
+        [
+          "debug.pattern.tx_mode",
+          "ne",
+          "payload"
+        ]
+      ],
+      "then_all": [
+        [
+          "wiredtx.config.current_code",
+          "le",
+          189
+        ],
+        [
+          "wiredtx.config.postcursor_code",
+          "eq",
+          0
+        ],
+        [
+          "wiredtx.config.post_polarity",
+          "eq",
+          0
+        ]
+      ]
+    },
+    {
+      "id": "wtx_100base_no_term",
+      "class": "legality",
+      "node": "no TX termination in 100BASE-TX (WT53-c, WT50)",
+      "if_any": [
+        [
+          "wiredtx.config.post_polarity",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "txpad.config.term_request",
+          "eq",
+          0
+        ]
+      ]
+    },
+    {
+      "id": "wtx_boost_100base_only",
+      "class": "legality",
+      "node": "pad_txpad CASCODE boost in 100BASE-TX only (WT53-c)",
+      "if_any": [
+        [
+          "wtx.cascode_boost",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "wiredtx.config.post_polarity",
+          "eq",
+          1
+        ],
+        [
+          "debug.wtx_ext.enable",
+          "eq",
+          0
+        ]
+      ]
+    },
+    {
+      "id": "wtx_mode_change_banks_off",
+      "class": "legality",
+      "node": "CASCODE boost / 100BASE-TX mode change only with the TX banks disabled (WT54)",
+      "changed": [
+        "wtx.cascode_boost",
+        "wiredtx.config.post_polarity"
+      ],
+      "then_all": [
+        [
+          "wiredtx.state.state",
+          "ne",
+          "active"
+        ]
+      ]
     }
   ],
   "break_before_make": [
@@ -3283,6 +3445,11 @@
             "bits": 1,
             "port": "h2d_unf",
             "meaning": "sticky until reset: H2D FIFO read empty while running"
+          },
+          "wtx_run": {
+            "bits": 1,
+            "port": "wtx_run",
+            "meaning": "live: pt_wiredtx8 TX_RUN (all eight conduction windows toggling, ring-run detector; through the wired iso clamp, 0 while the wired island is off) (WT50)"
           }
         }
       }
@@ -3337,7 +3504,8 @@
           9,
           11,
           12,
-          13
+          13,
+          60
         ]
       },
       {
@@ -3369,7 +3537,8 @@
           28,
           40,
           41,
-          58
+          58,
+          59
         ]
       },
       {
@@ -4879,6 +5048,32 @@
           "mode": {
             "consolidation.wiredtx_stage.stage": "serial"
           },
+          "islands": [
+            "wired"
+          ],
+          "chips": [
+            "wired"
+          ]
+        },
+        {
+          "signal": "wiredtx_avgp",
+          "port": null,
+          "path": "atb1",
+          "select": "wiredtx_avgp",
+          "expected": "ATB1 = DC average of pt_wiredtx8 MAIN_P through 100 kohm (phase-trim slot-width calibration, WT50)",
+          "islands": [
+            "wired"
+          ],
+          "chips": [
+            "wired"
+          ]
+        },
+        {
+          "signal": "wiredtx_avgn",
+          "port": null,
+          "path": "atb1",
+          "select": "wiredtx_avgn",
+          "expected": "ATB1 = DC average of pt_wiredtx8 MAIN_N through 100 kohm (phase-trim slot-width calibration, WT50)",
           "islands": [
             "wired"
           ],

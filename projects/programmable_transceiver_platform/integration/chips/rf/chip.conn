@@ -39,9 +39,9 @@ inst digital pt_digital_macro chip
   island_off[{1,2,5}]>island_off[\1] island_off[{0,3,4}]>-
   s_pg_{rf_rx,rf_tx,lod,lo,pll,conv,debug}=s_pg_\1      # per-switch power-good; the macro ANDs each enable group
   s_pg_{wired_rx,wired_cap,wired_tx}=VSS wired_on_ext=VSS      # no wired island on this chip
-  atb0_sw[{0,13,28,34,35,42,43,44,45,46,47,48,49,50,51,52,53,54,55,57}]>atb0_sw[\1] atb0_sw[{1,2,3,4,5,6,7,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,29,30,31,32,33,36,37,38,39,40,41,56}]>-
+  atb0_sw[{0,13,28,34,35,42,43,44,45,46,47,48,49,50,51,52,53,54,55,57}]>atb0_sw[\1] atb0_sw[{1,2,3,4,5,6,7,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,29,30,31,32,33,36,37,38,39,40,41,56,58,59}]>-
   atb1_sw[{0,1,2,3,4,5,7,8,10,11,12,13,14,15,16,17,18,19,20,24,28,29,30,31,32,33,34,35,36,37,38,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57}]>atb1_sw[\1]
-  atb1_sw[{6,9,21,22,23,25,26,27,39}]>-      # leaves of wired nodes: not on this chip
+  atb1_sw[{6,9,21,22,23,25,26,27,39,58,59}]>-      # leaves of wired nodes: not on this chip
   atb0_grp[{0:1}]>atb0_grp[\1] atb1_grp[{0:4}]>atb1_grp[\1]
   atb0_en>atb0_en atb1_en>atb1_en
   rx_en_aux>rx_en_aux rx_en_wclk>- rx_en_wtx_ext>-
@@ -51,7 +51,7 @@ inst digital pt_digital_macro chip
   s_pll_tx_lock=PLL_TX_LOCK s_pll_cdr_lock=PLL_CDR_LOCK s_ref_present=s_ref_present s_refbuf_ready=REFBUF_READY
   s_adc_i_ovl=ADCI_OVL s_adc_i_b_ovl=ADCI_OVLB s_adc_q_ovl=ADCQ_OVL s_adc_q_b_ovl=ADCQ_OVLB
   s_adc_i_done=ADCI_DONE s_adc_i_b_done=ADCI_DONEB s_adc_q_done=ADCQ_DONE s_adc_q_b_done=ADCQ_DONEB
-  s_detect_{diff_pos,diff_neg,se_p,se_n}=VSS s_wrx_slp=VSS s_wrx_slm=VSS s_wtx_ext_data=VSS s_wtx_ext_present=VSS      # wired status: not on this chip
+  s_detect_{diff_pos,diff_neg,se_p,se_n}=VSS s_wrx_slp=VSS s_wrx_slm=VSS s_wtx_ext_data=VSS s_wtx_ext_present=VSS s_wtx_run=VSS      # wired status: not on this chip
   s_aux_present=AUX_PRESENT
   fault=VSS      # no monitor block exists (D-FAULT); floating high would force every TX path off
   # every c_* net is a macro output port of the same name (ctl_ports.txt); they are not repeated here. Ports of the

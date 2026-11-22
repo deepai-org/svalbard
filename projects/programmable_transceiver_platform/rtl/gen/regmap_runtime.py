@@ -80,16 +80,40 @@ def cond_ok(cond, cfg):
         return v in values
     if op == 'nin':
         return v not in values
+    # numeric comparisons (WT50 / LO-DIG-1): a constant, the sum with another field, or another field
+    if op == 'le':
+        return v <= values[0]
+    if op == 'ge':
+        return v >= values[0]
+    if op == 'sum_le':
+        return v + cfg[values[0]] <= values[1]
+    if op == 'le_field':
+        return v <= cfg[values[0]]
+    if op == 'ge_field':
+        return v >= cfg[values[0]]
     raise ValueError(op)
 
 
-def rule_ok(rule, cfg):
+def rule_ok(rule, cfg, active=None):
+    """Rule check on the shadow cfg. A transition rule (`changed` list) is triggered when one of its fields differs
+    between cfg (shadow) and active; its requirements must then hold in both. Without `active` it cannot trigger."""
     if rule.get('absent'):      # every field of the rule is absent on this chip (chip_view): the rule drops out
         return True
+    if rule.get('changed'):
+        if active is None or all(cfg[n] == active[n] for n in rule['changed']):
+            return True
+        return all(cond_ok(c, cfg) and cond_ok(c, active) for c in rule['then_all'])
     trig = any(cond_ok(c, cfg) for c in rule['if_any']) if rule['if_any'] else True
     if rule['if_all']:
         trig = trig and all(cond_ok(c, cfg) for c in rule['if_all'])
     return (not trig) or all(cond_ok(c, cfg) for c in rule['then_all'])
+
+
+def rule_field_names(rule):
+    """Every field a rule reads (condition fields, fields compared against, transition fields)."""
+    names = [c[0] for c in rule['if_any'] + rule['if_all'] + rule['then_all']] + list(rule.get('changed') or [])
+    names += [c[2][0] for c in rule['if_any'] + rule['if_all'] + rule['then_all'] if c[1] in ('sum_le', 'le_field', 'ge_field')]
+    return names
 
 
 def reset_config():
@@ -107,7 +131,7 @@ def chip_view(chip):
     for reg in REGISTERS:
         reg['reset'] = sum(((FIELD_BY_NAME[n]['default'] >> fl) & ((1 << w) - 1)) << rl for n, fl, w, rl in reg['chunks'])
     for rule in RULES:
-        if all(FIELD_BY_NAME[c[0]].get('absent') for c in rule['if_any'] + rule['if_all'] + rule['then_all']):
+        if all(FIELD_BY_NAME[n].get('absent') for n in rule_field_names(rule)):
             rule['absent'] = True
     # OBS-6: ATB codes with no leaf on this chip are rejected at write time (spec/chips.json atb_no_leaf).
     for bus in ('atb0', 'atb1'):
@@ -157,7 +181,7 @@ def commit_code(shadow, active, enable):
         if not field_ok(_field(name), shadow[name]):
             return 0xC0 + i
     for i, rule in enumerate(RULES):
-        if not rule_ok(rule, shadow):
+        if not rule_ok(rule, shadow, active):
             return 1 + i
     for i, name in enumerate(BREAK_BEFORE_MAKE):
         if active[name] != 0 and shadow[name] != 0 and shadow[name] != active[name]:

@@ -5,7 +5,7 @@ PWR = [f'debug.island_power.{k}' for k in ('wired', 'rf', 'pll', 'usb', 'conv', 
 def base(rand=True):
     F = {}
     for f in FIELDS:
-        F[f['name']] = random.choice(list(legal(f))) if rand and random.random() < 0.8 else default(f)
+        F[f['name']] = random.choice(legal(f)) if rand and random.random() < 0.8 else default(f)
     for f in FIELDS:
         if not present(f): F[f['name']] = 0              # not stored on this chip
     for n in PWR: F[n] = 1 if present(next((f for f in FIELDS if f['name'] == n), dict(chips=['rf', 'wired']))) else 0
@@ -19,7 +19,7 @@ def base(rand=True):
 V = []
 for _ in range(600): V.append(base())
 for f in FIELDS:                                   # every legal value of every field (<= 64 values, else walking bits + random)
-    vals = list(legal(f))
+    vals = legal(f); vals = vals if isinstance(vals, range) else list(vals)    # range stays lazy (32-bit wtx.phase_trim)
     if len(vals) > 64: vals = sorted(set([0, vals[-1]] + [1 << b for b in range(f['w']) if (1 << b) <= vals[-1]] + [vals[-1] ^ (1 << b) for b in range(f['w']) if 0 <= (vals[-1] ^ (1 << b)) <= vals[-1]] + random.sample(vals, 8)))
     if f['name'] in PWR or f['name'].startswith('debug.pgood') or not present(f): continue
     for x in vals:

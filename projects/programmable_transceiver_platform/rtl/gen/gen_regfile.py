@@ -324,6 +324,24 @@ def build_model():
         f = by_name[name]
         if f['store'] is None:
             raise SpecError(f'rule uses dropped field {name}')
+        if op in ('le', 'ge', 'sum_le', 'le_field', 'ge_field'):
+            # numeric comparisons (WT50 / LO-DIG-1): le / ge a constant code, sum_le [other field, limit]
+            # (field + other <= limit), le_field / ge_field [other field]
+            if f['values'] is not None:
+                raise SpecError(f'rule op {op} needs a numeric field ({name})')
+            if op in ('le', 'ge'):
+                if not isinstance(value, int) or not 0 <= value < (1 << f['bits']):
+                    raise SpecError(f'rule op {op} on {name} needs an integer that fits the field')
+                return [name, op, [value]]
+            other = value[0]
+            g = by_name.get(other)
+            if g is None or g['store'] is None or g['values'] is not None or g['chips'] != f['chips']:
+                raise SpecError(f'rule op {op}: {name} vs {other} needs a stored numeric field on the same chips')
+            if op == 'sum_le':
+                if len(value) != 2 or not isinstance(value[1], int) or not 0 <= value[1] < (1 << (max(f['bits'], g['bits']) + 1)):
+                    raise SpecError(f'rule op sum_le on {name} needs [other field, limit]')
+                return [name, op, [other, value[1]]]
+            return [name, op, [other]]
         vals = value if op in ('in', 'nin') else [value]
         if op not in ('eq', 'ne', 'in', 'nin'):
             raise SpecError(f'bad op {op}')
@@ -331,9 +349,19 @@ def build_model():
 
     rules = []
     for r in dbg['rules']:
-        rules.append(dict(id=r['id'], cls=r['class'], node=r.get('node'), if_any=[compile_cond(c) for c in r.get('if_any', [])],
-                          if_all=[compile_cond(c) for c in r.get('if_all', [])],
-                          then_all=[compile_cond(c) for c in r['then_all']], source='spec/debug-controls.json'))
+        rule = dict(id=r['id'], cls=r['class'], node=r.get('node'), if_any=[compile_cond(c) for c in r.get('if_any', [])],
+                    if_all=[compile_cond(c) for c in r.get('if_all', [])],
+                    then_all=[compile_cond(c) for c in r['then_all']], source='spec/debug-controls.json')
+        if r.get('changed'):
+            # transition rule: a commit that changes one of these fields needs then_all on the shadow AND the active
+            # configuration (e.g. wtx.cascode_boost only with the TX banks off before and after, WT54)
+            if r.get('if_any') or r.get('if_all') or r['class'] != 'legality':
+                raise SpecError(f"{r['id']}: a transition rule has no trigger conditions and is class legality")
+            for n in r['changed']:
+                if n not in by_name or by_name[n]['store'] is None or by_name[n]['live']:
+                    raise SpecError(f"{r['id']}: transition field {n} undefined, dropped or live")
+            rule['changed'] = list(r['changed'])
+        rules.append(rule)
     for n in atb_nodes:
         if n['force'] == 'override':
             ov = 'debug.bias_override.' + n['override']
@@ -500,6 +528,20 @@ def sv_cond(c, prefix, by_name):
     f = by_name[name]
     w = f['bits']
     sig = prefix + f['sv']
+    if op == 'le':
+        return f'({sig}<={sv_const(w, vals[0])})'
+    if op == 'ge':
+        return f'({sig}>={sv_const(w, vals[0])})'
+    if op in ('sum_le', 'le_field', 'ge_field'):
+        g = by_name[vals[0]]
+        osig, wg = prefix + g['sv'], g['bits']
+        if op == 'sum_le':
+            ws = max(w, wg) + 1
+            return f"(({{{ws - w}'d0,{sig}}}+{{{ws - wg}'d0,{osig}}})<={sv_const(ws, vals[1])})"
+        wm = max(w, wg)
+        a_ = sig if w == wm else f"{{{wm - w}'d0,{sig}}}"
+        b_ = osig if wg == wm else f"{{{wm - wg}'d0,{osig}}}"
+        return f"({a_}{'<=' if op == 'le_field' else '>='}{b_})"
     if op == 'eq':
         return f'({sig}=={sv_const(w, vals[0])})'
     if op == 'ne':
@@ -509,6 +551,12 @@ def sv_cond(c, prefix, by_name):
 
 
 def sv_rule(r, prefix, by_name):
+    if r.get('changed'):
+        assert prefix == 's_', 'transition rules are commit checks (shadow vs active) only'
+        # transition rule (commit check only): shadow s_ vs active a_
+        chg = '||'.join(f"s_{by_name[n]['sv']}!=a_{by_name[n]['sv']}" for n in r['changed'])
+        then = '&&'.join(sv_cond(c, p, by_name) for p in ('s_', 'a_') for c in r['then_all'])
+        return f'(!({chg})||({then}))'
     trig = []
     if r['if_any']:
         trig.append('(' + '||'.join(sv_cond(c, prefix, by_name) for c in r['if_any']) + ')')
@@ -726,7 +774,7 @@ def emit_sv(model):
     a(' // Commit validation on the complete shadow configuration.')
     a(f' wire[{len(rules) - 1}:0]rule_ok_s;')
     for i, r in enumerate(rules):
-        names = {c[0] for c in r['if_any'] + r['if_all'] + r['then_all']}
+        names = set(rule_names(r))
         on = sorted({c for n in names for c in by_name[n]['chips']})
         expr = sv_rule(r, "s_", by_name)
         if on != ['rf', 'wired']:      # every field of the rule belongs to one chip: the rule drops out on the other (D4)
@@ -955,9 +1003,16 @@ def emit_sv(model):
     return '\n'.join(L) + '\n'
 
 
+def rule_names(r):
+    """Every field a rule reads (same as regmap_runtime.rule_field_names)."""
+    conds = r['if_any'] + r['if_all'] + r['then_all']
+    return [c[0] for c in conds] + list(r.get('changed') or []) + \
+        [c[2][0] for c in conds if c[1] in ('sum_le', 'le_field', 'ge_field')]
+
+
 def rule_presence(r, by_name):
     """'' when the rule is on both chips, else the SV condition under which it is enforced (split, D4)."""
-    on = sorted({c for x in r['if_any'] + r['if_all'] + r['then_all'] for c in by_name[x[0]]['chips']})
+    on = sorted({c for x in rule_names(r) for c in by_name[x]['chips']})
     return '' if on == ['rf', 'wired'] else ('||'.join({'rf': 'ON_RF', 'wired': 'ON_WIRED'}[c] for c in on) or "1'b0")
 
 
@@ -1015,6 +1070,8 @@ def emit_formal(model, a, by_name):
         if not f['split']:
             a(f'  assert({pr}{sv_check(f, "s_" + f["sv"])});')
     for r in rules:
+        if r.get('changed'):
+            continue        # transition rules are commit checks (shadow vs active), see P5
         a(f'  assert({wrap(r, sv_rule(r, "a_", by_name))}); // {r["id"]}')
     a(' end')
     a(' // P3 every pad/node exclusion rule holds on the pad-facing outputs, for every island,')
@@ -1228,10 +1285,19 @@ def emit_markdown(model):
 
     def ctext(c):
         f = by_name[c[0]]
+        if c[1] == 'sum_le':
+            return f'{c[0]} + {c[2][0]} <= {c[2][1]}'
+        if c[1] in ('le', 'ge', 'le_field', 'ge_field'):
+            return f"{c[0]} {'<=' if c[1].startswith('le') else '>='} {c[2][0]}"
         vals = [f['values'][v] if f['values'] else v for v in c[2]]
         return f'{c[0]} {c[1]} {"/".join(map(str, vals))}'
     for i, r in enumerate(model['rules']):
-        a(f"| {i + 1} | `{r['id']}` | {r['cls']} | {r['node'] or ''} | {'; '.join(ctext(c) for c in r['if_any'] + r['if_all'])} | {'; '.join(ctext(c) for c in r['then_all'])} |")
+        trig = '; '.join(ctext(c) for c in r['if_any'] + r['if_all'])
+        then = '; '.join(ctext(c) for c in r['then_all'])
+        if r.get('changed'):
+            trig = 'commit changes ' + ' or '.join(r['changed'])
+            then += ' (before and after the commit)'
+        a(f"| {i + 1} | `{r['id']}` | {r['cls']} | {r['node'] or ''} | {trig} | {then} |")
     a('')
     a('## Islands')
     a('')

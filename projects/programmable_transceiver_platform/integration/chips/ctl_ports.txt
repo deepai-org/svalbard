@@ -201,14 +201,15 @@ c_wrx_cap_psel | 3 | 0 | rtl/pt_wrx_ctl.sv phase picker (automatic, or wrx.picke
 c_wrx_cap_slipp | 1 | 0 | pt_wrx_ctl slip tag + (automatic with the PSEL 3 -> 4 step, or one per change of manual_slip_plus) | wrx.picker.auto+wrx.picker.manual_slip_plus | dynamic; as above
 c_wrx_cap_slipm | 1 | 0 | pt_wrx_ctl slip tag - | wrx.picker.auto+wrx.picker.manual_slip_minus | dynamic; as above
 # ---- wired transmit
-c_wiredtx_mode_h | 1 | 0 | rate_mode 0 -> HF 00 (x1), 1 -> 10 (x2), 2 -> 01 (x4) | consolidation.wiredtx_stage.rate_mode | code 11 (generic serializer fallback, wired_tx README) is not reachable from this field: add a value if it is wanted
-c_wiredtx_mode_f | 1 | 0 | as above | consolidation.wiredtx_stage.rate_mode |
 c_wiredtx_ser_en | 1 | 0 | (wiredtx.state == active) & island_on[0] & tx_ring_ready & !debug.wtx_ext | wiredtx.state.state+debug.wtx_ext.enable | WT25; tx_ring_ready = ring enabled for its lock time or the FBCK counter in tolerance (not the LOCK pin); replaces ct_ser_run (MW-15)
 c_wiredtx_ext | 1 | 0 | direct | debug.wtx_ext.enable |
 c_wiredtx_post_pol | 1 | 0 | direct | wiredtx.config.post_polarity | (was: new field wiredtx.config.post_polarity (IX-9))
 c_wiredtx_main_code | 8 | 109 | direct | wiredtx.config.current_code |
 c_wiredtx_post_code | 8 | 0 | direct | wiredtx.config.postcursor_code |
 c_wiredtx_bias_en | 1 | 0 | any c_txpad_req_* & island_on[0] | txpad.config.branch | core_bias EN_wiredtx
+c_wiredtx_idle | 1 | 1 | pt_core wire_idle (wire_tx_clk domain: 1 while no payload word is launched; wiredtx.idle.idle forces it) & !debug.wtx_ext & island_on[0] | wiredtx.idle.idle+debug.wtx_ext.enable | pt_wiredtx8 IDLE (WT50); dynamic (word-granular)
+c_wiredtx_idle_mode | 1 | 0 | direct | wtx.idle_mode | pt_wiredtx8 IDLE_MODE (WT50)
+c_wiredtx_tr | 32 | 0 | direct | wtx.phase_trim | pt_wiredtx8 TR{k}_{b} = bit 4k+b (WT50); TAP_EN is bound to c_usb_hs_en
 c_txpad_req_main | 1 | 0 | (wiredtx.state == active) & (branch != off) & !idle, OR the fallback request (branch == 2 & debug.wtx_ext & state active & !idle) | txpad.config.branch+wiredtx.state.state+wiredtx.idle.idle+debug.wtx_ext.enable | interlock REQ_MAIN (wired TX README.md section 3, WT28); dropping the request is a power-down, not a protocol idle (WT30)
 c_txpad_req_post | 1 | 0 | req_main & (postcursor_code != 0 or post_polarity) | txpad.config.branch+wiredtx.config.postcursor_code |
 c_txpad_req_detect | 1 | 0 | branch == detect | txpad.config.branch |

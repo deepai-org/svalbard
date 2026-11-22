@@ -244,9 +244,16 @@ class Stimulus:
         return code
 
 
+NUMERIC = ('le', 'ge', 'sum_le', 'le_field', 'ge_field')
+
+
 def satisfy(cond):
     name, op, vals = cond
     codes = valid_codes(F[name])
+    if op in ('le', 'sum_le', 'le_field'):      # numeric ops (WT50 / LO-DIG-1): the smallest code
+        return codes[0]
+    if op in ('ge', 'ge_field'):
+        return codes[-1]
     if op in ('eq', 'in'):
         return vals[0]
     pick = [c for c in codes if c not in vals and c != 0] or [c for c in codes if c not in vals]
@@ -256,10 +263,30 @@ def satisfy(cond):
 def violate(cond):
     name, op, vals = cond
     codes = valid_codes(F[name])
+    if op == 'le':
+        return next(c for c in codes if c > vals[0])
+    if op == 'ge':
+        return next(c for c in reversed(codes) if c < vals[0])
+    if op in ('sum_le', 'le_field'):      # the largest code; violation_partner() moves the other field
+        return codes[-1]
+    if op == 'ge_field':
+        return codes[0]
     if op in ('ne', 'nin'):
         return vals[0]
     pick = [c for c in codes if c not in vals and c != 0] or [c for c in codes if c not in vals]
     return pick[0]
+
+
+def violation_partner(cond):
+    """For a field-against-field condition: the other field's value that, with violate(cond), breaks it."""
+    name, op, vals = cond
+    if op == 'sum_le':
+        return {vals[0]: valid_codes(F[vals[0]])[-1]}
+    if op == 'le_field':
+        return {vals[0]: valid_codes(F[vals[0]])[0]}
+    if op == 'ge_field':
+        return {vals[0]: valid_codes(F[vals[0]])[-1]}
+    return {}
 
 
 def rule_configs(rule):
@@ -268,8 +295,12 @@ def rule_configs(rule):
         trig[c[0]] = satisfy(c)
     if rule['if_any']:
         trig[rule['if_any'][0][0]] = satisfy(rule['if_any'][0])
+    if rule.get('changed'):      # transition rule: change its first field away from the reset (= active) value
+        f = F[rule['changed'][0]]
+        trig[f['name']] = next(c for c in valid_codes(f) if c != f['default'])
     bad = dict(trig)
     bad[rule['then_all'][0][0]] = violate(rule['then_all'][0])
+    bad.update(violation_partner(rule['then_all'][0]))
     good = dict(trig)
     for c in rule['then_all']:
         good[c[0]] = satisfy(c)
@@ -377,7 +408,7 @@ def build(seed, n_random):
             not_violable.append(rule['id']); continue
         cfg = M.reset_config()
         cfg.update(bad)
-        assert not M.rule_ok(rule, cfg), rule['id']
+        assert not M.rule_ok(rule, cfg, M.reset_config()), rule['id']     # active = reset (transition rules)
         s.reset()
         s.set_fields(bad)
         code = s.commit()

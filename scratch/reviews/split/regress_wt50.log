@@ -1,0 +1,13 @@
+chip-top-rf 0 problems; staged=0 -> FAIL 4s   (FAIL = demand / staged counts only; unbound=0 ctl=0 cfg=0 macro=0)
+chip-top-wired 0 problems; staged=0 -> FAIL 4s
+transceiver-regfile rc=0 95s
+transceiver-regfile-formal rc=0 76s
+transceiver-top-modes rc=0 (rerun alone after the decode-table bench fix for the 32-bit wtx.phase_trim: 2^32-entry list -> earlyoom, iverilog full-word force; PT_CHIP 3/1/2 mismatching ports 0)
+transceiver-chip-io rc=0 1s
+transceiver-por-bypass-chip rc=0 0s
+transceiver-contract rc=0 8s
+transceiver-ctl-blocks rc=0 1569s
+transceiver-digital-rtl-checks rc=0 (make -o transceiver-top-modes; top-modes run separately above)
+check_performance_requirements rc=0 0s
+check_architecture_conn rc=0 0s
+ALLDONE

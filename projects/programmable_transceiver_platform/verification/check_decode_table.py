@@ -12,7 +12,7 @@ HERE = Path(__file__).resolve().parent / 'decode_table'
 for chip in sys.argv[1:] or ['3', '1', '2']:      # PT_CHIP: both halves, pt_rf, pt_wired (split, D4)
   with tempfile.TemporaryDirectory() as t:
     for f in ('gen.py', 'model.py', 'run_q1.py', 'ana_q1.py'): shutil.copy(HERE / f, t)
-    env = dict(os.environ, OMP_NUM_THREADS='1', PT_CHIP=chip)
+    env = dict(os.environ, OMP_NUM_THREADS='1', PT_CHIP=chip, PT_PROJECT=str(HERE.parents[0] if HERE.name == 'verification' else HERE.parents[1]))
     r = subprocess.run([sys.executable, 'run_q1.py'], cwd=t, capture_output=True, text=True, env=env)
     if r.returncode: sys.exit(f'DECODE_TABLE_CHECK_FAIL: PT_CHIP={chip}: run\n' + (r.stdout + r.stderr)[-3000:])
     a = subprocess.run([sys.executable, 'ana_q1.py'], cwd=t, capture_output=True, text=True, env=env)

@@ -1,7 +1,7 @@
 // Wired-TX launch / enable control for the REAL published cells (replaces the serializer model in
 // pt_clocktree_slow: MW-15/16/17, D-CT, D-TMDS, D-PLLEN, WT25/26/28/30, TOP-17). Drives the "wired transmit"
 // ports and the TX-ring rows of integration/chips/ctl_ports.txt:
-//   pll_tx (pt_pll_ring_core) EN / N4 / N8 / BAND, pt_wiredtx SER_EN / MODE_H / MODE_F, core_bias EN_wiredtx,
+//   pll_tx (pt_pll_ring_core) EN / N4 / N8 / BAND, pt_wiredtx8 SER_EN (no MODE_H / MODE_F since WT50), core_bias EN_wiredtx,
 //   tx interlock REQ_MAIN / REQ_POST / REQ_DETECT / REQ_TERM, pt_wtx_fallback_control raw latch inputs,
 //   and the transport's wire_tx_request (no analog producer: D-VALID, WT25(6)).
 //
@@ -55,7 +55,6 @@ module pt_wtx_ctl #(
     input  wire [7:0] cfg_ring_lock_time, // ring_l.lock_time: (code + 1) * 64 REF cycles
     input  wire [1:0] cfg_ring_ready_sel, // 0 timer, 1 timer OR frequency flag, 2 frequency flag only, 3 override (ready while enabled)
     input  wire [1:0] cfg_wtx_state,      // wiredtx.state.state (2 = active)
-    input  wire [1:0] cfg_rate_mode,      // consolidation.wiredtx_stage.rate_mode: 0 x1, 1 x2, 2 x4, 3 reserved (= x1)
     input  wire [1:0] cfg_branch,         // txpad.config.branch: 0 off, 1 serial, 2 tmds, 3 detect
     input  wire       cfg_idle,           // wiredtx.idle.idle (reset 1)
     input  wire       cfg_wtx_ext,        // debug.wtx_ext.enable
@@ -66,7 +65,7 @@ module pt_wtx_ctl #(
     // TX ring
     output wire       c_pll_tx_en, c_pll_tx_n4, c_pll_tx_n8, c_pll_tx_band,
     // serializer
-    output wire       c_wiredtx_ser_en, c_wiredtx_mode_h, c_wiredtx_mode_f, c_wiredtx_bias_en,
+    output wire       c_wiredtx_ser_en, c_wiredtx_bias_en,
     // interlock requests
     output wire       c_txpad_req_main, c_txpad_req_post, c_txpad_req_detect, c_txpad_req_term,
     // fallback control cell, raw
@@ -91,8 +90,6 @@ module pt_wtx_ctl #(
     assign c_pll_tx_n4      = cfg_ring_n == 2'd2;
     assign c_pll_tx_n8      = cfg_ring_n == 2'd1;
     assign c_pll_tx_band    = cfg_ring_band;
-    assign c_wiredtx_mode_h = cfg_rate_mode == 2'd1;
-    assign c_wiredtx_mode_f = cfg_rate_mode == 2'd2;
     assign c_wtxfb_branch   = cfg_branch;
     assign c_wtxfb_state    = cfg_wtx_state;
     assign c_wtxfb_idle     = cfg_idle;
@@ -246,6 +243,13 @@ module pt_wtx_ctl #(
     assign c_txpad_req_term   = seq_active[4] & gate_w;
     assign c_wiredtx_bias_en  = c_txpad_req_main | c_txpad_req_post | c_txpad_req_detect | c_txpad_req_term;
     assign c_wiredtx_ser_en   = ser_q & island_on_wired & c_pll_tx_en & ~cfg_wtx_ext;
+    // WT50 / pt_wiredtx8: SER_EN also gates the eight PH input buffers (NAND2(PH, SER_EN)), whose PH inputs float while
+    // the pll island is off, so SER_EN must be 0 then. c_pll_tx_en contains island_on_pll; checked here in simulation
+    // and by sim/tb_pt_wtx_ctl.sv (every island / enable combination and a random walk).
+`ifndef SYNTHESIS
+    always @* if (!island_on_pll && c_wiredtx_ser_en !== 1'b0)
+        $error("pt_wtx_ctl: c_wiredtx_ser_en = %b while the pll island is off (WT50)", c_wiredtx_ser_en);
+`endif
 
     // ------------------------------------------------------------------ wire_tx_clk domain
     // Cleared asynchronously while SER_EN is low (the clock is stopped then); released by two WORD_CLK40 edges.

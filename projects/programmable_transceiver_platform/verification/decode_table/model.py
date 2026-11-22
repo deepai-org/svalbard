@@ -81,7 +81,7 @@ def expect(F, D, O):
     for k in range(8): E[f'c_ptrim_t{k}'] = f(f'cdr.phase_trim.p{k}')
     E['c_wrx_cap_rcs'] = f('slicer.capture.rcsel')
     # wired transmit / USB static
-    rm = f('consolidation.wiredtx_stage.rate_mode'); E['c_wiredtx_mode_h'] = int(rm == 1); E['c_wiredtx_mode_f'] = int(rm == 2)
+    E['c_wiredtx_idle_mode'] = f('wtx.idle_mode'); E['c_wiredtx_tr'] = f('wtx.phase_trim')     # WT50 (MODE_H / MODE_F removed)
     E['c_wiredtx_ext'] = f('debug.wtx_ext.enable'); E['c_wiredtx_post_pol'] = f('wiredtx.config.post_polarity')
     E['c_wiredtx_main_code'] = f('wiredtx.config.current_code'); E['c_wiredtx_post_code'] = f('wiredtx.config.postcursor_code')
     E['c_hsbias_en'] = f('usbhs.bias.enable'); E['c_hsbias_c'] = f('usbhs.bias.code')
@@ -92,5 +92,5 @@ def expect(F, D, O):
     for n in ('pullup_p', 'pullup_n', 'pulldown_p', 'pulldown_n', 'ls_slow'): E['c_usb_' + n] = f('usbfs.config.' + n)
     E['c_usb_term_trim'] = f('usbhs.config.term_trim') if f('usbhs.config.term_enable') else 0
     return E
-DYNAMIC = {'c_wiredtx_ser_en', 'c_wiredtx_bias_en', 'c_txpad_req_main', 'c_txpad_req_post', 'c_txpad_req_detect', 'c_txpad_req_term', 'c_usb_hs_drv', 'c_usb_tx_dp', 'c_usb_tx_dn',
+DYNAMIC = {'c_wiredtx_ser_en', 'c_wiredtx_idle', 'c_wiredtx_bias_en', 'c_txpad_req_main', 'c_txpad_req_post', 'c_txpad_req_detect', 'c_txpad_req_term', 'c_usb_hs_drv', 'c_usb_tx_dp', 'c_usb_tx_dn',
            'c_usb_tx_oe', 'c_cdr_fup', 'c_cdr_fdn', 'c_wrx_cap_psel', 'c_wrx_cap_slipp', 'c_wrx_cap_slipm'}

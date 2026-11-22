@@ -8,9 +8,9 @@ module tb_pt_wtx_ctl;
     reg rst_n = 0, ref_clk = 0, ref_run = 1;   // reset asserted from time zero
     reg island_on_wired = 0, island_on_pll = 0, vreg_tx_ok = 0, fault = 0, fc_tx_in_tol = 0, txpad_ready = 1;
     reg cfg_ring_en = 0; reg [1:0] cfg_ring_n = 0; reg cfg_ring_band = 1; reg [7:0] cfg_ring_lock_time = 8'd3;
-    reg [1:0] cfg_ring_ready_sel = 0, cfg_wtx_state = 0, cfg_rate_mode = 0, cfg_branch = 0;
+    reg [1:0] cfg_ring_ready_sel = 0, cfg_wtx_state = 0, cfg_branch = 0;
     reg cfg_idle = 1, cfg_wtx_ext = 0, cfg_post_pol = 0; reg [7:0] cfg_post_code = 0; reg cfg_term_req = 0, cfg_stage_tmds = 0;
-    wire c_pll_tx_en, c_pll_tx_n4, c_pll_tx_n8, c_pll_tx_band, c_wiredtx_ser_en, c_wiredtx_mode_h, c_wiredtx_mode_f;
+    wire c_pll_tx_en, c_pll_tx_n4, c_pll_tx_n8, c_pll_tx_band, c_wiredtx_ser_en;   // MODE_H / MODE_F removed (WT50)
     wire c_wiredtx_bias_en, c_txpad_req_main, c_txpad_req_post, c_txpad_req_detect, c_txpad_req_term;
     wire [1:0] c_wtxfb_branch, c_wtxfb_state; wire c_wtxfb_idle, c_wtxfb_stage_tmds;
     wire wire_tx_request, wire_tx_up, tx_ring_ready, st_seq_fault; wire [2:0] st_state;
@@ -84,6 +84,7 @@ module tb_pt_wtx_ctl;
     // ---------------------------------------------------------------- invariants, sampled every ns
     always #1 if (rst_n && $time > 100) begin
         chk(c_pll_tx_en === (cfg_ring_en & island_on_pll & vreg_tx_ok), "c_pll_tx_en equation");
+        // WT50: pt_wiredtx8 gates its PH buffers with SER_EN (PH floats while the pll island is off): SER_EN = 0 then
         if (!island_on_pll) chk(c_pll_tx_en === 1'b0 && c_wiredtx_ser_en === 1'b0, "pll island off: ring or SER_EN on");
         if (!island_on_wired || fault)
             chk({c_txpad_req_main, c_txpad_req_post, c_txpad_req_detect, c_txpad_req_term, c_wiredtx_bias_en} === 5'd0,
@@ -94,7 +95,6 @@ module tb_pt_wtx_ctl;
         chk(!(c_txpad_req_detect && (c_txpad_req_main || c_txpad_req_post || c_txpad_req_term)), "interlock conflict requested");
         chk(!(c_txpad_req_post && !c_txpad_req_main), "POST without MAIN");
         if (wire_tx_request) chk(c_wiredtx_ser_en === 1'b1, "wire_tx_request with SER_EN low");
-        chk({c_wiredtx_mode_h, c_wiredtx_mode_f} === (cfg_rate_mode == 0 ? 2'b00 : cfg_rate_mode == 1 ? 2'b10 : cfg_rate_mode == 2 ? 2'b01 : 2'b00), "MODE_H/F decode");
         chk({c_pll_tx_n4, c_pll_tx_n8} === (cfg_ring_n == 2 ? 2'b10 : cfg_ring_n == 1 ? 2'b01 : 2'b00), "N4/N8 decode");
         chk(c_pll_tx_band === cfg_ring_band, "band");
         chk({c_wtxfb_branch, c_wtxfb_state, c_wtxfb_idle, c_wtxfb_stage_tmds} === {cfg_branch, cfg_wtx_state, cfg_idle, cfg_stage_tmds}, "wtxfb raw");
@@ -102,9 +102,9 @@ module tb_pt_wtx_ctl;
 
     task refs(input integer n); begin repeat (n) @(posedge ref_clk); #1; end endtask
     task all_low(input [639:0] msg);
-        chk({c_pll_tx_en, c_pll_tx_n4, c_pll_tx_n8, c_wiredtx_ser_en, c_wiredtx_mode_h, c_wiredtx_mode_f, c_wiredtx_bias_en,
+        chk({c_pll_tx_en, c_pll_tx_n4, c_pll_tx_n8, c_wiredtx_ser_en, c_wiredtx_bias_en,
              c_txpad_req_main, c_txpad_req_post, c_txpad_req_detect, c_txpad_req_term, wire_tx_request, wire_tx_up,
-             tx_ring_ready, st_state, st_seq_fault} === 18'd0, msg);
+             tx_ring_ready, st_state, st_seq_fault} === 16'd0, msg);
     endtask
     // mission configuration: serial branch, post-cursor on, termination on, lock code 3 (256 cycles = 5.12 us)
     task mission; begin
@@ -264,8 +264,8 @@ module tb_pt_wtx_ctl;
         end
         chk_timer = 1; stop_all;
         // ---- T10 pure decodes, all codes (checked by the 1 ns invariants)
-        for (i = 0; i < 32; i = i + 1) begin {cfg_ring_band, cfg_ring_n, cfg_rate_mode} = i[4:0]; cfg_stage_tmds = i[0]; #3; end
-        cfg_ring_band = 1; cfg_ring_n = 0; cfg_rate_mode = 0; cfg_stage_tmds = 0; #3;
+        for (i = 0; i < 8; i = i + 1) begin {cfg_ring_band, cfg_ring_n} = i[2:0]; cfg_stage_tmds = i[0]; #3; end
+        cfg_ring_band = 1; cfg_ring_n = 0; cfg_stage_tmds = 0; #3;
 
         $display("checks %0d errors %0d", checks, errors);
         if (errors == 0) begin $display("TB PASS"); $finish; end

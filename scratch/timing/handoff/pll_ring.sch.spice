@@ -1,0 +1,865 @@
+* SPDX-License-Identifier: Apache-2.0
+* VERSION: pt_pll_ring r12 STAGED (2026-11-20, ECO on r9v: ct_phbuf8m + ct_xc4 duty pairs, east strip +10.75 um; not published) / r9v (2026-11-12, r8ring RING ECO: r9d core layout kept as routed; old FT legs + VCF resistors removed; FT = header current-steered macro pt_pll_ring_ft (pll_ring_ft.spice, r9h scheme), hand layout; FU/FD/KP ports moved to the block bottom) / r9d (2026-11-11, RINGAREA: WT21 BAND bit, tail m8 + replica 6.67 (r9c); r9 2026-11-10) -- ports REF EN N4 N8 HOLD IBIAS PH0..PH7 LOCK FBCK REFO ATB_VCTRL N5 N10 KP0..KP2 FU0..FU3 FD0..FD3 BAND VDD VSS
+* r9 (IX-1, PD9, AC3-W9; 2026-11-10): (1) ring cell ct_ring9 (interleaved layout, 2x ring devices): the extracted
+*   ct_ring8 lost 42 % of its speed to cell wiring; r9 runs on the pt_pll_vreg output (VDD = ring supply, ~0.9 x rail)
+*   and covers 393-834 MHz in ONE band with VCTRL 0.87..2.02 V (ff/22/3.015 .. ss/32/2.71 V; ring cell extracted).
+*   (2) fast-tune units are tail/header copies (gate VCF / VPBF) so ppm/vote tracks the ring current (see below).
+*   Low rates (IX-4) need no ring change: full-rate phase mapping with the ring at 2 x the bit rate (OSR 2).
+* r8 (AC3-W7, AC3-W8): (1) N = 10 (N10: feedback VCO -> ct_div5 -> /2 = /10) and N = 5 (N5: REF/2 into the PFD with
+*   the same /10 feedback, as N4 does with /8) for HDMI/DVI x10 (720p full rate, 1080p half rate).  Priority
+*   N5/N10 > N4/N8.  The /5 counter is held in reset unless EN & (N5|N10).  Pump 10 uA in /10 modes.
+* (2) CDR fast-tune (proportional) port: per vote leg k two gate-switched current legs on the ring tail
+*   (VT) with 1/12-size copies on the header replica (VPB), so both rails move: leg on when FUk=1 and leg on
+*   when FDk=0 -> FU only: +1 unit, FD only: -1 unit, neither/both: 0 (vs the idle level, a static offset
+*   the integral path absorbs).  Unit = KP code (0..7, cdr.config kp bits) x one switched long-channel
+*   conductance.  FUk/FDk come straight from the capture PD (one ring cycle each).  KP=0: path off.
+* pt_pll_ring: wired-side PLL with the compact 8-phase ring (P3/P4 first cut).
+* Shared loop pieces from pll.spice (PFD, charge pump, filter, lock detector);
+* VCO = ct_ring8 (4-stage pseudo-differential ring, O0..O7 at 45 deg) with an
+* NMOS tail on VT (gate VCTRL) and a PMOS header on VH; feedback = four
+* ct_tspc2 TSPC /2 stages; N = 16 (N4=N8=0), 8 (N8=1) or 4 (N4=1, host_follow
+* from the 125/156.25 MHz H2D_CLK).  N=4 is realised as REF/2 (TSPC) into the
+* PFD with feedback /8, so the PFD never runs above ~80 MHz (an extracted
+* PFD at 125-156 MHz did not hold lock).  This is the single PLL design for every loop (P3-2).  PH0..PH7 are the eight
+* ring phases at the VCO rate (wired_rx phase-interpolator interface).
+* EN=0: REF gated, PFD reset, filter discharged, header and tail off, phase
+* outputs and TSPC stages clamped, LOCK=0.
+* SPDX-License-Identifier: Apache-2.0
+* Shared transistor-level cells for the timing family (GF180MCU gf180mcuD,
+* 3.3 V nfet_03v3/pfet_03v3 and ppolyf_u_1k only).  Every block .spice
+* includes this file; layout, LVS and simulation read the same text.
+* Convention: all cells take VDD VSS as their last two ports.
+
+* ---------------------------------------------------------------- inverters
+.subckt pt_t_inv1 A Y VDD VSS
+XP Y A VDD VDD pfet_03v3 w=2u l=0.28u
+XN Y A VSS VSS nfet_03v3 w=1u l=0.28u
+.ends
+.subckt pt_t_inv2 A Y VDD VSS
+XP Y A VDD VDD pfet_03v3 w=4u l=0.28u
+XN Y A VSS VSS nfet_03v3 w=2u l=0.28u
+.ends
+.subckt pt_t_inv4 A Y VDD VSS
+XP Y A VDD VDD pfet_03v3 w=8u l=0.28u
+XN Y A VSS VSS nfet_03v3 w=4u l=0.28u
+.ends
+.subckt pt_t_inv8 A Y VDD VSS
+XP Y A VDD VDD pfet_03v3 w=8u l=0.28u m=2
+XN Y A VSS VSS nfet_03v3 w=8u l=0.28u
+.ends
+
+* ---------------------------------------------------------------- gates
+.subckt pt_t_nand2 A B Y VDD VSS
+XPA Y A VDD VDD pfet_03v3 w=2u l=0.28u
+XPB Y B VDD VDD pfet_03v3 w=2u l=0.28u
+XNA Y A X VSS nfet_03v3 w=2u l=0.28u
+XNB X B VSS VSS nfet_03v3 w=2u l=0.28u
+.ends
+* Faster 2x NAND for GHz select gating.
+.subckt pt_t_nand2x A B Y VDD VSS
+XPA Y A VDD VDD pfet_03v3 w=4u l=0.28u
+XPB Y B VDD VDD pfet_03v3 w=4u l=0.28u
+XNA Y A X VSS nfet_03v3 w=4u l=0.28u
+XNB X B VSS VSS nfet_03v3 w=4u l=0.28u
+.ends
+.subckt pt_t_nand3 A B C Y VDD VSS
+XPA Y A VDD VDD pfet_03v3 w=2u l=0.28u
+XPB Y B VDD VDD pfet_03v3 w=2u l=0.28u
+XPC Y C VDD VDD pfet_03v3 w=2u l=0.28u
+XNA Y A X1 VSS nfet_03v3 w=3u l=0.28u
+XNB X1 B X2 VSS nfet_03v3 w=3u l=0.28u
+XNC X2 C VSS VSS nfet_03v3 w=3u l=0.28u
+.ends
+.subckt pt_t_nand3x A B C Y VDD VSS
+XPA Y A VDD VDD pfet_03v3 w=4u l=0.28u
+XPB Y B VDD VDD pfet_03v3 w=4u l=0.28u
+XPC Y C VDD VDD pfet_03v3 w=4u l=0.28u
+XNA Y A X1 VSS nfet_03v3 w=6u l=0.28u
+XNB X1 B X2 VSS nfet_03v3 w=6u l=0.28u
+XNC X2 C VSS VSS nfet_03v3 w=6u l=0.28u
+.ends
+.subckt pt_t_nor2 A B Y VDD VSS
+XPA X A VDD VDD pfet_03v3 w=4u l=0.28u
+XPB Y B X VDD pfet_03v3 w=4u l=0.28u
+XNA Y A VSS VSS nfet_03v3 w=1u l=0.28u
+XNB Y B VSS VSS nfet_03v3 w=1u l=0.28u
+.ends
+.subckt pt_t_nor2x A B Y VDD VSS
+XPA X A VDD VDD pfet_03v3 w=8u l=0.28u
+XPB Y B X VDD pfet_03v3 w=8u l=0.28u
+XNA Y A VSS VSS nfet_03v3 w=2u l=0.28u
+XNB Y B VSS VSS nfet_03v3 w=2u l=0.28u
+.ends
+* AND2 / OR2 composites
+.subckt pt_t_and2 A B Y VDD VSS
+X0 A B N VDD VSS pt_t_nand2
+X1 N Y VDD VSS pt_t_inv1
+.ends
+
+* ---------------------------------------------------------------- latch / dividers
+* Clocked (C2MOS) inverter: drives Y = !A while CKN=1 and CKP=0.
+.subckt pt_t_cinv A Y CKN CKP VDD VSS
+XP1 X A VDD VDD pfet_03v3 w=4u l=0.28u
+XP2 Y CKP X VDD pfet_03v3 w=4u l=0.28u
+XN2 Y CKN Z VSS nfet_03v3 w=2u l=0.28u
+XN1 Z A VSS VSS nfet_03v3 w=2u l=0.28u
+.ends
+* Pseudo-differential C2MOS latch with cross-coupled keeper (strong enough to
+* reject the common-mode state P=N that weak keepers allowed), so the
+* state is static at any clock rate.  Transparent while EN=1, ENB=0.
+* Non-inverting: OP follows DP.
+.subckt pt_t_latd DP DN OP ON EN ENB VDD VSS
+X0 DP ON EN ENB VDD VSS pt_t_cinv
+X1 DN OP EN ENB VDD VSS pt_t_cinv
+XKP1 ON OP VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN1 ON OP VSS VSS nfet_03v3 w=1u l=0.28u
+XKP2 OP ON VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN2 OP ON VSS VSS nfet_03v3 w=1u l=0.28u
+.ends
+* Same latch with reset: RST=1 forces OP=0 / ON=1.  Used only as the slave
+* (opaque while the clock pair is stopped at CKP=0), so reset never fights
+* a transparent latch in the stopped state.
+.subckt pt_t_latdr DP DN OP ON EN ENB RST VDD VSS
+X0 DP ON EN ENB VDD VSS pt_t_cinv
+X1 DN OP EN ENB VDD VSS pt_t_cinv
+XKP1 ON OP VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN1 ON OP VSS VSS nfet_03v3 w=1u l=0.28u
+XKP2 OP ON VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN2 OP ON VSS VSS nfet_03v3 w=1u l=0.28u
+XR OP RST VSS VSS nfet_03v3 w=2u l=0.28u
+.ends
+* Master-side reset variant: RST=1 forces ON=0 / OP=1, which is exactly the
+* value a transparent master copies from a reset slave, so it never fights.
+.subckt pt_t_latdm DP DN OP ON EN ENB RST VDD VSS
+X0 DP ON EN ENB VDD VSS pt_t_cinv
+X1 DN OP EN ENB VDD VSS pt_t_cinv
+XKP1 ON OP VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN1 ON OP VSS VSS nfet_03v3 w=1u l=0.28u
+XKP2 OP ON VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN2 OP ON VSS VSS nfet_03v3 w=1u l=0.28u
+XR ON RST VSS VSS nfet_03v3 w=2u l=0.28u
+.ends
+* Divide-by-two with quadrature outputs.  Clock pair CKP/CKN (complementary).
+* RST is effective while the clock pair is stopped (CKP=0, CKN=1).
+* Slave (I) changes on CKP rising, master (Q) on CKP falling: Q leads I by a
+* quarter output period.  Output pairs are complementary by construction.
+.subckt pt_t_div2 CKP CKN RST IP IN QP QN VDD VSS
+XM IN IP QP QN CKN CKP RST VDD VSS pt_t_latdm
+XS QP QN IP IN CKP CKN RST VDD VSS pt_t_latdr
+.ends
+* Edge-triggered pseudo-differential D flip-flop (rising CKP).
+.subckt pt_t_dffd DP DN CKP CKN RST QP QN VDD VSS
+XM DP DN MP MN CKN CKP VDD VSS pt_t_latd
+XS MP MN QP QN CKP CKN RST VDD VSS pt_t_latdr
+.ends
+* Divide-by-five: 3-bit shift register with D0 = NOR(Q1,Q2); 40 % duty.
+* Self-starting from every state.
+.subckt pt_t_div5 CKP CKN RST OP ON VDD VSS
+X0 D0P D0N CKP CKN RST OP ON VDD VSS pt_t_dffd
+X1 OP ON CKP CKN RST Q1P Q1N VDD VSS pt_t_dffd
+X2 Q1P Q1N CKP CKN RST Q2P Q2N VDD VSS pt_t_dffd
+XNOR Q1P Q2P D0P VDD VSS pt_t_nor2
+XNAND Q1N Q2N D0N VDD VSS pt_t_nand2
+.ends
+
+* ---------------------------------------------------------------- clock selection
+* Y = (S0 & A) | (S1 & B) for pseudo-differential pairs; with S0=S1=0 the
+* output is stopped at P=0, N=1.  S0/S1 must be one-hot or both 0; changing
+* the selection is specified only through the stopped state (both 0).
+.subckt pt_t_sel2 AP AN BP BN S0 S1 YP YN VDD VSS
+XSN S0 S1 SN VDD VSS pt_t_nor2
+XSB SN SNB VDD VSS pt_t_inv1
+XA0 AP S0 NA0 VDD VSS pt_t_nand2x
+XB0 BP S1 NB0 VDD VSS pt_t_nand2x
+XO0 NA0 NB0 VDD YP VDD VSS pt_t_nand3x
+XA1 AN S0 NA1 VDD VSS pt_t_nand2x
+XB1 BN S1 NB1 VDD VSS pt_t_nand2x
+XO1 NA1 NB1 SNB YN VDD VSS pt_t_nand3x
+.ends
+* OR-combine two stopped-or-running pairs (at most one running):
+* YP = AP | BP, YN = AN & BN.  Same gate depth on both legs.
+.subckt pt_t_comb2 AP AN BP BN YP YN VDD VSS
+XIA AP APB VDD VSS pt_t_inv2
+XIB BP BPB VDD VSS pt_t_inv2
+XOP APB BPB YP VDD VSS pt_t_nand2x
+XON AN BN YNB VDD VSS pt_t_nand2x
+XIN YNB YN VDD VSS pt_t_inv2
+.ends
+* 2:1 multiplexer (single-ended): Y = S ? B : A.  AOI22 + inverter.
+.subckt pt_t_mux2 A B S SB Y VDD VSS
+XPA X1 A VDD VDD pfet_03v3 w=4u l=0.28u
+XPSB X1 SB VDD VDD pfet_03v3 w=4u l=0.28u
+XPB YB B X1 VDD pfet_03v3 w=4u l=0.28u
+XPS YB S X1 VDD pfet_03v3 w=4u l=0.28u
+XNA YB A X2 VSS nfet_03v3 w=2u l=0.28u
+XNSB X2 SB VSS VSS nfet_03v3 w=2u l=0.28u
+XNB YB B X3 VSS nfet_03v3 w=2u l=0.28u
+XNS X3 S VSS VSS nfet_03v3 w=2u l=0.28u
+XI YB Y VDD VSS pt_t_inv2
+.ends
+* Faster first-stage divider: 2x C2MOS strength (for VCO-rate inputs).
+.subckt pt_t_cinvf A Y CKN CKP VDD VSS
+XP1 X A VDD VDD pfet_03v3 w=8u l=0.28u
+XP2 Y CKP X VDD pfet_03v3 w=8u l=0.28u
+XN2 Y CKN Z VSS nfet_03v3 w=4u l=0.28u
+XN1 Z A VSS VSS nfet_03v3 w=4u l=0.28u
+.ends
+.subckt pt_t_latdf DP DN OP ON EN ENB VDD VSS
+X0 DP ON EN ENB VDD VSS pt_t_cinvf
+X1 DN OP EN ENB VDD VSS pt_t_cinvf
+XKP1 ON OP VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN1 ON OP VSS VSS nfet_03v3 w=1u l=0.28u
+XKP2 OP ON VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN2 OP ON VSS VSS nfet_03v3 w=1u l=0.28u
+.ends
+.subckt pt_t_latdfm DP DN OP ON EN ENB RST VDD VSS
+X0 DP ON EN ENB VDD VSS pt_t_cinvf
+X1 DN OP EN ENB VDD VSS pt_t_cinvf
+XKP1 ON OP VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN1 ON OP VSS VSS nfet_03v3 w=1u l=0.28u
+XKP2 OP ON VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN2 OP ON VSS VSS nfet_03v3 w=1u l=0.28u
+XR ON RST VSS VSS nfet_03v3 w=2u l=0.28u
+.ends
+.subckt pt_t_latdfr DP DN OP ON EN ENB RST VDD VSS
+X0 DP ON EN ENB VDD VSS pt_t_cinvf
+X1 DN OP EN ENB VDD VSS pt_t_cinvf
+XKP1 ON OP VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN1 ON OP VSS VSS nfet_03v3 w=1u l=0.28u
+XKP2 OP ON VDD VDD pfet_03v3 w=1.5u l=0.28u
+XKN2 OP ON VSS VSS nfet_03v3 w=1u l=0.28u
+XR OP RST VSS VSS nfet_03v3 w=2u l=0.28u
+.ends
+.subckt pt_t_div2f CKP CKN RST IP IN QP QN VDD VSS
+XM IN IP QP QN CKN CKP RST VDD VSS pt_t_latdfm
+XS QP QN IP IN CKP CKN RST VDD VSS pt_t_latdfr
+.ends
+* Single-ended clock to complementary pair (CKN one inverter, CKP two).
+.subckt pt_t_s2d A CKP CKN VDD VSS
+X0 A AB VDD VSS pt_t_inv2
+X1 AB CKP VDD VSS pt_t_inv4
+X2 A CKN VDD VSS pt_t_inv4
+.ends
+* Single-ended one-hot select: Y = (A & S0) | (B & S1); 0 when stopped.
+.subckt pt_t_sel2s A B S0 S1 Y VDD VSS
+XA A S0 NA VDD VSS pt_t_nand2
+XB B S1 NB VDD VSS pt_t_nand2
+XO NA NB Y VDD VSS pt_t_nand2
+.ends
+* Y = A | B
+.subckt pt_t_or2 A B Y VDD VSS
+X0 A B N VDD VSS pt_t_nor2
+X1 N Y VDD VSS pt_t_inv1
+.ends
+* 4-way single-ended one-hot select
+.subckt pt_t_sel4s A B C D S0 S1 S2 S3 Y VDD VSS
+X0 A B S0 S1 Y0 VDD VSS pt_t_sel2s
+X1 C D S2 S3 Y1 VDD VSS pt_t_sel2s
+X2 Y0 Y1 Y VDD VSS pt_t_or2
+.ends
+* SPDX-License-Identifier: Apache-2.0
+* Loop-piece library for pt_pll_ring (included by pll_ring.spice):
+*   pt_pfd -- static NAND-DFF phase-frequency detector with RESET_N input.
+* Not a block on its own (no layout or evidence of its own).
+
+* ---- PFD ----
+.subckt pt_pfd_inv A Y VDD VSS
+XP Y A VDD VDD pfet_03v3 w=2u l=0.28u
+XN Y A VSS VSS nfet_03v3 w=1u l=0.28u
+.ends
+.subckt pt_pfd_nand2 A B Y VDD VSS
+XP0 Y A VDD VDD pfet_03v3 w=2u l=0.28u
+XP1 Y B VDD VDD pfet_03v3 w=2u l=0.28u
+XN0 Y A N VSS nfet_03v3 w=2u l=0.28u
+XN1 N B VSS VSS nfet_03v3 w=2u l=0.28u
+.ends
+.subckt pt_pfd_nand3 A B C Y VDD VSS
+XP0 Y A VDD VDD pfet_03v3 w=2u l=0.28u
+XP1 Y B VDD VDD pfet_03v3 w=2u l=0.28u
+XP2 Y C VDD VDD pfet_03v3 w=2u l=0.28u
+XN0 Y A N1 VSS nfet_03v3 w=3u l=0.28u
+XN1 N1 B N2 VSS nfet_03v3 w=3u l=0.28u
+XN2 N2 C VSS VSS nfet_03v3 w=3u l=0.28u
+.ends
+.subckt pt_pfd_and2 A B Y VDD VSS
+XN A B N VDD VSS pt_pfd_nand2
+XI N Y VDD VSS pt_pfd_inv
+.ends
+.subckt pt_pfd_dff D CLK RN Q QB VDD VSS
+XDB D DB VDD VSS pt_pfd_inv
+XCB CLK CB VDD VSS pt_pfd_inv
+XMS D CB RN MS VDD VSS pt_pfd_nand3
+XMR0 DB CB MR0 VDD VSS pt_pfd_nand2
+XMR MR0 RN MR VDD VSS pt_pfd_and2
+XMQ MS MQB MQ VDD VSS pt_pfd_nand2
+XMQB MR MQ MQB VDD VSS pt_pfd_nand2
+XSS MQ CLK RN SS VDD VSS pt_pfd_nand3
+XSR0 MQB CLK SR0 VDD VSS pt_pfd_nand2
+XSR SR0 RN SR VDD VSS pt_pfd_and2
+XQ SS QB Q VDD VSS pt_pfd_nand2
+XQB SR Q QB VDD VSS pt_pfd_nand2
+.ends
+.subckt pt_pfd REF FB RESET_N UP DN VDD VSS
+XU VDD REF RN UP UPB VDD VSS pt_pfd_dff
+XD VDD FB RN DN DNB VDD VSS pt_pfd_dff
+XRESET UP DN BOTH_N VDD VSS pt_pfd_nand2
+XRN RESET_N BOTH_N RN VDD VSS pt_pfd_and2
+.ends
+* pt_pll_ring_ft: CDR ring fast-tune array (r7ring r9v), header-side current steering, see pll_ring.spice
+.subckt pt_pll_ring_ft VH VPBF KP0 KP1 KP2 FU0 FU1 FU2 FU3 FD0 FD1 FD2 FD3 EN IBIAS VDD VSS
+* r9h FT legs (r7ring, 2026-11-11): HEADER-SIDE CURRENT STEERING.  r9c/r9d switched the SOURCE node of each
+* long-channel tail/header copy; while a leg was off that node (tens of fF of Cgs) recharged from VT/VH and was dumped
+* at the next turn-on, so every vote transition moved charge into the ring: +4360..+4830 ppm for net-zero FU/FD
+* alternation (r9c ext / r9d sch), data-dependent.  r9h: the ring is header-limited (r7ring: tail-only copies give
+* ~1/3 of the gain), so only header copies remain.  Each binary PMOS copy (gate VPBF, source at VDD through its static
+* KP switch) conducts ALWAYS and stays saturated; its drain is steered by a complementary PMOS switch pair into VH
+* (vote active) or into VHD, held at V(VH) by a follower (replica feed-forward + push-pull transconductor, below).
+* The steered drain only moves by |VH - VHD| (mV) on a saturated device, and each switch returns its channel charge
+* within one on/off cycle (half-size dummies on VH cancel the VH-side share).  U: into VH when FUk=1.  D: into VH when FDk=0 (idle offset absorbed by the integral path).
+XKPI0 KP0 KPB0 VDD VSS pt_t_inv1
+XKPI1 KP1 KPB1 VDD VSS pt_t_inv1
+XKPI2 KP2 KPB2 VDD VSS pt_t_inv1
+* VHD follower: (1) feed-forward: a replica of the nominal dump current (4 binary copy sets = one per leg, same
+* KP switches) into an NMOS diode, mirrored 1:1 as a sink on VHD, so at idle the follower carries no current;
+* (2) a push-pull transconductor for the vote-dependent rest: NMOS pair (VHD | VH), PMOS diode loads, x2 mirrors:
+* sink 2*I(VHD side) via an NMOS mirror, source 2*I(VH side); net 0 at balance.  VHD is the only high-impedance
+* node (dominant pole, 4 pF decap).  Tail = 4 x the IBIAS mirror (10 uA each).  EN=0: no bias, VHD shorted to VH (so it starts at V(VH) when the ring starts; no slewing from a rail).
+XHFT HFT IBIAS VSS VSS nfet_03v3 w=4u l=2u m=4
+XHF1 HFA VHD HFT VSS nfet_03v3 w=8u l=1u
+XHF2 HFB VH HFT VSS nfet_03v3 w=8u l=1u
+XHFA HFA HFA VDD VDD pfet_03v3 w=4u l=0.5u
+XHFB HFB HFB VDD VDD pfet_03v3 w=4u l=0.5u
+XHFAM HFN HFA VDD VDD pfet_03v3 w=4u l=0.5u m=2
+XHFND HFN HFN VSS VSS nfet_03v3 w=2u l=0.5u m=2
+XHFNS VHD HFN VSS VSS nfet_03v3 w=2u l=0.5u m=2
+XHFBM VHD HFB VDD VDD pfet_03v3 w=4u l=0.5u m=2
+XHFC VSS VHD VSS VSS nfet_03v3 w=10u l=10u m=8
+XRDD RDN RDN VSS VSS nfet_03v3 w=2u l=0.5u
+XRDS VHD RDN VSS VSS nfet_03v3 w=2u l=0.5u
+XHR0 RDN VPBF ZR0 VDD pfet_03v3 w=0.44u l=1.75u m=4
+XHR0k ZR0 KPB0 VDD VDD pfet_03v3 w=0.44u l=0.28u m=4
+XHR1 RDN VPBF ZR1 VDD pfet_03v3 w=0.88u l=1.75u m=4
+XHR1k ZR1 KPB1 VDD VDD pfet_03v3 w=0.88u l=0.28u m=4
+XHR2 RDN VPBF ZR2 VDD pfet_03v3 w=1.76u l=1.75u m=4
+XHR2k ZR2 KPB2 VDD VDD pfet_03v3 w=1.76u l=0.28u m=4
+XHFZ VHD EN VH VDD pfet_03v3 w=2u l=0.28u
+XFUN0 FU0 FUB0 VDD VSS pt_t_inv1
+XFDN0 FD0 FDB0 VDD VSS pt_t_inv1
+XHU00 YU0 VPBF ZU00 VDD pfet_03v3 w=0.44u l=1.75u
+XHU00k ZU00 KPB0 VDD VDD pfet_03v3 w=0.44u l=0.28u
+XHU01 YU0 VPBF ZU01 VDD pfet_03v3 w=0.88u l=1.75u
+XHU01k ZU01 KPB1 VDD VDD pfet_03v3 w=0.88u l=0.28u
+XHU02 YU0 VPBF ZU02 VDD pfet_03v3 w=1.76u l=1.75u
+XHU02k ZU02 KPB2 VDD VDD pfet_03v3 w=1.76u l=0.28u
+XSU0a YU0 FUB0 VH VDD pfet_03v3 w=0.88u l=0.28u
+XSU0b YU0 FU0 VHD VDD pfet_03v3 w=0.88u l=0.28u
+XSU0d VH FU0 VH VDD pfet_03v3 w=0.44u l=0.28u
+XSU0e VHD FUB0 VHD VDD pfet_03v3 w=0.44u l=0.28u
+XHD00 YD0 VPBF ZD00 VDD pfet_03v3 w=0.44u l=1.75u
+XHD00k ZD00 KPB0 VDD VDD pfet_03v3 w=0.44u l=0.28u
+XHD01 YD0 VPBF ZD01 VDD pfet_03v3 w=0.88u l=1.75u
+XHD01k ZD01 KPB1 VDD VDD pfet_03v3 w=0.88u l=0.28u
+XHD02 YD0 VPBF ZD02 VDD pfet_03v3 w=1.76u l=1.75u
+XHD02k ZD02 KPB2 VDD VDD pfet_03v3 w=1.76u l=0.28u
+XSD0a YD0 FD0 VH VDD pfet_03v3 w=0.88u l=0.28u
+XSD0b YD0 FDB0 VHD VDD pfet_03v3 w=0.88u l=0.28u
+XSD0d VH FDB0 VH VDD pfet_03v3 w=0.44u l=0.28u
+XSD0e VHD FD0 VHD VDD pfet_03v3 w=0.44u l=0.28u
+XFUN1 FU1 FUB1 VDD VSS pt_t_inv1
+XFDN1 FD1 FDB1 VDD VSS pt_t_inv1
+XHU10 YU1 VPBF ZU10 VDD pfet_03v3 w=0.44u l=1.75u
+XHU10k ZU10 KPB0 VDD VDD pfet_03v3 w=0.44u l=0.28u
+XHU11 YU1 VPBF ZU11 VDD pfet_03v3 w=0.88u l=1.75u
+XHU11k ZU11 KPB1 VDD VDD pfet_03v3 w=0.88u l=0.28u
+XHU12 YU1 VPBF ZU12 VDD pfet_03v3 w=1.76u l=1.75u
+XHU12k ZU12 KPB2 VDD VDD pfet_03v3 w=1.76u l=0.28u
+XSU1a YU1 FUB1 VH VDD pfet_03v3 w=0.88u l=0.28u
+XSU1b YU1 FU1 VHD VDD pfet_03v3 w=0.88u l=0.28u
+XSU1d VH FU1 VH VDD pfet_03v3 w=0.44u l=0.28u
+XSU1e VHD FUB1 VHD VDD pfet_03v3 w=0.44u l=0.28u
+XHD10 YD1 VPBF ZD10 VDD pfet_03v3 w=0.44u l=1.75u
+XHD10k ZD10 KPB0 VDD VDD pfet_03v3 w=0.44u l=0.28u
+XHD11 YD1 VPBF ZD11 VDD pfet_03v3 w=0.88u l=1.75u
+XHD11k ZD11 KPB1 VDD VDD pfet_03v3 w=0.88u l=0.28u
+XHD12 YD1 VPBF ZD12 VDD pfet_03v3 w=1.76u l=1.75u
+XHD12k ZD12 KPB2 VDD VDD pfet_03v3 w=1.76u l=0.28u
+XSD1a YD1 FD1 VH VDD pfet_03v3 w=0.88u l=0.28u
+XSD1b YD1 FDB1 VHD VDD pfet_03v3 w=0.88u l=0.28u
+XSD1d VH FDB1 VH VDD pfet_03v3 w=0.44u l=0.28u
+XSD1e VHD FD1 VHD VDD pfet_03v3 w=0.44u l=0.28u
+XFUN2 FU2 FUB2 VDD VSS pt_t_inv1
+XFDN2 FD2 FDB2 VDD VSS pt_t_inv1
+XHU20 YU2 VPBF ZU20 VDD pfet_03v3 w=0.44u l=1.75u
+XHU20k ZU20 KPB0 VDD VDD pfet_03v3 w=0.44u l=0.28u
+XHU21 YU2 VPBF ZU21 VDD pfet_03v3 w=0.88u l=1.75u
+XHU21k ZU21 KPB1 VDD VDD pfet_03v3 w=0.88u l=0.28u
+XHU22 YU2 VPBF ZU22 VDD pfet_03v3 w=1.76u l=1.75u
+XHU22k ZU22 KPB2 VDD VDD pfet_03v3 w=1.76u l=0.28u
+XSU2a YU2 FUB2 VH VDD pfet_03v3 w=0.88u l=0.28u
+XSU2b YU2 FU2 VHD VDD pfet_03v3 w=0.88u l=0.28u
+XSU2d VH FU2 VH VDD pfet_03v3 w=0.44u l=0.28u
+XSU2e VHD FUB2 VHD VDD pfet_03v3 w=0.44u l=0.28u
+XHD20 YD2 VPBF ZD20 VDD pfet_03v3 w=0.44u l=1.75u
+XHD20k ZD20 KPB0 VDD VDD pfet_03v3 w=0.44u l=0.28u
+XHD21 YD2 VPBF ZD21 VDD pfet_03v3 w=0.88u l=1.75u
+XHD21k ZD21 KPB1 VDD VDD pfet_03v3 w=0.88u l=0.28u
+XHD22 YD2 VPBF ZD22 VDD pfet_03v3 w=1.76u l=1.75u
+XHD22k ZD22 KPB2 VDD VDD pfet_03v3 w=1.76u l=0.28u
+XSD2a YD2 FD2 VH VDD pfet_03v3 w=0.88u l=0.28u
+XSD2b YD2 FDB2 VHD VDD pfet_03v3 w=0.88u l=0.28u
+XSD2d VH FDB2 VH VDD pfet_03v3 w=0.44u l=0.28u
+XSD2e VHD FD2 VHD VDD pfet_03v3 w=0.44u l=0.28u
+XFUN3 FU3 FUB3 VDD VSS pt_t_inv1
+XFDN3 FD3 FDB3 VDD VSS pt_t_inv1
+XHU30 YU3 VPBF ZU30 VDD pfet_03v3 w=0.44u l=1.75u
+XHU30k ZU30 KPB0 VDD VDD pfet_03v3 w=0.44u l=0.28u
+XHU31 YU3 VPBF ZU31 VDD pfet_03v3 w=0.88u l=1.75u
+XHU31k ZU31 KPB1 VDD VDD pfet_03v3 w=0.88u l=0.28u
+XHU32 YU3 VPBF ZU32 VDD pfet_03v3 w=1.76u l=1.75u
+XHU32k ZU32 KPB2 VDD VDD pfet_03v3 w=1.76u l=0.28u
+XSU3a YU3 FUB3 VH VDD pfet_03v3 w=0.88u l=0.28u
+XSU3b YU3 FU3 VHD VDD pfet_03v3 w=0.88u l=0.28u
+XSU3d VH FU3 VH VDD pfet_03v3 w=0.44u l=0.28u
+XSU3e VHD FUB3 VHD VDD pfet_03v3 w=0.44u l=0.28u
+XHD30 YD3 VPBF ZD30 VDD pfet_03v3 w=0.44u l=1.75u
+XHD30k ZD30 KPB0 VDD VDD pfet_03v3 w=0.44u l=0.28u
+XHD31 YD3 VPBF ZD31 VDD pfet_03v3 w=0.88u l=1.75u
+XHD31k ZD31 KPB1 VDD VDD pfet_03v3 w=0.88u l=0.28u
+XHD32 YD3 VPBF ZD32 VDD pfet_03v3 w=1.76u l=1.75u
+XHD32k ZD32 KPB2 VDD VDD pfet_03v3 w=1.76u l=0.28u
+XSD3a YD3 FD3 VH VDD pfet_03v3 w=0.88u l=0.28u
+XSD3b YD3 FDB3 VHD VDD pfet_03v3 w=0.88u l=0.28u
+XSD3d VH FDB3 VH VDD pfet_03v3 w=0.44u l=0.28u
+XSD3e VHD FD3 VHD VDD pfet_03v3 w=0.44u l=0.28u
+.ends pt_pll_ring_ft
+* SPDX-License-Identifier: Apache-2.0
+* generated by fastcells.py (intended netlist)
+.subckt ct_ring9 O0 O1 O2 O3 O4 O5 O6 O7 ENB VT VH VDD VSS
+XM0a N1 P0 VT VSS nfet_03v3 w=8u l=0.28u
+XM0b N1 P0 VH VDD pfet_03v3 w=16u l=0.28u
+XM0c P1 N0 VT VSS nfet_03v3 w=8u l=0.28u
+XM0d P1 N0 VH VDD pfet_03v3 w=16u l=0.28u
+XK0a P1 N1 VT VSS nfet_03v3 w=1u l=0.28u
+XK0b P1 N1 VH VDD pfet_03v3 w=2u l=0.28u
+XK0c N1 P1 VT VSS nfet_03v3 w=1u l=0.28u
+XK0d N1 P1 VH VDD pfet_03v3 w=2u l=0.28u
+XR1n A1 P1 VSS VSS nfet_03v3 w=4u l=0.28u
+XR1p A1 P1 VDD VDD pfet_03v3 w=2u l=0.28u
+XS1n O1 A1 VSS VSS nfet_03v3 w=2u l=0.28u
+XS1p O1 A1 VDD VDD pfet_03v3 w=4u l=0.28u
+XR5n A5 N1 VSS VSS nfet_03v3 w=4u l=0.28u
+XR5p A5 N1 VDD VDD pfet_03v3 w=2u l=0.28u
+XS5n O5 A5 VSS VSS nfet_03v3 w=2u l=0.28u
+XS5p O5 A5 VDD VDD pfet_03v3 w=4u l=0.28u
+XC0a P1 ENB VSS VSS nfet_03v3 w=0.5u l=0.28u
+XC0b N1 P1 VSS VSS nfet_03v3 w=0.5u l=0.28u
+XM1a N2 P1 VT VSS nfet_03v3 w=8u l=0.28u
+XM1b N2 P1 VH VDD pfet_03v3 w=16u l=0.28u
+XM1c P2 N1 VT VSS nfet_03v3 w=8u l=0.28u
+XM1d P2 N1 VH VDD pfet_03v3 w=16u l=0.28u
+XK1a P2 N2 VT VSS nfet_03v3 w=1u l=0.28u
+XK1b P2 N2 VH VDD pfet_03v3 w=2u l=0.28u
+XK1c N2 P2 VT VSS nfet_03v3 w=1u l=0.28u
+XK1d N2 P2 VH VDD pfet_03v3 w=2u l=0.28u
+XR2n A2 P2 VSS VSS nfet_03v3 w=4u l=0.28u
+XR2p A2 P2 VDD VDD pfet_03v3 w=2u l=0.28u
+XS2n O2 A2 VSS VSS nfet_03v3 w=2u l=0.28u
+XS2p O2 A2 VDD VDD pfet_03v3 w=4u l=0.28u
+XR6n A6 N2 VSS VSS nfet_03v3 w=4u l=0.28u
+XR6p A6 N2 VDD VDD pfet_03v3 w=2u l=0.28u
+XS6n O6 A6 VSS VSS nfet_03v3 w=2u l=0.28u
+XS6p O6 A6 VDD VDD pfet_03v3 w=4u l=0.28u
+XC1a P2 ENB VSS VSS nfet_03v3 w=0.5u l=0.28u
+XC1b N2 ENB VSS VSS nfet_03v3 w=0.5u l=0.28u
+XM2a N3 P2 VT VSS nfet_03v3 w=8u l=0.28u
+XM2b N3 P2 VH VDD pfet_03v3 w=16u l=0.28u
+XM2c P3 N2 VT VSS nfet_03v3 w=8u l=0.28u
+XM2d P3 N2 VH VDD pfet_03v3 w=16u l=0.28u
+XK2a P3 N3 VT VSS nfet_03v3 w=1u l=0.28u
+XK2b P3 N3 VH VDD pfet_03v3 w=2u l=0.28u
+XK2c N3 P3 VT VSS nfet_03v3 w=1u l=0.28u
+XK2d N3 P3 VH VDD pfet_03v3 w=2u l=0.28u
+XR3n A3 P3 VSS VSS nfet_03v3 w=4u l=0.28u
+XR3p A3 P3 VDD VDD pfet_03v3 w=2u l=0.28u
+XS3n O3 A3 VSS VSS nfet_03v3 w=2u l=0.28u
+XS3p O3 A3 VDD VDD pfet_03v3 w=4u l=0.28u
+XR7n A7 N3 VSS VSS nfet_03v3 w=4u l=0.28u
+XR7p A7 N3 VDD VDD pfet_03v3 w=2u l=0.28u
+XS7n O7 A7 VSS VSS nfet_03v3 w=2u l=0.28u
+XS7p O7 A7 VDD VDD pfet_03v3 w=4u l=0.28u
+XC2a P3 ENB VSS VSS nfet_03v3 w=0.5u l=0.28u
+XC2b N3 ENB VSS VSS nfet_03v3 w=0.5u l=0.28u
+XM3a P0 P3 VT VSS nfet_03v3 w=8u l=0.28u
+XM3b P0 P3 VH VDD pfet_03v3 w=16u l=0.28u
+XM3c N0 N3 VT VSS nfet_03v3 w=8u l=0.28u
+XM3d N0 N3 VH VDD pfet_03v3 w=16u l=0.28u
+XK3a N0 P0 VT VSS nfet_03v3 w=1u l=0.28u
+XK3b N0 P0 VH VDD pfet_03v3 w=2u l=0.28u
+XK3c P0 N0 VT VSS nfet_03v3 w=1u l=0.28u
+XK3d P0 N0 VH VDD pfet_03v3 w=2u l=0.28u
+XR4n A4 N0 VSS VSS nfet_03v3 w=4u l=0.28u
+XR4p A4 N0 VDD VDD pfet_03v3 w=2u l=0.28u
+XS4n O4 A4 VSS VSS nfet_03v3 w=2u l=0.28u
+XS4p O4 A4 VDD VDD pfet_03v3 w=4u l=0.28u
+XR0n A0 P0 VSS VSS nfet_03v3 w=4u l=0.28u
+XR0p A0 P0 VDD VDD pfet_03v3 w=2u l=0.28u
+XS0n O0 A0 VSS VSS nfet_03v3 w=2u l=0.28u
+XS0p O0 A0 VDD VDD pfet_03v3 w=4u l=0.28u
+XC3a N0 ENB VSS VSS nfet_03v3 w=0.5u l=0.28u
+XC3b P0 ENB VSS VSS nfet_03v3 w=0.5u l=0.28u
+.ends ct_ring9
+* SPDX-License-Identifier: Apache-2.0
+* generated by fastcells.py (intended netlist)
+.subckt ct_tspc2 CK Q ENB VDD VSS
+XN1 X QB VSS VSS nfet_03v3 w=2u l=0.28u
+XP1 m1 QB VDD VDD pfet_03v3 w=4u l=0.28u
+XP2 X CK m1 VDD pfet_03v3 w=4u l=0.28u
+XN2 Y X m2 VSS nfet_03v3 w=2u l=0.28u
+XN3 m2 CK VSS VSS nfet_03v3 w=2u l=0.28u
+XP3 Y CK VDD VDD pfet_03v3 w=4u l=0.28u
+XN4 QB CK m3 VSS nfet_03v3 w=2u l=0.28u
+XN5 m3 Y VSS VSS nfet_03v3 w=2u l=0.28u
+XP4 QB Y VDD VDD pfet_03v3 w=4u l=0.28u
+XNR QB ENB VSS VSS nfet_03v3 w=1u l=0.28u
+XNO1 Q QB VSS VSS nfet_03v3 w=2u l=0.28u
+XNO2 Q ENB VSS VSS nfet_03v3 w=2u l=0.28u
+XPO1 mo QB VDD VDD pfet_03v3 w=4u l=0.28u
+XPO2 Q ENB mo VDD pfet_03v3 w=4u l=0.28u
+.ends ct_tspc2
+* SPDX-License-Identifier: Apache-2.0
+* generated by fastcells.py (intended netlist)
+.subckt ct_phbuf8m I0 I1 I2 I3 I4 I5 I6 I7 PH0 PH1 PH2 PH3 PH4 PH5 PH6 PH7 DK M0 M1 M2 M3 M4 M5 M6 M7 VDD VSS
+Xu0n DKB I0 VSS VSS nfet_03v3 w=1u l=0.28u
+Xu0p DKB I0 VDD VDD pfet_03v3 w=2u l=0.28u
+Xm0n M0 I0 VSS VSS nfet_03v3 w=2u l=0.28u
+Xm0p M0 I0 VDD VDD pfet_03v3 w=4u l=0.28u
+Xo0a PH0 M0 VSS VSS nfet_03v3 w=3u l=0.28u
+Xo0b PH0 M0 VDD VDD pfet_03v3 w=6u l=0.28u
+Xo0c PH0 M0 VSS VSS nfet_03v3 w=3u l=0.28u
+Xo0d PH0 M0 VDD VDD pfet_03v3 w=6u l=0.28u
+Xu1n U1 I1 VSS VSS nfet_03v3 w=1u l=0.28u
+Xu1p U1 I1 VDD VDD pfet_03v3 w=2u l=0.28u
+Xm1n M1 I1 VSS VSS nfet_03v3 w=2u l=0.28u
+Xm1p M1 I1 VDD VDD pfet_03v3 w=4u l=0.28u
+Xo1a PH1 M1 VSS VSS nfet_03v3 w=3u l=0.28u
+Xo1b PH1 M1 VDD VDD pfet_03v3 w=6u l=0.28u
+Xo1c PH1 M1 VSS VSS nfet_03v3 w=3u l=0.28u
+Xo1d PH1 M1 VDD VDD pfet_03v3 w=6u l=0.28u
+Xu2n U2 I2 VSS VSS nfet_03v3 w=1u l=0.28u
+Xu2p U2 I2 VDD VDD pfet_03v3 w=2u l=0.28u
+Xm2n M2 I2 VSS VSS nfet_03v3 w=2u l=0.28u
+Xm2p M2 I2 VDD VDD pfet_03v3 w=4u l=0.28u
+Xo2a PH2 M2 VSS VSS nfet_03v3 w=3u l=0.28u
+Xo2b PH2 M2 VDD VDD pfet_03v3 w=6u l=0.28u
+Xo2c PH2 M2 VSS VSS nfet_03v3 w=3u l=0.28u
+Xo2d PH2 M2 VDD VDD pfet_03v3 w=6u l=0.28u
+Xu3n U3 I3 VSS VSS nfet_03v3 w=1u l=0.28u
+Xu3p U3 I3 VDD VDD pfet_03v3 w=2u l=0.28u
+Xm3n M3 I3 VSS VSS nfet_03v3 w=2u l=0.28u
+Xm3p M3 I3 VDD VDD pfet_03v3 w=4u l=0.28u
+Xo3a PH3 M3 VSS VSS nfet_03v3 w=3u l=0.28u
+Xo3b PH3 M3 VDD VDD pfet_03v3 w=6u l=0.28u
+Xo3c PH3 M3 VSS VSS nfet_03v3 w=3u l=0.28u
+Xo3d PH3 M3 VDD VDD pfet_03v3 w=6u l=0.28u
+Xu4n U4 I4 VSS VSS nfet_03v3 w=1u l=0.28u
+Xu4p U4 I4 VDD VDD pfet_03v3 w=2u l=0.28u
+Xm4n M4 I4 VSS VSS nfet_03v3 w=2u l=0.28u
+Xm4p M4 I4 VDD VDD pfet_03v3 w=4u l=0.28u
+Xo4a PH4 M4 VSS VSS nfet_03v3 w=3u l=0.28u
+Xo4b PH4 M4 VDD VDD pfet_03v3 w=6u l=0.28u
+Xo4c PH4 M4 VSS VSS nfet_03v3 w=3u l=0.28u
+Xo4d PH4 M4 VDD VDD pfet_03v3 w=6u l=0.28u
+Xu5n U5 I5 VSS VSS nfet_03v3 w=1u l=0.28u
+Xu5p U5 I5 VDD VDD pfet_03v3 w=2u l=0.28u
+Xm5n M5 I5 VSS VSS nfet_03v3 w=2u l=0.28u
+Xm5p M5 I5 VDD VDD pfet_03v3 w=4u l=0.28u
+Xo5a PH5 M5 VSS VSS nfet_03v3 w=3u l=0.28u
+Xo5b PH5 M5 VDD VDD pfet_03v3 w=6u l=0.28u
+Xo5c PH5 M5 VSS VSS nfet_03v3 w=3u l=0.28u
+Xo5d PH5 M5 VDD VDD pfet_03v3 w=6u l=0.28u
+Xu6n U6 I6 VSS VSS nfet_03v3 w=1u l=0.28u
+Xu6p U6 I6 VDD VDD pfet_03v3 w=2u l=0.28u
+Xm6n M6 I6 VSS VSS nfet_03v3 w=2u l=0.28u
+Xm6p M6 I6 VDD VDD pfet_03v3 w=4u l=0.28u
+Xo6a PH6 M6 VSS VSS nfet_03v3 w=3u l=0.28u
+Xo6b PH6 M6 VDD VDD pfet_03v3 w=6u l=0.28u
+Xo6c PH6 M6 VSS VSS nfet_03v3 w=3u l=0.28u
+Xo6d PH6 M6 VDD VDD pfet_03v3 w=6u l=0.28u
+Xu7n U7 I7 VSS VSS nfet_03v3 w=1u l=0.28u
+Xu7p U7 I7 VDD VDD pfet_03v3 w=2u l=0.28u
+Xm7n M7 I7 VSS VSS nfet_03v3 w=2u l=0.28u
+Xm7p M7 I7 VDD VDD pfet_03v3 w=4u l=0.28u
+Xo7a PH7 M7 VSS VSS nfet_03v3 w=3u l=0.28u
+Xo7b PH7 M7 VDD VDD pfet_03v3 w=6u l=0.28u
+Xo7c PH7 M7 VSS VSS nfet_03v3 w=3u l=0.28u
+Xo7d PH7 M7 VDD VDD pfet_03v3 w=6u l=0.28u
+Xdkn DK DKB VSS VSS nfet_03v3 w=2u l=0.28u
+Xdkp DK DKB VDD VDD pfet_03v3 w=4u l=0.28u
+.ends ct_phbuf8m
+* SPDX-License-Identifier: Apache-2.0
+* generated by fastcells.py (intended netlist)
+.subckt ct_xc4 M0 M1 M2 M3 M4 M5 M6 M7 VDD VSS
+Xx0an M0 M4 VSS VSS nfet_03v3 w=2u l=0.28u
+Xx0ap M0 M4 VDD VDD pfet_03v3 w=4u l=0.28u
+Xx0bn M4 M0 VSS VSS nfet_03v3 w=2u l=0.28u
+Xx0bp M4 M0 VDD VDD pfet_03v3 w=4u l=0.28u
+Xx1an M1 M5 VSS VSS nfet_03v3 w=2u l=0.28u
+Xx1ap M1 M5 VDD VDD pfet_03v3 w=4u l=0.28u
+Xx1bn M5 M1 VSS VSS nfet_03v3 w=2u l=0.28u
+Xx1bp M5 M1 VDD VDD pfet_03v3 w=4u l=0.28u
+Xx2an M2 M6 VSS VSS nfet_03v3 w=2u l=0.28u
+Xx2ap M2 M6 VDD VDD pfet_03v3 w=4u l=0.28u
+Xx2bn M6 M2 VSS VSS nfet_03v3 w=2u l=0.28u
+Xx2bp M6 M2 VDD VDD pfet_03v3 w=4u l=0.28u
+Xx3an M3 M7 VSS VSS nfet_03v3 w=2u l=0.28u
+Xx3ap M3 M7 VDD VDD pfet_03v3 w=4u l=0.28u
+Xx3bn M7 M3 VSS VSS nfet_03v3 w=2u l=0.28u
+Xx3bp M7 M3 VDD VDD pfet_03v3 w=4u l=0.28u
+.ends ct_xc4
+* SPDX-License-Identifier: Apache-2.0
+* generated by fastcells.py (intended netlist)
+.subckt ct_mux4 A0 A1 A2 A3 S0 S1 S2 S3 Y VDD VSS
+Xn0a m0 S0 VSS VSS nfet_03v3 w=2u l=0.28u
+Xn0b Z0 A0 m0 VSS nfet_03v3 w=2u l=0.28u
+Xp0a Z0 S0 VDD VDD pfet_03v3 w=2u l=0.28u
+Xp0b Z0 A0 VDD VDD pfet_03v3 w=2u l=0.28u
+Xn1a m1 S1 VSS VSS nfet_03v3 w=2u l=0.28u
+Xn1b Z1 A1 m1 VSS nfet_03v3 w=2u l=0.28u
+Xp1a Z1 S1 VDD VDD pfet_03v3 w=2u l=0.28u
+Xp1b Z1 A1 VDD VDD pfet_03v3 w=2u l=0.28u
+Xn2a m2 S2 VSS VSS nfet_03v3 w=2u l=0.28u
+Xn2b Z2 A2 m2 VSS nfet_03v3 w=2u l=0.28u
+Xp2a Z2 S2 VDD VDD pfet_03v3 w=2u l=0.28u
+Xp2b Z2 A2 VDD VDD pfet_03v3 w=2u l=0.28u
+Xn3a m3 S3 VSS VSS nfet_03v3 w=2u l=0.28u
+Xn3b Z3 A3 m3 VSS nfet_03v3 w=2u l=0.28u
+Xp3a Z3 S3 VDD VDD pfet_03v3 w=2u l=0.28u
+Xp3b Z3 A3 VDD VDD pfet_03v3 w=2u l=0.28u
+Xq0 u0 Z0 VSS VSS nfet_03v3 w=4u l=0.28u
+Xq1 u1 Z1 u0 VSS nfet_03v3 w=4u l=0.28u
+Xq2 u2 Z2 u1 VSS nfet_03v3 w=4u l=0.28u
+Xq3 X Z3 u2 VSS nfet_03v3 w=4u l=0.28u
+Xr0 X Z0 VDD VDD pfet_03v3 w=3u l=0.28u
+Xr1 X Z1 VDD VDD pfet_03v3 w=3u l=0.28u
+Xr2 X Z2 VDD VDD pfet_03v3 w=3u l=0.28u
+Xr3 X Z3 VDD VDD pfet_03v3 w=3u l=0.28u
+Xb1 XB X VSS VSS nfet_03v3 w=2u l=0.28u
+Xb2 XB X VDD VDD pfet_03v3 w=4u l=0.28u
+Xb3 Y XB VSS VSS nfet_03v3 w=3u l=0.28u
+Xb4 Y XB VDD VDD pfet_03v3 w=6u l=0.28u
+Xb5 Y XB VSS VSS nfet_03v3 w=3u l=0.28u
+Xb6 Y XB VDD VDD pfet_03v3 w=6u l=0.28u
+.ends ct_mux4
+* SPDX-License-Identifier: Apache-2.0
+* generated by fastcells.py (intended netlist)
+.subckt ct_tspcd CK D Q ENB VDD VSS
+XN1 X D VSS VSS nfet_03v3 w=2u l=0.28u
+XP1 m1 D VDD VDD pfet_03v3 w=4u l=0.28u
+XP2 X CK m1 VDD pfet_03v3 w=4u l=0.28u
+XN2 Y X m2 VSS nfet_03v3 w=2u l=0.28u
+XN3 m2 CK VSS VSS nfet_03v3 w=2u l=0.28u
+XP3 Y CK VDD VDD pfet_03v3 w=4u l=0.28u
+XN4 QB CK m3 VSS nfet_03v3 w=2u l=0.28u
+XN5 m3 Y VSS VSS nfet_03v3 w=2u l=0.28u
+XP4 QB Y VDD VDD pfet_03v3 w=4u l=0.28u
+XNR QB ENB VSS VSS nfet_03v3 w=1u l=0.28u
+XNO1 Q QB VSS VSS nfet_03v3 w=2u l=0.28u
+XNO2 Q ENB VSS VSS nfet_03v3 w=2u l=0.28u
+XPO1 mo QB VDD VDD pfet_03v3 w=4u l=0.28u
+XPO2 Q ENB mo VDD pfet_03v3 w=4u l=0.28u
+.ends ct_tspcd
+* SPDX-License-Identifier: Apache-2.0
+* generated by fastcells.py (intended netlist)
+.subckt ct_div5 CK ENB A B C VDD VSS
+XfaP2 fan1 CK VDD VDD pfet_03v3 w=4u l=0.28u
+XfaN10 fas0 QBB VSS VSS nfet_03v3 w=3u l=0.28u
+XfaP10 XA QBB fan1 VDD pfet_03v3 w=2u l=0.28u
+XfaN11 XA QBC fas0 VSS nfet_03v3 w=3u l=0.28u
+XfaP11 XA QBC fan1 VDD pfet_03v3 w=2u l=0.28u
+XfaN2 YA XA fam2 VSS nfet_03v3 w=2u l=0.28u
+XfaN3 fam2 CK VSS VSS nfet_03v3 w=2u l=0.28u
+XfaP3 YA CK VDD VDD pfet_03v3 w=4u l=0.28u
+XfaN4 QBA CK fam3 VSS nfet_03v3 w=2u l=0.28u
+XfaN5 fam3 YA VSS VSS nfet_03v3 w=2u l=0.28u
+XfaP4 QBA YA VDD VDD pfet_03v3 w=4u l=0.28u
+XfaNR QBA ENB VSS VSS nfet_03v3 w=1u l=0.28u
+XfaNO1 A QBA VSS VSS nfet_03v3 w=2u l=0.28u
+XfaNO2 A ENB VSS VSS nfet_03v3 w=2u l=0.28u
+XfaPO1 famo QBA VDD VDD pfet_03v3 w=4u l=0.28u
+XfaPO2 A ENB famo VDD pfet_03v3 w=4u l=0.28u
+XfbN1 XB A VSS VSS nfet_03v3 w=2u l=0.28u
+XfbP1 fbm1 A VDD VDD pfet_03v3 w=4u l=0.28u
+XfbP2 XB CK fbm1 VDD pfet_03v3 w=4u l=0.28u
+XfbN2 YB XB fbm2 VSS nfet_03v3 w=2u l=0.28u
+XfbN3 fbm2 CK VSS VSS nfet_03v3 w=2u l=0.28u
+XfbP3 YB CK VDD VDD pfet_03v3 w=4u l=0.28u
+XfbN4 QBB CK fbm3 VSS nfet_03v3 w=2u l=0.28u
+XfbN5 fbm3 YB VSS VSS nfet_03v3 w=2u l=0.28u
+XfbP4 QBB YB VDD VDD pfet_03v3 w=4u l=0.28u
+XfbNR QBB ENB VSS VSS nfet_03v3 w=1u l=0.28u
+XfbNO1 B QBB VSS VSS nfet_03v3 w=2u l=0.28u
+XfbNO2 B ENB VSS VSS nfet_03v3 w=2u l=0.28u
+XfbPO1 fbmo QBB VDD VDD pfet_03v3 w=4u l=0.28u
+XfbPO2 B ENB fbmo VDD pfet_03v3 w=4u l=0.28u
+XfcN1 XC B VSS VSS nfet_03v3 w=2u l=0.28u
+XfcP1 fcm1 B VDD VDD pfet_03v3 w=4u l=0.28u
+XfcP2 XC CK fcm1 VDD pfet_03v3 w=4u l=0.28u
+XfcN2 YC XC fcm2 VSS nfet_03v3 w=2u l=0.28u
+XfcN3 fcm2 CK VSS VSS nfet_03v3 w=2u l=0.28u
+XfcP3 YC CK VDD VDD pfet_03v3 w=4u l=0.28u
+XfcN4 QBC CK fcm3 VSS nfet_03v3 w=2u l=0.28u
+XfcN5 fcm3 YC VSS VSS nfet_03v3 w=2u l=0.28u
+XfcP4 QBC YC VDD VDD pfet_03v3 w=4u l=0.28u
+XfcNR QBC ENB VSS VSS nfet_03v3 w=1u l=0.28u
+XfcNO1 C QBC VSS VSS nfet_03v3 w=2u l=0.28u
+XfcNO2 C ENB VSS VSS nfet_03v3 w=2u l=0.28u
+XfcPO1 fcmo QBC VDD VDD pfet_03v3 w=4u l=0.28u
+XfcPO2 C ENB fcmo VDD pfet_03v3 w=4u l=0.28u
+.ends ct_div5
+
+.subckt pt_pll_ring REF EN N4 N8 HOLD IBIAS PH0 PH1 PH2 PH3 PH4 PH5 PH6 PH7 LOCK FBCK REFO ATB_VCTRL N5 N10 KP0 KP1 KP2 FU0 FU1 FU2 FU3 FD0 FD1 FD2 FD3 BAND VDD VSS
+* r8 mode decode: NX = N5|N10 (/10 feedback), R45 = N4|N5 (reference /2)
+XNXN N5 N10 NXB VDD VSS pt_t_nor2
+XNXI NXB NX VDD VSS pt_t_inv1
+XR4N N4 N5 R45B VDD VSS pt_t_nor2
+XR4I R45B R45 VDD VSS pt_t_inv1
+XEI EN ENB VDD VSS pt_t_inv1
+* bias and charge pump (as pt_pll)
+XNB IBIAS IBIAS NBS VSS nfet_03v3 w=4u l=2u
+XNBS NBS EN VSS VSS nfet_03v3 w=4u l=0.28u
+XNBC IBIAS ENB VSS VSS nfet_03v3 w=1u l=0.28u
+XNM1 PB IBIAS VSS VSS nfet_03v3 w=4u l=2u
+XPB PB PB VDD VDD pfet_03v3 w=8u l=2u
+XRG REF EN REFB VDD VSS pt_t_nand2
+XRGI REFB REFG VDD VSS pt_t_inv1
+* N4 (host_follow): reference /2, held in reset unless EN & N4
+XRDE EN R45 RD2RB VDD VSS pt_t_nand2
+XRD2 REFG REFD2 RD2RB VDD VSS ct_tspc2
+XRSN R45 N4N VDD VSS pt_t_inv1
+XRSM REFG REFD2 VSS VSS N4N R45 VSS VSS REFP VDD VSS ct_mux4
+* clean reference and feedback copies for the standard-cell lock checker
+XRO1 REFP REFOB VDD VSS pt_t_inv1
+XRO2 REFOB REFO VDD VSS pt_t_inv2
+* HOLD (r6, for the CDR hand-over): HOLD is sampled on the falling edge of
+* the PFD reference (mid-cycle, when no pump pulse is active in lock); the
+* registered HOLDS keeps the PFD in reset, so UP/DN stay off and the loop
+* filter floats with no truncated pump pulse.  The VCO keeps running on the
+* held VCTRL; an external pump (pt_cdr bang-bang) may still drive ATB_VCTRL.
+* HOLD=0 releases at the next reference falling edge; the PFD restarts from
+* reset (normal re-acquisition).
+* r6a (2026-11-09): the HOLD flop clock is NOR(REFP, ENB), not !REFP.  With
+* EN=0 REFP is held low, so an inverter held CK high and ct_tspcd's reset
+* NMOS (XNR) fought its Y-gated pull-up (XP4): 509 uA static in the disabled
+* state (safe bench, schematic and extracted).  CK low in reset removes the fight.
+XHI REFP ENB REFPN VDD VSS pt_t_nor2
+XHF REFPN HOLD HOLDS ENB VDD VSS ct_tspcd
+XHN HOLDS HOLDSB VDD VSS pt_t_inv1
+XPEN EN HOLDSB PENB VDD VSS pt_t_nand2
+XPEI PENB PEN VDD VSS pt_t_inv1
+XPFD REFP FB PEN UP DN VDD VSS pt_pfd
+XUI UP UPB VDD VSS pt_t_inv1
+* charge pump scaled with the feedback divider so the loop bandwidth and
+* phase margin do not change: 20 uA for /16 (N=16), 10 uA for /8 (N=8, and
+* N=4 = REF/2 with /8), as a 10 uA leg plus a 10 uA leg enabled by N16
+* (L = 2 um mirrors).
+XN16I N16 N16B VDD VSS pt_t_inv1
+* r8: 20 uA only for /16 (S16 = N16 & !NX)
+XS16N N16 NXB S16B VDD VSS pt_t_nand2
+XS16I S16B S16 VDD VSS pt_t_inv1
+XPS0 PS PB VDD VDD pfet_03v3 w=8u l=2u
+XPS2 PS2 PB VDD VDD pfet_03v3 w=8u l=2u
+XPE2 PS S16B PS2 VDD pfet_03v3 w=2u l=0.28u
+XPU ATB_VCTRL UPB PS VDD pfet_03v3 w=2u l=0.28u
+XND ATB_VCTRL DN NS VSS nfet_03v3 w=1u l=0.28u
+* r7 (2026-11-09) current steering: while UP (DN) is off its current source is steered into
+* VDUM, which a unity-gain PMOS-input OTA holds at VCTRL.  r6a let PS float to VDD and NS to VSS
+* between pulses; at switch-on PS dumped its charge into VCTRL (schematic: +35 mV in a 0.64 ns
+* UP/DN overlap, i.e. ~48 uA effective vs a 20 uA pump), which the loop cancelled with ~1 ns of
+* DN-only per reference cycle: 38 mV VCTRL ripple, PFD activity 6.5 % (analog LOCK dropped at
+* 625/810 MHz) and part of the HOLD step.  r7 schematic: ripple 3.6 mV, activity 3.2 %, HOLD step
+* +273 ppm (r6a +850 ppm).  In HOLD both sources run into VDUM, so the off switches see ~0 V.
+* EN=0: OTA tail is the PB mirror (no current), VDUM clamped to VSS.
+XDI DN DNB VDD VSS pt_t_inv1
+XPUD VDUM UP PS VDD pfet_03v3 w=2u l=0.28u
+XNDD VDUM DNB NS VSS nfet_03v3 w=1u l=0.28u
+XAT TL PB VDD VDD pfet_03v3 w=8u l=2u
+XA1 AM ATB_VCTRL TL VDD pfet_03v3 w=8u l=1u
+XA2 VDUM VDUM TL VDD pfet_03v3 w=8u l=1u
+XA3 AM AM VSS VSS nfet_03v3 w=4u l=2u
+XA4 VDUM AM VSS VSS nfet_03v3 w=4u l=2u
+XCD VSS VDUM VSS VSS nfet_03v3 w=10u l=10u m=2
+XCLD VDUM ENB VSS VSS nfet_03v3 w=1u l=0.28u
+XNS0 NS IBIAS VSS VSS nfet_03v3 w=4u l=2u
+XNS2 NS2 IBIAS VSS VSS nfet_03v3 w=4u l=2u
+XNE2 NS S16 NS2 VSS nfet_03v3 w=2u l=0.28u
+XC2A VSS ATB_VCTRL VSS VSS nfet_03v3 w=10u l=10u m=2
+XR ATB_VCTRL VZ VSS ppolyf_u_1k r_width=1u r_length=20u
+XC1 VSS VZ VSS VSS nfet_03v3 w=20u l=20u m=5
+XCLV ATB_VCTRL ENB VSS VSS nfet_03v3 w=1u l=0.28u
+XCLZ VZ ENB VSS VSS nfet_03v3 w=1u l=0.28u
+* VCO (r9c: tail m 6 -> 8 and replica 5 -> 6.67 um, keeping the 1/12 replica ratio: +33 % current at a given VCTRL, for 810/834 MHz at ss/32/2.69 V with +15 % ring C and gate R (model-uncertainty audit))
+* WT21 band bit (r9d): BAND=1 high band (tail 8 x 10/1, replica 6.67/1), BAND=0 low band (half: tail 4 x, replica 3.33):
+* the switched halves have their gate VTG = ATB_VCTRL through a static transmission gate (no series switch in the
+* tail current path), pulled to VSS when BAND=0.
+XBI BAND BANDB VDD VSS pt_t_inv1
+XBGN ATB_VCTRL BAND VTG VSS nfet_03v3 w=2u l=0.28u
+XBGP ATB_VCTRL BANDB VTG VDD pfet_03v3 w=4u l=0.28u
+XBGD VTG BANDB VSS VSS nfet_03v3 w=1u l=0.28u
+XTL VT ATB_VCTRL VSS VSS nfet_03v3 w=10u l=1u m=4
+XTLB VT VTG VSS VSS nfet_03v3 w=10u l=1u m=4
+* symmetric starving: the header is a PMOS current source mirrored from a
+* 1/12 replica of the tail (VCTRL -> XRPN -> diode XRPD -> VPB), so both ring
+* rails move with the tuning current.  The ring common mode is not
+* controlled: VT stays near 0.25 V and VH tracks the current (1.9-3.0 V);
+* ct_ring8 restores each node with a low-threshold (~1.25 V) inverter.  EN=0: replica path open, VPB pulled to VDD (header off).
+XRPN VPB ATB_VCTRL RPS VSS nfet_03v3 w=3.33u l=1u
+XRPNB VPB VTG RPS VSS nfet_03v3 w=3.34u l=1u
+XRPE RPS EN VSS VSS nfet_03v3 w=4u l=0.28u
+XRPD VPB VPB VDD VDD pfet_03v3 w=6.5u l=0.28u
+XRPU VPB EN VDD VDD pfet_03v3 w=1u l=0.28u
+XHD VH VPB VDD VDD pfet_03v3 w=10u l=0.28u m=8
+XFT VH VPBF KP0 KP1 KP2 FU0 FU1 FU2 FU3 FD0 FD1 FD2 FD3 EN IBIAS VDD VSS pt_pll_ring_ft
+XRVP VPB VPBF VSS ppolyf_u_1k r_width=1u r_length=20u
+XRING O0 O1 O2 O3 O4 O5 O6 O7 ENB VT VH VDD VSS ct_ring9
+* common-mode-insensitive phase restore + balanced port drivers
+XPHB O4 O5 O6 O7 O0 O1 O2 O3 PH0 PH1 PH2 PH3 PH4 PH5 PH6 PH7 ODC PM0 PM1 PM2 PM3 PM4 PM5 PM6 PM7 VDD VSS ct_phbuf8m
+* r12 duty pairs (TIM-15/17): complementary phase-buffer nodes cross-coupled
+XXC4 PM0 PM1 PM2 PM3 PM4 PM5 PM6 PM7 VDD VSS ct_xc4
+* feedback /16 from the dedicated divider tap
+* divider clock ODC from ct_phbuf8 (tapped at input 0, dummy-balanced)
+XD1 ODC Q1 ENB VDD VSS ct_tspc2
+XD2 Q1 Q2 ENB VDD VSS ct_tspc2
+XD3 Q2 Q3 ENB VDD VSS ct_tspc2
+XD4 Q3 Q4 ENB VDD VSS ct_tspc2
+* feedback divider select: /8 (N8 or N4) or /16 (N16 = neither)
+XNSN N4 N8 N16 VDD VSS pt_t_nor2
+XS8N N16B NXB S8B VDD VSS pt_t_nand2
+XS8I S8B S8 VDD VSS pt_t_inv1
+* r8 /10: VCO (ODC, gated + buffered) -> /5 (ct_div5) -> TSPC /2; reset unless EN & NX
+XD5E EN NX D5RB VDD VSS pt_t_nand2
+* clock gated low in reset and re-buffered (as pt_wordclk): sharp edges into the three TSPC flops
+XD5C D5RB D5EN VDD VSS pt_t_inv1
+XD5A ODC D5EN D5K0 VDD VSS pt_t_nand2
+XD5B D5K0 D5K1 VDD VSS pt_t_inv2
+XD5F D5K1 D5K2 VDD VSS pt_t_inv4
+XD5G D5K2 D5CK VDD VSS pt_t_inv8
+XD5 D5CK D5RB A5 B5 C5 VDD VSS ct_div5
+* /2 after the /5 (ct_div5 is dynamic: it divides by 4 with a 235 MHz VCO/2 clock, so it runs at the VCO rate)
+XD5H C5 D10 D5RB VDD VSS ct_tspc2
+XNSM Q3 Q4 D10 VSS S8 S16 NX VSS FB VDD VSS ct_mux4
+XFB FB FBB VDD VSS pt_t_inv1
+XFB2 FBB FBCK VDD VSS pt_t_inv2
+* analog lock indicator (demoted: informative only; the qualified lock check is
+* the standard-cell REFO-vs-FBCK counter in the register-file RTL)
+XLO UP DN UDN VDD VSS pt_t_nor2
+XLOI UDN ORUD VDD VSS pt_t_inv1
+* lock qualification: LK charges at ~3 uA and is discharged at ~15x that
+* while UP or DN is active, so LOCK=1 only when PFD activity < ~15 % of time
+XLU LK ENB VDD VDD pfet_03v3 w=0.5u l=5u
+XLD LK ORUD LDS VSS nfet_03v3 w=0.5u l=2u
+XLDE LDS EN VSS VSS nfet_03v3 w=1u l=0.28u
+XLC VSS LK VSS VSS nfet_03v3 w=4u l=10u
+XLK LK ENB VSS VSS nfet_03v3 w=1u l=0.28u
+XLI1 LK LKB VDD VSS pt_t_inv1
+XLN LKB ENB LOCK VDD VSS pt_t_nor2
+.ends

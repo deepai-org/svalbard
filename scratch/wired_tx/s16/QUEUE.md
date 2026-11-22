@@ -31,14 +31,13 @@ Pad option A: not published (txr/models holds only tx_rt/rh/zero; esdopt/tx a4/a
 4. pad=C duplicates of the step-4 rows.
 Durations (s14): cal about 3.9 h, row about 2 h. Step 3 takes about 34 h (up to 50 h if second cal iterations are needed). Everything takes about 6-9 days.
 
-## State: queue STOPPED (coordinator ruling 2026-11-20)
-The phase buffers' first gate becomes NAND(PH, SER_EN) on all eight PH inputs, so pt_wiredtx8 is rebuilt; the pin list is unchanged.
-This snapshot was a dry run of the flow. c_ssp3125_0 was killed after 2 min and its files were deleted. STOPQ is set.
-When the new GDS commit arrives:
-1. Copy the GDS to net/ and update SHA256.
-2. Run `python3 net/extfull16.py pt_wiredtx8`, then the C-only run (xk/conly/c.tcl).
-3. Rename `_flat` in the netlists, then run `fixcap16.py` and `check16.py`.
-4. Run the sanity: `chain16.py sanity <tag>`.
-5. Delete STOPQ and start TWO runners (the owner allows two slots): `nohup python3 q16.py q16.jobs >> q16.out 2>&1 &`, run twice.
-   The runners share the job file. Each claims a job with an empty file claims/<tag>; to rerun a failed job, delete its claim.
-Owner confirmed: 3.24 / 2.7 are line rates in Gb/s.
+## State (2026-11-21 21:41 UTC): RUNNING, two runners (q16.py x2, claims/)
+Final block for the table: commit 3e90f876 (phase buffers NAND2(PH, SER_EN)). The GDS sha is 62e25b01...
+* Extraction: 1790/1806 nets (99.1 %). 1125 nets with R (16089 R). 124 ports equal in name and order; 5375 X / 39 D are identical.
+* fixcap16: ground C 35.27 -> 17.46 pF, 6478 coupling pairs added (1.31 pF). Netlist `pt_wiredtx8.fullfix16.rc.spice` sha ada39d70....
+  Total C 27.76 pF = C-only flat; the generator's C-only is 27.03 pF (+2.7 %).
+* Sanity sp16b_ssp (SER_EN=1): TX_RUN rises at 29.47 ns. Gate 1.55 V pp, pad 0.54 V pp, 51.9 mA.
+* Front of the queue: four PDS-14 island-current rows I_* (POST on, MAIN/POST 200/55 and 128/127, ss 3.15 V 32 C and ff 3.45 V 85 C, pad=C).
+  Result key `isup` holds avg / peak over the window after TX_RUN + 2 ns. The bench's single VDD also feeds the pad VDD pin.
+  Codes: s14 start codes, not calibrated.
+* The dry-run netlists of 8114f8d3 were replaced. The queue order is otherwise as above.

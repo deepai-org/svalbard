@@ -31,7 +31,27 @@ def deck(work, **kw):
     kw['ring'] = dict(kw['ring'], route=tuple(_route))
     if _stuck is not None and kw.get('full'):
         kw['words'] = [[0 if i % 8 == _stuck else b for i, b in enumerate(w)] for w in kw['words']]
-    return _deck(work, **kw)
+    n = _deck(work, **kw)
+    if kw.get('full') and _isplit:
+        import isplit
+        tp = Path(work) / 'topx.spice'; txt, used = isplit.split(tp.read_text()); tp.write_text(txt)
+        _last['groups'] = used
+        tb = Path(work) / 'tb.sp'; T = tb.read_text().split('\n')
+        vd = kw['vdd']; ex = ['i(VPADV)', 'i(VTV)'] + [f'i(v.xtop.vam_{g})' for g in used if g != 'unassigned']
+        for j, l in enumerate(T):
+            if l.startswith('XPAD '):
+                q = l.split(); q[3] = 'VDDPAD'; T[j] = ' '.join(q) + f'\nVPADV VDDPAD 0 {vd}'
+            elif l.startswith('save ') or l.startswith('wrdata '):
+                T[j] = l + ' ' + ' '.join(ex)
+        tb.write_text('\n'.join(T))
+        n = n + ['I_PADVDD', 'I_VTV'] + [f'I_{g}' for g in used if g != 'unassigned']
+    if kw.get('full'):
+        _last['names'] = n; _last['work'] = work
+    return n
+
+
+_last = {}
+_isplit = False
 
 
 C13.deck = deck
@@ -62,7 +82,28 @@ def setup(kw):
 
 
 def run(**kw):
-    return chain14.run(**setup(kw))
+    global _isplit
+    isup = kw.pop('isup', False)
+    _isplit = bool(kw.pop('isplit', False))
+    o = chain14.run(**setup(kw))
+    if isup and _last.get('work') and (Path(_last['work']) / 'wave.txt').exists():   # island supply current (PDS-14)
+        a = tools.read_wrdata(Path(_last['work']) / 'wave.txt', _last['names']); t = a['time']; i = -a['I']
+        up = C13.S.crossings(t, a['TX_RUN'], th=o['vdd'] / 2, rising=True)
+        if len(up):
+            m = t > up[0] + 2e-9
+            if _isplit:
+                st = lambda x: dict(avg_ma=round(float(np.trapezoid(x[m], t[m]) / (t[m][-1] - t[m][0])) * 1e3, 2), peak_ma=round(float(x[m].max()) * 1e3, 2))
+                sp = {k[2:]: st(-a[k] if k in ('I_PADVDD', 'I_VTV') else a[k]) for k in a if k.startswith('I_')}
+                sp['block_total_iVDD'] = st(i)
+                sp['block_unassigned'] = {q: round(sp['block_total_iVDD'][q] - sum(v[q] for k, v in sp.items() if k not in ('PADVDD', 'VTV', 'block_total_iVDD')), 2) for q in ('avg_ma',)}
+                o['isplit'] = dict(sp, devices=_last.get('groups'), note='VTV = TERM_VCM source (on chip term_buffer on RAIL_wired_tx); sign: current delivered by the source')
+            o['isup'] = dict(t_run_ns=round(float(up[0]) * 1e9, 2), window_ns=round(float(t[m][-1] - t[m][0]) * 1e9, 1),
+                             avg_ma=round(float(np.trapezoid(i[m], t[m]) / (t[m][-1] - t[m][0])) * 1e3, 2), peak_ma=round(float(i[m].max()) * 1e3, 2),
+                             min_ma=round(float(i[m].min()) * 1e3, 2), note='i(VDD) of the ideal block supply = RAIL_wired_tx; pad VDD shares it in this bench')
+        else:
+            o['isup'] = dict(error='TX_RUN never rose')
+        C13._save(o)
+    return o
 
 
 def sanity(tag, tstop=40e-9):

@@ -1,0 +1,158 @@
+{
+ "tag": "IS_ss315_32C_post0",
+ "target_rate": 3122640000.0,
+ "n_over": 1,
+ "corner": "ss",
+ "temp": 32,
+ "vdd": 3.15,
+ "vring": 2.69,
+ "vctrl": 1.3241,
+ "band": 0,
+ "pess": false,
+ "ring_pess": false,
+ "ring": "ring=layout-11Nov",
+ "padm": "pad=C",
+ "top_ext": "/home/ubuntu/svalbard/scratch/wired_tx/s16/net/pt_wiredtx8.fullfix16.rc.spice",
+ "res": "ss",
+ "codes": [
+  0,
+  2,
+  2,
+  4,
+  2,
+  3,
+  3,
+  6
+ ],
+ "main_code": 200,
+ "post_code": 55,
+ "en_post": 0,
+ "pol": 0,
+ "mux_ext": null,
+ "aux_ext": null,
+ "ser_ext": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/wired_tx/generated/fast/wtx_ser8d.ext.spice",
+ "kill": null,
+ "S": 1.0,
+ "supply": null,
+ "frot": 2,
+ "limits": {
+  "eye_h_v": 0.2,
+  "eye_w_ui": 0.45,
+  "min_bits": 200
+ },
+ "t_run_ns": 29.1,
+ "i_avg_ma": 49.54,
+ "main_bias_v": 1.551,
+ "far": {
+  "bits": 80,
+  "errors": 0,
+  "latency": 70,
+  "inverted": false,
+  "eye_h_v": 0.3837,
+  "eye_w_ui": 0.781,
+  "eye_w_ps": 249.4,
+  "ui_ps": 319.17,
+  "rate_gbps": 3.1331,
+  "dj_pp_ps": 61.3,
+  "n_cross": 40,
+  "amp_pp_v": 0.81
+ },
+ "pad": {
+  "bits": 80,
+  "errors": 0,
+  "latency": 72,
+  "inverted": false,
+  "eye_h_v": 0.5855,
+  "eye_w_ui": 0.828,
+  "eye_w_ps": 264.3,
+  "ui_ps": 319.17,
+  "rate_gbps": 3.1331,
+  "dj_pp_ps": 50.5,
+  "n_cross": 41,
+  "amp_pp_v": 0.824
+ },
+ "gate": {
+  "bits": 80,
+  "errors": 0,
+  "latency": 72,
+  "inverted": true,
+  "eye_h_v": 1.4527,
+  "eye_w_ui": 0.812,
+  "eye_w_ps": 259.3,
+  "ui_ps": 319.17,
+  "rate_gbps": 3.1331,
+  "dj_pp_ps": 57.5,
+  "n_cross": 41,
+  "amp_pp_v": 3.126
+ },
+ "ok": false,
+ "route_ohm_F": [
+  30.0,
+  7.5e-14
+ ],
+ "route": "route=TIM-23 nom 30ohm/75fF",
+ "stuck": null,
+ "net_sha256": "ada39d70a353fd6285a16c2bf7dc8a6acc18aa490fb4789db760b1fe0128b8a9",
+ "pad_sha256": "dd8641f70edfd70e5058324155ac4aad9d5439dae96b9d27c6e2f69e3d0e08fb",
+ "ideal_phases": null,
+ "ilk_bypass": false,
+ "isplit": {
+  "PADVDD": {
+   "avg_ma": 0.03,
+   "peak_ma": 0.05
+  },
+  "VTV": {
+   "avg_ma": 16.24,
+   "peak_ma": 17.56
+  },
+  "ser": {
+   "avg_ma": 21.83,
+   "peak_ma": 35.15
+  },
+  "mux": {
+   "avg_ma": 22.97,
+   "peak_ma": 30.62
+  },
+  "phbuf": {
+   "avg_ma": 1.71,
+   "peak_ma": 2.3
+  },
+  "mux_post": {
+   "avg_ma": 0.0,
+   "peak_ma": 0.02
+  },
+  "aux": {
+   "avg_ma": 0.0,
+   "peak_ma": 0.0
+  },
+  "mux_main": {
+   "avg_ma": 1.86,
+   "peak_ma": 2.54
+  },
+  "block_total_iVDD": {
+   "avg_ma": 49.72,
+   "peak_ma": 66.56
+  },
+  "block_unassigned": {
+   "avg_ma": 1.35
+  },
+  "devices": {
+   "ser": 994,
+   "mux": 633,
+   "unassigned": 103,
+   "phbuf": 112,
+   "mux_post": 9,
+   "aux": 12,
+   "mux_main": 12
+  },
+  "note": "VTV = TERM_VCM source (on chip term_buffer on RAIL_wired_tx); sign: current delivered by the source"
+ },
+ "isup": {
+  "t_run_ns": 29.13,
+  "window_ns": 100.9,
+  "avg_ma": 49.72,
+  "peak_ma": 66.56,
+  "min_ma": 29.97,
+  "note": "i(VDD) of the ideal block supply = RAIL_wired_tx; pad VDD shares it in this bench"
+ }
+}

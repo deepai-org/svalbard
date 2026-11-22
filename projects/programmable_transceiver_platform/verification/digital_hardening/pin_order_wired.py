@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""pin_order_wired.py: writes pin_order_wired.cfg, the pt_wired pin order (row ASM-11, chip assembly).
+"""pin_order_wired.py: writes pin_order_wired.cfg, the pt_wired pin order (row ASM-11 rev 2, chip assembly: all
+wire_tx_data and wiredtx8 controls on the south edge at macro x 963-1223, data 0..39 by increasing x, then controls).
 
 The N / W / E sections are copied from pin_order.cfg (shared with pt_rf). The south edge is laid out slot by slot so
 that wire_tx_data and the pt_wiredtx8 control pins sit at the macro x positions assembly asked for (pt_wiredtx8 is
@@ -50,10 +51,10 @@ def main():
                 s += 1
             plan[s] = n
             s += step
-    put(CTRL_A, 945.0, 6)                       # 11 pins over ~140 um
-    for order, xc in DGROUPS:
-        put(bits('wire_tx_data', order), xc - 4.5 * PITCH)
-    put(CTRL_B, 1631.0)
+    # ASM-11 rev 2 (pt_wiredtx8 inputs on its top edge): wire_tx_data[0..39] by increasing x, then the controls,
+    # all in macro x 963-1223 at one slot (2.24 um) pitch
+    put(['wire_tx_clk'] + bits('wire_tx_data', range(40)) + bits('c_wiredtx_main_code', range(8))
+        + bits('c_wiredtx_post_code', range(8)) + ['c_wiredtx_post_pol', 'c_wiredtx_ser_en'], 966.0)
     assert max(plan) < NSLOT, 'south pins past the east edge'
     # group-regex lines: LEFT packed from x 20 um, GAP into the gaps between the data groups
     lines = ['#S', '@min_distance=2.24']
@@ -78,8 +79,7 @@ def main():
         emit_virtual(s - cur); cur = s
         out.append(g); cur += n; s = cur
     assert cur <= slot(940.0), f'left groups overrun x 940 um ({cur} slots)'
-    gaps = [(slot(1110.0 + 6 * PITCH), slot(1282.0 - 6 * PITCH)), (slot(1282.0 + 6 * PITCH), slot(1451.0 - 6 * PITCH)),
-            (slot(1451.0 + 6 * PITCH), slot(1614.0 - 6 * PITCH))]
+    gaps = [(max(plan) + 3, NSLOT)]
     # explicit pins up to the first gap
     def explicit_until(limit):
         nonlocal cur

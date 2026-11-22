@@ -1,24 +1,7 @@
 {
- "block": "lo_vtdet",
- "gds_sha256": "6cdb4e61d8b1fb76b478e2b94c8fbbea8df2690b6c2077a9720e52944f9c61df",
- "top": "pt_lo_vtdet",
- "klayout": "KLayout 0.30.9",
- "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
- "variant": "D",
- "run_mode": "deep",
- "clean": true,
- "gds": "lo_vtdet.gds",
- "deck": "gf180mcu.drc (precheck decks: main=all,-antenna,-density,-cup; antenna=antenna)",
- "decks": {
-  "main": {
-   "total": 0,
-   "rules": {},
-   "error": null
-  },
-  "antenna": {
-   "total": 0,
-   "rules": {},
-   "error": null
-  }
- }
+ "ran": true,
+ "violations": 0,
+ "by_rule": {},
+ "deck": "gf180mcuD KLayout (sak-drc.sh -k)",
+ "note": "r2 2026-11-22: port pads Metal4 on the top edge (Metal5 widened + via4), Magic DRC 0"
 }

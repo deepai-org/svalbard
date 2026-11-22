@@ -301,6 +301,7 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
       'strap_x0' um: x of the first strap pair (default origin + 3);
       'm5_keep' [(x0, x1)]: extra Metal5 keep-out columns (chip grid channels, ASM-8);
       'm5_bars' [(net, x0, x1)]: full-height Metal5 bars of a power net with Via4 arrays on its tracks;
+      'port_antenna_um' um: antenna diode on every gate-only port net, sized for that much top-level Metal5;
       'trunk_row'  {net: row}: the net's trunk is placed at the median of its pin columns in that row (default: all rows);
       'trunk_at'   {net: [devices]}: the net's trunk is placed at the mean x of the named devices' centres;
       'dense_cross' True: 0.56 um instead of 0.8 um via pitch where a wide (`net_width`) track meets its trunk.
@@ -673,6 +674,33 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
     # 1.32 um^2 drain, ~880 um M5, ratio 426).  Pins that are both gate and diffusion stay 'sd' (as before).
     terms_ad = terminals
     req = ad.requests_from_shapes(L.shapes, terms_ad)
+    # em['port_antenna_um'] = L: every gate-only PORT net gets a diode sized for L um of top-level Metal5 outside the
+    # block (long chip nets reach the block's gate pins; ASM-10).  Landed on the net's own Metal3-5 wiring.
+    ext_l = (em or {}).get('port_antenna_um')
+    if ext_l:
+        have = {r_['net'] for r_ in req}
+        for prt in ports:
+            if prt in power_nets:
+                continue
+            tl = [t_ for t_ in terms_ad if t_[2] == prt]
+            if not any(t_[3] == 'g' for t_ in tl) or any(t_[3] in ('sd', 'sdA') for t_ in tl):
+                continue
+            ga_ = sum(t_[4] for t_ in tl if t_[3] == 'g')
+            need_ = ad.need_area({'metal5': 2.0 * ext_l}, ga_)
+            if need_ <= 0:
+                continue
+            segs_ = []
+            for s_ in L.shapes:
+                if s_[5] == prt and s_[0] in ('metal3', 'metal4', 'metal5'):
+                    x1_, y1_, x2_, y2_ = s_[1:5]
+                    segs_.append((s_[0], x1_, (y1_ + y2_) / 2, x2_, (y1_ + y2_) / 2) if x2_ - x1_ >= y2_ - y1_ else
+                                 (s_[0], (x1_ + x2_) / 2, y1_, (x1_ + x2_) / 2, y2_))
+            if prt in have:
+                for r_ in req:
+                    if r_['net'] == prt:
+                        r_['area'] = max(r_['area'], need_)
+            elif segs_:
+                req.append(dict(net=prt, level=5, area=need_, segs=sorted(segs_, key=lambda q: -int(q[0][-1]))))
     dcmds, diodes = ad.plan(req, [s[:5] for s in L.shapes], keepouts, taps=taps)
     L.cmds += dcmds
     for i, prt in enumerate(ports, 1):

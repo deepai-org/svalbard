@@ -1,0 +1,501 @@
+{
+ "block": "ptrim",
+ "subckt": "pt_ptrim",
+ "params": {
+  "NAND": [
+   4,
+   6,
+   2
+  ],
+  "INV1": [
+   4,
+   8,
+   1
+  ],
+  "INV2": [
+   4,
+   8,
+   4
+  ],
+  "INV3": [
+   5,
+   10,
+   10
+  ],
+  "CH0_M": 2,
+  "CH0_TA_K": [
+   1,
+   1,
+   1.141,
+   1.081,
+   1.053
+  ],
+  "DUMMY_TN": true,
+  "UNITS": [
+   [
+    1,
+    0,
+    1.27,
+    0.45,
+    0.6
+   ],
+   [
+    2,
+    0,
+    1.47,
+    0.45,
+    0.6
+   ],
+   [
+    2,
+    2,
+    0.36,
+    0.45,
+    0.6
+   ],
+   [
+    4,
+    4,
+    0.535,
+    0.45,
+    0.6
+   ],
+   [
+    8,
+    8,
+    0.595,
+    0.45,
+    0.6
+   ]
+  ],
+  "FIX": [
+   0,
+   2,
+   4,
+   5,
+   0,
+   4,
+   [
+    11,
+    5
+   ],
+   [
+    11,
+    5
+   ]
+  ],
+  "STRAP_M5": false,
+  "VDD_M5_TRUNK": true,
+  "VDD_SHIFT": 1.5
+ },
+ "reference": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/wired_rx/ptrim.spice",
+ "reference_sha256": "26c6e058d6d15fcbc4b684b25cd05366d87b490ac4c616b60e1a765e43e0ef6d",
+ "netlists_sha256": "4e77195988acf68ebcdd5d02587662a910e3a7ad98c5c5a3d3a3eb199c4ad6ec",
+ "ptrim_compact_sha256": "78b279a8e30ec8300e9c7dd128c3b597d50edf7d0b6700abf5d35328170052fb",
+ "cells": {
+  "wp_ch": {
+   "drc_errors": 0,
+   "lvs_unique": true,
+   "size_um": [
+    149.45,
+    26.7
+   ],
+   "devices": 102
+  },
+  "wp_ch0": {
+   "drc_errors": 0,
+   "lvs_unique": true,
+   "size_um": [
+    182.91,
+    26.7
+   ],
+   "devices": 130
+  },
+  "wp_ch_f11x5": {
+   "drc_errors": 0,
+   "lvs_unique": true,
+   "size_um": [
+    161.7,
+    26.7
+   ],
+   "devices": 108
+  },
+  "wp_ch_f2": {
+   "drc_errors": 0,
+   "lvs_unique": true,
+   "size_um": [
+    159.35,
+    26.7
+   ],
+   "devices": 106
+  },
+  "wp_ch_f4": {
+   "drc_errors": 0,
+   "lvs_unique": true,
+   "size_um": [
+    159.35,
+    26.7
+   ],
+   "devices": 106
+  },
+  "wp_ch_f5": {
+   "drc_errors": 0,
+   "lvs_unique": true,
+   "size_um": [
+    159.35,
+    26.7
+   ],
+   "devices": 106
+  }
+ },
+ "drc_errors_magic": 0,
+ "devices": 872,
+ "lvs_mag_macro": {
+  "unique": true,
+  "property_errors": false,
+  "final": "Circuits match uniquely.",
+  "ok": true,
+  "report": "/home/ubuntu/svalbard/scratch/wired_rx/r12/ptrim/finalc/work/top/lvs.txt"
+ },
+ "lvs_mag_family": {
+  "unique": true,
+  "property_errors": false,
+  "final": "Circuits match uniquely.",
+  "ok": true,
+  "report": "/home/ubuntu/svalbard/scratch/wired_rx/r12/ptrim/finalc/work/top/lvs-family.txt"
+ },
+ "gds_export": {
+  "magic": "8.3.678",
+  "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "marker_shapes": {
+   "HRES 62/0": 0,
+   "RES_MK 110/5": 0
+  },
+  "ppolyf_u_1k_devices": 0,
+  "klayout_drc": {
+   "violations": 0,
+   "by_rule": {},
+   "rc": "0",
+   "lyrdb_files": 1
+  },
+  "hres_ok": true,
+  "pass": true
+ },
+ "size_um": [
+  201.61,
+  235.2
+ ],
+ "area_um2": 47418.7,
+ "pin_edge": "right (east): PHk and Tk_0..4 Metal2, CKPk Metal3 (2 um wide, over a 1 um Metal2 stub) in row k; ptrim_en Metal4 strap and VSS / VDD_WIRE_SW Metal4+5 straps at the top right",
+ "pins": {
+  "T0_4": [
+   201.01,
+   9.9
+  ],
+  "T0_3": [
+   201.01,
+   10.65
+  ],
+  "T0_2": [
+   201.01,
+   11.4
+  ],
+  "T0_1": [
+   201.01,
+   12.15
+  ],
+  "T0_0": [
+   201.01,
+   12.9
+  ],
+  "PH0": [
+   201.01,
+   14.4
+  ],
+  "CKP0": [
+   201.01,
+   7.65
+  ],
+  "T1_4": [
+   201.01,
+   39.6
+  ],
+  "T1_3": [
+   201.01,
+   40.35
+  ],
+  "T1_2": [
+   201.01,
+   41.1
+  ],
+  "T1_1": [
+   201.01,
+   41.85
+  ],
+  "T1_0": [
+   201.01,
+   42.6
+  ],
+  "PH1": [
+   201.01,
+   44.1
+  ],
+  "CKP1": [
+   201.01,
+   37.35
+  ],
+  "T2_4": [
+   201.01,
+   69.3
+  ],
+  "T2_3": [
+   201.01,
+   70.05
+  ],
+  "T2_2": [
+   201.01,
+   70.8
+  ],
+  "T2_1": [
+   201.01,
+   71.55
+  ],
+  "T2_0": [
+   201.01,
+   72.3
+  ],
+  "PH2": [
+   201.01,
+   73.8
+  ],
+  "CKP2": [
+   201.01,
+   67.05
+  ],
+  "T3_4": [
+   201.01,
+   99.0
+  ],
+  "T3_3": [
+   201.01,
+   99.75
+  ],
+  "T3_2": [
+   201.01,
+   100.5
+  ],
+  "T3_1": [
+   201.01,
+   101.25
+  ],
+  "T3_0": [
+   201.01,
+   102.0
+  ],
+  "PH3": [
+   201.01,
+   103.5
+  ],
+  "CKP3": [
+   201.01,
+   96.75
+  ],
+  "T4_4": [
+   201.01,
+   128.7
+  ],
+  "T4_3": [
+   201.01,
+   129.45
+  ],
+  "T4_2": [
+   201.01,
+   130.2
+  ],
+  "T4_1": [
+   201.01,
+   130.95
+  ],
+  "T4_0": [
+   201.01,
+   131.7
+  ],
+  "PH4": [
+   201.01,
+   133.2
+  ],
+  "CKP4": [
+   201.01,
+   126.45
+  ],
+  "T5_4": [
+   201.01,
+   158.4
+  ],
+  "T5_3": [
+   201.01,
+   159.15
+  ],
+  "T5_2": [
+   201.01,
+   159.9
+  ],
+  "T5_1": [
+   201.01,
+   160.65
+  ],
+  "T5_0": [
+   201.01,
+   161.4
+  ],
+  "PH5": [
+   201.01,
+   162.9
+  ],
+  "CKP5": [
+   201.01,
+   156.15
+  ],
+  "T6_4": [
+   201.01,
+   188.1
+  ],
+  "T6_3": [
+   201.01,
+   188.85
+  ],
+  "T6_2": [
+   201.01,
+   189.6
+  ],
+  "T6_1": [
+   201.01,
+   190.35
+  ],
+  "T6_0": [
+   201.01,
+   191.1
+  ],
+  "PH6": [
+   201.01,
+   192.6
+  ],
+  "CKP6": [
+   201.01,
+   185.85
+  ],
+  "T7_4": [
+   201.01,
+   217.8
+  ],
+  "T7_3": [
+   201.01,
+   218.55
+  ],
+  "T7_2": [
+   201.01,
+   219.3
+  ],
+  "T7_1": [
+   201.01,
+   220.05
+  ],
+  "T7_0": [
+   201.01,
+   220.8
+  ],
+  "PH7": [
+   201.01,
+   222.3
+  ],
+  "CKP7": [
+   201.01,
+   215.55
+  ]
+ },
+ "row_x0": {
+  "0": 0.0,
+  "1": 23.56,
+  "2": 23.56,
+  "3": 23.56,
+  "4": 33.46,
+  "5": 23.56,
+  "6": 21.21,
+  "7": 21.21
+ },
+ "straps": {
+  "ptrim_en": [
+   184.51,
+   "metal4"
+  ],
+  "VSS": [
+   189.01,
+   "metal4+5"
+  ],
+  "VDD_WIRE_SW": [
+   197.51,
+   "metal4+5"
+  ]
+ },
+ "row_pitch_um": 29.7,
+ "uniquify": {
+  "top": "pt_ptrim",
+  "renamed": 6
+ },
+ "klayout_precheck": {
+  "clean": true,
+  "gds_sha256": "4a83f3e1c14981d17946844d6192f23219093511e077a401857860a56d589c77",
+  "klayout": "KLayout 0.30.9",
+  "work": "/home/ubuntu/svalbard/scratch/wired_rx/r12/ptrim/finalc/kl/ptrim",
+  "decks": {
+   "main": {
+    "total": 0,
+    "rules": {},
+    "error": null
+   },
+   "antenna": {
+    "total": 0,
+    "rules": {},
+    "error": null
+   }
+  }
+ },
+ "readback": {
+  "gds_sha256": "4a83f3e1c14981d17946844d6192f23219093511e077a401857860a56d589c77",
+  "drc_raw": "0",
+  "lvs": {
+   "unique": true,
+   "property_errors": false,
+   "final": "Circuits match uniquely.",
+   "ok": true,
+   "report": "/home/ubuntu/svalbard/scratch/wired_rx/r12/ptrim/finalc/readback/lvs-readback.txt"
+  },
+  "netlist_sha256": "a93b75f72600fef0b8cee5b46826ebdea14480a69e32d36ae15c6c70a8d315cb"
+ },
+ "lvs_negative_controls": {
+  "width_plus_10nm_one_bit3_group": {
+   "unique": true,
+   "property_errors": true,
+   "final": "Circuits match uniquely.",
+   "ok": false,
+   "report": "/home/ubuntu/svalbard/scratch/wired_rx/r12/ptrim/finalc/readback/lvs-neg-width.txt"
+  },
+  "inv1_gate_of_ch3_moved_to_tn4": {
+   "unique": false,
+   "property_errors": false,
+   "final": "Top level cell failed pin matching.",
+   "ok": false,
+   "report": "/home/ubuntu/svalbard/scratch/wired_rx/r12/ptrim/finalc/readback/lvs-neg-net.txt"
+  },
+  "both_fail": true
+ },
+ "gds_sha256": "4a83f3e1c14981d17946844d6192f23219093511e077a401857860a56d589c77",
+ "ext_sha256": "b9db34f5d30f7c848828206700a9b1ad7a762647533164d46676c51e11840796",
+ "mag_sha256": "87cde57215ca59fe06d1515813a10b5e4be21ba32d1d09c93c9e899eba80218e",
+ "lvs_spice_sha256": "be03aa66b2a9d165d12ed1f33c0a4aeb212c08df2a64d4d9df5798e3193fd9f1",
+ "published_cell_um": [
+  449.2,
+  645.0
+ ],
+ "area_delta_um2": -242315.3
+}

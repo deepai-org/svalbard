@@ -1,0 +1,53 @@
+{
+ "klayout_precheck": {
+  "clean": true,
+  "gds_sha256": "6a758708225d748908fc0f41838a8300a1f29801627707ba34d61c38756c8d45",
+  "klayout": "KLayout 0.30.9",
+  "work": "/home/ubuntu/svalbard/scratch/wired_rx/r12/ptrim/finalc/kl_dcf/ptrim",
+  "decks": {
+   "main": {
+    "total": 0,
+    "rules": {},
+    "error": null
+   },
+   "antenna": {
+    "total": 0,
+    "rules": {},
+    "error": null
+   }
+  }
+ },
+ "readback": {
+  "gds_sha256": "6a758708225d748908fc0f41838a8300a1f29801627707ba34d61c38756c8d45",
+  "drc_raw": "0",
+  "lvs": {
+   "unique": true,
+   "property_errors": false,
+   "final": "Circuits match uniquely.",
+   "ok": true,
+   "report": "/home/ubuntu/svalbard/scratch/wired_rx/r12/ptrim/finalc/readback_dcf/lvs-readback.txt"
+  },
+  "netlist_sha256": "a93b75f72600fef0b8cee5b46826ebdea14480a69e32d36ae15c6c70a8d315cb"
+ },
+ "lvs_negative_controls": {
+  "width_plus_10nm_one_bit3_group": {
+   "unique": true,
+   "property_errors": true,
+   "final": "Circuits match uniquely.",
+   "ok": false,
+   "report": "/home/ubuntu/svalbard/scratch/wired_rx/r12/ptrim/finalc/readback_dcf/lvs-neg-width.txt"
+  },
+  "inv1_gate_of_ch3_moved_to_tn4": {
+   "unique": false,
+   "property_errors": false,
+   "final": "Top level cell failed pin matching.",
+   "ok": false,
+   "report": "/home/ubuntu/svalbard/scratch/wired_rx/r12/ptrim/finalc/readback_dcf/lvs-neg-net.txt"
+  },
+  "both_fail": true
+ },
+ "gds_sha256": "6a758708225d748908fc0f41838a8300a1f29801627707ba34d61c38756c8d45",
+ "_x": "b9db34f5d30f7c848828206700a9b1ad7a762647533164d46676c51e11840796",
+ "mag_sha256": "87cde57215ca59fe06d1515813a10b5e4be21ba32d1d09c93c9e899eba80218e",
+ "lvs_spice_sha256": "be03aa66b2a9d165d12ed1f33c0a4aeb212c08df2a64d4d9df5798e3193fd9f1"
+}

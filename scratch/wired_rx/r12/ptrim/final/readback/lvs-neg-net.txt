@@ -1,0 +1,394 @@
+
+Circuit 1 cell nfet_03v3 and Circuit 2 cell nfet_03v3 are black boxes.
+Warning: Equate pins:  cell nfet_03v3 is a placeholder, treated as a black box.
+Warning: Equate pins:  cell nfet_03v3 is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: nfet_03v3                       |Circuit 2: nfet_03v3                       
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+4                                          |4                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes nfet_03v3 and nfet_03v3 are equivalent.
+
+Circuit 1 cell pfet_03v3 and Circuit 2 cell pfet_03v3 are black boxes.
+Warning: Equate pins:  cell pfet_03v3 is a placeholder, treated as a black box.
+Warning: Equate pins:  cell pfet_03v3 is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: pfet_03v3                       |Circuit 2: pfet_03v3                       
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+4                                          |4                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes pfet_03v3 and pfet_03v3 are equivalent.
+Flattening unmatched subcell pt_ptrim__wp_ch0 in circuit pt_ptrim (0)(1 instance)
+Flattening unmatched subcell pt_ptrim__wp_ch_f2 in circuit pt_ptrim (0)(1 instance)
+Flattening unmatched subcell pt_ptrim__wp_ch_f4 in circuit pt_ptrim (0)(2 instances)
+Flattening unmatched subcell pt_ptrim__wp_ch_f5 in circuit pt_ptrim (0)(1 instance)
+Flattening unmatched subcell pt_ptrim__wp_ch in circuit pt_ptrim (0)(1 instance)
+Flattening unmatched subcell pt_ptrim__wp_ch_f8 in circuit pt_ptrim (0)(2 instances)
+
+Class pt_ptrim (0):  Merged 606 parallel devices.
+Subcircuit summary:
+Circuit 1: pt_ptrim                        |Circuit 2: pt_ptrim                        
+-------------------------------------------|-------------------------------------------
+nfet_03v3 (694->215)                       |nfet_03v3 (694->215)                       
+pfet_03v3 (174->47)                        |pfet_03v3 (174->47)                        
+Number of devices: 262                     |Number of devices: 262                     
+Number of nets: 175                        |Number of nets: 175                        
+---------------------------------------------------------------------------------------
+NET mismatches: Class fragments follow (with fanout counts):
+Circuit 1: pt_ptrim                        |Circuit 2: pt_ptrim                        
+
+---------------------------------------------------------------------------------------
+Net: pt_ptrim__wp_ch:XC4/tn                |Net: tn3                                   
+  nfet_03v3/(1|3) = 7                      |  nfet_03v3/(1|3) = 8                      
+  pfet_03v3/(1|3) = 2                      |  pfet_03v3/(1|3) = 2                      
+  pfet_03v3/2 = 2                          |  pfet_03v3/2 = 2                          
+  nfet_03v3/2 = 2                          |  nfet_03v3/2 = 1                          
+---------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------
+Net: pt_ptrim__wp_ch_f8:XC6/tn             |Net: tn7                                   
+  nfet_03v3/(1|3) = 8                      |  nfet_03v3/(1|3) = 8                      
+  pfet_03v3/2 = 2                          |  pfet_03v3/(1|3) = 2                      
+  pfet_03v3/(1|3) = 2                      |  nfet_03v3/2 = 2                          
+  nfet_03v3/2 = 2                          |  pfet_03v3/2 = 2                          
+                                           |                                           
+Net: pt_ptrim__wp_ch_f8:XC7/tn             |Net: tn6                                   
+  nfet_03v3/(1|3) = 8                      |  nfet_03v3/(1|3) = 8                      
+  pfet_03v3/2 = 2                          |  pfet_03v3/(1|3) = 2                      
+  pfet_03v3/(1|3) = 2                      |  nfet_03v3/2 = 2                          
+  nfet_03v3/2 = 2                          |  pfet_03v3/2 = 2                          
+                                           |                                           
+Net: pt_ptrim__wp_ch_f5:XC3/tn             |Net: tn5                                   
+  nfet_03v3/(1|3) = 8                      |  nfet_03v3/(1|3) = 8                      
+  pfet_03v3/2 = 2                          |  pfet_03v3/(1|3) = 2                      
+  pfet_03v3/(1|3) = 2                      |  nfet_03v3/2 = 2                          
+  nfet_03v3/2 = 2                          |  pfet_03v3/2 = 2                          
+                                           |                                           
+Net: pt_ptrim__wp_ch_f4:XC5/tn             |Net: tn2                                   
+  nfet_03v3/(1|3) = 8                      |  nfet_03v3/(1|3) = 8                      
+  pfet_03v3/2 = 2                          |  pfet_03v3/(1|3) = 2                      
+  pfet_03v3/(1|3) = 2                      |  nfet_03v3/2 = 2                          
+  nfet_03v3/2 = 2                          |  pfet_03v3/2 = 2                          
+                                           |                                           
+Net: pt_ptrim__wp_ch_f4:XC2/tn             |Net: tn1                                   
+  nfet_03v3/(1|3) = 8                      |  nfet_03v3/(1|3) = 8                      
+  pfet_03v3/2 = 2                          |  pfet_03v3/(1|3) = 2                      
+  pfet_03v3/(1|3) = 2                      |  nfet_03v3/2 = 2                          
+  nfet_03v3/2 = 2                          |  pfet_03v3/2 = 2                          
+                                           |                                           
+Net: pt_ptrim__wp_ch_f2:XC1/tn             |Net: tn4                                   
+  nfet_03v3/(1|3) = 8                      |  nfet_03v3/2 = 3                          
+  pfet_03v3/2 = 2                          |  nfet_03v3/(1|3) = 7                      
+  pfet_03v3/(1|3) = 2                      |  pfet_03v3/(1|3) = 2                      
+  nfet_03v3/2 = 2                          |  pfet_03v3/2 = 2                          
+---------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------
+Net: pt_ptrim__wp_ch_f8:XC6/ta             |Net: ta7                                   
+  nfet_03v3/2 = 1                          |  nfet_03v3/(1|3) = 5                      
+  nfet_03v3/(1|3) = 5                      |  pfet_03v3/(1|3) = 1                      
+  pfet_03v3/(1|3) = 1                      |  nfet_03v3/2 = 1                          
+  pfet_03v3/2 = 1                          |  pfet_03v3/2 = 1                          
+                                           |                                           
+Net: pt_ptrim__wp_ch_f8:XC7/ta             |Net: ta6                                   
+  nfet_03v3/2 = 1                          |  nfet_03v3/(1|3) = 5                      
+  nfet_03v3/(1|3) = 5                      |  pfet_03v3/(1|3) = 1                      
+  pfet_03v3/(1|3) = 1                      |  nfet_03v3/2 = 1                          
+  pfet_03v3/2 = 1                          |  pfet_03v3/2 = 1                          
+                                           |                                           
+Net: pt_ptrim__wp_ch_f5:XC3/ta             |Net: ta5                                   
+  nfet_03v3/2 = 1                          |  nfet_03v3/(1|3) = 5                      
+  nfet_03v3/(1|3) = 5                      |  pfet_03v3/(1|3) = 1                      
+  pfet_03v3/(1|3) = 1                      |  nfet_03v3/2 = 1                          
+  pfet_03v3/2 = 1                          |  pfet_03v3/2 = 1                          
+                                           |                                           
+Net: pt_ptrim__wp_ch_f4:XC5/ta             |Net: ta2                                   
+  nfet_03v3/2 = 1                          |  nfet_03v3/(1|3) = 5                      
+  nfet_03v3/(1|3) = 5                      |  pfet_03v3/(1|3) = 1                      
+  pfet_03v3/(1|3) = 1                      |  nfet_03v3/2 = 1                          
+  pfet_03v3/2 = 1                          |  pfet_03v3/2 = 1                          
+                                           |                                           
+Net: pt_ptrim__wp_ch_f4:XC2/ta             |Net: ta1                                   
+  nfet_03v3/2 = 1                          |  nfet_03v3/(1|3) = 5                      
+  nfet_03v3/(1|3) = 5                      |  pfet_03v3/(1|3) = 1                      
+  pfet_03v3/(1|3) = 1                      |  nfet_03v3/2 = 1                          
+  pfet_03v3/2 = 1                          |  pfet_03v3/2 = 1                          
+                                           |                                           
+Net: pt_ptrim__wp_ch_f2:XC1/ta             |Net: ta3                                   
+  nfet_03v3/2 = 1                          |  nfet_03v3/(1|3) = 5                      
+  nfet_03v3/(1|3) = 5                      |  pfet_03v3/(1|3) = 1                      
+  pfet_03v3/(1|3) = 1                      |  nfet_03v3/2 = 1                          
+  pfet_03v3/2 = 1                          |  pfet_03v3/2 = 1                          
+---------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------
+Net: pt_ptrim__wp_ch:XC4/ta                |Net: ta4                                   
+  pfet_03v3/2 = 1                          |  pfet_03v3/2 = 1                          
+  nfet_03v3/(1|3) = 4                      |  nfet_03v3/(1|3) = 4                      
+  nfet_03v3/2 = 1                          |  nfet_03v3/2 = 1                          
+  pfet_03v3/(1|3) = 1                      |  pfet_03v3/(1|3) = 1                      
+---------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------
+Net: VSS                                   |Net: VSS                                   
+  nfet_03v3/(1|3) = 206                    |  nfet_03v3/(1|3) = 206                    
+  nfet_03v3/4 = 215                        |  nfet_03v3/4 = 215                        
+---------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------
+Net: VDD_WIRE_SW                           |Net: VDD_WIRE_SW                           
+  pfet_03v3/(1|3) = 54                     |  pfet_03v3/(1|3) = 54                     
+  pfet_03v3/4 = 47                         |  pfet_03v3/4 = 47                         
+---------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------
+Net: pt_ptrim__wp_ch_f8:XC6/tcFa           |Net: tc7_fa                                
+  nfet_03v3/(1|3) = 1                      |  nfet_03v3/(1|3) = 1                      
+  nfet_03v3/2 = 1                          |  nfet_03v3/2 = 1                          
+                                           |                                           
+Net: pt_ptrim__wp_ch_f8:XC7/tcFa           |Net: tc6_fa                                
+  nfet_03v3/(1|3) = 1                      |  nfet_03v3/(1|3) = 1                      
+  nfet_03v3/2 = 1                          |  nfet_03v3/2 = 1                          
+                                           |                                           
+Net: pt_ptrim__wp_ch_f5:XC3/tcFa           |Net: tc5_fa                                
+  nfet_03v3/(1|3) = 1                      |  nfet_03v3/(1|3) = 1                      
+  nfet_03v3/2 = 1                          |  nfet_03v3/2 = 1                          
+                                           |                                           
+Net: pt_ptrim__wp_ch_f4:XC5/tcFa           |Net: tc2_fa                                
+  nfet_03v3/(1|3) = 1                      |  nfet_03v3/(1|3) = 1                      
+  nfet_03v3/2 = 1                          |  nfet_03v3/2 = 1                          
+                                           |                                           
+Net: pt_ptrim__wp_ch_f4:XC2/tcFa           |Net: tc1_fa                                
+  nfet_03v3/(1|3) = 1                      |  nfet_03v3/(1|3) = 1                      
+  nfet_03v3/2 = 1                          |  nfet_03v3/2 = 1                          
+                                           |                                           
+Net: T7_4                                  |Net: T7_4                                  
+  nfet_03v3/2 = 2                          |  nfet_03v3/2 = 2                          
+                                           |                                           
+Net: T7_3                                  |Net: T7_3                                  
+  nfet_03v3/2 = 2                          |  nfet_03v3/2 = 2                          
+                                           |                                           
+Net: T7_2                                  |Net: T7_2                                  
+  nfet_03v3/2 = 2                          |  nfet_03v3/2 = 2                          
+                                           |                                           
+Net: T6_4                                  |Net: T6_4                                  
+  nfet_03v3/2 = 2                          |  nfet_03v3/2 = 2                          
+                                           |                                           
+Net: T6_3                                  |Net: T6_3                                  
+  nfet_03v3/2 = 2                          |  nfet_03v3/2 = 2                          
+                                           |                                           
+Net: T6_2                                  |Net: T6_2                                  
+  nfet_03v3/2 = 2                          |  nfet_03v3/2 = 2                          
+                                           |                                           
+Net: T5_4                                  |Net: T5_4                                  
+  nfet_03v3/2 = 2                          |  nfet_03v3/2 = 2                          
+                                           |                                           
+Net: T5_3                                  |Net: T5_3                                  
+  nfet_03v3/2 = 2                          |  nfet_03v3/2 = 2                          
+                                           |                                           
+Net: T5_2                                  |Net: T5_2                                  
+  nfet_03v3/2 = 2                          |  nfet_03v3/2 = 2                          
+                                           |                                           
+Net: T2_4                                  |Net: T2_4                                  
+  nfet_03v3/2 = 2                          |  nfet_03v3/2 = 2                          
+                                           |                                           
+Net: T2_3                                  |Net: T2_3                                  
+  nfet_03v3/2 = 2                          |  nfet_03v3/2 = 2                          
+                                           |                                           
+Net: T2_2                                  |Net: T2_2                                  
+  nfet_03v3/2 = 2                          |  nfet_03v3/2 = 2                          
+                                           |                                           
+Net: T1_4                                  |Net: T1_4                                  
+  nfet_03v3/2 = 2                          |  nfet_03v3/2 = 2                          
+                                           |                                           
+Net: T1_3                                  |Net: T1_3                                  
+  nfet_03v3/2 = 2                          |  nfet_03v3/2 = 2                          
+                                           |                                           
+Net: T1_2                                  |Net: T1_2                                  
+  nfet_03v3/2 = 2                          |  nfet_03v3/2 = 2                          
+                                           |                                           
+Net: T4_4                                  |Net: T4_4                                  
+  nfet_03v3/2 = 2                          |  nfet_03v3/2 = 2                          
+                                           |                                           
+Net: T4_3                                  |Net: T4_3                                  
+  nfet_03v3/2 = 2                          |  nfet_03v3/2 = 2                          
+                                           |                                           
+Net: T4_2                                  |Net: T4_2                                  
+  nfet_03v3/2 = 2                          |  nfet_03v3/2 = 2                          
+                                           |                                           
+Net: pt_ptrim__wp_ch_f2:XC1/tcFa           |Net: tc3_fa                                
+  nfet_03v3/(1|3) = 1                      |  nfet_03v3/(1|3) = 1                      
+  nfet_03v3/2 = 1                          |  nfet_03v3/2 = 1                          
+                                           |                                           
+Net: T3_4                                  |Net: T3_4                                  
+  nfet_03v3/2 = 2                          |  nfet_03v3/2 = 2                          
+                                           |                                           
+Net: T3_3                                  |Net: T3_3                                  
+  nfet_03v3/2 = 2                          |  nfet_03v3/2 = 2                          
+                                           |                                           
+Net: T3_2                                  |Net: T3_2                                  
+  nfet_03v3/2 = 2                          |  nfet_03v3/2 = 2                          
+---------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------
+Net: ptrim_en                              |Net: ptrim_en                              
+  pfet_03v3/2 = 8                          |  pfet_03v3/2 = 8                          
+  nfet_03v3/2 = 28                         |  nfet_03v3/2 = 28                         
+---------------------------------------------------------------------------------------
+DEVICE mismatches: Class fragments follow (with node fanout counts):
+Circuit 1: pt_ptrim                        |Circuit 2: pt_ptrim                        
+
+---------------------------------------------------------------------------------------
+Instance: pt_ptrim__wp_ch_f8:XC6/pfet_03v3 |Instance: pfet_03v3:MP38                   
+  (1,3) = (101,8)                          |  (1,3) = (101,8)                          
+  2 = 14                                   |  2 = 14                                   
+  4 = 101                                  |  4 = 101                                  
+                                           |                                           
+Instance: pt_ptrim__wp_ch_f8:XC7/pfet_03v3 |Instance: pfet_03v3:MP33                   
+  (1,3) = (101,8)                          |  (1,3) = (101,8)                          
+  2 = 14                                   |  2 = 14                                   
+  4 = 101                                  |  4 = 101                                  
+                                           |                                           
+Instance: pt_ptrim__wp_ch_f4:XC5/pfet_03v3 |Instance: pfet_03v3:MP28                   
+  (1,3) = (101,8)                          |  (1,3) = (101,8)                          
+  2 = 14                                   |  2 = 14                                   
+  4 = 101                                  |  4 = 101                                  
+                                           |                                           
+Instance: pt_ptrim__wp_ch_f5:XC3/pfet_03v3 |Instance: pfet_03v3:MP13                   
+  (1,3) = (101,8)                          |  (1,3) = (101,8)                          
+  2 = 14                                   |  2 = 14                                   
+  4 = 101                                  |  4 = 101                                  
+                                           |                                           
+Instance: pt_ptrim__wp_ch_f4:XC2/pfet_03v3 |Instance: pfet_03v3:MP8                    
+  (1,3) = (101,8)                          |  (1,3) = (101,8)                          
+  2 = 14                                   |  2 = 14                                   
+  4 = 101                                  |  4 = 101                                  
+                                           |                                           
+Instance: pt_ptrim__wp_ch_f2:XC1/pfet_03v3 |Instance: pfet_03v3:MP23                   
+  (1,3) = (101,8)                          |  (1,3) = (101,7)                          
+  2 = 14                                   |  2 = 14                                   
+  4 = 101                                  |  4 = 101                                  
+                                           |                                           
+Instance: pt_ptrim__wp_ch:XC4/pfet_03v3:97 |Instance: pfet_03v3:MP18                   
+  (1,3) = (101,7)                          |  (1,3) = (101,8)                          
+  2 = 13                                   |  2 = 13                                   
+  4 = 101                                  |  4 = 101                                  
+---------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------
+Instance: pt_ptrim__wp_ch_f8:XC6/nfet_03v3 |Instance: nfet_03v3:MN128                  
+  (1,3) = (14,2)                           |  (1,3) = (14,2)                           
+  2 = 36                                   |  2 = 36                                   
+  4 = 421                                  |  4 = 421                                  
+                                           |                                           
+Instance: pt_ptrim__wp_ch_f8:XC7/nfet_03v3 |Instance: nfet_03v3:MN111                  
+  (1,3) = (14,2)                           |  (1,3) = (14,2)                           
+  2 = 36                                   |  2 = 36                                   
+  4 = 421                                  |  4 = 421                                  
+                                           |                                           
+Instance: pt_ptrim__wp_ch_f4:XC5/nfet_03v3 |Instance: nfet_03v3:MN94                   
+  (1,3) = (14,2)                           |  (1,3) = (14,2)                           
+  2 = 36                                   |  2 = 36                                   
+  4 = 421                                  |  4 = 421                                  
+                                           |                                           
+Instance: pt_ptrim__wp_ch_f5:XC3/nfet_03v3 |Instance: nfet_03v3:MN45                   
+  (1,3) = (14,2)                           |  (1,3) = (14,2)                           
+  2 = 36                                   |  2 = 36                                   
+  4 = 421                                  |  4 = 421                                  
+                                           |                                           
+Instance: pt_ptrim__wp_ch_f4:XC2/nfet_03v3 |Instance: nfet_03v3:MN28                   
+  (1,3) = (14,2)                           |  (1,3) = (14,2)                           
+  2 = 36                                   |  2 = 36                                   
+  4 = 421                                  |  4 = 421                                  
+                                           |                                           
+Instance: pt_ptrim__wp_ch_f2:XC1/nfet_03v3 |Instance: nfet_03v3:MN79                   
+  (1,3) = (14,2)                           |  (1,3) = (421,7)                          
+  2 = 36                                   |  2 = 14                                   
+  4 = 421                                  |  4 = 421                                  
+                                           |                                           
+Instance: pt_ptrim__wp_ch:XC4/nfet_03v3:84 |Instance: nfet_03v3:MN62                   
+  (1,3) = (421,7)                          |  (1,3) = (13,2)                           
+  2 = 13                                   |  2 = 36                                   
+  4 = 421                                  |  4 = 421                                  
+---------------------------------------------------------------------------------------
+Netlists do not match.
+Port matching may fail to disambiguate symmetries.
+
+Subcircuit pins:
+Circuit 1: pt_ptrim                        |Circuit 2: pt_ptrim                        
+-------------------------------------------|-------------------------------------------
+VSS                                        |VSS                                        
+VDD_WIRE_SW                                |VDD_WIRE_SW                                
+T0_0                                       |T0_0                                       
+T0_1                                       |T0_1                                       
+T4_0                                       |T3_0 **Mismatch**                          
+T4_1                                       |T3_1 **Mismatch**                          
+T1_0                                       |T1_0                                       
+T1_1                                       |T1_1                                       
+T2_0                                       |T2_0                                       
+T2_1                                       |T2_1                                       
+T3_0                                       |T4_0 **Mismatch**                          
+T3_1                                       |T4_1 **Mismatch**                          
+T5_0                                       |T5_0                                       
+T5_1                                       |T5_1                                       
+T7_0                                       |T6_0 **Mismatch**                          
+T7_1                                       |T6_1 **Mismatch**                          
+T6_0                                       |T7_0 **Mismatch**                          
+T6_1                                       |T7_1 **Mismatch**                          
+T6_4                                       |T7_3 **Mismatch**                          
+T6_3                                       |T7_2 **Mismatch**                          
+T6_2                                       |T6_4 **Mismatch**                          
+T7_4                                       |T6_3 **Mismatch**                          
+T7_3                                       |T6_2 **Mismatch**                          
+T7_2                                       |T5_4 **Mismatch**                          
+T5_4                                       |T5_3 **Mismatch**                          
+T5_3                                       |T5_2 **Mismatch**                          
+T5_2                                       |T2_4 **Mismatch**                          
+T3_4                                       |T2_3 **Mismatch**                          
+T3_3                                       |T2_2 **Mismatch**                          
+T3_2                                       |T1_4 **Mismatch**                          
+T2_4                                       |T1_3 **Mismatch**                          
+T2_3                                       |T1_2 **Mismatch**                          
+T2_2                                       |T4_4 **Mismatch**                          
+T1_4                                       |T4_3 **Mismatch**                          
+T1_3                                       |T4_2 **Mismatch**                          
+T1_2                                       |(no pin, node is tc3_fa)                   
+T4_4                                       |T3_4 **Mismatch**                          
+T4_3                                       |T3_3 **Mismatch**                          
+T4_2                                       |T3_2 **Mismatch**                          
+T0_2                                       |T0_2                                       
+T0_3                                       |T0_3                                       
+T0_4                                       |T0_4                                       
+CKP1                                       |CKP1                                       
+CKP2                                       |CKP2                                       
+CKP3                                       |CKP3                                       
+CKP5                                       |CKP5                                       
+CKP7                                       |CKP6 **Mismatch**                          
+CKP6                                       |CKP7 **Mismatch**                          
+CKP0                                       |CKP0                                       
+CKP4                                       |CKP4                                       
+ptrim_en                                   |ptrim_en                                   
+PH0                                        |PH0                                        
+PH4                                        |PH3 **Mismatch**                           
+PH1                                        |PH1                                        
+PH2                                        |PH2                                        
+PH3                                        |PH4 **Mismatch**                           
+PH5                                        |PH5                                        
+PH7                                        |PH6 **Mismatch**                           
+PH6                                        |PH7 **Mismatch**                           
+(no pin, node is T4_2)                     |T7_4                                       
+---------------------------------------------------------------------------------------
+Cell pin lists for pt_ptrim and pt_ptrim altered to match.
+Device classes pt_ptrim and pt_ptrim are equivalent.
+
+Final result: Top level cell failed pin matching.

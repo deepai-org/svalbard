@@ -62,6 +62,12 @@ for net in cfg['nets']:
     res = dict(nodes=int(n), tie_px=int(len(tie)), load_mA_unconnected=round(lost, 3), tie_current_mA=round(float(I[good].sum()) * 1e3, 2))
     res['loads'] = {k_: dict(max_mV=round(float(V[s].max()) * 1e3, 2), mean_mV=round(float(V[s].mean()) * 1e3, 2)) for k_, s in loads.items()}
     res['max_mV'] = round(float(V.max()) * 1e3, 2)
+    inj = G.tocsr() @ V - I                      # session 18: current drawn from each tie group (V = 0 at ties)
+    grp = {}
+    for t in cfg['ties'][net]:
+        k = ML.index(t['layer']); i0, j0, i1, j1 = pix(t['box']); s = idx[k][j0:j1, i0:i1]; s = np.unique(s[s >= 0])
+        grp[t.get('name', 'tie')] = grp.get(t.get('name', 'tie'), 0.0) + float(-inj[s].sum()) * 1e3
+    res['tie_split_mA'] = {k_: round(v, 2) for k_, v in grp.items()}
     # EM: current per um of width in each layer (lateral), current per cut in each via layer
     em = {}
     Vm = np.zeros((5, ny, nx)); Vm[idx >= 0] = V[idx[idx >= 0]]

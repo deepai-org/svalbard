@@ -400,3 +400,20 @@ just outside the 5 mV limit**; against the s12 padr baseline A_ssp_3.125_C (0.21
 valid result (ring not calibrated for this run: its frequency / trims need cal.py with ring=, not done).
 aux + mux combination DRC 0/0 (an M3.2a hit at block
 347.4, 380.2 was cleared by ending the tie verticals' Metal3 below the pad); wtx_ser8d DRC 0/0, LVS unique, 4/4.
+
+## Session 18: island VDD east landing (WT55, owner decision (a)), state 2026-11-22
+- **VDD ties:** the top-edge ties T_main_0..3 / T_post_0..3 (unchanged) are the primary feed. `ties.VDD.east_island` = [597.7, 598.7, 236.96, 401.4] is an extra feed: a Metal5 column x 568.7-598.7 on the L's inner edge (outline x 598.7), y 236.96-401.4.
+- **Band:** Metal5 || Metal4 || Metal3 at y 381.0-393.7 (`east_island.band_y`) from the POST header end (x 454.65) to the column. It is cut 0.6 um at the grid landings and 2.9 um from the PH lanes, so PH C is unchanged at 36.0-37.6 fF.
+- **VSS:** the right VSS bar and the corner plate stubs / ties are removed. New VSS tie `east_plate` on the right edge of the lower part: [743.5, 744.5, 215.16, 229.16].
+- **Pump:** `wtx8_casbias` exists but is OFF (`wtx8_top.PUMP = False`); the block ports are unchanged.
+- **Checks from disk:** Magic DRC 0, KLayout DRC 0, LVS unique (52/52 devices, 163/163 nets), 6/6 negative controls fail, antenna 0. Decap n = 686. Seam unchanged.
+- **IR** (`ir/run.sh`, phase O, 10.5 um grid contacts; SCALE = current factor; results also in `s18/ir/phO_1.0|1.5`):
+
+| current | VDD headers nom / high R | VSS tails nom / high R | VDD source split top / east (mA) |
+|---|---|---|---|
+| 60 mA | 3.34 / 7.02 PASS (nom) | **3.34 / 4.55 FAIL (limit 3.0, nom)** | 54.0 / 6.0 |
+| 90 mA | 5.01 / 10.53 | 5.01 / 6.82 | 80.9 / 9.1 |
+
+  The VSS miss comes from removing the right VSS bar tie (it was 2.94 mV with it). The east_plate tie recovers only 0.04 mV. Not closed.
+- **EM** (raster, 85 C): worst margin 35.8 % at 60 mA (VDD via1) and **3.7 % at 90 mA**. Band cuts: worst 55.9 % at 60 mA and 33.8 % at 90 mA.
+- **Not modelled:** assembly's Metal4 feed bar over y 380-401.4. The model ties the top VDD straps directly.

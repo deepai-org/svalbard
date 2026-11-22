@@ -5,6 +5,8 @@
                   + wtx8_phbuf (per phase NAND2(PH, SER_EN) + inverter in front of wtx_ser8d: the ring drives only
                   the mux and one NAND input per phase; the stream macro's clocks are about two gate delays late)
                   + wtx8_decap
+                  + wtx8_casbias (session 18, WT54): CASCODE for pad_txpad's cascode gates; CB_EN = 0: VDD through a select
+                    switch; CB_EN = 1: ring-clocked doubler regulated to VDD + Vsg(pfet_06v0 replica shunt), about 4.2 V
   PH gating (session 17): the first gate on each PH input is NAND2(PH k, SER_EN), PH on the input next to the output,
   identical for all eight; SER_EN = 1 inverts like the former inverter.  The digital holds SER_EN low while the pll
   island is off, so floating PH inputs then draw no crowbar current in the buffers.
@@ -28,12 +30,14 @@ CMOS tap (TAP_EN): MAIN_P / MAIN_N -> NMOS pair with poly loads -> skewed invert
 from pathlib import Path
 
 import cells
+import wtx8_casbias as casbias
 import wtx_mux8 as mux8
 from wtx_mux8 import fet, inv, nand2, nor2
 
 HERE = Path(__file__).resolve().parent
 FAST = HERE / 'generated' / 'fast'
 NAME = 'pt_wiredtx8'
+PUMP = False        # session 18: wtx8_casbias (CB_EN / CASCODE) is in the block only once its extracted transients pass (WT54)
 FROT = 2            # slice k of the mux takes stream (k + FROT) mod 8 (see ser8d_macro.py)
 PH = [f'PH{k}' for k in range(8)]
 SER_PH = [f'PH{a}' for a in (0, 45, 90, 135, 180, 225, 270, 315)]
@@ -42,7 +46,7 @@ PORTS = (PH + [f'D{i}' for i in range(40)] + ['WORD_CLK40', 'SER_EN', 'IDLE', 'I
          'EN_MAIN', 'EN_POST', 'ISLAND_OFF', 'TAP_EN', 'IBIAS'] + [f'MAIN_CODE{i}' for i in range(8)]
          + [f'POST_CODE{i}' for i in range(8)] + TRIM
          + ['MAIN_P', 'MAIN_N', 'POST_P', 'POST_N', 'MAIN_BIAS', 'POST_BIAS', 'TAP_P', 'TAP_N', 'TX_RUN', 'WTX_EXT_DATA',
-            'ATB_NBIAS', 'ATB_PBIAS', 'ATB_AVGP', 'ATB_AVGN', 'VDD', 'VSS'])
+            'ATB_NBIAS', 'ATB_PBIAS', 'ATB_AVGP', 'ATB_AVGN'] + (['CB_EN', 'CASCODE'] if PUMP else []) + ['VDD', 'VSS'])
 TAP = dict(pair=(2.0, 0.28), tail=(20.0, 2.0), rl=(1.0, 15.0), sk=(4.0, 0.5, 2.0), b1=(1, 2), b2=(4, 8))
 AUX_PORTS = ['SER_EN', 'IDLE', 'IDLE_MODE', 'WTX_EXT', 'DX', 'EN_MAIN', 'EN_POST', 'ISLAND_OFF', 'TAP_EN', 'IBIAS'] + \
     [f'MAIN_CODE{i}' for i in range(8)] + [f'POST_CODE{i}' for i in range(8)] + \
@@ -109,6 +113,8 @@ def top(name=NAME):
     L.append('XPB ' + ' '.join(PH) + ' ' + ' '.join(f'PS{k}' for k in range(8)) + ' SER_EN VDD VSS wtx8_phbuf')
     if DECAP['n']:
         L.append('XDEC VDD VSS wtx8_decap')
+    if PUMP:
+        L.append('XCB CB_EN CASCODE VDD VSS wtx8_casbias')
     L.append('XSER ' + ' '.join(f'D{i}' for i in range(40)) + ' ' + ' '.join(f'PS{k}' for k in range(8)) + ' SERQ ' + ' '.join(f'F{k}' for k in range(8))
              + ' WORD_CLK40 VDD VSS wtx_ser8d')
     L.append('XMUX ' + ' '.join(PH) + ' ' + ' '.join(f'F{(k + FROT) % 8}' for k in range(8)) + ' ' + ' '.join(TRIM)
@@ -127,7 +133,7 @@ def netlist(ser_text=None, mux_text=None):
     """complete hierarchical netlist; ser_text / mux_text default to the intended netlists."""
     ser_text = ser_text if ser_text is not None else (FAST / 'wtx_ser8d.spice').read_text()
     mux_text = mux_text if mux_text is not None else mux8.netlist()
-    return ser_text + '\n' + mux_text + '\n' + aux_text() + '\n' + top()
+    return ser_text + '\n' + mux_text + '\n' + aux_text() + '\n' + (casbias.netlist() + '\n' if PUMP else '') + top()
 
 
 if __name__ == '__main__':

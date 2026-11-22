@@ -51,6 +51,7 @@ import wtx8_top as T
 import wtx_mux8 as mux8
 import wtx_mux8_layout as L
 import wtx8_aux_layout as AX
+import wtx8_casbias as CB
 from wtx_mux8_layout import G, Geo, RAIL_W, XRow, s
 
 NAME = T.NAME
@@ -68,6 +69,12 @@ CL5 = 0.8                            # Metal5 clearance to another net's Metal5 
 I_BANK, I_LOGIC, I_MUXL = 26.0, 30.0, 3.0      # mA: per bank; ser8d + all logic; of which the mux's logic
 CGATE = 2.2                          # fF per um of gate width (estimate for the ring-load figure)
 SER = json.loads((FAST / 'wtx_ser8d.pins.json').read_text())
+# session 18 (WT55): island VDD enters on an east-facing Metal5 landing = the right-hand supply column (x from the old VDD
+# bar's left edge to the L's inner edge), full edge height; the right VSS bar is gone (VSS stays on the grid ties).  A
+# second, lower strap band (Metal5 || Metal4 || Metal3, y E_Y0 .. the header strap) feeds the POST header region from it.
+E_Y0 = 381.0 - 236.96                # lower edge of the east strap band, relative to the mux origin (0.84 above the windows' jog top)
+LANE_CL = 2.9                        # clearance of the band's added metal to a PH lane below the header strap (lanes see what they saw)
+CB_GAP = 2.0                         # wtx8_casbias (WT54) to the decap rows
 
 
 def conn():
@@ -111,7 +118,7 @@ def build(work=None, bare=False):
     if work.exists():
         shutil.rmtree(work)
     work.mkdir(parents=True)
-    for d in (FAST / 'wtx_ser8d_mag', L.WORK / 'build', AX.WORK / 'build'):
+    for d in (FAST / 'wtx_ser8d_mag', L.WORK / 'build', AX.WORK / 'build') + ((CB.WORK,) if T.PUMP else ()):
         for f in d.glob('*.mag'):
             shutil.copy(f, work / f.name)
     MR = json.loads((L.OUT / 'report.json').read_text())
@@ -247,7 +254,8 @@ def build(work=None, bare=False):
     # ------------------------------------------------------------------ supplies
     em = {}
     xr0 = s(XM + MR['size_um'][0] + 2.0)                   # right-hand bars: directly right of the mux
-    xbar = dict(VSS=[(0.5, 0.5 + BAR), (xr0 + BAR_R + 1.5, xr0 + 2 * BAR_R + 1.5)], VDD=[(2.0 + BAR, 2.0 + 2 * BAR), (xr0, xr0 + BAR_R)])
+    xk = s(xr0 + 2 * BAR_R + 1.5 + 0.5)                    # the L's inner vertical edge (the block's upper part ends here)
+    xbar = dict(VSS=[(0.5, 0.5 + BAR)], VDD=[(2.0 + BAR, 2.0 + 2 * BAR), (xr0, xk)])     # right column: island VDD landing (WT55)
     by0 = s(yvd + RAIL_W - brow.top)                       # phase buffers: cell VDD rail on the VDD rail's lower edge, cell VSS rail in the VSS rail
     if by0 < yvs + 1.0:
         raise RuntimeError('phase buffer does not fit the rail band')
@@ -274,7 +282,7 @@ def build(work=None, bare=False):
                 continue                   # a strap under the other net's bar stays inside ser8d
             if min(abs(px - x) for x in xm) < 0.6 + 1.0 + 0.7:
                 continue                   # ... and so does a strap that would run into a phase pin pad
-            if net == 'VDD' and xbar['VDD'][1][0] - 10.0 < px < xbar['VSS'][1][1]:
+            if net == 'VDD' and xr0 - 10.0 < px < xk + 2.5:
                 continue                   # ... and a VDD strap between the mux and the right bars (the VSS plate stays whole there)
             ytop = dec_y1 if dec_x0 + 1.2 < px < dec_x1 - 1.2 else y_end
             ext[net].append(px)
@@ -310,7 +318,7 @@ def build(work=None, bare=False):
             plate.append((s(x_), s(a)))
         x_ = max(x_, b)
     if Wb - 0.5 > x_ + 2.0:
-        plate.append((s(x_), s(Wb - 0.5)))
+        plate.append((s(x_), s(Wb)))                     # session 18: the last segment reaches the right edge (VSS tie east_plate)
     em['plate_cuts'] = 0
     v4own = sorted([(a, b) for a, b in xbar['VSS']] + [(x_ - w / 2, x_ + w / 2) for x_, w in zip(necks, neckw)] +
                    [(q - 1.0, q + 1.0) for q in ext['VSS']] + [(s(XA - 1.9), s(XA - 0.9))])      # these carry their own Via4 arrays
@@ -330,10 +338,7 @@ def build(work=None, bare=False):
             if c - 0.6 - x_ >= 1.0:
                 em['plate_cuts'] += g.varr(x_, yp0 + 0.2, c - 0.6, yp0 + 1.4, 4, 5) + g.varr(x_, yp1 - 1.4, c - 0.6, yp1 - 0.2, 4, 5)
             x_ = max(x_, d_ + 0.6)
-    xr_vss = xbar['VSS'][1][0]
-    stubs = [(max(a, xr_vss), b) for a, b in plate if b > xr_vss + 2.0]
-    for a, b in stubs:
-        g.rect('metal5', a, yp0, b, Ym)
+    stubs = []                             # session 18: no VSS plate stubs / ties at the free corner (the island VDD bar comes in there)
     mvdd = []
     for p in range(8):
         xv = XM + X0m + p * Wsl + vdd_dx
@@ -463,39 +468,89 @@ def build(work=None, bare=False):
         g.via(x, yh0 - 1.2, 3, 5)             # Metal3 to the top edge (passes under a Metal4 / Metal5 ring)
         g.rect('metal3', x - 0.2, yh0 - 1.4, x + 0.2, Yt)
         pins[n] = ('metal3', x, s(Yt - 0.5))
-    # ------------------------------------------------------------------ decap rows (left of the aux cell)
+    # ------------------------------------------------------------------ decap rows (left of the aux cell) and wtx8_casbias (session 18)
     d = T.DECAP
-    nfin = int((dec_x1 - dec_x0 - 1.2) / (2 * (0.44 + (d['l'] - L.L0) / 2))) + 1
-    while True:
-        nfin -= 1
-        cols = [dict(k='c', n='VSS', p='-')]
-        for _ in range(nfin):
-            cols += [G('DCG', d['w'], None, p=False, l=d['l']), dict(k='c', n='VSS', p='-')]
-        row = XRow('dc', cols, d['w'], d['w'], through=['DCG'], tracks={'DCG': 0}, nonly=True)
-        row.build()
-        if row.width <= dec_x1 - dec_x0:
-            break
+
+    def drow(width):
+        nf = int((width - 1.2) / (2 * (0.44 + (d['l'] - L.L0) / 2))) + 1
+        while True:
+            nf -= 1
+            cols = [dict(k='c', n='VSS', p='-')]
+            for _ in range(nf):
+                cols += [G('DCG', d['w'], None, p=False, l=d['l']), dict(k='c', n='VSS', p='-')]
+            rw = XRow('dc', cols, d['w'], d['w'], through=['DCG'], tracks={'DCG': 0}, nonly=True)
+            rw.build()
+            if rw.width <= width:
+                return nf, rw
+    nfin, row = drow(dec_x1 - dec_x0)
     nrow = int((dec_y1 - 1.0 - (Ym + 1.0)) / (row.top + 0.4))
+    yt0 = s(Ym + 1.0 + nrow * (row.top + 0.4) + 0.4)        # TAP_P wire (unchanged position)
+    # wtx8_casbias: top-left of the decap area; its port trunks (Metal4, cell top) leave upwards: VSS / VDD / CB_EN on Metal3
+    # to the left (VSS / VDD bars, CB_EN to the block edge), CASCODE on Metal4 then Metal3 straight up to the top edge
+    cbr = dict(placed=False)
+    cyc, cbb, cb_x1 = 1e9, [0, 0, 0, 0], dec_x0
+    if T.PUMP:
+        CI = json.loads((CB.WORK / 'layout-info.json').read_text())
+        cbb = CI['bbox_um']
+        cpt = {}
+        for l_ in (CB.WORK / f'{CB.NAME}.mag').read_text().splitlines():
+            tk_ = l_.split()
+            if tk_[:2] == ['flabel', 'metal4'] and tk_[-1] in CB.PORTS:
+                cpt[tk_[-1]] = (s((int(tk_[2]) + int(tk_[4])) / 400), s((int(tk_[3]) + int(tk_[5])) / 400), s((int(tk_[4]) - int(tk_[2])) / 200))
+        ttop = max(v[1] for v in cpt.values()) + 0.3                 # trunk tops (cell coordinates)
+        cyc = s(yt0 - 4.0 - ttop)
+        cxc = s(dec_x0 - cbb[0])
+        inst += [f'getcell {CB.NAME} child 0 0 parent {cxc} {cyc}', 'identify XCB'] if not bare else []
+        cb_x1 = s(cxc + cbb[2])
+        T_ = s(cyc + ttop)
+        order = sorted((v[0], n_) for n_, v in cpt.items() if n_ != 'CASCODE')
+        tgt = dict(VSS=s((xbar['VSS'][0][0] + xbar['VSS'][0][1]) / 2), VDD=s((xbar['VDD'][0][0] + xbar['VDD'][0][1]) / 2), CB_EN=0.3)
+        cbr = dict(origin=[cxc, cyc], bbox=[s(cxc + cbb[0]), s(cyc + cbb[1]), cb_x1, s(cyc + cbb[3])], area_um2=round((cbb[2] - cbb[0]) * (cbb[3] - cbb[1]), 1))
+        for i_, (x_, n_) in enumerate(order):                        # levels rise with x: no Metal3 crossing
+            xt_, yl = s(cxc + x_), s(T_ + 0.6 + 1.2 * i_)
+            wv = 0.8 if n_ in ('VDD', 'VSS') else 0.4
+            g.via(xt_, s(T_ - 0.5), 3, 4)
+            g.rect('metal3', xt_ - wv / 2, T_ - 0.7, xt_ + wv / 2, yl + wv / 2)
+            g.rect('metal3', tgt[n_] - (1.0 if n_ != 'CB_EN' else 0.0), yl - wv / 2, xt_ + wv / 2, yl + wv / 2)
+            if n_ == 'CB_EN':
+                pins['CB_EN'] = ('metal3', 0.6, yl)
+            else:
+                g.varr(tgt[n_] - 1.0, yl - 0.4, tgt[n_] + 1.0, yl + 0.4, 3, 5)
+            cbr[f'exit_{n_}_y'] = yl
+        xc_ = s(cxc + cpt['CASCODE'][0])
+        yc_ = s(yt0 - 1.0)
+        g.rect('metal4', xc_ - 0.5, T_ - 0.6, xc_ + 0.5, yc_ + 0.3)
+        g.via(xc_, yc_, 3, 4)
+        g.rect('metal3', xc_ - 0.4, yc_ - 0.3, xc_ + 0.4, Yt)
+        pins['CASCODE'] = ('metal3', xc_, s(Yt - 0.5))
+        cbr['cascode_metal3_x'] = xc_
+    # decap rows: full width below the cell, shortened right of it
+    nfs, rows_ = drow(dec_x1 - cb_x1 - CB_GAP), []
+    ndec = 0
     for i in range(nrow):
         y0_ = s(Ym + 1.0 + i * (row.top + 0.4))
-        g.place(row.geo, dec_x0, y0_)
-        g.rect('metal2', dec_x0, y0_, dec_x1, y0_ + RAIL_W)
-        g.rect('metal1', dec_x0, y0_, dec_x1, y0_ + RAIL_W)
-        g.rect('via1', dec_x0 + 0.3, y0_ + 0.1, dec_x0 + row.width - 0.3, y0_ + RAIL_W - 0.1)
-        ty = s(y0_ + row.track['DCG'])
+        short = T.PUMP and y0_ + row.top > cyc + cbb[1] - CB_GAP
+        xa_, rw, nf = (s(cb_x1 + CB_GAP), nfs[1], nfs[0]) if short else (dec_x0, row, nfin)
+        ndec += nf
+        g.place(rw.geo, xa_, y0_)
+        g.rect('metal2', xa_, y0_, dec_x1, y0_ + RAIL_W)
+        g.rect('metal1', xa_, y0_, dec_x1, y0_ + RAIL_W)
+        g.rect('via1', xa_ + 0.3, y0_ + 0.1, xa_ + rw.width - 0.3, y0_ + RAIL_W - 0.1)
+        ty = s(y0_ + rw.track['DCG'])
         for px in ser_x['VSS']:
-            if dec_x0 + 1.2 < px < dec_x1 - 1.2:
+            if xa_ + 1.2 < px < dec_x1 - 1.2:
                 g.rect('metal2', px - 0.9, y0_, px + 0.9, y0_ + RAIL_W)
                 g.varr(px - 0.9, y0_ + 0.05, px + 0.9, y0_ + 0.55, 2, 5)
         for px in ser_x['VDD']:
-            if dec_x0 + 1.2 < px < dec_x0 + row.width - 1.2:
+            if xa_ + 1.2 < px < xa_ + rw.width - 1.2:
                 g.via(px - 0.45, ty, 2, 5)
                 g.via(px + 0.45, ty, 2, 5)
-    ndec = nfin * nrow
+        rows_.append(nf)
+    cbr['decap_rows_fingers'] = rows_
     # ------------------------------------------------------------------ tap pins: Metal4 to the left edge above the decap rows
     for i, n in enumerate(('TAP_P', 'TAP_N')):
         _, px, py = AR['pins'][n]
-        x, y, yt = s(XA - 1.9 + px), s(Ym + py), s(Ym + 1.0 + nrow * (row.top + 0.4) + 0.4 + 0.9 * i)        # above the last decap row
+        x, y, yt = s(XA - 1.9 + px), s(Ym + py), s(yt0 + 0.9 * i)        # above the last decap row
         xt = s(dec_x0 - 1.0)                  # Metal4 over the mux / aux / decap, Metal3 under the bars to the edge
         g.rect('metal3', x - 0.2, y - 0.2, x + 0.2, yt + 0.2)
         g.via(x, yt, 3, 4)
@@ -573,17 +628,54 @@ def build(work=None, bare=False):
     for l_ in lands:
         g.rect('metal5', *l_['core'])
         g.rect('metal5', *l_['jog'])
+    # session 18 (WT55): east strap band below the right header strap, from the POST header's right end (xr_start) to the
+    # island VDD column: Metal5 (cut at the grid landings, 0.6 um, and LANE_CL from each PH lane) || Metal4 || Metal3
+    # (continuous under the landings; cut LANE_CL from each lane and kept off the POST header span, whose mux Metal3 / Metal4
+    # are there); Via4 / Via3 stitched.  Above y = yh0 the header strap and its bridges are as before.
+    ye0 = s(Ym + E_Y0)
+    if ye0 < wy1 + 0.8:
+        raise RuntimeError('east band too close to the PH windows / landing jogs')
+    qa, qb = (s(XM + MR['clusters']['Q'][0] - MR['geo']['hdr_rail']['Q']['width_um'] / 2 - 0.3), s(XM + MR['clusters']['Q'][0] + MR['geo']['hdr_rail']['Q']['width_um'] / 2 + 0.3))
+
+    def free(x0, x1, cuts):
+        out_, x_ = [], x0
+        for a, b in sorted(cuts):
+            if b <= x_ or a >= x1:
+                continue
+            if a - x_ >= 1.0:
+                out_.append((s(x_), s(a)))
+            x_ = max(x_, b)
+        if x1 - x_ >= 1.0:
+            out_.append((s(x_), s(x1)))
+        return out_
+    lcut = [(a - LANE_CL, b + LANE_CL) for a, b in lanes]
+    m5 = free(xr_start, xk, lcut + [(l_['core'][0] - 0.6, l_['core'][2] + 0.6) for l_ in lands])
+    m34 = free(max(xr_start, qb), xk, lcut)
+    east = dict(band_y=[ye0, yh0], metal5=m5, metal3_4=m34, via4=0, via3=0)
+    for a, b in m5:
+        g.rect('metal5', a, ye0, b, yh0 + 0.2)               # overlaps the header strap above (same net)
+    for a, b in m34:
+        for m in (3, 4):
+            g.rect(f'metal{m}', a, ye0, b, yh0)
+        east['via3'] += g.varr(a + 0.2, ye0 + 0.2, b - 0.2, yh0 - 0.2, 3, 4, metal=False)
+        for c, d_ in m5:
+            if min(b, d_) - max(a, c) >= 1.0:
+                east['via4'] += g.varr(max(a, c) + 0.2, ye0 + 0.2, min(b, d_) - 0.2, yh0 - 0.2, 4, 5, metal=False)
+    east['landing'] = dict(edge_x=xk, y=[Ym, s(Yt)], bar=[xr0, xk], layer='metal5', net='VDD (RAIL_wired_tx)')
     hdr_pieces = sorted((r[1], r[3]) for r in g.r if r[0] == 'metal5' and (r[2], r[4]) == hdr_y[0])
     # tie points (outline edge, Metal5): VDD = the header strap ends beside the MAIN / POST risers (the island strap lands
     # there, carries both banks) and the two VDD bars' top ends; VSS = the two VSS bars (full height on the left edge and
     # on the inner edge of the L) and the plate stubs on the free corner's lower edge.
     tmain = [(a, b) for a, b in hdr_pieces if b <= xl_end + 0.01 and b > xl_end - 60.0]
     tpost = [(a, b) for a, b in hdr_pieces if a >= xr_start - 0.01 and a < xr_start + 60.0]
-    ties = dict(VDD=dict(**{f'T_main_{j}': (max(a, s(xl_end - 60.0)), b, yh0, s(Yt)) for j, (a, b) in enumerate(tmain)},
-                         **{f'T_post_{j}': (a, min(b, s(xr_start + 60.0)), yh0, s(Yt)) for j, (a, b) in enumerate(tpost)},
-                         bar_left=(xbar['VDD'][0][0], xbar['VDD'][0][1], s(Yt - 20.0), s(Yt)), bar_right=(xbar['VDD'][1][0], xbar['VDD'][1][1], s(Yt - 20.0), s(Yt))),
-                VSS=dict(bar_left=(xbar['VSS'][0][0], xbar['VSS'][0][1], yT0, s(Yt)), bar_right=(xbar['VSS'][1][0], xbar['VSS'][1][1], yT0, s(Yt)),
-                         **{f'corner_{j}': (max(a, s(xbar['VSS'][1][1] + 0.5)), b, s(Ym - 1.0), Ym) for j, (a, b) in enumerate(stubs)},
+    # session 18 (WT55): the island VDD enters only on the east landing (Metal5, the whole right-hand column, x xr0 .. xk, on the
+    # L's inner edge from the corner (y = Ym) to the top edge); tie rectangle = the 1 um edge strip.  The top-edge header strap
+    # ends (former T_main / T_post) and the bar tops are no VDD ties any more (`ties_former_VDD`, for reference only).
+    ties_old = dict(**{f'T_main_{j}': (max(a, s(xl_end - 60.0)), b, yh0, s(Yt)) for j, (a, b) in enumerate(tmain)},
+                    **{f'T_post_{j}': (a, min(b, s(xr_start + 60.0)), yh0, s(Yt)) for j, (a, b) in enumerate(tpost)})
+    ties = dict(VDD=dict(**ties_old, east_island=(s(xk - 1.0), xk, Ym, s(Yt))),     # owner decision (a): top ties primary + east landing
+                VSS=dict(bar_left=(xbar['VSS'][0][0], xbar['VSS'][0][1], yT0, s(Yt)),
+                         east_plate=(s(Wb - 1.0), Wb, yp0, yp1),
                          **{f'bottom_{j}': (a, b, 0.0, 1.0) for j, (a, b) in enumerate(vbars)}, **tabs,
                          **{f'grid_tie_{j}': (l_['core'][0], l_['core'][2], s(Yt - 1.0), s(Yt)) for j, l_ in enumerate(lands)}))
     for i, n in enumerate(T.PORTS):
@@ -597,7 +689,6 @@ def build(work=None, bare=False):
         else:
             layer, x, y = pins[n]
             g.label(n, layer, x, y, i + 1)
-    xk = s(xbar['VSS'][1][1] + 0.5)                        # the block's upper part ends here: the top right corner is not used
     # ------------------------------------------------------------------ trim bits: the mux's Metal4 pins on its right side, continued
     #                                                                    under the right-hand Metal5 bars to the block edge at the free corner
     trims = {}
@@ -633,7 +724,7 @@ def build(work=None, bare=False):
                                lanes={f'PH{k}': next([a, wy0, b, Yt] for a, b in lanes if win[f'PH{k}'][0] < a < win[f'PH{k}'][2]) for k in range(8)},
                                lane_keep_um=0.6, guard='VSS Metal4 left / right / top of each window, VSS Metal4 shield + Metal3 beside PH in the bus band (wtx_mux8)',
                                landings=lands, header_bridges=bridges, x0_rule='R0, x0 = 23.75 (mod 70); die grid VSS axes 502.25 + 70 k, VDD 467.25 + 70 k; landings at block x 268.5 / 338.5 / 408.5 / 478.5 (centres) on VSS (WT48)'),
-               ties=ties, vss_plate=dict(y=[yp0, yp1], segments=plate, corner_stubs=stubs), neck_width_um=neckw,
+               ties=ties, ties_former_VDD=ties_old, east_island=east, casbias=cbr, vss_plate=dict(y=[yp0, yp1], segments=plate, corner_stubs=stubs), neck_width_um=neckw,
                mux_vdd_x=mvdd, vss_trunks=[list(v) for v in vbars],
                m5_channels=dict(x=SER.get('m5_channels', []), y=[0.0, Y0], note='Metal5-free over wtx_ser8d (block x = ser8d x); grid strap axes at their centres'))
     (work / 'geom.json').write_text(json.dumps(res, indent=1))
@@ -647,7 +738,8 @@ def reference():
 def negatives(sch):
     """references that must NOT match: two phases swapped at the mux, stream rotation off by one, OVP / OVN swapped at the mux,
     the outputs of the phase buffers 0 and 1 swapped at ser8d, two trim pins (TR6_0 / TR7_3, right-side Metal4) swapped at the mux,
-    SER_EN replaced by PH2 at the NAND of phase buffer 3 (session 17)."""
+    SER_EN replaced by PH2 at the NAND of phase buffer 3 (session 17), CB_EN / CASCODE swapped at wtx8_casbias and one
+    finger of its select switch tied to VSS instead of VDD (session 18)."""
     xm = next(l for l in sch.splitlines() if l.startswith('XMUX '))
     tk = xm.split()
     a = list(tk)
@@ -667,7 +759,9 @@ def negatives(sch):
     return {'neg_ph0_ph1_swapped_at_mux': sch.replace(xm, ' '.join(a)), 'neg_stream_rotation_plus_one': sch.replace(xm, ' '.join(b)),
             'neg_ovp_ovn_swapped_at_mux': sch.replace(xm, ' '.join(c)), 'neg_buffer_outputs_ps0_ps1_swapped_at_ser8d': sch.replace(xs, ' '.join(d)),
             'neg_trim_pins_tr6_0_tr7_3_swapped_at_mux': sch.replace(xm, ' '.join(e)),
-            'neg_ser_en_replaced_by_ph2_at_buffer_3': re.sub(r'^(XA3n?p?b_\d+ \S+) SER_EN ', r'\1 PH2 ', sch, flags=re.M)}
+            'neg_ser_en_replaced_by_ph2_at_buffer_3': re.sub(r'^(XA3n?p?b_\d+ \S+) SER_EN ', r'\1 PH2 ', sch, flags=re.M),
+            **({} if not T.PUMP else {'neg_casbias_cb_en_cascode_swapped': sch.replace('XCB CB_EN CASCODE VDD VSS', 'XCB CASCODE CB_EN VDD VSS'),
+            'neg_casbias_select_switch_to_vss': sch.replace('XMS_0 VDD SG CASCODE', 'XMS_0 VSS SG CASCODE')})}
 
 
 def cval(x):
@@ -838,7 +932,7 @@ def run_all():
     raw = f.read_text()
     fixed, nfix = L.fix_vsubs(raw, NAME)
     res['c_netlist'] = dict(vsubs_lines_fixed=nfix, ports_ok=L.ports_of(fixed, NAME) == list(T.PORTS),
-                            devices={k: sum(1 for l in fixed.splitlines() if l.startswith('X') and k in l) for k in ('nfet_03v3', 'pfet_03v3', 'ppolyf_u', 'diode')},
+                            devices={k: sum(1 for l in fixed.splitlines() if l.startswith('X') and k in l) for k in ('nfet_03v3', 'pfet_03v3', 'nfet_06v0', 'pfet_06v0', 'ppolyf_u', 'diode')},
                             floating_vsubs_left=sum(1 for l in fixed.splitlines() if 'VSUBS' in l))
     f.unlink()
     f.write_text(fixed)

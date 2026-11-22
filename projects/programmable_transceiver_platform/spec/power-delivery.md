@@ -203,6 +203,28 @@ the macro at 81.8 mA):
   distances. `wrx_cap` (1.5 mm from `isw_wired_cap`), `pt_wiredtx8` and `lo_mmd` / `lo_ext` need the switch moved
   toward the load or a raw-VDD trunk that is not in the model.
 
+### 4.0 Baseline on the assembly's current placements (2026-11-22)
+
+`scratch/integration/assembly-<chip>/{place.json, floorplan.json}` (rf 2026-11-21 20:03, wired 22:59), per-region
+coverage as drawn, `PDN_ASSEMBLY=1`; outputs `scratch/integration/m1-pdn/out/baseline/`. Pessimistic set: worst currents,
+digital 81.8 mA; nominal set: nominal currents. pt_wired W with POST on.
+
+| Check | pt_rf | pt_wired |
+| --- | --- | --- |
+| Worst tap, all bonds, pess / nom (117 mV) | **123.3** (`lo_mmd`) / 79.4: **fails** | 127.6 / 92.1 at the 84 mA pt_wiredtx8 booking (fails); every other tap <= 109.8 (`ptrim`) |
+| Worst tap, one open supply bond (pess) | 126.9 | 134.5 (booking) |
+| pt_wiredtx8 at 56 / 60 mA, high-R, with the drawn 0.234 mm2 bar (about 5.5-5.9 mV), budget 105.5 | | 98.6 / 101.7: pass |
+| Worst bond all / one open (125 mA, target <= 106) | 46.0 / 59.0 | 101.5 / 119.1 (5 % margin) |
+| Decap as placed (5.4 nF plan) | 4.74 nF (19 of 30 tiles) | **3.92 nF (18 of 43 tiles), 1.48 short** |
+| Macro, PWR-DIG, residual 0.15 / single-phase (150 mV) | 90 / 194 | **155** / 298: fails |
+| CDM reach, high-R, 450 MHz fit (<= 0.7 ohm) | RF_RX 0.42, RF_TX 0.59 | **`bidir[14]` 0.78, `[15]` 0.75**; `[18]` 0.67, `[21]` 0.62 |
+
+- pt_rf: the south-east region (QVCO / LO) is drawn at 4.7-5.7 %. `lo_mmd` passes with SE >= 10 % on every net and layer
+  (112.9 mV; 116.0 at 8 %).
+- pt_wired: restoring the 25 unplaced tiles (1.48 nF, 0.37 mm2), 14 of them inboard of `pad_hs_rx` (x about 2870-2990,
+  y 940-1440), brings the macro back to 148 mV and `bidir[14]` to 0.50 ohm. The pt_wiredtx8 booking (60 + 24 mA) stays
+  until PDS-14 evidence; at the wired TX design current (56-60 mA) the tap passes.
+
 ### 4.1 The grid as drawn (ASM-9)
 
 The assembly draws the core ring at 2 x 14 um (Metal4 + Metal5) and the mesh at Metal4 7.3-7.8 % / Metal5 10.5-11.0 %

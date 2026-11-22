@@ -5,7 +5,7 @@
 at the unscaled 81.8 mA (pd2u: pt_wired W 432 mA with POST on), all bonds and each single open supply bond.
 EM at 85 C (DRM 14.2): core ring per net 14 um Metal4 x 2.09 + 14 um Metal5 x 4.5 mA/um = 92 mA; supply cell 125 mA.
 The core ring's share of each boundary-edge current is its conductance share against the provider rails at that edge.
-Usage: asm9_drawn.py chip=rf|wired [m4=0.073] [m5=0.105] [ring=14] [tovdd=site,..] [move=rect:x0,y0;..] [tag=..] [regions=1 [set=SE:15;ME:12]]"""
+Usage: asm9_drawn.py chip=rf|wired [m4=0.073] [m5=0.105] [ring=14] [tovdd=site,..] [move=rect:x0,y0;..] [tag=..] [regions=1 [set=SE:15;ME:12]] [pset=nom: nominal set and nominal currents]"""
 import sys, json, numpy as np
 import model as M, core as C, chipcfg as P2
 D = dict(a.split('=', 1) for a in sys.argv[1:]); P2.apply(); CH = P2.CHIP
@@ -58,12 +58,12 @@ print(f"{CH}: {'per-region coverage ' + str(D.get('set', 'as drawn')) if REG els
 print(f'{CH}: drawn grid M4 {m4:.3f} / M5 {m5:.3f} per net, core ring 2 x {ring:g} um M4+M5 (EM limit {RING_LIM:.0f} mA per net), pess set, digital 81.8 mA')
 for drop in [None]+[b['site'] for b in B0 if b['net'] == 'VDD']:
     M.BONDS[:] = [b for b in B0 if b['site'] != drop]
-    p = P2.pset('pess', dict(cov_m5=m5, cov_m4=m4), core_ring_w=ring, ring_core_w=ring)
+    p = P2.pset(D.get('pset', 'pess'), dict(cov_m5=m5, cov_m4=m4), core_ring_w=ring, ring_core_w=ring)
     if REG: p['cov_region'] = cov_region
     n, info, ports, vict = C.full(p, decap=dec, x_feed=P2.X_FEED)
     site = {b['ring']: (b['site'], b['net']) for b in M.BONDS}
     for case in CASE:
-        d = C.dc(n, info, case, 'pd2u', x_feed=P2.X_FEED); rs = ring_seg(n, info, p)
+        d = C.dc(n, info, case, 'pd2u' if D.get('pset', 'pess') == 'pess' else 'pd2n', x_feed=P2.X_FEED); rs = ring_seg(n, info, p)
         taps = {b: (3.267-v['rail'])*1e3 for b, v in d['blocks'].items() if v['mA'] > 0.3 and not b.startswith('tap:')}
         tb = max(taps, key=taps.get); bv = max((x, site[k][0]) for k, x in d['bond_mA'].items())
         key = drop or 'all bonds'; r = res.setdefault(key, dict(tap=(0,), bond=(0,), ring=0.0, taps={}))

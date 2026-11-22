@@ -85,8 +85,38 @@ Current work status is in `SESSION-STATE.md`, not here.
 - **Independent review before "done":** a different agent, given artefacts, not the conclusion.
 - **Limits do not follow measurements.** A missed limit is reported as a miss or raised as a budget request.
 - **Chip-level verification is a first-class workstream:** one connectivity source of truth
-  (`integration/top/pt_chip.conn` and its `run.sh`), isolation/off-state audit, power-delivery model,
-  substrate and pulling checks, power-up and reset.
+  (`integration/chips/<chip>/chip.conn` and `integration/chips/run.sh`), isolation/off-state audit,
+  power-delivery model, substrate and pulling checks, power-up and reset.
+
+### 4a. Lessons that recur (coordinator, 2026-11-22; each found the hard way at least once)
+
+- **Resistance extraction:** Magic `extresist` covers only some nets by default and loses parallel paths; with
+  `ext2spice` it also double-counts substrate capacitance on resisted nets (~2.4x; port nets carry no FLOATING tag
+  and are missed by naive fixes; coupling caps to unnamed nets get dropped). Use full-coverage extraction and
+  rebuild every net's ground and coupling C from the C-only extraction of the same GDS
+  (`scratch/wired_tx/s16/net/fixcap16.py`). Report coverage and a per-net C cross-check with every R+C result.
+  Hand-entered lumped resistances were 1.4-20x low (contacts, vias, short poly omitted): never use them as evidence.
+- **Resistance hides real defects:** C-only extraction and LVS cannot see current-density or IR problems (the LNA
+  tail ran 30x over the EM limit; pad ESD paths had 23-32 ohm). Every current-carrying block needs an R+C run.
+- **Mismatch:** benches that rewrite PDK devices into plain M-lines silently drop mismatch; Monte Carlo then shows
+  zero spread. Prove mismatch is live with a matched-pair known-answer test (rf_rx helper, row RQ-18).
+- **Benches lie in small ways:** node-name collisions (a channel node named like a TIA output invalidated chain NF);
+  ngspice parses node names starting with `k` as couplings; scripts that resume from old result files reported
+  stale numbers; LVS wrappers exited 0 on mismatch and counted crashes as passes. Every bench needs a known-answer
+  case and a negative control that must fail, and verdicts must be parsed from tool output, not exit codes.
+- **GDS markers:** Magic's GDS export can drop marker layers (NAT for native devices, HRES); check marker layers in
+  the GDS read back from disk, because DRC rules keyed on a missing marker simply don't run.
+- **Generated files:** editing a register description changes the map hash compiled into RTL; regenerate through the
+  generator in the same commit. A committed check must never depend on an untracked generated file.
+- **Real neighbours and full ranges:** ideal-source benches hid most failures found this week. Verify loops over the
+  full range a block can reach, not just its operating range (a divider that miscounts above its limit can drive a
+  PLL into runaway).
+- **Measure, don't copy numbers:** area, capacitance and current figures copied from old reports were wrong; re-measure
+  from the current GDS or netlist.
+- **Before calling a requirement physically impossible, check the board:** per-application carriers can close gaps
+  (100BASE-TX: on-chip cascode boost plus carrier magnetics and centre tap).
+- **Layout for assembly:** block pins on the cell edge (Metal3/4), Metal5 left to the grid (ASM-8), keep-out markers
+  drawn in the block; pin-inside cells and mirrored abstracts caused most top-level routing shorts.
 
 ## 5. Top level and physical design
 

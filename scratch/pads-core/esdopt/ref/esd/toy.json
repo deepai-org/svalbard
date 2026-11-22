@@ -1,0 +1,92 @@
+{
+ "tag": "toy",
+ "model": "/home/ubuntu/svalbard/scratch/pads-core/esdopt/ref/x",
+ "model_sha256": null,
+ "ring": "typ",
+ "ring_ohm": {
+  "dvdd_near": 0.155,
+  "dvss_near": 0.189,
+  "dvdd_far": 0.46,
+  "dvss_far": 0.57
+ },
+ "far_cells": [
+  5,
+  7
+ ],
+ "sitecap": "1n,0.7",
+ "cdie": null,
+ "rxgate": false,
+ "toy_ohm": 2.0,
+ "strip_site": false,
+ "strip_sec": false,
+ "results": [
+  {
+   "case": "P+VSS",
+   "stimulus": "hbm2kV",
+   "ipk_a": 1.3333333333333333,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "d7182da71b0a5b9420afc3f14d8d0724ffff3262b57dd98843aac777dcdb2dac",
+   "pad_peak_abs_v": 2.89858463,
+   "pad_p_range_v": [
+    6.94239493e-14,
+    2.89858463
+   ],
+   "pad_n_range_v": [
+    6.94371399e-14,
+    0.25025846
+   ],
+   "pad_minus_local_vss_abs_v": 2.6483216680000004,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.00851936300000003,
+    6.061024667e-06
+   ],
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 0.0,
+   "worst_diode": "",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0
+  },
+  {
+   "case": "P+VSS",
+   "stimulus": "cdm2A",
+   "ipk_a": 2.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "fe36170e4e4162b3e7e99965db3d2e2e2d3d6dc0fd5e362f9e57389403118b03",
+   "pad_peak_abs_v": 4.37799653,
+   "pad_p_range_v": [
+    6.94239493e-14,
+    4.37799653
+   ],
+   "pad_n_range_v": [
+    -2.8848794e-07,
+    0.377992351
+   ],
+   "pad_minus_local_vss_abs_v": 3.9999999960000006,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.088098187,
+    0.033374485280000005
+   ],
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 0.0,
+   "worst_diode": "",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0
+  }
+ ]
+}

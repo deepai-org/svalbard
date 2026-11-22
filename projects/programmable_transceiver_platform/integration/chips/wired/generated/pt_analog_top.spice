@@ -4,8 +4,8 @@
 Xpor VDD VDD NC_por_por_unbuf VSS por_n NC_por_por gf180mcu_ocd_ip__por
 Xaosc c_aosc_en fc_src[4] NC_aosc_ATB_X VDD VSS pt_aosc
 Xisw_pll VDD RAIL_pll VSS island_en[2] NC_isw_pll_ISO s_pg_pll isw_debug_pex
-Xpad_ref REF_IN REF_IN_N VSS REF_VCM NC_pad_ref_ATB_ESD_RAIL tx_protected_pad
-Xpad_aux_clk AUX_CLK_P AUX_CLK_N VSS REF_VCM NC_pad_aux_clk_ATB_ESD_RAIL tx_protected_pad
+Xpad_ref REF_IN REF_IN_N VSS REF_VCM VDD tx_protected_pad
+Xpad_aux_clk AUX_CLK_P AUX_CLK_N VSS REF_VCM VDD tx_protected_pad
 Xrefvcm REF_VCM c_refvcm_en RAIL_pll VSS pt_refvcm
 Xrx_ref_in REF_IN REF_IN_N c_rx_ref_en VSS NC_rx_ref_in_OUTP ref_clk s_ref_present NC_rx_ref_in_ATB_DET VDD VSS pt_diff_clk_rx
 Xiso_host_clk HOST_CLK island_off[2] host_word_clk VDD VSS iso_clamp_x4

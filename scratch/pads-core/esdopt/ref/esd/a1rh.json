@@ -1,0 +1,2374 @@
+{
+ "tag": "a1rh",
+ "model": "/home/ubuntu/svalbard/scratch/pads-core/esdopt/ref/models/a1_r_high.spice",
+ "model_sha256": "3d0225796aba51ed6fda8cce3cf071952ed9f0d142cdc5d15a83c563a7ab6b46",
+ "ring": "typ",
+ "ring_ohm": {
+  "dvdd_near": 0.155,
+  "dvss_near": 0.189,
+  "dvdd_far": 0.46,
+  "dvss_far": 0.57
+ },
+ "far_cells": [
+  5,
+  7
+ ],
+ "sitecap": "1n,0.7",
+ "cdie": null,
+ "rxgate": false,
+ "toy_ohm": null,
+ "strip_site": false,
+ "strip_sec": false,
+ "results": [
+  {
+   "case": "P+VSS",
+   "stimulus": "hbm2kV",
+   "ipk_a": 1.3333333333333333,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "18c3406d9f3c10ce10fe357f877cf23202ca34c17a9573c1afac8f064d7551e5",
+   "pad_peak_abs_v": 6.07831476,
+   "pad_p_range_v": [
+    2.66235543e-13,
+    6.07831476
+   ],
+   "pad_n_range_v": [
+    -0.0149022006,
+    0.653763095
+   ],
+   "pad_minus_local_vss_abs_v": 6.07721580438,
+   "ring_dvdd_minus_dvss_site_v": [
+    2.2094546799999997e-13,
+    2.3063937869999998
+   ],
+   "pad_minus_core_vdd_abs_v": 4.49945812,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 6.027,
+   "worst_diode": "D24 diode_nd2ps_06v0 VSS__aP PAD_P__dn4",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 3.342,
+    "max_rev_ma_per_um": 0.014,
+    "max_energy_nj": 44.23,
+    "worst": {
+     "d": "D7",
+     "fwd_ma_per_um": 3.342,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 44.23
+    }
+   }
+  },
+  {
+   "case": "P-VSS",
+   "stimulus": "hbm2kV",
+   "ipk_a": 1.3333333333333333,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "77b0853cdef6129e3432e5b67ba465374315da2092d6c949e3f286a212cd5620",
+   "pad_peak_abs_v": 4.42612272,
+   "pad_p_range_v": [
+    -4.42612272,
+    2.3063304e-06
+   ],
+   "pad_n_range_v": [
+    -0.383273413,
+    1.19456299e-06
+   ],
+   "pad_minus_local_vss_abs_v": 4.1758457810000005,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.004366541230000001,
+    0.00654399299999997
+   ],
+   "pad_minus_core_vdd_abs_v": 4.182408151000001,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 4.111,
+   "worst_diode": "D7 diode_pd2nw_06v0 PAD_P__up2 DVDD__kP",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 5.142,
+    "max_rev_ma_per_um": 0.014,
+    "max_energy_nj": 86.961,
+    "worst": {
+     "d": "D4",
+     "fwd_ma_per_um": 5.142,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 86.961
+    }
+   }
+  },
+  {
+   "case": "N+VSS",
+   "stimulus": "hbm2kV",
+   "ipk_a": 1.3333333333333333,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "2e47491baddb19c9b1602f9161382a7521c0371bf3dd460b7989bce4347268bf",
+   "pad_peak_abs_v": 6.07822566,
+   "pad_p_range_v": [
+    -0.0143532081,
+    0.650494373
+   ],
+   "pad_n_range_v": [
+    2.67507041e-13,
+    6.07822566
+   ],
+   "pad_minus_local_vss_abs_v": 6.07712797556,
+   "ring_dvdd_minus_dvss_site_v": [
+    2.2109900700000002e-13,
+    2.306492182
+   ],
+   "pad_minus_core_vdd_abs_v": 4.49937376,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 6.027,
+   "worst_diode": "D25 diode_nd2ps_06v0 VSS__aN PAD_N__dn4",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 3.342,
+    "max_rev_ma_per_um": 0.014,
+    "max_energy_nj": 44.242,
+    "worst": {
+     "d": "D8",
+     "fwd_ma_per_um": 3.342,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 44.242
+    }
+   }
+  },
+  {
+   "case": "N-VSS",
+   "stimulus": "hbm2kV",
+   "ipk_a": 1.3333333333333333,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "e88ea54e4ced195cb9711e0037d5ab49b178eff09840c97e5eea463d0cc55aef",
+   "pad_peak_abs_v": 4.42612439,
+   "pad_p_range_v": [
+    -0.382462675,
+    1.18876635e-06
+   ],
+   "pad_n_range_v": [
+    -4.42612439,
+    2.33780167e-06
+   ],
+   "pad_minus_local_vss_abs_v": 4.175847573,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.004327378329999999,
+    0.006544200999999972
+   ],
+   "pad_minus_core_vdd_abs_v": 4.182410151,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 4.111,
+   "worst_diode": "D8 diode_pd2nw_06v0 PAD_N__up2 DVDD__kN",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 5.142,
+    "max_rev_ma_per_um": 0.013,
+    "max_energy_nj": 86.961,
+    "worst": {
+     "d": "D1",
+     "fwd_ma_per_um": 5.142,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 86.961
+    }
+   }
+  },
+  {
+   "case": "P+VDD",
+   "stimulus": "hbm2kV",
+   "ipk_a": 1.3333333333333333,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "91c8bc4905cc6eafaaf7bbac1fcd55e66b0ed4f1fefb9c0bf3453280d49ddc7d",
+   "pad_peak_abs_v": 4.16665368,
+   "pad_p_range_v": [
+    -4.06032877e-06,
+    4.16665368
+   ],
+   "pad_n_range_v": [
+    -5.17319219e-06,
+    0.328107669
+   ],
+   "pad_minus_local_vss_abs_v": 3.9653726979999995,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.010230475579999999,
+    0.003995723000000007
+   ],
+   "pad_minus_core_vdd_abs_v": 4.166642574637899,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 3.915,
+   "worst_diode": "D24 diode_nd2ps_06v0 VSS__aP PAD_P__dn4",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 3.341,
+    "max_rev_ma_per_um": 0.014,
+    "max_energy_nj": 44.231,
+    "worst": {
+     "d": "D7",
+     "fwd_ma_per_um": 3.341,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 44.231
+    }
+   }
+  },
+  {
+   "case": "P-VDD",
+   "stimulus": "hbm2kV",
+   "ipk_a": 1.3333333333333333,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "d1196f3ff90dc9578a683c2143a86d3787dc3f375b60a186bf93599704e29940",
+   "pad_peak_abs_v": 6.33707941,
+   "pad_p_range_v": [
+    -6.33707941,
+    -3.6388517e-13
+   ],
+   "pad_n_range_v": [
+    -2.23684077,
+    -3.92954304e-13
+   ],
+   "pad_minus_local_vss_abs_v": 4.176002110000001,
+   "ring_dvdd_minus_dvss_site_v": [
+    2.24555251e-13,
+    2.335434619
+   ],
+   "pad_minus_core_vdd_abs_v": 6.00386955,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 6.265,
+   "worst_diode": "D7 diode_pd2nw_06v0 PAD_P__up2 DVDD__kP",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 5.142,
+    "max_rev_ma_per_um": 0.014,
+    "max_energy_nj": 86.961,
+    "worst": {
+     "d": "D4",
+     "fwd_ma_per_um": 5.142,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 86.961
+    }
+   }
+  },
+  {
+   "case": "N+VDD",
+   "stimulus": "hbm2kV",
+   "ipk_a": 1.3333333333333333,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "c94a1296c8cdd213d9d5f797607f1a34b3f80a1893862dd3158c90b0fd0f2895",
+   "pad_peak_abs_v": 4.16654058,
+   "pad_p_range_v": [
+    -5.17903083e-06,
+    0.327723203
+   ],
+   "pad_n_range_v": [
+    -4.02885588e-06,
+    4.16654058
+   ],
+   "pad_minus_local_vss_abs_v": 3.9652922770000005,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.00995818885,
+    0.004043770000000002
+   ],
+   "pad_minus_core_vdd_abs_v": 4.16653609898424,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 3.915,
+   "worst_diode": "D25 diode_nd2ps_06v0 VSS__aN PAD_N__dn4",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 3.342,
+    "max_rev_ma_per_um": 0.014,
+    "max_energy_nj": 44.243,
+    "worst": {
+     "d": "D8",
+     "fwd_ma_per_um": 3.342,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 44.243
+    }
+   }
+  },
+  {
+   "case": "N-VDD",
+   "stimulus": "hbm2kV",
+   "ipk_a": 1.3333333333333333,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "9cbcbfdd0d3b828fe41768addccc0e4530a06b399ddf923584a9aed5123c5cb0",
+   "pad_peak_abs_v": 6.33708161,
+   "pad_p_range_v": [
+    -2.23851373,
+    -3.93142381e-13
+   ],
+   "pad_n_range_v": [
+    -6.33708161,
+    -3.62600172e-13
+   ],
+   "pad_minus_local_vss_abs_v": 4.176004880000001,
+   "ring_dvdd_minus_dvss_site_v": [
+    2.24705726e-13,
+    2.3353987029999996
+   ],
+   "pad_minus_core_vdd_abs_v": 6.003871153,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 6.265,
+   "worst_diode": "D8 diode_pd2nw_06v0 PAD_N__up2 DVDD__kN",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 5.142,
+    "max_rev_ma_per_um": 0.013,
+    "max_energy_nj": 86.961,
+    "worst": {
+     "d": "D1",
+     "fwd_ma_per_um": 5.142,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 86.961
+    }
+   }
+  },
+  {
+   "case": "P+N",
+   "stimulus": "hbm2kV",
+   "ipk_a": 1.3333333333333333,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "303e8d1fd740bcebae2e8375e7bf3f0dd5d12d6e1be01da1f6e5ab2ddccb28d9",
+   "pad_peak_abs_v": 10.500279,
+   "pad_p_range_v": [
+    -4.36826144e-08,
+    10.500279
+   ],
+   "pad_n_range_v": [
+    0.0,
+    0.0
+   ],
+   "pad_minus_local_vss_abs_v": 6.324419810000001,
+   "ring_dvdd_minus_dvss_site_v": [
+    2.0488665220000001e-13,
+    2.4685154600000003
+   ],
+   "pad_minus_core_vdd_abs_v": 6.00252695,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 6.467,
+   "worst_diode": "D8 diode_pd2nw_06v0 PAD_N__up2 DVDD__kN",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 5.142,
+    "max_rev_ma_per_um": 0.014,
+    "max_energy_nj": 86.961,
+    "worst": {
+     "d": "D1",
+     "fwd_ma_per_um": 5.142,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 86.961
+    }
+   }
+  },
+  {
+   "case": "P-N",
+   "stimulus": "hbm2kV",
+   "ipk_a": 1.3333333333333333,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "4187cffc877c6aa882e0fe3512758b016609e6c4c832465a3c573a07ae24db70",
+   "pad_peak_abs_v": 10.499416,
+   "pad_p_range_v": [
+    -10.499416,
+    -1.03797865e-13
+   ],
+   "pad_n_range_v": [
+    0.0,
+    0.0
+   ],
+   "pad_minus_local_vss_abs_v": 6.32391421,
+   "ring_dvdd_minus_dvss_site_v": [
+    2.0488665220000001e-13,
+    2.4683078899999997
+   ],
+   "pad_minus_core_vdd_abs_v": 6.00214176,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 6.467,
+   "worst_diode": "D19 diode_pd2nw_06v0 PAD_P__up6 DVDD__kP",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 5.141,
+    "max_rev_ma_per_um": 0.013,
+    "max_energy_nj": 86.961,
+    "worst": {
+     "d": "D4",
+     "fwd_ma_per_um": 5.141,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 86.961
+    }
+   }
+  },
+  {
+   "case": "P+VSS",
+   "stimulus": "hbm1kV",
+   "ipk_a": 0.6666666666666666,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "151615d79e9366c884e6ff85b34510cb1a53c2236c202587cc5eb3e2ab0a70f3",
+   "pad_peak_abs_v": 4.39506033,
+   "pad_p_range_v": [
+    2.66235543e-13,
+    4.39506033
+   ],
+   "pad_n_range_v": [
+    -0.00266738129,
+    0.528071251
+   ],
+   "pad_minus_local_vss_abs_v": 4.3087025983,
+   "ring_dvdd_minus_dvss_site_v": [
+    2.2094546799999997e-13,
+    2.0585074283
+   ],
+   "pad_minus_core_vdd_abs_v": 2.74091108,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 4.287,
+   "worst_diode": "D24 diode_nd2ps_06v0 VSS__aP PAD_P__dn4",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 1.67,
+    "max_rev_ma_per_um": 0.009,
+    "max_energy_nj": 16.444,
+    "worst": {
+     "d": "D7",
+     "fwd_ma_per_um": 1.67,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 16.444
+    }
+   }
+  },
+  {
+   "case": "P-VSS",
+   "stimulus": "hbm1kV",
+   "ipk_a": 0.6666666666666666,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "3a22271c49599bb9c3d1b84785977c52ad7d0862f000a5fc5e0871ff739e4fd8",
+   "pad_peak_abs_v": 2.69272754,
+   "pad_p_range_v": [
+    -2.69272754,
+    2.3063304e-06
+   ],
+   "pad_n_range_v": [
+    -0.206939701,
+    1.19456299e-06
+   ],
+   "pad_minus_local_vss_abs_v": 2.567575933,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.0036834942100000003,
+    0.0030456670000000158
+   ],
+   "pad_minus_core_vdd_abs_v": 2.570628833,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 2.535,
+   "worst_diode": "D2 diode_pd2nw_06v0 PAD_P__up0 DVDD__kP",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 2.571,
+    "max_rev_ma_per_um": 0.009,
+    "max_energy_nj": 30.299,
+    "worst": {
+     "d": "D4",
+     "fwd_ma_per_um": 2.571,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 30.299
+    }
+   }
+  },
+  {
+   "case": "N+VSS",
+   "stimulus": "hbm1kV",
+   "ipk_a": 0.6666666666666666,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "a06afcdb9267825caf6877a81647c26c7aab06964afe31cebdb8ca6091a76c0e",
+   "pad_peak_abs_v": 4.39494122,
+   "pad_p_range_v": [
+    -0.00228335477,
+    0.525081925
+   ],
+   "pad_n_range_v": [
+    2.67507041e-13,
+    4.39494122
+   ],
+   "pad_minus_local_vss_abs_v": 4.3090046991,
+   "ring_dvdd_minus_dvss_site_v": [
+    2.2109900700000002e-13,
+    2.0582014391000003
+   ],
+   "pad_minus_core_vdd_abs_v": 2.7408213,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 4.287,
+   "worst_diode": "D25 diode_nd2ps_06v0 VSS__aN PAD_N__dn4",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 1.67,
+    "max_rev_ma_per_um": 0.009,
+    "max_energy_nj": 16.448,
+    "worst": {
+     "d": "D8",
+     "fwd_ma_per_um": 1.67,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 16.448
+    }
+   }
+  },
+  {
+   "case": "N-VSS",
+   "stimulus": "hbm1kV",
+   "ipk_a": 0.6666666666666666,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "71bc3f04ad574f3d2f2ce7fc1d7eda234f6d4d7411ce6d13cab8c42e4994aa35",
+   "pad_peak_abs_v": 2.69271499,
+   "pad_p_range_v": [
+    -0.206441804,
+    1.18876635e-06
+   ],
+   "pad_n_range_v": [
+    -2.69271499,
+    2.33780167e-06
+   ],
+   "pad_minus_local_vss_abs_v": 2.567564537,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.0037415562300000004,
+    0.003046354000000001
+   ],
+   "pad_minus_core_vdd_abs_v": 2.570619779,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 2.535,
+   "worst_diode": "D8 diode_pd2nw_06v0 PAD_N__up2 DVDD__kN",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 2.571,
+    "max_rev_ma_per_um": 0.01,
+    "max_energy_nj": 30.299,
+    "worst": {
+     "d": "D1",
+     "fwd_ma_per_um": 2.571,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 30.299
+    }
+   }
+  },
+  {
+   "case": "P+VDD",
+   "stimulus": "hbm1kV",
+   "ipk_a": 0.6666666666666666,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "320c6e307539a55f6379ca8b621d34d6a712da2bad8cccb3f8b14a0844030b90",
+   "pad_peak_abs_v": 2.54922397,
+   "pad_p_range_v": [
+    -4.06032877e-06,
+    2.54922397
+   ],
+   "pad_n_range_v": [
+    -5.17319219e-06,
+    0.179191996
+   ],
+   "pad_minus_local_vss_abs_v": 2.448230943,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.008295307069999999,
+    0.0016761744999999884
+   ],
+   "pad_minus_core_vdd_abs_v": 2.5492216290895597,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 2.423,
+   "worst_diode": "D24 diode_nd2ps_06v0 VSS__aP PAD_P__dn4",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 1.67,
+    "max_rev_ma_per_um": 0.01,
+    "max_energy_nj": 16.445,
+    "worst": {
+     "d": "D7",
+     "fwd_ma_per_um": 1.67,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 16.445
+    }
+   }
+  },
+  {
+   "case": "P-VDD",
+   "stimulus": "hbm1kV",
+   "ipk_a": 0.6666666666666666,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "8612536417887e6ce366fbb5209e8c31772460e984130955b4b168052f78aa45",
+   "pad_peak_abs_v": 4.50870763,
+   "pad_p_range_v": [
+    -4.50870763,
+    -3.6388517e-13
+   ],
+   "pad_n_range_v": [
+    -1.94064269,
+    -3.92954304e-13
+   ],
+   "pad_minus_local_vss_abs_v": 2.5675271499999996,
+   "ring_dvdd_minus_dvss_site_v": [
+    2.24555251e-13,
+    2.0772948557
+   ],
+   "pad_minus_core_vdd_abs_v": 4.4709804526,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 4.409,
+   "worst_diode": "D21 diode_pd2nw_06v0 PAD_P__up7 DVDD__kP",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 2.571,
+    "max_rev_ma_per_um": 0.009,
+    "max_energy_nj": 30.299,
+    "worst": {
+     "d": "D4",
+     "fwd_ma_per_um": 2.571,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 30.299
+    }
+   }
+  },
+  {
+   "case": "N+VDD",
+   "stimulus": "hbm1kV",
+   "ipk_a": 0.6666666666666666,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "99f7ae0118c07017e03acebe2b88ed1d7c1943d097b1f5f7399a06257e65f632",
+   "pad_peak_abs_v": 2.54920545,
+   "pad_p_range_v": [
+    -5.17903083e-06,
+    0.178901126
+   ],
+   "pad_n_range_v": [
+    -4.02885588e-06,
+    2.54920545
+   ],
+   "pad_minus_local_vss_abs_v": 2.44824148,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.00806681722,
+    0.0017056891000000046
+   ],
+   "pad_minus_core_vdd_abs_v": 2.54920286716338,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 2.423,
+   "worst_diode": "D25 diode_nd2ps_06v0 VSS__aN PAD_N__dn4",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 1.67,
+    "max_rev_ma_per_um": 0.01,
+    "max_energy_nj": 16.449,
+    "worst": {
+     "d": "D8",
+     "fwd_ma_per_um": 1.67,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 16.449
+    }
+   }
+  },
+  {
+   "case": "N-VDD",
+   "stimulus": "hbm1kV",
+   "ipk_a": 0.6666666666666666,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "dba01336f87a381ddcfa94c66f911cb00961b712a1177fb89b1e4c423ef50b42",
+   "pad_peak_abs_v": 4.5083766,
+   "pad_p_range_v": [
+    -1.94208305,
+    -3.93142381e-13
+   ],
+   "pad_n_range_v": [
+    -4.5083766,
+    -3.62600172e-13
+   ],
+   "pad_minus_local_vss_abs_v": 2.5675598499999994,
+   "ring_dvdd_minus_dvss_site_v": [
+    2.24705726e-13,
+    2.0774850278
+   ],
+   "pad_minus_core_vdd_abs_v": 4.4708377612,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 4.409,
+   "worst_diode": "D23 diode_pd2nw_06v0 PAD_N__up7 DVDD__kN",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 2.571,
+    "max_rev_ma_per_um": 0.009,
+    "max_energy_nj": 30.299,
+    "worst": {
+     "d": "D1",
+     "fwd_ma_per_um": 2.571,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 30.299
+    }
+   }
+  },
+  {
+   "case": "P+N",
+   "stimulus": "hbm1kV",
+   "ipk_a": 0.6666666666666666,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "0c2f920503fa7e2f6005e094fc64eef748ac4a8706241c3022653aa61e97deec",
+   "pad_peak_abs_v": 6.81389677,
+   "pad_p_range_v": [
+    -4.36826144e-08,
+    6.81389677
+   ],
+   "pad_n_range_v": [
+    0.0,
+    0.0
+   ],
+   "pad_minus_local_vss_abs_v": 4.42836325,
+   "ring_dvdd_minus_dvss_site_v": [
+    2.0488665220000001e-13,
+    2.1600340600000005
+   ],
+   "pad_minus_core_vdd_abs_v": 4.47999542,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 4.507,
+   "worst_diode": "D8 diode_pd2nw_06v0 PAD_N__up2 DVDD__kN",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 2.571,
+    "max_rev_ma_per_um": 0.01,
+    "max_energy_nj": 30.298,
+    "worst": {
+     "d": "D1",
+     "fwd_ma_per_um": 2.571,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 30.298
+    }
+   }
+  },
+  {
+   "case": "P-N",
+   "stimulus": "hbm1kV",
+   "ipk_a": 0.6666666666666666,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "53d00b24c77fbcbbe7b12460171ad3209d7ccbddabd4bb8f887f337720284a99",
+   "pad_peak_abs_v": 6.81572697,
+   "pad_p_range_v": [
+    -6.81572697,
+    -1.03797865e-13
+   ],
+   "pad_n_range_v": [
+    0.0,
+    0.0
+   ],
+   "pad_minus_local_vss_abs_v": 4.43011134,
+   "ring_dvdd_minus_dvss_site_v": [
+    2.0488665220000001e-13,
+    2.16147655
+   ],
+   "pad_minus_core_vdd_abs_v": 4.48186968,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 4.508,
+   "worst_diode": "D7 diode_pd2nw_06v0 PAD_P__up2 DVDD__kP",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 2.571,
+    "max_rev_ma_per_um": 0.01,
+    "max_energy_nj": 30.298,
+    "worst": {
+     "d": "D4",
+     "fwd_ma_per_um": 2.571,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 30.298
+    }
+   }
+  },
+  {
+   "case": "P+VSS",
+   "stimulus": "cdm1A",
+   "ipk_a": 1.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "322f53d2b5f7aeb1d03cd40414807efa55e92d7e23dbb89c126df64609b53002",
+   "pad_peak_abs_v": 5.60142157,
+   "pad_p_range_v": [
+    2.66235543e-13,
+    5.60142157
+   ],
+   "pad_n_range_v": [
+    2.37746223e-13,
+    0.667902937
+   ],
+   "pad_minus_local_vss_abs_v": 5.437352462,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.00019244041599999996,
+    2.216196642
+   ],
+   "pad_minus_core_vdd_abs_v": 3.3398687000000002,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 5.399,
+   "worst_diode": "D24 diode_nd2ps_06v0 VSS__aP PAD_P__dn4",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 2.523,
+    "max_rev_ma_per_um": 0.041,
+    "max_energy_nj": 0.357,
+    "worst": {
+     "d": "D7",
+     "fwd_ma_per_um": 2.523,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 0.357
+    }
+   }
+  },
+  {
+   "case": "P-VSS",
+   "stimulus": "cdm1A",
+   "ipk_a": 1.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "1f9025770a32453fd3115aa4f35099174fb3bd00af840f7bacd193aa4229c958",
+   "pad_peak_abs_v": 3.57877022,
+   "pad_p_range_v": [
+    -3.57877022,
+    2.3192625e-06
+   ],
+   "pad_n_range_v": [
+    -0.301086746,
+    1.20084142e-06
+   ],
+   "pad_minus_local_vss_abs_v": 3.391049973,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.012659386500000001,
+    0.03510671399999998
+   ],
+   "pad_minus_core_vdd_abs_v": 3.436751782,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 3.371,
+   "worst_diode": "D21 diode_pd2nw_06v0 PAD_P__up7 DVDD__kP",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 3.885,
+    "max_rev_ma_per_um": 0.043,
+    "max_energy_nj": 0.711,
+    "worst": {
+     "d": "D4",
+     "fwd_ma_per_um": 3.885,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 0.711
+    }
+   }
+  },
+  {
+   "case": "N+VSS",
+   "stimulus": "cdm1A",
+   "ipk_a": 1.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "da96910461e34200fbd21160d6cf96a6523bf30bd8a11bd91a2eaf2b28a1e964",
+   "pad_peak_abs_v": 5.60136436,
+   "pad_p_range_v": [
+    2.37580164e-13,
+    0.664652944
+   ],
+   "pad_n_range_v": [
+    2.67507041e-13,
+    5.60136436
+   ],
+   "pad_minus_local_vss_abs_v": 5.4372996680000005,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.00017809808999999998,
+    2.216201328
+   ],
+   "pad_minus_core_vdd_abs_v": 3.34012652,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 5.399,
+   "worst_diode": "D25 diode_nd2ps_06v0 VSS__aN PAD_N__dn4",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 2.523,
+    "max_rev_ma_per_um": 0.041,
+    "max_energy_nj": 0.357,
+    "worst": {
+     "d": "D8",
+     "fwd_ma_per_um": 2.523,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 0.357
+    }
+   }
+  },
+  {
+   "case": "N-VSS",
+   "stimulus": "cdm1A",
+   "ipk_a": 1.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "630b68e2c8f927d3d8288427c8e0103bf3f34e43f144913aca2ca1d9eb45bd69",
+   "pad_peak_abs_v": 3.57877081,
+   "pad_p_range_v": [
+    -0.300353841,
+    1.19500527e-06
+   ],
+   "pad_n_range_v": [
+    -3.57877081,
+    2.35090641e-06
+   ],
+   "pad_minus_local_vss_abs_v": 3.391010191,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.012659639700000001,
+    0.03510801800000002
+   ],
+   "pad_minus_core_vdd_abs_v": 3.436717305,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 3.371,
+   "worst_diode": "D23 diode_pd2nw_06v0 PAD_N__up7 DVDD__kN",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 3.885,
+    "max_rev_ma_per_um": 0.043,
+    "max_energy_nj": 0.711,
+    "worst": {
+     "d": "D1",
+     "fwd_ma_per_um": 3.885,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 0.711
+    }
+   }
+  },
+  {
+   "case": "P+VDD",
+   "stimulus": "cdm1A",
+   "ipk_a": 1.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "28509fdf58508a96e210aa52abfbbae3768f5a3b02f1ee5e646c035a6a371d61",
+   "pad_peak_abs_v": 3.37629809,
+   "pad_p_range_v": [
+    -4.08558787e-06,
+    3.37629809
+   ],
+   "pad_n_range_v": [
+    -5.20508569e-06,
+    0.259147875
+   ],
+   "pad_minus_local_vss_abs_v": 3.246707544,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.023142083120000004,
+    0.024371634000000003
+   ],
+   "pad_minus_core_vdd_abs_v": 3.37629439416098,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 3.209,
+   "worst_diode": "D24 diode_nd2ps_06v0 VSS__aP PAD_P__dn4",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 2.524,
+    "max_rev_ma_per_um": 0.041,
+    "max_energy_nj": 0.357,
+    "worst": {
+     "d": "D7",
+     "fwd_ma_per_um": 2.524,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 0.357
+    }
+   }
+  },
+  {
+   "case": "P-VDD",
+   "stimulus": "cdm1A",
+   "ipk_a": 1.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "755c61891dddcdabc6b69641efa0c6d84f68ed545c70658d6cc8fb211db9b264",
+   "pad_peak_abs_v": 5.76761234,
+   "pad_p_range_v": [
+    -5.76761234,
+    -3.6388517e-13
+   ],
+   "pad_n_range_v": [
+    -2.18031265,
+    -3.92954304e-13
+   ],
+   "pad_minus_local_vss_abs_v": 3.3896869200000004,
+   "ring_dvdd_minus_dvss_site_v": [
+    2.24555251e-13,
+    2.241183238
+   ],
+   "pad_minus_core_vdd_abs_v": 5.7260603525,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 5.577,
+   "worst_diode": "D7 diode_pd2nw_06v0 PAD_P__up2 DVDD__kP",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 3.882,
+    "max_rev_ma_per_um": 0.042,
+    "max_energy_nj": 0.711,
+    "worst": {
+     "d": "D4",
+     "fwd_ma_per_um": 3.882,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 0.711
+    }
+   }
+  },
+  {
+   "case": "N+VDD",
+   "stimulus": "cdm1A",
+   "ipk_a": 1.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "e5bc98a3237d22fbdc8dab9d1d763acf8b489cf4b69a417c6c455c4121d99a7a",
+   "pad_peak_abs_v": 3.3762402,
+   "pad_p_range_v": [
+    -5.21093806e-06,
+    0.258710833
+   ],
+   "pad_n_range_v": [
+    -4.05391717e-06,
+    3.3762402
+   ],
+   "pad_minus_local_vss_abs_v": 3.246768555,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.022281495650000004,
+    0.02457289500000001
+   ],
+   "pad_minus_core_vdd_abs_v": 3.3762365166061796,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 3.209,
+   "worst_diode": "D25 diode_nd2ps_06v0 VSS__aN PAD_N__dn4",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 2.525,
+    "max_rev_ma_per_um": 0.04,
+    "max_energy_nj": 0.357,
+    "worst": {
+     "d": "D8",
+     "fwd_ma_per_um": 2.525,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 0.357
+    }
+   }
+  },
+  {
+   "case": "N-VDD",
+   "stimulus": "cdm1A",
+   "ipk_a": 1.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "df921659ff7d783ab5e0412e112eadc282d6e56960dae8a34a5a999d43fc84e2",
+   "pad_peak_abs_v": 5.76761507,
+   "pad_p_range_v": [
+    -2.18178709,
+    -3.93142381e-13
+   ],
+   "pad_n_range_v": [
+    -5.76761507,
+    -3.62600172e-13
+   ],
+   "pad_minus_local_vss_abs_v": 3.38968758,
+   "ring_dvdd_minus_dvss_site_v": [
+    2.24705726e-13,
+    2.2411851599999997
+   ],
+   "pad_minus_core_vdd_abs_v": 5.7260634671,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 5.577,
+   "worst_diode": "D8 diode_pd2nw_06v0 PAD_N__up2 DVDD__kN",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 3.882,
+    "max_rev_ma_per_um": 0.042,
+    "max_energy_nj": 0.711,
+    "worst": {
+     "d": "D1",
+     "fwd_ma_per_um": 3.882,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 0.711
+    }
+   }
+  },
+  {
+   "case": "P+N",
+   "stimulus": "cdm1A",
+   "ipk_a": 1.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "521129c5642aaa6caf9e6009b419b19e5a2b21f8021435a8a2d0d92d67ffa997",
+   "pad_peak_abs_v": 8.92783463,
+   "pad_p_range_v": [
+    -4.39204766e-08,
+    8.92783463
+   ],
+   "pad_n_range_v": [
+    0.0,
+    0.0
+   ],
+   "pad_minus_local_vss_abs_v": 5.53848769,
+   "ring_dvdd_minus_dvss_site_v": [
+    -3.6335599999999524e-05,
+    2.3187267400000002
+   ],
+   "pad_minus_core_vdd_abs_v": 5.67037104,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 5.653,
+   "worst_diode": "D8 diode_pd2nw_06v0 PAD_N__up2 DVDD__kN",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 3.882,
+    "max_rev_ma_per_um": 0.043,
+    "max_energy_nj": 0.711,
+    "worst": {
+     "d": "D1",
+     "fwd_ma_per_um": 3.882,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 0.711
+    }
+   }
+  },
+  {
+   "case": "P-N",
+   "stimulus": "cdm1A",
+   "ipk_a": 1.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "90763cee3cbb5d248d68d21eb555e0626b133140148233355957806faa36d557",
+   "pad_peak_abs_v": 8.92809558,
+   "pad_p_range_v": [
+    -8.92809558,
+    -1.03797865e-13
+   ],
+   "pad_n_range_v": [
+    0.0,
+    0.0
+   ],
+   "pad_minus_local_vss_abs_v": 5.53874664,
+   "ring_dvdd_minus_dvss_site_v": [
+    2.0488665220000001e-13,
+    2.3190131199999997
+   ],
+   "pad_minus_core_vdd_abs_v": 5.670738500000001,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 5.654,
+   "worst_diode": "D7 diode_pd2nw_06v0 PAD_P__up2 DVDD__kP",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 3.882,
+    "max_rev_ma_per_um": 0.042,
+    "max_energy_nj": 0.711,
+    "worst": {
+     "d": "D4",
+     "fwd_ma_per_um": 3.882,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 0.711
+    }
+   }
+  },
+  {
+   "case": "P+VSS",
+   "stimulus": "cdm2A",
+   "ipk_a": 2.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "35955c68bbffda4f28074e1660587a310c58653d146685070844c8b2a719f7f9",
+   "pad_peak_abs_v": 8.903029,
+   "pad_p_range_v": [
+    2.66235543e-13,
+    8.903029
+   ],
+   "pad_n_range_v": [
+    2.37746223e-13,
+    1.0600107
+   ],
+   "pad_minus_local_vss_abs_v": 8.567037996,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.0003969147200000001,
+    3.066974996
+   ],
+   "pad_minus_core_vdd_abs_v": 6.039631089999999,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 8.491,
+   "worst_diode": "D24 diode_nd2ps_06v0 VSS__aP PAD_P__dn4",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 5.049,
+    "max_rev_ma_per_um": 0.059,
+    "max_energy_nj": 1.096,
+    "worst": {
+     "d": "D7",
+     "fwd_ma_per_um": 5.049,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 1.096
+    }
+   }
+  },
+  {
+   "case": "P-VSS",
+   "stimulus": "cdm2A",
+   "ipk_a": 2.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "f82100584b3b2dc5b1a092f16d0a27b481771ffac358f56eeb23e598da6c9126",
+   "pad_peak_abs_v": 6.18728973,
+   "pad_p_range_v": [
+    -6.18728973,
+    2.3192625e-06
+   ],
+   "pad_n_range_v": [
+    -0.569729829,
+    1.20084142e-06
+   ],
+   "pad_minus_local_vss_abs_v": 5.811914281,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.026052875299999997,
+    0.07320021900000001
+   ],
+   "pad_minus_core_vdd_abs_v": 5.907056267000001,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 5.774,
+   "worst_diode": "D21 diode_pd2nw_06v0 PAD_P__up7 DVDD__kP",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 7.77,
+    "max_rev_ma_per_um": 0.063,
+    "max_energy_nj": 2.32,
+    "worst": {
+     "d": "D4",
+     "fwd_ma_per_um": 7.77,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 2.32
+    }
+   }
+  },
+  {
+   "case": "N+VSS",
+   "stimulus": "cdm2A",
+   "ipk_a": 2.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "b9cf3e45aa9d1fb2ceb600e925e4b98e3837b25f5b9ab634e7166fff6ee3b24d",
+   "pad_peak_abs_v": 8.90289864,
+   "pad_p_range_v": [
+    2.37580164e-13,
+    1.05496216
+   ],
+   "pad_n_range_v": [
+    2.67507041e-13,
+    8.90289864
+   ],
+   "pad_minus_local_vss_abs_v": 8.566894888,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.00037326663999999996,
+    3.066970728
+   ],
+   "pad_minus_core_vdd_abs_v": 6.0395198699999995,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 8.491,
+   "worst_diode": "D25 diode_nd2ps_06v0 VSS__aN PAD_N__dn4",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 5.05,
+    "max_rev_ma_per_um": 0.06,
+    "max_energy_nj": 1.097,
+    "worst": {
+     "d": "D8",
+     "fwd_ma_per_um": 5.05,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 1.097
+    }
+   }
+  },
+  {
+   "case": "N-VSS",
+   "stimulus": "cdm2A",
+   "ipk_a": 2.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "343a084ca689651dfc575c08388a35bcd60c3b4215c457a89c2688acd5fa524e",
+   "pad_peak_abs_v": 6.18729136,
+   "pad_p_range_v": [
+    -0.568486418,
+    1.19500527e-06
+   ],
+   "pad_n_range_v": [
+    -6.18729136,
+    2.35090641e-06
+   ],
+   "pad_minus_local_vss_abs_v": 5.811834103,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.026053777200000003,
+    0.07320248099999999
+   ],
+   "pad_minus_core_vdd_abs_v": 5.906985445,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 5.774,
+   "worst_diode": "D23 diode_pd2nw_06v0 PAD_N__up7 DVDD__kN",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 7.769,
+    "max_rev_ma_per_um": 0.064,
+    "max_energy_nj": 2.32,
+    "worst": {
+     "d": "D1",
+     "fwd_ma_per_um": 7.769,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 2.32
+    }
+   }
+  },
+  {
+   "case": "P+VDD",
+   "stimulus": "cdm2A",
+   "ipk_a": 2.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "db0593a562857c3a6eb98250cb46c5b2d6eec13dd4e683f5e7e640e0bbf87bf0",
+   "pad_peak_abs_v": 5.81024394,
+   "pad_p_range_v": [
+    -4.08558787e-06,
+    5.81024394
+   ],
+   "pad_n_range_v": [
+    -5.20508569e-06,
+    0.486145547
+   ],
+   "pad_minus_local_vss_abs_v": 5.553536052999999,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.0286433325,
+    0.051287461000000034
+   ],
+   "pad_minus_core_vdd_abs_v": 5.8102346068183905,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 5.477,
+   "worst_diode": "D24 diode_nd2ps_06v0 VSS__aP PAD_P__dn4",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 5.051,
+    "max_rev_ma_per_um": 0.06,
+    "max_energy_nj": 1.097,
+    "worst": {
+     "d": "D7",
+     "fwd_ma_per_um": 5.051,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 1.097
+    }
+   }
+  },
+  {
+   "case": "P-VDD",
+   "stimulus": "cdm2A",
+   "ipk_a": 2.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "47f1a7494cf694de7f4b8bd9aad413a75fea04eeb350747803b72c28632625c6",
+   "pad_peak_abs_v": 9.18050672,
+   "pad_p_range_v": [
+    -9.18050672,
+    -3.6388517e-13
+   ],
+   "pad_n_range_v": [
+    -3.14525761,
+    -3.92954304e-13
+   ],
+   "pad_minus_local_vss_abs_v": 5.809628239999999,
+   "ring_dvdd_minus_dvss_site_v": [
+    2.24555251e-13,
+    3.095472294
+   ],
+   "pad_minus_core_vdd_abs_v": 9.109373725800001,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 8.797,
+   "worst_diode": "D7 diode_pd2nw_06v0 PAD_P__up2 DVDD__kP",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 7.766,
+    "max_rev_ma_per_um": 0.065,
+    "max_energy_nj": 2.319,
+    "worst": {
+     "d": "D4",
+     "fwd_ma_per_um": 7.766,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 2.319
+    }
+   }
+  },
+  {
+   "case": "N+VDD",
+   "stimulus": "cdm2A",
+   "ipk_a": 2.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "c6a058b9440a778c04a679683d8071d7fd4631599bf2deceb1fec43f7fda9e76",
+   "pad_peak_abs_v": 5.81012849,
+   "pad_p_range_v": [
+    -5.21093806e-06,
+    0.485495856
+   ],
+   "pad_n_range_v": [
+    -4.05391717e-06,
+    5.81012849
+   ],
+   "pad_minus_local_vss_abs_v": 5.553636065,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.028154471,
+    0.05166558900000001
+   ],
+   "pad_minus_core_vdd_abs_v": 5.81011918531264,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 5.478,
+   "worst_diode": "D25 diode_nd2ps_06v0 VSS__aN PAD_N__dn4",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 5.051,
+    "max_rev_ma_per_um": 0.061,
+    "max_energy_nj": 1.097,
+    "worst": {
+     "d": "D8",
+     "fwd_ma_per_um": 5.051,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 1.097
+    }
+   }
+  },
+  {
+   "case": "N-VDD",
+   "stimulus": "cdm2A",
+   "ipk_a": 2.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "7b383c7a7a22d5194da55c8fe334a0b5d387d95d2bb0a3d9040a167d0cdee336",
+   "pad_peak_abs_v": 9.18049927,
+   "pad_p_range_v": [
+    -3.14704087,
+    -3.93142381e-13
+   ],
+   "pad_n_range_v": [
+    -9.18049927,
+    -3.62600172e-13
+   ],
+   "pad_minus_local_vss_abs_v": 5.8096220700000005,
+   "ring_dvdd_minus_dvss_site_v": [
+    2.24705726e-13,
+    3.09548128
+   ],
+   "pad_minus_core_vdd_abs_v": 9.109365776799999,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 8.797,
+   "worst_diode": "D8 diode_pd2nw_06v0 PAD_N__up2 DVDD__kN",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 7.766,
+    "max_rev_ma_per_um": 0.066,
+    "max_energy_nj": 2.319,
+    "worst": {
+     "d": "D1",
+     "fwd_ma_per_um": 7.766,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 2.319
+    }
+   }
+  },
+  {
+   "case": "P+N",
+   "stimulus": "cdm2A",
+   "ipk_a": 2.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "d4ef40835262c7baf8dbace757579f76ef25fd3d6b857dd518ba1e2a8046523f",
+   "pad_peak_abs_v": 14.5436202,
+   "pad_p_range_v": [
+    -4.39204766e-08,
+    14.5436202
+   ],
+   "pad_n_range_v": [
+    0.0,
+    0.0
+   ],
+   "pad_minus_local_vss_abs_v": 8.73445684,
+   "ring_dvdd_minus_dvss_site_v": [
+    -5.2691600000001615e-05,
+    3.2344146599999997
+   ],
+   "pad_minus_core_vdd_abs_v": 8.94143067,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 8.936,
+   "worst_diode": "D8 diode_pd2nw_06v0 PAD_N__up2 DVDD__kN",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 7.766,
+    "max_rev_ma_per_um": 0.062,
+    "max_energy_nj": 2.319,
+    "worst": {
+     "d": "D1",
+     "fwd_ma_per_um": 7.766,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 2.319
+    }
+   }
+  },
+  {
+   "case": "P-N",
+   "stimulus": "cdm2A",
+   "ipk_a": 2.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "33a6252b3dbb0ad456fa3418f53f4440038809cf705e27b8ad2f5cba3125f48d",
+   "pad_peak_abs_v": 14.5434586,
+   "pad_p_range_v": [
+    -14.5434586,
+    -1.03797865e-13
+   ],
+   "pad_n_range_v": [
+    0.0,
+    0.0
+   ],
+   "pad_minus_local_vss_abs_v": 8.73429779,
+   "ring_dvdd_minus_dvss_site_v": [
+    2.0488665220000001e-13,
+    3.2343996199999996
+   ],
+   "pad_minus_core_vdd_abs_v": 8.94142652,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 8.936,
+   "worst_diode": "D2 diode_pd2nw_06v0 PAD_P__up0 DVDD__kP",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 7.766,
+    "max_rev_ma_per_um": 0.061,
+    "max_energy_nj": 2.319,
+    "worst": {
+     "d": "D4",
+     "fwd_ma_per_um": 7.766,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 2.319
+    }
+   }
+  },
+  {
+   "case": "P+VSS",
+   "stimulus": "cdm3A",
+   "ipk_a": 3.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "a59b8df60ce7a3bc17c91fbbc029464c89c11744680cd3854f9bd7ceb6ba4ba8",
+   "pad_peak_abs_v": 12.2759177,
+   "pad_p_range_v": [
+    2.66235543e-13,
+    12.2759177
+   ],
+   "pad_n_range_v": [
+    2.37746223e-13,
+    1.43348915
+   ],
+   "pad_minus_local_vss_abs_v": 11.796420279,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.0005931700499999999,
+    4.024939519
+   ],
+   "pad_minus_core_vdd_abs_v": 8.654787,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 11.682,
+   "worst_diode": "D24 diode_nd2ps_06v0 VSS__aP PAD_P__dn4",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 7.575,
+    "max_rev_ma_per_um": 0.075,
+    "max_energy_nj": 2.215,
+    "worst": {
+     "d": "D7",
+     "fwd_ma_per_um": 7.575,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 2.215
+    }
+   }
+  },
+  {
+   "case": "P-VSS",
+   "stimulus": "cdm3A",
+   "ipk_a": 3.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "d0c9d94fe64db53a177315d831514378710be4a252b972c2d9090a968f285069",
+   "pad_peak_abs_v": 8.78661343,
+   "pad_p_range_v": [
+    -8.78661343,
+    2.3192625e-06
+   ],
+   "pad_n_range_v": [
+    -0.834266752,
+    1.20084142e-06
+   ],
+   "pad_minus_local_vss_abs_v": 8.224913084,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.033247005200000006,
+    0.11373550599999999
+   ],
+   "pad_minus_core_vdd_abs_v": 8.372750312,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 8.172,
+   "worst_diode": "D21 diode_pd2nw_06v0 PAD_P__up7 DVDD__kP",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 11.655,
+    "max_rev_ma_per_um": 0.078,
+    "max_energy_nj": 4.82,
+    "worst": {
+     "d": "D4",
+     "fwd_ma_per_um": 11.655,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 4.82
+    }
+   }
+  },
+  {
+   "case": "N+VSS",
+   "stimulus": "cdm3A",
+   "ipk_a": 3.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "8d9f256297e90a48f8678d93da8cba9ace51f38154b850e970d3848c2f9a2409",
+   "pad_peak_abs_v": 12.2756675,
+   "pad_p_range_v": [
+    2.37580164e-13,
+    1.42649853
+   ],
+   "pad_n_range_v": [
+    2.67507041e-13,
+    12.2756675
+   ],
+   "pad_minus_local_vss_abs_v": 11.796149339,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.00056093257,
+    4.024907039
+   ],
+   "pad_minus_core_vdd_abs_v": 8.654617530000001,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 11.682,
+   "worst_diode": "D25 diode_nd2ps_06v0 VSS__aN PAD_N__dn4",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 7.576,
+    "max_rev_ma_per_um": 0.076,
+    "max_energy_nj": 2.216,
+    "worst": {
+     "d": "D8",
+     "fwd_ma_per_um": 7.576,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 2.216
+    }
+   }
+  },
+  {
+   "case": "N-VSS",
+   "stimulus": "cdm3A",
+   "ipk_a": 3.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "87806077d440454959f5a9c4bc2adfcbb9ddbc1701173be96260c15bbb21fe44",
+   "pad_peak_abs_v": 8.78661612,
+   "pad_p_range_v": [
+    -0.832534021,
+    1.19500527e-06
+   ],
+   "pad_n_range_v": [
+    -8.78661612,
+    2.35090641e-06
+   ],
+   "pad_minus_local_vss_abs_v": 8.224789393,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.033248026900000005,
+    0.11373868100000001
+   ],
+   "pad_minus_core_vdd_abs_v": 8.372639391,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 8.172,
+   "worst_diode": "D23 diode_pd2nw_06v0 PAD_N__up7 DVDD__kN",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 11.654,
+    "max_rev_ma_per_um": 0.079,
+    "max_energy_nj": 4.82,
+    "worst": {
+     "d": "D1",
+     "fwd_ma_per_um": 11.654,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 4.82
+    }
+   }
+  },
+  {
+   "case": "P+VDD",
+   "stimulus": "cdm3A",
+   "ipk_a": 3.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "3ee50baf0a8d2cf4bad6f6ed60d72638512e99651561bf9a5a4acadd9d6c140b",
+   "pad_peak_abs_v": 8.2365676,
+   "pad_p_range_v": [
+    -4.08558787e-06,
+    8.2365676
+   ],
+   "pad_n_range_v": [
+    -5.20508569e-06,
+    0.710980403
+   ],
+   "pad_minus_local_vss_abs_v": 7.854358567,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.0342062144,
+    0.07972739099999998
+   ],
+   "pad_minus_core_vdd_abs_v": 8.23625766298,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 7.74,
+   "worst_diode": "D24 diode_nd2ps_06v0 VSS__aP PAD_P__dn4",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 7.577,
+    "max_rev_ma_per_um": 0.073,
+    "max_energy_nj": 2.215,
+    "worst": {
+     "d": "D7",
+     "fwd_ma_per_um": 7.577,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 2.215
+    }
+   }
+  },
+  {
+   "case": "P-VDD",
+   "stimulus": "cdm3A",
+   "ipk_a": 3.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "f0e9045660f9369012688954a0a7e1190f405d5d21fd7e6e6b4578366a3ae4cc",
+   "pad_peak_abs_v": 12.1644674,
+   "pad_p_range_v": [
+    -12.1644674,
+    -3.6388517e-13
+   ],
+   "pad_n_range_v": [
+    -4.05469657,
+    -3.92954304e-13
+   ],
+   "pad_minus_local_vss_abs_v": 8.17320477,
+   "ring_dvdd_minus_dvss_site_v": [
+    2.24555251e-13,
+    3.9089962570000005
+   ],
+   "pad_minus_core_vdd_abs_v": 12.031399459000001,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 11.435,
+   "worst_diode": "D7 diode_pd2nw_06v0 PAD_P__up2 DVDD__kP",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 11.568,
+    "max_rev_ma_per_um": 0.395,
+    "max_energy_nj": 4.638,
+    "worst": {
+     "d": "D4",
+     "fwd_ma_per_um": 11.568,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 4.638
+    }
+   }
+  },
+  {
+   "case": "N+VDD",
+   "stimulus": "cdm3A",
+   "ipk_a": 3.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "aaf7a70adcba324f1d0a0ffefe0493347bf547f8184b7f42cfbb203d5721d1fe",
+   "pad_peak_abs_v": 8.23639491,
+   "pad_p_range_v": [
+    -5.21093806e-06,
+    0.710124267
+   ],
+   "pad_n_range_v": [
+    -4.05391717e-06,
+    8.23639491
+   ],
+   "pad_minus_local_vss_abs_v": 7.854491715,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.032675847800000005,
+    0.08027752000000005
+   ],
+   "pad_minus_core_vdd_abs_v": 8.236085796477,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 7.74,
+   "worst_diode": "D25 diode_nd2ps_06v0 VSS__aN PAD_N__dn4",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 7.578,
+    "max_rev_ma_per_um": 0.075,
+    "max_energy_nj": 2.216,
+    "worst": {
+     "d": "D8",
+     "fwd_ma_per_um": 7.578,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 2.216
+    }
+   }
+  },
+  {
+   "case": "N-VDD",
+   "stimulus": "cdm3A",
+   "ipk_a": 3.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "85d51565055b2ec53e6934d05810d53a686b9ffb4d4222f7f9cafad680ef8db0",
+   "pad_peak_abs_v": 12.1644549,
+   "pad_p_range_v": [
+    -4.05682406,
+    -3.93142381e-13
+   ],
+   "pad_n_range_v": [
+    -12.1644549,
+    -3.62600172e-13
+   ],
+   "pad_minus_local_vss_abs_v": 8.17321086,
+   "ring_dvdd_minus_dvss_site_v": [
+    2.24705726e-13,
+    3.9090159170000005
+   ],
+   "pad_minus_core_vdd_abs_v": 12.031385229,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 11.435,
+   "worst_diode": "D8 diode_pd2nw_06v0 PAD_N__up2 DVDD__kN",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 11.568,
+    "max_rev_ma_per_um": 0.395,
+    "max_energy_nj": 4.638,
+    "worst": {
+     "d": "D1",
+     "fwd_ma_per_um": 11.568,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 4.638
+    }
+   }
+  },
+  {
+   "case": "P+N",
+   "stimulus": "cdm3A",
+   "ipk_a": 3.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "dc208c5bb66c0882779f0700f59091b856f3487ba6e5974524d4be91022adfe2",
+   "pad_peak_abs_v": 19.6041643,
+   "pad_p_range_v": [
+    -4.39204766e-08,
+    19.6041643
+   ],
+   "pad_n_range_v": [
+    0.0,
+    0.0
+   ],
+   "pad_minus_local_vss_abs_v": 11.8264448,
+   "ring_dvdd_minus_dvss_site_v": [
+    -6.608639999999832e-05,
+    4.0551067
+   ],
+   "pad_minus_core_vdd_abs_v": 11.6786653,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 11.712,
+   "worst_diode": "D24 diode_nd2ps_06v0 VSS__aP PAD_P__dn4",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 11.329,
+    "max_rev_ma_per_um": 0.473,
+    "max_energy_nj": 4.513,
+    "worst": {
+     "d": "D1",
+     "fwd_ma_per_um": 11.329,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 4.513
+    }
+   }
+  },
+  {
+   "case": "P-N",
+   "stimulus": "cdm3A",
+   "ipk_a": 3.0,
+   "ring": "typ",
+   "complete": true,
+   "deck_sha256": "d759ea4db6786e5bb21ba589ec8c262e70cfbcb31faad1b83d000dca8d7db27c",
+   "pad_peak_abs_v": 19.6038122,
+   "pad_p_range_v": [
+    -19.6038122,
+    -1.03797865e-13
+   ],
+   "pad_n_range_v": [
+    0.0,
+    0.0
+   ],
+   "pad_minus_local_vss_abs_v": 11.8259731,
+   "ring_dvdd_minus_dvss_site_v": [
+    2.0488665220000001e-13,
+    4.05488037
+   ],
+   "pad_minus_core_vdd_abs_v": 11.678514,
+   "over_limit_devices": [],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 11.712,
+   "worst_diode": "D25 diode_nd2ps_06v0 VSS__aN PAD_N__dn4",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0,
+   "site_current": {
+    "max_fwd_ma_per_um": 11.325,
+    "max_rev_ma_per_um": 0.473,
+    "max_energy_nj": 4.513,
+    "worst": {
+     "d": "D4",
+     "fwd_ma_per_um": 11.325,
+     "rev_ma_per_um": 0.0,
+     "v_rev_pk": 0.0,
+     "energy_nj": 4.513
+    }
+   }
+  }
+ ]
+}

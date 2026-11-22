@@ -13,9 +13,9 @@
     },
     "status": "physical_poly_HRES_DUALGATE_enclosures_materialized_requires_roundtrip",
     "rule": "Connected high-R poly grown 0.4um; HRES 62/0, and DUALGATE 55/0 for MV only.",
-    "before_gds_sha256": "f189d9176c468c95e88ae97b7efdc8d2ebb1f03f081067553abb74a558437cfb",
-    "after_gds_sha256": "33148b54aac164840f5a5978378ed7597a2f6a3717b1bfc113adbd86c7adecf7",
-    "physical_magic_sha256": "1fd241db37ac3814ccbc601ae77c79dd119f324669ebfc884dd670a196725f31",
+    "before_gds_sha256": "7416208588a6148994c3a8b339e208e87b8dd0f9c6a5a0603675e944e89426de",
+    "after_gds_sha256": "d77f0c5ae0bcf0b9eccd57c8857dac0a8a916b61a7b851a05f733dc8eaf40b0f",
+    "physical_magic_sha256": "d414214547bd281871a969199ad4af306ef8d239fcd49f6a56d15b6338d3fe01",
     "generator_sha256": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4"
   },
   "serial_tail_units": null,
@@ -177,12 +177,12 @@
   ],
   "bond_pitch_um": 211.0,
   "escape_layer": "metal2",
-  "escape_width_um": 4.0,
+  "escape_width_um": 8.0,
   "active_origin_um": 440.0,
   "core_clearance_depth_um": 416.0,
   "reference_sites": [
-    "inputs[1].pad",
-    "inputs[0].pad"
+    "bidir[20].pad",
+    "bidir[21].pad"
   ],
   "fits_reference_height": false,
   "near_bond_ground_landings_um": [
@@ -225,15 +225,15 @@
       440.0
     ],
     [
-      35.3,
+      33.3,
       76,
-      39.7,
+      41.7,
       440.0
     ],
     [
-      246.3,
+      244.3,
       76,
-      250.7,
+      252.7,
       440.0
     ],
     [
@@ -249,98 +249,97 @@
       440.0
     ],
     [
-      79.945,
-      438.0,
-      354.5,
-      728.0
+      9.0,
+      62.0,
+      74.0,
+      148.7
     ],
     [
-      86.16499999999999,
-      741.0,
-      382.83500000000004,
-      908.87
-    ],
-    [
-      100.0,
-      728.0,
-      130.0,
-      741.0
-    ],
-    [
-      180.0,
-      728.0,
-      210.0,
-      741.0
-    ],
-    [
-      33.5,
-      392.0,
-      372.0,
-      400.0
-    ],
-    [
-      364.0,
-      392.0,
-      372.0,
-      484.0
-    ],
-    [
-      262.0,
-      476.0,
-      372.0,
-      484.0
-    ],
-    [
-      244.5,
-      402.0,
-      388.0,
-      410.0
-    ],
-    [
-      380.0,
-      402.0,
-      388.0,
-      504.0
-    ],
-    [
-      266.0,
-      496.0,
-      388.0,
-      504.0
-    ],
-    [
-      216.0,
-      442.0,
-      402.0,
-      446.0
-    ],
-    [
-      396.0,
-      411.0,
-      404.0,
-      448.0
-    ],
-    [
-      30.659999999999997,
-      413.0,
-      402.0,
-      417.0
+      220.0,
+      62.0,
+      285.0,
+      148.7
     ]
   ],
+  "capacitors": [],
+  "paired_devices": {},
+  "usb_term_block": {
+    "options": {
+      "neck_w": 8.0,
+      "height_um": null,
+      "x0": [
+        46.0,
+        257.0
+      ],
+      "gap": 1.5,
+      "rail": [
+        352.0,
+        357.5
+      ],
+      "yp": 360.8,
+      "ys_b": 365.1,
+      "vcm": [
+        389.4,
+        395.0
+      ],
+      "strap": [
+        253.0,
+        313.0
+      ],
+      "bar": [
+        1345.0,
+        1432.6
+      ],
+      "neck_m1": [
+        [
+          67.0,
+          95.6
+        ],
+        [
+          99.8,
+          348.3
+        ]
+      ],
+      "links": {},
+      "vss_p": 420.0,
+      "vss_n": 398.0,
+      "bar_w": 0.8,
+      "neck_hi": null,
+      "top_pins": true,
+      "pad_trunk_fill": false,
+      "fs": null,
+      "term_block": false
+    },
+    "info": null,
+    "top_pins_um": {
+      "VSS": [
+        28.66,
+        911.19,
+        36.66,
+        912.91
+      ],
+      "VCM": [
+        27.22,
+        911.19,
+        27.66,
+        912.91
+      ]
+    }
+  },
   "area_ceiling_um2": 185000,
   "fits_assigned_area": true,
   "image_id": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
   "sources_sha256": {
-    "analog/pads/layout.py": "747c7be03aef948ba6a117258abe2715d45f607945b93932ca37dd6e4f8ebe8d",
+    "analog/pads/layout.py": "ffe71882168a6b615299097fad70c0a8ac7dfc6ab1b7a18ab00c19d85752b85b",
     "analog/pads/gds_markers.py": "3cbdc612a7466752bff301b8dc481b057a3dbfdc8dbc76b43f1ce6daf3fe0bc4",
     "analog/pads/generated/provider-sites.json": "c58790b22d45497c45bfd20e8cc60e698d8286010856fcc6fa18ab7021d26df4",
-    "analog/pads/circuits.py": "1c212fbefc7157c2fb50594b3c137aa9ce2f94bfd30075c9386c05a0fa55e2b3",
-    "analog/pads/design.py": "7330ebd9a33ffcfe6a0c9949cd8d51d08a8e6564521b14ae4ec57fd66a1a40f9",
-    "analog/pads/wired_receive.py": "955c3b046b5b62c338143ed9fc3c6a141a12e3f067713d05d3868306ff244a37",
+    "analog/pads/circuits.py": "b3410460a41f77203d58cf04e69f5585ebf46de55397cb27956e8200893379ed",
+    "analog/pads/design.py": "5b4866e5afd4c82af6f4f9b2f3c06f78450fe7e3970b9198e96688294cb0d745",
+    "analog/pads/wired_receive.py": "f27e9ccb29fdaf767e6acb6369fca900e429c8d5caad67846472161969cf64cc",
     "analog/pads/folded_tail.py": "7d8ddd4f655ac25e8ebbfdcb4c1599b53374f7b6b795e521ecdade18da2ed386",
-    "spec/analog-architecture.json": "e5b4968e929acb2157ab45d9745959435c6557ac5c508cc67261048273ae6a4e",
-    "spec/contract.json": "712a142ab5e6fa1f2fe50b30c23be83207125c47caee8b18c79fd134eb7b693c",
-    "spec/schematic-implementation.json": "eae5d10b78eaa098f87660ec4dd0b5cbe953a9d8b0074fd4786628ea1490c332"
+    "spec/analog-architecture.json": "926ab41bb4d58096dc49f01e2f066ac21ed4d55ed9dfc3d00f81949fc307781f",
+    "spec/contract.json": "f29eecf0de1e329e75dc250171537f28aa5a4fa8eb11c65d7f836ff1e8718433",
+    "spec/schematic-implementation.json": "b6a965a27a311ee851a37ce2d925706d5b1ce1e72055a8260d76c187b751c3a8"
   },
   "drc_count": "0",
   "pcell_terminal_coordinates": {
@@ -377,16 +376,128 @@
   "physical_bbox_um": [
     2.7800000000000002,
     0.0,
-    404.0,
+    285.0,
     912.91
   ],
   "candidate_size_um": [
-    404.0,
+    285.0,
     912.91
   ],
-  "area_um2": 176475.6279,
+  "area_um2": 58337.74,
   "area_basis": "Allocated nonrectangular union, not material area or bounding rectangle.",
-  "allocation_union_um2": 176475.6279,
+  "allocation_union_um2": 58337.74,
   "connected_primary_candidate": true,
-  "device_count": 404
+  "esd_option_a": {
+    "site_options": {
+      "neck": [
+        33.5,
+        41.5
+      ],
+      "neck_extra_left": 0.0,
+      "pad_bar": 7,
+      "vss_strip": [
+        9.0,
+        11.0
+      ],
+      "n_dn": 5,
+      "n_up": 5,
+      "pitch": 6.0,
+      "first_x": null,
+      "y_dn": 82.0,
+      "y_up": 113.5,
+      "plate_y": 62.0,
+      "y_vdd_top": 148.7,
+      "dvss_band": [
+        70.0,
+        117.0
+      ],
+      "dvdd_bands": [
+        [
+          118.0,
+          125.0
+        ],
+        [
+          134.0,
+          197.0
+        ]
+      ],
+      "x_max": 74.0,
+      "n_up_left": 3,
+      "n_dn_left": 0,
+      "no_up_row": false
+    },
+    "sites": [
+      {
+        "dvdd_label": [
+          57.75,
+          141.4
+        ],
+        "vss_label": [
+          57.75,
+          91.5
+        ],
+        "pad_label": [
+          37.5,
+          63.0
+        ],
+        "fingers_x": [
+          46.0,
+          52.0,
+          58.0,
+          64.0,
+          70.0
+        ],
+        "n_dn": 5,
+        "n_up": 5,
+        "n_up_left": 3,
+        "n_dn_left": 0,
+        "cuts": {
+          "via1": 395,
+          "via2": 2720
+        },
+        "bbox": [
+          9.0,
+          62.0,
+          74.0,
+          148.7
+        ]
+      },
+      {
+        "dvdd_label": [
+          268.75,
+          141.4
+        ],
+        "vss_label": [
+          268.75,
+          91.5
+        ],
+        "pad_label": [
+          248.5,
+          63.0
+        ],
+        "fingers_x": [
+          257.0,
+          263.0,
+          269.0,
+          275.0,
+          281.0
+        ],
+        "n_dn": 5,
+        "n_up": 5,
+        "n_up_left": 3,
+        "n_dn_left": 0,
+        "cuts": {
+          "via1": 395,
+          "via2": 2720
+        },
+        "bbox": [
+          220.0,
+          62.0,
+          285.0,
+          148.7
+        ]
+      }
+    ]
+  },
+  "device_count": 42
 }

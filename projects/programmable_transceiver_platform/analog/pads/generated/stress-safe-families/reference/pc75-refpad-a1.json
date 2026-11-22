@@ -1,0 +1,151 @@
+{
+ "row": "PC-75",
+ "cell": "pad_refpad",
+ "state": "BASELINE (MANDATE 1: finished-if-imperfect; known misses below)",
+ "candidate": "a1 (ESD option A: pad-site primaries to the ring, no protection network)",
+ "build_command": "python3 $P/analog/pads/stress_safe_compact_layout.py reference_clock OUT $P/analog/pads/generated/stress-safe-families/network-gc '--esd-a={\"site\": {\"n_up_left\": 3}, \"tb\": {\"top_pins\": true}}'  (= scratch/pads-core/esdopt/ref/build.sh a1 network-gc ...); top cell tx_with_primary renamed to pad_refpad on publish (byte-level STRNAME rename, nothing else changed)",
+ "rebuild_check": "2026-11-22 rebuild from the working generators (layout.py ffe71882, wired_protection_layout_ss.py b2e89345, stress_safe_compact_layout.py 0c0f8b61, pad_site_primary.py 2bca0b81; uncommitted pads-agent edits, committed with the pad_wirepad publish) into esdopt/ref/build/pub1: generator DRC 0, 42 devices, device LVS match; GDS with BGNLIB/BGNSTR timestamps zeroed 80fb15cd == candidate a1 (a37db142) == published file (after the top rename). Default path (no --esd-a) XOR 0.0 um2 vs the previous published pad_refpad (STATUS L7).",
+ "sha256": {
+  "combined.gds": "96dc5a02dc76777811ed42940c1f6a767951728dd91c418e0243ecbacda66e1e",
+  "physical.spice": "787fa2cebe5a03a3c79673c5cd24535d456aa3162ac073d1b9570059272e6063",
+  "physical-r-typ.spice": "4c29e7711a90d12cc949644ac27d269ff457ebcf8c75ec8498f3550043297818",
+  "physical-r-high.spice": "3d0225796aba51ed6fda8cce3cf071952ed9f0d142cdc5d15a83c563a7ab6b46",
+  "physical-r-typ-rail.spice": "33f53875306af99965fe13cc0cc59d6a7e15df7820f03c9a07ef697ab8fd7749",
+  "physical-r-high-rail.spice": "3b9712799567554eaf0e4c0e3f43cd482c47832e604f3a47743128e36db29ce2",
+  "lvs-reference.spice": "21fdaa29e5c0bbcb5c4a3545a7d5d149c9521e2cf43375a6dbbc24fc6c7eed1d",
+  "combined-lvs.txt": "7f70fcf21049c477e482232d07d3328d8a9ee300fd6fa06058ae3bdfbbce4d8b",
+  "placement-layout.json": "2f25248ae552e88ffd2a71062b163d9614efaff409a75f19131a487bbeddeea9",
+  "marker-merge.json": "ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+  "independent-device-audit.json": "ad21169bad7d96edd8aff97756644c00485db3132b2ac8c23663a3e5bb2eab27",
+  "layout-screen.json": "043b1a042800126417ccf120a77e1a967424425514febbbd44dc5f52fac37034",
+  "model-audit.json": "525d6dad6e03e6b99ab31d8e856bdd85a49e990559db3d400e149669e027f228",
+  "lu.json": "a3fadf63a683889ab34e1cd59af851b900e57287d2d08dc38bdff5fcfea5535c"
+ },
+ "generators_sha256_8": {
+  "layout.py": "ffe71882",
+  "wired_protection_layout_ss.py": "b2e89345",
+  "stress_safe_compact_layout.py": "0c0f8b61",
+  "pad_site_primary.py": "2bca0b81"
+ },
+ "bbox_um": [
+  2.78,
+  0,
+  285.0,
+  912.91
+ ],
+ "devices": "42 diodes (16 + 2 x 13 pad-site diode_pd2nw_06v0 / diode_nd2ps_06v0 + bias poly), no MOS",
+ "ports": [
+  "PAD_P",
+  "PAD_N",
+  "VSS",
+  "VCM",
+  "DVDD"
+ ],
+ "ports_note": "ATB_ESD_RAIL and ESD_RAIL removed (no protection network). DVDD = ring landing of the pad-site up-diodes (Metal3 y 141.4, both sites): tie to the ring supply (chip top DVDD~VDD), not routed. Top-edge core pins: PAD_P / PAD_N Metal5 at y 911.94, VCM Metal4 x 27.22-27.66, VSS Metal4 x 28.66-36.66 (y 911.19-912.91).",
+ "models": {
+  "physical.spice": "C-only extraction, wrapper tx_protected_pad (PAD_P PAD_N VSS VCM DVDD)",
+  "physical-r-typ.spice / physical-r-high.spice": "R+C (netres on PAD_P / PAD_N from the bond opening to every device terminal + site islands; typ / high metal)",
+  "physical-r-typ-rail.spice / physical-r-high-rail.spice": "same + under-rail capacitance of the provider rail cell (mkrail.py, 198.8 fF / leg)",
+  "note": "the bond -> top-edge core pin resistance (14.6 / 17.8 ohm typ for P / N) is not a model terminal"
+ },
+ "limits": [
+  [
+   "L1 Magic DRC (generator)",
+   "0",
+   "PASS"
+  ],
+  [
+   "L2 read-back LVS (flat GDS from disk) vs generator schematic / composer reference; controls VCM/VSS label swap, one site diode missing",
+   "match / match (42 devices); mismatch, mismatch (PAD_P/N swap matches: symmetric, not a control)",
+   "PASS"
+  ],
+  [
+   "L3 KLayout precheck main / antenna (cell; pad on rail); sliver control",
+   "0 / 0 (0 / 0); control reports",
+   "PASS"
+  ],
+  [
+   "L4 latch-up uncovered at 15 um; isolated-nmos control",
+   "0.0 um2; 6.4 um2",
+   "PASS"
+  ],
+  [
+   "L5 rail_site_check / selftest / railconn",
+   "PASS / OK / DVDD only on DVDD bands",
+   "PASS"
+  ],
+  [
+   "L6 core pins on the top edge",
+   "PAD_P/N, VCM, VSS at y 911-913",
+   "PASS"
+  ],
+  [
+   "L7 default-path XOR (reference, USB)",
+   "0.0 / 0.0 um2",
+   "PASS"
+  ],
+  [
+   "L8 outline inside the published bbox",
+   "(2.78,0)-(285,912.91) inside (..404)",
+   "PASS"
+  ],
+  [
+   "E1 HBM 2 kV pad - local VSS (6 V consumers <= 8.0 V), high / typ metal",
+   "6.32 / 5.69 V",
+   "PASS"
+  ],
+  [
+   "E1 CDM 2 A + SITECAP 1 nF / 0.7 ohm pad - local VSS, high / typ",
+   "8.73 / 7.78 V",
+   "MISS at high metal (0.73 V over); typ PASS"
+  ],
+  [
+   "E4 consumer MIM <= 6.0 V (far plate assumed at VSS, conservative bound)",
+   "HBM 6.32 / 5.69; CDM 8.73 / 7.78 V",
+   "MISS (upper bound, consumer not simulated)"
+  ],
+  [
+   "E2 non-primary junctions",
+   "none in the cell",
+   "PASS"
+  ],
+  [
+   "E3 site fingers fwd <= 10 / aval <= 1 mA/um",
+   "HBM 2 kV 5.14 / 0.014; CDM 2 A 7.77 / 0.066",
+   "PASS"
+  ],
+  [
+   "Bench controls: 2 ohm toy vs hand; sites stripped",
+   "2.899 / 4.378 V = hand; 86.5 kV / 10.6 kV",
+   "PASS"
+  ],
+  [
+   "F1 pad C per leg at 1 GHz (R+C + rail) <= published + 0.3 pF",
+   "0.870-0.938 pF vs 0.702-0.780 (delta +0.148..+0.177)",
+   "PASS (0.12 pF margin)"
+  ],
+  [
+   "F1 at 2.45 GHz (external LO, report)",
+   "0.867-0.936 pF, series 0.32-0.47 ohm",
+   "report"
+  ]
+ ],
+ "misses_and_conditions": [
+  "CDM 2 A at high metal R: pad - local VSS 8.73 V > 8.0 V at the consumers' 6 V devices (pt_diff_clk_rx INP/INN, pt_lo_ext EXT_x nfet_06v0 drains); typ metal 7.78 V passes with 0.22 V margin.",
+  "Consumer MIM (6 V): upper bound exceeded if its far plate stays at VSS (HBM 6.32 V, CDM 8.73 V); the real consumer cells are not in the ESD bench.",
+  "Not run: consumer cells in the ESD bench, ss / ff / hot device corners in ESD, low-metal corner, P-N differential stress at the consumers (HBM P+N pad-to-pad 10.5 V), external-LO amplitude rerun (lo_ext_pad.py) with the new pad, EM of the site paths.",
+  "Levers (not tried, baseline-first): local secondary (series R + small diodes before the core pin), more down-row fingers, wider neck."
+ ],
+ "review": {
+  "status": "scratch/pads-core/esdopt/ref/STATUS.md (BASELINE a1)",
+  "interface_rows": "scratch/reviews/interface-changes.md PC-75",
+  "independent_review": "none yet"
+ },
+ "evidence": {
+  "checks": "scratch/pads-core/esdopt/ref/checks/a1/ (progress, logs; not tracked)",
+  "esd": "scratch/pads-core/esdopt/ref/esd/{a1rh,a1rt,a1rh_nosite,toy}.json",
+  "pad_c": "scratch/pads-core/esdopt/ref/bench/{a1rt_rail,a1rh_rail,a1rt_rail_ctest,pubrt_rail,pubrh_rail,pubc}-padc.json",
+  "rpin": "scratch/pads-core/esdopt/ref/rpin/{a1,pub}-res.json",
+  "scripts": "scratch/pads-core/esdopt/ref/{build.sh,checks.sh,q.sh,q_pub.sh,rflow.sh,mkspec.py,fixspec.py,mkmodel.py,mkrail.py,esd_ref.py,esdtab.py,padc_ref.py,xor.sh}"
+ }
+}

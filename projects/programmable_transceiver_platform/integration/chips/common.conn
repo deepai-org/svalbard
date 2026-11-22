@@ -79,9 +79,9 @@ inst pad_dvss_{0:7} prov_supply chip
 inst pad_vss_{0:1} prov_supply chip
   PAD~VSS
 inst pad_ref pad_refpad pll
-  PAD_P~REF_IN PAD_N~REF_IN_N VSS~VSS VCM~REF_VCM ATB_ESD_RAIL~-
+  PAD_P~REF_IN PAD_N~REF_IN_N VSS~VSS VCM~REF_VCM DVDD~VDD      # DVDD: pad-site up-diode ring landing (PC-75)
 inst pad_aux_clk pad_refpad pll
-  PAD_P~AUX_CLK_P PAD_N~AUX_CLK_N VSS~VSS VCM~REF_VCM ATB_ESD_RAIL~-
+  PAD_P~AUX_CLK_P PAD_N~AUX_CLK_N VSS~VSS VCM~REF_VCM DVDD~VDD      # DVDD: pad-site up-diode ring landing (PC-75)
 inst refvcm pt_refvcm pll
   VCM~REF_VCM EN=c_refvcm_en VDD~RAIL_pll VSS~VSS      # refpad VCM (VDD/2 in the LO bench) has no source (MW-6), D-REFVCM
 

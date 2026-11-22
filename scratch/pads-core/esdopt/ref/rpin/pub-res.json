@@ -1,0 +1,324 @@
+{
+ "gds": "/work/esdopt/ref/pub/combined.gds",
+ "gds_sha256": "ae89311095ffb7498628bb44af8de5cb0341030dcc926f761f81731d98a36cae",
+ "top": "pad_refpad",
+ "resistances": {
+  "typ": {
+   "M1": 0.09,
+   "M2": 0.09,
+   "M3": 0.09,
+   "M4": 0.09,
+   "M5": 0.04,
+   "V1": 4.5,
+   "V2": 4.5,
+   "V3": 4.5,
+   "V4": 4.5
+  },
+  "high": {
+   "M1": 0.104,
+   "M2": 0.104,
+   "M3": 0.104,
+   "M4": 0.104,
+   "M5": 0.049,
+   "V1": 15.0,
+   "V2": 15.0,
+   "V3": 15.0,
+   "V4": 15.0
+  }
+ },
+ "tech_checked": true,
+ "nets": {
+  "PAD_P": {
+   "name": "PAD_P",
+   "seeds": [
+    [
+     "M5",
+     24.22,
+     911.94
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 1.0,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 154.159,
+    "M2": 5288.181,
+    "M3": 4129.835,
+    "M4": 7513.835,
+    "M5": 7133.74
+   },
+   "via_cuts": {
+    "V1": 9,
+    "V2": 6485,
+    "V3": 6492,
+    "V4": 6484
+   },
+   "mesh_nodes": 28999,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "bond": {
+     "layer": "M5",
+     "cells": 3660,
+     "x": 37.5,
+     "y": 32.0
+    },
+    "core": {
+     "layer": "M5",
+     "cells": 8,
+     "x": 24.22,
+     "y": 911.95
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "bond|core": 18.77063
+     },
+     "paths": {
+      "bond|core": {
+       "narrowest_on_path": {
+        "width_um": 4.0,
+        "layer": "M2",
+        "x": 35.5,
+        "y": 65.325,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 0.25,
+       "single_cut_vias_on_path": 1,
+       "single_cut_vias": [
+        {
+         "via": "V4",
+         "cuts": 1,
+         "x": 24.22,
+         "y": 426.0,
+         "current_fraction": 1.0
+        }
+       ],
+       "fewest_cuts_on_path": {
+        "via": "V4",
+        "cuts": 1,
+        "x": 24.22,
+        "y": 426.0,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 1.0,
+        "via": "V4",
+        "x": 24.22,
+        "y": 426.0
+       },
+       "flags": [
+        "1 single-cut via(s) on the path"
+       ]
+      }
+     },
+     "reduced_network": [
+      [
+       "bond",
+       "core",
+       18.770628316332484
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "bond|core": 34.03294
+     },
+     "paths": {
+      "bond|core": {
+       "narrowest_on_path": {
+        "width_um": 4.0,
+        "layer": "M2",
+        "x": 35.5,
+        "y": 65.325,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 0.25,
+       "single_cut_vias_on_path": 1,
+       "single_cut_vias": [
+        {
+         "via": "V4",
+         "cuts": 1,
+         "x": 24.22,
+         "y": 426.0,
+         "current_fraction": 1.0
+        }
+       ],
+       "fewest_cuts_on_path": {
+        "via": "V4",
+        "cuts": 1,
+        "x": 24.22,
+        "y": 426.0,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 1.0,
+        "via": "V4",
+        "x": 24.22,
+        "y": 426.0
+       },
+       "flags": [
+        "1 single-cut via(s) on the path"
+       ]
+      }
+     },
+     "reduced_network": [
+      [
+       "bond",
+       "core",
+       34.03294281158294
+      ]
+     ]
+    }
+   },
+   "groups": {},
+   "seconds": 1.9
+  },
+  "PAD_N": {
+   "name": "PAD_N",
+   "seeds": [
+    [
+     "M5",
+     19.22,
+     911.94
+    ]
+   ],
+   "clip": null,
+   "max_step_um": 1.0,
+   "path_fraction": 0.5,
+   "metal_area_um2": {
+    "M1": 154.159,
+    "M2": 5324.021,
+    "M3": 4131.115,
+    "M4": 7347.211,
+    "M5": 7181.74
+   },
+   "via_cuts": {
+    "V1": 9,
+    "V2": 6485,
+    "V3": 6492,
+    "V4": 6484
+   },
+   "mesh_nodes": 29181,
+   "floating_nodes_dropped": 0,
+   "terminals": {
+    "bond": {
+     "layer": "M5",
+     "cells": 3600,
+     "x": 248.5,
+     "y": 32.0
+    },
+    "core": {
+     "layer": "M5",
+     "cells": 8,
+     "x": 19.22,
+     "y": 911.95
+    }
+   },
+   "corners": {
+    "typ": {
+     "resistance_ohm": {
+      "bond|core": 22.11293
+     },
+     "paths": {
+      "bond|core": {
+       "narrowest_on_path": {
+        "width_um": 4.0,
+        "layer": "M2",
+        "x": 246.5,
+        "y": 65.325,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 0.25,
+       "single_cut_vias_on_path": 1,
+       "single_cut_vias": [
+        {
+         "via": "V4",
+         "cuts": 1,
+         "x": 19.22,
+         "y": 434.0,
+         "current_fraction": 1.0
+        }
+       ],
+       "fewest_cuts_on_path": {
+        "via": "V4",
+        "cuts": 1,
+        "x": 19.22,
+        "y": 434.0,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 1.0,
+        "via": "V4",
+        "x": 19.22,
+        "y": 434.0
+       },
+       "flags": [
+        "1 single-cut via(s) on the path"
+       ]
+      }
+     },
+     "reduced_network": [
+      [
+       "bond",
+       "core",
+       22.112926893786682
+      ]
+     ]
+    },
+    "high": {
+     "resistance_ohm": {
+      "bond|core": 37.8896
+     },
+     "paths": {
+      "bond|core": {
+       "narrowest_on_path": {
+        "width_um": 4.0,
+        "layer": "M2",
+        "x": 246.5,
+        "y": 65.325,
+        "current_fraction": 1.0
+       },
+       "max_run_current_density_per_um": 0.25,
+       "single_cut_vias_on_path": 1,
+       "single_cut_vias": [
+        {
+         "via": "V4",
+         "cuts": 1,
+         "x": 19.22,
+         "y": 434.0,
+         "current_fraction": 1.0
+        }
+       ],
+       "fewest_cuts_on_path": {
+        "via": "V4",
+        "cuts": 1,
+        "x": 19.22,
+        "y": 434.0,
+        "current_fraction": 1.0
+       },
+       "max_current_fraction_per_cut": {
+        "fraction": 1.0,
+        "via": "V4",
+        "x": 19.22,
+        "y": 434.0
+       },
+       "flags": [
+        "1 single-cut via(s) on the path"
+       ]
+      }
+     },
+     "reduced_network": [
+      [
+       "bond",
+       "core",
+       37.889605488771785
+      ]
+     ]
+    }
+   },
+   "groups": {},
+   "seconds": 1.6
+  }
+ }
+}

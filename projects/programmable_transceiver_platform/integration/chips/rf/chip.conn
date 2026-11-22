@@ -120,10 +120,10 @@ inst lna pt_lna rf_rx
   tail~LNA_TAIL vtk~LNA_VTK VDD~RAIL_rf_rx VSS~VSS
 # LNA spirals (analog/rf_rx/README.md section 7, RQ-1): unpublished candidates. LNA_VTK and LNA_TAIL connect to nothing else
 # (no decap, ESD or other block); each carries the full 18-19 mA: short wide top metal.
-inst lna_ind_{p,n} pt_lna_ind rf_rx demand
+inst lna_ind_{p,n} pt_lna_ind rf_rx
   A~LNA_VTK B~LNA_TANK_\U1            # tank load, 2.01 nH, from the LNA's tank centre tap
-inst lna_deg_{p,n} pt_lna_deg rf_rx demand
-  A~LNA_SRC_\U1 B~LNA_TAIL              # on-chip source degeneration 0.47 nH, to the LNA's tail node
+inst lna_deg_{p,n} pt_lna_deg rf_rx
+  A~LNA_SRC_\U1 B~LNA_TAIL              # on-chip source degeneration 0.31 nH, to the LNA's tail node
 inst rxmix_{i,q} pt_rxmix_\1 rf_rx
   rf_p~RFA_\U1_P rf_n~RFA_\U1_N lo_p~LO_\U1P lo_n~LO_\U1N bb_p~BB\U1_RX_P bb_n~BB\U1_RX_N ibias~BIAS_rxmix_\1
   en=c_rxmix_\1_en ofs{0:4}=c_rxmix_\1_ofs[\2] ofs_sign=c_rxmix_\1_ofs[5] island_off=island_off[1] hib=c_rxmix_hib

@@ -8,13 +8,13 @@
   "K4": 0,
   "K5": 0,
   "K6": 0,
-  "K7": 10
+  "K7": 6
  },
  "groups": {
   "K1 island-to-island / island-to-core gate with no clamp": 8,
   "K2 pad back-drive into an off island": 2,
   "K2 core / digital source onto p-diffusion of an off island": 4,
-  "K7 ATB leaf not gated by its island": 10
+  "K7 ATB leaf not gated by its island": 6
  },
  "fails": [
   {
@@ -173,30 +173,12 @@
   },
   {
    "rule": "K7",
-   "leaf": "atb0_leaf29",
-   "node": "ATBN_pll_ibias",
-   "island": "pll",
-   "sel": "atb0_sw[28]",
-   "bus": "ATB0 force",
-   "detail": "leaf on an island node but its select is not gated by island_on[2]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
-  },
-  {
-   "rule": "K7",
    "leaf": "atb1_leaf29",
    "node": "ATBN_pll_ibias",
    "island": "pll",
    "sel": "atb1_sw[28]",
    "bus": "ATB1 sense",
    "detail": "leaf on an island node but its select is not gated by island_on[2]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
-  },
-  {
-   "rule": "K7",
-   "leaf": "atb0_leaf56",
-   "node": "ATBN_debug_ibias",
-   "island": "debug",
-   "sel": "atb0_sw[55]",
-   "bus": "ATB0 force",
-   "detail": "leaf on an island node but its select is not gated by island_on[5]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
   },
   {
    "rule": "K7",
@@ -227,30 +209,12 @@
   },
   {
    "rule": "K7",
-   "leaf": "atb0_leaf14",
-   "node": "ATBN_rf_ibias",
-   "island": "rf",
-   "sel": "atb0_sw[13]",
-   "bus": "ATB0 force",
-   "detail": "leaf on an island node but its select is not gated by island_on[1]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
-  },
-  {
-   "rule": "K7",
    "leaf": "atb1_leaf14",
    "node": "ATBN_rf_ibias",
    "island": "rf",
    "sel": "atb1_sw[13]",
    "bus": "ATB1 sense",
    "detail": "leaf on an island node but its select is not gated by island_on[1]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
-  },
-  {
-   "rule": "K7",
-   "leaf": "atb0_leaf35",
-   "node": "ATBN_conv_ibias",
-   "island": "conv",
-   "sel": "atb0_sw[34]",
-   "bus": "ATB0 force",
-   "detail": "leaf on an island node but its select is not gated by island_on[4]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
   },
   {
    "rule": "K7",

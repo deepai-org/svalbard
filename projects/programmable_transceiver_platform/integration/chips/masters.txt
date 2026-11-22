@@ -96,16 +96,14 @@ master atb_provider_pad  inline ASIG5V DVDD DVSS VDD VSS
 # the macro: target pin list = what pt_chip.conn binds on instance `digital`; check_top.py diffs it against rtl/pt_digital_macro.sv
 master pt_digital_macro  target
 # ---- build demands (do not exist; see decisions.md) ----
-master pt_lna_ind        demand rf_rx A B
-master pt_lna_deg        demand rf_rx A B
+master pt_lna_ind        inline A B      # layout analog/rf_rx/generated (RQ-20); inductor: black-box in top LVS
+master pt_lna_deg        inline A B      # layout analog/rf_rx/generated (RQ-20); inductor: black-box in top LVS
 master pt_lo_vreg        demand timing+power VIN VOUT EN VSS
-master pt_refvcm         demand pads VCM EN VDD VSS
-master pad_strap         demand pads+digital PAD Y VDD VSS
+master pt_refvcm         inline VCM EN VDD VSS        # published: analog/core_support/distribution/generated/pt_refvcm (PC-72)
+master pad_strap         inline PAD Y PU PD DVDD DVSS VDD VSS   # provider gf180mcu_fd_io__in_c, unmodified (PC-72, STRAP.md)
 master pt_txpad_bias     demand pads BUF_REF BUF_BIAS EN_TERM VDD VSS
-master pad_downbond      demand pads PAD
-master pt_agnd_tie       demand pads A B
 # provider supply / ground pad cells (dvdd, dvss, vdd, vss of the retained ring): one bond each
 master prov_supply       inline PAD
 # supply / ground bond on a free signal site (D12, bond_map.txt): a provider supply cell (or a custom cell) at a signal site; demand until
 # the pads owner confirms the cell, its clamp and the tester diode check per site (D-SPLIT-SUPSITE)
-master prov_supply_sig demand pads PAD
+master prov_supply_sig inline PAD                    # provider dvss/dvdd cell at a signal site, unmodified (PC-35, PC-72)

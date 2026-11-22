@@ -6,7 +6,7 @@ Xaosc c_aosc_en fc_src[4] NC_aosc_ATB_X VDD VSS pt_aosc
 Xisw_pll VDD RAIL_pll VSS island_en[2] NC_isw_pll_ISO s_pg_pll isw_debug_pex
 Xpad_ref REF_IN REF_IN_N VSS REF_VCM NC_pad_ref_ATB_ESD_RAIL tx_protected_pad
 Xpad_aux_clk AUX_CLK_P AUX_CLK_N VSS REF_VCM NC_pad_aux_clk_ATB_ESD_RAIL tx_protected_pad
-Xrefvcm REF_VCM c_refvcm_en RAIL_pll VSS pt_refvcm   * DEMAND
+Xrefvcm REF_VCM c_refvcm_en RAIL_pll VSS pt_refvcm
 Xrx_ref_in REF_IN REF_IN_N c_rx_ref_en VSS NC_rx_ref_in_OUTP ref_clk s_ref_present NC_rx_ref_in_ATB_DET VDD VSS pt_diff_clk_rx
 Xiso_host_clk HOST_CLK island_off[2] host_word_clk VDD VSS iso_clamp_x4
 Xprescale WIRE_CK c_prescale_en c_prescale_d[0] c_prescale_d[1] c_prescale_d[2] c_prescale_d[3] PRE_CK RAIL_pll VSS pt_prescale
@@ -98,10 +98,10 @@ Xpad_rf_tx RF_TX_N RF_TX_P VSS ESD_RAIL_rf_tx NC_pad_rf_tx_ATB_ESD_RAIL pad_refe
 Xpad_bb_i BB_I_N BB_I_P VSS ESD_RAIL_bb NC_pad_bb_i_ATB_ESD_RAIL pad_reference
 Xpad_bb_q BB_Q_N BB_Q_P VSS ESD_RAIL_bb NC_pad_bb_q_ATB_ESD_RAIL pad_reference
 Xlna RF_RX_P RF_RX_N RFA_I_P RFA_I_N RFA_Q_P RFA_Q_N BIAS_lna c_lna_en c_lna_gain_lo c_lna_byp c_lna_ct[0] c_lna_ct[1] c_lna_ct[2] c_lna_se c_lna_rt island_off[1] ATBN_lna_bias ATBN_rf_vcm RAIL_rf_rx VSS c_lna_ct[3] c_lna_att[0] c_lna_att[1] c_lna_att[2] c_lna_att[3] c_lna_att[4] LNA_SRC_P LNA_SRC_N LNA_TANK_P LNA_TANK_N c_lna_lobias LNA_TAIL LNA_VTK pt_lna
-Xlna_ind_p LNA_VTK LNA_TANK_P pt_lna_ind   * DEMAND
-Xlna_ind_n LNA_VTK LNA_TANK_N pt_lna_ind   * DEMAND
-Xlna_deg_p LNA_SRC_P LNA_TAIL pt_lna_deg   * DEMAND
-Xlna_deg_n LNA_SRC_N LNA_TAIL pt_lna_deg   * DEMAND
+Xlna_ind_p LNA_VTK LNA_TANK_P pt_lna_ind
+Xlna_ind_n LNA_VTK LNA_TANK_N pt_lna_ind
+Xlna_deg_p LNA_SRC_P LNA_TAIL pt_lna_deg
+Xlna_deg_n LNA_SRC_N LNA_TAIL pt_lna_deg
 Xrxmix_i RFA_I_P RFA_I_N LO_IP LO_IN BBI_RX_P BBI_RX_N BIAS_rxmix_i c_rxmix_i_en c_rxmix_i_ofs[0] c_rxmix_i_ofs[1] c_rxmix_i_ofs[2] c_rxmix_i_ofs[3] c_rxmix_i_ofs[4] c_rxmix_i_ofs[5] island_off[1] NC_rxmix_i_atb_vcm ATBN_rxmix_bias c_rxmix_hib RAIL_rf_rx VSS pt_rxmix_i
 Xrxmix_q RFA_Q_P RFA_Q_N LO_QP LO_QN BBQ_RX_P BBQ_RX_N BIAS_rxmix_q c_rxmix_q_en c_rxmix_q_ofs[0] c_rxmix_q_ofs[1] c_rxmix_q_ofs[2] c_rxmix_q_ofs[3] c_rxmix_q_ofs[4] c_rxmix_q_ofs[5] island_off[1] NC_rxmix_q_atb_vcm NC_rxmix_q_atb_vbp c_rxmix_hib RAIL_rf_rx VSS pt_rxmix_q
 Xbbfilter_i BBI_RX_P BBI_RX_N DACI_P DACI_N BBI_INJ_P BBI_INJ_N ADCI_P ADCI_N BBI_TX_P BBI_TX_N BBI_OBS_P BBI_OBS_N BIAS_bbfilter_i c_bbfilter_i_en c_bbfilter_dir_tx c_bbfilter_inj c_bbfilter_rx_direct c_bbfilter_byp_s1 c_bbfilter_byp_s23 c_bbfilter_obs_sel[0] c_bbfilter_obs_sel[1] c_bbfilter_i_cut[3] c_bbfilter_i_cut[4] c_bbfilter_i_cut[5] c_bbfilter_i_cut[6] c_bbfilter_i_gain[0] c_bbfilter_i_gain[1] c_bbfilter_i_gain[2] c_bbfilter_i_gain[3] c_bbfilter_i_gain[4] c_bbfilter_i_gain[5] c_bbfilter_i_gainc[0] c_bbfilter_i_gainc[1] c_bbfilter_i_qt[0] c_bbfilter_i_qt[1] island_off[1] ATBN_pga_bias ATBN_bbfilter_bias RAIL_rf_rx VSS c_bbfilter_i_qt[2] c_bbfilter_i_qt[3] c_bbfilter_i_cut[0] c_bbfilter_i_cut[1] c_bbfilter_i_cut[2] c_bbfilter_i_dcf[0] c_bbfilter_i_dcf[1] c_bbfilter_i_dcf[2] c_bbfilter_i_dcf[3] c_bbfilter_i_dcf[4] c_bbfilter_i_dcf[5] c_bbfilter_i_dcf[6] c_bbfilter_i_dcf[7] c_bbfilter_i_dcf[8] pt_bbfilter_i

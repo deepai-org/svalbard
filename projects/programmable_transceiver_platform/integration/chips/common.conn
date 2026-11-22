@@ -57,7 +57,7 @@ inst debug_pads pt_debug_physical chip
   clk_obs=clk_obs clk_obs_oe=clk_obs_oe dbg_obs0=dbg_obs0 dbg_obs0_oe=dbg_obs0_oe dbg_obs1=dbg_obs1 dbg_obs1_oe=dbg_obs1_oe
 # DT-10 / MW-26 / always-on audit: bonded strap with pad pull-down (digital is adding the pad; site open, D-POR)
 inst pad_por_bypass pad_strap chip
-  PAD~POR_BYPASS Y>por_bypass VDD~VDD VSS~VSS
+  PAD~POR_BYPASS Y>por_bypass PU~VSS PD~VDD DVDD~VDD DVSS~VSS VDD~VDD VSS~VSS
 
 # ================= always-on core rail =================
 inst por por core
@@ -82,7 +82,7 @@ inst pad_ref pad_refpad pll
   PAD_P~REF_IN PAD_N~REF_IN_N VSS~VSS VCM~REF_VCM ATB_ESD_RAIL~-
 inst pad_aux_clk pad_refpad pll
   PAD_P~AUX_CLK_P PAD_N~AUX_CLK_N VSS~VSS VCM~REF_VCM ATB_ESD_RAIL~-
-inst refvcm pt_refvcm pll demand
+inst refvcm pt_refvcm pll
   VCM~REF_VCM EN=c_refvcm_en VDD~RAIL_pll VSS~VSS      # refpad VCM (VDD/2 in the LO bench) has no source (MW-6), D-REFVCM
 
 # ================= clocks (pll island) =================

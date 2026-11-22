@@ -293,6 +293,7 @@ module pt_analog_top_stub(
  wire BIAS_detect;
  wire BIAS_wiredtx;
  wire BIAS_hsbias;
+ wire BIAS_txpad_det;
  wire BIAS_bb_tap_wmon;
  wire ATBN_wire_ibias;
  wire ISO_wired_tx;
@@ -324,6 +325,7 @@ module pt_analog_top_stub(
  wire TX_POST_N;
  wire TX_POST_BIAS;
  wire TX_EN_DETECT;
+ wire TX_DETECT_PBIAS;
  wire TX_EN_TERM;
  wire TX_TERM_VCM;
  wire WMON_IN;
@@ -548,6 +550,7 @@ module pt_analog_top_stub(
  wire p_core_bias__EN_detect = c_detect_en;
  wire p_core_bias__EN_wiredtx = c_wiredtx_bias_en;
  wire p_core_bias__EN_hsbias = c_hsbias_en;
+ wire p_core_bias__EN_txpad_det = c_txpad_req_detect;
  wire p_core_bias__EN_bb_tap_wmon = c_bb_tap_wmon_bias_en;
  wire p_isw_wired_rx__EN = island_en[0];
  assign s_pg_wired_rx = island_en[0];
@@ -1207,7 +1210,8 @@ module pt_analog_top_stub(
  assign TX_EN_DETECT = 1'b0;
  assign TX_EN_TERM = 1'b0;
  wire p_term_buffer__ENABLE = island_on[0];
- wire p_txpad_bias__EN_TERM = TX_EN_TERM;
+ wire p_txpad_bias__EN = TX_EN_TERM;
+ wire p_txpad_bias__EN_DET = TX_EN_DETECT;
  wire p_usb_txdrv__CMD_P = WTX_TAP_P;
  wire p_usb_txdrv__CMD_N = WTX_TAP_N;
  wire p_usb_txdrv__HS_EN = c_usb_hs_en;

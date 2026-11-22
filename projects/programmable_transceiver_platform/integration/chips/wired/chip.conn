@@ -77,6 +77,7 @@ inst core_bias pt_core_bias_wired core
   EN_cdr=c_cdr_en BIAS_cdr~BIAS_cdr
   EN_ctle=c_ctle_en BIAS_ctle~BIAS_ctle EN_detect=c_detect_en BIAS_detect~BIAS_detect
   EN_wiredtx=c_wiredtx_bias_en BIAS_wiredtx~BIAS_wiredtx EN_hsbias=c_hsbias_en BIAS_hsbias~BIAS_hsbias
+  EN_txpad_det=c_txpad_req_detect BIAS_txpad_det~BIAS_txpad_det      # detect-source bias of pt_txpad_bias (PC-72); macro request (core), the interlock gates the cell itself
   EN_bb_tap_wmon=c_bb_tap_wmon_bias_en BIAS_bb_tap_wmon~BIAS_bb_tap_wmon
   ROOT_REF~ATBN_master_ibias VREF0~VREF0_MASTER VCM~VCM_MASTER VBG~ATBN_vbg IDAC1~ATBN_idac1
   TRK_WIRED_RX~ATBN_wire_ibias TRK_PLL~ATBN_pll_ibias TRK_DEBUG~ATBN_debug_ibias
@@ -117,7 +118,7 @@ inst pad_wire_tx pad_txpad wired_tx
   PAD_P~WIRE_TX_P PAD_N~WIRE_TX_N VDD~RAIL_wired_tx VSS~VSS CASCODE~RAIL_wired_tx
   MAIN_P=TX_MAIN_P MAIN_N=TX_MAIN_N MAIN_BIAS~TX_MAIN_BIAS POST_P=TX_POST_P POST_N=TX_POST_N POST_BIAS~TX_POST_BIAS
   TMDS_P=VSS TMDS_N=VSS TMDS_BIAS~VSS      # TMDS branch removed from pt_wiredtx (WT22): tied off (MW-17), D-TMDS
-  DETECT_ENABLE=TX_EN_DETECT DETECT_PBIAS~RAIL_wired_tx TERM_ENABLE=TX_EN_TERM TERM_VCM~TX_TERM_VCM ATB_ESD_RAIL~-
+  DETECT_ENABLE=TX_EN_DETECT DETECT_PBIAS~TX_DETECT_PBIAS TERM_ENABLE=TX_EN_TERM TERM_VCM~TX_TERM_VCM ATB_ESD_RAIL~-
 inst bb_tap_wmon pt_bb_tap debug
   in_p~WMON_IN in_n~VSS pad_p~WMON pad_n~- inj_p~- inj_n~- ibias~BIAS_bb_tap_wmon obs_en=c_wmon_obs_en inj_en=VSS
   island_off=island_off[5] atb_nbias~ATBN_debug_buffer_bias VDD~RAIL_debug VSS~VSS      # unused N leg / inject path: D-WMON;
@@ -229,9 +230,9 @@ inst attached_tx_interlock tx_interlock wired_tx
 inst term_buffer term_buffer wired_tx
   VDD~RAIL_wired_tx VSS~VSS REF~TX_BUF_REF BIAS~TX_BUF_BIAS OUT~TX_TERM_VCM ENABLE=island_on[0]   # on whenever wired_tx is on (WT51 ruling); switches gated by TX_EN_TERM
 # buffer reference / bias are ideal sources in every pads bench (MW walk 6.3): build demand, D-TXTERM.
-# DETECT_PBIAS = RAIL_wired (detect source off) until pads state a bias source (wired TX README.md section 3)
-inst txpad_bias pt_txpad_bias wired_tx demand
-  BUF_REF~TX_BUF_REF BUF_BIAS~TX_BUF_BIAS EN_TERM=TX_EN_TERM VDD~RAIL_wired_tx VSS~VSS
+inst txpad_bias pt_txpad_bias wired_tx
+  BUF_REF~TX_BUF_REF BUF_BIAS~TX_BUF_BIAS EN=TX_EN_TERM EN_DET=TX_EN_DETECT IBIAS_DET~BIAS_txpad_det
+  DETECT_PBIAS~TX_DETECT_PBIAS VDD~RAIL_wired_tx VSS~VSS      # IBIAS_DET: 10 uA from core_bias wired_tx bank (OUT2)
 # USB line pre-driver (analog/wired_tx/README.md section 4): HS data = the pt_wiredtx8 CMOS tap TAP_P/N; FS/LS and chirp from the macro
 inst usb_txdrv pt_usb_txdrv wired_tx
   CMD_P=WTX_TAP_P CMD_N=WTX_TAP_N HS_EN=c_usb_hs_en HS_DRV=c_usb_hs_drv FS_EN=c_usb_fs_en TX_DP=c_usb_tx_dp TX_DN=c_usb_tx_dn

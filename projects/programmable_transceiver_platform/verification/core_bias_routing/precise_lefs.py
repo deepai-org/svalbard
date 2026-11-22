@@ -98,7 +98,7 @@ for item in inputs['cells']:
     count = 0
     for name in layers:
         region = metal[name] - pins[name] - owned_all[name]
-        if name == 'Metal4' and not mim_keepout.is_empty():
+        if name in ('Metal4', 'Metal5') and not mim_keepout.is_empty():  # Metal5 too: the 1.0 um supply wires over a plate failed MIMTM.1
             region = (region + (mim_keepout - pins[name] - owned_all[name])).merged()
         if region.is_empty():
             continue

@@ -40,7 +40,7 @@ TRUNKS = {
     'wired': {
         'pll': ('PLL', 'pll', 'pll', 3, ['pll_ring_tx', 'pll_ring_rx', 'cdr'], 29),
         'wired_rx': ('WIRE', 'wired', 'wire', 3, ['ctle', 'detect'], 22),
-        'wired_tx': ('RF', 'wired', 'wire', 3, ['wiredtx', 'hsbias'], None),
+        'wired_tx': ('RF', 'wired', 'wire', 3, ['wiredtx', 'hsbias', 'txpad_det'], None),
         'debug': ('DEBUG', 'debug', 'debug', 3, ['bb_tap_wmon'], 56),
     },
 }

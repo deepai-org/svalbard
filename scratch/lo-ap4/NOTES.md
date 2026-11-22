@@ -226,3 +226,8 @@ Guard-limited (r18; VT 2.645 / 2.96 first pass, then 2.69 at 3.15 V): top b0 TT/
 Band 7/8 overlap (largest bank step; f(b8, VT max) vs f(b7, 0.3 V)): TT 2.370 / 2.287 (+3.6 %), SS 2.315 / 2.225 (+4.1 %), FF 2.431 / 2.358 (+3.1 %), SF 2.359 / 2.281 (+3.4 %), FS 2.381 / 2.294 (+3.8 %), PF115 2.125 / 2.038 (+4.3 %), both supplies within 0.1 %: overlap at every corner. Other band transitions not simulated (binary bank, 7/8 is the largest step).
 LO plan 2.400-2.4835 GHz (+-IF): inside [bottom, top] at every corner incl. pessimistic (2.293 ... 2.574 at the pessimistic ends) with band overlap. Bottom ends unchanged by the VTUNE limit (VTUNE 0.3 V).
 Open: charge-pump VTUNE ceiling vs 2.69 V (not checked), phase noise, mismatch, review, publish.
+
+## 2026-11-22: state at the baseline freeze (coordinator: only fix what assembly / LVS / precheck report in LO cells)
+Published baseline LO cells for pt_rf: QVCO r9 (spiral 290 um, bank 9.0 um), pt_lo_vreg r2 (pins on edges), pt_lo_vtdet r2 (Metal4 pins), lo_vtdet instanced in rf/chip.conn. Divider = published lo_mmd (v7 dropped).
+Deferred until both chips are assembled, LVS-clean and through precheck: charge-pump VTUNE ceiling vs 2.69 V (`cpceil/bench.py`: the bias pin must be SOURCED 10 uA, sink gave ~0 current; run stopped), phase noise, closed-loop lock, regulator PSRR (PD2-11 78.125 MHz), external LO (LO-05, XT-08), obs_pre4 / lo_obs at 600 um, r9 independent review, RF-cell per-net C cross-check (rft9f RC vs C-only) and coverage report, extracted bench of lo_vtdet.
+Done for MANDATE 4a: mismatch known-answer through the LO bench header (`mcka/ka.json`, 2.19 vs 2.45 mV, off 0); r9 Monte Carlo tt b8 (20 seeds): f sigma ~0.7 MHz, Q-I -89.07...-89.82 deg (`q7/rmc/`).

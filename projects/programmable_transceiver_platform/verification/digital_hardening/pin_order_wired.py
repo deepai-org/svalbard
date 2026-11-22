@@ -10,8 +10,8 @@ directly below that stretch of the south edge):
   * c_wiredtx_main_code[0,5,6], c_wiredtx_post_code[4-7], c_wiredtx_post_pol at x 1629-1676 um.
 Every other south pin keeps its group order and is packed left of x 943 um or into the gaps between the data groups.
 Slots: '@min_distance=2.24' on the south edge gives one slot per 4 Metal2 tracks (x = 0.28 + 2.24 * i um); the list
-is padded with virtual pins ($n) to exactly the slot count, so the flow places pin i at slot i (io_place.py
-equally_spaced_sequence with total == tracks). WIDTH must match the outline in wired/config.json.
+is padded with virtual pins ($n) to one less than the slot count, so the flow places pin i at slot i (io_place.py
+equally_spaced_sequence: tracks_per_pin 1, start index 0). WIDTH must match the outline in wired/config.json.
 """
 import re
 from pathlib import Path
@@ -96,7 +96,9 @@ def main():
         emit_virtual(start - cur); cur = start
         out.append(g); cur += n
     explicit_until(NSLOT)
-    emit_virtual(NSLOT - cur)
+    # one slot short of the track count: io_place.py's total == tracks branch keeps the virtual entries and fails its
+    # length assert; with NSLOT - 1 entries tracks_per_pin = 1, one unused track, start index 0 (pin i at slot i)
+    emit_virtual(NSLOT - 1 - cur)
     text = '\n'.join(lines + out) + '\n' + rest
     (H / 'pin_order_wired.cfg').write_text(text)
     print(f'pin_order_wired.cfg: {NSLOT} south slots, {len(plan)} placed pins')

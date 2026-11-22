@@ -59,7 +59,7 @@ EPS0 = 8.854e-12
 ANALOG_IMAGE = 'docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3'
 DIGITAL_IMAGE = 'svalbard/librelane-gf180-canary:2026.08'
 
-G = dict(turns=3, width_um=25.0, space_um=2.5, dout_um=300.0, under_w_um=12.0, f_hz=2.45e9,
+G = dict(turns=3, width_um=25.0, space_um=2.5, dout_um=290.0, under_w_um=12.0, f_hz=2.45e9,
          strap=['metal5', 'metal4', 'metal3'], underpass=['metal2', 'metal1'])
 STACK = dict(metal1=(1.23, 0.55, 0.090), metal2=(2.38, 0.55, 0.090), metal3=(3.53, 0.55, 0.090),
              metal4=(4.68, 0.55, 0.090), metal5=(5.83, 1.0025, 0.040))
@@ -213,7 +213,7 @@ def subckt(name, m, note):
 # L scales are relative to the Mohan value; nominal is set to the FastHenry
 # extraction of the drawn polyline (0.91 x Mohan, i.e. 2.65 nH), and +-10 % of that
 # spans both FastHenry and Mohan.
-L_NOM = 0.91
+L_NOM = 0.9119   # FastHenry / Mohan at dout 290 (scratch/lo-ap4/sp290); 0.9107 at 300
 VARIANTS = {
     # name: (substrate, Rs scale, L scale)
     'pt_spiral': ('nominal', 1.0, L_NOM),

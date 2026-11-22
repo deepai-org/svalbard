@@ -1,0 +1,92 @@
+* NGSPICE file created from pt_lo_vtdet.ext - technology: gf180mcuD
+
+.subckt p_nfet_03v3_w4_l1 a_n326_n692# a_n188_n400# a_n100_n560# a_100_n400#
+X0 a_100_n400# a_n100_n560# a_n188_n400# a_n326_n692# nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+.ends
+
+.subckt p_nfet_03v3_w1_l0p28 a_n254_n392# a_28_n100# a_n36_n256# a_n116_n100#
+X0 a_28_n100# a_n36_n256# a_n116_n100# a_n254_n392# nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+.ends
+
+.subckt p_nfet_03v3_w2_l2 a_n288_n200# a_n200_n360# a_200_n200# a_n426_n492#
+X0 a_200_n200# a_n200_n360# a_n288_n200# a_n426_n492# nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+.ends
+
+.subckt p_pfet_03v3_w2_l0p28 w_n278_n516# a_n36_n356# a_n116_n200# a_28_n200#
+X0 a_28_n200# a_n36_n356# a_n116_n200# w_n278_n516# pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+.ends
+
+.subckt p_ppolyf_u_1k_w1_l20 a_n100_2000# a_n100_n2122# a_n312_n2334#
+X0 a_n100_2000# a_n100_n2122# a_n312_n2334# ppolyf_u_1k r_width=1u r_length=20u
+.ends
+
+.subckt p_ppolyf_u_1k_w1_l88 a_n100_8800# a_n100_n8922# a_n312_n9134#
+X0 a_n100_8800# a_n100_n8922# a_n312_n9134# ppolyf_u_1k r_width=1u r_length=88u
+.ends
+
+.subckt p_pfet_03v3_w4_l0p28 a_28_n400# a_n36_n556# w_n278_n716# a_n116_n400#
+X0 a_28_n400# a_n36_n556# a_n116_n400# w_n278_n716# pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+.ends
+
+.subckt p_pfet_03v3_w4_l1 a_n188_n400# a_n100_n560# a_100_n400# w_n350_n716#
+X0 a_100_n400# a_n100_n560# a_n188_n400# w_n350_n716# pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+.ends
+
+.subckt p_nfet_03v3_w8_l1 a_100_n800# a_n326_n1092# a_n188_n800# a_n100_n960#
+X0 a_100_n800# a_n100_n960# a_n188_n800# a_n326_n1092# nfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=1u
+.ends
+
+.subckt p_nfet_03v3_w4_l0p28 a_n254_n692# a_28_n400# a_n36_n556# a_n116_n400#
+X0 a_28_n400# a_n36_n556# a_n116_n400# a_n254_n692# nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+.ends
+
+.subckt p_ppolyf_u_1k_w1_l400 a_n100_40000# a_n100_n40122# a_n312_n40334#
+X0 a_n100_40000# a_n100_n40122# a_n312_n40334# ppolyf_u_1k r_width=1u r_length=0.4m
+.ends
+
+.subckt p_ppolyf_u_1k_w1_l60 a_n312_n6334# a_n100_6000# a_n100_n6122#
+X0 a_n100_6000# a_n100_n6122# a_n312_n6334# ppolyf_u_1k r_width=1u r_length=60u
+.ends
+
+.subckt p_nfet_03v3_w4_l2 a_n426_n692# a_n288_n400# a_n200_n560# a_200_n400#
+X0 a_200_n400# a_n200_n560# a_n288_n400# a_n426_n692# nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=2u
+.ends
+
+.subckt pt_lo_vtdet VTUNE EN DET VDD VSS
+XXFB VSS m1_17506_1078# m1_4816_634# VDD p_nfet_03v3_w4_l1
+XXI2_N VSS DET m1_1070_84806# VSS p_nfet_03v3_w1_l0p28
+XXBC VSS m1_12176_634# a_3068_41126# VSS p_nfet_03v3_w1_l0p28
+XXBD VSS m1_12176_634# m1_12176_634# VSS p_nfet_03v3_w2_l2
+XXI2_P VDD m1_1070_84806# VDD DET p_pfet_03v3_w2_l0p28
+XXR1 m1_3582_1078# m1_4816_634# VSS p_ppolyf_u_1k_w1_l20
+XXR2 m1_4816_634# m1_6028_634# VSS p_ppolyf_u_1k_w1_l88
+XXSW m1_3582_1078# a_3068_41126# VDD VDD p_pfet_03v3_w4_l0p28
+XXEI_N VSS a_3068_41126# EN VSS p_nfet_03v3_w1_l0p28
+XXP1 VDD m1_24010_1478# m1_24010_1478# VDD p_pfet_03v3_w4_l1
+XXR3 m1_6028_634# m1_7240_634# VSS p_ppolyf_u_1k_w1_l88
+XXP2 VDD m1_24010_1478# a_14470_86287# VDD p_pfet_03v3_w4_l1
+XXFBT VSS m1_12176_634# m1_17506_1078# VSS p_nfet_03v3_w2_l2
+XXEI_P VDD EN VDD a_3068_41126# p_pfet_03v3_w2_l0p28
+XXM1 m1_24010_1478# VSS m1_22610_1078# m1_16106_1078# p_nfet_03v3_w8_l1
+XXFAT VSS m1_12176_634# m1_16106_1078# VSS p_nfet_03v3_w2_l2
+XXM2 a_14470_86287# VSS m1_22610_1078# m1_17506_1078# p_nfet_03v3_w8_l1
+XXBS VDD a_3068_41126# VDD m1_10942_878# p_pfet_03v3_w2_l0p28
+XXHY VSS m1_7240_634# DET VSS p_nfet_03v3_w4_l0p28
+XXI1_N VSS m1_1070_84806# a_14470_86287# VSS p_nfet_03v3_w1_l0p28
+XXRB m1_10942_878# m1_12176_634# VSS p_ppolyf_u_1k_w1_l400
+XXI1_P VDD a_14470_86287# VDD m1_1070_84806# p_pfet_03v3_w2_l0p28
+XXRH VSS m1_7240_634# VSS p_ppolyf_u_1k_w1_l60
+XXOFF VSS a_14470_86287# a_3068_41126# VSS p_nfet_03v3_w1_l0p28
+XXT VSS VSS m1_12176_634# m1_22610_1078# p_nfet_03v3_w4_l2
+XXFA VSS m1_16106_1078# VTUNE VDD p_nfet_03v3_w4_l1
+D0 VSS a_14470_86287# diode_nd2ps_03v3 pj=2.6u area=0.4225p
+D1 VSS DET diode_nd2ps_03v3 pj=3.76u area=0.8836p
+D2 VSS a_3068_41126# diode_nd2ps_03v3 pj=4.56u area=1.2996p
+D3 VSS EN diode_nd2ps_03v3 pj=4.56u area=1.2996p
+D4 VSS EN diode_nd2ps_03v3 pj=4.92u area=1.5129p
+D5 VSS a_3068_41126# diode_nd2ps_03v3 pj=3.76u area=0.8836p
+D6 VSS a_14470_86287# diode_nd2ps_03v3 pj=4.64u area=1.3456p
+D7 VSS a_3068_41126# diode_nd2ps_03v3 pj=4.92u area=1.5129p
+D8 VSS a_3068_41126# diode_nd2ps_03v3 pj=4.92u area=1.5129p
+.ends
+

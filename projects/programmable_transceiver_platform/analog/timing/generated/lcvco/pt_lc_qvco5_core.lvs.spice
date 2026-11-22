@@ -1,883 +1,883 @@
 * NGSPICE file created from pt_lc_qvco5_core.ext - technology: gf180mcuD
 
-.subckt mimu m4_n1080_n960# m4_n960_n840#
-X0 m4_n960_n840# m4_n1080_n960# cap_mim_2f0_m4m5_noshield c_width=8.4u c_length=8.4u
+.subckt mimu m4_n1020_n900# m4_n1140_n1020#
+X0 m4_n1020_n900# m4_n1140_n1020# cap_mim_2f0_m4m5_noshield c_width=9u c_length=9u
 .ends
 
 .subckt pt_lc_qvco_rf VSS VTUNE_I TSI VDDCI VDD_I CMLSEL_I IBIAS_I B0_I B1_I B2_I
 + B3_I IP IN VTUNE_Q TSQ VDDCQ VDD_Q CMLSEL_Q IBIAS_Q B0_Q B1_Q B2_Q B3_Q QP QN
-Xmimu_60 a_20318_40480# QP mimu
-Xmimu_50 a_20318_29580# QP mimu
-Xmimu_61 a_20494_40480# QN mimu
-Xmimu_0 a_4516_27400# IP mimu
-Xmimu_1 a_4692_27400# IN mimu
-Xmimu_40 a_26660_36120# QP mimu
-Xmimu_51 a_20494_29580# QN mimu
-Xmimu_62 a_20318_42660# QP mimu
-Xmimu_2 a_4516_29580# IP mimu
-Xmimu_30 a_10858_42660# IP mimu
-Xmimu_41 a_26484_36120# QN mimu
-Xmimu_52 a_20318_31760# QP mimu
-Xmimu_63 a_20494_42660# QN mimu
-Xmimu_3 a_4692_29580# IN mimu
-Xmimu_10 a_4516_38300# IP mimu
-Xmimu_20 a_10858_31760# IP mimu
-Xmimu_21 a_10682_31760# IN mimu
-Xmimu_31 a_10682_42660# IN mimu
-Xmimu_32 a_26660_27400# QP mimu
-Xmimu_42 a_26660_38300# QP mimu
-Xmimu_43 a_26484_38300# QN mimu
-Xmimu_53 a_20494_31760# QN mimu
-Xmimu_54 a_20318_33940# QP mimu
-Xmimu_4 a_4516_31760# IP mimu
-Xmimu_11 a_4692_38300# IN mimu
-Xmimu_22 a_10858_33940# IP mimu
-Xmimu_33 a_26484_27400# QN mimu
-Xmimu_44 a_26660_40480# QP mimu
-Xmimu_55 a_20494_33940# QN mimu
-Xmimu_5 a_4692_31760# IN mimu
-Xmimu_12 a_4516_40480# IP mimu
-Xmimu_23 a_10682_33940# IN mimu
-Xmimu_34 a_26660_29580# QP mimu
-Xmimu_45 a_26484_40480# QN mimu
-Xmimu_56 a_20318_36120# QP mimu
-Xmimu_6 a_4516_33940# IP mimu
-Xmimu_13 a_4692_40480# IN mimu
-Xmimu_24 a_10858_36120# IP mimu
-Xmimu_35 a_26484_29580# QN mimu
-Xmimu_46 a_26660_42660# QP mimu
-Xmimu_57 a_20494_36120# QN mimu
-Xmimu_7 a_4692_33940# IN mimu
-Xmimu_14 a_4516_42660# IP mimu
-Xmimu_25 a_10682_36120# IN mimu
-Xmimu_36 a_26660_31760# QP mimu
-Xmimu_47 a_26484_42660# QN mimu
-Xmimu_58 a_20318_38300# QP mimu
-Xmimu_8 a_4516_36120# IP mimu
-Xmimu_15 a_4692_42660# IN mimu
-Xmimu_26 a_10858_38300# IP mimu
-Xmimu_37 a_26484_31760# QN mimu
-Xmimu_48 a_20318_27400# QP mimu
-Xmimu_59 a_20494_38300# QN mimu
-Xmimu_9 a_4692_36120# IN mimu
-Xmimu_16 a_10858_27400# IP mimu
-Xmimu_27 a_10682_38300# IN mimu
-Xmimu_38 a_26660_33940# QP mimu
-Xmimu_49 a_20494_27400# QN mimu
-Xmimu_17 a_10682_27400# IN mimu
-Xmimu_28 a_10858_40480# IP mimu
-Xmimu_39 a_26484_33940# QN mimu
-Xmimu_18 a_10858_29580# IP mimu
-Xmimu_19 a_10682_29580# IN mimu
-Xmimu_29 a_10682_40480# IN mimu
+Xmimu_60 QP a_20558_41200# mimu
+Xmimu_50 QP a_20558_29700# mimu
+Xmimu_61 QN a_20734_41200# mimu
+Xmimu_0 IP a_4516_27400# mimu
+Xmimu_1 IN a_4692_27400# mimu
+Xmimu_40 QP a_27140_36600# mimu
+Xmimu_51 QN a_20734_29700# mimu
+Xmimu_62 QP a_20558_43500# mimu
+Xmimu_2 IP a_4516_29700# mimu
+Xmimu_30 IP a_11098_43500# mimu
+Xmimu_41 QN a_26964_36600# mimu
+Xmimu_52 QP a_20558_32000# mimu
+Xmimu_63 QN a_20734_43500# mimu
+Xmimu_3 IN a_4692_29700# mimu
+Xmimu_10 IP a_4516_38900# mimu
+Xmimu_20 IP a_11098_32000# mimu
+Xmimu_21 IN a_10922_32000# mimu
+Xmimu_31 IN a_10922_43500# mimu
+Xmimu_32 QP a_27140_27400# mimu
+Xmimu_42 QP a_27140_38900# mimu
+Xmimu_43 QN a_26964_38900# mimu
+Xmimu_53 QN a_20734_32000# mimu
+Xmimu_54 QP a_20558_34300# mimu
+Xmimu_4 IP a_4516_32000# mimu
+Xmimu_11 IN a_4692_38900# mimu
+Xmimu_22 IP a_11098_34300# mimu
+Xmimu_33 QN a_26964_27400# mimu
+Xmimu_44 QP a_27140_41200# mimu
+Xmimu_55 QN a_20734_34300# mimu
+Xmimu_5 IN a_4692_32000# mimu
+Xmimu_12 IP a_4516_41200# mimu
+Xmimu_23 IN a_10922_34300# mimu
+Xmimu_34 QP a_27140_29700# mimu
+Xmimu_45 QN a_26964_41200# mimu
+Xmimu_56 QP a_20558_36600# mimu
+Xmimu_6 IP a_4516_34300# mimu
+Xmimu_13 IN a_4692_41200# mimu
+Xmimu_24 IP a_11098_36600# mimu
+Xmimu_35 QN a_26964_29700# mimu
+Xmimu_46 QP a_27140_43500# mimu
+Xmimu_57 QN a_20734_36600# mimu
+Xmimu_7 IN a_4692_34300# mimu
+Xmimu_14 IP a_4516_43500# mimu
+Xmimu_25 IN a_10922_36600# mimu
+Xmimu_36 QP a_27140_32000# mimu
+Xmimu_47 QN a_26964_43500# mimu
+Xmimu_58 QP a_20558_38900# mimu
+Xmimu_8 IP a_4516_36600# mimu
+Xmimu_15 IN a_4692_43500# mimu
+Xmimu_26 IP a_11098_38900# mimu
+Xmimu_37 QN a_26964_32000# mimu
+Xmimu_48 QP a_20558_27400# mimu
+Xmimu_59 QN a_20734_38900# mimu
+Xmimu_9 IN a_4692_36600# mimu
+Xmimu_16 IP a_11098_27400# mimu
+Xmimu_27 IN a_10922_38900# mimu
+Xmimu_38 QP a_27140_34300# mimu
+Xmimu_49 QN a_20734_27400# mimu
+Xmimu_17 IN a_10922_27400# mimu
+Xmimu_28 IP a_11098_41200# mimu
+Xmimu_39 QN a_26964_34300# mimu
+Xmimu_18 IP a_11098_29700# mimu
+Xmimu_19 IN a_10922_29700# mimu
+Xmimu_29 IN a_10922_41200# mimu
 X0 IN IP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X1 a_20494_36120# B3_Q a_20318_36120# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X2 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X1 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X2 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
 X3 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X4 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X5 a_4516_42660# VSS a_4692_42660# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X6 a_10682_42660# B1_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X7 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X8 a_10682_29580# B2_I a_10858_29580# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X9 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X10 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X11 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X12 IN IP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X13 a_10858_36120# B3_I a_10682_36120# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X14 a_26484_31760# B3_Q a_26660_31760# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X15 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X16 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X4 a_26964_32000# B3_Q a_27140_32000# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X5 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X6 a_20558_41200# B3_Q a_20734_41200# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X7 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X8 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X9 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X10 IN IP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X11 a_26964_34300# B1_Q a_27140_34300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X12 a_20558_43500# B1_Q a_20734_43500# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X13 a_26964_36600# B3_Q a_27140_36600# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X14 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X15 a_27140_41200# B3_Q a_26964_41200# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X16 a_26964_38900# B2_Q a_27140_38900# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
 X17 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X18 IN IP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X19 a_4516_40480# B3_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X20 a_20494_33940# B0_Q a_20318_33940# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X21 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X22 VSS B3_Q a_20494_27400# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X23 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X24 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X25 IN IP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X26 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X27 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X28 a_26484_38300# B2_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X29 a_10858_33940# B0_I a_10682_33940# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X30 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X31 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X32 a_20318_40480# B3_Q a_20494_40480# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X33 a_4516_29580# B2_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X34 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X35 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X36 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X37 a_20318_42660# B1_Q a_20494_42660# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X38 TSQ IP QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X39 a_4692_31760# B3_I a_4516_31760# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X40 a_20318_29580# B2_Q a_20494_29580# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X41 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X42 a_10858_31760# B3_I a_10682_31760# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X43 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X44 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X45 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X46 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X47 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=9.7p ps=40.97u w=20u l=1u
-X48 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X18 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X19 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X20 IN IP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X21 VSS B3_I a_11098_41200# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X22 a_4692_32000# B3_I a_4516_32000# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X23 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=9.7p pd=40.97u as=6p ps=20.6u w=20u l=1u
+X24 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X25 a_27140_43500# VSS a_26964_43500# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X26 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X27 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X28 VSS B1_I a_11098_43500# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X29 a_4692_34300# B1_I a_4516_34300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X30 TSQ IP QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X31 a_4692_36600# B3_I a_4516_36600# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X32 a_4692_38900# B2_I a_4516_38900# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X33 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X34 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X35 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X36 IN IP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X37 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X38 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X39 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X40 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X41 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X42 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X43 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X44 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X45 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X46 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X47 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X48 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
 X49 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X50 IP IN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X51 IP QN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X52 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X53 a_4692_36120# B3_I a_4516_36120# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X54 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X55 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X56 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X57 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X58 a_26660_42660# VSS a_26484_42660# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X59 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X60 a_4692_38300# B2_I a_4516_38300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X61 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X62 a_4516_40480# B3_I a_4692_40480# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X63 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X64 a_10682_40480# B3_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X65 a_26660_27400# B3_Q a_26484_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X66 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X50 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X51 a_4516_41200# B3_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X52 VSS B3_Q a_20734_41200# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X53 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X54 IP IN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X55 IP QN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X56 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X57 a_4516_43500# VSS VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X58 VSS B1_Q a_20734_43500# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X59 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X60 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X61 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X62 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X63 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X64 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X65 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X66 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
 X67 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X68 IN IP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X68 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
 X69 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X70 IP IN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X71 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X72 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X73 a_4692_33940# B1_I a_4516_33940# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X74 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X75 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X76 a_4516_29580# B2_I a_4692_29580# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X77 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X78 a_10682_29580# B2_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X79 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X80 VSS B2_I a_10858_38300# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X81 a_20494_31760# B3_Q a_20318_31760# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X82 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X83 VSS B1_Q a_20494_42660# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X84 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X85 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X86 TSQ IP QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X87 a_26484_36120# B3_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X88 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X89 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X90 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X91 TSQ IN QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X92 a_10858_31760# B3_I a_10682_31760# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X93 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X94 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X95 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X96 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X97 IP IN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X98 IP QN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X99 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=4.85p pd=20.97u as=3p ps=10.6u w=10u l=0.28u
-X100 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X101 IP IN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X102 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X103 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X104 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X105 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X106 a_20318_40480# B3_Q a_20494_40480# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X107 a_4516_27400# B3_I a_4692_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X108 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X109 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X110 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X111 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X112 a_26484_33940# B1_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X113 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X114 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X115 a_20494_27400# B3_Q a_20318_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X116 a_26660_27400# B3_Q a_26484_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X117 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X118 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X119 a_20318_29580# B2_Q a_20494_29580# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X120 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X121 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X122 a_26660_40480# B3_Q a_26484_40480# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X123 a_4692_36120# B3_I a_4516_36120# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X124 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X125 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X126 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X127 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X128 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X129 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X130 a_26660_42660# VSS a_26484_42660# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X131 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X132 a_26660_29580# B2_Q a_26484_29580# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X133 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X134 a_4692_31760# B3_I a_4516_31760# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X135 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X136 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X137 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X138 VSS B3_I a_10858_36120# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X139 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X140 IN QP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X141 a_20318_38300# B2_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X142 a_4692_33940# B1_I a_4516_33940# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X143 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X144 VSS B3_Q a_20494_40480# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X145 VSS B3_I a_4692_27400# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X146 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X147 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X148 a_10682_38300# B2_I a_10858_38300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X149 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X150 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=9.7p ps=40.97u w=20u l=1u
-X151 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X152 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X153 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X154 VSS B2_Q a_20494_29580# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X155 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X156 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X157 VSS B0_I a_10858_33940# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X158 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X159 a_4516_42660# VSS a_4692_42660# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X160 TSQ QN QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X161 IN QP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X162 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X163 a_26484_31760# B3_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X164 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X165 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X166 TSQ QN QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X167 a_20494_42660# B1_Q a_20318_42660# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X168 a_26660_42660# VSS a_26484_42660# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X70 a_11098_27400# B3_I a_10922_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X71 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X72 a_11098_29700# B2_I a_10922_29700# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X73 IN IP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X74 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X75 IP IN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X76 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X77 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X78 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X79 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X80 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X81 a_20558_41200# B3_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X82 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X83 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X84 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X85 a_20558_43500# B1_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X86 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X87 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X88 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X89 a_27140_41200# B3_Q a_26964_41200# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X90 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X91 a_10922_41200# B3_I a_11098_41200# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X92 a_10922_43500# B1_I a_11098_43500# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X93 a_27140_43500# VSS a_26964_43500# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X94 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X95 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X96 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X97 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X98 a_4516_41200# B3_I a_4692_41200# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X99 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X100 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X101 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X102 IP IN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X103 IP QN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X104 a_4516_43500# VSS a_4692_43500# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X105 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=4.85p pd=20.97u as=3p ps=10.6u w=10u l=0.28u
+X106 IP IN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X107 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X108 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X109 TSQ QN QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X110 a_20734_27400# B3_Q a_20558_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X111 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X112 a_20734_29700# B2_Q a_20558_29700# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X113 a_4516_27400# B3_I a_4692_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X114 a_4692_32000# B3_I a_4516_32000# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X115 a_4516_29700# B2_I a_4692_29700# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X116 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X117 a_4692_34300# B1_I a_4516_34300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X118 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X119 a_4692_36600# B3_I a_4516_36600# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X120 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X121 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X122 a_4692_38900# B2_I a_4516_38900# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X123 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X124 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X125 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X126 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X127 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X128 a_20558_41200# B3_Q a_20734_41200# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X129 a_20558_43500# B1_Q a_20734_43500# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X130 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X131 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X132 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X133 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X134 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X135 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X136 a_26964_27400# B3_Q a_27140_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X137 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X138 QN IN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X139 a_11098_27400# B3_I a_10922_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X140 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X141 a_11098_29700# B2_I a_10922_29700# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X142 a_26964_29700# B2_Q a_27140_29700# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X143 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X144 a_10922_32000# B3_I a_11098_32000# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X145 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X146 a_10922_34300# B0_I a_11098_34300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X147 IN QP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X148 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X149 a_10922_36600# B3_I a_11098_36600# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X150 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X151 a_10922_38900# B2_I a_11098_38900# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X152 VSS B3_I a_4692_27400# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X153 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X154 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X155 VSS B2_I a_4692_29700# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X156 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=9.7p ps=40.97u w=20u l=1u
+X157 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X158 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X159 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X160 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X161 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X162 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X163 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X164 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X165 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X166 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X167 a_26964_32000# B3_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X168 IN QP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
 X169 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X170 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X171 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X172 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X173 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X174 IN QP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X175 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X176 VDDCI IP IN VDDCI pfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X177 a_10858_27400# B3_I a_10682_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X178 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X179 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X180 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X181 a_26660_40480# B3_Q a_26484_40480# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X182 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X183 TSQ QN QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X184 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X185 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X186 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X187 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X188 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X189 a_26484_27400# B3_Q a_26660_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X190 a_20318_36120# B3_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X191 a_26660_29580# B2_Q a_26484_29580# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X192 a_4692_31760# B3_I a_4516_31760# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X193 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X194 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X195 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X196 VSS VSS a_4692_42660# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X197 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X198 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X199 a_10682_36120# B3_I a_10858_36120# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X200 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X201 TSQ QN QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X202 IP QN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X203 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X204 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X205 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X206 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X207 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X208 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X209 a_20318_33940# B0_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X210 VSS B3_I a_10858_31760# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X211 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X212 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X213 a_20494_27400# B3_Q a_20318_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X214 a_4516_40480# B3_I a_4692_40480# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X215 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X216 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X217 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X218 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X219 IP IN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X220 a_10682_33940# B0_I a_10858_33940# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X221 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X222 a_20494_40480# B3_Q a_20318_40480# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X223 a_26660_40480# B3_Q a_26484_40480# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X224 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X225 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X226 a_4516_29580# B2_I a_4692_29580# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X227 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X228 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X229 a_10682_38300# B2_I a_10858_38300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X230 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X231 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X232 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X233 VSS B3_Q a_26660_27400# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X234 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X235 a_20494_29580# B2_Q a_20318_29580# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X236 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X237 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X238 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X239 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X240 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X241 a_26660_29580# B2_Q a_26484_29580# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X242 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X243 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X244 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X245 a_10858_42660# B1_I a_10682_42660# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X246 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X170 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X171 a_26964_34300# B1_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X172 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X173 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X174 a_26964_36600# B3_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X175 a_20734_27400# B3_Q a_20558_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X176 a_20734_29700# B2_Q a_20558_29700# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X177 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X178 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X179 a_26964_38900# B2_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X180 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X181 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X182 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X183 a_4692_32000# B3_I a_4516_32000# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X184 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X185 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X186 a_4692_34300# B1_I a_4516_34300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X187 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X188 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X189 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X190 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X191 a_4692_36600# B3_I a_4516_36600# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X192 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X193 a_4692_38900# B2_I a_4516_38900# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X194 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X195 IN QP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X196 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X197 VDDCI IP IN VDDCI pfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X198 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=4.85p ps=20.97u w=10u l=0.28u
+X199 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X200 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X201 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X202 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X203 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X204 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X205 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X206 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X207 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X208 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X209 TSQ QN QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X210 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X211 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X212 a_27140_32000# B3_Q a_26964_32000# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X213 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X214 a_27140_34300# B1_Q a_26964_34300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X215 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X216 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X217 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X218 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X219 IP QN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X220 a_27140_36600# B3_Q a_26964_36600# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X221 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X222 a_27140_38900# B2_Q a_26964_38900# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X223 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X224 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X225 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X226 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X227 a_11098_41200# B3_I a_10922_41200# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X228 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X229 TSQ QN QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X230 a_11098_43500# B1_I a_10922_43500# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X231 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X232 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X233 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X234 TSQ QN QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X235 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X236 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X237 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X238 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X239 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X240 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X241 IP IN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X242 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X243 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X244 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X245 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X246 TSQ QN QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
 X247 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X248 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X249 TSQ QN QP VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X250 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X251 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X252 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X253 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X254 a_26484_42660# VSS a_26660_42660# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X255 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X256 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X257 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X258 a_4516_38300# B2_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X259 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X260 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X261 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X262 VSS B3_I a_4692_40480# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X263 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X264 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X265 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X266 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X267 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X268 a_20318_38300# B2_Q a_20494_38300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X269 TSI IP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X270 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X271 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X272 VSS B2_I a_4692_29580# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X273 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X274 a_20318_31760# B3_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X275 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X276 a_20494_42660# B1_Q a_20318_42660# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X277 QP IP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X278 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X279 TSQ QN QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X280 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X281 a_10682_31760# B3_I a_10858_31760# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X248 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X249 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X250 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X251 TSQ QN QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X252 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X253 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X254 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X255 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X256 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X257 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X258 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X259 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X260 a_20734_41200# B3_Q a_20558_41200# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X261 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X262 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X263 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X264 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X265 a_20734_43500# B1_Q a_20558_43500# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X266 a_4516_41200# B3_I a_4692_41200# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X267 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X268 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X269 a_4516_43500# VSS a_4692_43500# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X270 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X271 TSQ QN QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X272 a_20734_27400# B3_Q a_20558_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X273 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X274 a_20734_29700# B2_Q a_20558_29700# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X275 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X276 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X277 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X278 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X279 QN IN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X280 a_11098_27400# B3_I a_10922_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X281 VSS B3_Q a_27140_27400# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
 X282 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
 X283 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X284 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X285 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X286 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X287 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X288 TSI IP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X289 a_10682_36120# B3_I a_10858_36120# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X290 IN QP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X291 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X284 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X285 VSS B2_Q a_27140_29700# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X286 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X287 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X288 a_11098_29700# B2_I a_10922_29700# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X289 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X290 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X291 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
 X292 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X293 VSS VSS a_26660_42660# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X294 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X295 TSQ QN QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X296 a_4516_38300# B2_I a_4692_38300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X297 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X298 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X299 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X300 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X301 a_10682_38300# B2_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X302 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X303 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X304 a_10858_40480# B3_I a_10682_40480# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X305 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=9.7p pd=40.97u as=6p ps=20.6u w=20u l=1u
+X293 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=9.7p pd=40.97u as=6p ps=20.6u w=20u l=1u
+X294 TSQ QN QP VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X295 TSI IP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X296 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X297 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X298 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X299 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X300 a_26964_41200# B3_Q a_27140_41200# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X301 TSQ QN QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X302 a_11098_41200# B3_I a_10922_41200# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X303 a_11098_43500# B1_I a_10922_43500# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X304 a_26964_43500# VSS a_27140_43500# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X305 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
 X306 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X307 a_26484_27400# B3_Q a_26660_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X308 TSQ QN QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X309 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X310 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X311 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X312 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X313 a_10682_33940# B0_I a_10858_33940# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X314 a_26484_40480# B3_Q a_26660_40480# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X315 a_10858_29580# B2_I a_10682_29580# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X316 a_4516_36120# B3_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X317 TSQ QN QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X318 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X319 QP IP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X320 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X321 TSQ QN QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X322 a_26484_29580# B2_Q a_26660_29580# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X323 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X324 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X325 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X326 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X327 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X328 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X329 a_20318_36120# B3_Q a_20494_36120# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X330 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X331 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X332 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X333 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X334 a_4516_33940# B1_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X335 IP QN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X336 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X337 a_20318_38300# B2_Q a_20494_38300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X338 a_20494_40480# B3_Q a_20318_40480# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X339 a_4692_27400# B3_I a_4516_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X340 a_10858_27400# B3_I a_10682_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X341 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X342 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X343 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X344 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X345 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X346 TSQ QN QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X347 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X348 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X349 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X350 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X351 a_20318_33940# B0_Q a_20494_33940# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X352 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X353 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X354 TSQ QN QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X355 QN IN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X356 a_20494_29580# B2_Q a_20318_29580# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X357 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X358 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=4.85p ps=20.97u w=10u l=0.28u
-X359 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X360 a_26660_38300# B2_Q a_26484_38300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X361 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X362 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X363 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X364 VSS B3_Q a_26660_40480# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X365 a_4516_36120# B3_I a_4692_36120# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X366 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X367 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X368 a_10682_36120# B3_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X369 a_26484_42660# VSS a_26660_42660# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X370 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X371 VSS B2_Q a_26660_29580# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X372 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X373 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X374 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X375 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X376 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X377 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X378 a_10682_31760# B3_I a_10858_31760# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X379 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X380 a_20494_27400# B3_Q a_20318_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X381 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X382 a_4516_33940# B1_I a_4692_33940# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X383 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X384 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X385 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X386 VSS B2_Q a_20494_38300# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X387 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X388 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X389 a_10682_33940# B0_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X390 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X391 a_10858_27400# B3_I a_10682_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X392 TSI IP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X393 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X394 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X395 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X396 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X397 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X398 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X399 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X400 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X307 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X308 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X309 a_10922_32000# B3_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X310 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X311 TSI IP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X312 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X313 VSS B3_I a_4692_41200# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X314 VSS VSS a_4692_43500# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X315 a_10922_34300# B0_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X316 IN QP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X317 a_10922_36600# B3_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X318 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X319 a_10922_38900# B2_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X320 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X321 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X322 QP IP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X323 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X324 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X325 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X326 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X327 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X328 a_20734_41200# B3_Q a_20558_41200# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X329 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X330 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X331 a_20734_43500# B1_Q a_20558_43500# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X332 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X333 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X334 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X335 a_20558_32000# B3_Q a_20734_32000# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X336 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X337 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X338 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X339 a_20558_34300# B0_Q a_20734_34300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X340 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X341 a_26964_27400# B3_Q a_27140_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X342 QP IP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X343 a_20558_36600# B3_Q a_20734_36600# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X344 a_26964_29700# B2_Q a_27140_29700# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X345 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X346 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X347 TSQ QN QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X348 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X349 a_20558_38900# B2_Q a_20734_38900# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X350 a_27140_32000# B3_Q a_26964_32000# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X351 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X352 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X353 a_27140_34300# B1_Q a_26964_34300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X354 VSS B3_I a_11098_32000# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X355 VSS B0_I a_11098_34300# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X356 IP QN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X357 a_27140_36600# B3_Q a_26964_36600# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X358 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X359 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X360 a_27140_38900# B2_Q a_26964_38900# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X361 VSS B3_I a_11098_36600# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X362 a_4692_27400# B3_I a_4516_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X363 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X364 VSS B2_I a_11098_38900# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X365 a_4692_29700# B2_I a_4516_29700# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X366 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X367 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X368 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X369 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X370 QP IP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X371 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X372 TSQ QN QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X373 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=4.85p ps=20.97u w=10u l=0.28u
+X374 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X375 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X376 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X377 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X378 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X379 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X380 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X381 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X382 a_4516_32000# B3_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X383 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X384 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X385 VSS B3_Q a_20734_32000# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X386 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X387 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X388 a_4516_34300# B1_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X389 VSS B0_Q a_20734_34300# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X390 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X391 QP IP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X392 a_4516_36600# B3_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X393 VSS B3_Q a_20734_36600# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X394 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X395 TSQ QN QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X396 QN IN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X397 a_4516_38900# B2_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X398 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X399 VSS B2_Q a_20734_38900# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X400 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
 X401 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X402 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X403 QP IP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X404 a_4516_31760# B3_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X405 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X406 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X407 a_20318_36120# B3_Q a_20494_36120# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X408 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X409 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X410 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X411 a_4692_42660# VSS a_4516_42660# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X412 a_10858_42660# B1_I a_10682_42660# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X413 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X414 TSI IP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X415 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X416 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X417 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X418 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X419 a_20318_31760# B3_Q a_20494_31760# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X420 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X421 TSI IP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X422 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X423 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X424 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X425 a_26660_36120# B3_Q a_26484_36120# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X426 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X427 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X428 a_20318_33940# B0_Q a_20494_33940# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X429 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X430 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X431 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X432 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X433 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X434 TSI IP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X435 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X436 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X437 a_26660_38300# B2_Q a_26484_38300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X438 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X439 a_26484_40480# B3_Q a_26660_40480# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X440 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X441 a_4692_27400# B3_I a_4516_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X442 TSI IP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X402 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X403 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X404 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X405 TSI IP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X406 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X407 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X408 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X409 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X410 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X411 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X412 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X413 a_20558_32000# B3_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X414 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X415 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X416 a_20558_34300# B0_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X417 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X418 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X419 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X420 a_20558_36600# B3_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X421 a_20558_38900# B2_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X422 a_10922_32000# B3_I a_11098_32000# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X423 a_27140_32000# B3_Q a_26964_32000# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X424 a_20734_41200# B3_Q a_20558_41200# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X425 a_27140_34300# B1_Q a_26964_34300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X426 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X427 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X428 TSI IP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X429 a_20734_43500# B1_Q a_20558_43500# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X430 a_10922_34300# B0_I a_11098_34300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X431 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X432 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X433 a_10922_36600# B3_I a_11098_36600# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X434 a_27140_36600# B3_Q a_26964_36600# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X435 a_10922_38900# B2_I a_11098_38900# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X436 a_27140_38900# B2_Q a_26964_38900# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X437 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X438 TSI IP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X439 a_11098_41200# B3_I a_10922_41200# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X440 VSS B3_Q a_27140_41200# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X441 a_4516_32000# B3_I a_4692_32000# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X442 VSS VSS a_27140_43500# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
 X443 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X444 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X445 a_26660_33940# B1_Q a_26484_33940# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X446 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X447 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X448 a_20494_42660# B1_Q a_20318_42660# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X449 a_26484_29580# B2_Q a_26660_29580# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X450 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X451 QP IP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X452 a_4516_31760# B3_I a_4692_31760# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X453 VSS B3_Q a_20494_36120# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X454 a_10682_31760# B3_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X455 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X456 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X457 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X458 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X459 a_10858_42660# B1_I a_10682_42660# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X460 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X461 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X462 TSI IP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X463 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X464 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X465 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X466 TSI IP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X467 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X468 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X469 a_4692_40480# B3_I a_4516_40480# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X470 a_4516_38300# B2_I a_4692_38300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X471 VSS B0_Q a_20494_33940# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X472 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X473 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X474 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X475 a_10858_40480# B3_I a_10682_40480# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X476 a_26484_27400# B3_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X477 QN IN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X478 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X479 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=9.7p pd=40.97u as=6p ps=20.6u w=20u l=1u
-X480 TSI IP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X481 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X482 TSI QN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X483 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X484 a_20494_38300# B2_Q a_20318_38300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X485 a_26660_38300# B2_Q a_26484_38300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X486 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X487 a_4692_29580# B2_I a_4516_29580# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X488 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X489 a_10858_29580# B2_I a_10682_29580# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X490 a_20318_31760# B3_Q a_20494_31760# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X491 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X492 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X493 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X494 QN IN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X495 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X496 a_26660_36120# B3_Q a_26484_36120# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X497 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X498 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X499 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X500 TSI IP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X501 a_4692_42660# VSS a_4516_42660# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X502 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X503 TSI QN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X504 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X505 a_26660_31760# B3_Q a_26484_31760# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X506 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X507 a_20494_40480# B3_Q a_20318_40480# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X508 a_4692_27400# B3_I a_4516_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X509 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X510 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X511 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X512 VSS B2_I a_4692_38300# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X444 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X445 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X446 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X447 a_11098_43500# B1_I a_10922_43500# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X448 a_4516_34300# B1_I a_4692_34300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X449 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X450 a_4516_36600# B3_I a_4692_36600# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X451 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X452 QN IN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X453 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X454 a_4516_38900# B2_I a_4692_38900# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X455 TSI IN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X456 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X457 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X458 TSI IP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X459 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X460 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X461 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X462 a_4692_27400# B3_I a_4516_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X463 TSI IP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X464 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X465 a_4692_29700# B2_I a_4516_29700# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X466 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X467 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X468 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X469 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X470 a_20558_32000# B3_Q a_20734_32000# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X471 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X472 a_20558_34300# B0_Q a_20734_34300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X473 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X474 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X475 a_20558_36600# B3_Q a_20734_36600# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X476 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X477 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X478 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X479 a_20558_38900# B2_Q a_20734_38900# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X480 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X481 TSI IP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X482 QP QN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X483 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X484 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X485 TSI IP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X486 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X487 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X488 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X489 a_10922_27400# B3_I a_11098_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X490 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X491 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X492 a_10922_29700# B2_I a_11098_29700# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X493 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X494 TSI IP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X495 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X496 TSI QN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X497 QP QN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X498 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X499 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X500 a_26964_41200# B3_Q a_27140_41200# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X501 a_26964_43500# VSS a_27140_43500# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X502 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X503 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X504 a_26964_27400# B3_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X505 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X506 TSI IP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X507 a_4692_41200# B3_I a_4516_41200# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X508 a_26964_29700# B2_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X509 VDD_I CMLSEL_I VDDCI VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X510 TSI QN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X511 a_4692_43500# VSS a_4516_43500# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X512 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
 X513 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X514 a_26660_33940# B1_Q a_26484_33940# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X515 a_10858_40480# B3_I a_10682_40480# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X516 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X517 TSI IP IN VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X518 QN IN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X519 a_20494_29580# B2_Q a_20318_29580# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X520 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X521 VSS B3_I a_10858_27400# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X522 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X523 a_10858_29580# B2_I a_10682_29580# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X524 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X525 QP QN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X526 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X514 a_4692_27400# B3_I a_4516_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X515 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X516 a_4692_29700# B2_I a_4516_29700# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X517 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X518 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X519 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X520 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X521 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X522 TSI IP IN VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X523 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X524 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X525 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X526 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
 X527 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X528 a_4516_36120# B3_I a_4692_36120# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X529 VSS B3_Q a_20494_31760# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X528 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X529 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
 X530 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X531 QP QN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X532 a_26484_42660# VSS VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X533 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X534 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X535 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X536 a_20494_36120# B3_Q a_20318_36120# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X537 a_26660_36120# B3_Q a_26484_36120# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X538 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X539 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X540 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X541 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X542 VSS IBIAS_I TSI VSS nfet_03v3 ad=9.7p pd=40.97u as=6p ps=20.6u w=20u l=1u
-X543 TSI QN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X544 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X545 QP QN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X546 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X547 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X548 a_4516_33940# B1_I a_4692_33940# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X549 IP IN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X550 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X551 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X552 QP QN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X553 a_10858_38300# B2_I a_10682_38300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X554 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X555 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X556 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X557 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X558 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X559 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X560 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X561 a_20494_33940# B0_Q a_20318_33940# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X562 a_26660_33940# B1_Q a_26484_33940# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X563 a_4692_40480# B3_I a_4516_40480# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X564 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X565 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X566 a_26484_38300# B2_Q a_26660_38300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X567 a_4692_42660# VSS a_4516_42660# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X531 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X532 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X533 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X534 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X535 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X536 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X537 a_27140_27400# B3_Q a_26964_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X538 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X539 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X540 a_27140_29700# B2_Q a_26964_29700# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X541 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X542 a_11098_32000# B3_I a_10922_32000# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X543 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X544 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X545 VSS IBIAS_I TSI VSS nfet_03v3 ad=9.7p pd=40.97u as=6p ps=20.6u w=20u l=1u
+X546 TSI QN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X547 a_11098_34300# B0_I a_10922_34300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X548 a_11098_36600# B3_I a_10922_36600# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X549 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X550 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X551 a_11098_38900# B2_I a_10922_38900# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X552 IP IN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X553 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X554 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X555 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X556 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X557 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X558 TSQ IN QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X559 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X560 QP QN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X561 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X562 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X563 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X564 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X565 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=9.7p ps=40.97u w=20u l=1u
+X566 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X567 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
 X568 IP IN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X569 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X570 QP QN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X571 TSI QP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X572 VSS B3_I a_4692_36120# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X573 a_4692_29580# B2_I a_4516_29580# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X574 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X575 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X576 a_26660_31760# B3_Q a_26484_31760# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X577 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X578 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X579 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X580 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X581 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X569 TSI QP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X570 IN IP VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X571 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X572 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X573 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X574 QP QN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X575 a_20734_32000# B3_Q a_20558_32000# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X576 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X577 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X578 a_20734_34300# B0_Q a_20558_34300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X579 a_4516_32000# B3_I a_4692_32000# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X580 a_20734_36600# B3_Q a_20558_36600# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X581 a_4516_34300# B1_I a_4692_34300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
 X582 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X583 a_20318_27400# B3_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X584 VSS B1_I a_10858_42660# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X585 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X586 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X587 a_20494_38300# B2_Q a_20318_38300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X588 TSI QP IN VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X589 VSS B1_I a_4692_33940# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X590 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X591 a_26484_40480# B3_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X592 a_10682_27400# B3_I a_10858_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X593 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X594 QP QN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X583 QP QN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X584 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X585 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X586 a_20734_38900# B2_Q a_20558_38900# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X587 a_4516_36600# B3_I a_4692_36600# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X588 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X589 a_4692_41200# B3_I a_4516_41200# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X590 a_4516_38900# B2_I a_4692_38900# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X591 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X592 TSI QP IN VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X593 a_4692_43500# VSS a_4516_43500# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X594 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
 X595 IP IN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
 X596 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X597 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X598 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X599 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X600 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X597 QP QN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X598 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X599 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X600 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
 X601 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X602 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X603 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X604 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X605 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X606 a_26484_29580# B2_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X602 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X603 QP QN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X604 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X605 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X606 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
 X607 VSS IBIAS_I TSI VSS nfet_03v3 ad=9.7p pd=40.97u as=6p ps=20.6u w=20u l=1u
-X608 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X609 VSS B2_Q a_26660_38300# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X610 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X611 a_4516_31760# B3_I a_4692_31760# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X612 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X613 IP IN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X608 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X609 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X610 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X611 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X612 a_11098_32000# B3_I a_10922_32000# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X613 a_26964_32000# B3_Q a_27140_32000# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
 X614 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X615 QP QN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X616 a_10858_36120# B3_I a_10682_36120# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X617 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X618 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X619 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X620 a_20494_31760# B3_Q a_20318_31760# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X621 a_26660_31760# B3_Q a_26484_31760# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X622 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X623 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X624 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X625 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X626 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X627 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X628 a_26484_36120# B3_Q a_26660_36120# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X629 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X630 a_4692_40480# B3_I a_4516_40480# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X631 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X632 IN IP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X633 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X634 a_10858_33940# B0_I a_10682_33940# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X635 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X636 IN IP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X637 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X638 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X639 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X640 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X641 a_4692_29580# B2_I a_4516_29580# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X642 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=4.85p pd=20.97u as=3p ps=10.6u w=10u l=0.28u
-X643 a_26484_33940# B1_Q a_26660_33940# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X644 VSS B3_I a_10858_40480# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X645 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X646 a_20318_42660# B1_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X647 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X648 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X649 TSQ IN QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X650 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X651 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X615 IP IN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X616 a_26964_34300# B1_Q a_27140_34300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X617 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X618 a_11098_34300# B0_I a_10922_34300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X619 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X620 a_11098_36600# B3_I a_10922_36600# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X621 a_26964_36600# B3_Q a_27140_36600# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X622 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X623 a_11098_38900# B2_I a_10922_38900# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X624 a_26964_38900# B2_Q a_27140_38900# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X625 QP QN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X626 a_10922_41200# B3_I a_11098_41200# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X627 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X628 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X629 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X630 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X631 a_10922_43500# B1_I a_11098_43500# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X632 VSS B3_I a_4692_32000# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X633 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X634 VSS B1_I a_4692_34300# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X635 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X636 QP QN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X637 a_10922_27400# B3_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X638 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X639 VSS B3_I a_4692_36600# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X640 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X641 VSS B2_I a_4692_38900# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X642 a_10922_29700# B2_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X643 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X644 IN IP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X645 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X646 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X647 QP QN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X648 IN IP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X649 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X650 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X651 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
 X652 QP QN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X653 a_20494_36120# B3_Q a_20318_36120# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X654 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X655 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X656 VSS B3_I a_4692_31760# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X657 a_10682_42660# B1_I a_10858_42660# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X658 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X659 VSS B2_I a_10858_29580# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X660 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X661 IN IP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X662 TSI QN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X663 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X664 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X665 TSQ QP QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X666 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X667 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X668 VSS B3_Q a_26660_36120# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X669 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X670 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X671 QP QN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X672 a_20494_33940# B0_Q a_20318_33940# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X673 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X674 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X675 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X676 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X677 a_26484_38300# B2_Q a_26660_38300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X678 IN IP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X679 a_10682_27400# B3_I a_10858_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X680 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X681 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X682 VSS B1_Q a_26660_33940# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X683 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X684 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X685 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X686 TSQ IN QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X687 QP QN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X688 a_10858_31760# B3_I a_10682_31760# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X689 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X690 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X691 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X692 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X693 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X694 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X695 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X696 IN IP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X697 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X698 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X699 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X700 a_26484_31760# B3_Q a_26660_31760# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X701 TSI QP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X702 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X703 a_20318_40480# B3_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X704 a_4516_27400# B3_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X653 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X654 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X655 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X656 a_20734_32000# B3_Q a_20558_32000# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X657 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X658 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X659 a_26964_41200# B3_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X660 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X661 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X662 a_26964_43500# VSS VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X663 a_20734_34300# B0_Q a_20558_34300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X664 a_20734_36600# B3_Q a_20558_36600# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X665 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X666 a_20734_38900# B2_Q a_20558_38900# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X667 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X668 IN IP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X669 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X670 a_4692_41200# B3_I a_4516_41200# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X671 TSI QN IP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X672 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X673 a_4692_43500# VSS a_4516_43500# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X674 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X675 a_20558_27400# B3_Q a_20734_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X676 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X677 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X678 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X679 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=4.85p pd=20.97u as=3p ps=10.6u w=10u l=0.28u
+X680 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=9.7p ps=40.97u w=20u l=1u
+X681 a_20558_29700# B2_Q a_20734_29700# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X682 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X683 a_27140_27400# B3_Q a_26964_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X684 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X685 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X686 VSS B3_I a_11098_27400# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X687 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X688 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X689 TSQ IN QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X690 a_27140_29700# B2_Q a_26964_29700# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X691 VSS B2_I a_11098_29700# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X692 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X693 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X694 IN IP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X695 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X696 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X697 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X698 a_27140_41200# B3_Q a_26964_41200# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X699 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X700 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X701 IP VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X702 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X703 a_27140_43500# VSS a_26964_43500# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X704 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
 X705 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X706 IP IN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X707 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X708 QP QN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X709 a_4692_38300# B2_I a_4516_38300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X710 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X711 a_10858_38300# B2_I a_10682_38300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X712 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X713 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X714 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X715 a_10682_40480# B3_I a_10858_40480# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X716 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=4.85p ps=20.97u w=10u l=0.28u
-X717 QP QN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X718 TSQ IP QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X719 a_20318_29580# B2_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X720 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X721 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X722 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X723 a_20318_27400# B3_Q a_20494_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X724 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X725 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X726 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X727 IP IN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X728 a_10682_29580# B2_I a_10858_29580# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X729 IP IN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X730 a_20494_31760# B3_Q a_20318_31760# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X731 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X732 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X733 VDDCQ QN QP VDDCQ pfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X734 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X735 TSQ IP QP VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X736 a_26484_36120# B3_Q a_26660_36120# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X737 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X738 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X739 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X740 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X741 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X742 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X743 a_10682_42660# B1_I a_10858_42660# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X744 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X745 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X746 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X747 a_20494_38300# B2_Q a_20318_38300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X748 VSS B3_Q a_26660_31760# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
-X749 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X750 TSI QP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X751 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X752 a_4516_27400# B3_I a_4692_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X753 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X754 a_10682_27400# B3_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X755 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X756 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X757 IN IP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X758 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X759 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X760 a_10858_38300# B2_I a_10682_38300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X761 a_26484_33940# B1_Q a_26660_33940# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X762 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X763 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X764 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X765 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X766 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X767 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X768 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X769 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X770 a_4516_42660# VSS VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X771 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X772 a_4692_36120# B3_I a_4516_36120# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X773 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X774 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X775 a_10858_36120# B3_I a_10682_36120# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X776 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X777 a_20318_42660# B1_Q a_20494_42660# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X778 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X779 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X780 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X781 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X782 QN QP VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
-X783 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X784 a_20318_27400# B3_Q a_20494_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X785 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X786 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X787 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=9.7p ps=40.97u w=20u l=1u
-X788 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=9.7p ps=40.97u w=20u l=1u
-X789 a_4692_33940# B1_I a_4516_33940# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X706 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X707 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X708 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X709 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X710 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X711 IN IP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X712 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X713 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X714 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X715 TSI QP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X716 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X717 a_4516_27400# B3_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X718 VSS B3_Q a_20734_27400# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X719 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X720 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X721 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X722 IP IN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X723 a_4516_29700# B2_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X724 VSS B2_Q a_20734_29700# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X725 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X726 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X727 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X728 TSQ IN QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X729 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X730 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X731 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X732 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X733 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X734 QP QN VDDCQ VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X735 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X736 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X737 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X738 IP IN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X739 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X740 IP IN TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X741 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X742 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X743 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X744 IP IN VDDCI VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X745 a_20558_27400# B3_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X746 a_20734_32000# B3_Q a_20558_32000# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X747 a_20558_29700# B2_Q VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X748 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X749 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X750 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X751 a_20734_34300# B0_Q a_20558_34300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X752 a_27140_27400# B3_Q a_26964_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X753 TSQ IN QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X754 a_20734_36600# B3_Q a_20558_36600# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X755 a_10922_27400# B3_I a_11098_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X756 QP QN TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X757 TSQ IP QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X758 a_10922_29700# B2_I a_11098_29700# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X759 a_27140_29700# B2_Q a_26964_29700# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X760 a_20734_38900# B2_Q a_20558_38900# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X761 a_11098_32000# B3_I a_10922_32000# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X762 VSS B3_Q a_27140_32000# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X763 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
+X764 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X765 a_11098_34300# B0_I a_10922_34300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X766 VSS B1_Q a_27140_34300# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X767 TSI QP IN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X768 VSS B3_Q a_27140_36600# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X769 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X770 a_11098_36600# B3_I a_10922_36600# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X771 a_4516_27400# B3_I a_4692_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X772 a_11098_38900# B2_I a_10922_38900# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X773 VSS B2_Q a_27140_38900# VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X774 a_4516_29700# B2_I a_4692_29700# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X775 IN IP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X776 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X777 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X778 VDDCQ QN QP VDDCQ pfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X779 TSQ IP QP VSS nfet_03v3 ad=2.425p pd=10.97u as=1.5p ps=5.6u w=5u l=0.28u
+X780 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X781 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X782 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X783 VDDCI IN IP VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X784 a_20558_27400# B3_Q a_20734_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X785 a_10922_41200# B3_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X786 a_20558_29700# B2_Q a_20734_29700# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X787 VSS IBIAS_Q TSQ VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X788 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X789 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
 X790 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X791 a_10858_33940# B0_I a_10682_33940# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X792 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X793 IN IP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X794 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X795 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X796 QN QP TSQ VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X797 QN VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
-X798 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X799 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
-X800 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X801 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X802 a_4692_38300# B2_I a_4516_38300# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X791 a_10922_43500# B1_I VSS VSS nfet_03v3 ad=1.5p pd=5.6u as=2.425p ps=10.97u w=5u l=0.28u
+X792 VDDCQ QP QN VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X793 TSQ IP QP VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X794 QP VTUNE_Q cap_nmos_03v3_b c_width=10u c_length=1u
+X795 VDDCQ QN QP VDDCQ pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X796 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X797 TSI IBIAS_I VSS VSS nfet_03v3 ad=6p pd=20.6u as=9.7p ps=40.97u w=20u l=1u
+X798 IN IP TSI VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X799 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
+X800 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X801 VSS IBIAS_I TSI VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X802 VDDCI IP IN VDDCI pfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
 X803 IN VTUNE_I cap_nmos_03v3_b c_width=10u c_length=1u
-X804 a_10682_40480# B3_I a_10858_40480# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X804 VDD_Q CMLSEL_Q VDDCQ VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
 X805 VDDCI CMLSEL_I VDD_I VDD_I pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
-X806 a_26660_27400# B3_Q a_26484_27400# VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
-X807 TSQ IN QN VSS nfet_03v3 ad=1.5p pd=5.6u as=1.5p ps=5.6u w=5u l=0.28u
+X806 TSQ IBIAS_Q VSS VSS nfet_03v3 ad=6p pd=20.6u as=6p ps=20.6u w=20u l=1u
+X807 VDDCQ CMLSEL_Q VDD_Q VDD_Q pfet_03v3 ad=3p pd=10.6u as=3p ps=10.6u w=10u l=0.28u
 .ends
 
 .subckt p_nfet_03v3_w6_l0p28 a_n254_n892# a_28_n600# a_n36_n756# a_n116_n600#

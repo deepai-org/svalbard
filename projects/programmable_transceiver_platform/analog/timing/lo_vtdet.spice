@@ -1,0 +1,39 @@
+* SPDX-License-Identifier: Apache-2.0
+.include timing_cells.spice
+* pt_lo_vtdet: QVCO runaway guard (LO owner, 2026-11-21, coordinator ruling on divider overspeed).
+* DET = 1 while VTUNE is above VREF = ~0.92 x VDD (top of the tuning range: the loop has pushed the QVCO to the
+* top of its band, e.g. because the feedback divider miscounts above its maximum frequency and under-reports).
+* Hysteresis: DET = 1 shorts RH in the lower divider leg -> VREF falls by 0.028 x VDD (~90 mV).
+* Input: gate only (no load on the loop filter). EN = 0: divider, bias and comparator off, DET = 0.
+* Digital (row LO-DIG-1): synchronise DET, filter (persistent >= 8 ref cycles), status bit, back off one band and retry.
+* ATB_DET: DET also driven onto a test-bus leaf (observation) through the macro's status path, no extra analog pin.
+.subckt pt_lo_vtdet VTUNE EN DET VDD VSS
+XEI EN ENB VDD VSS pt_t_inv1
+* reference divider (gated): VREF = 0.922 x VDD with DET = 0, 0.898 x VDD with DET = 1 (RH shorted: hysteresis)
+XSW VT ENB VDD VDD pfet_03v3 w=4u l=0.28u
+XR1 VT VREF VSS ppolyf_u_1k r_width=1u r_length=20u
+XR2 VREF VR2 VSS ppolyf_u_1k r_width=1u r_length=88u
+XR3 VR2 VR3 VSS ppolyf_u_1k r_width=1u r_length=88u
+XRH VR3 VSS VSS ppolyf_u_1k r_width=1u r_length=60u
+XHY VR3 DET VSS VSS nfet_03v3 w=4u l=0.28u
+* bias: poly R into a diode, gated
+XBS BT ENB VDD VDD pfet_03v3 w=2u l=0.28u
+XRB BT NB VSS ppolyf_u_1k r_width=1u r_length=400u
+XBD NB NB VSS VSS nfet_03v3 w=2u l=2u
+XBC NB ENB VSS VSS nfet_03v3 w=1u l=0.28u
+* level shift: matched NMOS source followers (gate inputs, no load on VTUNE), then the 5T pair at ~VDD - 1 V
+XFA VDD VTUNE SA VSS nfet_03v3 w=4u l=1u
+XFB VDD VREF SB VSS nfet_03v3 w=4u l=1u
+XFAT SA NB VSS VSS nfet_03v3 w=2u l=2u
+XFBT SB NB VSS VSS nfet_03v3 w=2u l=2u
+* 5T comparator, NMOS pair
+XT TL NB VSS VSS nfet_03v3 w=4u l=2u
+XM1 D1 SA TL VSS nfet_03v3 w=8u l=1u
+XM2 D2 SB TL VSS nfet_03v3 w=8u l=1u
+XP1 D1 D1 VDD VDD pfet_03v3 w=4u l=1u
+XP2 D2 D1 VDD VDD pfet_03v3 w=4u l=1u
+XOFF D2 ENB VSS VSS nfet_03v3 w=1u l=0.28u
+* D2 high when VTUNE > VREF: DETB = !D2, DET = !DETB
+XI1 D2 DETB VDD VSS pt_t_inv1
+XI2 DETB DET VDD VSS pt_t_inv1
+.ends

@@ -81,7 +81,7 @@ def loads_text(wd, kind, v, n, obs_en=0, qdum_en=None, mmd_en=1, sel='emo'):
     return s, {k: md5(p) for k, p in N.items()}
 
 
-def deck(cname, code, vt, kind, vq=None, vdie=None, route=0.0, fill=0.0, n=48, top=1, ib=10.0, T=60e-9, obs_en=0, qdum_en=None, wd=None, sel='emo'):
+def deck(cname, code, vt, kind, vq=None, vdie=None, route=0.0, fill=0.0, n=48, top=1, ib=10.0, T=60e-9, obs_en=0, qdum_en=None, wd=None, sel='emo', seed=0):
     c = rx.CORNERS[cname]
     v = vdie or c['v']
     vq = vq or v
@@ -123,7 +123,7 @@ def deck(cname, code, vt, kind, vq=None, vdie=None, route=0.0, fill=0.0, n=48, t
                 f'.measure tran tfb2 when v(fb)={v / 2} td={tdf} rise=2\n' if 'm' in sel and tdf >= 25e-9 else '') +
                f'.measure tran imm avg i(VDIE) from={td} to={T}\n' +
                (f'.measure tran lomax max v(loip) from={td} to={T}\n.measure tran lomin min v(loip) from={td} to={T}\n' if 'e' in sel else ''))
-    d = rlc.hdr(c['corner'], c['temp']) + f""".include {sp}
+    d = rlc.hdr(c['corner'], c['temp']) + (f'.param sw_stat_mismatch=1\n.option seed={seed}\n' if seed else '') + f""".include {sp}
 .include {fn}
 VDD vdd 0 {vq}
 VDDB vddb 0 {v}
@@ -166,7 +166,7 @@ def one(tag, case):
     if len(f) > 4 and f[4]:
         for kv in f[4].split(','):
             k, val = kv.split('=')
-            kw[k] = val if k == 'sel' else float(val) if k not in ('n', 'top', 'obs_en', 'qdum_en') else int(val)
+            kw[k] = val if k == 'sel' else float(val) if k not in ('n', 'top', 'obs_en', 'qdum_en', 'seed') else int(val)
     wd = HERE / tag / case.replace(':', '_').replace(',', '_').replace('=', '')
     if (wd / 'result.json').exists():
         return json.loads((wd / 'result.json').read_text())

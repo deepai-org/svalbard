@@ -35,7 +35,7 @@ D = dict(
     tail_f=40, tail_w=20.0,               # tail: per core 2 rows x tail_f/2 ... (total tail_f*tail_w*2 = 1600 um)
     hdr_f=50, hdr_w=10.0,                 # header PMOS fingers x W per core
     var_f=17, var_w=10.0, var_l=1.0,      # varactor fingers per side
-    mim=8.4,                              # bank unit MIM side (um)
+    mim=9.0,                              # bank unit MIM side (um); r9 (range fix 2026-11-21): 9.0, was 8.4
     cfix_mim=8.4,                         # fixed-C cell MIM side (the 16th cell; series pair across P-N)
     sw_f=5, sw_w=5.0,                     # unit switch fingers x W (+ 2 pull-down fingers)
 )
@@ -767,7 +767,7 @@ def top_ref(axw):
 ASM = 'pt_lc_qvco5'
 AUXTAG_PUBLISHED = 'f5'        # aux build of the published r6b top (top7); top() does not record it
 SPIRAL_GAP = 8.0
-SPIRAL_DOUT = float(_os.environ.get('QSPIRAL_DOUT', '300'))
+SPIRAL_DOUT = float(_os.environ.get('QSPIRAL_DOUT', '290'))   # r9: 290 um spiral (was 300)
 EDGE_W = -(SPIRAL_DOUT / 2 + 36.0 + SPIRAL_GAP) - SPIRAL_DOUT / 2 - 25.0
 
 

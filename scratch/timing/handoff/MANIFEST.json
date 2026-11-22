@@ -55,13 +55,14 @@
  },
  "wrx_cap": {
   "top": "pt_wrx_cap",
-  "rev": "r7e staged + DCF taps (r7f not usable: hop gate fails, 9a4a235a)",
-  "size": "1239.2 x 242.7",
-  "checks": "main 0, DCF.1a 0, read-back LVS unique vs r7e schematic, negative control fails",
-  "misses": "ASM-8 NOT met: Metal5 35 571 um2 (11.8 %); full-rate mode race (do not use B1=1); pessimistic 625/810 MHz failures; LDE contract (WR11-4)",
+  "rev": "r7e cells, top re-routed with the chip-grid Metal5 channels kept free (r7g-grid) + DCF taps",
+  "size": "1239.2 x 242.7 (unchanged)",
+  "checks": "shuttle main 0, antenna 0, DCF.1a 0; read-back LVS unique vs wrx_cap.sch.spice, negative control fails; Metal5 9 359 um2 total, 0 in the 27 um channels at x = 12.25 / 47.25 + 70k from the block left edge (was 35 571)",
+  "misses": "timing NOT re-run after the re-route (port-net C changed -21..+25 fF; e.g. S7 150 -> 175 fF, WSTB 21 -> 44 fF); r7e misses stand: full-rate race (B1=1 unusable), pessimistic 625/810 MHz, LDE contract (WR11-4)",
   "rows": "WR11-4",
   "gds": "wrx_cap.gds",
-  "gds_sha256_16": "9eb9ed2592af6130"
+  "gds_sha256_16": "f8e4c26310570120",
+  "grid": "m5_keep 70"
  },
  "ctle": {
   "top": "pt_ctle",

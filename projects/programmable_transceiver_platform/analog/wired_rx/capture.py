@@ -870,7 +870,7 @@ ROWS = [['FRONT1'], ['FRONT0', 'CTL'], ['LN', 'PD', 'CN'], ['SL0', 'SL1'],
         [f'P{i}' for i in (12, 16, 13, 17, 10, 14, 18, 11, 15, 19)]]
 
 
-def build_top(rows=None, max_row_width=1100.0):
+def build_top(rows=None, max_row_width=1100.0, em=None):
     """Assemble the compact rows with timing's generic macro placer/router (layout_engine), from this
     directory's generated/fast cells.  Writes generated/wrx_cap.{mag,gds,ext.spice,lvs.spice}."""
     import netlist as tn
@@ -892,7 +892,8 @@ def build_top(rows=None, max_row_width=1100.0):
     # r5h: the vote outputs as one trunk group flanked by static mode/select ports (r5g: CKP0's trunk beside UP3,
     # 68 fF: 0.6 V spikes on UP3 with EN = 0 and an extra 68 fF on one ring phase)
     rep = le.generate(work, 'pt_wrx_cap', ports, devices, rows=rows, max_row_width=max_row_width,
-                      trunk_groups=[['RCS'] + [f'UP{k}' for k in range(4)] + [f'DN{k}' for k in range(4)] + ['B2']], over_cell=True)
+                      trunk_groups=[['RCS'] + [f'UP{k}' for k in range(4)] + [f'DN{k}' for k in range(4)] + ['B2']], over_cell=True,
+                      em=em)   # em: layout_engine options (r7g: chip-grid Metal5 channels, ASM-8)
     defs = ''.join((FAST / f'{m}.spice').read_text() for m in CELLS)
     top_sp = tn.flat_spice(ports, devices, 'pt_wrx_cap')
     ant = le.ad.spice_lines(rep.get('antenna_diodes', []))   # K1 antenna diodes -> LVS reference

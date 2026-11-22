@@ -219,6 +219,10 @@ digital 81.8 mA; nominal set: nominal currents. pt_wired W with POST on.
 | Macro, PWR-DIG, residual 0.15 / single-phase (150 mV) | 90 / 194 | **155** / 298: fails |
 | CDM reach, high-R, 450 MHz fit (<= 0.7 ohm) | RF_RX 0.42, RF_TX 0.59 | **`bidir[14]` 0.78, `[15]` 0.75**; `[18]` 0.67, `[21]` 0.62 |
 
+- **pt_rf decap 4.74 nF is accepted for the baseline (coordinator, 2026-11-22): a known miss against the D9 5.4 nF plan**
+  with every functional check passing (RQ-3a, macro 90 mV two-phase, RF pad CDM reach, QVCO requirement). The 11 tiles
+  (0.66 nF) do not fit beside the taller macro and the LNA spirals. Recovery: about 0.35 mm2 of grid MIM plates over
+  blocks once Metal5 is freed (ASM-8), or tiles if an area lever appears.
 - pt_rf: the south-east region (QVCO / LO) is drawn at 4.7-5.7 %. `lo_mmd` passes with SE >= 10 % on every net and layer
   (112.9 mV; 116.0 at 8 %).
 - pt_wired: restoring the 25 unplaced tiles (1.48 nF, 0.37 mm2), 14 of them inboard of `pad_hs_rx` (x about 2870-2990,

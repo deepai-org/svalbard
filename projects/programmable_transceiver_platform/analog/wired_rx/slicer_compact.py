@@ -391,7 +391,8 @@ def flat_lines():
     return lines
 
 
-def build_top():
+def build_top(em=None, gen=None):
+    """em: layout_engine options (chip-grid Metal5 channels, ASM-8); gen: output directory (default generated/)."""
     import netlist as tn
     for n in CELLS:
         tn.MACROS[n] = json.loads((FAST / f'{n}.pins.json').read_text())['ports']
@@ -412,7 +413,7 @@ def build_top():
                       net_space={'SL_P': 1.0, 'SL_N': 1.0, **{q: 1.0 for q in ('D0', 'E0', 'D1', 'E1', 'D2', 'E2', 'D3', 'E3')}},
                       trunk_groups=[['trim_d0_f0', 'trim_d0_p0', 'trim_d0_n0', 'trim_d0_f1']] +   # r7: SL_P/SL_N placed by net_space
                       # r6c: each aux gate pair flanked by static trims (r6b: 17-28 fF clock -> AXN)
-                      [[f'trim_{e}_n1', f'axn_{e}', f'axp_{e}', f'trim_{e}_n2'] for e in ('e0', 'e1', 'e2', 'e3')])
+                      [[f'trim_{e}_n1', f'axn_{e}', f'axp_{e}', f'trim_{e}_n2'] for e in ('e0', 'e1', 'e2', 'e3')], em=em)
     defs = ''.join((FAST / f'{m}.spice').read_text() for m in CELLS)
     top_sp = tn.flat_spice(ports, devices, 'pt_slicer')
     ant = le.ad.spice_lines(rep.get('antenna_diodes', []))   # layout_engine antenna diodes -> LVS reference
@@ -430,7 +431,8 @@ def build_top():
                                               'ext2spice rthresh 0', 'ext2spice -o pt_slicer.flat.spice',
                                               'quit -noprompt']) + '\n')
     le.docker_magic(work, 'flat.tcl')
-    gen = HERE / 'generated'
+    gen = Path(gen) if gen else HERE / 'generated'
+    gen.mkdir(parents=True, exist_ok=True)
     shutil.copy(work / 'pt_slicer.flat.spice', gen / 'slicer.ext.spice')
     for suf in ('.mag', '.lvs.spice'):
         f = work / f'pt_slicer{suf}'

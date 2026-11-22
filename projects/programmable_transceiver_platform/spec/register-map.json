@@ -8613,7 +8613,7 @@
    "live": false,
    "mantissa_bits": null,
    "maximum": 15,
-   "meaning": "LO-DIG-1 per-die band-search limit table: lowest allowed vco_coarse code (15 = lowest frequency). Commit rule: band_min <= vco_coarse <= band_max; software band search and any hardware acquisition stay inside [band_min, band_max]. 0xEF (free tail): rfpll.config at 0x84 is full and no later address moves.",
+   "meaning": "LO-DIG-1 per-die band-search limit table: lowest allowed vco_coarse code (15 = lowest frequency). Commit rule: band_min <= vco_coarse <= band_max (so band_min must not exceed band_max: otherwise every pt_rf commit fails with rule 48; write both limits and commit together); software band search and any hardware acquisition stay inside [band_min, band_max]. 0xEF (free tail): rfpll.config at 0x84 is full and no later address moves.",
    "minimum": 0,
    "name": "rfpll.config.band_min",
    "range_text": null,
@@ -16996,7 +16996,7 @@
  },
  "last_analog": 183,
  "last_debug": 93,
- "map_hash16": 19521,
+ "map_hash16": 64963,
  "obs_status": [
   "island_pgood_wired",
   "island_pgood_rf",

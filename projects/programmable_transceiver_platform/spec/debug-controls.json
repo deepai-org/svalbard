@@ -3256,7 +3256,7 @@
         }
       },
       "rfpll.status": {
-        "description": "LO-DIG-1 QVCO runaway guard (pt_lo_vtguard in rtl/pt_monitor.sv, software-only variant: no hardware preset / band-step / retry). Source: pt_lo_vtdet DET (VTUNE above VDD_LO - 0.26..0.29 V, release 82-93 mV lower), macro input s_lo_vtdet, clamped with the rf enable group (lo island) and two-flop synchronized on REF_CLK. Takes the 0xF2 slot that was reserved since the counter PLL lock check was retired (status.pll_lock), so no status address moves. Both bits are also on DBG_OBS (debug.dbg_obs codes 53 / 54).",
+        "description": "LO-DIG-1 QVCO runaway guard (pt_lo_vtguard in rtl/pt_monitor.sv, software-only variant: no hardware preset / band-step / retry). Source: pt_lo_vtdet DET (VTUNE above VDD_LO - 0.26..0.29 V, release 82-93 mV lower), macro input s_lo_vtdet, clamped with the rf enable group (lo island) and two-flop synchronized on REF_CLK. Takes the 0xF2 slot that was reserved since the counter PLL lock check was retired (status.pll_lock), so no status address moves. Both bits are also on DBG_OBS (debug.dbg_obs codes 53 / 54). Clear vt_runaway by writing 0x0002 to rfpll.status only: a write that also sets the read-only vt_high bit (e.g. a read-modify-write 0x0003) is refused.",
         "fields": {
           "vt_high": {
             "bits": 1,

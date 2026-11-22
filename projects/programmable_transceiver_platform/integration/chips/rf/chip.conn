@@ -188,8 +188,10 @@ inst lo_ext pt_lo_ext lod
 # no iso_pd on LO_*: lo_ext (lod) and the mixers (rf_rx, rf_tx) are in one enable group since PD2 (D-ISO)
 # on-chip LO synthesizer (MW-7): cells exist, instanced per analog/timing/README.md (LO integration); D-LO.
 # VDD_LO = quiet rail for the QVCO core and the charge pump (LO21/LO22: regulator not built): build demand
-inst lo_vreg pt_lo_vreg lo demand
-  VIN~RAIL_lo VOUT~VDD_LO EN=c_lo_vreg_en VSS~VSS
+inst lo_vreg pt_lo_vreg lo
+  VIN~RAIL_lo VOUT~VDD_LO EN=c_lo_vreg_en VSS~VSS VREF~ATBN_vbg      # VREF: bandgap VBG (gate load only, own RC filter)
+  BYP=VSS TRIM{0:2}=VSS      # baseline: regulated, trim code 0 (all divider segments in); register fields requested (CB8-13)
+  ATB_OUT~- ATB_G~-          # no free ATB leaf on pt_rf yet (OBS-4, CB8-12)
 inst qvco pt_lc_qvco5 lo
   EN=c_qvco_en CMLSEL=c_lo_cmlsel VTUNE~LO_VTUNE IBIAS~BIAS_qvco BAND{0:3}=c_qvco_band[\1] PRE>-
   IP~LOI_IP IN~LOI_IN QP~LOI_QP QN~LOI_QN VDD~VDD_LO VDDB~RAIL_lod VSS~VSS ATB_EN=c_qvco_atb_en ATB_VTUNE~- ATB_ITAIL~-
@@ -201,6 +203,10 @@ inst lo_pfdcp pt_lo_pfdcp lo
   REF=ref_clk FB=LO_FB EN=c_lo_pfdcp_en PRE=c_lo_pre IBIAS~BIAS_lo_pfdcp VTUNE~LO_CP VDD~VDD_LO VSS~VSS ICP{0:1}=c_lo_icp[\1]
 inst lo_lf pt_lo_lf lo
   CP~LO_CP VT~LO_VTUNE VSS~VSS
+# QVCO runaway guard (LO-DIG-1): gate-only tap on LO_VTUNE; EN rides on the CP enable until digital adds c_lo_vtdet_en;
+# DET -> s_lo_vtdet once the macro has the port (declared unconnected in the baseline)
+inst lo_vtdet pt_lo_vtdet lo
+  VTUNE~LO_VTUNE EN=c_lo_pfdcp_en DET>- VDD~VDD_LO VSS~VSS
 inst lo_obs pt_lo_obs lod
   LP~LOI_IP LN~LOI_IN EN=c_lo_obs_en OBS>LO_OBS VDD~RAIL_lod VSS~VSS
 inst lo_obs_q pt_lo_obs lod

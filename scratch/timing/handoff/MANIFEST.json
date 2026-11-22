@@ -7,17 +7,19 @@
   "misses": "phase spacing spread up to 66.8 ps at ss 810 MHz (ptrim absorbs; ptrim r12 pending); C-only extraction only (no R+C yet); duty 0.49-0.55 OK",
   "rows": "TIM-17, TIM-19",
   "gds": "pll_ring.gds",
-  "gds_sha256_16": "3613314afedaea08"
+  "gds_sha256_16": "3613314afedaea08",
+  "grid": "not grid-aligned (Metal5 used freely): hand ECO over the r9d core, no regeneration path"
  },
  "pll_ring_core": {
   "top": "pt_pll_ring_core",
-  "rev": "r12 staged (committed ct_ring9 = TIM-12, ct_phbuf8x, DCF taps)",
-  "size": "202.1 x 442.5 (published r9d 196.0 x 438.9)",
-  "checks": "shuttle main 0, antenna 0, DCF.1a 0; read-back LVS unique vs pll_ring_core.sch.spice, negative control fails, taps add no nets",
-  "misses": "phase positions -41..+48 ps / slots up to +74 ps at 340 MHz ff (wired TX trim); C-only extraction",
+  "rev": "r12-grid: committed ct_ring9 + ct_phbuf8x, re-placed at max row width 260 with the chip-grid Metal5 channels kept free, DCF taps",
+  "size": "262.6 x 385.1 (0.101 mm2; r12 202.1 x 442.5 = 0.089)",
+  "checks": "shuttle main 0, antenna 0, DCF.1a 0; flow LVS + read-back LVS unique vs pll_ring_core.sch.spice, negative control fails; Metal5 4 097 um2, 0 in channels",
+  "misses": "C-only extraction; phase position / slot error ps: 405 MHz ss315 -23..+17 / -26..+19, tt -21..+22 / -25..+39; 340 MHz ss315 -27..+22 / -31..+37, ff -37..+32 / -42..+70 (equal or better than r12); duty 0.48-0.51; other corners not rerun",
   "rows": "TIM-16, TIM-18",
   "gds": "pll_ring_core.gds",
-  "gds_sha256_16": "f529acad19c4771d"
+  "gds_sha256_16": "928ec46f58f86a71",
+  "grid": "m5_keep 70"
  },
  "clk_obs16": {
   "top": "pt_clk_obs16",
@@ -43,7 +45,8 @@
   "checks": "main 0, DCF.1a 0; read-back LVS unique vs schematic and vs published layout netlist",
   "misses": "as published",
   "gds": "slicer.gds",
-  "gds_sha256_16": "2c96ac2d70fcfe6a"
+  "gds_sha256_16": "2c96ac2d70fcfe6a",
+  "grid": "not grid-aligned (Metal5 used freely): fixed rows leave no free trunk column (build fails); needs a row re-plan"
  },
  "vco_replica": {
   "top": "pt_vco_replica",
@@ -72,7 +75,8 @@
   "misses": "ssp 3.125/3.24 Gb/s eye, gain spread 4.7 dB, EM load strips, DC wiring R, current at res_ff (WR12-1); Metal5 12 208 um2",
   "rows": "WR12-1",
   "gds": "ctle.gds",
-  "gds_sha256_16": "fd225a0c04bad8ea"
+  "gds_sha256_16": "fd225a0c04bad8ea",
+  "grid": "not grid-aligned (Metal5 used freely): wrx_flow router has no Metal5 keep-out option yet"
  },
  "cdr": {
   "top": "pt_cdr",
@@ -80,7 +84,8 @@
   "checks": "shuttle main 0 standalone; read-back LVS unique; ASM-10 MT.2a items at cell y 321.9 lie above the 319.8 um cell top (top-level wiring)",
   "misses": "as published",
   "gds": "cdr.gds",
-  "gds_sha256_16": "2f03773bd7bbbdd9"
+  "gds_sha256_16": "2f03773bd7bbbdd9",
+  "grid": "not grid-aligned (Metal5 used freely): wrx_flow router has no Metal5 keep-out option yet"
  },
  "diff_clk_rx": {
   "top": "pt_diff_clk_rx",

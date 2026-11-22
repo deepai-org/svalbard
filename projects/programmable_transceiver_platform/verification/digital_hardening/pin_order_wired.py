@@ -79,7 +79,7 @@ def main():
         emit_virtual(s - cur); cur = s
         out.append(g); cur += n; s = cur
     assert cur <= slot(940.0), f'left groups overrun x 940 um ({cur} slots)'
-    gaps = [(max(plan) + 3, NSLOT)]
+    gaps = [(max(max(plan) + 3, slot(1230.0)), NSLOT)]   # keep 963-1223 for the wiredtx8 pins only
     # explicit pins up to the first gap
     def explicit_until(limit):
         nonlocal cur

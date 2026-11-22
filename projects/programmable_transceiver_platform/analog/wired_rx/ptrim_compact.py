@@ -40,14 +40,14 @@ INV1 = (4, 8, 1)
 INV2 = (4, 8, 4)
 INV3 = (5, 10, 10)                # 50/100: 20-80 % edges <= 150 ps at the HIGH route bound, ss / 3.15 V
 CH0_M = 2                         # channel 0: inv1, inv2, inv3 fingers x CH0_M, ta unit widths x CH0_M x CH0_TA_K
-CH0_TA_K = [1, 1, 1.24, 1.175, 1.145]      # per bit (bits 0 / 1 have no ta units)
+CH0_TA_K = [1, 1, 1.141, 1.081, 1.053]      # per bit (bits 0 / 1 have no ta units)
 DUMMY_TN = True                   # channels 1..7: (CH0_M - 1) x inv1 gate as MOS capacitors on tn
 # bit b: (units on tn, units on ta, capacitor W um, capacitor L um, switch W um); widths tuned on the extraction
 # for binary weights at ss / 3.15 V / 810 MHz and its pessimistic bound (layout l8 of scratch/wired_rx/r10ptrim, 2026-11-18)
 UNITS = [(1, 0, 1.27, 0.45, 0.6), (2, 0, 1.47, 0.45, 0.6), (2, 2, 0.36, 0.45, 0.6), (4, 4, 0.535, 0.45, 0.6), (8, 8, 0.595, 0.45, 0.6)]
 # r12 (TIM-19): per-channel fixed offset = FIX[k] always-on bit-4-type unit pairs (tn + ta, switch gate EN = ptrim_en);
 # keep in step with netlists.PTRIM_FIX.  Channels with different FIX get their own row cell (wp_ch_f<n> / wp_ch0_f<n>).
-FIX = [0, 2, 4, 5, 0, 4, 8, 8]
+FIX = [0, 2, 4, 5, 0, 4, (11, 5), (11, 5)]      # r12b: ch6/7 shifted toward tn (duty, C4 at the pessimistic bound)
 CH_PORTS = ['PH', 'EN', 'CKP'] + [f'T{b}' for b in range(5)]
 TOP_PORTS = ['VDD_WIRE_SW', 'VSS', 'ptrim_en'] + [f'PH{k}' for k in range(8)] + [f'CKP{k}' for k in range(8)] + \
     [f'T{k}_{b}' for k in range(8) for b in range(5)]
@@ -138,12 +138,23 @@ def _fixed(c, node, tag, n, wk):
     c._add(cols, net)
 
 
+def _fixpair(fix):
+    """FIX entry: n (= n units on tn and n on ta) or (n_tn, n_ta)"""
+    return tuple(fix) if isinstance(fix, (tuple, list)) else (fix, fix)
+
+
+def _fixname(fix):
+    a, b = _fixpair(fix)
+    return '' if not (a or b) else f'_f{a}' if a == b else f'_f{a}x{b}'
+
+
 def channel(ch0=False, fix=0):
-    name = ('wp_ch0' if ch0 else 'wp_ch') + (f'_f{fix}' if fix else '')
+    name = ('wp_ch0' if ch0 else 'wp_ch') + _fixname(fix)
+    fa, fb = _fixpair(fix)
     m0 = CH0_M if ch0 else 1
     c = cap.Cell(name)
-    if fix:                                             # r12 fixed offset units on tn (leftmost), wide fingers
-        _fixed(c, 'tn', 'a', fix, 1.0)
+    if fa:                                              # r12 fixed offset units on tn (leftmost), wide fingers
+        _fixed(c, 'tn', 'a', fa, 1.0)
     for b in (4, 3, 2, 1, 0):
         ntn, nta, cw, cl, sw = UNITS[b]
         if ntn:
@@ -165,8 +176,8 @@ def channel(ch0=False, fix=0):
         if nta:
             k0 = m0 * (CH0_TA_K[b] if isinstance(CH0_TA_K, (list, tuple)) else CH0_TA_K) if ch0 else 1          # channel 0: wider ta units (same count)
             _units(c, 'ta', b, 'b', nta, round(cw * k0, 3), cl, round(sw * k0, 3))
-    if fix:                                             # r12 fixed offset units on ta (after bit 4)
-        _fixed(c, 'ta', 'b', fix, m0 * CH0_TA_K[4] if ch0 else 1.0)
+    if fb:                                              # r12 fixed offset units on ta (after bit 4)
+        _fixed(c, 'ta', 'b', fb, m0 * CH0_TA_K[4] if ch0 else 1.0)
     for _ in range(INV2[2] * m0):
         c.inv('ta', 'tb', INV2[0], INV2[1])
     for _ in range(INV3[2] * m0):
@@ -183,7 +194,8 @@ class _Cells(dict):
     def __getitem__(self, name):
         base, _, f = name.partition('_f')
         assert base in ('wp_ch', 'wp_ch0'), name
-        return lambda: channel(base == 'wp_ch0', int(f) if f else 0)
+        fx = (0 if not f else int(f) if 'x' not in f else tuple(int(v) for v in f.split('x')))
+        return lambda: channel(base == 'wp_ch0', fx)
 
 
 CELLS = _Cells()
@@ -220,7 +232,7 @@ def build_cell(name='wp_ch'):
 
 
 def cell_of(k):
-    return ('wp_ch0' if k == 0 and CH0_M > 1 else 'wp_ch') + (f'_f{FIX[k]}' if FIX[k] else '')
+    return ('wp_ch0' if k == 0 and CH0_M > 1 else 'wp_ch') + _fixname(FIX[k])
 
 
 def top_netlist():
@@ -234,6 +246,8 @@ def top_netlist():
 ROW_GAP = 3.0         # between rows (n-well of row k to the substrate tap of row k+1: 2.45 um)
 STRAP_W = 5.0         # VSS / VDD straps (Metal4 + Metal5)
 STRAP_M5 = False      # r12 (ASM-8): False = Metal5 kept free; straps Metal4 only, pins on Metal4 (the chip grid lands with via4)
+VDD_M5_TRUNK = True   # r12 (ASM-8 declared trunk): VDD_WIRE_SW strap also on Metal5 (the grid cannot feed the switched rail);
+VDD_SHIFT = 1.5       # um: VDD strap moved right so its Metal5 clears a 10.5 um grid VSS Metal5 strap centred on the VSS strap
 CKP_W = 1.0           # CKPk Metal2 stub width from the row pin to the block edge
 CKP_W3 = 2.0          # CKPk Metal3 strap over the row's own Metal2 CKP track (output fingers -> block edge), via2 every 1 um
 RAIL_W23 = 1.6        # Metal2 + Metal3 reinforcement of the row rails from the inv2 / inv3 fingers to the power straps
@@ -260,7 +274,7 @@ def build_top():
     rails = meta[cells[0]]['rails']
     ROW_PITCH = round(hrow + ROW_GAP, 2)
     X_EN = round(wmax + 1.6, 2)          # ptrim_en strap, then the VSS and VDD straps
-    X_VSS, X_VDD = X_EN + 4.5, X_EN + 11.5
+    X_VSS, X_VDD = X_EN + 4.5, X_EN + 11.5 + (VDD_SHIFT if VDD_M5_TRUNK and not STRAP_M5 else 0.0)
     work = SCRATCH / 'top'
     if work.exists():
         shutil.rmtree(work)
@@ -328,20 +342,32 @@ def build_top():
                 rect('via1', xv - 0.13, yr - 0.13, xv + 0.13, yr + 0.13)
                 rect('via2', xv - 0.14, yr - 0.14, xv + 0.14, yr + 0.14)
                 xv += 1.0
-            for mm in range(1, 6 if STRAP_M5 else 5):
+            m5 = STRAP_M5 or (VDD_M5_TRUNK and net == 'VDD')
+            for mm in range(1, 6 if m5 else 5):
                 rect(f'metal{mm}', xs - 2.0, yr - 0.6, xs + 2.0, yr + 0.6)
             for dx in (-1.55, -0.93, -0.31, 0.31, 0.93, 1.55):
                 for dy in (-0.3, 0.3):
-                    for mm in range(1, 5 if STRAP_M5 else 4):
+                    for mm in range(1, 5 if m5 else 4):
                         h = 0.13 if mm == 1 else 0.14
                         rect(f'via{mm}', xs + dx - h, yr + dy - h, xs + dx + h, yr + dy + h)
     en_y = [k * ROW_PITCH + meta[cell_of(k)]['pins']['EN'][1] for k in range(8)]
     rect('metal4', X_EN - 0.22, en_y[0] - 0.2, X_EN + 0.22, top - 0.5)      # Metal4: the CKP Metal3 straps cross it
     port('ptrim_en', 'metal4', X_EN, top - 0.8)
     for net, xs, tp in (('VSS', X_VSS, 'VSS'), ('VDD', X_VDD, 'VDD_WIRE_SW')):
-        for mm in ((4, 5) if STRAP_M5 else (4,)):
+        m5 = STRAP_M5 or (VDD_M5_TRUNK and net == 'VDD')
+        for mm in ((4, 5) if m5 else (4,)):
             rect(f'metal{mm}', xs - STRAP_W / 2, -0.2, xs + STRAP_W / 2, top + 0.2)
-        port(tp, 'metal5' if STRAP_M5 else 'metal4', xs, top - 0.5)
+        if m5 and not STRAP_M5:          # via4 between the Metal4 strap and the Metal5 trunk along the whole height
+            yv = 1.0
+            joints = [k * ROW_PITCH + rails['VDD'][1] for k in range(8)]
+            while yv <= top - 1.0:
+                if min(abs(yv - yj) for yj in joints) < 1.2:          # the rail-joint via stacks already have via4 there
+                    yv += 2.0
+                    continue
+                for dx in (-1.55, -0.93, -0.31, 0.31, 0.93, 1.55):
+                    rect('via4', xs + dx - 0.14, yv - 0.14, xs + dx + 0.14, yv + 0.14)
+                yv += 2.0
+        port(tp, 'metal5' if m5 else 'metal4', xs, top - 0.5)
     script = ['crashbackups stop', 'load pt_ptrim', 'units microns', 'snap internal'] + cmds + ['save', 'quit -noprompt']
     (work / 'layout.tcl').write_text('\n'.join(script) + '\n')
     (work / 'top.spice').write_text(top_netlist())

@@ -25,16 +25,16 @@ XMN6 tc0_1a T0_1 tn0 VSS nfet_03v3 w=0.6u l=0.28u m=2
 XMC2 VSS tc0_1a VSS VSS nfet_03v3 w=1.47u l=0.45u m=2
 XMN7 tc0_2a T0_2 tn0 VSS nfet_03v3 w=0.6u l=0.28u m=2
 XMC3 VSS tc0_2a VSS VSS nfet_03v3 w=0.36u l=0.45u m=2
-XMN8 tc0_2b T0_2 ta0 VSS nfet_03v3 w=1.488u l=0.28u m=2
-XMC4 VSS tc0_2b VSS VSS nfet_03v3 w=0.893u l=0.45u m=2
+XMN8 tc0_2b T0_2 ta0 VSS nfet_03v3 w=1.369u l=0.28u m=2
+XMC4 VSS tc0_2b VSS VSS nfet_03v3 w=0.822u l=0.45u m=2
 XMN9 tc0_3a T0_3 tn0 VSS nfet_03v3 w=0.6u l=0.28u m=4
 XMC5 VSS tc0_3a VSS VSS nfet_03v3 w=0.535u l=0.45u m=4
-XMN10 tc0_3b T0_3 ta0 VSS nfet_03v3 w=1.41u l=0.28u m=4
-XMC6 VSS tc0_3b VSS VSS nfet_03v3 w=1.257u l=0.45u m=4
+XMN10 tc0_3b T0_3 ta0 VSS nfet_03v3 w=1.297u l=0.28u m=4
+XMC6 VSS tc0_3b VSS VSS nfet_03v3 w=1.157u l=0.45u m=4
 XMN11 tc0_4a T0_4 tn0 VSS nfet_03v3 w=0.6u l=0.28u m=8
 XMC7 VSS tc0_4a VSS VSS nfet_03v3 w=0.595u l=0.45u m=8
-XMN12 tc0_4b T0_4 ta0 VSS nfet_03v3 w=1.374u l=0.28u m=8
-XMC8 VSS tc0_4b VSS VSS nfet_03v3 w=1.363u l=0.45u m=8
+XMN12 tc0_4b T0_4 ta0 VSS nfet_03v3 w=1.264u l=0.28u m=8
+XMC8 VSS tc0_4b VSS VSS nfet_03v3 w=1.253u l=0.45u m=8
 XMN13 ta0 tn0 VSS VSS nfet_03v3 w=4u l=0.28u m=2
 XMP3 ta0 tn0 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=8u l=0.28u m=2
 XMN14 tb0 ta0 VSS VSS nfet_03v3 w=4u l=0.28u m=8
@@ -229,50 +229,54 @@ XMN109 tc6_4a T6_4 tn6 VSS nfet_03v3 w=0.6u l=0.28u m=8
 XMC68 VSS tc6_4a VSS VSS nfet_03v3 w=0.595u l=0.45u m=8
 XMN110 tc6_4b T6_4 ta6 VSS nfet_03v3 w=0.6u l=0.28u m=8
 XMC69 VSS tc6_4b VSS VSS nfet_03v3 w=0.595u l=0.45u m=8
-XMN111 tc6_fa ptrim_en tn6 VSS nfet_03v3 w=4.8u l=0.28u
-XMC70 VSS tc6_fa VSS VSS nfet_03v3 w=4.76u l=0.45u
-XMN112 tc6_fb ptrim_en ta6 VSS nfet_03v3 w=4.8u l=0.28u
-XMC71 VSS tc6_fb VSS VSS nfet_03v3 w=4.76u l=0.45u
-XMN113 ta6 tn6 VSS VSS nfet_03v3 w=4u l=0.28u
+XMN111 tc6_fa ptrim_en tn6 VSS nfet_03v3 w=3.3u l=0.28u
+XMC70 VSS tc6_fa VSS VSS nfet_03v3 w=3.27u l=0.45u
+XMN112 tc6_fa ptrim_en tn6 VSS nfet_03v3 w=3.3u l=0.28u
+XMC71 VSS tc6_fa VSS VSS nfet_03v3 w=3.27u l=0.45u
+XMN113 tc6_fb ptrim_en ta6 VSS nfet_03v3 w=3u l=0.28u
+XMC72 VSS tc6_fb VSS VSS nfet_03v3 w=2.975u l=0.45u
+XMN114 ta6 tn6 VSS VSS nfet_03v3 w=4u l=0.28u
 XMP33 ta6 tn6 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
-XMN114 tb6 ta6 VSS VSS nfet_03v3 w=4u l=0.28u m=4
+XMN115 tb6 ta6 VSS VSS nfet_03v3 w=4u l=0.28u m=4
 XMP34 tb6 ta6 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=8u l=0.28u m=4
-XMN115 CKP6 tb6 VSS VSS nfet_03v3 w=5u l=0.28u m=10
+XMN116 CKP6 tb6 VSS VSS nfet_03v3 w=5u l=0.28u m=10
 XMP35 CKP6 tb6 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=10u l=0.28u m=10
-XMC72 VSS tn6 VSS VSS nfet_03v3 w=4u l=0.28u
+XMC73 VSS tn6 VSS VSS nfet_03v3 w=4u l=0.28u
 XMCP6 VDD_WIRE_SW tn6 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
-XMN116 tn7_s0 PH7 VSS VSS nfet_03v3 w=4u l=0.28u
-XMN117 tn7 ptrim_en tn7_s0 VSS nfet_03v3 w=4u l=0.28u
-XMN118 tn7_s1 PH7 VSS VSS nfet_03v3 w=4u l=0.28u
-XMN119 tn7 ptrim_en tn7_s1 VSS nfet_03v3 w=4u l=0.28u
+XMN117 tn7_s0 PH7 VSS VSS nfet_03v3 w=4u l=0.28u
+XMN118 tn7 ptrim_en tn7_s0 VSS nfet_03v3 w=4u l=0.28u
+XMN119 tn7_s1 PH7 VSS VSS nfet_03v3 w=4u l=0.28u
+XMN120 tn7 ptrim_en tn7_s1 VSS nfet_03v3 w=4u l=0.28u
 XMP36 tn7 PH7 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=6u l=0.28u m=2
 XMP37 tn7 ptrim_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=6u l=0.28u m=2
-XMN120 tc7_0a T7_0 tn7 VSS nfet_03v3 w=0.6u l=0.28u
-XMC73 VSS tc7_0a VSS VSS nfet_03v3 w=1.27u l=0.45u
-XMN121 tc7_1a T7_1 tn7 VSS nfet_03v3 w=0.6u l=0.28u m=2
-XMC74 VSS tc7_1a VSS VSS nfet_03v3 w=1.47u l=0.45u m=2
-XMN122 tc7_2a T7_2 tn7 VSS nfet_03v3 w=0.6u l=0.28u m=2
-XMC75 VSS tc7_2a VSS VSS nfet_03v3 w=0.36u l=0.45u m=2
-XMN123 tc7_2b T7_2 ta7 VSS nfet_03v3 w=0.6u l=0.28u m=2
-XMC76 VSS tc7_2b VSS VSS nfet_03v3 w=0.36u l=0.45u m=2
-XMN124 tc7_3a T7_3 tn7 VSS nfet_03v3 w=0.6u l=0.28u m=4
-XMC77 VSS tc7_3a VSS VSS nfet_03v3 w=0.535u l=0.45u m=4
-XMN125 tc7_3b T7_3 ta7 VSS nfet_03v3 w=0.6u l=0.28u m=4
-XMC78 VSS tc7_3b VSS VSS nfet_03v3 w=0.535u l=0.45u m=4
-XMN126 tc7_4a T7_4 tn7 VSS nfet_03v3 w=0.6u l=0.28u m=8
-XMC79 VSS tc7_4a VSS VSS nfet_03v3 w=0.595u l=0.45u m=8
-XMN127 tc7_4b T7_4 ta7 VSS nfet_03v3 w=0.6u l=0.28u m=8
-XMC80 VSS tc7_4b VSS VSS nfet_03v3 w=0.595u l=0.45u m=8
-XMN128 tc7_fa ptrim_en tn7 VSS nfet_03v3 w=4.8u l=0.28u
-XMC81 VSS tc7_fa VSS VSS nfet_03v3 w=4.76u l=0.45u
-XMN129 tc7_fb ptrim_en ta7 VSS nfet_03v3 w=4.8u l=0.28u
-XMC82 VSS tc7_fb VSS VSS nfet_03v3 w=4.76u l=0.45u
-XMN130 ta7 tn7 VSS VSS nfet_03v3 w=4u l=0.28u
+XMN121 tc7_0a T7_0 tn7 VSS nfet_03v3 w=0.6u l=0.28u
+XMC74 VSS tc7_0a VSS VSS nfet_03v3 w=1.27u l=0.45u
+XMN122 tc7_1a T7_1 tn7 VSS nfet_03v3 w=0.6u l=0.28u m=2
+XMC75 VSS tc7_1a VSS VSS nfet_03v3 w=1.47u l=0.45u m=2
+XMN123 tc7_2a T7_2 tn7 VSS nfet_03v3 w=0.6u l=0.28u m=2
+XMC76 VSS tc7_2a VSS VSS nfet_03v3 w=0.36u l=0.45u m=2
+XMN124 tc7_2b T7_2 ta7 VSS nfet_03v3 w=0.6u l=0.28u m=2
+XMC77 VSS tc7_2b VSS VSS nfet_03v3 w=0.36u l=0.45u m=2
+XMN125 tc7_3a T7_3 tn7 VSS nfet_03v3 w=0.6u l=0.28u m=4
+XMC78 VSS tc7_3a VSS VSS nfet_03v3 w=0.535u l=0.45u m=4
+XMN126 tc7_3b T7_3 ta7 VSS nfet_03v3 w=0.6u l=0.28u m=4
+XMC79 VSS tc7_3b VSS VSS nfet_03v3 w=0.535u l=0.45u m=4
+XMN127 tc7_4a T7_4 tn7 VSS nfet_03v3 w=0.6u l=0.28u m=8
+XMC80 VSS tc7_4a VSS VSS nfet_03v3 w=0.595u l=0.45u m=8
+XMN128 tc7_4b T7_4 ta7 VSS nfet_03v3 w=0.6u l=0.28u m=8
+XMC81 VSS tc7_4b VSS VSS nfet_03v3 w=0.595u l=0.45u m=8
+XMN129 tc7_fa ptrim_en tn7 VSS nfet_03v3 w=3.3u l=0.28u
+XMC82 VSS tc7_fa VSS VSS nfet_03v3 w=3.27u l=0.45u
+XMN130 tc7_fa ptrim_en tn7 VSS nfet_03v3 w=3.3u l=0.28u
+XMC83 VSS tc7_fa VSS VSS nfet_03v3 w=3.27u l=0.45u
+XMN131 tc7_fb ptrim_en ta7 VSS nfet_03v3 w=3u l=0.28u
+XMC84 VSS tc7_fb VSS VSS nfet_03v3 w=2.975u l=0.45u
+XMN132 ta7 tn7 VSS VSS nfet_03v3 w=4u l=0.28u
 XMP38 ta7 tn7 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
-XMN131 tb7 ta7 VSS VSS nfet_03v3 w=4u l=0.28u m=4
+XMN133 tb7 ta7 VSS VSS nfet_03v3 w=4u l=0.28u m=4
 XMP39 tb7 ta7 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=8u l=0.28u m=4
-XMN132 CKP7 tb7 VSS VSS nfet_03v3 w=5u l=0.28u m=10
+XMN134 CKP7 tb7 VSS VSS nfet_03v3 w=5u l=0.28u m=10
 XMP40 CKP7 tb7 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=10u l=0.28u m=10
-XMC83 VSS tn7 VSS VSS nfet_03v3 w=4u l=0.28u
+XMC85 VSS tn7 VSS VSS nfet_03v3 w=4u l=0.28u
 XMCP7 VDD_WIRE_SW tn7 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 w=8u l=0.28u
 .ends pt_ptrim

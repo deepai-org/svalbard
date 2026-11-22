@@ -946,7 +946,7 @@ PTRIM_INV1 = (4, 8, 1)            # wn, wp, fingers
 PTRIM_INV2 = (4, 8, 4)
 PTRIM_INV3 = (5, 10, 10)
 PTRIM_CH0_M = 2                   # channel 0 (capture main clock, 2 x the load): inv1 / inv2 / inv3 fingers x 2, ta units x 2 wide
-PTRIM_CH0_TA_K = (1, 1, 1.24, 1.175, 1.145)      # channel 0 ta unit width = PTRIM_CH0_M x this x the unit width (per bit)
+PTRIM_CH0_TA_K = (1, 1, 1.141, 1.081, 1.053)      # r12c: l8 values x0.92 for bits 2..4 (ch0 max step 1.026 deg at the pessimistic bound, R+C)
 # bit b: (units on tn, units on ta, capacitor W um, capacitor L um, switch W um)
 PTRIM_UNITS = ((1, 0, 1.27, 0.45, 0.6), (2, 0, 1.47, 0.45, 0.6), (2, 2, 0.36, 0.45, 0.6), (4, 4, 0.535, 0.45, 0.6),
                (8, 8, 0.595, 0.45, 0.6))
@@ -954,7 +954,7 @@ PTRIM_UNITS = ((1, 0, 1.27, 0.45, 0.6), (2, 0, 1.47, 0.45, 0.6), (2, 2, 0.36, 0.
 # pt_pll_ring r12.  Channel k carries PTRIM_FIX[k] always-on unit pairs (one bit-4 unit on tn + one on ta, switch gate =
 # ptrim_en), i.e. the same devices as the trim units (they track corner / supply like the trim) worth ~2 LSB each;
 # laid out as wide fingers of the same cap / switch W ratio (ptrim_fix_fingers).
-PTRIM_FIX = (0, 2, 4, 5, 0, 4, 8, 8)        # r12: scratch/wired_rx/r12/ptrim/pickfix.json
+PTRIM_FIX = (0, 2, 4, 5, 0, 4, (11, 5), (11, 5))   # r12b: n = n on tn + n on ta; (a, b) = a on tn, b on ta        # r12: scratch/wired_rx/r12/ptrim/pickfix.json
 PTRIM_FIX_MAXW = 4.8              # um: a fixed offset is laid out as ceil(W / this) wide fingers (no taller than inv3 5 um)
 
 
@@ -1000,11 +1000,14 @@ covering the ring's static phase position error plus the channel spread (spec AC
                     tc = f'tc{k}_{b}{tag}'
                     c.n(tc, f'T{k}_{b}', node, w=round(sw * wk, 3), m=cnt)      # switch: the unit floats when T = 0
                     c.ncap(tc, round(cw * wk, 3), cl, m=cnt)
-        if PTRIM_FIX[k]:                                  # r12 fixed offset: always-on bit-4-type units on tn and ta
+        fx = PTRIM_FIX[k] if isinstance(PTRIM_FIX[k], tuple) else (PTRIM_FIX[k], PTRIM_FIX[k])     # (units on tn, units on ta)
+        if any(fx):                                       # r12 fixed offset: always-on bit-4-type units on tn and ta
             ntn, nta, cw, cl, sw = PTRIM_UNITS[4]
-            for node, tag, wk in ((tn, 'a', 1), (ta, 'b', m0 * PTRIM_CH0_TA_K[4] if k == 0 else 1)):
+            for node, tag, wk, nfx in ((tn, 'a', 1, fx[0]), (ta, 'b', m0 * PTRIM_CH0_TA_K[4] if k == 0 else 1, fx[1])):
+                if not nfx:
+                    continue
                 tc = f'tc{k}_f{tag}'
-                for fw in ptrim_fix_fingers(PTRIM_FIX[k], wk):       # wide fingers = n units each (same W ratio)
+                for fw in ptrim_fix_fingers(nfx, wk):       # wide fingers = n units each (same W ratio)
                     c.n(tc, 'ptrim_en', node, w=fw[1])
                     c.ncap(tc, fw[0], cl)
         for a, y, (w_n, w_p, nf) in ((tn, ta, PTRIM_INV1), (ta, tb, PTRIM_INV2), (tb, f'CKP{k}', PTRIM_INV3)):

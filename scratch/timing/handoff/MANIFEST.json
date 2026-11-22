@@ -97,8 +97,12 @@
  },
  "ptrim": {
   "top": "pt_ptrim",
-  "rev": "r12 PENDING (sub-agent finishing; Metal5 0; scratch/wired_rx/r12/ptrim/final/gen/ptrim.gds)",
-  "checks": "flow DRC 0 / LVS unique; my read-back on the tapped copy fails pin matching against the working-tree ptrim.spice (source moved on) - not handed off yet",
-  "misses": "ssp 810 MHz coverage 1.20 < 1.25"
+  "rev": "r12c staged: fixed per-channel offsets [0,2,4,5,0,4,8,8] cancel the r12 ring pattern; ch6/7 fixed-load split; ch0 ta bits 2-4 x0.92; DCF taps",
+  "size": "201.3 x 235.7",
+  "grid": "own rule agreed with assembly: x0 = 313.05 mod 70, 10.5 um grid VSS over the block VSS strap; Metal5 only a declared VDD_WIRE_SW trunk 1 175 um2 (2.5 %)",
+  "checks": "shuttle main 0, antenna 0, DCF.1a 0; read-back LVS unique vs ptrim.sch.spice (= analog/wired_rx/ptrim.spice), negative control fails; R+C (mkrc) 116/116 clock-path nets, per-pair C ratio 1.000",
+  "misses": "full 28-point matrix on the r12c R+C netlist NOT run (stopped for the baseline); r12b at ssp315 810 MHz: G1 1.48, G2 0.72 deg, C4/C5 pass, C2 1.026 deg on ch0 (r12c targets it, unverified); supply 24-37 mA (44 at the pessimistic 3.50 V bound)",
+  "gds": "ptrim.gds",
+  "gds_sha256_16": "6a758708225d7489"
  }
 }

@@ -1,0 +1,63 @@
+{
+ "row": "PC-74",
+ "cell": "pad_single_leg",
+ "state": "BASELINE (MANDATE 1: finished-if-imperfect; known misses below)",
+ "candidate": "s2 (ESD option A: pad-site primaries; old network reused as core-side secondary)",
+ "build_command": "scratch/pads-core/esdopt/rf/build.sh <family> s2 '<opt of b/s2.json>' (rf_compose.py on ../pins/b/<cell>.gds)",
+ "rebuild_check": "2026-11-23 rebuild with the same opt: XOR 17.4 um2 per site vs the candidate (not identical; see misses). Published = candidate GDS.",
+ "sha256": {
+  "pad.gds": "e89158e3efc31372f315968a0d86bbb0920330648fac456de96dc4e07b3de62b",
+  "pad-extracted.spice": "15b649d1a7c0203183747fbfaffa472f8a23ae65fccdc3deb7235068d4d1b121",
+  "reference.spice": "69e73ae070487d6c8d4ee8a5699df3d1d34c6b1c4d621558d02bc382e328dc7c",
+  "physical-r-typ.spice": "9fca45650bd4bee7366e5ee82fee09e53e2a02ca76e1192b8e1dc3fc2a028389",
+  "physical-r-high.spice": "8ef618f7385b95a40ed6e1016660f21e5948edab509d87eabd65a5f437b0486c",
+  "pad-layout.json": "70dd40153081d5b49ec8dcf1cadf60d55f1cc0db5402641945e07068cbb909a2",
+  "lu.json": "a20319a571a93ac37ab6f331c1dc5fd545c10c237a3f3ee20f84a14cd913ee51",
+  "pad-lvs.txt": "e7b153d1b684a5c660266931942d3d014e437f914edaf45401296ceee0d14072"
+ },
+ "bbox_um": [
+  0,
+  0,
+  302.14,
+  912.91
+ ],
+ "ports": [
+  "PAD_P",
+  "ATB_ESD_RAIL",
+  "VSS",
+  "ESD_RAIL",
+  "DVDD"
+ ],
+ "ports_note": "DVDD = ring landing of the pad-site up-diodes (chip top DVDD~VDD, bound in b3fff60f).",
+ "models": {
+  "pad-extracted.spice": "C-only flat extraction, wrapper rf_protected_pad",
+  "physical-r-typ/high.spice": "lumped R+C (netres) typ / high metal, wrapper rf_pad"
+ },
+ "limits": [
+  [
+   "Magic DRC / read-back LVS + 2 failing controls / KLayout main+antenna / rail_site / latch-up 15 um",
+   "0 / match + mismatch x2 / 0+0 / PASS / 0.0 um2",
+   "PASS"
+  ],
+  [
+   "ESD bench (esd3.py) on s2",
+   "INVALID: the pair bench drives a PAD_N the single-leg model does not have (pad 1e9 V, gate 4 kV nonsense)",
+   "NOT JUDGED"
+  ]
+ ],
+ "misses_and_conditions": [
+  "ESD evidence missing: s2 runs are invalid (pair cases on a one-leg model). By construction identical site primaries to rf_pair r3 (4 dn + 4 up) - not a substitute for a run.",
+  "Rebuild from the current generators (rf_compose.py + pad_site_primary.py 2bca0b81) differs from the candidate by 17.4 um2 XOR per site: the published GDS is the checked candidate, not a fresh rebuild (generator drift after the candidate was built; to be reconciled).",
+  "Pad C evidence pending: the cbench.py C bench failed on every model (IndexError, empty .dat); only Magic coupling C per leg reported (cap summary). C limit (published + 0.3 pF) NOT judged.",
+  "Core-side network is the old published network reused unchanged behind the Metal2 neck (24 / 62 ohm typ / high bond -> core diodes); the generator for it (protection_pad_ss.py) cannot be rerun (input deleted).",
+  "Evidence queue of the rf agent still running at publish time; independent review: none."
+ ],
+ "review": {
+  "status": "scratch/pads-core/esdopt/rf/STATUS.md",
+  "independent_review": "none"
+ },
+ "evidence": {
+  "checks": "scratch/pads-core/esdopt/rf/chk/s2/summary.txt",
+  "esd": "scratch/pads-core/esdopt/rf/esd/s2h.json, s2t.json"
+ }
+}

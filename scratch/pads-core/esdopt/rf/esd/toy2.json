@@ -1,0 +1,57 @@
+{
+ "tag": "toy2",
+ "model": "/home/ubuntu/svalbard/scratch/pads-core/esdopt/rf/none",
+ "model_sha256": null,
+ "ring": "high",
+ "ring_ohm": {
+  "dvdd_near": 0.155,
+  "dvss_near": 0.189,
+  "dvdd_far": 0.46,
+  "dvss_far": 0.57
+ },
+ "far_cells": [
+  5,
+  7
+ ],
+ "cdie": null,
+ "sitecap": "1n,0.7",
+ "rxgate": false,
+ "toy_ohm": 2.0,
+ "strip_site": false,
+ "strip_sec": false,
+ "results": [
+  {
+   "case": "P+VSS",
+   "stimulus": "hbm2kV",
+   "ipk_a": 1.3333333333333333,
+   "ring": "high",
+   "complete": true,
+   "deck_sha256": "ab147658f4900a145976538fbed16f8da54b466b8e52c87e29aea449bdec5378",
+   "pad_peak_abs_v": 2.89858463,
+   "pad_p_range_v": [
+    6.94239493e-14,
+    2.89858463
+   ],
+   "pad_n_range_v": [
+    6.94371399e-14,
+    0.25025846
+   ],
+   "pad_minus_local_vss_abs_v": 2.6483216680000004,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.00851936300000003,
+    6.061024667e-06
+   ],
+   "mos": 0,
+   "mos_over_dc_screen": 0,
+   "mos_over_transient_limit": 0,
+   "worst_mos": {},
+   "worst_diode_reverse_v": 0.0,
+   "worst_diode": "",
+   "worst_mim_v": 0.0,
+   "worst_mim": "",
+   "worst_nonprimary_diode_rev_v": 0.0,
+   "worst_nonprimary_diode": "",
+   "worst_nonprimary_frac_bv": 0.0
+  }
+ ]
+}

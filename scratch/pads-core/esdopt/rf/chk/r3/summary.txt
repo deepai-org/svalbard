@@ -1,0 +1,50 @@
+gds sha256 0983bc467bddc9910049a8aea10f112d935ac3ac9cf18f592873f35dc02c1fa8
+MAGIC_DRC 0
+floating 1
+devices 404
+rb pos: PASS (status match, unique True, None)
+rb neg (VSS<->DVDD): PASS (status mismatch, unique False, netgen: Final result: Top level cell failed pin matching.; census equal)
+rb drop1 control (must not match): "status": "mismatch" Circuits match uniquely
+kl r3: CLEAN (main=0, antenna=0)
+RAIL-SITE r3: PASS {"rail_origins_um": [[0.0, 0.0], [211.0, 0.0]], "decks": {"main": {"total": 0, "rules": {}, "error": null}, "antenna": {"total": 0, "rules": {}, "error": null}}, "error": null}
+lu15 "nmos_to_ptap_uncovered_at_15um_um2": 0.0 "pmos_to_ntap_uncovered_at_15um_um2": 0.0 
+cap PAD_N 963.5 fF: VSS:529.3 DVDD:135.0 m3_42200_52400#:36.
+cap PAD_P 991.7 fF: VSS:552.5 DVDD:135.0 m3_0_52400#:36.5 m3
+R PAD_P        typ  bond|pin                         8.723 ohm  narrowest 4.0 um
+R PAD_P        typ  bond|dn                           0.21 ohm  narrowest 48.5 u
+R PAD_P        typ  bond|up                          0.395 ohm  narrowest 7.0 um
+R PAD_P        typ  bond|cdn                        24.005 ohm  narrowest 0.48 u
+R PAD_P        typ  bond|cup                        24.005 ohm  narrowest 0.48 u
+R PAD_P        typ  pin|cdn                         23.859 ohm  narrowest 0.48 u
+R PAD_P        high bond|pin                        12.625 ohm  narrowest 4.0 um
+R PAD_P        high bond|dn                          0.605 ohm  narrowest 48.5 u
+R PAD_P        high bond|up                          0.825 ohm  narrowest 7.0 um
+R PAD_P        high bond|cdn                        62.106 ohm  narrowest 0.48 u
+R PAD_P        high bond|cup                        62.106 ohm  narrowest 0.48 u
+R PAD_P        high pin|cdn                         59.989 ohm  narrowest 0.48 u
+R VSS_SITE_P   typ  land|anodes                       0.06 ohm  narrowest None u
+R VSS_SITE_P   high land|anodes                      0.196 ohm  narrowest None u
+R DVDD_P       typ  land|cath                        0.116 ohm  narrowest None u
+R DVDD_P       high land|cath                        0.365 ohm  narrowest None u
+R PAD_N        typ  bond|pin                         7.134 ohm  narrowest 4.0 um
+R PAD_N        typ  bond|dn                           0.21 ohm  narrowest 48.5 u
+R PAD_N        typ  bond|up                          0.395 ohm  narrowest 7.0 um
+R PAD_N        typ  bond|cdn                        24.355 ohm  narrowest 0.48 u
+R PAD_N        typ  bond|cup                        26.155 ohm  narrowest 0.48 u
+R PAD_N        typ  pin|cdn                         25.399 ohm  narrowest 0.48 u
+R PAD_N        high bond|pin                        10.775 ohm  narrowest 4.0 um
+R PAD_N        high bond|dn                          0.605 ohm  narrowest 48.5 u
+R PAD_N        high bond|up                          0.825 ohm  narrowest 7.0 um
+R PAD_N        high bond|cdn                        62.512 ohm  narrowest 0.48 u
+R PAD_N        high bond|cup                        64.592 ohm  narrowest 0.48 u
+R PAD_N        high pin|cdn                         61.755 ohm  narrowest 0.48 u
+R VSS_SITE_N   typ  land|anodes                       0.06 ohm  narrowest None u
+R VSS_SITE_N   high land|anodes                      0.196 ohm  narrowest None u
+R DVDD_N       typ  land|cath                        0.116 ohm  narrowest None u
+R DVDD_N       high land|cath                        0.365 ohm  narrowest None u
+R VSS_NET      typ  land|clampsrc                    18.49 ohm  narrowest 4.0 um
+R VSS_NET      typ  land|pin                        19.683 ohm  narrowest 4.0 um
+R VSS_NET      typ  pin|clampsrc                     1.112 ohm  narrowest 10.0 u
+R VSS_NET      high land|clampsrc                   50.905 ohm  narrowest 4.0 um
+R VSS_NET      high land|pin                        52.362 ohm  narrowest 4.0 um
+R VSS_NET      high pin|clampsrc                     1.393 ohm  narrowest 10.0 u

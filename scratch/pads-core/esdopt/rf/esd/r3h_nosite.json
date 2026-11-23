@@ -1,0 +1,67 @@
+{
+ "tag": "r3h_nosite",
+ "model": "/home/ubuntu/svalbard/scratch/pads-core/esdopt/rf/models/r3_high.spice",
+ "model_sha256": "1c48b40d1a00fa147ad1c91ade72b37bc7c3ff284eb9dded4c240a2a7ccb8974",
+ "ring": "high",
+ "ring_ohm": {
+  "dvdd_near": 0.155,
+  "dvss_near": 0.189,
+  "dvdd_far": 0.46,
+  "dvss_far": 0.57
+ },
+ "far_cells": [
+  5,
+  7
+ ],
+ "cdie": null,
+ "sitecap": "1n,0.7",
+ "rxgate": false,
+ "toy_ohm": null,
+ "strip_site": true,
+ "strip_sec": false,
+ "results": [
+  {
+   "case": "P+VSS",
+   "stimulus": "hbm2kV",
+   "ipk_a": 1.3333333333333333,
+   "ring": "high",
+   "complete": true,
+   "deck_sha256": "d85bbef932207b5299c7156b6df4364f4d88be65ebfb4cf5388b965b79f76f0d",
+   "pad_peak_abs_v": 164.055226,
+   "pad_p_range_v": [
+    2.07064154e-13,
+    164.055226
+   ],
+   "pad_n_range_v": [
+    1.89447302e-13,
+    66.8239935
+   ],
+   "pad_minus_local_vss_abs_v": 163.80503208300001,
+   "ring_dvdd_minus_dvss_site_v": [
+    -0.0009769954999999993,
+    0.0027042149999999543
+   ],
+   "mos": 348,
+   "mos_over_dc_screen": 5,
+   "mos_over_transient_limit": 5,
+   "worst_mos": {
+    "device": "X47",
+    "model": "pfet_06v0",
+    "gate_v": 11.221,
+    "nodes": [
+     "ESD_RAIL",
+     "a_1005_131545_h",
+     "a_3813_117064_h",
+     "ESD_RAIL"
+    ]
+   },
+   "worst_diode_reverse_v": 14.245,
+   "worst_diode": "D20 diode_nd2ps_06v0 VSS__net PAD_P__core",
+   "worst_mim_v": 9.187,
+   "worst_mim": "X100 a_1005_131545_h VSS__net",
+   "worst_nonprimary_diode_rev_v": 14.245,
+   "worst_nonprimary_diode": "D20 diode_nd2ps_06v0 VSS__net PAD_P__core",
+   "worst_nonprimary_frac_bv": 1.295
+  }
+ ]
+}

@@ -391,6 +391,14 @@ X366 RAIL a_1852_60519# VSS VSS nfet_06v0 ad=13.936p pd=54.12u as=13.936p ps=54.
 X367 RAIL a_2245_2628# VSS VSS nfet_06v0 ad=13p pd=50.52u as=13p ps=50.52u w=50u l=0.7u
 .ends
 
-.subckt pad_reference PAD_P VSS ESD_RAIL ATB_ESD_RAIL
+.subckt pad_reference PAD_P VSS ESD_RAIL ATB_ESD_RAIL DVDD
 XP VSS ESD_RAIL PAD_P VSS ATB_ESD_RAIL network_flat
+DSPN0 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
+DSPN1 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
+DSPN2 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
+DSPN3 VSS PAD_P diode_nd2ps_06v0 pj=51.8u area=22.5p
+DSPP0 PAD_P DVDD diode_pd2nw_06v0 pj=51.8u area=22.5p
+DSPP1 PAD_P DVDD diode_pd2nw_06v0 pj=51.8u area=22.5p
+DSPP2 PAD_P DVDD diode_pd2nw_06v0 pj=51.8u area=22.5p
+DSPP3 PAD_P DVDD diode_pd2nw_06v0 pj=51.8u area=22.5p
 .ends pad_reference

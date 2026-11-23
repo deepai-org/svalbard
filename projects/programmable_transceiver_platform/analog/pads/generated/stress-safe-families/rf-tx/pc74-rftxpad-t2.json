@@ -1,0 +1,78 @@
+{
+ "row": "PC-74",
+ "cell": "pad_rftxpad",
+ "state": "BASELINE (MANDATE 1: finished-if-imperfect; known misses below)",
+ "candidate": "t2 (ESD option A: pad-site primaries; old network reused as core-side secondary)",
+ "build_command": "scratch/pads-core/esdopt/rf/build.sh <family> t2 '<opt of b/t2.json>' (rf_compose.py on ../pins/b/<cell>.gds)",
+ "rebuild_check": "2026-11-23 rebuild with the same opt: XOR 17.4 um2 per site vs the candidate (not identical; see misses). Published = candidate GDS.",
+ "sha256": {
+  "pad.gds": "ce8376179e0f55cbd079dd28b552079ba5e0fce42145dea06a7add357e687df9",
+  "pad-extracted.spice": "3f43ae22cef960b3ebd0502fd611d923a16aefaa6303b8505aa60e4153736d09",
+  "reference.spice": "0f3294e796bc662fc31b3964748e8d371fe7f069db791045f8817c8492412ced",
+  "physical-r-typ.spice": "c9fb64b799f6b27d841510da5870d4210c7785c1a6276095f204959b516b7d33",
+  "physical-r-high.spice": "e918a9a683fdb48e4515252089232150dc53532a16aa711cd56ac39f630c985f",
+  "pad-layout.json": "b9366c5369adba8bf641949fb61144ed23d854631fa471f6190fb870b9f1d179",
+  "lu.json": "2218ded92bc221c9c7bdee69da6eff36835336ad67950316f9696c6529161624",
+  "pad-lvs.txt": "73e632fec9bc37c634e16d3ebeaf596bac2195e54ce376581717d567fedf8a8f"
+ },
+ "bbox_um": [
+  0,
+  0,
+  310,
+  912.91
+ ],
+ "ports": [
+  "PAD_P",
+  "PAD_N",
+  "ATB_ESD_RAIL",
+  "VSS",
+  "ESD_RAIL"
+ ],
+ "ports_note": "no DVDD (no up-diode).",
+ "models": {
+  "pad-extracted.spice": "C-only flat extraction, wrapper rf_protected_pad",
+  "physical-r-typ/high.spice": "lumped R+C (netres) typ / high metal, wrapper rf_pad"
+ },
+ "limits": [
+  [
+   "Magic DRC / read-back LVS + 2 failing controls / KLayout main+antenna / rail_site / latch-up 15 um",
+   "0 / match + mismatch x2 / 0+0 / PASS / 0.0 um2",
+   "PASS"
+  ],
+  [
+   "HBM 1 kV / 2 kV, MOS gate high",
+   "2.15 / 2.20 V, 0 over",
+   "PASS"
+  ],
+  [
+   "HBM 1 kV positive zap (N+VSS): site nd2ps reverse vs bv 11 V, high / typ",
+   "13.30 / 13.09 V",
+   "MISS (expected: no up-diode, PC-31)"
+  ],
+  [
+   "CDM 2 A: site reverse high / typ",
+   "16.25 / 15.99 V",
+   "MISS"
+  ],
+  [
+   "Stripped-site control HBM 1 kV",
+   "pad 77 V",
+   "control ran"
+  ]
+ ],
+ "misses_and_conditions": [
+  "No DVDD port / no up-diode (RF_TX swings above the supply, PC-31): positive zaps avalanche the site nd2ps diodes (13.3 V HBM 1 kV, 16.2 V CDM 2 A vs 11 V bv) - accepted baseline miss; avalanche current density not judged.",
+  "Rebuild from the current generators (rf_compose.py + pad_site_primary.py 2bca0b81) differs from the candidate by 17.4 um2 XOR per site: the published GDS is the checked candidate, not a fresh rebuild (generator drift after the candidate was built; to be reconciled).",
+  "Pad C evidence pending: the cbench.py C bench failed on every model (IndexError, empty .dat); only Magic coupling C per leg reported (cap summary). C limit (published + 0.3 pF) NOT judged.",
+  "Core-side network is the old published network reused unchanged behind the Metal2 neck (24 / 62 ohm typ / high bond -> core diodes); the generator for it (protection_pad_ss.py) cannot be rerun (input deleted).",
+  "Evidence queue of the rf agent still running at publish time; independent review: none."
+ ],
+ "review": {
+  "status": "scratch/pads-core/esdopt/rf/STATUS.md",
+  "independent_review": "none"
+ },
+ "evidence": {
+  "checks": "scratch/pads-core/esdopt/rf/chk/t2/summary.txt",
+  "esd": "scratch/pads-core/esdopt/rf/esd/t2h.json, t2t.json"
+ }
+}

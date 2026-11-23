@@ -61,9 +61,9 @@ All under `generated/`. Every cell: Magic DRC 0, netgen LVS unique, independent 
 | `pad_wirepad` | `stress-safe-families/wired-receive-usb/` | 2.78..524 × 0..1434.72 | 316,021 allocated (ceiling 340,000) | 739 (615) | `PAD_P PAD_N VDD VSS TERM_VCM TERM_ENABLE DIFF_ENABLE DIV_ENABLE BYPASS_ENABLE RX_P RX_N HS_PBIAS HS_P HS_N FS_HIGH_P/N FS_LOW_P/N PULLUP_P/N PULLDOWN_P/N TERM_TRIM0..2 LS_SLOW ATB_ESD_RAIL` |
 | `pad_txpad` | `stress-safe-families/wired-transmit/` (`combined.gds`) | 286 × 699.76 | 200,135 bbox | 409 (346) | `PAD_P PAD_N VDD VSS DVDD_P DVDD_N CASCODE MAIN_P/N MAIN_BIAS POST_P/N POST_BIAS TMDS_P/N TMDS_BIAS DETECT_ENABLE DETECT_PBIAS TERM_ENABLE TERM_TRIM0..3 TERM_VCM`; top-edge pins TERM_VCM, PAD_P, PAD_N |
 | `pad_refpad` | `stress-safe-families/reference/` (`combined.gds`) | 2.78..285 × 0..912.91 | 257,636 bbox | 42 diodes (0) | `PAD_P PAD_N VSS VCM DVDD`; top-edge pins PAD_P, PAD_N, VCM, VSS |
-| `pad_rf_pair` | `stress-safe-families/rf-pair/` | 310 × 912.91 | 176,900 allocated | 388 (348) | `PAD_P PAD_N VSS ATB_ESD_RAIL` |
-| `pad_rftxpad` | `stress-safe-families/rf-tx/` | 310 × 912.91 | 176,900 allocated | 388 | `PAD_P PAD_N VSS ATB_ESD_RAIL` |
-| `pad_single_leg` | `stress-safe-families/single-leg/` | 302.14 × 912.91 | 157,853 allocated | 388 | `PAD_P VSS ATB_ESD_RAIL` |
+| `pad_rf_pair` | `stress-safe-families/rf-pair/` (`pad.gds`) | 310 × 912.91 | 176,900 allocated | 404 | `PAD_P PAD_N VSS ESD_RAIL ATB_ESD_RAIL DVDD` |
+| `pad_rftxpad` | `stress-safe-families/rf-tx/` (`pad.gds`) | 310 × 912.91 | 176,900 allocated | 396 | `PAD_P PAD_N VSS ESD_RAIL ATB_ESD_RAIL` (no DVDD) |
+| `pad_single_leg` | `stress-safe-families/single-leg/` (`pad.gds`) | 302.14 × 912.91 | 157,853 allocated | 396 | `PAD_P VSS ESD_RAIL ATB_ESD_RAIL DVDD` |
 | `pad_tlp_flat` | `tlp-site/` | 68 × 124.34 | 8,455 bbox | 8 diodes | `PAD VSS VDD` |
 | `tx_steering_buffer_flat` | `steering-buffer-compact/` | 54.58 × 158.98 | 8,677 bbox | 128 | `VDD VSS IN OUT` |
 | `buffer_compensated_flat` | `termination-buffer-candidate/compact-array/` | 156.8 × 479.57 | 75,196 bbox | 282 | `VDD VSS REF BIAS OUT ENABLE` |
@@ -80,7 +80,7 @@ Evidence files that belong to the published netlists:
 | `pad_wirepad` (GDS sha 4e4b9d92…) | `placement-layout.json`, `layout-screen.json`, `model-audit.json`, `lu.json`, `pad_wirepad-kldrc.json`, `combined-lvs.txt`, `pd47-usb-ls-miller.json`; 1 kV HBM and CDM surrogate in `../pd48-esd-tiering.json` key `pd48c` |
 | `pad_txpad` (GDS sha 131af869…; hashes in `pc72-txpad-a16.json`) | `layout-info.json`, `lu.json`, `marker-merge.json`, `pad_txpad-kldrc.json`, `pad-lvs.txt`, `pc72-txpad-a16.json`, models `physical.spice` (C-only, wrapper `tx_protected_pad`), `physical-r-{typ,high}.spice` (R+C; model-only ports `DVSS_P/N`, tie to VSS) |
 | `pad_refpad` (GDS sha 96dc5a02…; hashes in `pc75-refpad-a1.json`) | `placement-layout.json`, `layout-screen.json`, `independent-device-audit.json`, `model-audit.json`, `marker-merge.json`, `lu.json`, `pad_refpad-kldrc.json`, `combined-lvs.txt`, `pc75-refpad-a1.json`, models `physical.spice` (C-only, wrapper `tx_protected_pad`), `physical-r-{typ,high}[-rail].spice` (R+C) |
-| `pad_rf_pair` | folder layout/audit/kldrc files; safe/HBM runs in `../pd13-family-sims.json` (model sha matches); 1 kV runs for rftxpad in `../pd48-esd-tiering.json` key `family` |
+| `pad_rf_pair` r3, `pad_single_leg` s2, `pad_rftxpad` t2 (hashes in `pc74-rfpair-r3.json`, `pc74-singleleg-s2.json`, `pc74-rftxpad-t2.json`) | `pad.gds`, `pad-extracted.spice` (C-only, wrapper `rf_protected_pad`), `reference.spice` (LVS / chip-top master `pad_reference`), `physical-r-{typ,high}.spice` (lumped R+C), `pad-layout.json`, `pad-lvs.txt`, `lu.json`, `<cell>-kldrc.json` |
 
 Files in `wired-receive-usb/` named `pd28-*` were produced on other
 netlists and are not evidence for the published cells; no flow reads them.
@@ -212,13 +212,19 @@ Known misses: CDM 2 A at high metal (8.73 V on the 6 V nfet drains of `pt_diff_c
 over 6 V if its far plate stays at VSS (upper bound, consumers not in the bench). Not run: consumer cells in the
 ESD bench, device corners, P–N differential stress, external-LO amplitude with the new pad.
 
-### `pad_rftxpad`, `pad_rf_pair`
+### `pad_rf_pair` r3, `pad_single_leg` s2, `pad_rftxpad` t2 BASELINE (`pc74-*.json`; PC-74)
 
-| Cell | Result | File |
+ESD option A: pad-site primaries (4 down + 4 up per leg; rftxpad 4 down, no up-diode) on the published shell, whose old
+network stays as the core-side secondary. All layout checks pass (DRC, read-back LVS + 2 controls, KLayout, rail_site, latch-up).
+
+| Cell | ESD (lumped R+C, ring model, 1 nF site decap) | Result |
 |---|---|---|
-| `pad_rf_pair` (old cell) | HBM 2 kV: 0 of 348 MOS over the screen, pad 6.18–6.91 V; ±100 mA pulse 2.51–2.77 V | `pd13-family-sims.json` |
-| `pad_rftxpad` | HBM 1 kV: 0 of 348, pad 4.52–4.70 V | `pd48-esd-tiering.json` |
-| Consumer gates on pad nets (`hbm_core_screen.py`) | 0 exceedances of the transient limits in all cases at the tier level; worst gate 4.72 V (LNA, 2 kV), 5.42 V (6 V devices on AUX_CLK), 4.18 V (rfdriver, 1 kV). The same screen fails at 3 kV (188–302 exceedances) | `pd48-esd-tiering.json` key `core_screen` |
+| `pad_rf_pair` | HBM 2 kV gates ≤ 1.71 V; CDM 2 A site reverse 10.69 V high / 9.14 typ (bv 11) | PASS, 0.31 V margin |
+| `pad_rftxpad` | HBM 1 kV gates ≤ 2.15 V; positive zaps avalanche the site diodes: 13.3 V HBM 1 kV, 16.2 V CDM 2 A | MISS (no up-diode, PC-31) |
+| `pad_single_leg` | bench runs invalid (pair cases on a one-leg model) | NOT JUDGED |
+
+Known misses (all three): pad C not judged (C bench failed; Magic C only); the current generator rebuilds each with a
+17.4 µm² XOR per site (published = the checked candidate); the old network's generator cannot be rerun; no independent review.
 
 ### POR_BYPASS strap (`scratch/reviews/pads-core/STRAP.md`)
 
@@ -321,7 +327,7 @@ budget-sized ideal capacitors on top of extracted capacitance.
    family meets its HBM tier; every HBM / CDM number in section 4 except the `pad_hspad` rows is capacitance-only and
    is not evidence. Decided fix (PC-27): primary diodes at the bond pad tied to the ring rails, all families; back-feed is
    accepted and sequenced by the board (`spec/board-requirements.md` B53). `pad_hspad` is published with it (a6, PC-47,
-   conditions in section 4), and so are `pad_txpad` (a16 baseline, PC-72) and `pad_refpad` (a1 baseline, PC-75).
+   conditions in section 4), and so are `pad_txpad` (a16, PC-72), `pad_refpad` (a1, PC-75) and the rf-shell families (r3 / s2 / t2, PC-74).
    `RF_TX` gets no diode to the supply (it swings above it). (PAD-11)
 2. **`pad_wirepad` signal path.** (`pad_txpad`: trimmed termination in a16, section 4.) `pad_wirepad` has about
    81 Ω of metal in series with its 45 Ω HS termination (survey only), not fixed. Resistance-aware extraction

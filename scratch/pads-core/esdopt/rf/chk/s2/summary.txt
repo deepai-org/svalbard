@@ -1,0 +1,33 @@
+gds sha256 e89158e3efc31372f315968a0d86bbb0920330648fac456de96dc4e07b3de62b
+MAGIC_DRC 0
+floating 1
+devices 396
+rb pos: PASS (status match, unique True, None)
+rb neg (VSS<->DVDD): PASS (status mismatch, unique False, netgen: Final result: Top level cell failed pin matching.; census equal)
+rb drop1 control (must not match): "status": "mismatch" Circuits match uniquely
+kl s2: CLEAN (main=0, antenna=0)
+RAIL-SITE s2: PASS {"rail_origins_um": [[0.0, 0.0]], "decks": {"main": {"total": 0, "rules": {}, "error": null}, "antenna": {"total": 0, "rules": {}, "error": null}}, "error": null}
+lu15 "nmos_to_ptap_uncovered_at_15um_um2": 0.0 "pmos_to_ntap_uncovered_at_15um_um2": 0.0 
+cap PAD_P 975.5 fF: VSS:566.8 DVDD:135.0 m3_0_52400#:36.5 m3
+R PAD_P        typ  bond|pin                         8.723 ohm  narrowest 4.0 um
+R PAD_P        typ  bond|dn                           0.21 ohm  narrowest 48.5 u
+R PAD_P        typ  bond|up                          0.395 ohm  narrowest 7.0 um
+R PAD_P        typ  bond|cdn                        24.005 ohm  narrowest 0.48 u
+R PAD_P        typ  bond|cup                        24.005 ohm  narrowest 0.48 u
+R PAD_P        typ  pin|cdn                         23.859 ohm  narrowest 0.48 u
+R PAD_P        high bond|pin                        12.625 ohm  narrowest 4.0 um
+R PAD_P        high bond|dn                          0.605 ohm  narrowest 48.5 u
+R PAD_P        high bond|up                          0.825 ohm  narrowest 7.0 um
+R PAD_P        high bond|cdn                        62.106 ohm  narrowest 0.48 u
+R PAD_P        high bond|cup                        62.106 ohm  narrowest 0.48 u
+R PAD_P        high pin|cdn                         59.989 ohm  narrowest 0.48 u
+R VSS_SITE_P   typ  land|anodes                       0.06 ohm  narrowest None u
+R VSS_SITE_P   high land|anodes                      0.196 ohm  narrowest None u
+R DVDD_P       typ  land|cath                        0.116 ohm  narrowest None u
+R DVDD_P       high land|cath                        0.365 ohm  narrowest None u
+R VSS_NET      typ  land|clampsrc                   25.564 ohm  narrowest 4.0 um
+R VSS_NET      typ  land|pin                        26.757 ohm  narrowest 4.0 um
+R VSS_NET      typ  pin|clampsrc                     1.112 ohm  narrowest 10.0 u
+R VSS_NET      high land|clampsrc                   68.928 ohm  narrowest 4.0 um
+R VSS_NET      high land|pin                        70.385 ohm  narrowest 4.0 um
+R VSS_NET      high pin|clampsrc                     1.393 ohm  narrowest 10.0 u

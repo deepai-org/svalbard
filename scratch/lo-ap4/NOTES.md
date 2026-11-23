@@ -253,3 +253,13 @@ Differential measurement rerun correctly (E-sources): line 0.74 / 1.08 V pp diff
 - Charge pump (extracted pt_lo_pfdcp, ICP = 3, bias 10 uA sourced, `cpceil/results_source.json`): UP current 98.2-98.5 uA at every corner/supply; falls to 80 % at VTUNE 2.75 V (ss/3.15), 2.80 (tt, fs), 2.85 (ff, sf) at 3.15 V and 3.15-3.20 V at 3.50 V: above the guard-limited 2.69 / 3.01 V ceilings (>= 60 mV margin at ss/3.15).
 - Kvco, r9 band 6, VT 1.2 -> 1.8 V (extracted, `q7/rkv/`): ff 53.1, OPT85 58.6, tt 65.7, ss 80.4, PF115 84.8 MHz/V (2.42 / 2.64 / 2.36 / 2.31 / 2.11 GHz at VT 1.2).
 - Loop (`lock/lock_r9.py`, run_loop.hop4, as built filter, R +-25 %, C2 +-15 %, Icp 75-125 uA, N 44 / 56, start +-0.35 V from the VDD/2 preset): every case locks; phase margin >= 48.7 deg (PF115), fc 91-405 kHz; lock (2 deg) 39-42 us at the nominal filter, 59-62 us at the slow filter corner (R +25 %, C2 +15 %): the known 50 us miss (LO-04, filter R trim LO24 would fix it; not built).
+
+## 2026-11-23: phase noise r9 (real loads): NOT RESOLVED - bench floor, recorded as a known item
+`q7/pn9.py` (fork A method: injected white tank-loss noise, no device noise models, no flicker), band 6, VT 1.5 V, 0.5 us:
+TT -105.4 dBc/Hz at 1 MHz (fit 4-80 MHz) / -114.9 at 3 MHz; SS -98.6 / -108.1; PF115 -100.1 / -109.6.
+Negative controls at TT: noise scaled to 0.316 and to 0 give the SAME -105.4 / -114.9: the result is the bench's deterministic floor
+(phase content without any noise: most likely the dividing lo_mmd / dummy modulating the tank at f/2N ~ 25 MHz, inside the fit band,
+plus numerical phase error at 1 ps steps), not phase noise. The true L(f) is below this floor; the floor itself may be a real
+spur (divider kick-back onto the tank) to quantify by a spectral-line analysis with the divider off / on. The r5 record (no
+divider on the tank) was -115.5 / -117.4 dBc/Hz at 1 MHz. Requirement RF-RX-LOPN -107 dBc/Hz at 3 MHz: not shown.
+Margin work stopped here (coordinator, 2026-11-23: function first).

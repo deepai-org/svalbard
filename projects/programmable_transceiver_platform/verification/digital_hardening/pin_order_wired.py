@@ -35,10 +35,18 @@ CTRL_A = ['wire_tx_clk'] + bits('c_wiredtx_main_code', [1, 2, 3, 4, 7]) + bits('
 CTRL_B = bits('c_wiredtx_main_code', [0, 5, 6]) + bits('c_wiredtx_post_code', [4, 5, 6, 7]) + ['c_wiredtx_post_pol']
 MOVED = r'c_wiredtx_(main_code|post_code|post_pol|ser_en)'
 # remaining south groups (regex lines, as in pin_order.cfg), left part then the filler for the data-group gaps
+LEFT_NAMES = ['rf_.*', 'reset_n_pad', 'por_n', 'por_bypass', 'host_word_clk', 'd2h_.*', 'spi_.*', 'wire_rx_.*',
+              'c_txpad_.*', 'c_wtxfb_.*']
 # (regex, x start um or None): d2h_* starts under the hand-placed D2H block (macro x 630-851 on the south edge)
 LEFT = ['rf_.*', 'reset_n_pad', 'por_n', 'por_bypass', 'host_word_clk', ('d2h_.*', 640.0), 'spi_.*', 'wire_rx_.*',
         'c_wiredtx_(?!main_code|post_code|post_pol|ser_en).*', 'c_txpad_.*', 'c_wtxfb_.*']
 GAP = ['c_usb_.*', 'c_hsbias_.*', 'c_adc_.*', 'c_dac_.*', 'c_refbuf_.*', 's_adc_.*', 's_refbuf_ready', 's_wtx_ext_.*']
+
+def south_extra(base):
+    """south regex lines of pin_order.cfg not covered above (new ports added there land on pt_wired too)"""
+    sec = base[base.index('#S') + 2:base.index('#N')].split()
+    known = set(LEFT_NAMES + GAP + ['wire_.*', 'c_wiredtx_.*'])
+    return [l for l in sec if l not in known and not l.startswith('@') and not l.startswith('$')]
 
 def main():
     base = (H / 'pin_order.cfg').read_text()
@@ -86,7 +94,7 @@ def main():
         for sl in sorted(k for k in plan if cur <= k < limit):
             emit_virtual(sl - cur); out.append(plan[sl]); cur = sl + 1
     gi = 0
-    for g in GAP:
+    for g in GAP + south_extra(base):
         n = sum(1 for p in ports if re.match(f'^{g}$', p))
         while gi < len(gaps) and gaps[gi][1] - max(gaps[gi][0], cur) < n:
             gi += 1

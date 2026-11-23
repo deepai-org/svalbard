@@ -5,11 +5,16 @@ Runs sim/tb_pt_wtx_ctl.sv on the RTL (must pass) and on mutated copies that must
   fault_ignored      pad requests not dropped by fault
   pll_en_island      c_pll_tx_en ignores the pll island state
   commit_during_run  the registered pad commit (DG9-WTX-SEQ) ignores hold: pads re-sequenced while payload runs
+  idle_flag_stale    rtl/pt_tx_pad_sequence.sv: the registered idle flag (DG9-WTX-SEQ2) is not set on SETTLE -> IDLE
 """
 import re, subprocess, sys, tempfile
 from pathlib import Path
 P = Path(__file__).resolve().parents[1]
 SRC = (P/'rtl/pt_wtx_ctl.sv').read_text()
+SEQ = (P/'rtl/pt_tx_pad_sequence.sv').read_text()
+SEQ_MUTANTS = {   # mutants of the pad sequencer (run with the unmodified pt_wtx_ctl)
+    'idle_flag_stale': ("else begin traffic_ready <= 1; state <= IDLE; idle_q <= 1'b1; end", "else begin traffic_ready <= 1; state <= IDLE; end"),
+}
 MUTANTS = {
     'ser_before_ready': None,
     'fault_ignored': None,
@@ -18,11 +23,12 @@ MUTANTS = {
 }
 
 
-def run(rtl_text, tmp):
+def run(rtl_text, tmp, seq_text=SEQ):
     f = tmp/'pt_wtx_ctl.sv'; f.write_text(rtl_text)
+    fs = tmp/'pt_tx_pad_sequence.sv'; fs.write_text(seq_text)
     vvp = tmp/'tb.vvp'
     c = subprocess.run(['iverilog', '-g2012', '-I', str(P/'rtl'), '-s', 'tb_pt_wtx_ctl', '-o', str(vvp), str(P/'sim/tb_pt_wtx_ctl.sv'), str(f),
-                        str(P/'rtl/pt_fifo.sv'), str(P/'rtl/pt_tx_pad_sequence.sv'), str(P/'rtl/pt_vreg_seq.sv'), str(P/'rtl/pt_cells.sv')], capture_output=True, text=True)
+                        str(P/'rtl/pt_fifo.sv'), str(fs), str(P/'rtl/pt_vreg_seq.sv'), str(P/'rtl/pt_cells.sv')], capture_output=True, text=True)
     if c.returncode: sys.exit('WTX_CTL_CHECK_FAIL: compile\n' + c.stderr)
     out = subprocess.run(['vvp', '-n', str(vvp)], capture_output=True, text=True, timeout=900).stdout
     return bool(re.search(r'^TB PASS$', out, re.M)), out
@@ -53,6 +59,11 @@ def main():
             text = mutate(name)
             assert text != SRC, f'mutant {name} did not apply'
             ok, out = run(text, t)
+            if ok: sys.exit(f'WTX_CTL_CHECK_FAIL: mutant {name} was not detected')
+            print(f'mutant {name}: detected')
+        for name, (old, new) in SEQ_MUTANTS.items():
+            assert SEQ.count(old) == 1, name
+            ok, out = run(SRC, t, SEQ.replace(old, new))
             if ok: sys.exit(f'WTX_CTL_CHECK_FAIL: mutant {name} was not detected')
             print(f'mutant {name}: detected')
     print('WTX_CTL_CHECK_PASS')

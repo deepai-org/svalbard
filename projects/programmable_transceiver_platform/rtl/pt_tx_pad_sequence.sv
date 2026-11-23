@@ -41,7 +41,12 @@ module pt_tx_pad_sequence #(
     wire conflict = ((request[2] || request[3]) &&
                      (request[0] || request[1] || request[4])) ||
                     (request[2] && request[3]);
-    assign command_ready = reset_ok && state == IDLE;
+    // Timing (DG9-WTX-SEQ2, routed pt_wired ref: pad_seq.state -> state == IDLE -> pt_wtx_ctl pad_down /
+    // state_n -> ser_q): idle_q is a register that is written together with every state assignment and
+    // always equals (state == IDLE), so command_ready is one AND of a flop with the reset level. Exact: same
+    // values on every cycle, no added latency (checked every cycle in simulation below).
+    reg idle_q;
+    assign command_ready = reset_ok && idle_q;
     initial begin
         if (PRE_CYCLES < 1 || POST_CYCLES < 1 || LOAD_CYCLES < 1) $fatal(1,"Blanking counts must be positive");
         // PD40 (interface-changes): MEASURED_READY must stay continuously high >= 100 ns before traffic
@@ -54,7 +59,7 @@ module pt_tx_pad_sequence #(
     end
     always @(posedge clk or negedge reset_ok) begin
         if (!reset_ok) begin
-            state <= IDLE; left <= 0; pending <= 0; tmo <= 0; last <= 1'b1; tmo_ge <= READY_TIMEOUT_CYCLES <= 1;
+            state <= IDLE; idle_q <= 1'b1; left <= 0; pending <= 0; tmo <= 0; last <= 1'b1; tmo_ge <= READY_TIMEOUT_CYCLES <= 1;
             active_request <= 0; qualified <= 0; traffic_ready <= 0;
             buffer_request <= 0; fault <= 0;
         end else begin
@@ -66,10 +71,10 @@ module pt_tx_pad_sequence #(
                         fault <= conflict;
                         qualified <= 0; traffic_ready <= 0;
                         left <= PRE_CYCLES; last <= PRE_CYCLES <= 1;
-                        state <= PRE;
+                        state <= PRE; idle_q <= 1'b0;
                     end else if (qualified && !analog_ready) begin
                         qualified <= 0; traffic_ready <= 0; fault <= 1;
-                        pending <= 0; left <= PRE_CYCLES; last <= PRE_CYCLES <= 1; state <= PRE;
+                        pending <= 0; left <= PRE_CYCLES; last <= PRE_CYCLES <= 1; state <= PRE; idle_q <= 1'b0;
                     end
                 end
                 PRE: begin
@@ -84,7 +89,7 @@ module pt_tx_pad_sequence #(
                 end
                 POST: begin
                     if (!last) begin left <= left - 1'b1; last <= left == 2; end
-                    else if (active_request == 0 || fault) state <= IDLE;
+                    else if (active_request == 0 || fault) begin state <= IDLE; idle_q <= 1'b1; end
                     else if (analog_ready) begin qualified <= 1; left <= LOAD_CYCLES; last <= LOAD_CYCLES <= 1; state <= SETTLE; end
                     else state <= WAIT_READY;
                 end
@@ -94,7 +99,7 @@ module pt_tx_pad_sequence #(
                     // contiguous run of good samples is required under load.
                     if (!analog_ready) begin left <= LOAD_CYCLES; last <= LOAD_CYCLES <= 1; end
                     else if (!last) begin left <= left - 1'b1; last <= left == 2; end
-                    else begin traffic_ready <= 1; state <= IDLE; end
+                    else begin traffic_ready <= 1; state <= IDLE; idle_q <= 1'b1; end
                 end
                 default: ;
             endcase
@@ -102,17 +107,21 @@ module pt_tx_pad_sequence #(
             // (or chattering) buffer faults instead of passing traffic.
             if (READY_TIMEOUT_CYCLES > 0 && (state == POST || state == WAIT_READY || state == SETTLE)) begin
                 if (tmo_ge && !(state == SETTLE && analog_ready && last)) begin
-                    state <= IDLE; qualified <= 0; traffic_ready <= 0; active_request <= 0;
+                    state <= IDLE; idle_q <= 1'b1; qualified <= 0; traffic_ready <= 0; active_request <= 0;
                     buffer_request <= 0; fault <= 1; tmo <= 0; tmo_ge <= READY_TIMEOUT_CYCLES <= 1;
                 end else begin tmo <= tmo + 1'b1; tmo_ge <= tmo >= TMO_M2; end
             end
             case (state)
                 IDLE, PRE, POST, WAIT_READY, SETTLE: ;
                 default: begin
-                    state <= IDLE; qualified <= 0; traffic_ready <= 0; active_request <= 0;
+                    state <= IDLE; idle_q <= 1'b1; qualified <= 0; traffic_ready <= 0; active_request <= 0;
                     buffer_request <= 0; fault <= 1;
                 end
             endcase
         end
     end
+`ifndef SYNTHESIS
+    always @(posedge clk) if (reset_ok && idle_q !== (state == IDLE))
+        $fatal(1, "pt_tx_pad_sequence: idle_q %b != (state == IDLE) (state %0d)", idle_q, state);
+`endif
 endmodule

@@ -1,0 +1,55 @@
+diff --git a/projects/programmable_transceiver_platform/rtl/pt_monitor.sv b/projects/programmable_transceiver_platform/rtl/pt_monitor.sv
+index 02c2aaf2..11b1301f 100644
+--- a/projects/programmable_transceiver_platform/rtl/pt_monitor.sv
++++ b/projects/programmable_transceiver_platform/rtl/pt_monitor.sv
+@@ -203,14 +203,22 @@ module pt_monitor #(
+     // in that tick still cancels it through q_run). qcnt only changes at a pre_tick and q_done is
+     // only non-zero at the next one, 64 ticks later.
+     assign q_run = (|unq) & (&(g | ~unq));
++    // r9 (routed pt_wired fc4 -2.1 ns: qcnt -> QW-bit compare -> q_done_q): the compare is registered (q_ge).
++    // qcnt changes only at a pre_tick (64 ticks apart) or on a restart, so q_ge is current at every pre_tick:
++    // after an increment it is recomputed long before the next pre_tick; on a restart it is loaded with the
++    // value for qcnt = 0 (cfg == 0) in the same edge. Same q_done as the direct compare.
+     reg [QW-1:0] qcnt;
+-    assign q_done = q_run & pre_tick & (qcnt >= cfg_qualification_ticks);
++    reg q_ge;
++    assign q_done = q_run & pre_tick & q_ge;
+     always @(posedge mon_clk or negedge rst_n)
+-        if (!rst_n) begin qcnt <= {QW{1'b0}}; q_done_q <= 1'b0; end
++        if (!rst_n) begin qcnt <= {QW{1'b0}}; q_done_q <= 1'b0; q_ge <= 1'b0; end
+         else begin
+             q_done_q <= q_done;
+-            if (!q_run || q_done_q) qcnt <= {QW{1'b0}};
+-            else if (pre_tick) qcnt <= qcnt + 1'b1;
++            if (!q_run || q_done_q) begin qcnt <= {QW{1'b0}}; q_ge <= cfg_qualification_ticks == {QW{1'b0}}; end
++            else begin
++                if (pre_tick) qcnt <= qcnt + 1'b1;
++                q_ge <= qcnt >= cfg_qualification_ticks;
++            end
+         end
+ 
+     // shared loss timer of the level requirements
+diff --git a/projects/programmable_transceiver_platform/verification/check_monitor.py b/projects/programmable_transceiver_platform/verification/check_monitor.py
+index 8b9f1906..7f36ac71 100644
+--- a/projects/programmable_transceiver_platform/verification/check_monitor.py
++++ b/projects/programmable_transceiver_platform/verification/check_monitor.py
+@@ -25,7 +25,7 @@ MUTANTS = [
+     ("mon_clk_loss_ignored", "| (mon_dead_q & arm_r);", "| 1'b0;"),
+     ("timeout_ignored", "else if (icnt >= cfg_loss_timeout_ticks) in_alive_q <= 1'b0;",
+      "else if (icnt >= 12'd8) in_alive_q <= 1'b0;"),
+-    ("no_qualification", "assign q_done = q_run & pre_tick & (qcnt >= cfg_qualification_ticks);",
++    ("no_qualification", "assign q_done = q_run & pre_tick & q_ge;",
+      "assign q_done = q_run;"),
+     ("pgood_ignored", "(PGOOD_IMPL[i] ? island_pgood[i] : 1'b1)", "1'b1"),
+     # r7: without the asynchronous clear a requirement re-armed under a dead clock comes back "qualified"
+@@ -121,8 +121,8 @@ def main():
+                     for m in re.finditer(r"^\s+(\$_\w*DFF\w*_)\s+(\d+)\s*$|^\s+(\d+)\s+(\$_\w*DFF\w*_)\s*$", st, re.M):
+                         flops += int(m.group(2) or m.group(3))
+                     print(f"yosys: check -assert clean, no latches; flops (bits) {flops}")
+-                    if flops == 0 or flops >= 150:
+-                        print("yosys: flop count outside 1..149 -> ERROR\n" + st)
++                    if flops == 0 or flops >= 160:   # r9: +1 (registered qualification compare q_ge)
++                        print("yosys: flop count outside 1..159 -> ERROR\n" + st)
+                         bad += 1
+     finally:
+         shutil.rmtree(work, ignore_errors=True)

@@ -203,14 +203,22 @@ module pt_monitor #(
     // in that tick still cancels it through q_run). qcnt only changes at a pre_tick and q_done is
     // only non-zero at the next one, 64 ticks later.
     assign q_run = (|unq) & (&(g | ~unq));
+    // r9 (routed pt_wired fc4 -2.1 ns: qcnt -> QW-bit compare -> q_done_q): the compare is registered (q_ge).
+    // qcnt changes only at a pre_tick (64 ticks apart) or on a restart, so q_ge is current at every pre_tick:
+    // after an increment it is recomputed long before the next pre_tick; on a restart it is loaded with the
+    // value for qcnt = 0 (cfg == 0) in the same edge. Same q_done as the direct compare.
     reg [QW-1:0] qcnt;
-    assign q_done = q_run & pre_tick & (qcnt >= cfg_qualification_ticks);
+    reg q_ge;
+    assign q_done = q_run & pre_tick & q_ge;
     always @(posedge mon_clk or negedge rst_n)
-        if (!rst_n) begin qcnt <= {QW{1'b0}}; q_done_q <= 1'b0; end
+        if (!rst_n) begin qcnt <= {QW{1'b0}}; q_done_q <= 1'b0; q_ge <= 1'b0; end
         else begin
             q_done_q <= q_done;
-            if (!q_run || q_done_q) qcnt <= {QW{1'b0}};
-            else if (pre_tick) qcnt <= qcnt + 1'b1;
+            if (!q_run || q_done_q) begin qcnt <= {QW{1'b0}}; q_ge <= cfg_qualification_ticks == {QW{1'b0}}; end
+            else begin
+                if (pre_tick) qcnt <= qcnt + 1'b1;
+                q_ge <= qcnt >= cfg_qualification_ticks;
+            end
         end
 
     // shared loss timer of the level requirements

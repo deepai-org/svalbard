@@ -25,7 +25,7 @@ MUTANTS = [
     ("mon_clk_loss_ignored", "| (mon_dead_q & arm_r);", "| 1'b0;"),
     ("timeout_ignored", "else if (icnt >= cfg_loss_timeout_ticks) in_alive_q <= 1'b0;",
      "else if (icnt >= 12'd8) in_alive_q <= 1'b0;"),
-    ("no_qualification", "assign q_done = q_run & pre_tick & (qcnt >= cfg_qualification_ticks);",
+    ("no_qualification", "assign q_done = q_run & pre_tick & q_ge;",
      "assign q_done = q_run;"),
     ("pgood_ignored", "(PGOOD_IMPL[i] ? island_pgood[i] : 1'b1)", "1'b1"),
     # r7: without the asynchronous clear a requirement re-armed under a dead clock comes back "qualified"
@@ -121,8 +121,8 @@ def main():
                     for m in re.finditer(r"^\s+(\$_\w*DFF\w*_)\s+(\d+)\s*$|^\s+(\d+)\s+(\$_\w*DFF\w*_)\s*$", st, re.M):
                         flops += int(m.group(2) or m.group(3))
                     print(f"yosys: check -assert clean, no latches; flops (bits) {flops}")
-                    if flops == 0 or flops >= 150:
-                        print("yosys: flop count outside 1..149 -> ERROR\n" + st)
+                    if flops == 0 or flops >= 160:   # r9: +1 (registered qualification compare q_ge)
+                        print("yosys: flop count outside 1..159 -> ERROR\n" + st)
                         bad += 1
     finally:
         shutil.rmtree(work, ignore_errors=True)

@@ -182,16 +182,17 @@ module pt_d2h_pingpong(input wire core_clk, wrst_n, rst_n, input wire [39:0] w, 
         else if (wt) pp1 <= {p3, p2, p1, p0}; else pp0 <= {p3, p2, p1, p0};
 endmodule
 
-// Falling-edge phase copy: lp (rising, no reset, no logic before it except the reset gate) is
-// sampled by the falling-edge flop nsel half a period later. This direct flop -> flop transfer is
-// the only half-period path of a DDR group (no logic). nsel is 1 on the falling edges where the
-// two-period data register `x` must be taken, 0 where the held copy is taken. After reset nsel is
-// 0 and lp is 0 for one period; every register it selects between is still 0 then.
+// Falling-edge phase copy: lp (rising, no logic before it except the run gate) is sampled by the
+// falling-edge flop nsel half a period later. This direct flop -> flop transfer is the only
+// half-period path of a DDR group (no logic). nsel is 1 on the falling edges where the two-period
+// data register `x` must be taken, 0 where the held copy is taken. After reset nsel and lp are 0
+// (lp has the same reset as nsel; it was unreset before r10, so its users had to gate it with run:
+// lp = 1 implies run = 1, so lp alone is that product), and lp is 0 for the first period after it.
 `ifndef FORMAL
 (* keep_hierarchy = "yes" *)
 `endif
 module pt_ddr_nphase(input wire clk, rst_n, run, phase, output reg nsel, output reg lp);
-    always @(posedge clk) lp <= phase & run;
+    always @(posedge clk or negedge rst_n) if (!rst_n) lp <= 1'b0; else lp <= phase & run;
     always @(negedge clk or negedge rst_n) if (!rst_n) nsel <= 1'b0; else nsel <= lp;
 endmodule
 
@@ -278,12 +279,16 @@ module pt_d2h_gearbox(input wire ddr_clk, rst_n, nrst_n, input wire [39:0] pp0, 
         //    one rising edge earlier from the next state of x / f3 (x' = load ? prefix : x, f3' = load ? f3
         //    : x.P3) and lp, so the falling flop takes a register directly (no logic in the half period, like
         //    lp -> nsel).
-        wire s_r = lpq[gq] & run[gq];
-        wire lr_d = qr_d[gq] ^ (s_r ? x[gq+10] : f3[gq]);
+        // The select of q_f's next state is lp (lp & run before r10; lp now has a reset, so lp = 1
+        // implies run = 1). lp is 0 whenever load is 1 (lp = load & run of the previous edge and load
+        // toggles; both reset values agree), so on load edges the lp term is constant: asserted below.
+        // r10 (routed hddr worst path run -> nand -> mux S -> aoi/oai/oai221 -> hr, -1.5 ns both chips):
+        // no run gate and no lp in the load branch; lp is one mux select in the other branch only.
+        wire lr_d = load[gq] ? (x[gq+20] ^ f3[gq]) : (x[gq] ^ (lpq[gq] ? x[gq+10] : f3[gq]));
         // load selects last (r9: load -> hr was the hddr worst path behind the ping-pong read mux): both
         // alternatives are computed from registers, the late-arriving phase only picks one.
-        wire hr_ld = prefix[gq] ^ (s_r ? prefix[gq+10] : f3[gq]);
-        wire hr_hd = x[gq+20] ^ (s_r ? x[gq+10] : x[gq+30]);
+        wire hr_ld = prefix[gq] ^ f3[gq];
+        wire hr_hd = x[gq+20] ^ (lpq[gq] ? x[gq+10] : x[gq+30]);
         wire hr_d = load[gq] ? hr_ld : hr_hd;
         reg hr;
         always @(posedge hio_s or negedge rst_n) if (!rst_n) hr <= 1'b0; else hr <= hr_d;
@@ -297,6 +302,8 @@ module pt_d2h_gearbox(input wire ddr_clk, rst_n, nrst_n, input wire [39:0] pp0, 
     always @(posedge ddr_clk or negedge rst_n) if (!rst_n) f_rises <= 3'd0; else if (f_rises != 3'd7) f_rises <= f_rises + 1'b1;
     always @(negedge ddr_clk) if (rst_n && nrst_n && f_rises >= 3'd2) begin
         assert(nsel == {10{nsel[0]}});
+        // lp is never 1 on a load edge's input and only after run (the r10 simplification of lr_d / hr_d)
+        assert(!(load & lpq)); assert(!(lpq & ~run));
         if (nsel[0]) assert(x[19:10] == f_xd[19:10]); else assert(f3 == f_f3d);
     end
     // ping-pong read select: on every load edge rsel did not change on the rising edge before (SDC
@@ -309,7 +316,19 @@ module pt_d2h_gearbox(input wire ddr_clk, rst_n, nrst_n, input wire [39:0] pp0, 
 `endif
     // Forwarded clock (TC13 r4): the same ODDR lane fed a fixed pattern: the rising flop shows 0 during
     // the low half, the falling flop shows clk_en during the high half -> clk_pin = hddr while enabled.
-    pt_hio_launch lc(.clk(hio_s), .sel(hio_ms), .rst_n(rst_n), .nrst_n(nrst_n), .dr(1'b0), .df(clk_en), .z(clk_pin));
+    // r10 (routed hddr: en_d -> inv -> nor3 -> lc.lf was a half-period path with logic, -1.9 ns): clk_en
+    // (quasi-static) is registered first in lc_en, a rising flop on the launch clock net hio_s placed
+    // next to lc.lf (hio_placement_1640.cfg), so the half period into lc.lf is one direct flop -> flop
+    // copy like hr -> lf. The forwarded clock starts / stops one hddr period later than before.
+    wire lc_df;
+`ifdef SYNTHESIS
+    gf180mcu_fd_sc_mcu7t5v0__dffrnq_1 lc_en(.D(clk_en), .RN(rst_n), .CLK(hio_s), .Q(lc_df));
+`else
+    reg lc_en;
+    always @(posedge hio_s or negedge rst_n) if (!rst_n) lc_en <= 1'b0; else lc_en <= clk_en;
+    assign lc_df = lc_en;
+`endif
+    pt_hio_launch lc(.clk(hio_s), .sel(hio_ms), .rst_n(rst_n), .nrst_n(nrst_n), .dr(1'b0), .df(lc_df), .z(clk_pin));
 endmodule
 
 // H2D capture, 1:4 gearbox and pin-clock -> hcore quad FIFO (8 entries: two synchronizer stages on

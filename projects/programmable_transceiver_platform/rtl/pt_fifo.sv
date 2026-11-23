@@ -248,11 +248,20 @@ assign empty=playing?pe:empty_r;
  wire readable=playing||rdr;
  wire pvx=pv||pinit;
  wire[DEPTH-1:0]fstep=(playing&&fl)?{{(DEPTH-1){1'b0}},1'b1}:{foh[DEPTH-2:0],foh[DEPTH-1]};
- wire fl_step=playing&&(fl?last0:|(foh&lastm1));
+ // DG9-FL (routed pt_wired egress_wtx: foh -> 24-wide AND-OR with play_last-1 -> fl): "F+1 is play_last" (m0) is
+ // selected from registers computed one fetch ahead: y = (F == play_last-1) and z = (F == play_last-2), both
+ // registered from the F of the previous clock, with how F changed on that clock: held (pv = 0: m0 = y), advanced
+ // by one (pv = 1, no wrap: m0 = z), wrapped to entry 0 (wrap_q: m0 = (play_last == 1)), the pinit load (finit:
+ // m0 = play_last is 1 or 3) and the first clock after reset (F = entry 0: m0 = (play_last == 1)). While playing
+ // F never passes play_last (given the stopped-only play / play_last contract above), so "advanced by one" has no modular wrap. m0 == |(foh & lastm1) on every clock
+ // while play_last is static (it changes only while stopped, with the read side held in reset).
+ reg fy,fz,wrap_q,pinit_q;
+ wire[DEPTH-1:0]lastm2=(last0||last1)?{DEPTH{1'b0}}:({{(DEPTH-1){1'b0}},1'b1}<<(lastc-2'd2));   // one-hot play_last-2
+ wire m0=rinit?last1:pinit_q?(last1||lastc==3):!pv?fy:wrap_q?last1:fz;
+ wire fl_step=playing&&(fl?last0:m0);
  // pinit: address the entry after 0 (0 itself if play_last is 0); afterwards F. F is entry 0 (its reset value)
- // during pinit, so only address bits 0 and 1 take the pinit term.
+ // during pinit, so only address bits 0 and 1 take the pinit term (applied per fetch-pointer copy, read tree below).
  wire pin1=pinit&&!last0;
- wire[DEPTH-1:0]faddr={foh[DEPTH-1:2],foh[1]||pin1,foh[0]&&!pin1};
  wire ftag=pinit?(last0||last1):rinit?last0:fl;
  // F after the pinit clock: two entries past 0 with the playback wrap
  wire[DEPTH-1:0]finit=(last0||last1)?{{(DEPTH-1){1'b0}},1'b1}:{{(DEPTH-3){1'b0}},3'b100};
@@ -272,8 +281,30 @@ assign empty=playing?pe:empty_r;
  wire[CS-1:0]cs_n;
  pt_sel2 #(.W(CS)) cs_sel(.s(take),.a(cs_h),.b(cs_t),.z(cs_n));
  always @(posedge rd_clk or negedge rd_ready)
-  if(!rd_ready)begin foh<=1;fl<=1'b0;fbn<=step(0);fg<=gray(0);vq<=1'b0;vs<=1'b0;pv<=1'b0;rdr<=1'b0;room<=1'b1;rinit<=1'b1;end
-  else begin rinit<=1'b0;{foh,fl,fbn,fg,vq,vs,pv,rdr,room}<=cs_n;end
+  if(!rd_ready)begin foh<=1;fl<=1'b0;fbn<=step(0);fg<=gray(0);vq<=1'b0;vs<=1'b0;pv<=1'b0;rdr<=1'b0;room<=1'b1;rinit<=1'b1;
+   fy<=1'b0;fz<=1'b0;wrap_q<=1'b0;pinit_q<=1'b0;end
+  else begin rinit<=1'b0;{foh,fl,fbn,fg,vq,vs,pv,rdr,room}<=cs_n;
+   fy<=|(foh&lastm1);fz<=|(foh&lastm2);wrap_q<=playing&&fl;pinit_q<=pinit;end
+`ifndef SYNTHESIS
+ always @(posedge rd_clk)if(rd_ready&&playing&&m0!==|(foh&lastm1))
+  $fatal(1,"pt_cdc_fifo: precomputed playback-last flag %b != |(foh & lastm1) (foh %h last %0d)",m0,foh,lastc);
+`endif
+ // Fetch-pointer copies (DG9-FL; routed egress_wtx / hcore: foh -> buffer tree to 40 x DEPTH/2 AND-OR inputs ->
+ // pa / pb): NR kept copies of foh (same D = cs_n, same reset), copy r addresses data bits r*SW .. r*SW+SW-1 of
+ // both half-array partials, so each pointer flop drives about SW AND gates. Copy 0 is foh itself.
+ localparam NR=4,SW=(W+NR-1)/NR;
+ wire[DEPTH*NR-1:0]fcp;
+ assign fcp[DEPTH-1:0]=foh;
+ genvar gr,gj;
+ generate for(gr=1;gr<NR;gr=gr+1)begin:fcopy
+  for(gj=0;gj<DEPTH;gj=gj+1)begin:b_
+   if(gj==0)begin:s1 pt_dff_rep1 r(rd_clk,rd_ready,cs_n[CS-DEPTH+gj],fcp[gr*DEPTH+gj]);end
+   else begin:s0 pt_dff_rep r(rd_clk,rd_ready,cs_n[CS-DEPTH+gj],fcp[gr*DEPTH+gj]);end
+  end
+ end endgenerate
+`ifndef SYNTHESIS
+ always @(posedge rd_clk)if(rd_ready&&fcp!=={NR{foh}})$fatal(1,"pt_cdc_fifo: fetch-pointer copies differ from foh");
+`endif
  // playback: entries 0..play_last (the head's last flag), then stop or wrap
  wire play_done_n=play_done||(playing&&take&&ql&&!play_loop);
  always @(posedge rd_clk or negedge rd_ready)
@@ -282,11 +313,15 @@ assign empty=playing?pe:empty_r;
  always @(posedge rd_clk or negedge rd_ready)
   if(!rd_ready)ne_r<=1'b0;else ne_r<=!(playing?play_done_n:empty_n);
  localparam HALF=(DEPTH+1)/2;
- reg[W-1:0]ca,cb;integer j;
+ reg[W-1:0]ca,cb;integer j,jb;reg[DEPTH-1:0]fa;
  always @*begin
   ca=0;cb=0;
-  for(j=0;j<DEPTH;j=j+1)
-   if(j<HALF)ca=ca|({W{faddr[j]}}&mem[j]);else cb=cb|({W{faddr[j]}}&mem[j]);
+  for(jb=0;jb<W;jb=jb+1)begin
+   fa=fcp[(jb/SW)*DEPTH+:DEPTH];
+   fa={fa[DEPTH-1:2],fa[1]||pin1,fa[0]&&!pin1};   // faddr of copy jb/SW
+   for(j=0;j<DEPTH;j=j+1)
+    if(j<HALF)ca[jb]=ca[jb]|(fa[j]&mem[j][jb]);else cb[jb]=cb[jb]|(fa[j]&mem[j][jb]);
+  end
  end
  reg[W-1:0]pa,pb;
  always @(posedge rd_clk)begin pa<=ca;pb<=cb;pl<=ftag;end
@@ -396,6 +431,14 @@ endmodule
 `endif
 module pt_dff_rep(input wire clk, rst_n, d, output reg q);
     always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b0; else q <= d;
+endmodule
+
+// Replicated flop with set (kept): as pt_dff_rep, reset value 1.
+`ifndef FORMAL
+(* keep_hierarchy = "yes" *)
+`endif
+module pt_dff_rep1(input wire clk, rst_n, d, output reg q);
+    always @(posedge clk or negedge rst_n) if (!rst_n) q <= 1'b1; else q <= d;
 endmodule
 
 // Kept 2:1 select (z = s ? b : a): a hierarchy boundary so synthesis cannot share the logic in front

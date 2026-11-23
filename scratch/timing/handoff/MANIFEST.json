@@ -58,14 +58,12 @@
  },
  "wrx_cap": {
   "top": "pt_wrx_cap",
-  "rev": "r7e cells, top re-routed with the chip-grid Metal5 channels kept free (r7g-grid) + DCF taps",
-  "size": "1239.2 x 242.7 (unchanged)",
-  "checks": "shuttle main 0, antenna 0, DCF.1a 0; read-back LVS unique vs wrx_cap.sch.spice, negative control fails; Metal5 9 359 um2 total, 0 in the 27 um channels at x = 12.25 / 47.25 + 70k from the block left edge (was 35 571)",
-  "misses": "timing NOT re-run after the re-route (port-net C changed -21..+25 fF; e.g. S7 150 -> 175 fF, WSTB 21 -> 44 fF); r7e misses stand: full-rate race (B1=1 unusable), pessimistic 625/810 MHz, LDE contract (WR11-4)",
-  "rows": "WR11-4",
+  "rev": "published r6 + DCF taps (baseline: its ports DX0..39 / WCLK40 match chip.conn and the digital macro). r7e (WSTB / DW, W7-GEAR) needs the gearbox in the digital macro first; its grid-aligned build stays staged in scratch/wired_rx/r12/capgrid",
+  "size": "1454.3 x 658.1 (published)",
+  "checks": "shuttle main 0, antenna 0, DCF.1a 0 (13 -> 0, 22 604 taps); read-back LVS unique vs the published layout netlist (= published r6 LVS reference), negative control fails",
+  "misses": "as published r6: does not receive 2.5 Gb/s with real neighbours (WR11-4 / README); Metal5 not grid-aligned (no IR failure in its region per assembly, TIM-28)",
   "gds": "wrx_cap.gds",
-  "gds_sha256_16": "f8e4c26310570120",
-  "grid": "m5_keep 70"
+  "gds_sha256_16": "925fac856dd9e6b7"
  },
  "ctle": {
   "top": "pt_ctle",

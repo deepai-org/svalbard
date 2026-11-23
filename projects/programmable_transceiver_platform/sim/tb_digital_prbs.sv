@@ -13,6 +13,7 @@
 module tb_digital_prbs;
  reg rst_n=0,ref_clk=0,host_sclk=0,host_cs_n=1,host_mosi=0,host_tx_clk=0,host_rx_clk=0,wire_rx_clk=0,wire_tx_clk=0,rf_rx_clk=0,rf_tx_clk=0;
  wire core_rst_n=rst_n,core_rel_n=rst_n;
+ reg wtx_run=0, lo_vt_high=0, lo_vt_runaway=0; wire lo_vt_runaway_clr;   // WT50 / LO-DIG-1 status ports, idle in this bench
  reg [39:0] h2d_quad=0; wire [39:0] d2h_quad; reg [39:0] wire_rx_data=0; reg wire_rx_valid=0; wire [39:0] wire_tx_data;
  wire wire_tx_valid,wire_idle; reg wire_tx_request=0; reg [23:0] rf_rx_sample=0; reg rf_rx_valid=0; wire [23:0] rf_tx_sample;
  wire rf_tx_valid,rf_mute,rf_tx_clk_out; reg rf_tx_request=0; wire enable,mode8; wire [15:0] rf_trim,wire_trim,clock_trim; reg calibration_above_target=0;

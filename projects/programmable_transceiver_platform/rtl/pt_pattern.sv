@@ -266,6 +266,39 @@ module pt_pattern_check #(parameter integer W=10, parameter integer CW=16,
     function automatic [2:0] pop5(input [4:0] v);
         pop5 = ({2'b0, v[0]} + {2'b0, v[1]}) + ({2'b0, v[2]} + {2'b0, v[3]}) + {2'b0, v[4]};
     endfunction
+    // Stage-2 decisions as a late select (DG9-PRBS, routed pt_wired wrx -2.5 ns: mism_q -> 40-bit zero1 NOR
+    // tree -> fanout -> run / bad / locked next-state logic). The next value of run, bad and locked is computed
+    // twice from registers only, for zero1 = 1 (z1) and zero1 = 0 (z0); zero1 drives only kept 2:1 selects
+    // (pt_pat_sel2). The candidates are the old if/else evaluated with zero1 fixed, so the values are identical
+    // on every ce cycle: no added latency, same lock / unlock decisions, same counted words.
+    localparam [RW-1:0] LOCK_M1 = LOCK_WORDS - 1, UNLOCK_M1 = UNLOCK_WORDS - 1;
+    initial if (LOCK_WORDS < 1 || LOCK_WORDS > (1 << RW) || UNLOCK_WORDS < 1 || UNLOCK_WORDS > (1 << RW))
+        $fatal(1, "pt_pattern_check: LOCK_WORDS / UNLOCK_WORDS must be 1 .. 2^RW");
+    wire          run_at = run == LOCK_M1, bad_at = bad == UNLOCK_M1;
+    reg  [RW-1:0] run_z1, run_z0, bad_z1, bad_z0;
+    reg           lk_z1, lk_z0;
+    always @* begin
+        run_z1 = run; run_z0 = run; bad_z1 = bad; bad_z0 = bad; lk_z1 = locked; lk_z0 = locked;
+        if (!on) begin
+            run_z1 = 0; run_z0 = 0; bad_z1 = 0; bad_z0 = 0; lk_z1 = 1'b0; lk_z0 = 1'b0;
+        end else if (v1) begin
+            if (!locked) begin
+                bad_z1 = 0; bad_z0 = 0;
+                run_z0 = 0;                                         // !(zero1 && nz1)
+                if (!nz1) run_z1 = 0;
+                else if (run_at) begin lk_z1 = 1'b1; run_z1 = 0; end
+                else run_z1 = run + 1'b1;
+            end else begin
+                bad_z1 = 0;                                         // zero1: bad cleared
+                if (bad_at) begin lk_z0 = 1'b0; bad_z0 = 0; run_z0 = 0; end
+                else bad_z0 = bad + 1'b1;
+            end
+        end
+    end
+    wire [2*RW:0] dec_z1 = {run_z1, bad_z1, lk_z1};
+    wire [2*RW:0] dec_z0 = {run_z0, bad_z0, lk_z0};
+    wire [2*RW:0] dec_n;
+    pt_pat_sel2 #(2*RW+1) sel_dec(.s(zero1), .a(dec_z0), .b(dec_z1), .z(dec_n));
     reg  [3*NG-1:0] grp;             // group counts of the word flagged by mism_v (same edge)
     reg  [PW-1:0]   psum; reg psum_v;
     reg  [PW-1:0]   ptot; reg ptot_v;
@@ -317,21 +350,7 @@ module pt_pattern_check #(parameter integer W=10, parameter integer CW=16,
             v1     <= on && valid;
             nz1    <= nz;
             // stage 2: lock decisions on the previous word (mism_q)
-            if (!on) begin
-                locked <= 1'b0; run <= 0; bad <= 0;
-            end else if (v1) begin
-                if (!locked) begin
-                    bad <= 0;
-                    if (!(zero1 && nz1)) run <= 0;
-                    else if (run == LOCK_WORDS - 1) begin locked <= 1'b1; run <= 0; end
-                    else run <= run + 1'b1;
-                end else begin
-                    if (zero1) bad <= 0;
-                    else if (bad == UNLOCK_WORDS - 1) begin
-                        locked <= 1'b0; bad <= 0; run <= 0;
-                    end else bad <= bad + 1'b1;
-                end
-            end
+            {run, bad, locked} <= dec_n;   // late select of the candidates above
             // error count of a word checked while locked: flag and popcount of the same word (mism_q)
             mism_v <= on && v1 && locked && !zero1 && !clear;
             for (gs = 0; gs < NG; gs = gs + 1) grp[3*gs+:3] <= pop5(mism_pad[5*gs+:5]);
@@ -355,7 +374,7 @@ module pt_pattern_check #(parameter integer W=10, parameter integer CW=16,
                 if (at_max || pend[QW]) begin pend <= 0; pend_nz <= 1'b0; end
                 else begin pend <= pend_sum; pend_nz <= sum_nz; end
                 if (pend[QW] && !at_max) ovf <= 1'b1;
-                if (on && v1 && locked && !zero1 && bad == UNLOCK_WORDS - 1) lost_lock <= 1'b1;
+                if (on && v1 && locked && !zero1 && bad_at) lost_lock <= 1'b1;
             end
         end
     end

@@ -1,13 +1,13 @@
 {
   "block": "adc_i",
   "top_cell": "pt_adc_i",
-  "generated_utc": "2026-11-10T02:44:32Z",
+  "generated_utc": "2026-11-22T08:10:16Z",
   "source_hashes": {
-    "adc_i.spice": "sha256:0e0b21ba7b95358b326b0947783dd9a0857fab63b02809108ae515bfe2ebc5c9",
-    "circuits.py": "sha256:dab7a955791d8288e0570057e50a2b724869b8d4a436a8b2ec52810fdaac45ba",
-    "lib/convkit.py": "sha256:335aaf313b48811efd7abdca25e07c0e4535a19b8c5e4e14de11ec17fed43a6e",
-    "flow.py": "sha256:2cfac4be4d486d95f11a11ab4c09217a37d163a9daa2d96bf1b4eb4976097817",
-    "benches.py": "sha256:4315c470b4fba951ebdeed473b74acc279820a9ffc018f4261b5f6565deacebc",
+    "adc_i.spice": "sha256:12d6bfb9c58dce0c6c3d79cdeb5f9d486e41c8205b115d9aa609c4e1b60ade4b",
+    "circuits.py": "sha256:cc88dafedf73b42d264ce79346e8cae06f67f315b2d07fc4d61104e42192b59a",
+    "lib/convkit.py": "sha256:956a4e5b16d2ebb4e262cda866e86e1df1ee25212af5c16ffd8198b88bd123b8",
+    "flow.py": "sha256:72740b03c07d45c3f6a95a2203439b7e9e1d8ba06301f3020c7b23242c8cf34b",
+    "benches.py": "sha256:35ddcc96977d53d575b099e1f513e1761e38d2e947c2675eb7efc7a28337b05e",
     "generated/macros/adc_code_reg.gds": "sha256:62e70715d13b8d49e5fa376bb42e3f78ea6e80f555d10ea73a19ff46df67d693",
     "generated/macros/adc_code_reg.lef": "sha256:e310191ddc55dc59286e2c355059bca8464f998af224f9da6ba6372e7ad96b34",
     "generated/macros/adc_code_reg.pnl.v": "sha256:3f588477a65b65775a039876de3e88dd375854523933230fb7aca5fe17745e46",
@@ -20,9 +20,9 @@
     "rtl/tb_dac_logic.v": "sha256:0a651fb00017aa23e8f1e8917488404350f8b83be1ed1407f044dab6f1271679"
   },
   "artifact_hashes": {
-    "generated/adc_i.gds": "sha256:6c240c0aa0b824336246c5549a664fdba67e6bb5ad25b35c57d7573027063f4e",
-    "generated/adc_i.mag": "sha256:92e872db37ca3ad0ce9fb5094ccd797d3cc0c130198bfddac0fbe8f6602f4bae",
-    "generated/adc_i.ext.spice": "sha256:55d423d7b785a9960ee157af1031e32b17e2ded8fef70f75bf6baf62d35520ba"
+    "generated/adc_i.gds": "sha256:e2dd70e0891f58c393415538c197b5e3746a060edb47e3022e6e7baf01c695ac",
+    "generated/adc_i.mag": "sha256:ce42a622c4400227f93ce2fdb55d9b5196b85a410470b8ba000b1edee6eebf46",
+    "generated/adc_i.ext.spice": "sha256:ed80ae090cc85b0d98533651b9c6786a9976bbd38f797943972932a75a7ada86"
   },
   "images": {
     "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
@@ -32,35 +32,35 @@
   "pdk": "gf180mcuD ciel f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7 (both images)",
   "area": {
     "bbox_um": [
-      -60.0,
+      -49.4,
       0.0,
-      407.96,
-      1242.16
+      433.04,
+      937.0
     ],
-    "area_um2": 581281.2,
+    "area_um2": 452046.3,
     "ceiling_um2": 350000,
     "fits": false
   },
   "tests": {
     "safe": {
-      "state": "pass",
+      "state": "fail",
       "cases": [
         {
           "case": "EN=0 supply current (A)",
-          "value": -7.83346e-07
+          "value": -1.30181e-06
         },
         {
           "case": "INP held at 1.65 V while disabled / island unpowered",
           "value": {
             "powered_disabled": {
               "leak_A_at_1p65V": 8.522885e-12,
-              "cap_fF_at_10MHz": 232.0167,
-              "conductance_S": 1.918584e-08
+              "cap_fF_at_10MHz": 197.6242,
+              "conductance_S": 6.299094e-11
             },
             "island_unpowered": {
               "leak_A_at_1p65V": 7.283465e-12,
-              "cap_fF_at_10MHz": 209.0877,
-              "conductance_S": 1.540359e-11
+              "cap_fF_at_10MHz": 197.2882,
+              "conductance_S": 5.118287e-12
             }
           }
         }
@@ -69,7 +69,7 @@
     },
     "clean": {
       "extracted_nominal": {
-        "t_done_ns_max": 29.96,
+        "t_done_ns_max": 30.36,
         "all_done": true,
         "conversion_window_ns": 44.0,
         "core_A": {
@@ -80,18 +80,18 @@
             -0.7
           ],
           "codes": [
-            280,
-            -288,
-            64,
-            -402
+            270,
+            -302,
+            56,
+            -416
           ],
-          "codes_per_V": 568,
-          "implied_fullscale_V": 0.9014,
-          "offset_codes": -4.0,
+          "codes_per_V": 572,
+          "implied_fullscale_V": 0.8951,
+          "offset_codes": -16.0,
           "dev_from_gain_offset_fit": [
             0,
             0,
-            -2,
+            2,
             0
           ],
           "monotonic": true
@@ -104,19 +104,19 @@
             0.123
           ],
           "codes": [
-            -296,
-            272,
+            -298,
+            270,
             -414,
-            60
+            56
           ],
           "codes_per_V": 568,
           "implied_fullscale_V": 0.9014,
-          "offset_codes": -12.0,
+          "offset_codes": -14.0,
           "dev_from_gain_offset_fit": [
             0,
             0,
-            -4,
-            2
+            -2,
+            0
           ],
           "monotonic": true
         },
@@ -164,7 +164,7 @@
       "state": "pass"
     },
     "observable": {
-      "state": "pass",
+      "state": "open",
       "atb_taps": [
         "adc_comparator_bias (ATB_BIAS = local bias gate, also clock receiver)"
       ],
@@ -185,19 +185,19 @@
         "in-block: ILEN=0 runs core A alone at 20 MS/s (v2 behaviour)"
       ],
       "bypass_loading_fF": {
-        "powered_disabled": 232.0167,
-        "island_unpowered": 209.0877
+        "powered_disabled": 197.6242,
+        "island_unpowered": 197.2882
       },
       "evidence": {
         "powered_disabled": {
           "leak_A_at_1p65V": 8.522885e-12,
-          "cap_fF_at_10MHz": 232.0167,
-          "conductance_S": 1.918584e-08
+          "cap_fF_at_10MHz": 197.6242,
+          "conductance_S": 6.299094e-11
         },
         "island_unpowered": {
           "leak_A_at_1p65V": 7.283465e-12,
-          "cap_fF_at_10MHz": 209.0877,
-          "conductance_S": 1.540359e-11
+          "cap_fF_at_10MHz": 197.2882,
+          "conductance_S": 5.118287e-12
         }
       }
     }
@@ -207,7 +207,7 @@
       "metric": "40 MS/s per channel, 2-way interleaved (25 ns clock, 6 ns acquisition), tt/27C/3.3V",
       "target": "40 MS/s per I/Q (AA)",
       "nominal": {
-        "t_done_ns_max": 29.96,
+        "t_done_ns_max": 30.36,
         "all_done": true,
         "conversion_window_ns": 44.0,
         "core_A": {
@@ -218,18 +218,18 @@
             -0.7
           ],
           "codes": [
-            280,
-            -288,
-            64,
-            -402
+            270,
+            -302,
+            56,
+            -416
           ],
-          "codes_per_V": 568,
-          "implied_fullscale_V": 0.9014,
-          "offset_codes": -4.0,
+          "codes_per_V": 572,
+          "implied_fullscale_V": 0.8951,
+          "offset_codes": -16.0,
           "dev_from_gain_offset_fit": [
             0,
             0,
-            -2,
+            2,
             0
           ],
           "monotonic": true
@@ -242,19 +242,19 @@
             0.123
           ],
           "codes": [
-            -296,
-            272,
+            -298,
+            270,
             -414,
-            60
+            56
           ],
           "codes_per_V": 568,
           "implied_fullscale_V": 0.9014,
-          "offset_codes": -12.0,
+          "offset_codes": -14.0,
           "dev_from_gain_offset_fit": [
             0,
             0,
-            -4,
-            2
+            -2,
+            0
           ],
           "monotonic": true
         },
@@ -264,720 +264,43 @@
     {
       "metric": "single-core fallback ILEN=0 at 20 MS/s (50 ns, 10 ns acquisition)",
       "target": ">= 20 MS/s",
-      "nominal": {
-        "t_done_ns_max": 29.9,
-        "all_done": true,
-        "conversion_window_ns": 40.0,
-        "core_A": {
-          "inputs_V": [
-            0.5,
-            -0.5,
-            0.123,
-            -0.7
-          ],
-          "codes": [
-            286,
-            -288,
-            67,
-            -404
-          ],
-          "codes_per_V": 574,
-          "implied_fullscale_V": 0.892,
-          "offset_codes": -1.0,
-          "dev_from_gain_offset_fit": [
-            0,
-            0,
-            -3,
-            -1
-          ],
-          "monotonic": true
-        },
-        "pass": true
-      }
+      "nominal": null
     },
     {
       "metric": "margin probe: ss/32C/3.15V at 45 MS/s (22.2 ns clock)",
       "target": "margin, not gating",
-      "nominal": {
-        "t_done_ns_max": 1000000000.0,
-        "all_done": false,
-        "conversion_window_ns": 38.4,
-        "core_A": {
-          "inputs_V": [
-            0.5,
-            -0.5
-          ],
-          "codes": [
-            280,
-            224
-          ],
-          "codes_per_V": 56,
-          "implied_fullscale_V": 9.1429,
-          "offset_codes": 252.0,
-          "dev_from_gain_offset_fit": [
-            0,
-            0
-          ],
-          "monotonic": true
-        },
-        "core_B": {
-          "inputs_V": [
-            -0.5,
-            0.5
-          ],
-          "codes": [
-            -296,
-            272
-          ],
-          "codes_per_V": 568,
-          "implied_fullscale_V": 0.9014,
-          "offset_codes": -12.0,
-          "dev_from_gain_offset_fit": [
-            0,
-            0
-          ],
-          "monotonic": true
-        },
-        "pass": false
-      }
+      "nominal": null
     },
     {
       "metric": "input_test modes 1/2/3 per core (expect 0, +128*g, -128*g codes)",
       "target": "0/+VREF/4/-VREF/4",
       "nominal": {
-        "core_A_input_test=0": 168,
-        "core_A_input_test=1": 0,
-        "core_A_input_test=2": 126,
-        "core_A_input_test=3": -128,
-        "core_B_input_test=0": 158,
-        "core_B_input_test=1": -14,
-        "core_B_input_test=2": 112,
-        "core_B_input_test=3": -142,
+        "core_A_input_test=0": null,
+        "core_A_input_test=1": null,
+        "core_A_input_test=2": null,
+        "core_A_input_test=3": null,
+        "core_B_input_test=0": null,
+        "core_B_input_test=1": null,
+        "core_B_input_test=2": null,
+        "core_B_input_test=3": null,
         "note": "input 0.3 V differential applied throughout; modes 1-3 must ignore it"
       }
     },
     {
       "metric": "supply current at 40 MS/s (mA)",
       "target": "8 allocation",
-      "nominal": 5.73147
+      "nominal": 5.70382
     },
     {
       "metric": "VREF average current at 40 MS/s (uA)",
       "target": "refbuf source limit 1 mA",
-      "nominal": 83.17930000000001
+      "nominal": 83.0069
     },
     {
       "metric": "corner sweep at 40 MS/s interleaved (extracted)",
       "target": "40 MS/s at every envelope corner",
       "all_pass": true,
-      "corners": {
-        "typical_22C_3.15V": {
-          "t_done_ns_max": 30.16,
-          "all_done": true,
-          "conversion_window_ns": 44.0,
-          "core_A": {
-            "inputs_V": [
-              0.5,
-              -0.5
-            ],
-            "codes": [
-              280,
-              -288
-            ],
-            "codes_per_V": 568,
-            "implied_fullscale_V": 0.9014,
-            "offset_codes": -4.0,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "core_B": {
-            "inputs_V": [
-              -0.5,
-              0.5
-            ],
-            "codes": [
-              -297,
-              275
-            ],
-            "codes_per_V": 572,
-            "implied_fullscale_V": 0.8951,
-            "offset_codes": -11.0,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "pass": true
-        },
-        "typical_22C_3.35V": {
-          "t_done_ns_max": 29.26,
-          "all_done": true,
-          "conversion_window_ns": 44.0,
-          "core_A": {
-            "inputs_V": [
-              0.5,
-              -0.5
-            ],
-            "codes": [
-              284,
-              -288
-            ],
-            "codes_per_V": 572,
-            "implied_fullscale_V": 0.8951,
-            "offset_codes": -2.0,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "core_B": {
-            "inputs_V": [
-              -0.5,
-              0.5
-            ],
-            "codes": [
-              -296,
-              275
-            ],
-            "codes_per_V": 571,
-            "implied_fullscale_V": 0.8967,
-            "offset_codes": -10.5,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "pass": true
-        },
-        "typical_32C_3.15V": {
-          "t_done_ns_max": 30.74,
-          "all_done": true,
-          "conversion_window_ns": 44.0,
-          "core_A": {
-            "inputs_V": [
-              0.5,
-              -0.5
-            ],
-            "codes": [
-              280,
-              -288
-            ],
-            "codes_per_V": 568,
-            "implied_fullscale_V": 0.9014,
-            "offset_codes": -4.0,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "core_B": {
-            "inputs_V": [
-              -0.5,
-              0.5
-            ],
-            "codes": [
-              -298,
-              274
-            ],
-            "codes_per_V": 572,
-            "implied_fullscale_V": 0.8951,
-            "offset_codes": -12.0,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "pass": true
-        },
-        "typical_32C_3.35V": {
-          "t_done_ns_max": 30.04,
-          "all_done": true,
-          "conversion_window_ns": 44.0,
-          "core_A": {
-            "inputs_V": [
-              0.5,
-              -0.5
-            ],
-            "codes": [
-              280,
-              -288
-            ],
-            "codes_per_V": 568,
-            "implied_fullscale_V": 0.9014,
-            "offset_codes": -4.0,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "core_B": {
-            "inputs_V": [
-              -0.5,
-              0.5
-            ],
-            "codes": [
-              -296,
-              272
-            ],
-            "codes_per_V": 568,
-            "implied_fullscale_V": 0.9014,
-            "offset_codes": -12.0,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "pass": true
-        },
-        "ss_22C_3.15V": {
-          "t_done_ns_max": 38.0,
-          "all_done": true,
-          "conversion_window_ns": 44.0,
-          "core_A": {
-            "inputs_V": [
-              0.5,
-              -0.5
-            ],
-            "codes": [
-              280,
-              -288
-            ],
-            "codes_per_V": 568,
-            "implied_fullscale_V": 0.9014,
-            "offset_codes": -4.0,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "core_B": {
-            "inputs_V": [
-              -0.5,
-              0.5
-            ],
-            "codes": [
-              -296,
-              272
-            ],
-            "codes_per_V": 568,
-            "implied_fullscale_V": 0.9014,
-            "offset_codes": -12.0,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "pass": true
-        },
-        "ss_22C_3.35V": {
-          "t_done_ns_max": 37.34,
-          "all_done": true,
-          "conversion_window_ns": 44.0,
-          "core_A": {
-            "inputs_V": [
-              0.5,
-              -0.5
-            ],
-            "codes": [
-              278,
-              -288
-            ],
-            "codes_per_V": 566,
-            "implied_fullscale_V": 0.9046,
-            "offset_codes": -5.0,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "core_B": {
-            "inputs_V": [
-              -0.5,
-              0.5
-            ],
-            "codes": [
-              -296,
-              272
-            ],
-            "codes_per_V": 568,
-            "implied_fullscale_V": 0.9014,
-            "offset_codes": -12.0,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "pass": true
-        },
-        "ss_32C_3.15V": {
-          "t_done_ns_max": 39.1,
-          "all_done": true,
-          "conversion_window_ns": 44.0,
-          "core_A": {
-            "inputs_V": [
-              0.5,
-              -0.5
-            ],
-            "codes": [
-              280,
-              -288
-            ],
-            "codes_per_V": 568,
-            "implied_fullscale_V": 0.9014,
-            "offset_codes": -4.0,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "core_B": {
-            "inputs_V": [
-              -0.5,
-              0.5
-            ],
-            "codes": [
-              -296,
-              272
-            ],
-            "codes_per_V": 568,
-            "implied_fullscale_V": 0.9014,
-            "offset_codes": -12.0,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "pass": true
-        },
-        "ss_32C_3.35V": {
-          "t_done_ns_max": 37.54,
-          "all_done": true,
-          "conversion_window_ns": 44.0,
-          "core_A": {
-            "inputs_V": [
-              0.5,
-              -0.5
-            ],
-            "codes": [
-              280,
-              -288
-            ],
-            "codes_per_V": 568,
-            "implied_fullscale_V": 0.9014,
-            "offset_codes": -4.0,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "core_B": {
-            "inputs_V": [
-              -0.5,
-              0.5
-            ],
-            "codes": [
-              -296,
-              272
-            ],
-            "codes_per_V": 568,
-            "implied_fullscale_V": 0.9014,
-            "offset_codes": -12.0,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "pass": true
-        },
-        "ff_22C_3.15V": {
-          "t_done_ns_max": 24.48,
-          "all_done": true,
-          "conversion_window_ns": 44.0,
-          "core_A": {
-            "inputs_V": [
-              0.5,
-              -0.5
-            ],
-            "codes": [
-              287,
-              -289
-            ],
-            "codes_per_V": 576,
-            "implied_fullscale_V": 0.8889,
-            "offset_codes": -1.0,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "core_B": {
-            "inputs_V": [
-              -0.5,
-              0.5
-            ],
-            "codes": [
-              -304,
-              275
-            ],
-            "codes_per_V": 579,
-            "implied_fullscale_V": 0.8843,
-            "offset_codes": -14.5,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "pass": true
-        },
-        "ff_22C_3.35V": {
-          "t_done_ns_max": 23.98,
-          "all_done": true,
-          "conversion_window_ns": 44.0,
-          "core_A": {
-            "inputs_V": [
-              0.5,
-              -0.5
-            ],
-            "codes": [
-              286,
-              -290
-            ],
-            "codes_per_V": 576,
-            "implied_fullscale_V": 0.8889,
-            "offset_codes": -2.0,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "core_B": {
-            "inputs_V": [
-              -0.5,
-              0.5
-            ],
-            "codes": [
-              -304,
-              275
-            ],
-            "codes_per_V": 579,
-            "implied_fullscale_V": 0.8843,
-            "offset_codes": -14.5,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "pass": true
-        },
-        "ff_32C_3.15V": {
-          "t_done_ns_max": 24.8,
-          "all_done": true,
-          "conversion_window_ns": 44.0,
-          "core_A": {
-            "inputs_V": [
-              0.5,
-              -0.5
-            ],
-            "codes": [
-              287,
-              -289
-            ],
-            "codes_per_V": 576,
-            "implied_fullscale_V": 0.8889,
-            "offset_codes": -1.0,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "core_B": {
-            "inputs_V": [
-              -0.5,
-              0.5
-            ],
-            "codes": [
-              -304,
-              275
-            ],
-            "codes_per_V": 579,
-            "implied_fullscale_V": 0.8843,
-            "offset_codes": -14.5,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "pass": true
-        },
-        "ff_32C_3.35V": {
-          "t_done_ns_max": 24.42,
-          "all_done": true,
-          "conversion_window_ns": 44.0,
-          "core_A": {
-            "inputs_V": [
-              0.5,
-              -0.5
-            ],
-            "codes": [
-              287,
-              -289
-            ],
-            "codes_per_V": 576,
-            "implied_fullscale_V": 0.8889,
-            "offset_codes": -1.0,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "core_B": {
-            "inputs_V": [
-              -0.5,
-              0.5
-            ],
-            "codes": [
-              -304,
-              275
-            ],
-            "codes_per_V": 579,
-            "implied_fullscale_V": 0.8843,
-            "offset_codes": -14.5,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "pass": true
-        }
-      }
-    },
-    {
-      "metric": "single-core fallback 20 MS/s at ss corners",
-      "target": ">= 20 MS/s",
-      "corners": {
-        "ss_22C_3.15V": {
-          "t_done_ns_max": 37.74,
-          "all_done": true,
-          "conversion_window_ns": 40.0,
-          "core_A": {
-            "inputs_V": [
-              0.5,
-              -0.5
-            ],
-            "codes": [
-              280,
-              -288
-            ],
-            "codes_per_V": 568,
-            "implied_fullscale_V": 0.9014,
-            "offset_codes": -4.0,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "pass": true
-        },
-        "ss_22C_3.35V": {
-          "t_done_ns_max": 36.64,
-          "all_done": true,
-          "conversion_window_ns": 40.0,
-          "core_A": {
-            "inputs_V": [
-              0.5,
-              -0.5
-            ],
-            "codes": [
-              280,
-              -288
-            ],
-            "codes_per_V": 568,
-            "implied_fullscale_V": 0.9014,
-            "offset_codes": -4.0,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "pass": true
-        },
-        "ss_32C_3.15V": {
-          "t_done_ns_max": 38.36,
-          "all_done": true,
-          "conversion_window_ns": 40.0,
-          "core_A": {
-            "inputs_V": [
-              0.5,
-              -0.5
-            ],
-            "codes": [
-              280,
-              -288
-            ],
-            "codes_per_V": 568,
-            "implied_fullscale_V": 0.9014,
-            "offset_codes": -4.0,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "pass": true
-        },
-        "ss_32C_3.35V": {
-          "t_done_ns_max": 37.24,
-          "all_done": true,
-          "conversion_window_ns": 40.0,
-          "core_A": {
-            "inputs_V": [
-              0.5,
-              -0.5
-            ],
-            "codes": [
-              280,
-              -288
-            ],
-            "codes_per_V": 568,
-            "implied_fullscale_V": 0.9014,
-            "offset_codes": -4.0,
-            "dev_from_gain_offset_fit": [
-              0,
-              0
-            ],
-            "monotonic": true
-          },
-          "pass": true
-        }
-      }
+      "corners": {}
     }
   ],
   "excluded_coverage": [

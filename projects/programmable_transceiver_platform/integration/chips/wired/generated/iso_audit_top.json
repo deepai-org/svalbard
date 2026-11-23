@@ -3,7 +3,7 @@
  "direction_listed": [],
  "counts": {
   "K1": 20,
-  "K2": 9,
+  "K2": 11,
   "K3": 1,
   "K4": 0,
   "K5": 0,
@@ -13,6 +13,7 @@
  "groups": {
   "K1 island-to-island / island-to-core gate with no clamp": 20,
   "K2 pad back-drive into an off island": 9,
+  "K2 core / digital source onto p-diffusion of an off island": 2,
   "K3 switch": 1,
   "K7 ATB leaf not gated by its island": 4
  },
@@ -327,6 +328,17 @@
   },
   {
    "rule": "K2",
+   "net": "WIRE_TX_N",
+   "victim": "detect.TX_N",
+   "well": "~int",
+   "island": "wired",
+   "via": "pdiff:R",
+   "source": "pad_wire_tx.PAD_N",
+   "source_domain": "core",
+   "detail": "core driver can be high while wired is off"
+  },
+  {
+   "rule": "K2",
    "net": "WIRE_TX_P",
    "victim": "detect.TX_P",
    "well": "~int",
@@ -337,9 +349,20 @@
    "detail": "pad can be driven externally while the island is off"
   },
   {
+   "rule": "K2",
+   "net": "WIRE_TX_P",
+   "victim": "detect.TX_P",
+   "well": "~int",
+   "island": "wired",
+   "via": "pdiff:R",
+   "source": "pad_wire_tx.PAD_P",
+   "source_domain": "core",
+   "detail": "core driver can be high while wired is off"
+  },
+  {
    "rule": "K3",
    "inst": "isw_wired_tx_b",
-   "detail": "PG is NC_109, expected s_pg_wired_tx"
+   "detail": "PG is NC_111, expected s_pg_wired_tx"
   },
   {
    "rule": "K7",
@@ -374,13 +397,13 @@
    "detail": "leaf on an island node but its select is not gated by island_on[0]: a closed leaf connects the ATB bus/pad to diffusions in the off island"
   }
  ],
- "macro_internal_clamps": 77,
- "k1_clamped_ok": 91,
+ "macro_internal_clamps": 78,
+ "k1_clamped_ok": 92,
  "coverage": {
-  "instances": 257,
-  "nets": 1085,
+  "instances": 260,
+  "nets": 1118,
   "unbound_ports": 0,
-  "iso_clamp_instances": 90
+  "iso_clamp_instances": 91
  },
  "empty_boxes": [
   "atb_provider_pad",

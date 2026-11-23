@@ -5,64 +5,75 @@ Converter island (`conv`, rail `VDD_CONV_SW`, 3.3 V). Each block has a transisto
 netlist (parasitic C only) and extracted ngspice runs. `generated/<block>-evidence.json` is the record of
 the four tests (safe, clean, observable, fallback). The chip-top pin contract is `INTEGRATION.md`.
 
-## Blocks (published in `generated/`)
+## Blocks (published in `generated/`, 2026-11-22)
 
-| Block | Function | Ports | GDS outline | Supply (extracted, tt) |
-| --- | --- | --- | --- | --- |
-| `refbuf` | OTA + NMOS source follower buffering `VREF0` (1.0 V) to `VREF`, MIM reservoir. `ACT = EN & ~OVR`; with `OVR = 1` the output is high-Z so the ATB can force `VREF`. `READY` is a lower-bound comparator only. | `VDD VSS VREF0 VREF IBIAS EN OVR READY` | 393.5 × 300.56 µm, 0.118 mm² (Magic bbox) | 0.55 mA |
-| `adc_i`, `adc_q` | 10-bit asynchronous SAR, two cores time-interleaved behind one differential clock receiver (`ILEN = 1`: 40 MS/s; `ILEN = 0`: core A alone, 20 MS/s). Top-plate bootstrapped NMOS sampling, monotonic switching from `VREF`, StrongARM comparator, custom 3.3 V SAR logic, code register macro `adc_code_reg`. `TEST1:0` = `input_test` (1: zero, 2/3: ±VREF/4). | `VDD VSS INP INN VCM VREF IBIAS CLKP CLKN EN ILEN TEST0 TEST1 CODE0..9 DONE OVERLOAD CODEB0..9 DONEB OVERLOADB ATB_BIAS` | 465.46 × 1241.16 µm, 0.578 mm² each | 5.73 mA at 40 MS/s |
-| `dac_i`, `dac_q` | 10-bit current-steering DAC: 63 thermometer cells of 16 LSB + binary 8/4/2/1, cascoded NMOS sources, on-block common-mode loop (VDD/2), MIM decaps on the bias nodes, registered decode in macro `dac_logic`. Outputs leave through NMOS series switches. `CODEk` = transport bit k + 2 (truncation). | `VDD VSS OUTP OUTN IBIAS CLKP CLKN EN HOLD_ZERO CODE0..9 ATB_BIAS` | 674.50 × 275.93 µm, 0.186 mm² each | 2.07 mA |
+| Block | Function | Ports | GDS outline (read-back) |
+| --- | --- | --- | --- |
+| `refbuf` | OTA + NMOS source follower buffering `VREF0` (1.0 V) to `VREF`, MIM reservoir; `OVR = 1` = high-Z output for ATB forcing | `VDD VSS VREF0 VREF IBIAS EN OVR READY` | 393.5 × 300.56 µm (unchanged) |
+| `adc_i`, `adc_q` | 10-bit asynchronous SAR, two cores time-interleaved (`ILEN = 1`: one sample per `CLK`; `ILEN = 0`: core A, ≤ 20 MS/s). Single-ended CMOS `CLK`, on-block acquisition one-shot (`ACQ1:0`), interleave phase output `PH`, enable gate on `EN_D`. Code register macro `adc_code_reg`. | `VDD VSS INP INN VCM VREF IBIAS CLK ACQ0 ACQ1 EN ILEN TEST0 TEST1 CODE0..9 DONE OVERLOAD CODEB0..9 DONEB OVERLOADB ATB_BIAS PH` | 480.28 × 936.30 µm, 0.4497 mm² |
+| `dac_i`, `dac_q` | 10-bit current-steering DAC (63 × 16 LSB thermometer + binary 8/4/2/1), cascoded NMOS sources, CM loop to VDD/2, registered decode `dac_logic`; captures `CODE` on the falling `CLK` edge | `VDD VSS OUTP OUTN IBIAS CLK EN HOLD_ZERO CODE0..9 ATB_BIAS` | 668.50 × 200.63 µm, 0.1341 mm² |
 
-- GDS outlines of the ADC and DAC are KLayout measurements (`scratch/converters-ap4/meas/meas.json`, `old_*`
-  entries). The evidence files record the Magic bbox (ADC 467.96 × 1242.16, DAC 677.00 × 276.93 µm). The ADC is
-  over its 350,000 µm² ceiling (`fits: false`).
-- `adc_q` / `dac_q` are the same generator output under another top-cell name. `adc_i.gds` and `adc_q.gds` are
-  different builds: `adc_q` has 8 antenna diodes that `adc_i` lacks (3735 vs 3727 devices).
-- All controls are active-high and gate-only (safe at 0 V with the island off). Every device on the ADC
-  `INP/INN`, `VCM`, `VREF` and on the DAC `OUTP/OUTN` is an NMOS in p-substrate, so a disabled or unpowered
-  converter does not clamp the fallback paths (`rf_bb_external_adc`, `rf_tx_external_baseband`).
-- Each block takes one 10 µA `IBIAS` sink. ATB nodes: `conv_vref` = `VREF`; `adc_comparator_bias` = ADC
-  `ATB_BIAS`; `dac_bias` = DAC `ATB_BIAS`.
-- Register fields with no hardware in these blocks: ADC `comparator_trim`; DAC `gain_trim`, `offset_trim`.
-- Sample rate: the ADC default in RF modes is 39.0625 MS/s (host resamples 128/125), 40 MS/s selectable
-  (`spec/power-delivery.md` section 5.4). All converter evidence is at 40 MS/s.
+`adc_q` / `dac_q` are the same generator output as `adc_i` / `dac_i` under another top-cell name (same GDS
+geometry). Chip-top pin contract: `INTEGRATION.md`. `CONV_AP4=0` rebuilds the superseded differential-clock blocks
+for comparison only.
 
-## Verified numbers
+**Layers (ASM-8).** Pins: Metal4 labels on Metal4 trunks touching the north edge (`generated/<block>-gdscheck.json`).
+**Metal5 exception:** MIM top-plate straps only (`cap_mim_2f0_m4m5` needs Metal5): ADC 7 518 µm² in 128 polygons
+inside x 0.4–406.7, y 115.3–578.9 µm; DAC 1 382 µm² in 6 polygons inside x 240.5–316.4, y 20.4–45.1 µm. The rest of
+Metal5 is free for the grid. Metal4 is the block's.
 
-From `generated/<block>-evidence.json` unless another file is named. Extracted netlists, tt/27 °C/3.3 V unless
-a corner is given. `python3 summarize.py` appends the full per-metric dump to this file.
+## Verified on the published GDS (2026-11-22)
 
-| Block | Area µm² (ceiling) | Magic DRC | KLayout DRC | LVS | safe | clean | observable | fallback |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| refbuf | 118,270 (150,000) | 0 | 0 | unique | pass | pass | pass | waived (core) |
-| adc_i | 581,281 (350,000) | 0 | 0 | unique | pass | pass | pass | open |
-| adc_q | 581,281 (350,000) | 0 | 0 | unique | pass | pass | open | open |
-| dac_i, dac_q | 187,482 (225,000) | 0 | 0 | unique | pass | fail | pass | pass |
+| Check | adc_i | adc_q | dac_i | dac_q | Record |
+| --- | --- | --- | --- | --- | --- |
+| Magic DRC | 0 | 0 | 0 | 0 | `generated/<block>-drc.txt` |
+| Precheck deck (`kl_block_drc --publish`) main / antenna | 0 / 0 | 0 / 0 | 0 / 0 | 0 / 0 | `generated/<block>-kldrc.json` (sha-bound) |
+| Read-back LVS (Magic reads the GDS from disk, netgen, parameters compared) | unique | unique | unique | unique | `generated/<block>-lvs-readback.json` |
+| Negative controls: W × 1.5 / gate–drain swap | property errors / no match (both fail) | same | same | same | same |
+| Pins vs `chip.conn` / on edge Metal3–4 | exact / all | exact / all | exact / all | exact / all | `generated/<block>-gdscheck.json` |
+| Markers in read-back GDS vs devices | MIM 64 = CAP_MK 64 = 64 caps; no resistors | same | MIM 3 = CAP_MK 3; HRES 8 = 8 ppolyf_u_1k (RES_MK 16) | same | same |
 
-| Item | Value | Source |
-| --- | --- | --- |
-| ADC conversion, 40 MS/s interleaved | all conversions done at 12/12 corners (tt/ss/ff × 22/32 °C × 3.15/3.35 V); worst 39.1 ns (ss/32 °C/3.15 V) in a 44 ns window; tt 29.96 ns | `adc_i` |
-| ADC single core (`ILEN = 0`), 20 MS/s | done at all four ss corners, worst 38.36 ns in 40 ns | `adc_i` |
-| ADC transfer | 568 codes/V (full scale ±0.90 V), offsets −4 (A) / −12 (B) codes, ≤ 4 codes from a per-core gain/offset fit | `adc_i` |
-| ADC `input_test` 1/2/3 | core A 0 / +126 / −128, core B −14 / +112 / −142 codes | `adc_i` |
-| ADC FFT, 256 points, 18.9 MHz, 0.8 V peak, ideal VREF | raw SNDR 29.5 dB; after per-core offset/gain correction SNDR 31.4 dB (ENOB 4.9), SFDR 41.5 dB | `generated/adc_i-fft-u_tt_256_a0p8.json` |
-| ADC `VREF` draw | 83 µA average at 40 MS/s | `adc_i` |
-| ADC disabled | 0.78 µA (`adc_i`) / 0.87 µA (`adc_q`) in the bench window; input 232 fF powered-off, 209 fF unpowered, < 10 pA at 1.65 V | `adc_i`, `adc_q` |
-| DAC full scale | −0.979 / +0.972 V differential, LSB 1.907 mV | `dac_i` |
-| DAC static error (13 codes, endpoint fit) | max 2.14 LSB; endpoint spread 0.524 LSB against a 0.5 LSB gate, so `clean` = fail | `dac_i` |
-| DAC output common mode | 1.730 V (target 1.65 V) | `dac_i` |
-| DAC disabled | 7.4 nA; output 99 fF powered-off, 98 fF unpowered | `dac_i` |
-| refbuf `VREF` | 0.9989 V; 0.9977–0.9999 V over 12 corners; 27 mV p-p under 1 mA × 3 ns pulses | `refbuf` |
-| refbuf enable to `READY` | 1.56 µs after enable at tt | `refbuf` |
+MOD-22: converter netlists (schematics and Magic extractions) carry PDK MOS as X instances (scan: 0 M lines);
+`CONV_MC_SEED=<n>` turns on `sw_stat_mismatch` in every bench (`convkit.models`). Known answer
+(`mc_selftest.py`, `generated/mc-selftest.json`): matched nfet_03v3 pair W 10 / L 1 µm, 60 seeds, σ(ΔVgs) 2.37 mV
+against 2.45 expected (±20 %): pass; negative controls (mismatch off, M-line rewrite) σ = 0. No converter Monte
+Carlo has been run yet.
 
-The published GDS of every block is re-extracted and LVS-matched (round trip). Precheck-deck records (`generated/<block>-kldrc.json`, main + antenna, sha-bound to the GDS)
-exist for `adc_q`, `dac_i`, `dac_q` only.
+R+C extraction (`rcext.py`, method of MANDATE 4a): extresist tolerance 0 on the flattened GDS, ground C rebuilt per
+net from the C-only extraction of the same GDS (ADC 35.73 → 13.30 pF, DAC 11.02 → 5.41 pF), coupling totals equal to
+the C-only netlist (14.52 / 6.09 pF). Coverage of routed nets (> 2 fF): ADC 584/596 (missing: EN_D, enable delay
+line EDL_*, shaper taps Kt*/KD*), DAC 338/360 (missing: resistor terminals CMR/CMS/CMRA/CMRB, macro-internal
+nets). VDD/VSS resistance not extracted (ideal supplies in all benches).
+
+Extracted ADC evidence (C-only, `generated/adc_i-evidence.json`, `--corners minimal`, tt 27 °C 3.3 V, 40 MS/s):
+clean = pass (all conversions done, t_done max 30.36 ns of 44, supply 5.70 mA, VREF 83.0 µA);
+safe = **fail** (EN=0 current 1.30 µA in the 1–9 ns bench window against 1 µA; settled 18 nA at 200–290 ns);
+fallback = **open** (disabled input 197.6 fF against 100 fF); observable = open. The record's corner sweep is
+empty (minimal run): not a corner pass.
+
+## Known misses and not-yet-run items (current state)
+
+- Extracted R+C key runs on this GDS (ADC FFT/ENOB at 39.0625 and 40 MS/s, tt and ss 32 °C 3.15 V, ss trimmed
+  3.5 V; DAC static linearity and output range tt/ss) are running (`rc_bench.py`; results land as
+  `generated/<block>-rc-<tag>.json`). Until they land, the last extracted numbers are on the staged copy of the same
+  generator output (C-only, `scratch/converters-ap4/sim/`): ADC FFT 64 pt 40 MS/s tt ENOB 5.4 (corrected 5.5), ss
+  32 °C 3.15 V with C × 1.15 **ENOB 2.2, 20 of 64 conversions late** (MOD-04, CNV-07); DAC full scale ±0.998 V tt,
+  ±1.18 V ss, ±0.81 V ff against the ±1.0 V target, static error ≤ 0.65 LSB at 5 codes tt.
+- ADC `safe` 1.30 µA vs 1 µA (CNV-07); ADC disabled input load 197.6 fF vs 100 fF (CNV-02); ADC over its 350 000 µm²
+  ceiling (452 046 µm² Magic bbox).
+- DAC four-test evidence not regenerated on this GDS (the bench runs ~12 h); the earlier records were deleted as
+  superseded (CNV-09). DAC dynamic linearity not run (CNV-03); mismatch not simulated (CNV-05).
+- `VCM` source is a bare 40 kΩ divider, benches use an ideal source (CNV-06). Clamp in the ADC clock path: CNV9-1.
+- No noise or PSRR run. 5 V cells at 3.3 V without Liberty sign-off (CNV-04).
 
 ## Files and flow
 
 | Path | Role |
 | --- | --- |
-| `circuits.py` | block netlists; `CONV_AP4=1` selects the staged candidate, unset = the published blocks |
+| `circuits.py` | block netlists (default = published; `CONV_AP4=0` = superseded pre-AP4 blocks) |
+| `lvs_readback.py`, `gds_check.py` | read-back LVS with negative controls; pins / Metal5 / markers on the GDS |
+| `rcext.py`, `rc_bench.py` | R+C extraction with C repair; extracted FFT / DAC static runs on it |
+| `mc_selftest.py` | Monte Carlo known-answer test (MOD-22) |
 | `lib/convkit.py` | PCell placement, channel router, Magic/Netgen/ngspice wrappers |
 | `flow.py` | `harden` (LibreLane macros) and `block` (layout, DRC, LVS, extracted sims, evidence); `CONV_STAGE=<dir>` builds outside `generated/` |
 | `benches.py`, `adc_fft.py`, `dac_dynamic.py` | extracted benches; coherent ADC FFT; 80 MS/s DAC dynamic bench |
@@ -84,26 +95,4 @@ Layout method: single-finger PDK PCells with guard rings in rows, each terminal 
 a Metal3 channel, Metal4 jumpers and a west Metal4 trunk bank with the ports at the north edge, MIM capacitors
 on Metal4/5 inside capacitor rows, digital macros placed as GDS subcells.
 
-## Open items
-
-Risks: CNV-01, CNV-02, CNV-03, CNV-04, CNV-05, CNV-06, CNV-07, MOD-04, MOD-05, MOD-06, MOD-13, SUB-01
-(`spec/risk-register.md`).
-
-- A repacked candidate with a single CMOS `CLK` pin, on-block acquisition one-shot (`ACQ1:0`) and `PH` output
-  is staged in `scratch/converters-ap4/stage4/` (ADC 0.450 mm², DAC 0.134 mm²) and is not published; chip-top
-  already binds to its pin list (`INTEGRATION.md`). Its last revision is not re-reviewed, and its ADC `safe`
-  test reads 1.30 µA disabled against the 1 µA limit, which needs a ruling.
-- `adc_i.gds` has 7 antenna violations (ANT.16_i_ANT.5) and no precheck-deck record
-  (`scratch/reviews/signoff-gap.md` 6b).
-- The ADC `VCM` source is a bare 40 kΩ divider; every ADC bench uses an ideal 1.65 V source (CNV-06).
-- DAC `clean` fails on the endpoint-spread gate; no DAC corner sweep, stretch-rate or `hold_zero` result is in
-  the current evidence; random mismatch is not simulated (CNV-03, CNV-05).
-- The only DAC dynamic record (`generated/dac_i-dynamic-sch.json`) is a schematic run older than the current
-  DAC netlist.
-- ADC disabled-input load 232 / 209 fF against the 100 fF fallback limit: `fallback` = open (CNV-02).
-- ADC dynamics rest on one tt FFT with an ideal reference (MOD-04); `adc_q` evidence has the nominal run only
-  and its `observable` test is open.
-- Evidence staleness: `circuits.py`, `lib/convkit.py`, `flow.py`, `benches.py` changed after every evidence
-  record; schematics, macros and GDS/extracted netlists still match their hashes (MOD-05).
-- `dac_logic` and `adc_code_reg` use 5 V-rated cells at 3.3 V without 3.3 V Liberty sign-off (CNV-04).
-- No extraction with metal resistance; no noise, PSRR or Monte Carlo run on any block.
+Risks: CNV-01..07, CNV-09, MOD-04, MOD-05, MOD-06, MOD-13, MOD-22, SUB-01 (`spec/risk-register.md`).

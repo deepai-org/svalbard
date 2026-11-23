@@ -93,10 +93,10 @@ Xisw_lod VDD RAIL_lod VSS island_en[1] NC_isw_lod_ISO s_pg_lod isw_wired_pex
 Xisw_rf_rx VDD RAIL_rf_rx VSS island_en[1] NC_isw_rf_rx_ISO s_pg_rf_rx isw_rf_pex
 Xisw_conv VDD RAIL_conv VSS island_en[4] NC_isw_conv_ISO s_pg_conv isw_conv_pex
 Xisw_lo VDD RAIL_lo VSS island_en[1] NC_isw_lo_ISO s_pg_lo isw_conv_pex
-Xpad_rf_rx RF_RX_N RF_RX_P VSS ESD_RAIL_rf_rx NC_pad_rf_rx_ATB_ESD_RAIL pad_reference
+Xpad_rf_rx RF_RX_N RF_RX_P VSS ESD_RAIL_rf_rx NC_pad_rf_rx_ATB_ESD_RAIL VDD pad_reference
 Xpad_rf_tx RF_TX_N RF_TX_P VSS ESD_RAIL_rf_tx NC_pad_rf_tx_ATB_ESD_RAIL pad_reference
-Xpad_bb_i BB_I_N BB_I_P VSS ESD_RAIL_bb NC_pad_bb_i_ATB_ESD_RAIL pad_reference
-Xpad_bb_q BB_Q_N BB_Q_P VSS ESD_RAIL_bb NC_pad_bb_q_ATB_ESD_RAIL pad_reference
+Xpad_bb_i BB_I_N BB_I_P VSS ESD_RAIL_bb NC_pad_bb_i_ATB_ESD_RAIL VDD pad_reference
+Xpad_bb_q BB_Q_N BB_Q_P VSS ESD_RAIL_bb NC_pad_bb_q_ATB_ESD_RAIL VDD pad_reference
 Xlna RF_RX_P RF_RX_N RFA_I_P RFA_I_N RFA_Q_P RFA_Q_N BIAS_lna c_lna_en c_lna_gain_lo c_lna_byp c_lna_ct[0] c_lna_ct[1] c_lna_ct[2] c_lna_se c_lna_rt island_off[1] ATBN_lna_bias ATBN_rf_vcm RAIL_rf_rx VSS c_lna_ct[3] c_lna_att[0] c_lna_att[1] c_lna_att[2] c_lna_att[3] c_lna_att[4] LNA_SRC_P LNA_SRC_N LNA_TANK_P LNA_TANK_N c_lna_lobias LNA_TAIL LNA_VTK pt_lna
 Xlna_ind_p LNA_VTK LNA_TANK_P pt_lna_ind
 Xlna_ind_n LNA_VTK LNA_TANK_N pt_lna_ind
@@ -120,7 +120,7 @@ Xtxmix_q RAIL_rf_tx VSS BBQ_TX_P BBQ_TX_N DACQ_P DACQ_N LO_QP LO_QN TXQ_P TXQ_N 
 Xtxsum RAIL_rf_tx VSS TXI_P TXI_N TXQ_P TXQ_N TXS_P TXS_N c_txsum_en NC_txsum_atb_cm pt_txsum
 Xrfdriver RAIL_rf_tx VSS TXS_P TXS_N RF_TX_P RF_TX_N BIAS_rfdriver c_rfdriver_en c_rfdriver_mute c_rfdriver_bypass c_rfdriver_g[0] c_rfdriver_g[1] c_rfdriver_g[2] c_rfdriver_g[3] c_rfdriver_se ATBN_rfdriver_bias NC_rfdriver_atb_pre NC_rfdriver_atb_cm pt_rfdriver
 Xlo_ext REF_IN REF_IN_N AUX_CLK_P AUX_CLK_N LOI_IP LOI_IN LOI_QP LOI_QN c_lo_ext c_lo_int c_lo_cmlsel LO_IP LO_IN LO_QP LO_QN ATBN_quadrature_bias RAIL_lod VSS pt_lo_ext
-Xlo_vreg RAIL_lo VDD_LO c_lo_vreg_en VSS pt_lo_vreg   * DEMAND
+Xlo_vreg RAIL_lo VDD_LO VSS ATBN_vbg c_lo_vreg_en VSS VSS VSS VSS NC_lo_vreg_ATB_OUT NC_lo_vreg_ATB_G pt_lo_vreg
 Xqvco c_qvco_en c_lo_cmlsel LO_VTUNE BIAS_qvco c_qvco_band[0] c_qvco_band[1] c_qvco_band[2] c_qvco_band[3] NC_qvco_PRE LOI_IP LOI_IN LOI_QP LOI_QN VDD_LO RAIL_lod VSS c_qvco_atb_en NC_qvco_ATB_VTUNE NC_qvco_ATB_ITAIL pt_lc_qvco5
 Xlo_mmd LOI_IP LOI_IN c_lo_mmd_en c_lo_mmd_n[0] c_lo_mmd_n[1] c_lo_mmd_n[2] c_lo_mmd_n[3] c_lo_mmd_n[4] c_lo_mmd_n[5] LO_FB RAIL_lod VSS pt_lo_mmd
 Xlo_mmd_qdum LOI_QP LOI_QN c_lo_mmd_en NC_lo_mmd_qdum_QDP NC_lo_mmd_qdum_QDN RAIL_lod VSS pt_lo_mmd_qdum

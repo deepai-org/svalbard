@@ -1,0 +1,38 @@
+{
+ "block": "adc_q",
+ "top": "pt_adc_q",
+ "gds": "generated/adc_q.gds",
+ "gds_sha256": "sha256:ee97311bd5ff4a9203b2fab21ff5b446197bc19a5adc75e6a422bd8d6d4c9eda",
+ "reference": "adc_q.lvs_ref.spice",
+ "reference_sha256": "sha256:c61220d76ac6f9e8eefce08cb511f345f32f78c5ccebf9b2d18aafd347e9948d",
+ "extractor": "magic (analog image) gds read -> extract all -> ext2spice lvs",
+ "lvs": "netgen gf180mcuD_setup.tcl",
+ "images": {
+  "analog": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+  "digital": "svalbard/librelane-gf180-canary:2026.08"
+ },
+ "readback_devices": 28,
+ "real": {
+  "final": "Circuits match uniquely.",
+  "property_errors": false,
+  "does_not_match": false,
+  "passed": true
+ },
+ "negative_controls": {
+  "width_x1.5": {
+   "final": "Circuits match uniquely.",
+   "property_errors": true,
+   "does_not_match": false,
+   "passed": false,
+   "line": "X0 a_400_n200# a_n400_n360# a_n488_n200# w_n650_n516# pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=3.000u l=4u"
+  },
+  "gate_drain_swap": {
+   "final": "Netlists do not match.",
+   "property_errors": false,
+   "does_not_match": true,
+   "passed": false,
+   "line": "X0 a_n36_n1156# a_28_n1000# a_n116_n1000# a_n254_n1292# nfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.28u"
+  }
+ },
+ "pass": true
+}

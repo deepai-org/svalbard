@@ -102,9 +102,9 @@ inst isw_wired_tx_b isw_wired core
 inst isw_wired_cap isw_wired core
   VDD~VDD VISL~RAIL_wired_cap VSS~VSS EN=island_en[0] ISO>- PG>s_pg_wired_cap
 inst pad_wtx_ext pad_rf_pair debug
-  PAD_P~WTX_EXT_P PAD_N~WTX_EXT_N VSS~VSS ESD_RAIL~ESD_RAIL_wtx_ext ATB_ESD_RAIL~-
+  PAD_P~WTX_EXT_P PAD_N~WTX_EXT_N VSS~VSS ESD_RAIL~ESD_RAIL_wtx_ext ATB_ESD_RAIL~- DVDD~VDD
 inst pad_wmon pad_single_leg debug
-  PAD_P~WMON VSS~VSS ESD_RAIL~ESD_RAIL_wtx_ext ATB_ESD_RAIL~-
+  PAD_P~WMON VSS~VSS ESD_RAIL~ESD_RAIL_wtx_ext ATB_ESD_RAIL~- DVDD~VDD
 inst pad_tlp pad_tlp core
   PAD~TLP_TEST VSS~VSS VDD~VDD      # PD48b TLP/ESD test site (pad_tlp_flat, CP4-R2)
 inst pad_hs_rx pad_hspad wired_rx
@@ -117,10 +117,11 @@ inst pad_usb pad_wirepad wired_tx
   PULLUP_P=c_usb_pullup_p PULLUP_N=c_usb_pullup_n PULLDOWN_P=c_usb_pulldown_p PULLDOWN_N=c_usb_pulldown_n
   TERM_TRIM{0:2}=c_usb_term_trim[\1] LS_SLOW=c_usb_ls_slow ATB_ESD_RAIL~-      # USB data pins: D-USB (MW-18)
 inst pad_wire_tx pad_txpad wired_tx
-  PAD_P~WIRE_TX_P PAD_N~WIRE_TX_N VDD~RAIL_wired_tx VSS~VSS CASCODE~RAIL_wired_tx
+  PAD_P~WIRE_TX_P PAD_N~WIRE_TX_N VDD~RAIL_wired_tx VSS~VSS CASCODE~RAIL_wired_tx DVDD_P~VDD DVDD_N~VDD      # DVDD_*: ring landings (PC-73)
+  TERM_TRIM0~RAIL_wired_tx TERM_TRIM1=VSS TERM_TRIM2~RAIL_wired_tx TERM_TRIM3=VSS      # baseline code 5 (as HS RX reset); field requested (CB8-15)
   MAIN_P=TX_MAIN_P MAIN_N=TX_MAIN_N MAIN_BIAS~TX_MAIN_BIAS POST_P=TX_POST_P POST_N=TX_POST_N POST_BIAS~TX_POST_BIAS
   TMDS_P=VSS TMDS_N=VSS TMDS_BIAS~VSS      # TMDS branch removed from pt_wiredtx (WT22): tied off (MW-17), D-TMDS
-  DETECT_ENABLE=TX_EN_DETECT DETECT_PBIAS~TX_DETECT_PBIAS TERM_ENABLE=TX_EN_TERM TERM_VCM~TX_TERM_VCM ATB_ESD_RAIL~-
+  DETECT_ENABLE=TX_EN_DETECT DETECT_PBIAS~TX_DETECT_PBIAS TERM_ENABLE=TX_EN_TERM TERM_VCM~TX_TERM_VCM
 inst bb_tap_wmon pt_bb_tap debug
   in_p~WMON_IN in_n~VSS pad_p~WMON pad_n~- inj_p~- inj_n~- ibias~BIAS_bb_tap_wmon obs_en=c_wmon_obs_en inj_en=VSS
   island_off=island_off[5] atb_nbias~ATBN_debug_buffer_bias VDD~RAIL_debug VSS~VSS      # unused N leg / inject path: D-WMON;

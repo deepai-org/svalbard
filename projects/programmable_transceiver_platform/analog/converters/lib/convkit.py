@@ -999,11 +999,16 @@ def models(corner='typical'):
     res = {'typical': 'res_typical', 'ff': 'res_ff', 'ss': 'res_ss'}[corner]
     mim = {'typical': 'mimcap_typical', 'ff': 'mimcap_ff', 'ss': 'mimcap_ss'}[corner]
     dio = {'typical': 'diode_typical', 'ff': 'diode_ff', 'ss': 'diode_ss'}[corner]
+    # Monte Carlo (MOD-22): CONV_MC_SEED=<n> turns on the PDK fets_mm mismatch (sw_stat_mismatch) with that
+    # seed.  It acts only on X instances of nfet_03v3/pfet_03v3 (schematics and Magic extractions both emit X
+    # lines); an M-line rewrite would bypass it (mc_selftest.py proves both).
+    seed = os.environ.get('CONV_MC_SEED')
     return (f'.include {APDK}/libs.tech/ngspice/design.ngspice\n'
             f'.lib {APDK}/libs.tech/ngspice/sm141064.ngspice {corner}\n'
             f'.lib {APDK}/libs.tech/ngspice/sm141064.ngspice {mim}\n'
             f'.lib {APDK}/libs.tech/ngspice/sm141064.ngspice {res}\n'
-            f'.lib {APDK}/libs.tech/ngspice/sm141064.ngspice {dio}\n')
+            f'.lib {APDK}/libs.tech/ngspice/sm141064.ngspice {dio}\n'
+            + (f'.param sw_stat_mismatch=1\n.option seed={int(seed)}\n' if seed else ''))
 
 
 def read_wrdata(path):

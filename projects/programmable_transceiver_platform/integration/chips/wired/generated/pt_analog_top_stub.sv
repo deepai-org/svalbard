@@ -591,6 +591,8 @@ module pt_analog_top_stub(
  wire p_pad_usb__TERM_TRIM1 = c_usb_term_trim[1];
  wire p_pad_usb__TERM_TRIM2 = c_usb_term_trim[2];
  wire p_pad_usb__LS_SLOW = c_usb_ls_slow;
+ wire p_pad_wire_tx__TERM_TRIM1 = VSS;
+ wire p_pad_wire_tx__TERM_TRIM3 = VSS;
  wire p_pad_wire_tx__MAIN_P = TX_MAIN_P;
  wire p_pad_wire_tx__MAIN_N = TX_MAIN_N;
  wire p_pad_wire_tx__POST_P = TX_POST_P;

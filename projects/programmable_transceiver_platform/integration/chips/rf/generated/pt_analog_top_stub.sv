@@ -817,6 +817,10 @@ module pt_analog_top_stub(
  wire p_lo_ext__INT = c_lo_int;
  wire p_lo_ext__CMLSEL = c_lo_cmlsel;
  wire p_lo_vreg__EN = c_lo_vreg_en;
+ wire p_lo_vreg__BYP = VSS;
+ wire p_lo_vreg__TRIM0 = VSS;
+ wire p_lo_vreg__TRIM1 = VSS;
+ wire p_lo_vreg__TRIM2 = VSS;
  wire p_qvco__EN = c_qvco_en;
  wire p_qvco__CMLSEL = c_lo_cmlsel;
  wire p_qvco__BAND0 = c_qvco_band[0];

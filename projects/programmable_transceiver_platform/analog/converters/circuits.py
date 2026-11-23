@@ -16,12 +16,11 @@ N, P = 'nfet_03v3', 'pfet_03v3'
 HERE = Path(__file__).resolve().parent
 
 # Area pass 4 (2026-11-13, interface-changes AP4-4): denser floorplans of the same circuits.
-# Default (CONV_AP4 unset or 0) = the PUBLISHED pre-AP4 blocks in generated/ (differential clock pins).
-# CONV_AP4=1 = the staged candidate: denser floorplan + single-ended CMOS clock (MW-3). The default
-# flips when the candidate's extracted evidence is complete, reviewed and published
-# (scratch/converters-ap4/NOTES.md). Knobs are read at build time.
+# Default (CONV_AP4 unset or 1) = the PUBLISHED blocks in generated/ (2026-11-22): denser floorplan + single-ended
+# CMOS clock, ACQ1:0, PH (MW-3, D-CONV). CONV_AP4=0 rebuilds the superseded pre-AP4 blocks (differential
+# CLKP/CLKN) for comparison only. Knobs are read at build time.
 import os  # noqa: E402
-AP4 = os.environ.get('CONV_AP4', '0') not in ('0', '')
+AP4 = os.environ.get('CONV_AP4', '1') not in ('0', '')
 AP4_ADC = dict(nl=int(os.environ.get('CONV_ADC_NL', '4')), finger_above=15.0,
                track_sp=0.3, trunk_sp=0.3, row_gap=0.3, ch_margin=0.6,
                logic_gap=float(os.environ.get('CONV_ADC_GAP', '0.6')))

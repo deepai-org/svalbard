@@ -221,7 +221,10 @@ def layout_block(block):
     L.write()
     log(block, 'drc', L.report['drc_count'])
     lvs_sch = work / f'{c.name}.lvs_sch.spice'
-    lvs_sch.write_text(stdcell_spice().read_text() + '\n' + L.lvs_reference(sch))   # + antenna diodes
+    lvs_ref = L.lvs_reference(sch)                                                   # + antenna diodes
+    lvs_sch.write_text(stdcell_spice().read_text() + '\n' + lvs_ref)
+    GEN.mkdir(exist_ok=True)
+    (GEN / f'{block}.lvs_ref.spice').write_text(lvs_ref)   # read-back LVS reference (lvs_readback.py; + PDK stdcells)
     res = ck.lvs(work, f'{c.name}.lvs.spice', c.name, lvs_sch.name, c.name)
     log(block, 'lvs', res['final'])
     GEN.mkdir(exist_ok=True)

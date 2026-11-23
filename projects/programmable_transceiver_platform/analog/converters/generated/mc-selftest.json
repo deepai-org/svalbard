@@ -1,0 +1,41 @@
+{
+ "mc": {
+  "n_requested": 60,
+  "n": 60,
+  "mean_mV": -0.045849851666666705,
+  "sigma_mV": 2.3671164343656907
+ },
+ "neg_nomismatch": {
+  "n_requested": 10,
+  "n": 10,
+  "mean_mV": 0.0,
+  "sigma_mV": 0.0
+ },
+ "neg_mline": {
+  "n_requested": 10,
+  "n": 10,
+  "mean_mV": 0.0,
+  "sigma_mV": 0.0
+ },
+ "expected_sigma_mV": 2.45,
+ "limit": "+-20 % of expected; negative controls < 0.05 mV; no M-line PDK MOS in published netlists",
+ "netlist_scan": {
+  "files": [
+   "adc_i.spice",
+   "adc_q.spice",
+   "dac_i.spice",
+   "dac_q.spice",
+   "refbuf.spice",
+   "adc_i.ext.spice",
+   "adc_q.ext.spice",
+   "dac_i.ext.spice",
+   "dac_q.ext.spice",
+   "refbuf.ext.spice"
+  ],
+  "x_mos_lines": 26170,
+  "m_mos_lines": 0,
+  "examples": []
+ },
+ "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+ "pass": true
+}

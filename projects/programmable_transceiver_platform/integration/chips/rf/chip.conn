@@ -106,11 +106,11 @@ inst isw_{conv,lo} isw_conv core
 
 # ================= pads (custom families) =================
 inst pad_rf_rx pad_rf_pair rf_rx
-  PAD_P~RF_RX_P PAD_N~RF_RX_N VSS~VSS ESD_RAIL~ESD_RAIL_rf_rx ATB_ESD_RAIL~-
+  PAD_P~RF_RX_P PAD_N~RF_RX_N VSS~VSS ESD_RAIL~ESD_RAIL_rf_rx ATB_ESD_RAIL~- DVDD~VDD
 inst pad_rf_tx pad_rftxpad rf_tx
   PAD_P~RF_TX_P PAD_N~RF_TX_N VSS~VSS ESD_RAIL~ESD_RAIL_rf_tx ATB_ESD_RAIL~-
 inst pad_bb_{i,q} pad_rf_pair debug
-  PAD_P~BB_\U1_P PAD_N~BB_\U1_N VSS~VSS ESD_RAIL~ESD_RAIL_bb ATB_ESD_RAIL~-
+  PAD_P~BB_\U1_P PAD_N~BB_\U1_N VSS~VSS ESD_RAIL~ESD_RAIL_bb ATB_ESD_RAIL~- DVDD~VDD
 
 # ================= RF receive (rf island) =================
 inst lna pt_lna rf_rx
@@ -145,9 +145,8 @@ inst bb_tap_{i,q} pt_bb_tap debug
   atb_nbias~{ATBN_debug_buffer_bias,-} VDD~RAIL_debug VSS~VSS
 
 # ================= converters (conv island) =================
-# Bound to the converters owner's STAGED pin contract (analog/converters/INTEGRATION.md, AP4 candidate: one
-# single-ended CLK per block, ACQ[1:0] on the ADC, no top-level clock cell); generated/ still holds the old
-# CLKP/CLKN cells, so these masters are `staged` in masters.txt and counted until the candidate is published. D-CONV
+# Published converter cells (analog/converters/INTEGRATION.md, 2026-11-22): one single-ended CMOS CLK per block,
+# ACQ[1:0] and PH on the ADC, no top-level clock cell (D-CONV, CNV9-1).
 inst adc_{i,q} pt_adc_\1 conv
   VDD~RAIL_conv VSS~VSS INP~ADC\U1_P INN~ADC\U1_N VCM~VCM_MASTER VREF~VREF_CONV IBIAS~BIAS_adc_\1
   CLK=CONV_CLK_C ACQ{0:1}=c_adc_acq[\2] EN=c_adc_\1_en ILEN=c_adc_ilen TEST{0:1}=c_adc_\1_test[\2]

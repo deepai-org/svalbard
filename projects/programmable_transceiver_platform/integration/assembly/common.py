@@ -80,7 +80,7 @@ STAGED = {'wired': {'ptrim': dict(master='pt_ptrim', gds='scratch/timing/handoff
 # wired_tx switch masters on one VISL bar beside pt_wiredtx8): booking -> members
 # die-fit ledger bookings that no longer stand for anything (parts of pt_wiredtx8, power delivery 4.1c)
 STALE_BOOK = {'wired': ['wtx_ser8d', 'wtx_mux8']}
-GROUP_BOOK = {}
+GROUP_BOOK = {'rf': {'txmix_i': ['lo_txbuf', 'txmix_i']}}      # lo_txbuf abuts txmix_i (coordinator: hard rule)
 # blocks the assembly places itself at fixed lower-left corners, R0 (power delivery 4.1c option B, commit c4276fd1):
 # the wired_tx switch pair on the east edge beside the supply bonds, pt_wiredtx8 west of it, fed by a Metal5 bar
 FIXED_PLACE = {'wired': {'isw_wired_tx_a': (2938.0, 2209.0), 'isw_wired_tx_b': (3206.0, 2209.0), 'wiredtx': (1913.95, 2209.0)}}
@@ -108,13 +108,16 @@ FLOW_ADJ = {
         ('rxmix_i', 'lo_ext', 120, 14), ('rxmix_q', 'lo_ext', 120, 14),
         ('dac_i', 'txmix_i', 200, 3), ('dac_q', 'txmix_q', 200, 3), ('txsum', 'txmix_i', 100, 4), ('rfdriver', 'txsum', 150, 4), ('rfdriver', 'pad_rf_tx', 150, 10), ('txmix_i', 'rfdriver', 150, 6), ('txmix_q', 'rfdriver', 150, 6),
         ('bbfilter_i', 'rxmix_i', 100, 5), ('bbfilter_q', 'rxmix_q', 100, 5), ('adc_i', 'bbfilter_i', 100, 5), ('adc_q', 'bbfilter_q', 100, 5),
-        ('rx_ref_in', 'pad_ref', 100, 5)],
- 'wired': [('ptrim', 'pll_cdr', 60, 8), ('slicer', 'ptrim', 60, 8), ('ctle', 'slicer', 100, 6), ('cdr', 'pll_cdr', 100, 4),
+        ('rx_ref_in', 'pad_ref', 100, 5), ('rxmix_i', 'lna', 100, 10), ('rxmix_q', 'lna', 150, 10)],
+ 'wired': [('ctle', 'pad_hs_rx', 60, 30), ('slicer', 'ctle', 60, 12), ('ptrim', 'slicer', 60, 12), ('pll_cdr', 'ptrim', 80, 10),
+           ('pll_tx', 'fix_wiredtx', 150, 8), ('ptrim', 'pll_cdr', 60, 8), ('slicer', 'ptrim', 60, 8), ('ctle', 'slicer', 100, 6), ('cdr', 'pll_cdr', 100, 4),
            ('wrx_cap', 'digital', 300, 2), ('wrx_cap', 'slicer', 200, 3)]}
-FLOW_KEEPAWAY = {'rf': [('rfdriver', 'pll_tx', 300)], 'wired': []}
+FLOW_KEEPAWAY = {'rf': [('rfdriver', 'pll_tx', 300), ('rfdriver', 'pll_cdr', 300), ('txmix_i', 'pll_cdr', 300), ('txmix_q', 'pll_cdr', 300)], 'wired': []}
 # reserved slots for blocks not yet drawn, placed touching a partner (kept free of blocks; Metal1-3 blockage):
 # name -> (w, h, partner). pt_lo_txbuf (LO owner, 2026-11-23): CML-to-CMOS I/Q buffer at the TX mixers; size provisional
-BOOK_NEAR = {'rf': {'lo_txbuf_rsv': (165.0, 120.0, 'txmix_i')}}     # pt_lo_txbuf 161 x 115 um + margin
+# conn blocks the second pass must put touching a named partner (hard: decap gives way, else reported)
+HARD_NEXT_TO = {}
+BOOK_NEAR = {}     # pt_lo_txbuf is published (LO-ASM-4) and placed as a conn block next to the TX mixers
 TWIN = {'pt_adc_q': 'pt_adc_i', 'pt_dac_q': 'pt_dac_i'}
 # provider-ring instances of the conn (not core blocks): their pins are on the template's IO cells
 PROVIDER = ('pt_host_physical', 'pt_debug_physical', 'atb_provider_pad', 'pad_strap', 'prov_supply', 'prov_supply_sig')

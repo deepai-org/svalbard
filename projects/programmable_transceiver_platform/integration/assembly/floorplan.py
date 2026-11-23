@@ -46,7 +46,7 @@ mw_ = MJ.get('pt_digital_macro', {}).get('w')     # the baseline macro GDS sets 
 macro = {'rf': '1716:1108', 'wired': '1676:971'}[chip]      # wired: DG9-11 outline 1676 x 1592.96, 32 um to pad_ref (west, x 939) and pad_wire_tx (east, x 2679)
 env = dict(os.environ, ADJ=json.dumps([[a, b, d, w] for a, b, d, w in C.FLOW_ADJ.get(chip, [])]+[[b, a, d, w] for a, b, d, w in C.FLOW_ADJ.get(chip, [])]),
            KEEPAWAY=json.dumps(C.FLOW_KEEPAWAY.get(chip, [])), HALO=os.environ.get('HALO', {'rf': '4', 'wired': '10'}[chip]), CHIP=chip, SCEN='S', TAG='s', TRIES=os.environ.get('TRIES', '6'), PADS_JSON=RUN+'/fp_pads.json',
-           SIZES_JSON=RUN+'/fp_sizes.json', RUNDIR=RUN+'/fit', CHANNEL=os.environ.get('CHANNEL', '40'), ISLAND_W=os.environ.get('ISLAND_W', '0.3'), NOROT=','.join(list(C.STAGED.get(chip, {}))+list(C.GROUP_BOOK.get(chip, {}))+[n for n, i in inst0.items() if i['master'] in C.GRID_SNAP]), POCKET='1' if chip == 'wired' else '0', DROP=','.join(C.STALE_BOOK.get(chip, [])+list(C.FIXED_PLACE.get(chip, {}))+['isw_wired_tx']), EXTRA_RSV=json.dumps(fixed_rects()), ITEM_SIZES=json.dumps({b: [sum(msize(m)[0] for m in ms)+4*(len(ms)-1), max(msize(m)[1] for m in ms)] for b, ms in C.GROUP_BOOK.get(chip, {}).items()}),
+           SIZES_JSON=RUN+'/fp_sizes.json', RUNDIR=RUN+'/fit', CHANNEL=os.environ.get('CHANNEL', '40'), ISLAND_W=os.environ.get('ISLAND_W', '0.3'), NOROT=','.join(list(C.STAGED.get(chip, {}))+list(C.GROUP_BOOK.get(chip, {}))+[n for n, i in inst0.items() if i['master'] in C.GRID_SNAP]), POCKET='1' if chip == 'wired' else '0', DROP=','.join(C.STALE_BOOK.get(chip, [])+list(C.FIXED_PLACE.get(chip, {}))+['isw_wired_tx']+[m for b, ms in C.GROUP_BOOK.get(chip, {}).items() for m in ms if m != b]), EXTRA_RSV=json.dumps(fixed_rects()), ITEM_SIZES=json.dumps({b: [sum(msize(m)[0] for m in ms)+4*(len(ms)-1), max(msize(m)[1] for m in ms)] for b, ms in C.GROUP_BOOK.get(chip, {}).items()}),
            MACRO_MM2=str(round(MJ['pt_digital_macro']['w']*MJ['pt_digital_macro']['h']/1e6, 6)) if mw_ else ('2.669801' if chip == 'wired' else ''), OMP_NUM_THREADS='1', MACRO=os.environ.get('MACRO', macro))
 fit = C.ROOT+'/scratch/reviews/die-fit'
 r = subprocess.run(['true'] if os.environ.get('REUSE_FIT') else ['nice', '-n', '10', 'python3', 'fit.py'], cwd=fit, env=env, capture_output=True, text=True)
@@ -105,9 +105,12 @@ def partner(n):
 second = {}; dropped = []
 def ov(a, b): return min(a[2], b[2])-max(a[0], b[0]) > 1e-6 and min(a[3], b[3])-max(a[1], b[1]) > 1e-6
 for n in sorted(missing, key=lambda n: -(sizes.get(inst[n]['master'], [50, 50])[0]*sizes.get(inst[n]['master'], [50, 50])[1])):
-    m = inst[n]['master']; w, h = sizes.get(m, [100.0, 100.0]); t = partner(n)
+    m = inst[n]['master']; w, h = sizes.get(m, [100.0, 100.0]); t = C.HARD_NEXT_TO.get(chip, {}).get(n) or partner(n)
     if t in pads['pads']: pk.rects[t] = tuple(pads['pads'][t]['footprint'][0])
-    r = pk.place(n, w, h, halo=10.0, targets=[(t, 1.0)] if t else [], anchor=None, lam=0.6, step=2)
+    hard = n in C.HARD_NEXT_TO.get(chip, {})
+    r = pk.place(n, w, h, halo=4.0 if hard else 10.0, targets=[(t, 1.0)] if t else [], anchor=None, lam=0.6, step=2, maxgap=[(t, 12.0)] if hard else ())
+    def gap_(a, b): return max(b[0]-a[2], a[0]-b[2], 0)+max(b[1]-a[3], a[1]-b[3], 0)
+    if r is not None and hard and gap_(r, blocks[t]['rect']) > 12.0: r = None      # hard: retry with decap moved out
     if r is None:          # no hole: decap tiles give way (conn blocks before decap; the shortfall is reported)
         pk2 = Packer(C.CORE, G=2.0)
         for k, v in pj.items(): pk2.fixed(k, v)
@@ -115,7 +118,8 @@ for n in sorted(missing, key=lambda n: -(sizes.get(inst[n]['master'], [50, 50])[
             if not k.startswith(('decap_tile', 'decap_bank')): pk2.fixed(k, [b['rect']], halo=10.0 if not k.startswith('decap') else 0.0)
         for k, rr in reserves.items(): pk2.fixed(k, [rr])
         if t in pads['pads']: pk2.rects[t] = tuple(pads['pads'][t]['footprint'][0])
-        r = pk2.place(n, w, h, halo=10.0, targets=[(t, 1.0)] if t else [], anchor=None, lam=0.6, step=2)
+        r = pk2.place(n, w, h, halo=4.0 if hard else 10.0, targets=[(t, 1.0)] if t else [], anchor=None, lam=0.6, step=2, maxgap=[(t, 12.0)] if hard else ())
+        if r is not None and hard and gap_(r, blocks[t]['rect']) > 12.0: print('HARD next-to not met:', n, t, round(gap_(r, blocks[t]['rect'])))
         if r:
             for k in [k for k in blocks if k.startswith(('decap_tile', 'decap_bank')) and ov([r[0]-10, r[1]-10, r[2]+10, r[3]+10], blocks[k]['rect'])]:
                 dropped.append(k); del blocks[k]

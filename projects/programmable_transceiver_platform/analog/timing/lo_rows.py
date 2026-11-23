@@ -3,6 +3,8 @@
 `plan(block, name)` returns the keyword arguments for `timing_flow.build_layout(block, **kw)`.
 Plans:
   'r4'  : the row plans the published cells had before area pass 4 (kept for old/new comparisons)
+  'mw20': pt_lo_ext only, MW-20 / LO28 revision (2026-11-14): ap4 rows with each LO net on its own side of the CML core, and
+          the layout_engine `em` options (multi-cut pin escapes, macro taps, wide current tracks).  STAGED ONLY.
   'ap4' : area pass 4 (AP4-5, 2026-11-13) repack, STAGED ONLY until listed in PUBLISHED below.  Same netlists.  Two levers only:
           (1) groups of similar device height share a row, so the outline is no longer set by the widest row
               while the others are half empty (lo_mmd: rows of 110-200 um next to 379 um CMOS rows);
@@ -147,6 +149,95 @@ def ext_rows_ap4(devs):
     return _check(R, names)
 
 
+TAIL_GAP = 'GAP:8'      # tail row: gap at the row centre for the two TS trunks
+
+
+def ext_rows_mw20(devs):
+    """pt_lo_ext revision for MW-20 / LO28 (2026-11-14; needs the lo_ext.spice of that revision).  Same row stack as ap4.
+    LO rows: each LO net's devices are contiguous on its own side of the CML core (YP: pass gate, bias, clamp, load
+    pieces, sense, EXT-pair half E2 | core | E1, sense, load pieces, ... :YN), so an LO track spans half the row
+    (r4h / ap4 had E1 and E2 on the far side of the core).
+    Current paths are local and balanced (LO28): every tail device sits beside its steering switch (INT tails + XTW in a
+    row of their own, EXT tails + XTW2 in two halves at the two ends of the CML bias row), and the pad switch XSW is
+    split around the series capacitor XCC, so no track carries more than about half of a net's current."""
+    names, g, bias, cml_bias, lo_row, pad = _ext_groups(devs)
+
+    def lo_row2(a, b, p):
+        A = g(a + '_TN', a + '_TP') + [a + '_RB', a + '_CL']
+        B = g(b + '_TN', b + '_TP') + [b + '_RB', b + '_CL']
+        dm = g(p + '_DM')
+        return (A + g(p + '_RP') + [p + '_S1'] + g(p + '_E2') + dm[:1] + [p + '_CORE'] + dm[1:] + g(p + '_E1') + [p + '_S2']
+                + g(p + '_RN') + B[::-1])
+
+    def pad2(a):                # pad leg, the pad switch split around the series capacitor
+        sw = g(a + '_SW')
+        h = len(sw) // 2 + 1
+        return sw[:h] + g(a + '_CC') + sw[h:] + g(a + '_RG') + [a + '_CG', a + '_RP', a + '_CA', a + '_RL', a + '_KP', a + '_KN']
+
+    def tails(p, k):            # half k of driver p's INT tail: 3 tail devices, 4 steering switches, 3 tail devices
+        t, w = g(p + '_T_'), g(p + '_TW_')
+        return t[6 * k:6 * k + 3] + w[4 * k:4 * k + 4] + t[6 * k + 3:6 * k + 6]
+
+    def bias2(p):               # EXT tails + switches in two halves at the row ends, the small bias devices between them
+        t2, w2 = g(p + '_T2_'), g(p + '_TW2_')
+        rest = [n for n in cml_bias(p) if n not in t2 + w2 + g(p + '_TW_')]
+        return t2[:3] + w2[:4] + t2[3:6] + rest + t2[6:9] + w2[4:] + t2[9:]
+
+    # tail row: DI half, DQ half | DQ half, DI half: both drivers' halves straddle the row centre, where their TS trunks
+    # (placed at the core centres of the LO rows, `trunk_row`) come down
+    R = [bias, bias2('DI'), bias2('DQ'), tails('DI', 0) + tails('DQ', 0) + [TAIL_GAP] + tails('DQ', 1) + tails('DI', 1),
+         pad2('IP'), pad2('IN'), pad2('QP'), pad2('QN'), lo_row2('IP', 'IN', 'DI'), lo_row2('QP', 'QN', 'DQ')]
+    return _check(R, names)
+
+
+def _ext_mw20(src=None):
+    """Row plan + electromigration options (layout_engine `em`, LO28) of the MW-20 pt_lo_ext revision.
+    Pin escapes sized from the pin-current waveforms at ff/22/3.35 and ss/32/3.50, lo_mode 2 and lo_mode 3 at 4.5 Vpp
+    (scratch/lo-ap4/loext3/em; DRM 14.2 at 85 C: 0.58 mA per cut average, 0.87 mA peak for reversing currents):
+    tail and EXT-pair devices I/12 (2 columns), load pieces I/8 (3), steering switches I/8 (3 columns, 12 cuts along the
+    S/D strip), pad switch 1 mA peak (2), series capacitor 3 mA peak (5 columns, 24 cuts).
+    The CML core macro ct_locml is tapped on its own Metal2 tracks (one tap per drain strip; one extra landing on each
+    gate track) and Metal1 rails, so its 0.4 um tracks and 0.6 um rails carry one strip's current.  Riser columns (macro
+    x): drain columns 1.69 + 1.3 k carry the TS-rail taps (y 1.3 up to the TS track) and, above them, the drain-track taps
+    (DN / DP to their LO track, VHN / VHP up to theirs); source columns 2.99 + 2.6 k carry the header-source taps
+    (VS = VDD in this revision) over the full height, except two columns given to the gate-track taps.  The tapped nets
+    take the first signal tracks of the row in the order TS, YN, YP, VHN, VHP so that risers sharing a column do not
+    overlap in y: track centres relative to the row bottom must be TS <= 8.67, YN <= 12.42, YP <= 13.17; with power
+    tracks 1.7 um in the LO rows, TS 3.0 and YN / YP 2.4 + 0.4 extra space they are 6.44 / 9.86 / 12.98 (LVS is the check:
+    wider power tracks in these rows short TS to YN)."""
+    import netlist
+    from pathlib import Path
+    _, devs = netlist.load(Path(src) if src else Path(__file__).resolve().parent / 'lo_ext.spice', 'pt_lo_ext')   # src: staged source
+    rows = ext_rows_mw20(devs)
+    by = {d.name: d for d in devs}
+    row_of = {n: i for i, r in enumerate(rows) for n in r if not n.startswith('GAP:')}
+    cuts, taps, width, first, trow, tat = {}, {}, {}, [], {}, {}
+    for d in devs:
+        for key, n in (('_T_', 2), ('_T2_', 2), ('_TW_', (3, 12)), ('_TW2_', (3, 12)), ('_E1_', 2), ('_E2_', 2), ('_RP_', 3), ('_RN_', 3)):
+            if d.name.startswith(('DI' + key, 'DQ' + key)):
+                for t in ('p', 'n') if d.model.startswith('ppolyf') else ('d', 's'):
+                    cuts[(d.name, t)] = n
+        for key, n in (('_SW_', 2), ('_CC_', (5, 24))):
+            if d.name.startswith(tuple(a + key for a in ('IP', 'IN', 'QP', 'QN'))):
+                cuts[(d.name, 'd')] = cuts[(d.name, 's')] = n
+    vs_cols = [k for k in range(20) if k not in (9, 10)]
+    for p, (yp, yn) in dict(DI=('LO_IP', 'LO_IN'), DQ=('LO_QP', 'LO_QN')).items():
+        taps[p + '_CORE'] = ([('DN', 1.69 + 5.2 * k, 9.35, 2) for k in range(10)] + [('DP', 4.29 + 5.2 * k, 11.6, 2) for k in range(10)]
+                             + [('VHN', 1.69 + 5.2 * k, 13.1, 2) for k in range(10)] + [('VHP', 4.29 + 5.2 * k, 13.85, 2) for k in range(10)]
+                             + [('TS', 1.69 + 2.6 * k, 1.3, 1) for k in range(20)] + [('VS', 2.99 + 2.6 * k, 20.3, 1) for k in vs_cols]
+                             + [('GA', 2.99 + 2.6 * 9, 10.1, 2), ('GB', 2.99 + 2.6 * 10, 10.85, 2)])
+        first += [p + '.TS', yn, yp, p + '.VHN', p + '.VHP']
+        width.update({p + '.TS': 3.0, p + '.TS2': 3.0, p + '.TW': 1.6, p + '.TW2': 1.6, yp: 2.4, yn: 2.4, p + '.VHN': 2.4, p + '.VHP': 2.4})
+        trow.update({p + '.TS': row_of[p + '_CORE'], p + '.TS2': row_of[p + '_CORE']})
+    for a in ('IP', 'IN', 'QP', 'QN'):
+        width.update({'EXT_' + a: 3.0, a + '.PS': 3.0, 'LOI_' + a: 1.24})
+        tat['EXT_' + a] = [a + '_CC_0', a + '_CC_1']      # between the two halves of the pad switch
+    no_mim = {i for i, r in enumerate(rows) if not any(by[n].model.startswith('cap_mim') for n in r if n in by)}
+    return dict(rows=rows, over_cell=no_mim, net_width=width, net_space={n: 0.4 for n in ('LO_IP', 'LO_IN', 'LO_QP', 'LO_QN')},
+                em=dict(pin_cuts=cuts, pin_taps=taps, track_first=first, trunk_row=trow, trunk_at=tat, strap_cuts=True, strap_pitch=20.0,
+                        dense_cross=True, power_width={1: 2.0, 2: 2.0, 3: 2.0, 8: 1.7, 9: 1.7}))
+
+
 def _no_mim_rows(block, rows_fn):
     """Row indices without MIM capacitors (Metal4/5 plates): the rows that may carry their tracks over the devices."""
     import netlist
@@ -166,6 +257,7 @@ def _clk_obs16_ap4():
 PLANS = {
     ('lo_ext', 'r4'): lambda: dict(rows=ext_rows_r4),
     ('lo_ext', 'ap4'): lambda: dict(rows=ext_rows_ap4, over_cell=_no_mim_rows('lo_ext', ext_rows_ap4)),
+    ('lo_ext', 'mw20'): _ext_mw20,      # STAGED ONLY (scratch/lo-ap4/loext3); needs the MW-20 revision of lo_ext.spice
     ('lo_mmd_qdum', 'r4'): lambda: dict(max_row_width=220),
     ('lo_mmd_qdum', 'ap4'): lambda: dict(rows=qdum_rows_ap4, over_cell={0, 1, 2}, **TANK_PAIR),
     ('lo_obs', 'r4'): lambda: dict(max_row_width=200),

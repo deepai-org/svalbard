@@ -1,0 +1,40 @@
+diff --git a/projects/programmable_transceiver_platform/integration/pt_digital_macro.sdc b/projects/programmable_transceiver_platform/integration/pt_digital_macro.sdc
+index 600a8e79..baf4baac 100644
+--- a/projects/programmable_transceiver_platform/integration/pt_digital_macro.sdc
++++ b/projects/programmable_transceiver_platform/integration/pt_digital_macro.sdc
+@@ -959,3 +959,10 @@ if {[llength $pt_mag] && [llength $pt_loss]} {
+     set_multicycle_path 3 -setup -from $pt_mag -to $pt_loss
+     set_multicycle_path 2 -hold -from $pt_mag -to $pt_loss
+ } else { puts "pt_digital_macro.sdc: WARNING: wrx.mag / out_loss_q not found" }
++# Clocks whose port is tied off at this chip's top (rf/chip.conn: wire_rx_clk = wire_tx_clk = VSS; wired/chip.conn:
++# rf_rx_clk = rf_tx_clk = VSS): their logic never clocks on the die, so its paths are not timed (r9: the pt_rf
++# worst routed path was egress_wtx, the egress bank on the tied wire_tx_clk).
++set pt_absent_clks [dict get {rf {wtx wrx egress_wtx ingress_wrx} wired {rftx rfrx rfhalf rftx_fwd egress_rftx ingress_rfrx} both {}} $PT_CHIP_NAME]
++foreach c $pt_absent_clks {
++    if {[llength [get_clocks -quiet $c]]} { set_false_path -from [get_clocks $c]; set_false_path -to [get_clocks $c] }
++}
+diff --git a/projects/programmable_transceiver_platform/rtl/pt_freq_count.sv b/projects/programmable_transceiver_platform/rtl/pt_freq_count.sv
+index 0e974faf..34b02b5e 100644
+--- a/projects/programmable_transceiver_platform/rtl/pt_freq_count.sv
++++ b/projects/programmable_transceiver_platform/rtl/pt_freq_count.sv
+@@ -55,7 +55,19 @@ module pt_freq_count #(parameter integer CW = 18)(
+     localparam integer FC_EVAL_DELAY = 6;     // reference cycles from snapshot to result load
+     wire en = cfg_source != 3'd0;
+     // ---------------- source clock mux and source domain
+-    wire fb_clk = src[cfg_source == 3'd0 ? 3'd0 : cfg_source - 3'd1] & en;
++    // r9: the source select is a tree of kept clock muxes (pt_clock_mux: mux2_2 + clkbuf_8) instead of a
++    // synthesized 7:1 AND-OR: the synthesized gates drove the counter clock with 25-40 ns slews at ss (routed
++    // pt_wired max-slew list). Same function: src[cfg_source - 1] while enabled, 0 while cfg_source = 0.
++    wire [2:0] fsel = cfg_source - 3'd1;
++    wire [3:0] fm1; wire [1:0] fm2; wire fm3, fb_clk;
++    pt_clock_mux fx0(.I0(src[0]), .I1(src[1]), .S(fsel[0]), .Z(fm1[0]));
++    pt_clock_mux fx1(.I0(src[2]), .I1(src[3]), .S(fsel[0]), .Z(fm1[1]));
++    pt_clock_mux fx2(.I0(src[4]), .I1(src[5]), .S(fsel[0]), .Z(fm1[2]));
++    assign fm1[3] = src[6];
++    pt_clock_mux fx3(.I0(fm1[0]), .I1(fm1[1]), .S(fsel[1]), .Z(fm2[0]));
++    pt_clock_mux fx4(.I0(fm1[2]), .I1(fm1[3]), .S(fsel[1]), .Z(fm2[1]));
++    pt_clock_mux fx5(.I0(fm2[0]), .I1(fm2[1]), .S(fsel[2]), .Z(fm3));
++    pt_clock_mux fxe(.I0(1'b0), .I1(fm3), .S(en), .Z(fb_clk));
+     wire en_f;
+     pt_sync_bit sf(.clk(fb_clk), .rst_n(rst_n), .d(en), .q(en_f));
+     // Timing (TC6): en_f (x1 synchronizer flop, fanout 4) is re-registered into one kept copy per

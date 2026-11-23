@@ -841,8 +841,11 @@ pt_bound_xing $RFRX_PERIOD -from [get_clocks hcore] -to [get_clocks rfrx]
 # the gain change is followed by GAIN_SETTLE discarded samples in the transport).
 
 if {[info exists ::env(STEP_ID)] && $::env(STEP_ID) eq "OpenROAD.CTS"} {
-    if {[llength $egress_clks]} { delete_clock [get_clocks egress_rftx] }
-    if {[llength $ingress_clks]} { delete_clock [get_clocks ingress_rfrx] }
+    # keep, for CTS, the bank clock that runs on this chip (pt_rf: the RF owner; wired / both: the wire owner)
+    set eg_del [expr {$PT_CHIP_NAME eq "rf" ? "egress_wtx" : "egress_rftx"}]
+    set in_del [expr {$PT_CHIP_NAME eq "rf" ? "ingress_wrx" : "ingress_rfrx"}]
+    if {[llength $egress_clks]} { delete_clock [get_clocks $eg_del] }
+    if {[llength $ingress_clks]} { delete_clock [get_clocks $in_del] }
     if {$mem_on} { delete_clock [get_clocks egress_mem_sclk] }
     # pt_freq_count block clocks: the six source alternatives share one buffer output per instance
     foreach inst {fca fcb} { for {set i 1} {$i < 7} {incr i} {
@@ -959,3 +962,10 @@ if {[llength $pt_mag] && [llength $pt_loss]} {
     set_multicycle_path 3 -setup -from $pt_mag -to $pt_loss
     set_multicycle_path 2 -hold -from $pt_mag -to $pt_loss
 } else { puts "pt_digital_macro.sdc: WARNING: wrx.mag / out_loss_q not found" }
+# Clocks whose port is tied off at this chip's top (rf/chip.conn: wire_rx_clk = wire_tx_clk = VSS; wired/chip.conn:
+# rf_rx_clk = rf_tx_clk = VSS): their logic never clocks on the die, so its paths are not timed (r9: the pt_rf
+# worst routed path was egress_wtx, the egress bank on the tied wire_tx_clk).
+set pt_absent_clks [dict get {rf {wtx wrx egress_wtx ingress_wrx} wired {rftx rfrx rfhalf rftx_fwd egress_rftx ingress_rfrx} both {}} $PT_CHIP_NAME]
+foreach c $pt_absent_clks {
+    if {[llength [get_clocks -quiet $c]]} { set_false_path -from [get_clocks $c]; set_false_path -to [get_clocks $c] }
+}

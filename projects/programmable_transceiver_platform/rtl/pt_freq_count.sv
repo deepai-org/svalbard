@@ -55,7 +55,19 @@ module pt_freq_count #(parameter integer CW = 18)(
     localparam integer FC_EVAL_DELAY = 6;     // reference cycles from snapshot to result load
     wire en = cfg_source != 3'd0;
     // ---------------- source clock mux and source domain
-    wire fb_clk = src[cfg_source == 3'd0 ? 3'd0 : cfg_source - 3'd1] & en;
+    // r9: the source select is a tree of kept clock muxes (pt_clock_mux: mux2_2 + clkbuf_8) instead of a
+    // synthesized 7:1 AND-OR: the synthesized gates drove the counter clock with 25-40 ns slews at ss (routed
+    // pt_wired max-slew list). Same function: src[cfg_source - 1] while enabled, 0 while cfg_source = 0.
+    wire [2:0] fsel = cfg_source - 3'd1;
+    wire [3:0] fm1; wire [1:0] fm2; wire fm3, fb_clk;
+    pt_clock_mux fx0(.I0(src[0]), .I1(src[1]), .S(fsel[0]), .Z(fm1[0]));
+    pt_clock_mux fx1(.I0(src[2]), .I1(src[3]), .S(fsel[0]), .Z(fm1[1]));
+    pt_clock_mux fx2(.I0(src[4]), .I1(src[5]), .S(fsel[0]), .Z(fm1[2]));
+    assign fm1[3] = src[6];
+    pt_clock_mux fx3(.I0(fm1[0]), .I1(fm1[1]), .S(fsel[1]), .Z(fm2[0]));
+    pt_clock_mux fx4(.I0(fm1[2]), .I1(fm1[3]), .S(fsel[1]), .Z(fm2[1]));
+    pt_clock_mux fx5(.I0(fm2[0]), .I1(fm2[1]), .S(fsel[2]), .Z(fm3));
+    pt_clock_mux fxe(.I0(1'b0), .I1(fm3), .S(en), .Z(fb_clk));
     wire en_f;
     pt_sync_bit sf(.clk(fb_clk), .rst_n(rst_n), .d(en), .q(en_f));
     // Timing (TC6): en_f (x1 synchronizer flop, fanout 4) is re-registered into one kept copy per

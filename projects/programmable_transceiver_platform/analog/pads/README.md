@@ -57,7 +57,7 @@ All under `generated/`. Every cell: Magic DRC 0, netgen LVS unique, independent 
 
 | Cell (top) | Folder | Outline (µm) | Area (µm²) | Devices (MOS) | Ports |
 |---|---|---|---|---|---|
-| `pad_hspad` | `stress-safe-families/wired-receive-hs/` | 492 × 912.91 | 449,202 bbox | 554 (404) | `DVDD VSS VDD TERM_VCM TERM_ENABLE TERM_TRIM0..3 VBIAS RX_P RX_N PAD_P PAD_N` |
+| `pad_hspad` | `stress-safe-families/wired-receive-hs/` | 492 × 912.91 | 449,202 bbox | 554 (404) | `DVDD VSS VDD TERM_VCM TERM_ENABLE TERM_TRIM0..3 VBIAS RX_P RX_N PAD_P PAD_N`; all top-edge pins (y 912.91, Metal4 x 418-459, PAD_P/N Metal5) except DVDD (ring landing) |
 | `pad_wirepad` | `stress-safe-families/wired-receive-usb/` (`combined.gds`) | 2.78..384.18 × 0..1434.72 | 547,212 bbox | 371 | `PAD_P PAD_N VDD VSS TERM_VCM TERM_ENABLE DIFF_ENABLE DIV_ENABLE BYPASS_ENABLE RX_P RX_N HS_PBIAS HS_P HS_N FS_HIGH_P/N FS_LOW_P/N PULLUP_P/N PULLDOWN_P/N TERM_TRIM0..2 LS_SLOW DVDD` |
 | `pad_txpad` | `stress-safe-families/wired-transmit/` (`combined.gds`) | 286 × 699.76 | 200,135 bbox | 409 (346) | `PAD_P PAD_N VDD VSS DVDD_P DVDD_N CASCODE MAIN_P/N MAIN_BIAS POST_P/N POST_BIAS TMDS_P/N TMDS_BIAS DETECT_ENABLE DETECT_PBIAS TERM_ENABLE TERM_TRIM0..3 TERM_VCM`; top-edge pins TERM_VCM, PAD_P, PAD_N |
 | `pad_refpad` | `stress-safe-families/reference/` (`combined.gds`) | 2.78..285 × 0..912.91 | 257,636 bbox | 42 diodes (0) | `PAD_P PAD_N VSS VCM DVDD`; top-edge pins PAD_P, PAD_N, VCM, VSS |
@@ -76,7 +76,7 @@ Evidence files that belong to the published netlists:
 
 | Cell | Files |
 |---|---|
-| `pad_hspad` (GDS sha 07b6800d…; hashes in `pc47-hspad-a6.json`) | `geometry.json`, `layout-screen.json`, `independent-device-audit.json`, `site-primary.json`, `lu.json`, `pad_hspad-kldrc.json`, `pad-lvs.txt`, `pc47-hspad-a6.json`, models `physical-r-{low,typ,high}[-rail].spice` |
+| `pad_hspad` (GDS sha 4d7fae99…, a6 + top-edge pins; hashes in `pc47-hspad-a6.json`) | `geometry.json`, `layout-screen.json`, `independent-device-audit.json`, `site-primary.json`, `lu.json`, `pad_hspad-kldrc.json`, `pad-lvs.txt`, `pc47-hspad-a6.json`, models `physical-r-{low,typ,high}[-rail].spice` |
 | `pad_wirepad` b7 (hashes in `pc76-wirepad-b7.json`) | `placement-layout.json`, `layout-screen.json`, `independent-device-audit.json`, `model-audit.json`, `marker-merge.json`, `lu.json`, `pad_wirepad-kldrc.json`, `combined-lvs.txt`, models `physical.spice` (C-only), `physical-r-{typ,high}[-rail].spice` (R+C) |
 | `pad_txpad` (GDS sha 131af869…; hashes in `pc72-txpad-a16.json`) | `layout-info.json`, `lu.json`, `marker-merge.json`, `pad_txpad-kldrc.json`, `pad-lvs.txt`, `pc72-txpad-a16.json`, models `physical.spice` (C-only, wrapper `tx_protected_pad`), `physical-r-{typ,high}.spice` (R+C; model-only ports `DVSS_P/N`, tie to VSS) |
 | `pad_refpad` (GDS sha 96dc5a02…; hashes in `pc75-refpad-a1.json`) | `placement-layout.json`, `layout-screen.json`, `independent-device-audit.json`, `model-audit.json`, `marker-merge.json`, `lu.json`, `pad_refpad-kldrc.json`, `combined-lvs.txt`, `pc75-refpad-a1.json`, models `physical.spice` (C-only, wrapper `tx_protected_pad`), `physical-r-{typ,high}[-rail].spice` (R+C) |
@@ -109,6 +109,11 @@ capacitance-only extraction and is NOT valid for termination, receive loss or ES
 `physical-r-typ.spice` and bound with `-low` / `-high`; the `-rail` variants add the provider rail cell above the
 cell (206 fF per leg PAD to VSS) and are the ones for return loss and pad capacitance. Corners: tt / ss / ff / sf / fs,
 22 and 32 °C, 3.15 and 3.35 V, ss also at 3.50 V (23 corners).
+
+Core pins on the top edge (2026-11-23): the published GDS is a6 plus top-edge pins added by `scratch/pads-core/esdopt/pins/top_pins.py`
+(added metal / labels only, removed area 0 on every layer, read-back LVS matches). Pins at y 912.91: Metal4 TERM_TRIM0..3, VSS, RX_P, RX_N,
+VDD, TERM_ENABLE, TERM_VCM, VBIAS in x 418-459; PAD_P / PAD_N Metal5 as before; DVDD stays a ring landing. Known item: the models above
+do not include the added pin-route C (RX_P / RX_N +26 fF each, PAD_N +7.5 fF). Pin list and C in `pc47-hspad-a6.json` `top_edge_pins`.
 
 | Quantity | Typical metal | High-resistance metal | Limit |
 |---|---|---|---|

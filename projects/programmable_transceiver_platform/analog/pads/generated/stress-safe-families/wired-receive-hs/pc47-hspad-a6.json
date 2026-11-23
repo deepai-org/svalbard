@@ -5,7 +5,7 @@
  "build_command": "scratch/pads-core/esdopt/hs/sec/q_s.sh a6 leg7 '{\"up\": [1, 1], \"dvdd_w\": 3.0, \"ring\": true}'  (leg: hs_leg_layout.py --lb=4.2 --sec=...; compose: hs_pad_compose.py ... --stacked --site-primary --no-core-array --esd-opt={\"neck_m1\": true} --sec)",
  "rebuild_check": "rebuilt 2026-11-20 from the committed generators: pad_hspad.gds and pt_hs_leg.gds identical to the candidate with GDS timestamps zeroed (normalised f16f9f05472ea423 / bcaa90e8c23a40c6); physical.spice identical up to Magic capacitor ordering; no-flag build XOR 0.0 um2 vs the previously published GDS 8c8e2533",
  "sha256": {
-  "pad_hspad.gds": "07b6800d73eab73e31acb0ce7756436e37e999d3e707adf486b0e5ec7b226953",
+  "pad_hspad.gds": "4d7fae991dc43e632d2847cafde64400228a35e54a2dc2d4f675269103ecbec5",
   "physical.spice": "1399bc07291959d99ccf3f2aa4935b4b26c417ad8ad01257bcec1a97261a02a1",
   "physical-r-low.spice": "045547de7934b4286d5c3e4a8e5224b8d75f75030188167ece0124dae81648fe",
   "physical-r-typ.spice": "e8402507b9d6c747e3e254b7e0edc40af896da5b35cded72cbc3934887e6f836",
@@ -147,7 +147,41 @@
   "PC-45: >= 1 nF within 0.7 ohm incl. ESR of each east wired site, verified on the assembled GDS before tapeout; CDM evidence void without it",
   "TLP / vf-TLP measurement of the primary site diodes (rating is a literature figure; CDM density 7.2 mA/um)",
   "CDM headroom thin: 3 A misses; 2 A is the requirement",
-  "WR-SATA2-RL stays a recorded fail (a6 about 0.7 dB worse at the die than f6)"
+  "WR-SATA2-RL stays a recorded fail (a6 about 0.7 dB worse at the die than f6)",
+  "Known item: models exclude top-pin route C (RX_P/N +26 fF, PAD_N +7.5 fF); see top_edge_pins"
  ],
- "detail": "scratch/pads-core/esdopt/hs/STATUS.md (CANDIDATE a6 RESULTS), scratch/pads-core/esdopt/hs/sec/"
+ "detail": "scratch/pads-core/esdopt/hs/STATUS.md (CANDIDATE a6 RESULTS), scratch/pads-core/esdopt/hs/sec/",
+ "top_edge_pins": {
+  "note": "2026-11-23: published GDS replaced by the a6 + top-edge-pin variant made by scratch/pads-core/esdopt/pins/top_pins.py from the a6 GDS (sha 07b6800d...). Added metal (Metal4 / Via4 / Metal5) and moved labels only: removed area vs a6 = 0 on every layer, bbox and bond openings unchanged; same devices and netlist (read-back LVS vs lvs-reference.spice pad_hspad_flat: match, unique; RX_P<->RX_N swap control mismatches). kl_block_drc --publish CLEAN (0/0), rail_site_check PASS. Details: scratch/pads-core/esdopt/pins/STATUS.md. The eleven Metal5 channel straps still reach the east edge (x 492) as unlabelled metal (not pins).",
+  "pins_y_um": 912.91,
+  "pins": {
+   "TERM_TRIM0": "Metal4 x 418.0-419.0",
+   "TERM_TRIM1": "Metal4 x 420.6-421.6",
+   "TERM_TRIM2": "Metal4 x 423.2-424.2",
+   "TERM_TRIM3": "Metal4 x 425.8-426.8",
+   "VSS": "Metal4 x 428.4-431.4",
+   "RX_P": "Metal4 x 435.9-436.5",
+   "RX_N": "Metal4 x 441.0-441.6",
+   "VDD": "Metal4 x 446.1-449.1",
+   "TERM_ENABLE": "Metal4 x 450.7-451.7",
+   "TERM_VCM": "Metal4 x 453.3-456.3",
+   "VBIAS": "Metal4 x 457.9-458.9",
+   "PAD_P": "Metal5 x 286-290 (as a6)",
+   "PAD_N": "Metal5 x 302-306 (as a6)",
+   "DVDD": "ring landing, Metal3 y 141.4 (as a6, not a top pin)"
+  },
+  "added_C_fF": {
+   "RX_P": 26.5,
+   "RX_N": 26.1,
+   "PAD_N": 7.49,
+   "PAD_P": 0.0,
+   "VSS": 100.4,
+   "VDD": 47.1,
+   "TERM_VCM": 82.2,
+   "TERM_ENABLE": 50.1,
+   "VBIAS": 41.2,
+   "TERM_TRIM0..3": "41.4 / 52.2 / 51.8 / 53.1"
+  },
+  "known_item": "physical.spice and the R+C models physical-r-{low,typ,high}[-rail].spice are the a6 extractions and do NOT include the added pin-route C (RX_P/N +26 fF each, PAD_N +7.5 fF, of which +3.5 fF is the TERM_TRIM0 riser over the N leg). Not re-extracted."
+ }
 }

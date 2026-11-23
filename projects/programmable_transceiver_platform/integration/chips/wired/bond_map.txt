@@ -16,8 +16,8 @@ inputs[7].pad    west  TLP_TEST   pad_tlp            TLP/ESD test site (D5)
 inputs[6].pad    west  VSS        pad_xvss_3         ground
 dvdd_pads[4].pad west  VDD        pad_dvdd_4         provider supply site (fixed)
 dvss_pads[6].pad west  VSS        pad_dvss_6         provider supply site (fixed)
-inputs[5].pad    west  POR_BYPASS pad_por_bypass     strap (provider input cell on its native input site; DC)
-inputs[4].pad    west  VSS        pad_xvss_5         ground
+inputs[5].pad    west  AUX_CLK_P  pad_aux_clk        forwarded wire clock + aux clock
+inputs[4].pad    west  AUX_CLK_N  pad_aux_clk
 inputs[3].pad    west  REF_IN     pad_ref            reference
 inputs[2].pad    west  REF_IN_N   pad_ref
 dvdd_pads[3].pad west  VDD        pad_dvdd_3         provider supply site (fixed)
@@ -28,8 +28,8 @@ dvdd_pads[0].pad east  VDD        pad_dvdd_0         provider supply site (fixed
 dvss_pads[1].pad east  VSS        pad_dvss_1         provider supply site (fixed)
 bidir[14].pad    east  WIRE_RX_P  pad_hs_rx
 bidir[15].pad    east  WIRE_RX_N  pad_hs_rx
-bidir[16].pad    east  AUX_CLK_P  pad_aux_clk        forwarded wire clock + aux clock (next to WIRE_RX, nearest east pair to the CDR / clockmux)
-bidir[17].pad    east  AUX_CLK_N  pad_aux_clk
+bidir[16].pad    east  POR_BYPASS pad_por_bypass     strap (provider cell; keeps the site after pad_hspad free of custom cells: hspad is 492 um wide)
+bidir[17].pad    east  VSS        pad_xvss_5         ground
 bidir[18].pad    east  USB_DP     pad_usb
 bidir[19].pad    east  USB_DN     pad_usb
 dvdd_pads[1].pad east  VDD        pad_dvdd_1         provider supply site (fixed)

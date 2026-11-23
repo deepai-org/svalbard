@@ -13,7 +13,7 @@ Operating conditions (`scratch/reviews/MANDATE.md` section 2): performance at 22
 
 Two chips (`pt_rf`, `pt_wired`), one cell library. Bindings are in `integration/chips/{common,rf/chip,wired/chip}.conn`,
 sites in the per-chip bond maps (the generator resolves them with `design.resolve(chip=...)`), tiers from MANDATE
-section 6. Each pad family has `PAD_P` on its first (lower-numbered) site; families are placed unmirrored. Supply and
+section 6. Each pad family has `PAD_P` on its first (lower-numbered) site; families are placed unmirrored. `pad_hspad` is 492 um wide (two sites plus 70 um), so the site after it must hold a provider cell, never another custom family. Supply and
 ground bonds on signal sites are provider `dvdd` / `dvss` cells (`pad_xvdd_*`, `pad_xvss_*`; PC-35).
 
 **`pt_rf`** (`integration/chips/rf/bond_map.txt`):
@@ -34,10 +34,10 @@ ground bonds on signal sites are provider `dvdd` / `dvss` cells (`pad_xvdd_*`, `
 |---|---|---|---|
 | `pad_wmon` | `pad_single_leg` | west: WMON `inputs[9]` | 2 kV |
 | `pad_tlp` | `pad_tlp_flat` | west: TLP_TEST `inputs[7]` | test site |
-| `pad_por_bypass` | provider `gf180mcu_fd_io__in_c` (strap) | west: POR_BYPASS `inputs[5]` | provider cell |
+| `pad_aux_clk` | `pad_refpad` | west: AUX_CLK_P `inputs[5]`, AUX_CLK_N `inputs[4]` | 2 kV |
 | `pad_ref` | `pad_refpad` | west: REF_IN `inputs[3]`, REF_IN_N `inputs[2]` | 2 kV |
 | `pad_hs_rx` | `pad_hspad` | east: WIRE_RX_P `bidir[14]`, WIRE_RX_N `bidir[15]` | 2 kV |
-| `pad_aux_clk` | `pad_refpad` | east: AUX_CLK_P `bidir[16]`, AUX_CLK_N `bidir[17]` | 2 kV |
+| `pad_por_bypass` | provider `gf180mcu_fd_io__in_c` (strap) | east: POR_BYPASS `bidir[16]` | provider cell |
 | `pad_usb` | `pad_wirepad` | east: USB_DP `bidir[18]`, USB_DN `bidir[19]` | 2 kV |
 | `pad_wire_tx` | `pad_txpad` | east: WIRE_TX_P `bidir[20]`, WIRE_TX_N `bidir[21]` | 1 kV |
 | `pad_wtx_ext` | `pad_rf_pair` | east: WTX_EXT_P `bidir[23]`, WTX_EXT_N `bidir[24]` | 2 kV |

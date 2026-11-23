@@ -1408,7 +1408,7 @@
      "1250MHz": -19.1,
      "2450MHz": -13.3
     },
-    "AUX_CLK_P": {
+    "POR_BYPASS": {
      "156.25MHz": -41.6,
      "1250MHz": -23.5,
      "2450MHz": -17.7
@@ -1441,9 +1441,9 @@
     }
    }
   },
-  "AUX_CLK_P": {
+  "POR_BYPASS": {
    "site": "bidir[16].pad",
-   "cls": "lo_ref",
+   "cls": "strap",
    "bond_pad": 22,
    "board_net": "/pad_21",
    "connector_contact": 58,
@@ -1465,20 +1465,20 @@
     "156.25MHz": {
      "IL_interconnect_dB": 0.11,
      "RL_interconnect_dB": 28.9,
-     "RL_with_die_dB": 39.1,
-     "gain_to_die_dB": -0.06
+     "RL_with_die_dB": 0.2,
+     "gain_to_die_dB": -0.08
     },
     "1250MHz": {
      "IL_interconnect_dB": 0.65,
      "RL_interconnect_dB": 11.4,
-     "RL_with_die_dB": 17.0,
-     "gain_to_die_dB": -0.29
+     "RL_with_die_dB": 0.7,
+     "gain_to_die_dB": -7.05
     },
     "2450MHz": {
      "IL_interconnect_dB": 1.51,
      "RL_interconnect_dB": 6.7,
-     "RL_with_die_dB": 7.9,
-     "gain_to_die_dB": -5.08
+     "RL_with_die_dB": 0.9,
+     "gain_to_die_dB": -14.83
     }
    },
    "xtalk_dB": {
@@ -1486,11 +1486,6 @@
      "156.25MHz": -39.7,
      "1250MHz": -21.7,
      "2450MHz": -15.8
-    },
-    "AUX_CLK_N": {
-     "156.25MHz": -41.8,
-     "1250MHz": -23.8,
-     "2450MHz": -17.9
     }
    },
    "bond_wire": {
@@ -1517,85 +1512,6 @@
      "min": 162,
      "nom": 190,
      "max": 196
-    }
-   }
-  },
-  "AUX_CLK_N": {
-   "site": "bidir[17].pad",
-   "cls": "lo_ref",
-   "bond_pad": 23,
-   "board_net": "/pad_22",
-   "connector_contact": 57,
-   "bond_mm": 2.6,
-   "bond_nH_0p83": 2.16,
-   "bond_nH_1p0": 2.6,
-   "trace_F_mm": 1.06,
-   "trace_B_mm": 4.15,
-   "trace_w_mm": 0.1,
-   "z0_ohm": 86.6,
-   "vias": 1,
-   "via_nH": 0.419,
-   "connector_nH": 1.15,
-   "connector_dist_to_gnd_mm": 1.6,
-   "cob_delay_ps": 30.8,
-   "min_spacing_F_mm": 0.4,
-   "min_spacing_B_mm": 0.34,
-   "sparams": {
-    "156.25MHz": {
-     "IL_interconnect_dB": 0.12,
-     "RL_interconnect_dB": 27.6,
-     "RL_with_die_dB": 35.3,
-     "gain_to_die_dB": -0.06
-    },
-    "1250MHz": {
-     "IL_interconnect_dB": 0.78,
-     "RL_interconnect_dB": 10.3,
-     "RL_with_die_dB": 14.5,
-     "gain_to_die_dB": -0.69
-    },
-    "2450MHz": {
-     "IL_interconnect_dB": 1.7,
-     "RL_interconnect_dB": 6.2,
-     "RL_with_die_dB": 6.7,
-     "gain_to_die_dB": -5.88
-    }
-   },
-   "xtalk_dB": {
-    "AUX_CLK_P": {
-     "156.25MHz": -41.3,
-     "1250MHz": -23.3,
-     "2450MHz": -17.4
-    },
-    "USB_DP": {
-     "156.25MHz": -41.3,
-     "1250MHz": -23.2,
-     "2450MHz": -17.4
-    }
-   },
-   "bond_wire": {
-    "plan_mm_centre": 2.539,
-    "plan_mm_near_end": 2.156,
-    "angle_deg_centre": 19.6,
-    "angle_deg_near_end": 22.5,
-    "length_3d_mm": {
-     "min": 2.208,
-     "nom": 2.605,
-     "max": 2.694
-    },
-    "L_nH": {
-     "min": 1.66,
-     "nom": 2.28,
-     "max": 2.98
-    },
-    "R_mohm_Al": {
-     "min": 205,
-     "nom": 241,
-     "max": 250
-    },
-    "R_mohm_Au": {
-     "min": 157,
-     "nom": 185,
-     "max": 191
     }
    }
   },
@@ -1640,11 +1556,6 @@
     }
    },
    "xtalk_dB": {
-    "AUX_CLK_N": {
-     "156.25MHz": -41.9,
-     "1250MHz": -23.8,
-     "2450MHz": -17.9
-    },
     "USB_DN": {
      "156.25MHz": -40.0,
      "1250MHz": -22.0,
@@ -3411,6 +3322,11 @@
      "156.25MHz": -40.5,
      "1250MHz": -22.4,
      "2450MHz": -16.6
+    },
+    "AUX_CLK_N": {
+     "156.25MHz": -41.4,
+     "1250MHz": -23.4,
+     "2450MHz": -17.5
     }
    },
    "bond_wire": {
@@ -3440,9 +3356,88 @@
     }
    }
   },
-  "POR_BYPASS": {
+  "AUX_CLK_N": {
+   "site": "inputs[4].pad",
+   "cls": "lo_ref",
+   "bond_pad": 61,
+   "board_net": "/pad_60",
+   "connector_contact": 21,
+   "bond_mm": 2.53,
+   "bond_nH_0p83": 2.1,
+   "bond_nH_1p0": 2.53,
+   "trace_F_mm": 1.22,
+   "trace_B_mm": 4.24,
+   "trace_w_mm": 0.1,
+   "z0_ohm": 86.6,
+   "vias": 1,
+   "via_nH": 0.372,
+   "connector_nH": 1.08,
+   "connector_dist_to_gnd_mm": 1.2,
+   "cob_delay_ps": 32.3,
+   "min_spacing_F_mm": 0.4,
+   "min_spacing_B_mm": 0.2,
+   "sparams": {
+    "156.25MHz": {
+     "IL_interconnect_dB": 0.12,
+     "RL_interconnect_dB": 27.7,
+     "RL_with_die_dB": 35.7,
+     "gain_to_die_dB": -0.06
+    },
+    "1250MHz": {
+     "IL_interconnect_dB": 0.77,
+     "RL_interconnect_dB": 10.5,
+     "RL_with_die_dB": 14.8,
+     "gain_to_die_dB": -0.68
+    },
+    "2450MHz": {
+     "IL_interconnect_dB": 1.67,
+     "RL_interconnect_dB": 6.4,
+     "RL_with_die_dB": 6.8,
+     "gain_to_die_dB": -5.81
+    }
+   },
+   "xtalk_dB": {
+    "REF_IN": {
+     "156.25MHz": -41.5,
+     "1250MHz": -23.5,
+     "2450MHz": -17.6
+    },
+    "AUX_CLK_P": {
+     "156.25MHz": -35.8,
+     "1250MHz": -17.7,
+     "2450MHz": -12.2
+    }
+   },
+   "bond_wire": {
+    "plan_mm_centre": 2.482,
+    "plan_mm_near_end": 2.091,
+    "angle_deg_centre": 15.5,
+    "angle_deg_near_end": 17.7,
+    "length_3d_mm": {
+     "min": 2.145,
+     "nom": 2.55,
+     "max": 2.64
+    },
+    "L_nH": {
+     "min": 1.62,
+     "nom": 2.23,
+     "max": 2.91
+    },
+    "R_mohm_Al": {
+     "min": 199,
+     "nom": 236,
+     "max": 245
+    },
+    "R_mohm_Au": {
+     "min": 152,
+     "nom": 181,
+     "max": 188
+    }
+   }
+  },
+  "AUX_CLK_P": {
    "site": "inputs[5].pad",
-   "cls": "strap",
+   "cls": "lo_ref",
    "bond_pad": 62,
    "board_net": "/pad_61",
    "connector_contact": 20,
@@ -3464,23 +3459,29 @@
     "156.25MHz": {
      "IL_interconnect_dB": 0.12,
      "RL_interconnect_dB": 28.3,
-     "RL_with_die_dB": 0.2,
-     "gain_to_die_dB": -0.07
+     "RL_with_die_dB": 37.1,
+     "gain_to_die_dB": -0.06
     },
     "1250MHz": {
      "IL_interconnect_dB": 0.72,
      "RL_interconnect_dB": 10.9,
-     "RL_with_die_dB": 0.8,
-     "gain_to_die_dB": -7.1
+     "RL_with_die_dB": 15.7,
+     "gain_to_die_dB": -0.57
     },
     "2450MHz": {
      "IL_interconnect_dB": 1.58,
      "RL_interconnect_dB": 6.7,
-     "RL_with_die_dB": 1.0,
-     "gain_to_die_dB": -15.36
+     "RL_with_die_dB": 7.3,
+     "gain_to_die_dB": -5.53
     }
    },
-   "xtalk_dB": {},
+   "xtalk_dB": {
+    "AUX_CLK_N": {
+     "156.25MHz": -36.6,
+     "1250MHz": -18.6,
+     "2450MHz": -12.7
+    }
+   },
    "bond_wire": {
     "plan_mm_centre": 2.438,
     "plan_mm_near_end": 2.042,
@@ -4341,11 +4342,11 @@
    "bond_N": 2.69
   },
   "AUX_CLK": {
-   "P_mm": 3.12,
-   "N_mm": 5.21,
-   "skew_ps": -12.4,
-   "bond_P": 2.69,
-   "bond_N": 2.6
+   "P_mm": 5.22,
+   "N_mm": 5.46,
+   "skew_ps": -1.4,
+   "bond_P": 2.47,
+   "bond_N": 2.53
   },
   "WIRE_RX": {
    "P_mm": 5.34,
@@ -4463,168 +4464,168 @@
    "C0.7pF_conn+2mm": {
     "2.40": {
      "I_diff_gain": 2.71,
-     "Q_diff_gain": 2.73,
-     "IQ_phase_deg": -11.8,
-     "IQ_amp_dB": 0.04
+     "Q_diff_gain": 2.72,
+     "IQ_phase_deg": -18.3,
+     "IQ_amp_dB": 0.01
     },
     "2.45": {
      "I_diff_gain": 2.72,
-     "Q_diff_gain": 2.71,
-     "IQ_phase_deg": -12.1,
-     "IQ_amp_dB": -0.03
+     "Q_diff_gain": 2.69,
+     "IQ_phase_deg": -18.7,
+     "IQ_amp_dB": -0.08
     },
     "2.50": {
      "I_diff_gain": 2.72,
-     "Q_diff_gain": 2.69,
-     "IQ_phase_deg": -12.3,
-     "IQ_amp_dB": -0.09
+     "Q_diff_gain": 2.67,
+     "IQ_phase_deg": -19.1,
+     "IQ_amp_dB": -0.18
     },
     "bond_pm0p3_dB": 0.5
    },
    "C0.7pF_car30mm": {
     "2.40": {
      "I_diff_gain": 2.42,
-     "Q_diff_gain": 2.43,
-     "IQ_phase_deg": -11.8,
-     "IQ_amp_dB": 0.04
+     "Q_diff_gain": 2.42,
+     "IQ_phase_deg": -18.3,
+     "IQ_amp_dB": 0.01
     },
     "2.45": {
      "I_diff_gain": 2.42,
-     "Q_diff_gain": 2.41,
-     "IQ_phase_deg": -12.1,
-     "IQ_amp_dB": -0.03
+     "Q_diff_gain": 2.4,
+     "IQ_phase_deg": -18.7,
+     "IQ_amp_dB": -0.08
     },
     "2.50": {
      "I_diff_gain": 2.42,
-     "Q_diff_gain": 2.39,
-     "IQ_phase_deg": -12.3,
-     "IQ_amp_dB": -0.09
+     "Q_diff_gain": 2.37,
+     "IQ_phase_deg": -19.1,
+     "IQ_amp_dB": -0.18
     },
     "bond_pm0p3_dB": 0.5
    },
    "C1.0pF_conn+2mm": {
     "2.40": {
      "I_diff_gain": 2.3,
-     "Q_diff_gain": 2.19,
-     "IQ_phase_deg": -11.2,
-     "IQ_amp_dB": -0.42
+     "Q_diff_gain": 2.14,
+     "IQ_phase_deg": -17.0,
+     "IQ_amp_dB": -0.63
     },
     "2.45": {
      "I_diff_gain": 2.26,
-     "Q_diff_gain": 2.14,
-     "IQ_phase_deg": -11.2,
-     "IQ_amp_dB": -0.48
+     "Q_diff_gain": 2.08,
+     "IQ_phase_deg": -17.0,
+     "IQ_amp_dB": -0.72
     },
     "2.50": {
      "I_diff_gain": 2.23,
-     "Q_diff_gain": 2.1,
-     "IQ_phase_deg": -11.1,
-     "IQ_amp_dB": -0.53
+     "Q_diff_gain": 2.03,
+     "IQ_phase_deg": -16.9,
+     "IQ_amp_dB": -0.8
     },
     "bond_pm0p3_dB": 0.21
    },
    "C1.0pF_car30mm": {
     "2.40": {
      "I_diff_gain": 2.05,
-     "Q_diff_gain": 1.95,
-     "IQ_phase_deg": -11.2,
-     "IQ_amp_dB": -0.42
+     "Q_diff_gain": 1.9,
+     "IQ_phase_deg": -17.0,
+     "IQ_amp_dB": -0.63
     },
     "2.45": {
      "I_diff_gain": 2.01,
-     "Q_diff_gain": 1.91,
-     "IQ_phase_deg": -11.2,
-     "IQ_amp_dB": -0.48
+     "Q_diff_gain": 1.85,
+     "IQ_phase_deg": -17.0,
+     "IQ_amp_dB": -0.72
     },
     "2.50": {
      "I_diff_gain": 1.98,
-     "Q_diff_gain": 1.86,
-     "IQ_phase_deg": -11.1,
-     "IQ_amp_dB": -0.53
+     "Q_diff_gain": 1.8,
+     "IQ_phase_deg": -16.9,
+     "IQ_amp_dB": -0.8
     },
     "bond_pm0p3_dB": 0.21
    },
    "C1.5pF_conn+2mm": {
     "2.40": {
      "I_diff_gain": 1.58,
-     "Q_diff_gain": 1.46,
-     "IQ_phase_deg": -9.1,
-     "IQ_amp_dB": -0.68
+     "Q_diff_gain": 1.41,
+     "IQ_phase_deg": -13.6,
+     "IQ_amp_dB": -0.97
     },
     "2.45": {
      "I_diff_gain": 1.53,
-     "Q_diff_gain": 1.41,
-     "IQ_phase_deg": -8.9,
-     "IQ_amp_dB": -0.71
+     "Q_diff_gain": 1.37,
+     "IQ_phase_deg": -13.4,
+     "IQ_amp_dB": -1.0
     },
     "2.50": {
      "I_diff_gain": 1.49,
-     "Q_diff_gain": 1.37,
-     "IQ_phase_deg": -8.8,
-     "IQ_amp_dB": -0.74
+     "Q_diff_gain": 1.32,
+     "IQ_phase_deg": -13.3,
+     "IQ_amp_dB": -1.03
     },
     "bond_pm0p3_dB": 0.18
    },
    "C1.5pF_car30mm": {
     "2.40": {
      "I_diff_gain": 1.4,
-     "Q_diff_gain": 1.3,
-     "IQ_phase_deg": -9.1,
-     "IQ_amp_dB": -0.68
+     "Q_diff_gain": 1.26,
+     "IQ_phase_deg": -13.6,
+     "IQ_amp_dB": -0.97
     },
     "2.45": {
      "I_diff_gain": 1.36,
-     "Q_diff_gain": 1.26,
-     "IQ_phase_deg": -8.9,
-     "IQ_amp_dB": -0.71
+     "Q_diff_gain": 1.21,
+     "IQ_phase_deg": -13.4,
+     "IQ_amp_dB": -1.0
     },
     "2.50": {
      "I_diff_gain": 1.32,
-     "Q_diff_gain": 1.21,
-     "IQ_phase_deg": -8.8,
-     "IQ_amp_dB": -0.74
+     "Q_diff_gain": 1.17,
+     "IQ_phase_deg": -13.3,
+     "IQ_amp_dB": -1.03
     },
     "bond_pm0p3_dB": 0.18
    },
    "C2.0pF_conn+2mm": {
     "2.40": {
      "I_diff_gain": 1.14,
-     "Q_diff_gain": 1.05,
-     "IQ_phase_deg": -7.8,
-     "IQ_amp_dB": -0.72
+     "Q_diff_gain": 1.02,
+     "IQ_phase_deg": -11.7,
+     "IQ_amp_dB": -0.98
     },
     "2.45": {
      "I_diff_gain": 1.1,
-     "Q_diff_gain": 1.01,
-     "IQ_phase_deg": -7.6,
-     "IQ_amp_dB": -0.74
+     "Q_diff_gain": 0.98,
+     "IQ_phase_deg": -11.5,
+     "IQ_amp_dB": -1.0
     },
     "2.50": {
      "I_diff_gain": 1.07,
-     "Q_diff_gain": 0.98,
-     "IQ_phase_deg": -7.5,
-     "IQ_amp_dB": -0.75
+     "Q_diff_gain": 0.95,
+     "IQ_phase_deg": -11.4,
+     "IQ_amp_dB": -1.01
     },
     "bond_pm0p3_dB": 0.35
    },
    "C2.0pF_car30mm": {
     "2.40": {
      "I_diff_gain": 1.01,
-     "Q_diff_gain": 0.93,
-     "IQ_phase_deg": -7.8,
-     "IQ_amp_dB": -0.72
+     "Q_diff_gain": 0.91,
+     "IQ_phase_deg": -11.7,
+     "IQ_amp_dB": -0.98
     },
     "2.45": {
      "I_diff_gain": 0.98,
-     "Q_diff_gain": 0.9,
-     "IQ_phase_deg": -7.6,
-     "IQ_amp_dB": -0.74
+     "Q_diff_gain": 0.87,
+     "IQ_phase_deg": -11.5,
+     "IQ_amp_dB": -1.0
     },
     "2.50": {
      "I_diff_gain": 0.95,
-     "Q_diff_gain": 0.87,
-     "IQ_phase_deg": -7.5,
-     "IQ_amp_dB": -0.75
+     "Q_diff_gain": 0.84,
+     "IQ_phase_deg": -11.4,
+     "IQ_amp_dB": -1.01
     },
     "bond_pm0p3_dB": 0.35
    }
@@ -4639,8 +4640,8 @@
     ],
     "spread_dB": 7.8,
     "IQ_phase_deg": [
-     -12.1,
-     -8.9
+     -18.7,
+     -13.4
     ]
    },
    "R200": {
@@ -4652,8 +4653,8 @@
     ],
     "spread_dB": 5.2,
     "IQ_phase_deg": [
-     -9.4,
-     -8.5
+     -14.8,
+     -12.9
     ]
    },
    "R100": {
@@ -4665,8 +4666,8 @@
     ],
     "spread_dB": 3.6,
     "IQ_phase_deg": [
-     -8.0,
-     -7.9
+     -12.8,
+     -12.2
     ]
    },
    "R50": {
@@ -4678,8 +4679,8 @@
     ],
     "spread_dB": 2.0,
     "IQ_phase_deg": [
-     -6.8,
-     -7.0
+     -10.9,
+     -11.0
     ]
    }
   },

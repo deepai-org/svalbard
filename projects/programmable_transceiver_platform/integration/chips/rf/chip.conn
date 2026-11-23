@@ -106,11 +106,11 @@ inst isw_{conv,lo} isw_conv core
 
 # ================= pads (custom families) =================
 inst pad_rf_rx pad_rf_pair rf_rx
-  PAD_P~RF_RX_P PAD_N~RF_RX_N VSS~VSS ESD_RAIL~ESD_RAIL_rf_rx ATB_ESD_RAIL~- DVDD~VDD
+  PAD_P~RF_RX_P PAD_N~RF_RX_N VSS~VSS ESD_RAIL~- ATB_ESD_RAIL~- DVDD~VDD
 inst pad_rf_tx pad_rftxpad rf_tx
-  PAD_P~RF_TX_P PAD_N~RF_TX_N VSS~VSS ESD_RAIL~ESD_RAIL_rf_tx ATB_ESD_RAIL~-
+  PAD_P~RF_TX_P PAD_N~RF_TX_N VSS~VSS ESD_RAIL~- ATB_ESD_RAIL~-
 inst pad_bb_{i,q} pad_rf_pair debug
-  PAD_P~BB_\U1_P PAD_N~BB_\U1_N VSS~VSS ESD_RAIL~ESD_RAIL_bb ATB_ESD_RAIL~- DVDD~VDD
+  PAD_P~BB_\U1_P PAD_N~BB_\U1_N VSS~VSS ESD_RAIL~- ATB_ESD_RAIL~- DVDD~VDD
 
 # ================= RF receive (rf island) =================
 inst lna pt_lna rf_rx

@@ -102,9 +102,9 @@ inst isw_wired_tx_b isw_wired core
 inst isw_wired_cap isw_wired core
   VDD~VDD VISL~RAIL_wired_cap VSS~VSS EN=island_en[0] ISO>- PG>s_pg_wired_cap
 inst pad_wtx_ext pad_rf_pair debug
-  PAD_P~WTX_EXT_P PAD_N~WTX_EXT_N VSS~VSS ESD_RAIL~ESD_RAIL_wtx_ext ATB_ESD_RAIL~- DVDD~VDD
+  PAD_P~WTX_EXT_P PAD_N~WTX_EXT_N VSS~VSS ESD_RAIL~- ATB_ESD_RAIL~- DVDD~VDD
 inst pad_wmon pad_single_leg debug
-  PAD_P~WMON VSS~VSS ESD_RAIL~ESD_RAIL_wtx_ext ATB_ESD_RAIL~- DVDD~VDD
+  PAD_P~WMON VSS~VSS ESD_RAIL~- ATB_ESD_RAIL~- DVDD~VDD
 inst pad_tlp pad_tlp core
   PAD~TLP_TEST VSS~VSS VDD~VDD      # PD48b TLP/ESD test site (pad_tlp_flat, CP4-R2)
 inst pad_hs_rx pad_hspad wired_rx

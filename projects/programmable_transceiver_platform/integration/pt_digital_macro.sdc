@@ -642,7 +642,7 @@ if {[llength $hold_src]} {
     }
 }
 # (synthesis names a flop after the net it drives: host.crs[1] may appear as core_rst_n_*)
-set crs_src [concat [pt_cells *host.crs*] [pt_cells core_rst_n_*] [pt_cells *.core_rst_n_*]]
+set crs_src [concat [pt_cells *host.crs*] [pt_cells core_rst_n_*] [pt_cells *.core_rst_n_*] [pt_cells core_rel_n_*] [pt_cells *.core_rel_n_*]]
 if {[llength $crs_src]} {
     foreach c [all_clocks] {
         if {[lsearch -exact {hcore} [get_name $c]] < 0} { set_false_path -from $crs_src -to $c }

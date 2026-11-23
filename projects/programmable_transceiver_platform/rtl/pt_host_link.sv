@@ -61,6 +61,7 @@ module pt_host_link(
     input  wire        word_clk,      // 2 x hddr word clock (SDR forwarded clock; reduced rates only)
     output wire        core_clk,      // hcore = hddr/2
     output wire        core_rst_n,    // rst_n released synchronously to hcore
+    output wire        core_rel_n,    // kept copy of core_rst_n (same value at every time), low fanout
     output wire [39:0] h2d_quad,      // core_clk domain register, one quad per clock (0 = idle/underflow)
     input  wire [39:0] d2h_quad,      // core_clk domain register
     output wire [9:0]  d2h_pin,
@@ -87,6 +88,10 @@ module pt_host_link(
     (* async_reg = "true" *) reg [1:0] crs;
     always @(posedge core_clk or negedge rst_n) if (!rst_n) crs <= 2'b00; else crs <= {crs[0], 1'b1};
     assign core_rst_n = crs[1];
+    // r10 (routed pt_wired asynchronous worst path core_rst_n -> the 1263-pin core reset tree -> mux ->
+    // pt_core rr_* release flops, -1.9 ns): a kept copy of crs[1] (same clock, reset and D) feeds only
+    // pt_core's four release flops (pt_digital: core_rel_n), so their recovery path is short.
+    pt_rep_dff crs_rel(.clk(core_clk), .rst_n(rst_n), .d(crs[0]), .q(core_rel_n));
 
     // ---------------- D2H, core domain: enable gate, XOR prefix and ping-pong hand-over (DG8-6)
     wire en_c;

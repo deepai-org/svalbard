@@ -3,6 +3,8 @@
 module pt_digital #(parameter integer PT_CHIP = 3)(input wire rst_n,ref_clk,
  // Host-transport reset: rst_n AND the reduced-rate switch hold (pt_host_rate_clock).
  input wire core_rst_n,
+ // Kept copy of core_rst_n (pt_host_link crs_rel, identical value): only the core's release flops.
+ input wire core_rel_n,
  input wire host_sclk,host_cs_n,host_mosi,output wire host_miso,host_miso_oe,
  input wire host_tx_clk,host_rx_clk,wire_rx_clk,wire_tx_clk,rf_rx_clk,rf_tx_clk,
  // Host transport quads (AC-1): four ten-bit words per host_tx_clk (= host_rx_clk = core clock,
@@ -146,13 +148,15 @@ module pt_digital #(parameter integer PT_CHIP = 3)(input wire rst_n,ref_clk,
  // to change) the core leaves the host-link reset (core_rst_n needs the host word clock) and uses
  // RESET_N; every core domain still releases through its own synchronized ENABLE.
  wire core_reset_n=(capture_enable||playback_enable)?rst_n:core_rst_n;
+ // the same select on the low-fanout copy (== core_reset_n at every time): pt_core's release flops only
+ wire core_release_n=(capture_enable||playback_enable)?rst_n:core_rel_n;
  pt_core core(core_reset_n,enable,mode8,host_tx_clk,wire_rx_clk,wire_tx_clk,rf_rx_clk,rf_core_clk,
  h2d_quad,d2h_quad,wire_rx_data,wire_rx_valid,stream_wire,stream_wire_valid,wire_tx_request,
  rf_rx_sample,rf_rx_valid,stream_rf,stream_rf_valid,rf_req_core,core_status,stream_wire_idle,stream_rf_mute,
  analog_cfg[`PT_A_DIGITAL_TRANSPORT_CONFIG__PAYLOAD_IQ_LSB],linecode,rx_gain,rx_gain_active,
  // MEMORY v3 (sharing S1): capture/playback in the transport banks; pt_memory is deleted.
  capture_enable,playback_enable,memory_loop,memory_last,host_sclk,memory_write,index,memory_wdata,capture_data,capture_done,
- prbs_select,prbs_word,tx_enabled&&prbs_ready,!tx_enabled,wire_req_int,vth_fast,vth_a,vth_b);
+ prbs_select,prbs_word,tx_enabled&&prbs_ready,!tx_enabled,wire_req_int,vth_fast,vth_a,vth_b,core_release_n);
  pt_sync_bit e(wire_tx_clk,rst_n,enable,tx_enabled);
  // Shared wired pattern generator/checker (rtl/pt_pattern.sv, consolidation P2-6): 40-bit cores directly
  // on the 40-bit quad clocks (AC-1 S3: no gearbox, no clock gate). CDC: the quasi-static

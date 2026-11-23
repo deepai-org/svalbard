@@ -41,13 +41,13 @@ module tb_digital_wire40;
  // Pad-edge host link (DDR mode): forwarded H2D clock = hclk/2 centred on the FPGA words; D2H pins
  // sampled on the hclk falling edge.
  reg h2d_clk=0;always @(negedge hclk)h2d_clk<=!h2d_clk;
- wire core_clk,core_rst_n;wire[39:0]h2d_quad,d2h_quad;wire[9:0]d2h_pin;
+ wire core_clk,core_rst_n,core_rel_n;wire[39:0]h2d_quad,d2h_quad;wire[9:0]d2h_pin;
  reg hddr=0;always @(posedge hclk)hddr<=!hddr;   // host DDR clock = word clock / 2
  pt_host_link link(.rst_n(rst_n),.mode(2'd0),.d2h_enable(1'b1),.h2d_clk(h2d_clk),.h2d_pin(h2d),.link_clk(hddr),.word_clk(hclk),
-  .core_clk(core_clk),.core_rst_n(core_rst_n),.h2d_quad(h2d_quad),.d2h_quad(d2h_quad),.d2h_pin(d2h_pin),.d2h_clk_pin(),.d2h_stagger(1'b0),.d2h_oe(),
+  .core_clk(core_clk),.core_rst_n(core_rst_n),.core_rel_n(core_rel_n),.h2d_quad(h2d_quad),.d2h_quad(d2h_quad),.d2h_pin(d2h_pin),.d2h_clk_pin(),.d2h_stagger(1'b0),.d2h_oe(),
   .h2d_overflow(),.h2d_underflow());
  always @(negedge hclk)d2h<=d2h_pin;
- pt_digital dut(.rst_n(rst_n),.core_rst_n(core_rst_n),.ref_clk(1'b0),.host_sclk(sclk),.host_cs_n(1'b1),.host_mosi(1'b0),.host_miso(host_miso),
+ pt_digital dut(.rst_n(rst_n),.core_rst_n(core_rst_n),.core_rel_n(core_rel_n),.ref_clk(1'b0),.host_sclk(sclk),.host_cs_n(1'b1),.host_mosi(1'b0),.host_miso(host_miso),
   .host_miso_oe(host_miso_oe),.host_tx_clk(core_clk),.host_rx_clk(core_clk),.wire_rx_clk(wclk),.wire_tx_clk(wclk),
   .rf_rx_clk(1'b0),.rf_tx_clk(1'b0),.h2d_quad(h2d_quad),.d2h_quad(d2h_quad),.wire_rx_data(wire_rx_data),.wire_rx_valid(wire_rx_valid),
   .wire_tx_data(wire_tx_data),.wire_tx_valid(wire_tx_valid),.wire_idle(wire_idle),.wire_tx_request(wire_tx_request),

@@ -45,14 +45,17 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  // the pt_vthdac code). vth_fast[0] / [1] rise with the first accepted A / B command and override the register fields
  // slicer.threshold.vth_a / vth_b at the DAC pins until ENABLE = 0. host_clk registers; the DAC pins are
  // quasi-static analog inputs (settling ~100 ns), so no CDC is needed. Command -> pin: one host clock.
- output reg[1:0]vth_fast,output reg[7:0]vth_a,vth_b);
+ output reg[1:0]vth_fast,output reg[7:0]vth_a,vth_b,
+ // Low-fanout copy of rst_n (same value at every time; pt_digital core_release_n): reset of the four
+ // release flops rr_* only, so their recovery path does not ride on rst_n's 1263-pin tree (r10).
+ input wire rel_n);
  wire eh,ewr,ewt,err,ert;
  pt_enable_release e0(host_clk,rst_n,enable,eh);
  pt_sync_bit e2(wire_rx_clk,rst_n,enable,ewr);pt_sync_bit e3(wire_tx_clk,rst_n,enable,ewt);
  // The RF pack/unpack reservoirs sit in the sample-clock domains: disable must
  // flush them even while those clocks are stopped (owner change lifecycle).
  pt_enable_release e4(rf_rx_clk,rst_n,enable,err);pt_enable_release e5(rf_tx_clk,rst_n,enable,ert);
- wire crst=rst_n&&eh;
+ wire crst=rel_n&&eh;   // == rst_n&&eh (rel_n == rst_n); eh is reset by rst_n
  // Timing closure 2026-11-11: the hcore engines take their reset from replicated local release flops
  // (all sample 1 on the first host_clk edge after crst deasserts, so they release on the same edge);
  // the core_rst_n -> thousands-of-RN recovery tree becomes four local trees.

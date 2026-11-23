@@ -39,6 +39,14 @@ COMPACT = {
 }
 USB_FIX = dict(termination_geometry_um=(16., 1.3, 1), high_side_fast_off=True, hs_mirror_reference=False)
 
+# --esd-a[=JSON] (2026-11-20, opt-in; absent = the published cell): pad_wirepad ESD option A. JSON keys: "tb" = layout.py
+# usb_term_block overrides (termination block, neck, cleared site band), "site" = pad_site_primary OPT overrides. No
+# protection network macro; pad-site primaries at both bond sites; new port DVDD. Flags go after the positional arguments.
+ESD_A = None
+for _a in [a for a in sys.argv[4:] if a.startswith('--esd-a')]:
+    ESD_A = json.loads(_a.split('=', 1)[1]) if '=' in _a else {}
+    if set(ESD_A) - {'tb', 'site', 'term_poly', 'trim_poly', 'fs_pad_6v'}: raise ValueError('--esd-a: keys tb / site / term_poly / trim_poly / fs_pad_6v only')
+    sys.argv.remove(_a)
 family = sys.argv[1]; work = Path(sys.argv[2]); net = Path(sys.argv[3])
 # usbfix6v2 (PD28, opt-in): usbfix6v + 16 base 6 V termination switches, shorter base poly and a 4-bit
 # binary-weighted 6 V trim bank (TERM_TRIM0..2; 4 bits overflow the 146 um trunk bank), FS fast-off/control sizing for the 6 V high side.
@@ -46,6 +54,10 @@ USB6V2 = dict(termination_geometry_um=(16., 1.48, 1), termination_switch_units=1
               termination_trim=dict(poly=(4., 2.4), switch_w=5., bits=3), term_gate_drive=2.5, fast_off_width_um=16., control_width_um=8.)
 # usbfix6v2ls (PD28, opt-in): usbfix6v2 + LS slow-edge mode (wired_receive ls_slow, port LS_SLOW); the v9 nets keep
 # their trunk x (RX_P/N 98/97, VSS, ports) and the new nets share free signal tracks (layout.shared_tracks).
+if ESD_A and ESD_A.get('term_poly'):   # --esd-a: base termination poly (w, l) um, one segment (re-centred for the block's metal)
+    USB6V2['termination_geometry_um'] = (float(ESD_A['term_poly'][0]), float(ESD_A['term_poly'][1]), 1)
+if ESD_A and ESD_A.get('trim_poly'):   # --esd-a: trim unit poly (w, l) um of bit 0 (bit k: w x 2^k)
+    USB6V2['termination_trim'] = dict(USB6V2['termination_trim'], poly=(float(ESD_A['trim_poly'][0]), float(ESD_A['trim_poly'][1])))
 USB_LS = dict(high_a_units=10, low_a_units=3)
 # usbfix6v2lsm (PD46 = PD44 laid out, opt-in): usbfix6v2 + Miller-integrated LS edges (wired_receive ls_slow['miller'];
 # no A/B split), 1.5 pF MIMs in the strip right of the trunk bank, and 2-finger pairs for the parallel FS / pull-up
@@ -83,6 +95,26 @@ if KEEP_TRACKS is not None:
     params['keep_tracks_of'] = sorted({n for d in KEEP_TRACKS(**gp).devices for n in d.nodes})
 if sys.argv[4:5] == ['usbfix6v2lsm']:
     params['pair_prefixes'] = PAIR_PREFIXES
+if ESD_A and ESD_A.get('fs_pad_6v'):   # --esd-a b6: the 24 pad-side FS high-side PMOS per leg (FS_x_PAD_i) on 6 V oxide
+    # (pfet_06v0, L 0.55 um, same W) - a schematic device change: with the FS high side in the low-R block the 3.3 V pad-side PMOS
+    # takes VDD - pad in CDM (5.6 V > 5.0 V); the 6 V device holds. Applied to the circuit before layout (schematic = layout).
+    import dataclasses, re as _re, wired_receive as _wr
+    _b6_build = _wr.build
+    def _fs6(*a, **k):
+        c = _b6_build(*a, **k); n = 0
+        for i, d in enumerate(c.devices):
+            if _re.fullmatch(r'FS_[PN]_PAD_\d+', d.name):
+                if d.model != 'pfet_03v3': raise ValueError('fs_pad_6v: ' + d.name)
+                c.devices[i] = dataclasses.replace(d, model='pfet_06v0', l_um=.55); n += 1
+        if n != 48: raise ValueError(f'fs_pad_6v: {n} devices')
+        return c
+    _wr.build = _fs6
+if ESD_A is not None:
+    if family not in ('wired_receive_usb', 'reference_clock'): raise ValueError('--esd-a is for wired_receive_usb / reference_clock')
+    params['usb_term_block'] = ESD_A.get('tb', {})
+    if family == 'reference_clock':   # (2026-11-22) pad_refpad option A: no termination block, grid height kept (see layout.py term_block)
+        if set(ESD_A) - {'tb', 'site'}: raise ValueError('--esd-a reference_clock: keys tb / site only')
+        params['usb_term_block'] = dict(dict(term_block=False, height_um=None), **params['usb_term_block'])
 base_layout(work/'base', family, external_primary=True, bond_y_offsets_um=BOND_Y_OFFSETS, **params)
 base = work/'base'
 if family == 'wired_receive_usb':
@@ -101,5 +133,6 @@ if family == 'wired_receive_usb':
         shutil.copyfile(work/'discharge'/s, staged/n)
     base = staged
 connect_primary(work/'pad', base, net, COMPACT[family]['origin'], pdk, route_y_um=ROUTE_Y, ground_low_um=GROUND_LOW,
-                side_pins=COMPACT[family].get('side_pins'))
+                side_pins=None if (ESD_A and ESD_A.get('tb', {}).get('top_pins')) else COMPACT[family].get('side_pins'),   # ASM-2: RX pins on the top edge
+                **({'esd_a': dict({'neck': [33.5, 41.5], 'vss_strip': [9., 11.]}, **ESD_A.get('site', {}))} if ESD_A is not None else {}))
 print(json.dumps(json.loads((work/'pad/layout-screen.json').read_text()), indent=1)[:1500])

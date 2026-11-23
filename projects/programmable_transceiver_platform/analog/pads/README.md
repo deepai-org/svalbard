@@ -58,7 +58,7 @@ All under `generated/`. Every cell: Magic DRC 0, netgen LVS unique, independent 
 | Cell (top) | Folder | Outline (µm) | Area (µm²) | Devices (MOS) | Ports |
 |---|---|---|---|---|---|
 | `pad_hspad` | `stress-safe-families/wired-receive-hs/` | 492 × 912.91 | 449,202 bbox | 554 (404) | `DVDD VSS VDD TERM_VCM TERM_ENABLE TERM_TRIM0..3 VBIAS RX_P RX_N PAD_P PAD_N` |
-| `pad_wirepad` | `stress-safe-families/wired-receive-usb/` | 2.78..524 × 0..1434.72 | 316,021 allocated (ceiling 340,000) | 739 (615) | `PAD_P PAD_N VDD VSS TERM_VCM TERM_ENABLE DIFF_ENABLE DIV_ENABLE BYPASS_ENABLE RX_P RX_N HS_PBIAS HS_P HS_N FS_HIGH_P/N FS_LOW_P/N PULLUP_P/N PULLDOWN_P/N TERM_TRIM0..2 LS_SLOW ATB_ESD_RAIL` |
+| `pad_wirepad` | `stress-safe-families/wired-receive-usb/` (`combined.gds`) | 2.78..384.18 × 0..1434.72 | 547,212 bbox | 371 | `PAD_P PAD_N VDD VSS TERM_VCM TERM_ENABLE DIFF_ENABLE DIV_ENABLE BYPASS_ENABLE RX_P RX_N HS_PBIAS HS_P HS_N FS_HIGH_P/N FS_LOW_P/N PULLUP_P/N PULLDOWN_P/N TERM_TRIM0..2 LS_SLOW DVDD` |
 | `pad_txpad` | `stress-safe-families/wired-transmit/` (`combined.gds`) | 286 × 699.76 | 200,135 bbox | 409 (346) | `PAD_P PAD_N VDD VSS DVDD_P DVDD_N CASCODE MAIN_P/N MAIN_BIAS POST_P/N POST_BIAS TMDS_P/N TMDS_BIAS DETECT_ENABLE DETECT_PBIAS TERM_ENABLE TERM_TRIM0..3 TERM_VCM`; top-edge pins TERM_VCM, PAD_P, PAD_N |
 | `pad_refpad` | `stress-safe-families/reference/` (`combined.gds`) | 2.78..285 × 0..912.91 | 257,636 bbox | 42 diodes (0) | `PAD_P PAD_N VSS VCM DVDD`; top-edge pins PAD_P, PAD_N, VCM, VSS |
 | `pad_rf_pair` | `stress-safe-families/rf-pair/` (`pad.gds`) | 310 × 912.91 | 176,900 allocated | 404 | `PAD_P PAD_N VSS ESD_RAIL ATB_ESD_RAIL DVDD` |
@@ -77,13 +77,10 @@ Evidence files that belong to the published netlists:
 | Cell | Files |
 |---|---|
 | `pad_hspad` (GDS sha 07b6800d…; hashes in `pc47-hspad-a6.json`) | `geometry.json`, `layout-screen.json`, `independent-device-audit.json`, `site-primary.json`, `lu.json`, `pad_hspad-kldrc.json`, `pad-lvs.txt`, `pc47-hspad-a6.json`, models `physical-r-{low,typ,high}[-rail].spice` |
-| `pad_wirepad` (GDS sha 4e4b9d92…) | `placement-layout.json`, `layout-screen.json`, `model-audit.json`, `lu.json`, `pad_wirepad-kldrc.json`, `combined-lvs.txt`, `pd47-usb-ls-miller.json`; 1 kV HBM and CDM surrogate in `../pd48-esd-tiering.json` key `pd48c` |
+| `pad_wirepad` b7 (hashes in `pc76-wirepad-b7.json`) | `placement-layout.json`, `layout-screen.json`, `independent-device-audit.json`, `model-audit.json`, `marker-merge.json`, `lu.json`, `pad_wirepad-kldrc.json`, `combined-lvs.txt`, models `physical.spice` (C-only), `physical-r-{typ,high}[-rail].spice` (R+C) |
 | `pad_txpad` (GDS sha 131af869…; hashes in `pc72-txpad-a16.json`) | `layout-info.json`, `lu.json`, `marker-merge.json`, `pad_txpad-kldrc.json`, `pad-lvs.txt`, `pc72-txpad-a16.json`, models `physical.spice` (C-only, wrapper `tx_protected_pad`), `physical-r-{typ,high}.spice` (R+C; model-only ports `DVSS_P/N`, tie to VSS) |
 | `pad_refpad` (GDS sha 96dc5a02…; hashes in `pc75-refpad-a1.json`) | `placement-layout.json`, `layout-screen.json`, `independent-device-audit.json`, `model-audit.json`, `marker-merge.json`, `lu.json`, `pad_refpad-kldrc.json`, `combined-lvs.txt`, `pc75-refpad-a1.json`, models `physical.spice` (C-only, wrapper `tx_protected_pad`), `physical-r-{typ,high}[-rail].spice` (R+C) |
 | `pad_rf_pair` r3, `pad_single_leg` s2, `pad_rftxpad` t2 (hashes in `pc74-rfpair-r3.json`, `pc74-singleleg-s2.json`, `pc74-rftxpad-t2.json`) | `pad.gds`, `pad-extracted.spice` (C-only, wrapper `rf_protected_pad`), `reference.spice` (LVS / chip-top master `pad_reference`), `physical-r-{typ,high}.spice` (lumped R+C), `pad-layout.json`, `pad-lvs.txt`, `lu.json`, `<cell>-kldrc.json` |
-
-Files in `wired-receive-usb/` named `pd28-*` were produced on other
-netlists and are not evidence for the published cells; no flow reads them.
 
 ## 3. Protection foundation
 
@@ -150,20 +147,22 @@ metal). The receiver common mode comes from `VBIAS` through the coupling MIM. Te
 12/0.7) per leg. Not in any model: ss / ff / hot ESD, low-metal ESD, per-finger current density outside the primary
 diodes, ring resistance beyond the stated bound.
 
-### `pad_wirepad` (USB; `pd47-usb-ls-miller.json`)
+### `pad_wirepad` b7 BASELINE (USB; `pc76-wirepad-b7.json`)
 
-| Quantity | Value |
-|---|---|
-| Safe / HBM 2 kV | 0 of 615 MOS over the screen in pulse, HBM and peer runs; pad peak ≤ 5.41 V; 4 devices at exactly 3.63 V in the slow supply ramp |
-| HS termination (trim codes tt 4 / ss 7 / ff 0) | 44.2–47.6 Ω |
-| HS current delivered | 16.9–18.2 mA (target 17.78 mA) |
-| LS edges (`LS_SLOW` = 1, 50 and 450 pF, HS reference ±5 %) | 94.7–201 ns |
-| FS edges, 50 pF | 5.9–11.3 ns, rise/fall ratio 0.96–1.23 (USB-01) |
-| Pad C, bypass on or off, with RX loads | 2.08–3.37 pF against a 5.0 pF USB budget |
+ESD option A pad-site primaries (`DVDD`), no network (`ATB_ESD_RAIL` removed), low-R HS termination block, widened PAD trunks.
+Review `scratch/pads-core/esdopt/usb/review-b7/REVIEW.md`: GO with conditions.
 
-Rules for the controller: `LS_SLOW` must be 0 whenever the termination or HS is used; change it only with the
-driver off; LS needs the HS bias enabled. `HS_PBIAS` is a VSS-referenced gate voltage from `wtx_idac`. The HS
-level at ss/32 °C reaches 400 mV only from about 3.33 V upward (interface-changes row PC-13). (USB-02, PAD-03)
+| Limit | b7 | Result |
+|---|---|---|
+| HBM 2 kV / CDM 2 A (high metal) | 5.65 / 7.66 V | PASS (CDM margin 0.34 V) |
+| HS termination 23 corners, typ / high metal | in window | PASS |
+| HS delivered current | 16.78–17.14 mA | PASS |
+| HS eye template 1 (calibrated) | PASS all; ff outer margin 0.6 mV | PASS (thin) |
+| Pad C per leg | up to 3.45 pF | judged on eye / RL (PC-50) |
+
+Known misses: eye not run with the real `pt_usb_txdrv` edge (ff 0.6 mV outer margin, 496–498 ps edges); E2 junction check
+vacuous; HS-path EM not screened; F1–F3 not independently re-read; uncalibrated HS level 362 mV (B11 must raise the bias
+9–12 %); eye bench simplified (no jitter / noise / coupling / cable loss; template values unchecked against the spec).
 
 ### `pad_txpad` a16 BASELINE (`pc72-txpad-a16.json`; PC-72)
 
@@ -327,11 +326,10 @@ budget-sized ideal capacitors on top of extracted capacitance.
    family meets its HBM tier; every HBM / CDM number in section 4 except the `pad_hspad` rows is capacitance-only and
    is not evidence. Decided fix (PC-27): primary diodes at the bond pad tied to the ring rails, all families; back-feed is
    accepted and sequenced by the board (`spec/board-requirements.md` B53). `pad_hspad` is published with it (a6, PC-47,
-   conditions in section 4), and so are `pad_txpad` (a16, PC-72), `pad_refpad` (a1, PC-75) and the rf-shell families (r3 / s2 / t2, PC-74).
+   conditions in section 4), and so are `pad_txpad` (a16, PC-72), `pad_refpad` (a1, PC-75), `pad_wirepad` (b7) and the rf-shell families (r3 / s2 / t2, PC-74).
    `RF_TX` gets no diode to the supply (it swings above it). (PAD-11)
-2. **`pad_wirepad` signal path.** (`pad_txpad`: trimmed termination in a16, section 4.) `pad_wirepad` has about
-   81 Ω of metal in series with its 45 Ω HS termination (survey only), not fixed. Resistance-aware extraction
-   is mandatory for all pad evidence from now on (`rextract/`).
+2. **`pad_wirepad` signal path.** Fixed in b7 (low-R termination block, section 4); open: eye with the real
+   `pt_usb_txdrv` edge and the B11 calibration range. Resistance-aware extraction is mandatory for all pad evidence (`rextract/`).
 3. **CDM.** 250 V is a target only; die capacitance and CDM current are estimates.
 4. **Supply-clamp events.** Survivability of a fired clamp and the hot-plug waveform are not shown. The slew
    rule is in MANDATE section 6 and interface-changes row PC-16; it is not yet a row of

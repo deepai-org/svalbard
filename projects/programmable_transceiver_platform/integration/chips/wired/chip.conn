@@ -115,7 +115,7 @@ inst pad_usb pad_wirepad wired_tx
   DIV_ENABLE=DIV_ENABLE BYPASS_ENABLE=BYPASS_ENABLE RX_P~URX_P RX_N~URX_N HS_PBIAS~HS_PBIAS
   HS_P=USB_HS_P HS_N=USB_HS_N FS_HIGH_P=USB_FS_HIGH_P FS_HIGH_N=USB_FS_HIGH_N FS_LOW_P=USB_FS_LOW_P FS_LOW_N=USB_FS_LOW_N
   PULLUP_P=c_usb_pullup_p PULLUP_N=c_usb_pullup_n PULLDOWN_P=c_usb_pulldown_p PULLDOWN_N=c_usb_pulldown_n
-  TERM_TRIM{0:2}=c_usb_term_trim[\1] LS_SLOW=c_usb_ls_slow ATB_ESD_RAIL~-      # USB data pins: D-USB (MW-18)
+  TERM_TRIM{0:2}=c_usb_term_trim[\1] LS_SLOW=c_usb_ls_slow DVDD~VDD      # USB data pins: D-USB (MW-18); DVDD: ring landing (b7)
 inst pad_wire_tx pad_txpad wired_tx
   PAD_P~WIRE_TX_P PAD_N~WIRE_TX_N VDD~RAIL_wired_tx VSS~VSS CASCODE~RAIL_wired_tx DVDD_P~VDD DVDD_N~VDD      # DVDD_*: ring landings (PC-73)
   TERM_TRIM0~RAIL_wired_tx TERM_TRIM1=VSS TERM_TRIM2~RAIL_wired_tx TERM_TRIM3=VSS      # baseline code 5 (as HS RX reset); field requested (CB8-15)

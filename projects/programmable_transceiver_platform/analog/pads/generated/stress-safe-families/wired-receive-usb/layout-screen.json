@@ -2,21 +2,19 @@
   "status": "connected_primary_layout_verified_not_canonical",
   "family": "wired_receive_usb",
   "drc_count": 0,
-  "device_count": 739,
+  "device_count": 371,
   "device_lvs_match": true,
   "independent_device_graph_match": true,
   "limitations": [
-    "ESD_RAIL is an extraction port to hide inside the simulation wrapper, not a new bond pin.",
-    "Nonlinear well correction, extracted loading screens, provider placement and area accounting pending.",
-    "No ESD rating, core-survival or current-capacity claim."
+    "DVDD is the ring supply landing of the pad-site up-diodes: connect it to the provider ring supply at the site.",
+    "No protection network: pad-site primaries only (ESD option A)."
   ],
   "source_sha256": {
-    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/wired_protection_layout_ss.py": "e372ad4d4537d32d4ae538a9fd688fc4603677aa16a49ba36ecc760a74ef1130",
-    "/home/ubuntu/svalbard/scratch/pads-pd46/l1/primary-inputs/rx_pad_with_discharge.gds": "b1ca07d0eff72f2dd0f42c33cf4c911fe6b81d61050dfabd0f314e4aa5db8701",
-    "/home/ubuntu/svalbard/scratch/pads-pd46/l1/primary-inputs/pad_wired_receive_usb.spice": "81cb1c3685b73aaebd9583f095bebcc5230c8770655e990a34ddf1db94508e6b",
-    "/home/ubuntu/svalbard/scratch/pads-pd21/d2/macro/network.gds": "4b88515434a39cb50f1956710ce87331bb4578cb1982c2dba2caa34bed985c0c",
-    "/home/ubuntu/svalbard/scratch/pads-pd21/d2/macro/network_flat.spice": "8ccd58e93b9bfcfa97348c456c65cb14505a1685c8c09ddd9028bde58245ff2f"
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/wired_protection_layout_ss.py": "dbfaac63fc6e6f0f4d3e83f3215ce30950cb27bf0558ef0673ce8f352c2cdb0e",
+    "/home/ubuntu/svalbard/scratch/pads-core/esdopt/usb/build/b7/primary-inputs/rx_pad_with_discharge.gds": "b38a74715c7a7ab02999252eaaac62f5ad9a6295dfa27db2f5333ce76f073f52",
+    "/home/ubuntu/svalbard/scratch/pads-core/esdopt/usb/build/b7/primary-inputs/pad_wired_receive_usb.spice": "7f9f85e8415df56eb4cb5827629950c49ab66f4e42de001b7034eac29ae5f846",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/network-gc-d2/network.gds": "4b88515434a39cb50f1956710ce87331bb4578cb1982c2dba2caa34bed985c0c",
+    "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads/generated/stress-safe-families/network-gc-d2/network_flat.spice": "8ccd58e93b9bfcfa97348c456c65cb14505a1685c8c09ddd9028bde58245ff2f"
   },
-  "simulation_model_sha256": "7704d5a6f3c1f262d23b0d90402d6a1b106bf246c82c3a716637223fede46431",
-  "nonlinear_well_replacement_checked": true
+  "simulation_model_sha256": "fbaf1c32ad06180a71c838406229c5e27636e5092d7787490985cc01b8afe171"
 }

@@ -1,0 +1,79 @@
+{
+ "mode": "eye",
+ "dut": "models/b7_r_typ_rail.spice",
+ "model_sha256": "b6405faec37bf93e4db7065d1b75f3954e96cabd706d2184a0700987d80665b4",
+ "corner": [
+  "typical",
+  27,
+  3.3
+ ],
+ "term_code": 3,
+ "hs_scale": 1.1243590057404846,
+ "cal": [
+  {
+   "scale": 1.0,
+   "static_j_tp_mv": 356.57
+  },
+  {
+   "scale": 1.1218,
+   "static_j_tp_mv": 399.11
+  },
+  {
+   "scale": 1.1243,
+   "static_j_tp_mv": 399.98
+  }
+ ],
+ "bond": "max",
+ "tb_mm": 50.0,
+ "gate_ramp_s": 1.2e-09,
+ "channel": {
+  "USB_DP": {
+   "bond_nH": 2.91,
+   "bond_ohm": 0.245,
+   "F_mm": 1.22,
+   "B_mm": 1.96,
+   "via_nH": 0.47,
+   "conn_nH": 1.08
+  },
+  "USB_DN": {
+   "bond_nH": 2.85,
+   "bond_ohm": 0.241,
+   "F_mm": 1.12,
+   "B_mm": 4.29,
+   "via_nH": 0.369,
+   "conn_nH": 0.99
+  }
+ },
+ "result": {
+  "template1_tp": {
+   "bulk_delay_ps": 1065.0,
+   "clock_offset_ps": -8.4,
+   "crossing_jitter_pp_ps": 44.6,
+   "inner_margin_mv": 87.0,
+   "inner_violations": 0,
+   "outer_margin_mv": 24.7,
+   "outer_violations": 0,
+   "eye_height_min_mv": 387.0,
+   "peak_mv": 500.3,
+   "bit_errors": 0,
+   "bits_checked": 141,
+   "ok": true
+  },
+  "tp_level_mv": [
+   395.6,
+   -398.5
+  ],
+  "host_level_mv": [
+   395.4,
+   -397.8
+  ],
+  "host_lag_ns": 5.02,
+  "edge_10_90_ps": {
+   "min": 557.5,
+   "max": 721.8,
+   "n": 3
+  },
+  "level_ok": true,
+  "edges_ok": true
+ }
+}

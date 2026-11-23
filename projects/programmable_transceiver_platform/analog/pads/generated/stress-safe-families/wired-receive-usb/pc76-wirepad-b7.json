@@ -1,0 +1,133 @@
+{
+ "row": "PC-76",
+ "cell": "pad_wirepad",
+ "state": "BASELINE (MANDATE 1: finished-if-imperfect; known misses below)",
+ "candidate": "b7 (ESD option A pad-site primaries, low-R HS termination block, PAD trunk fill, 6 V FS pad devices)",
+ "build_command": "python3 $P/analog/pads/stress_safe_compact_layout.py wired_receive_usb OUT $P/analog/pads/generated/stress-safe-families/network-gc-d2 usbfix6v2lsm 14 '--esd-a={\"term_poly\": [16, 1.16], \"trim_poly\": [4, 1.2], \"fs_pad_6v\": true, \"site\": {\"n_up_left\": 3}, \"tb\": {\"fs\": {\"bus_w2\": 4}, \"top_pins\": true, \"pad_trunk_fill\": true}}'; top tx_with_primary renamed to pad_wirepad (byte-level)",
+ "rebuild_check": "2026-11-23 rebuild from the generators committed with this publish (layout.py ffe71882, wired_protection_layout_ss.py b2e89345, stress_safe_compact_layout.py 0c0f8b61, pad_site_primary.py 2bca0b81) into esdopt/usb/build/pub7: DRC 0, device LVS match, normalised GDS cea611c5 == candidate b7. Default paths at these shas: reference_clock and wired_receive_usb XOR 0.0 um2 vs their previous published cells (esdopt/ref STATUS L7). pad_hspad / rf-shell default paths through pad_site_primary.py NOT re-checked (rf-shell candidates rebuild with 17.4 um2/site XOR, PC-74 json).",
+ "sha256": {
+  "combined.gds": "d19ebdc9bd90dbeecd4970b27f5b41a69ec293e14a559de60aa3f15e1cedf400",
+  "physical.spice": "fbaf1c32ad06180a71c838406229c5e27636e5092d7787490985cc01b8afe171",
+  "physical-r-typ.spice": "73d0ef6da503b60df767b351a0d477ca82d0c3e07112d88c9f0c744491fc1b97",
+  "physical-r-high.spice": "9a97caa72bfe1535037cd5e3edc579ab2b77cb94b52cb229e8d471098204c3a4",
+  "physical-r-typ-rail.spice": "b6405faec37bf93e4db7065d1b75f3954e96cabd706d2184a0700987d80665b4",
+  "physical-r-high-rail.spice": "dacd08e9143a61bc3d01bb73b9cf739cb1704b9a566d0343e9fd6bc4919d5c37",
+  "lvs-reference.spice": "156805fce8b20a09b1bbce141c53ecd74dcc381864924c80e7068f6bdc5a0b41",
+  "combined-lvs.txt": "09cab6859547f4ba667b77c9014c137a31e7c32f021ddf4c193213f70a6ec69e",
+  "placement-layout.json": "fed7987552881f8867ec76466b2180f8f629afebf4c6aff91960e4598662bbf3",
+  "marker-merge.json": "a5cd26dd3c55177393144309d813ba6a7dc06a615b426f026c3244d1c09c7a74",
+  "independent-device-audit.json": "b9735e9f3324bc77f7c544c0d751258b9683d2b30bfdd945a63ee86b09ec6c3f",
+  "layout-screen.json": "fa98d2ab85e573145a51ecfa373ca6ce3a63328c718f032447f16a73eca88758",
+  "model-audit.json": "dd50f618ef8d7832b3f365b80fc05210aaa491d814acef28ae341d181a73bda6",
+  "lu.json": "ac1e8149a47bdd3fac3145d980788c1c03ef3335459a9eb07673c1edad31fe39"
+ },
+ "bbox_um": [
+  2.78,
+  0,
+  384.18,
+  1434.72
+ ],
+ "ports": [
+  "PAD_P",
+  "PAD_N",
+  "VDD",
+  "VSS",
+  "TERM_VCM",
+  "TERM_ENABLE",
+  "DIFF_ENABLE",
+  "DIV_ENABLE",
+  "BYPASS_ENABLE",
+  "RX_P",
+  "RX_N",
+  "HS_PBIAS",
+  "HS_P",
+  "HS_N",
+  "FS_HIGH_P",
+  "FS_HIGH_N",
+  "FS_LOW_P",
+  "FS_LOW_N",
+  "PULLUP_P",
+  "PULLUP_N",
+  "PULLDOWN_P",
+  "PULLDOWN_N",
+  "TERM_TRIM0",
+  "TERM_TRIM1",
+  "TERM_TRIM2",
+  "LS_SLOW",
+  "DVDD"
+ ],
+ "ports_note": "ATB_ESD_RAIL removed (no network); DVDD = ring landing (chip top DVDD~VDD).",
+ "limits": [
+  [
+   "L1-L8 layout (Magic DRC, read-back LVS + 2 controls, KLayout, latch-up, rail_site, floating, default XOR, outline)",
+   "all as STATUS b7",
+   "PASS"
+  ],
+  [
+   "E1 HBM 2 kV high / typ",
+   "5.65 / 5.13 V, 0 over",
+   "PASS"
+  ],
+  [
+   "E1 CDM 2 A high / typ",
+   "7.658 / 6.897 V",
+   "PASS (0.34 V = 4 % margin)"
+  ],
+  [
+   "E2 / E3 / E4",
+   "0 V (vacuous, review C2); 6.07 / 0.043 mA/um; MIM 5.03 V",
+   "E3/E4 PASS, E2 not evidence"
+  ],
+  [
+   "F1 HS termination 23 corners typ / high",
+   "all in window",
+   "PASS"
+  ],
+  [
+   "F2 FS / LS / pull-up",
+   "as STATUS",
+   "PASS"
+  ],
+  [
+   "HS delivered current",
+   "16.78-17.14 mA (17.78 +-10 %)",
+   "PASS"
+  ],
+  [
+   "F3 pad C vs published + 0.3 pF",
+   "+0.71 typ / +1.02 high",
+   "superseded by PC-50 (judged on F4)"
+  ],
+  [
+   "F4 HS eye template 1 (calibrated)",
+   "PASS all; ff outer margin 0.6 mV",
+   "PASS (thin)"
+  ],
+  [
+   "RL to 480 MHz",
+   ">= 19.3 dB",
+   "report"
+  ]
+ ],
+ "misses_and_conditions": [
+  "Review C1: eye not run with the real pt_usb_txdrv edge (ff outer-template margin 0.6 mV, edges 496-498 ps < 500 ps; the 1.2 ns gate stand-in is optimistic vs the 860 ps driver).",
+  "Review C2: the non-primary-junction ESD check (E2) is vacuous (reads 0 V even in the stripped-site control).",
+  "Review C3: HS-path EM not screened (plate + via4 array).",
+  "Review C4: F1-F3 not independently re-read.",
+  "HS amplitude uncalibrated 362 mV vs 360 mV minimum: the per-board calibration (B11) must raise the bias 9-12 % to reach 400 mV (DAC range not checked).",
+  "Eye bench simplified: 143 bits, no jitter / noise, uncoupled legs, lossless cable, receptacle values estimated; template values not checked against the USB 2.0 spec text.",
+  "CDM 2 A margin 0.34 V (4 %).",
+  "Pad C up to 3.45 pF per leg (F3 rule exceeded, accepted only on the F4 eye / RL evidence, PC-50).",
+  "Not run: RX sensitivity / template 4, ss / ff ESD corners, low metal, DIFF-mode limits; termination trim code table vs the c_usb_term_trim reset (4) not re-checked."
+ ],
+ "review": {
+  "reviews": [
+   "scratch/pads-core/esdopt/usb/review-b7/REVIEW.md (GO with conditions C1-C4)"
+  ],
+  "status": "scratch/pads-core/esdopt/usb/STATUS.md (CANDIDATE b7)"
+ },
+ "evidence": {
+  "esd": "scratch/pads-core/esdopt/usb/esd/b7*.json",
+  "bench": "scratch/pads-core/esdopt/usb/bench/b7*.json"
+ }
+}

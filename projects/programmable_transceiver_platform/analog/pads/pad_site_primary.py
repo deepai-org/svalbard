@@ -54,6 +54,12 @@ OPT = dict(
     y_vdd_top=148.7,          # DVDD bar top
     dvss_band=(70., 117.), dvdd_bands=((118., 125.), (134., 197.)),   # ring Metal3 bands used for landings (5LM_METAL_RAIL)
     x_max=74.,                # nothing beyond this x (rail-cell p-tap frame from 74.6)
+    n_up_left=0,              # (2026-11-20, pad_wirepad option A; 0 = the published pattern) extra pd2nw fingers in the up row LEFT of the
+                              # neck (centres neck x1 - 4.5 - pitch*i): PAD bar from the neck, substrate-tap bar joined to `vss_strip` and
+                              # landed on DVSS, own DVDD bar whose band-134 landing runs over the neck to the right DVDD bar (one DVDD net)
+    n_dn_left=0,              # (2026-11-21, rf-shell option A; 0 = the published pattern) extra nd2ps fingers in the down row LEFT of the neck
+                              # (centres neck x1 - 4.5 - pitch*i): PAD bar from the plate / neck, VSS bar joined to `vss_strip`, landed on DVSS
+    no_up_row=False,          # (2026-11-21, pad_rftxpad option A; False = the published pattern) draw the down row only (needs n_up = 0)
 )
 
 
@@ -78,6 +84,8 @@ def fingers(opt):
 def reference_lines(prefix, pad, vss, dvdd, opt):
     out = [f'D{prefix}N{i} {vss} {pad} {ND} pj=51.8u area=22.5p' for i in range(opt['n_dn'])]
     out += [f'D{prefix}P{i} {pad} {dvdd} {PD} pj=51.8u area=22.5p' for i in range(opt['n_up'])]
+    out += [f'D{prefix}L{i} {pad} {dvdd} {PD} pj=51.8u area=22.5p' for i in range(int(opt.get('n_up_left', 0)))]
+    out += [f'D{prefix}M{i} {vss} {pad} {ND} pj=51.8u area=22.5p' for i in range(int(opt.get('n_dn_left', 0)))]
     return out
 
 
@@ -123,27 +131,72 @@ def draw(layout, cell, x0, opt=OPT):
     box(M[2], n2 - 1., o['plate_y'], xr_dn, yd - .5)                 # PAD plate + bar (fed from the bond pad plate below)
     box(M[2], xl, yd + .5, xs, yd + 18.5)                            # VSS bar (to the strap)
     landing(xl + .2, yd + .7, xr - .2, yd + 18.3)
-    # ---- up row: pd2nw, A (centre stripe) = PAD, K (n-well ring) = DVDD, outer p+ ring = VSS
-    for x in fx[:nup]:
-        cell.insert(k.DCellInstArray(pd.cell_index(), k.DTrans(x0 + x, yu)))
-        for dy in range(1, nb + 1): via1(x, yu - dy)
-        for s in (-1., 1.):
-            for dy in range(1, 6): via1(x + s * 1.87, yu + dy)
-            for dy in range(6, 12): via1(x + s * .99, yu + dy)
-    box(M[2], nl, o['plate_y'], n2, yu - .5)                         # neck (drawn here too) + its widening
-    box(M[2], n2 - 1., yu - nb - .5, xr_up, yu - .5)                    # PAD bar
-    box(M[2], xl, yu + .5, xs, yu + 5.4)                             # substrate-tap bar
-    ya, yb = max(yu + .7, o['dvss_band'][0] + .2), min(yu + 5.2, o['dvss_band'][1] - .2)
-    if yb - ya >= .7: landing(xl + .2, ya, xr - .2, yb)
-    box(M[2], xr + 1., yd + .5, xs, yu + 5.4)                        # VSS strap round the right end of the PAD bar
-    yt = o['y_vdd_top']
-    box(M[2], xl, yu + 5.8, xr_up, yt)                               # DVDD bar
-    lab = None
-    for b1, b2 in o['dvdd_bands']:
-        ya, yb = max(yu + 6., b1 + .3), min(yt - .2, b2 - .3)
-        if yb - ya >= .7:
-            landing(xl + .2, ya, xr_up - .2, yb); lab = (x0 + (xl + xr_up) / 2, (ya + yb) / 2)
-    if lab is None: raise ValueError('no DVDD landing: y_vdd_top / bands')
+    if o.get('no_up_row', False):         # (2026-11-21, pad_rftxpad option A; False = the published pattern) down row only: no up-diode,
+        if nup or o.get('n_up_left', 0):   # no DVDD bar / landing / port (RF_TX swings above the supply, PC-31)
+            raise ValueError('no_up_row needs n_up = 0 and n_up_left = 0')
+        lab, yt = None, yd + 18.5
+    else:
+        # ---- up row: pd2nw, A (centre stripe) = PAD, K (n-well ring) = DVDD, outer p+ ring = VSS
+        for x in fx[:nup]:
+            cell.insert(k.DCellInstArray(pd.cell_index(), k.DTrans(x0 + x, yu)))
+            for dy in range(1, nb + 1): via1(x, yu - dy)
+            for s in (-1., 1.):
+                for dy in range(1, 6): via1(x + s * 1.87, yu + dy)
+                for dy in range(6, 12): via1(x + s * .99, yu + dy)
+        box(M[2], nl, o['plate_y'], n2, yu - .5)                         # neck (drawn here too) + its widening
+        box(M[2], n2 - 1., yu - nb - .5, xr_up, yu - .5)                    # PAD bar
+        box(M[2], xl, yu + .5, xs, yu + 5.4)                             # substrate-tap bar
+        ya, yb = max(yu + .7, o['dvss_band'][0] + .2), min(yu + 5.2, o['dvss_band'][1] - .2)
+        if yb - ya >= .7: landing(xl + .2, ya, xr - .2, yb)
+        box(M[2], xr + 1., yd + .5, xs, yu + 5.4)                        # VSS strap round the right end of the PAD bar
+        yt = o['y_vdd_top']
+        box(M[2], xl, yu + 5.8, xr_up, yt)                               # DVDD bar
+        lab = None
+        for b1, b2 in o['dvdd_bands']:
+            ya, yb = max(yu + 6., b1 + .3), min(yt - .2, b2 - .3)
+            if yb - ya >= .7:
+                landing(xl + .2, ya, xr_up - .2, yb); lab = (x0 + (xl + xr_up) / 2, (ya + yb) / 2)
+        if lab is None: raise ValueError('no DVDD landing: y_vdd_top / bands')
+    # ---- optional up-row fingers left of the neck (n_up_left)
+    nlu = int(o.get('n_up_left', 0))
+    if nlu:
+        vs = o.get('vss_strip')
+        if not vs: raise ValueError('n_up_left needs vss_strip (the tap bar joins it)')
+        fxl = [n1 - 4.5 - o['pitch'] * i for i in range(nlu)]
+        xa, xb = min(fxl) - 1.5, max(fxl) + 2.
+        if xa < vs[1] + 2.5: raise ValueError(f'n_up_left: fingers reach the VSS strip ({xa} < {vs[1] + 2.5})')
+        for x in fxl:
+            cell.insert(k.DCellInstArray(pd.cell_index(), k.DTrans(x0 + x, yu)))
+            for dy in range(1, nb + 1): via1(x, yu - dy)
+            for s_ in (-1., 1.):
+                for dy in range(1, 6): via1(x + s_ * 1.87, yu + dy)
+                for dy in range(6, 12): via1(x + s_ * .99, yu + dy)
+        box(M[2], xa, yu - nb - .5, n1 + 1., yu - .5)                    # PAD bar from the neck
+        box(M[2], vs[0], yu + .5, xb, yu + 5.4)                          # substrate-tap bar, joined to the VSS strip
+        ya, yb = max(yu + .7, o['dvss_band'][0] + .2), min(yu + 5.2, o['dvss_band'][1] - .2)
+        if yb - ya >= .7: landing(xa + .2, ya, xb - .2, yb)
+        box(M[2], xa, yu + 5.8, xb, yt)                                  # DVDD bar
+        for b1, b2 in o['dvdd_bands']:
+            ya, yb = max(yu + 6., b1 + .3), min(yt - .2, b2 - .3)
+            if yb - ya >= .7:
+                landing(xa + .2, ya, xb - .2, yb)
+                if b2 - b1 > 20.: box(M[3], xb - .2, ya, xl + .2, yb)        # band-134 landing over the neck to the right DVDD bar
+    # ---- optional down-row fingers left of the neck (n_dn_left)
+    ndl = int(o.get('n_dn_left', 0))
+    if ndl:
+        vs = o.get('vss_strip')
+        if not vs: raise ValueError('n_dn_left needs vss_strip (the VSS bar joins it)')
+        fxd = [n1 - 4.5 - o['pitch'] * i for i in range(ndl)]
+        xa, xb = min(fxd) - 2., max(fxd) + 2.
+        if xa < vs[1] + 2.5: raise ValueError(f'n_dn_left: fingers reach the VSS strip ({xa} < {vs[1] + 2.5})')
+        for x in fxd:
+            cell.insert(k.DCellInstArray(nd.cell_index(), k.DTrans(x0 + x, yd)))
+            for dy in range(1, nb + 1): via1(x, yd - dy)
+            for dy in range(1, 12):
+                for s_ in (-1.03, 1.03): via1(x + s_, yd + dy)
+        box(M[2], xa, o['plate_y'], n1 + 1., yd - .5)                    # PAD plate + bar from the bond pad plate / neck
+        box(M[2], vs[0], yd + .5, xb, yd + 18.5)                         # VSS bar, joined to the VSS strip
+        landing(xa + .2, yd + .7, xb - .2, yd + 18.3)
     # ---- Metal1 bridge under the neck: VSS bar -> the family's VSS Metal2 strip
     if o.get('vss_strip'):
         v1, v2 = o['vss_strip']; a = max(v1 + .3, v2 - 3.3); y1, y2 = yd + 14.3, yd + 17.
@@ -151,8 +204,9 @@ def draw(layout, cell, x0, opt=OPT):
         box(M[2], a, y1, v2 - .3, y2); varray(1, a, y1, v2 - .3, y2)        # Metal2 lies inside the strip
         varray(1, xl, y1, xl + 3., y2)
     return dict(dvdd_label=lab, vss_label=(x0 + (xl + xr) / 2, yd + 9.5), pad_label=(x0 + (n1 + n2) / 2, o['plate_y'] + 1.),
-                fingers_x=[x0 + x for x in fx], n_dn=ndn, n_up=nup, cuts=cnt,
+                fingers_x=[x0 + x for x in fx], n_dn=ndn, n_up=nup, n_up_left=nlu, n_dn_left=ndl, cuts=cnt,
                 bbox=[x0 + min(nl, (o.get('vss_strip') or (nl,))[0]), o['plate_y'], x0 + xs, yt])
+
 
 
 def assemble(work):

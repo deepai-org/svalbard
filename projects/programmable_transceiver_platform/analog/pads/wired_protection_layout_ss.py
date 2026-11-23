@@ -16,6 +16,7 @@ def assemble(work):
     cfg=json.loads((work/'config.json').read_text());ox,oy=cfg['origin_um'];gx,gy=cfg['ground_anchor_um']
     l=k.Layout();l.read(str(work/'base.gds'));base=l.top_cell()
     root=l.create_cell('tx_with_primary');root.copy_tree(base)
+    if cfg.get('esd_a') is not None:return assemble_esd_a(work,cfg,l,root)
     l.read(str(work/'network.gds'));network=l.cell('protection_network');network.flatten(False)
     for ix in l.layer_indexes():
         for shape in list(network.each_shape(ix)):
@@ -102,6 +103,61 @@ def assemble(work):
 
 
 
+def assemble_esd_a(work,cfg,l,root):
+    """ESD option A (pad_wirepad, 2026-11-20; opt-in, `esd_a`): NO protection network macro (no core diode array, no isolated
+    rail / clamps / ATB tap); pad-site primaries (pad_site_primary.py: down-diodes to ring VSS, up-diodes to the ring supply,
+    new port DVDD on each site's Metal3 landing) at both bond sites; the base must be built with layout.py usb_term_block
+    (neck, cleared band). Side pins as configured."""
+    import klayout.db as k
+    import sys;sys.path.insert(0,str(work))
+    import pad_site_primary as sp
+    metals={1:34,2:36,3:42,4:46,5:81};vias={1:35,2:38,3:40,4:41}
+    def box(layer,x1,y1,x2,y2):root.shapes(l.layer(layer,0)).insert(k.DBox(x1,y1,x2,y2))
+    meta=json.loads((work/'base-layout.json').read_text())
+    sp.load_primitives(l,work)
+    opt=dict(sp.OPT,**cfg['esd_a'])
+    sites=[]
+    for x0 in (0.,meta['bond_pitch_um']):
+        info=sp.draw(l,root,x0,opt);sites.append(info)
+        root.shapes(l.layer(42,10)).insert(k.DText('DVDD',k.DTrans(*info['dvdd_label'])))
+    routes=[]
+    for pin in cfg.get('side_pins') or []:
+        for layer,x1,y1,x2,y2 in pin['rects']:box(metals[layer],x1,y1,x2,y2)
+        for x,y,lo,hi in pin.get('stacks',[]):
+            for level in range(lo,hi+1):
+                h=.19 if level==1 else .22 if level==5 else .2
+                box(metals[level],x-h,y-h,x+h,y+h)
+            for level in range(lo,hi):
+                box(vias[level],x-.13,y-.13,x+.13,y+.13)
+        lx,ly,ll=pin['label']
+        root.shapes(l.layer(metals[ll],10)).insert(k.DText(pin['net'],k.DTrans(float(lx),float(ly))))
+        routes.append(dict(side_pin=pin['net'],rects=pin['rects']))
+    import marker_merge
+    (work/'marker-merge.json').write_text(json.dumps(marker_merge.merge(l,root),indent=1)+'\n')
+    opts=k.SaveLayoutOptions();opts.select_cell(root.cell_index());l.write(str(work/'combined.gds'),opts)
+    (work/'routes.json').write_text(json.dumps(routes,indent=2)+'\n')
+    regions=meta['allocation_regions_um'][:]
+    tb=meta.get('usb_term_block')
+    regions+=[[s['bbox'][0],s['bbox'][1],s['bbox'][2],s['bbox'][3]] for s in sites]
+    if tb and tb['options'].get('term_block',True):   # block band and TERM_VCM strap / bar
+        o=tb['options'];regions+=[[30.,o['rail'][0],330.,440.],[o['strap'][0],o['vcm'][0],o['strap'][1],o['bar'][1]],
+                                  [100.,o['bar'][0],o['strap'][1],o['bar'][1]]]
+    for route in routes:regions+=[[x1,y1,x2,y2] for _,x1,y1,x2,y2 in route['rects']]
+    union=k.Region()
+    for coords in regions:union.insert(k.DBox(*coords).to_itype(l.dbu))
+    union.merge()
+    b=root.dbbox()
+    for key in ('device_count','net_count','candidate_size_um','area_um2'):
+        if key in meta:meta['base_'+key]=meta.pop(key)
+    meta.pop('protection_device_centers_y_um',None)
+    meta.update(physical_bbox_um=[b.left,b.bottom,b.right,b.top],candidate_size_um=[max(0.,b.right),max(0.,b.top)],
+                area_um2=union.area()*l.dbu**2,area_basis='Allocated nonrectangular union, not material area or bounding rectangle.',
+                flat_cell='tx_with_primary',allocation_regions_um=regions,allocation_union_um2=union.area()*l.dbu**2,
+                fits_assigned_area=union.area()*l.dbu**2<=meta['area_ceiling_um2'],requires_attached_primary_protection=False,
+                connected_primary_candidate=True,esd_option_a=dict(site_options=opt,sites=sites))
+    (work/'placement-layout.json').write_text(json.dumps(meta,indent=2)+'\n')
+
+
 def export_model(work, network, pdk):
     from protection_device_audit import check
     raw=work/'combined_flat.spice';text=raw.read_text();lines=text.splitlines()
@@ -128,7 +184,21 @@ def export_model(work, network, pdk):
     return model
 
 
-def generate(work,base,network,origin,pdk=None,route_y_um=None,ground_low_um=None,side_pins=None):
+def export_model_esd_a(work,pdk):
+    from protection_device_audit import check
+    raw=work/'combined_flat.spice';text=raw.read_text()
+    joined=re.sub(r'\n\+\s*',' ',text)
+    ports=next(line.split()[2:] for line in joined.splitlines() if line.startswith('.subckt'))
+    wrapper='.subckt tx_protected_pad '+' '.join(ports)+'\nXPHYSICAL '+' '.join(ports)+' combined_flat\n.ends tx_protected_pad\n'
+    model=work/'physical.spice'
+    model.write_text(wrapper+text+f'\n.lib {pdk}/sm141064.ngspice diode_typical\n.lib {pdk}/sm141064.ngspice mimcap_typical\n')
+    result=check(work/'combined_flat.ext',model,work/'model-audit.json',None,ring_wells=('DVDD',))   # no array wells: nothing replaced
+    if not result['device_graph_matches']:raise ValueError('Combined model differs from physical extraction')
+    return model
+
+
+def generate(work,base,network,origin,pdk=None,route_y_um=None,ground_low_um=None,side_pins=None,esd_a=None):
+    # esd_a (opt-in, None = published): dict of pad_site_primary.OPT overrides; see assemble_esd_a.
     from layout import IMAGE,magic
     work.mkdir(parents=True,exist_ok=False)
     meta=json.loads((base/'layout-report.json').read_text())
@@ -144,7 +214,11 @@ def generate(work,base,network,origin,pdk=None,route_y_um=None,ground_low_um=Non
     for source,name in ((base_gds,'base.gds'),(base/'layout-report.json','base-layout.json'),(network/'network.gds','network.gds'),(Path(__file__),'wired_protection_layout.py'),(Path(__file__).with_name('marker_merge.py'),'marker_merge.py')):shutil.copyfile(source,work/name)
     network_meta=json.loads((network/'network-layout.json').read_text())
     atb=network_meta.get('ports',{}).get('ATB_RAIL')
-    (work/'config.json').write_text(json.dumps(dict(origin_um=origin,ground_anchor_um=ground_anchor,atb_port_um=atb,network_regions_um=network_meta.get('allocation_regions_um'),route_y_um=route_y_um,ground_low_um=ground_low_um,side_pins=side_pins,vss_trunk_width_um=meta['net_trunk_widths_um']['VSS']))+'\n')
+    (work/'config.json').write_text(json.dumps(dict(origin_um=origin,ground_anchor_um=ground_anchor,atb_port_um=atb,network_regions_um=network_meta.get('allocation_regions_um'),route_y_um=route_y_um,ground_low_um=ground_low_um,side_pins=side_pins,vss_trunk_width_um=meta['net_trunk_widths_um']['VSS'],**({'esd_a':esd_a} if esd_a is not None else {})))+'\n')
+    if esd_a is not None:
+        import pad_site_primary as sp
+        shutil.copyfile(Path(__file__).with_name('pad_site_primary.py'),work/'pad_site_primary.py')
+        for n in (sp.ND,sp.PD):shutil.copyfile(sp.PRIM/f'{n}.gds',work/f'{n}.gds')
     subprocess.run(['docker','run','--rm','--network','none','--entrypoint','python3','--mount',f'type=bind,src={work},dst=/work',IMAGE,'/work/wired_protection_layout.py','--inside','--output-dir','/work'],check=True)
     (work/'extract.tcl').write_text('crashbackups stop\ngds read combined.gds\nload tx_with_primary\nselect top cell\nflatten combined_flat\nload combined_flat\nselect top cell\nexpand\ndrc check\ndrc catchup\nputs "COMBINED_DRC [drc list count total]"\nputs [drc listall why]\nextract all\next2spice lvs\next2spice cthresh 0\next2spice\nsave\nquit -noprompt\n')
     result=magic(work,'extract.tcl')
@@ -155,13 +229,19 @@ def generate(work,base,network,origin,pdk=None,route_y_um=None,ground_low_um=Non
     definition=next(line.split() for line in base_text.splitlines() if line.startswith('.subckt'))
     base_cell=definition[1];ports=definition[2:]
     extra=' ATB_ESD_RAIL' if atb else ''
-    reference=base_text+(network/'network_flat.spice').read_text()+'\n.subckt expected '+' '.join(ports)+' ESD_RAIL'+extra+'\nXBASE '+' '.join(ports)+' '+base_cell+'\nXPRIMARY VSS ESD_RAIL PAD_P PAD_N'+extra+' network_flat\n.ends expected\n'
+    if esd_a is not None:
+        import pad_site_primary as sp
+        so=dict(sp.OPT,**esd_a)
+        reference=base_text+'\n.subckt expected '+' '.join(ports)+' DVDD\nXBASE '+' '.join(ports)+' '+base_cell+'\n'+'\n'.join(
+            x for p in ('PAD_P','PAD_N') for x in sp.reference_lines('S'+p[-1],p,'VSS','DVDD',so))+'\n.ends expected\n'
+    else:
+        reference=base_text+(network/'network_flat.spice').read_text()+'\n.subckt expected '+' '.join(ports)+' ESD_RAIL'+extra+'\nXBASE '+' '.join(ports)+' '+base_cell+'\nXPRIMARY VSS ESD_RAIL PAD_P PAD_N'+extra+' network_flat\n.ends expected\n'
     strip=lambda text:'\n'.join(line for line in text.splitlines() if not line.startswith('C'))+'\n'
     (work/'reference.spice').write_text(strip(reference))
     (work/'actual.spice').write_text(strip((work/'combined_flat.spice').read_text()))
     if not lvs(work,'actual.spice','combined_flat','reference.spice','expected','combined-lvs.txt'):
         raise ValueError('Connected TX device graph failed LVS')
-    independent=check(work/'combined_flat.ext',work/'combined_flat.spice',work/'independent-device-audit.json')
+    independent=check(work/'combined_flat.ext',work/'combined_flat.spice',work/'independent-device-audit.json',**(dict(ring_wells=('DVDD',)) if esd_a is not None else {}))
     if not independent['device_graph_matches']:raise ValueError('Independent physical device audit failed')
     placement=json.loads((work/'placement-layout.json').read_text())
     placement['device_count']=independent['physical_devices']
@@ -175,7 +255,12 @@ def generate(work,base,network,origin,pdk=None,route_y_um=None,ground_low_um=Non
                      'No ESD rating, core-survival or current-capacity claim.'],
         source_sha256={str(f.resolve()):hashlib.sha256(f.read_bytes()).hexdigest() for f in
             (Path(__file__),base_gds,base_schematic,network/'network.gds',network/'network_flat.spice')})
-    if pdk is not None:
+    if pdk is not None and esd_a is not None:
+        report['limitations']=['DVDD is the ring supply landing of the pad-site up-diodes: connect it to the provider ring supply at the site.',
+                               'No protection network: pad-site primaries only (ESD option A).']
+        model=export_model_esd_a(work,pdk)
+        report['simulation_model_sha256']=hashlib.sha256(model.read_bytes()).hexdigest()
+    elif pdk is not None:
         model=export_model(work,network,pdk)
         report['simulation_model_sha256']=hashlib.sha256(model.read_bytes()).hexdigest()
         report['nonlinear_well_replacement_checked']=True

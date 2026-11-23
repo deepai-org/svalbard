@@ -1,0 +1,60 @@
+{
+ "mode": "rl",
+ "dut": "models/b7_r_high_rail.spice",
+ "model_sha256": "dacd08e9143a61bc3d01bb73b9cf739cb1704b9a566d0343e9fd6bc4919d5c37",
+ "corner": [
+  "ss",
+  22,
+  3.15
+ ],
+ "term_code": 7,
+ "hs_scale": 1.0,
+ "cal": null,
+ "bond": "max",
+ "tb_mm": 30.0,
+ "gate_ramp_s": 1.2e-09,
+ "channel": {
+  "USB_DP": {
+   "bond_nH": 2.91,
+   "bond_ohm": 0.245,
+   "F_mm": 1.22,
+   "B_mm": 1.96,
+   "via_nH": 0.47,
+   "conn_nH": 1.08
+  },
+  "USB_DN": {
+   "bond_nH": 2.85,
+   "bond_ohm": 0.241,
+   "F_mm": 1.12,
+   "B_mm": 4.29,
+   "via_nH": 0.369,
+   "conn_nH": 0.99
+  }
+ },
+ "result": {
+  "rl_db": {
+   "12MHz": 36.08,
+   "60MHz": 35.85,
+   "120MHz": 34.12,
+   "240MHz": 28.29,
+   "400MHz": 21.75,
+   "480MHz": 19.15,
+   "800MHz": 11.54,
+   "1000MHz": 8.46,
+   "1500MHz": 5.04
+  },
+  "rl_min_db_to_480MHz": 19.33,
+  "rl_min_db_to_1GHz": 9.18,
+  "zdd_ohm_240MHz": [
+   95.05,
+   5.04
+  ],
+  "zdd_ohm_10MHz": 92.87,
+  "tdr_zdiff_ohm": {
+   "min": 83.7,
+   "max": 117.3,
+   "final": 93.3,
+   "t_min_ns": 2.099
+  }
+ }
+}

@@ -248,3 +248,8 @@ Per leg: 98 fF MIM AC coupling, resistor-self-biased inverter (4/8), three x2-ta
 | ss/3.15, tank 0.40 V | -0.03 ... 3.19 V (rail to rail) | 49.9 % | 89.0 deg | 0.74 V | 20.06 / 18.65 / 18.81 dB |
 I/Q skew: 0.5-1.0 deg (0.6-1.2 ps). RX recovery is small (+0.12-0.16 dB): the RX loss is the line's own capacitance at the lo_ext output, not the buffer input. Not run: ff, sf/fs, extracted txbuf, supply 3.50 V, mismatch. Earlier sizes: r1 (3 stages) ss 0.10-2.80 V; r2 (wider 2/3) worse.
 Differential measurement rerun correctly (E-sources): line 0.74 / 1.08 V pp diff at ss / tt.
+
+## 2026-11-23: closed loop across corners with the r9 QVCO (behavioural loop on extracted block data)
+- Charge pump (extracted pt_lo_pfdcp, ICP = 3, bias 10 uA sourced, `cpceil/results_source.json`): UP current 98.2-98.5 uA at every corner/supply; falls to 80 % at VTUNE 2.75 V (ss/3.15), 2.80 (tt, fs), 2.85 (ff, sf) at 3.15 V and 3.15-3.20 V at 3.50 V: above the guard-limited 2.69 / 3.01 V ceilings (>= 60 mV margin at ss/3.15).
+- Kvco, r9 band 6, VT 1.2 -> 1.8 V (extracted, `q7/rkv/`): ff 53.1, OPT85 58.6, tt 65.7, ss 80.4, PF115 84.8 MHz/V (2.42 / 2.64 / 2.36 / 2.31 / 2.11 GHz at VT 1.2).
+- Loop (`lock/lock_r9.py`, run_loop.hop4, as built filter, R +-25 %, C2 +-15 %, Icp 75-125 uA, N 44 / 56, start +-0.35 V from the VDD/2 preset): every case locks; phase margin >= 48.7 deg (PF115), fc 91-405 kHz; lock (2 deg) 39-42 us at the nominal filter, 59-62 us at the slow filter corner (R +25 %, C2 +15 %): the known 50 us miss (LO-04, filter R trim LO24 would fix it; not built).

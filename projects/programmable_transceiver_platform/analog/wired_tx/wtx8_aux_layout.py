@@ -358,14 +358,15 @@ def build(work=None):
     g.rect('metal2', xe + 0.5, min(tvdd, yhi - 0.2), xe + 0.9, max(tvdd + RAIL_W, yhi + 0.2))
     g.rect('metal2', xe + 0.5, yhi - 0.2, xr['TD1'] + 0.2, yhi + 0.2)
     x_end = s(tx0 + min(tr.pin[f'{n}@res'][0] for n in ('TD1', 'TD2')))  # both TD wires end at the same x
-    x_far = s(xh + (xh - xtap))                                         # ... and reach as far beyond the pair as to the tap strip
+    x_far = s(xh + (xh - xtap))
+    XFAR_MAX = s(x_far - 1.2)                                     # Metal2 wire ends clear of the mux's ENBM feed (Metal2, 0.8 beyond)
     for i, (n, x) in enumerate(xr.items()):
         inst += [f'getcell wtx8_aux_rl child 0 0 parent {x} {yc}', f'identify XTR{i + 1}']
         g.rect('metal1', x - 1.495, tvss, x - 1.265, yc - ri['py'] - 0.4)     # ring -> VSS rail
         g.rect('metal1', x - ri['hx'], ylo - 0.3, x + ri['hx'], ylo + 0.3)
         g.via(x, ylo, 1, 3)
         g.rect('metal3', x - 0.2, ylo - 0.2, x + 0.2, yw[n] + 0.2)
-        g.via(x, yw[n], 3, 4)
+        g.via(x, yw[n], 2, 3)
         g.rect('metal1', x - ri['hx'], yhi - 0.3, x + ri['hx'], yhi + 0.3)
         g.via(x, yhi, 1, 2)
     net += [f'XTR{i + 1} VDD TD{i + 1} VSS ppolyf_u_1k r_width={top_["rl"][0]}u r_length={top_["rl"][1]}u' for i in range(2)]
@@ -374,11 +375,11 @@ def build(work=None):
         x, y = s(xh + dx), yw[n]
         g.rect('ndiffc', x - L.CW / 2, yd0 + 0.065, x + L.CW / 2, yd0 + wpair - 0.065)
         g.rect('metal1', x - L.CW / 2, yd0, x + L.CW / 2, yd0 + wpair)
-        g.via(x, y, 1, 4)
-        g.label(n, 'metal4', x - 1.5, y)
+        g.via(x, y, 1, 2)                 # Metal2 wires (ASM-11a: no aux Metal4 in the block's top band)
+        g.label(n, 'metal2', x - 1.5, y)
         xc = s(tx0 + tr.pin[f'{n}@res'][0])
-        g.rect('metal4', min(x_end, xc) - 0.2, y - 0.2, x_far, y + 0.2)
-        g.via(xc, y, 3, 4)
+        g.rect('metal2', min(x_end, xc) - 0.2, y - 0.2, min(x_far, XFAR_MAX), y + 0.2)
+        g.via(xc, y, 2, 3)
     for pin_, dxg, o in (('INP', sg * 0.44, 'MAIN_P'), ('INN', -sg * 0.44, 'MAIN_N')):
         x, (xl, yl_) = s(xh + dxg), tp['landing'][o]
         xl = s(xl + x0)

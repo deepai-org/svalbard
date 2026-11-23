@@ -1642,8 +1642,8 @@ def build_top(P=None, work=None, checks=True):
         # TOP plate: RL upper heads -> RCM lower head on Metal1 .. Metal4 (static data: one RL feeds the whole RCM width)
         for m in (1, 2):
             g.rect(f'metal{m}', xb - rc['hx'], yw0, xb + rc['hx'], yr + rc['c0'][1] + 0.1)
-        g.varr(xb - rc['hx'], yw0, xb + rc['hx'], yw0 + 3.0, 1, 4)
-        geo['top_plate'] = dict(metal_um=round(2 * (yr + rc['c0'][1] + 0.1 - yw0) + 2 * 3.0, 2), rcm_half=rc['hx'], rl_half=rl['hx'])
+        g.varr(xb - rc['hx'], yw0, xb + rc['hx'], yw0 + 3.0, 1, 3)       # no Metal4: the block's top band holds only island VDD Metal4 (ASM-11a)
+        geo['top_plate'] = dict(metal_um=round(2 * (yr + rc['c0'][1] + 0.1 - yw0) + 3.0, 2), rcm_half=rc['hx'], rl_half=rl['hx'])
         g.label(topn, 'metal1', xb, yw0 + 1.0)
         g.label(top2, 'metal1', xb, yh - 0.5)
         for o, xr, sw in ((op, s(xb + sd * D), swp), (on, s(xb - sd * D), swn)):
@@ -1937,7 +1937,7 @@ def em_table(res, i_bank=EM_I):
     tp = g['top_plate']
     for tag in ('M', 'Q'):
         D = res['clusters'][tag][4]
-        row(f'TOP plate {tag}, lateral (static data: one RL feeds the whole RCM width; Metal1-4)',
+        row(f'TOP plate {tag}, lateral (static data: one RL feeds the whole RCM width; Metal1-3)',
             I * (tp['rcm_half'] + D - tp['rl_half']) / (2 * tp['rcm_half']), tp['metal_um'])
     row('RCM heads / TOP2 plate (Metal1 + Metal2)', I, 4 * g['rc_hx'])
     row('header column (Metal1 + Metal2)', 2 * I / g['nfh'], 1.2)

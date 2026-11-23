@@ -75,6 +75,26 @@ SER = json.loads((FAST / 'wtx_ser8d.pins.json').read_text())
 E_Y0 = 381.0 - 236.96                # lower edge of the east strap band, relative to the mux origin (0.84 above the windows' jog top)
 LANE_CL = 2.9                        # clearance of the band's added metal to a PH lane below the header strap (lanes see what they saw)
 CB_GAP = 2.0                         # wtx8_casbias (WT54) to the decap rows
+# ASM-11a (session 19): data / control inputs on the TOP edge, Metal3, left to right in the digital macro's pin order;
+# each goes straight down (Metal3) through the decap area to its seam track (D, WORD_CLK40: Metal4 to the ser8d top pin;
+# controls: Metal2 to the mux / aux pin).  The ser8d strap via columns in the decap area are skipped.
+TOP_PINS = (['WORD_CLK40'] + [f'D{i}' for i in range(40)] + [f'MAIN_CODE{i}' for i in range(8)] + [f'POST_CODE{i}' for i in range(8)] +
+            ['POST_POL', 'SER_EN', 'IDLE', 'IDLE_MODE', 'WTX_EXT', 'DX', 'EN_MAIN', 'EN_POST', 'ISLAND_OFF', 'TAP_EN'])
+TP_X0, TP_P = 30.0, 1.12             # first pin x, pitch
+
+
+def top_pin_x(ser_x, x1):
+    """x of each TOP_PINS net: pitch TP_P from TP_X0, skipping the ser8d strap via columns (Metal3 pads 1.0 um either side)."""
+    blk = [(q - 1.0 - 0.6, q + 1.0 + 0.6) for q in ser_x]
+    out, x = {}, TP_X0
+    for n in TOP_PINS:
+        while any(a < x < b for a, b in blk):
+            x = s(x + 0.05)
+        out[n] = s(x)
+        x = s(x + TP_P)
+    if x > x1:
+        raise RuntimeError('top pins run past the decap area')
+    return out
 
 
 def conn():
@@ -138,10 +158,7 @@ def build(work=None, bare=False):
     for port, net in cn['wtx_ser8d'].items():
         if port in ('VDD', 'VSS'):
             continue
-        if port in DC:
-            down_pins[net] = port
-        else:
-            bot_t.setdefault(net, []).append(SER['pins'][port][0])
+        bot_t.setdefault(net, []).append(SER['pins'][port][0])
     for port, net in cn['wtx_mux8'].items():
         for layer, x, y in MR['pins'][port]:
             if layer == 'metal3' and y < 1.0:
@@ -152,6 +169,10 @@ def build(work=None, bare=False):
     ph, ps = [f'PH{k}' for k in range(8)], [f'PS{k}' for k in range(8)]
     special = set(ph) | set(ps) | {'MAIN_P', 'MAIN_N', 'POST_P', 'POST_N', 'TAP_P', 'TAP_N', 'VDD', 'VSS', 'MAIN_BIAS', 'POST_BIAS'}
     trim = [n for n in top_t if n.startswith('TR')]
+    sx_all = [x for n_, x, _ in SER['power_pins']]
+    tpx = top_pin_x([q for q in sx_all if 28.0 < q < 169.3], s(XM - xa0) - 1.9 - 4.0)
+    for n_, x_ in tpx.items():
+        top_t.setdefault(n_, []).append(x_)
     xm = [top_t[f'PH{k}'][0] for k in range(8)]
     xs_ = [bot_t[f'PS{k}'][0] for k in range(8)]
     # ------------------------------------------------------------------ phase buffer cell (built once, painted eight times)
@@ -192,12 +213,12 @@ def build(work=None, bare=False):
     # where the fewest tracks result: the Metal2 tracks pass under the mux, the phase buffers sit in the rail band);
     # nets that are not ports (aux <-> mux) run between their pins.
     m2 = [n for n in top_t if n not in special and n not in bot_t and n not in trim]
-    prt = sorted((n for n in m2 if n in T.PORTS), key=lambda n: min(top_t[n]))
+    prt = sorted((n for n in m2 if n in T.PORTS and n not in tpx), key=lambda n: min(top_t[n]))
 
     def spans(nl):
         out = {}
         for n in m2:
-            side = ('L' if n in nl else 'R') if n in T.PORTS else None
+            side = ('L' if n in nl else 'R') if n in T.PORTS and n not in tpx else None
             out[n] = (0.3 if side == 'L' else min(top_t[n]) - 0.3, Wb - 0.3 if side == 'R' else max(top_t[n]) + 0.3, side)
         return out
     best = min(((max(pack({n: v[:2] for n, v in spans(set(prt[:i])).items()}).values()) + 1, i) for i in range(len(prt) + 1)))
@@ -206,7 +227,8 @@ def build(work=None, bare=False):
     n2 = max(t2.values()) + 1
     # ------------------------------------------------------------------ zones (y)
     yB0 = s(Y0 + 1.0)
-    yP0 = s(yB0 + nF * P4 + 0.3)                           # PS sub-zone: VSS track, PS, VSS, PS, ...
+    yP0 = s(yB0 + 0.4)                                     # PS sub-zone next to ser8d (short PS Metal5 risers; session 19): VSS, PS, VSS, ...
+    yF0 = s(yP0 + 2 * nP * P4 + P4)                        # F, SERQ, D, WORD_CLK40 tracks above it (the top VSS track separates them)
     hB = max((nF + 2 * nP + 1) * P4 + 0.3, n2 * P2)
     yT0 = s(yB0 + hB + 1.6)                                # PH pin pads (Metal5, via3/4 landings) in the gap below the rails
     yvs, yvd = yT0, s(yT0 + RAIL_VSS + 1.0)
@@ -229,7 +251,7 @@ def build(work=None, bare=False):
         g.via(x, y, 4, 5)
     pins = {}
     for n, (lo, hi) in m4nets.items():
-        y = s(yB0 + tF[n] * P4)
+        y = s(yF0 + tF[n] * P4)
         g.rect('metal4', lo - 0.1, y - 0.2, hi + 0.1, y + 0.2)
         g.label(n, 'metal4', lo + 0.5, y)
         for x in bot_t[n]:
@@ -450,13 +472,10 @@ def build(work=None, bare=False):
             if all(abs(px - x) > 1.0 + 0.2 + 0.5 for x in m3) and all(not (a - 1.5 < px < b + 1.5) for a, b in holes):
                 g.varr(px - 1.0, y0_ + 0.3, px + 1.0, y0_ + h - 0.3, 2, 4)
                 nst[net] += 1
-    # ------------------------------------------------------------------ D0..D39, word clock: ser8d's port trunks continued to the bottom edge
-    for net, port in down_pins.items():
-        c = DC[port]
-        if c['nblk']:
-            raise RuntimeError(f'ser8d trunk of {port} has other Metal5 below it: Metal4 jog not implemented')
-        g.rect('metal5', c['x'] - 0.22, 0.0, c['x'] + 0.22, c['lo'] + 0.6)
-        pins[net] = ('metal5', c['x'], 0.5)
+    # ------------------------------------------------------------------ top-edge input pins (ASM-11a): Metal3 from the seam drop to the top edge
+    for n_, x_ in tpx.items():
+        g.rect('metal3', x_ - 0.2, Ym, x_ + 0.2, Yt)
+        pins[n_] = ('metal3', x_, s(Yt - 0.5))
     # ------------------------------------------------------------------ tail biases to the top edge (over the aux cell), tap pins to the left edge
     for n in ('MAIN_BIAS', 'POST_BIAS'):
         port = next(p_ for p_, v in cn['wtx8_aux'].items() if v == n)
@@ -713,12 +732,12 @@ def build(work=None, bare=False):
     poly = [[0, 0], [Wb, 0], [Wb, Ym], [xk, Ym], [xk, Yt], [0, Yt]]
     res = dict(size_um=[Wb, Yt], bbox_area_um2=round(Wb * Yt, 1), used_polygon=poly, used_area_um2=round(Wb * Ym + xk * (Yt - Ym), 1),
                free_corner=dict(box=[xk, Ym, Wb, Yt], area_um2=round((Wb - xk) * (Yt - Ym), 1)),
-               seam_um=[Y0, Ym], zones_y=dict(B=yB0, PS=yP0, T=yT0, vss_rail=[yvs, s(yvs + RAIL_VSS)], vdd_rail=[yvd, s(yvd + RAIL_VDD)], buffers=[by0, s(by0 + brow.top)], ph_pins=ypin),
+               seam_um=[Y0, Ym], zones_y=dict(B=yB0, PS=yP0, F=yF0, T=yT0, vss_rail=[yvs, s(yvs + RAIL_VSS)], vdd_rail=[yvd, s(yvd + RAIL_VDD)], buffers=[by0, s(by0 + brow.top)], ph_pins=ypin),
                tracks=dict(F_and_SERQ=nF, PS=nP, metal2=n2), buffer_cell_um=[round(brow.width, 2), round(brow.top, 2)], mux_origin=[XM, Ym], aux_origin=[s(XA - 1.9), Ym],
                ph=tab, decap=dict(fingers=ndec, rows=nrow, per_row=nfin, w=d['w'], l=d['l'], box=[dec_x0, s(Ym + 1.0), dec_x1, dec_y1]),
                pins={n: list(v) for n, v in pins.items()}, trim_wires=trims, supply_bars=xbar, bar_y=[yT0, Yt], em_cuts=em, mux_vss_necks_x=necks, rail_stitches=nst,
                f_wires_um={n: round(m4nets[n][1] - m4nets[n][0], 1) for n in m4nets}, ser_straps_in_rails={k: len(v) for k, v in ext.items()},
-               header_strap=dict(y=[yh0, s(Yt - 0.2)], left_end_x=xl_end, right_start_x=xr_start), ser_trunks={n: DC[p_]['lo'] for n, p_ in down_pins.items()},
+               header_strap=dict(y=[yh0, s(Yt - 0.2)], left_end_x=xl_end, right_start_x=xr_start), top_pins=dict(order=TOP_PINS, x=tpx, layer='metal3', edge='top', pitch=TP_P),
                rail_holes=holes, vss_metal2_at_hole_um=round(yhole - yvs, 2), exits={n: v[2] for n, v in m2nets.items() if v[2]},
                ph_windows=dict(windows={k: v for k, v in win.items()}, layer='metal4 (pin PH k), Via4 from the lane',
                                lanes={f'PH{k}': next([a, wy0, b, Yt] for a, b in lanes if win[f'PH{k}'][0] < a < win[f'PH{k}'][2]) for k in range(8)},
@@ -756,7 +775,10 @@ def negatives(sch):
     e = list(tk)
     i0, i1 = mux8.PORTS.index('TR6_0') + 1, mux8.PORTS.index('TR7_3') + 1
     e[i0], e[i1] = e[i1], e[i0]
-    return {'neg_ph0_ph1_swapped_at_mux': sch.replace(xm, ' '.join(a)), 'neg_stream_rotation_plus_one': sch.replace(xm, ' '.join(b)),
+    xs2 = xs.split()
+    i0, i1 = xs2.index('D0'), xs2.index('D1')
+    xs2[i0], xs2[i1] = xs2[i1], xs2[i0]
+    return {'neg_d0_d1_swapped_at_ser8d': sch.replace(xs, ' '.join(xs2)), 'neg_ph0_ph1_swapped_at_mux': sch.replace(xm, ' '.join(a)), 'neg_stream_rotation_plus_one': sch.replace(xm, ' '.join(b)),
             'neg_ovp_ovn_swapped_at_mux': sch.replace(xm, ' '.join(c)), 'neg_buffer_outputs_ps0_ps1_swapped_at_ser8d': sch.replace(xs, ' '.join(d)),
             'neg_trim_pins_tr6_0_tr7_3_swapped_at_mux': sch.replace(xm, ' '.join(e)),
             'neg_ser_en_replaced_by_ph2_at_buffer_3': re.sub(r'^(XA3n?p?b_\d+ \S+) SER_EN ', r'\1 PH2 ', sch, flags=re.M),

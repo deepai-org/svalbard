@@ -7,6 +7,41 @@ Generator `analog/wired_tx/pt_wiredtx8_layout.py`. Reference: `wtx8_top.netlist(
 
 Every check below was run on the final GDS read back from disk (`top/verify`). Nothing is committed.
 
+## Session 19 (2026-11-23): ASM-11a top-edge input pins + Metal4 band. CURRENT STATE; supersedes outline, pins, y coordinates and seam below
+- **Outline:** 744.5 x **430.8** um (was 401.4; +29.4). The L is unchanged in x: used polygon (0,0) (744.5,0) (744.5,266.36) (598.7,266.36) (598.7,430.8) (0,430.8).
+  **Seam:** 197.68..266.36 = **68.68 um** (was 39.28). Zone B: PS sub-zone first, at y 199.08 next to ser8d, so the PS Metal5 risers stay short. Above it the F / SERQ / D / WORD_CLK40 Metal4 tracks start at y 208.32: 41 tracks, set by the 30 D nets that run under the mux. There are 26 Metal2 control tracks.
+  Everything above the seam moved up 29.4 um; x positions are unchanged.
+- **Input pins, TOP edge, Metal3** (pin point y 430.3, wire x +-0.2 from the seam to y 430.8), in the digital pin order. The pitch is 1.12 um, except where a pin skips a ser8d strap via column in the decap area (gaps at 37.84->44.11, 72.11->79.13, 107.13->114.1):
+  WORD_CLK40 30.0, D0..D6 31.12..37.84, D7..D32 44.11..72.11, D33..D39 79.13..85.85, MAIN_CODE0..7 86.97..94.81, POST_CODE0..7 95.93..103.77,
+  POST_POL 104.89, SER_EN 106.01, IDLE 107.13, IDLE_MODE 114.1, WTX_EXT 115.22, DX 116.34, EN_MAIN 117.46, EN_POST 118.58, ISLAND_OFF 119.7, TAP_EN 120.82
+  (exact list in out/report.json `top_pins` / `pins`). Each pin wire runs straight down through the decap area to its seam track. D and WORD_CLK40 then take Metal4 to the ser8d top pin through a Metal5 riser. The controls take Metal2 to the mux / aux pin.
+  The bottom-edge D / WORD_CLK40 pins and the left / right Metal2 control pins are gone.
+  **Unchanged:** TR* on the inner L edge (Metal3, x 598.1, y 285.24..309.0 = old + 29.4); IBIAS, TX_RUN, WTX_EXT_DATA, ATB_* as Metal2 on the right edge (x 743.9, y 198.68..213.8); TAP_P / TAP_N on the left edge; MAIN_BIAS / POST_BIAS / MAIN_* / POST_* on the top edge.
+  PUMP stays False (task deferred).
+- **Metal4 band** (now y 410.9-430.8, x 340-744; was 381.5-401.4) holds **only island-VDD Metal4**, checked on the read-back GDS.
+  - The mux TOPM / TOPQ plates lost their Metal4 (Metal1-3 remain). EM margin 23.4 / 26.4 % (was 40.6 / 42.9); the mux EM table passes (worst 13.6 %, unchanged).
+  - The aux tap wires TD1 / TS / TD2 are now Metal2, and their dummy ends are 1.2 um shorter. Aux DRC 0, LVS unique, negative controls fail as required; MAIN_P / MAIN_N with the tap 122.4 / 114.8 fF.
+  - Mux buses: MAIN_N 114.0 / MAIN_P 120.7 / POST_P 127.9 / POST_N 131.9 fF (was 114.3 / 121.1 / 128.2 / 132.2).
+- **New y for assembly:**
+  - PH windows: y 404.96-409.56 (x unchanged). Lanes run from there to the top edge 430.8.
+  - T_main / T_post ties: y 423.1-430.8.
+  - grid_tie_*: y 429.8-430.8.
+  - East landing: [597.7, 598.7] x y 266.36-430.8; east band y 410.4-423.1; header strap y 423.1-430.6.
+  - VSS east_plate: y 244.56-258.56; bar_left y 244.26-430.8.
+  - Bottom VSS trunks and channel tabs: unchanged.
+- **Checks from disk:** Magic DRC 0, KLayout DRC 0, LVS unique (52/52 devices, 163/163 nets, 0 property errors), antenna 0. **7/7 negative controls fail as required**; the new one is D0 / D1 swapped at ser8d. Decap n = 686.
+- **Coupling (C-only block extraction):**
+  - PH k to any moved pin net: max **0.081 fF**. The exception is SER_EN at 0.427 fF per PH, which is intrinsic to the NAND2(PH, SER_EN) gate, not routing.
+  - Moved nets to the output buses: 0.
+  - PH C 36.0-37.6 fF, spread 1.6 fF.
+  - PS: PS1-D36 2.76 fF, of which 2.50 fF is inside wtx_ser8d (adjacent D36 trunk / PH45 pin, unchanged cell) and about 0.26 fF is top-level. PS4-D38 0.27 fF. PS0-MAIN_CODE1/2 0.47 / 0.71 fF (static).
+- **IR** (phase O, 60 mA, `ir/run.sh`, quick check only):
+  - VDD headers 3.34 / 7.00 mV (nom / high R; unchanged).
+  - **VSS tails 3.95 / 5.41 mV (was 3.34 / 4.55): worse**, because the seam is taller (longer VSS path from the top grid ties to the tails). Limit 3.0: still failing, now by more.
+  - ser8d logic VDD 23.6 mV (was 22.7).
+  - The EM band cuts in `ir/phO/em_*.json` use the old hard-coded y: not valid for this geometry, not rerun.
+- **Open:** ss start-up of wtx8_casbias (pump not integrated, PUMP = False); the VSS IR miss; the D36 / PH45 coupling inside ser8d.
+
 ## 0. Session 17: PH inputs gated by SER_EN (supersedes the buffer / PH figures below where they differ)
 
 Why: with the pll island off and wired_tx on, the eight PH inputs float into powered gates. The first gate of each

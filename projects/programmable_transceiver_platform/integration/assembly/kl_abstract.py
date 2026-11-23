@@ -118,6 +118,29 @@ for site, side, net, n in BOND:
 # provider IO cells: site -> cell, transformation (pins come from their abstracts)
 for s, i in site_inst.items():
     man['io'][s] = dict(cell=i.cell.name.split('$')[0], trans=str(i.trans), bbox=[i.bbox().left/1000, i.bbox().bottom/1000, i.bbox().right/1000, i.bbox().top/1000])
+# pad overlap check (fails the stage): a custom pad's drawn outline may not reach another custom pad, nor the provider IO
+# cell of a site that is not one of its own (that cell's metal would join the pad's)
+pad_reg = {}
+for n, v in man['pads'].items():
+    c = ly.cell(v['master']); t = db.Trans.from_s(v['trans']); r = db.Region()
+    for li in ly.layer_indexes():
+        inf = ly.get_info(li)
+        if inf.datatype == 0 and inf.layer in (22, 30, 34, 36, 42, 46, 81, 35, 38, 40, 41, 33): r += db.Region(c.begin_shapes_rec(li))
+    pad_reg[n] = r.merged().transformed(t)
+man['pad_overlaps'] = []
+names = sorted(pad_reg)
+for i, a_ in enumerate(names):
+    for b_ in names[i+1:]:
+        x = pad_reg[a_] & pad_reg[b_]
+        if not x.is_empty(): man['pad_overlaps'].append(dict(a=a_, b=b_, with_='custom pad', bbox=str(x.bbox())))
+    own = set(man['pads'][a_]['sites'])
+    for s, iv in site_inst.items():
+        if s in own: continue
+        x = pad_reg[a_] & db.Region(iv.bbox())
+        if not x.is_empty():
+            hit = db.Region(iv.cell.begin_shapes_rec(ly.find_layer(46, 0))).transformed(iv.trans) & pad_reg[a_]
+            man['pad_overlaps'].append(dict(a=a_, b=s, with_=iv.cell.name.split('$')[0], bbox=str(x.bbox()), metal4_touch=not hit.is_empty()))
+for o in man['pad_overlaps']: print('PAD OVERLAP', o)
 allop = db.Region(top.begin_shapes_rec(L_PAD)).merged(); mreg = db.Region(MASK)
 man['pad_mask'] = dict(template=len(MASK), not_open=[str(q.bbox()) for q in (mreg-allop).merged().each()], extra=[str(q.bbox()) for q in (allop-mreg).merged().each() if q.bbox().width() < 100000])
 ly.write('/run/ring.gds')
@@ -238,5 +261,6 @@ for m in used:
     print(f"{m:28s} {info['w']:8.1f} x {info['h']:7.1f}  pins {len(info['pins']):3d}  missing {len(info['missing_pins']):3d}  obs {info['obs_rects']}", flush=True)
 json.dump(MJ, open('/run/masters.json', 'w'), indent=0)
 json.dump(man, open('/run/pads.json', 'w'), indent=0)
-print('pads:', {n: (v['master'], round(v['opening_error_um'], 3)) for n, v in man['pads'].items()}, '| mask', man['pad_mask'], '| swaps', len(man['supply_swaps']))
+print('pads:', {n: (v['master'], round(v['opening_error_um'], 3)) for n, v in man['pads'].items()}, '| mask', man['pad_mask'], '| swaps', len(man['supply_swaps']), '| PAD OVERLAPS', len(man['pad_overlaps']))
+if man['pad_overlaps']: sys.exit(3)
 for n in man['notes']: print(' note:', n)

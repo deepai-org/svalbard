@@ -24,7 +24,7 @@ for S in $STAGES; do
                  [ "$(wc -l < "$RUN/route/unreachable.txt")" -gt "$N0" ] || { echo "pin access fails without a named pin"; break; }
                done
                echo "   unreachable pins: $(wc -l < "$RUN/route/unreachable.txt")"
-               "$A/tool.sh" "$CHIP" -c 4 bash -c "NDR=${NDR:-1} HOOK_W=${HOOK_W:-1.2} DRT_ITERS=${DRT_ITERS:-20} openroad -exit /asm/route.tcl" > "$RUN/route/route.log" 2>&1 || true
+               "$A/tool.sh" "$CHIP" -c 4 bash -c "NDR=${NDR:-1} HOOK_W=${HOOK_W:-0.56} DRT_ITERS=${DRT_ITERS:-20} openroad -exit /asm/route.tcl" > "$RUN/route/route.log" 2>&1 || true
                grep -E "GRT-0228|ERROR|ROUTE DONE|Number of violations" "$RUN/route/route.log" | tail -3 ;;
     stream)    "$A/tool.sh" "$CHIP" -c 2 python3 /asm/kl_stream.py > "$RUN/stream.log" 2>&1; tail -1 "$RUN/stream.log" | cut -c1-400 ;;
     report)    python3 "$A/report.py" "$CHIP" > "$RUN/report.log"; head -30 "$RUN/report.log" ;;

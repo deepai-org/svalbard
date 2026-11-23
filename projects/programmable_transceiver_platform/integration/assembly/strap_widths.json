@@ -1,7 +1,8 @@
 {
- "comment": "Grid strap width (um) per 3 x 3 core region (power owner PDS-8 / PDS-16). pt_rf 10.5 um everywhere; pt_wired 22 um in MC/ME/SE for >= 12 % per net and layer at the pt_wiredtx8 tap (56 mA). The durable fix is ASM-8 (blocks free Metal5).",
+ "comment": "Grid strap width (um) per 3 x 3 core region (power owner PDS-8 / PDS-16). pt_rf 10.5 um everywhere; pt_wired 22 um in MC/ME/SE for >= 12 % per net and layer at the pt_wiredtx8 tap (56 mA). The durable fix is ASM-8 (blocks free Metal5). pt_rf SE (QVCO / LO) 21 um for >= 10 % per net and layer at lo_mmd (PDS-17).",
  "rf": {
-  "default": 10.5
+  "default": 10.5,
+  "SE": 21.0
  },
  "wired": {
   "default": 10.5,

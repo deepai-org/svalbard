@@ -15,7 +15,7 @@ DIE = (0.0, 0.0, 3932.0, 5122.0)
 CORE = (452.0, 452.0, 3480.0, 4670.0)        # die-fit core; the provider cells end 376 um from the die edge
 IO_INNER = 376.0                             # inner edge of the provider ring cells
 RING_W, RING_GAP = 14.0, 4.0                 # power-delivery G8: core ring 2 x 25 um, may narrow to 2 x 12 (taken: 2 x 14)
-PAD_CLEAR = 40.0                             # pad footprint growth the packer keeps free (core ring detour 2 x 14 + 4 + spacing)
+PAD_CLEAR = float(os.environ.get('PAD_CLEAR', '40'))                             # pad footprint growth the packer keeps free (core ring detour 2 x 14 + 4 + spacing)
 BASE_RING = 'projects/programmable_transceiver_platform/analog/pads/generated/packaging-assembly.gds'
 MASK = 'scratch/integration/signoff-gap/dl/precheck-live/assets/golden_masks/mask_1x1.gds'
 AN = 'projects/programmable_transceiver_platform/analog/'
@@ -42,19 +42,39 @@ SPECIAL = {
     'pad_txpad': [(AN+'pads/generated/stress-safe-families/wired-transmit/combined.gds', None)],
 }
 # staged pad cells with the ASM-2 core-edge pins (pads owner, 2026-11-21), used before the published ones until they publish
-STAGED_PADS = {'pad_txpad': ('scratch/pads-core/esdopt/tx/sec/b/a12/pad_txpad.gds', 'pad_txpad'),
-               'pad_wirepad': ('scratch/pads-core/esdopt/usb/build/b7/pad/combined.gds', 'tx_with_primary'),
-               # pin-move-only variants of the published cells (core pins on the top edge, Metal4)
-               'pad_rf_pair': ('scratch/pads-core/esdopt/pins/b/pad_rf_pair.gds', 'pad_rf_pair'),
-               'pad_rftxpad': ('scratch/pads-core/esdopt/pins/b/pad_rftxpad.gds', 'pad_rftxpad'),
-               'pad_single_leg': ('scratch/pads-core/esdopt/pins/b/pad_single_leg.gds', 'pad_single_leg'),
-               'pad_hspad': ('scratch/pads-core/esdopt/pins/b/pad_hspad.gds', 'pad_hspad')}
+STAGED_PADS = {}       # every custom pad family is published (option-A baselines; pinned pad_hspad ddcaaf79)
 for _m, (_g, _c) in STAGED_PADS.items(): SPECIAL[_m] = [(_g, _c)]+SPECIAL[_m]
+# owners' baseline handoffs (MANIFEST.json: {block: {gds, top}}), used before the published cells; the master is the top name
+GRID_SNAP = {}       # master -> pitch: built with Metal5 channels on the grid phase; placed R0 with x0 = y0 = 0 (mod pitch)
+HANDOFFS = ['scratch/timing/handoff']          # timing / wired RX (commit 860f6502)
+for _d in HANDOFFS:
+    try: _man = json.load(open(f'{ROOT}/{_d}/MANIFEST.json'))
+    except OSError: continue
+    for _k, _v in _man.items():
+        if isinstance(_v, dict) and _v.get('gds') and _v.get('top') and os.path.exists(f'{ROOT}/{_d}/{_v["gds"]}'):
+            SPECIAL[_v['top']] = [(f'{_d}/{_v["gds"]}', _v['top'])]+SPECIAL.get(_v['top'], [])
+            if str(_v.get('grid', '')).startswith('m5_keep'): GRID_SNAP[_v['top']] = float(str(_v['grid']).split()[-1])
 for _n in ('isw_wired', 'isw_rf', 'isw_pll', 'isw_conv', 'isw_debug', 'atb_leaf_s', 'atb_leaf_f', 'atb_grp', 'atb_pad'):
-    SPECIAL[_n] = [(IS+f'layout/{_n}.gds', _n)]
+    _p = AN+f'island_support/generated/isw/{_n}.gds'            # published first, the island-support scratch copy after
+    SPECIAL[_n] = ([(_p, _n)] if os.path.exists(ROOT+'/'+_p) else [])+[(IS+f'layout/{_n}.gds', _n)]
+# baseline (MANDATE 1, 2026-11-22): every instance real layout; owners' current best GDS before publication
+SPECIAL.update({
+    'iso_clamp_x4': [(AN+'island_support/generated/iso-family/iso_clamp_x4.gds', 'iso_clamp_x4')],
+    'iso_pd': [(AN+'island_support/generated/iso-family/iso_pd.gds', 'iso_pd')],
+    'pt_lna_ind': [(AN+'rf_rx/generated/lna_ind.gds', None)],
+    'pt_lna_deg': [(AN+'rf_rx/generated/lna_deg.gds', None)],
+    'pt_refvcm': [(AN+'core_support/distribution/generated/pt_refvcm.gds.gz', 'pt_refvcm')],
+    'pt_txpad_bias': [(AN+'core_support/distribution/generated/pt_txpad_bias.gds.gz', 'pt_txpad_bias')],
+})
+# per-chip sources: (chip, master) -> [(gds, cell)]; the digital macro baseline of each chip (DG9-12)
+# the owner's own LEF replaces the label-based abstract (the macro GDS carries labels of internal nets too)
+CHIP_LEF = {(ch, 'pt_digital_macro'): f'scratch/digital-macro-baseline/{ch}/pt_digital_macro.lef' for ch in ('rf', 'wired')}
+CHIP_SPECIAL = {(ch, 'pt_digital_macro'): [(f'scratch/digital-macro-baseline/{ch}/pt_digital_macro.gds', 'pt_digital_macro')] for ch in ('rf', 'wired')}
 # staged blocks that replace a conn instance's master in the layout before the conn changes (coordinator, 2026-11-20):
 # instance -> master, GDS, cell, placement rule (R0; x origin = x_mod[0] modulo x_mod[1] um), owner report with the grid ties
-STAGED = {'wired': {'wiredtx': dict(master='pt_wiredtx8', gds=AN+'wired_tx/generated/fast/pt_wiredtx8.gds', cell='pt_wiredtx8',
+STAGED = {'wired': {'ptrim': dict(master='pt_ptrim', gds='scratch/timing/handoff/ptrim.gds', cell='pt_ptrim',
+                                  x_mod=(313.05, 70.0), report='-', strap_w=10.5, via_pin='VSS'),   # r12 (wired RX), grid VSS Metal5 over its VSS strap
+                    'wiredtx': dict(master='pt_wiredtx8', gds=AN+'wired_tx/generated/fast/pt_wiredtx8.gds', cell='pt_wiredtx8',
                                     x_mod=(20.75, 35.0), report='scratch/wired_tx/s13/top/out/report.json')}}
 # ledger bookings that stand for a group of conn instances placed side by side on one bar (coordinator CB8-11: both
 # wired_tx switch masters on one VISL bar beside pt_wiredtx8): booking -> members
@@ -68,11 +88,33 @@ FIXED_PLACE = {'wired': {'isw_wired_tx_a': (2938.0, 2209.0), 'isw_wired_tx_b': (
 # them; the grid gives way. pt_wired: RAIL_wired_tx from the isw_wired_tx_a/_b VISL bars to pt_wiredtx8's east edge
 # (power delivery 4.1c option B, coordinator 2026-11-21: >= 180 um wide, IR closed at 56 mA); the run passes over the small
 # blocks between them where they draw no Metal5, and enters the block's free corner (block x >= 598.7, y >= 236.1)
-ISLAND_BARS = {'wired': [dict(net='RAIL_wired_tx', rects=[(2658.5, 2265.0, 3400.0, 2611.0), (2512.95, 2445.6, 2658.5, 2610.2)],
+# rel = (instance, [(layer, block-coordinate rect)]) placed with that instance (R0); tie_vias = (instance, report tie names):
+# Via4 where the Metal4 bar meets those Metal5 ties. pt_wiredtx8 WT57 (19367351): outline L 744.5 x 430.8, free corner
+# x >= 598.7, y >= 266.36; island VDD ties T_main / T_post at y 423.1-430.8 (Metal5), east_island column; Metal4 band
+# y 410.9-430.8, x 340-744 is island VDD only
+ISLAND_BARS = {'wired': [dict(net='RAIL_wired_tx', rects=[(2658.5, 2265.0, 3400.0, 2640.0)],
+                              rel=('wiredtx', [('Metal5', (598.9, 266.6, 744.5, 430.8)), ('Metal4', (340.0, 411.2, 744.5, 430.8))]),
+                              tie_merge=('wiredtx', ['east_island']),
+                              tie_vias=('wiredtx', ['T_main_2', 'T_main_3', 'T_post_0', 'T_post_1', 'T_post_2', 'T_post_3']),
                               vias=[('isw_wired_tx_a', 'VISL'), ('isw_wired_tx_b', 'VISL')])]}
 # decap tiles the assembly places itself before the other blocks (power delivery 4.1d / PDS-16: the 14 tiles that did not
 # place go inboard of pad_hs_rx, within 500 um of bidir[14], restoring 5.4 nF and the CDM reach): slot, count
 FIXED_DECAP = {'wired': dict(slot=(2453.0, 960.0, 2953.0, 1440.0), count=14)}
+# signal-flow adjacency the packer must keep (coordinator 2026-11-23, docs/layout/pt_<chip>-floorplan.png): pairs
+# (a, b, max edge gap um, pull weight), applied both ways (whichever is placed second); relaxed only if impossible and
+# then reported in floorplan.json 'relaxed'. KEEPAWAY adds (aggressor, victim, min gap um).
+FLOW_ADJ = {
+ 'rf': [('lna_ind_p', 'lna', 8, 20), ('lna_ind_n', 'lna', 8, 20), ('lna_deg_p', 'lna', 8, 20), ('lna_deg_n', 'lna', 8, 20),
+        ('rxmix_i', 'lo_ext', 120, 14), ('rxmix_q', 'lo_ext', 120, 14),
+        ('dac_i', 'txmix_i', 200, 3), ('dac_q', 'txmix_q', 200, 3), ('txsum', 'txmix_i', 100, 4), ('rfdriver', 'txsum', 150, 4), ('rfdriver', 'pad_rf_tx', 150, 10), ('txmix_i', 'rfdriver', 150, 6), ('txmix_q', 'rfdriver', 150, 6),
+        ('bbfilter_i', 'rxmix_i', 100, 5), ('bbfilter_q', 'rxmix_q', 100, 5), ('adc_i', 'bbfilter_i', 100, 5), ('adc_q', 'bbfilter_q', 100, 5),
+        ('rx_ref_in', 'pad_ref', 100, 5)],
+ 'wired': [('ptrim', 'pll_cdr', 60, 8), ('slicer', 'ptrim', 60, 8), ('ctle', 'slicer', 100, 6), ('cdr', 'pll_cdr', 100, 4),
+           ('wrx_cap', 'digital', 300, 2), ('wrx_cap', 'slicer', 200, 3)]}
+FLOW_KEEPAWAY = {'rf': [('rfdriver', 'pll_tx', 300)], 'wired': []}
+# reserved slots for blocks not yet drawn, placed touching a partner (kept free of blocks; Metal1-3 blockage):
+# name -> (w, h, partner). pt_lo_txbuf (LO owner, 2026-11-23): CML-to-CMOS I/Q buffer at the TX mixers; size provisional
+BOOK_NEAR = {'rf': {'lo_txbuf_rsv': (165.0, 120.0, 'txmix_i')}}     # pt_lo_txbuf 161 x 115 um + margin
 TWIN = {'pt_adc_q': 'pt_adc_i', 'pt_dac_q': 'pt_dac_i'}
 # provider-ring instances of the conn (not core blocks): their pins are on the template's IO cells
 PROVIDER = ('pt_host_physical', 'pt_debug_physical', 'atb_provider_pad', 'pad_strap', 'prov_supply', 'prov_supply_sig')
@@ -101,12 +143,12 @@ def master_pins(masters, m):
     return (md['pins'] if md['kind'] != 'file' else ct.subckt_pins(md['path'], md['sub'])) or []
 
 
-def gds_candidates(masters, m):
+def gds_candidates(masters, m, chip=None):
     staged = json.load(open(ROOT+'/scratch/reviews/die-fit/m45free_staged.json'))
-    out = [dict(gds=g, cell=c, kind='published' if g.startswith(AN) else 'scratch') for g, c in SPECIAL.get(m, [])]
+    out = [dict(gds=g, cell=c, kind='published' if g.startswith(AN) else 'scratch') for g, c in CHIP_SPECIAL.get((chip, m), [])+SPECIAL.get(m, [])]
     md = masters.get(m)
     if md and md.get('path') and m not in SPECIAL:
-        stem = re.sub(r'(\.ext|\.pex|_ext)?\.spice$', '', os.path.relpath(md['path'], ROOT))
+        stem = re.sub(r'(\.ext|\.pex|\.lvs|_ext)?\.spice$', '', os.path.relpath(md['path'], ROOT))
         out.append(dict(gds=stem+'.gds', cell=md['sub'], kind='published' if md['kind'] == 'file' else 'staged'))
     if m in staged and 'file' in staged[m]:
         out.append(dict(gds=staged[m]['file'].lstrip('/'), cell=staged[m].get('top'), kind='staged'))

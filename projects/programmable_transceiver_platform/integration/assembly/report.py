@@ -67,6 +67,18 @@ res = dict(chip=chip, nets=len(rows), routed=len(rows)-len(unrouted), unrouted=u
            drt_final_by_type=dict(drt_items), gr_congested_gcells=len(cong), gr_overflow_line=gr_over[-1] if gr_over else None,
            longest=longest, critical=crit[:40], hooks=len(PL['hooks']), unconnectable=PL['unconnectable'], single_pin_nets=len(PL['single_pin_nets']),
            pdn=PL['pdn'])
+# layout status per instance: placeholder (no GDS) or not yet published (staged / scratch / handoff), with the source
+MJ = json.load(open(RUN+'/masters.json'))
+status = []
+for n, b in sorted(PL['blocks'].items()):
+    m = b['master']
+    if m == 'decap': continue
+    g = MJ.get(m, {}).get('gds') or ''
+    k = 'placeholder' if b['kind'] == 'placeholder' else ('published' if g.startswith('projects/') and '/generated/' in g and 'staged' not in b['kind'] else 'staged')
+    if k != 'published': status.append(dict(inst=n, master=m, status=k, gds=g))
+for n, v in PADS['pads'].items():
+    if not v['gds'].startswith('projects/'): status.append(dict(inst=n, master=v['master'], status='staged', gds=v['gds']))
+res['layout_status'] = status
 json.dump(res, open(RUN+'/report/route.json', 'w'), indent=0)
 
 # ---------------------------------------------------------------------------------------------------- pictures

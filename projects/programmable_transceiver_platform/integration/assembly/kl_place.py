@@ -169,6 +169,14 @@ def pin_shapes_die0(n, p):
 bars = []          # island supply bars (common.ISLAND_BARS)
 for bd in C.ISLAND_BARS.get(CHIP, []):
     reg = db.Region([db.Box(*[um(v) for v in r]) for r in bd['rects']]).merged()
+    m4 = db.Region()
+    if bd.get('rel') and bd['rel'][0] in man['blocks']:
+        bx_, by_ = man['blocks'][bd['rel'][0]]['bbox'][:2]
+        for ln_, r_ in bd['rel'][1]:
+            b_ = db.Box(um(bx_+r_[0]), um(by_+r_[1]), um(bx_+r_[2]), um(by_+r_[3]))
+            if ln_ == 'Metal5': reg += db.Region(b_)
+            else: m4 += db.Region(b_)
+        reg = reg.merged()
     # same-net Metal5 of the listed cells (the polygons over their pin, e.g. the isw VISL plate) is joined, not cut
     same = db.Region(); other = db.Region(); cells_ = db.Region()
     for i_, p_ in bd['vias']:
@@ -178,10 +186,17 @@ for bd in C.ISLAND_BARS.get(CHIP, []):
         same += m5.interacting(pins_); other += m5.not_interacting(pins_)
         cells_ += db.Region(db.Box(*[um(v) for v in b_['bbox']]))
     # cut: every other block's Metal5 (2.5 um), and the listed cells' other-net Metal5 (2.5 um); their same-net Metal5 is joined
-    cut = (blkmetal['Metal5'] - cells_.sized(um(2.5))) + other.sized(um(2.5))
+    if bd.get('tie_merge') and bd['tie_merge'][0] in man['blocks']:      # same-net Metal5 ties of a block (e.g. the east island column)
+        st_ = C.STAGED.get(CHIP, {}).get(bd['tie_merge'][0], {}); rp_ = R+st_.get('report', '')
+        if os.path.isfile(rp_):
+            ties_ = json.load(open(rp_)).get('ties', {}).get('VDD', {}); bx_, by_ = man['blocks'][bd['tie_merge'][0]]['bbox'][:2]
+            for tn_ in bd['tie_merge'][1]:
+                if tn_ in ties_: t_ = ties_[tn_]; same += db.Region(db.Box(um(bx_+t_[0]), um(by_+t_[2]), um(bx_+t_[1]), um(by_+t_[3])))
+    cut = ((blkmetal['Metal5'] - cells_.sized(um(2.5))) + other.sized(um(2.5))) - same.sized(um(2.5)) + (other.sized(um(2.5)))
     reg = (reg - cut - padreg.sized(um(3))).merged() + (same & reg.sized(um(50)))
     reg = db.Region([p for p in reg.each() if p.area() > um(20)*um(20)])
-    bars.append(dict(bd, region=reg, merged=not same.is_empty()))
+    bars.append(dict(bd, region=reg, m4=m4, merged=not same.is_empty()))
+    avoid['Metal4'] = (avoid['Metal4'] + m4.sized(um(2.5))).merged()
     avoid['Metal5'] = (avoid['Metal5'] + reg.sized(um(2.5))).merged()
 PITCH, SW = 70.0, float(os.environ.get('STRAP_W', '10.5'))   # G1 15 % nominal; wider per region from strap_widths.json
 core = C.CORE
@@ -213,6 +228,17 @@ for key, (x0, y0, x1, y1) in cells3():
             if c+w/2 <= core[2]: straps[(net, 'Metal5')] += db.Region(db.Box(um(c-w/2), 0, um(c+w/2), um(C.DIE[3]))) & cell
         x += PITCH
 man['strap_widths'] = dict(SWJ, default=SW)
+# staged blocks with a strap-width rule over them (ptrim r12: a 16-22 um strap would reach its VDD_WIRE_SW strap)
+for n_, v_ in C.STAGED.get(CHIP, {}).items():
+    if v_.get('strap_w') and n_ in man['blocks']:
+        bb_ = db.Box(*[um(x) for x in man['blocks'][n_]['bbox']]).enlarged(um(3), um(3)); box_ = db.Region(bb_)
+        for key_ in list(straps):
+            if key_[1] != 'Metal5': continue
+            keep_ = straps[key_] - box_; thin_ = db.Region()
+            for p_ in (straps[key_] & box_).each():
+                b_ = p_.bbox(); cx_ = b_.center().x; hw_ = um(v_['strap_w'])//2
+                thin_.insert(db.Box(cx_-hw_, b_.bottom, cx_+hw_, b_.top))
+            straps[key_] = (keep_ + thin_).merged()
 raw_straps = {k: v.dup() for k, v in straps.items()}
 for (net, ln), reg in straps.items():
     reg = (reg & reach[net]) - avoid[ln] - (ring['VSS' if net == 'VDD' else 'VDD'] if net == 'VSS' else db.Region())
@@ -252,6 +278,13 @@ def via_fill(cell, lay, region, inset=0.5):
             if nx < 1 or ny < 1: continue
             cell.insert(db.CellInstArray(vc.cell_index(), db.Trans(db.Vector(ox, oy)), db.Vector(620, 0), db.Vector(0, 620), nx, ny)); n += nx*ny
     return n
+# Via4 from the grid VSS Metal5 straps onto a staged block's declared VSS Metal4 pin (ptrim r12 VSS strap, full height)
+for n_, v_ in C.STAGED.get(CHIP, {}).items():
+    if v_.get('via_pin') and n_ in man['blocks']:
+        b_ = man['blocks'][n_]; t_ = db.Trans.from_s(b_['trans']); info_ = MJ.get(b_['master'], {}); o_ = info_.get('origin', [0, 0])
+        pr_ = db.Region([t_*db.Box(um(r[0]+o_[0]), um(r[1]+o_[1]), um(r[2]+o_[0]), um(r[3]+o_[1])) for ln, r in info_.get('pins', {}).get(v_['via_pin'], []) if ln == 'Metal4'])
+        land_ = pr_ & straps[('VSS', 'Metal5')]
+        man.setdefault('staged_vias', {})[n_] = via_fill(pdn, VIA['Via4'], land_, inset=0.3) if not land_.is_empty() else 0
 nvia = 0
 for net in ('VDD', 'VSS'):
     for ln in ('Metal4', 'Metal5'): pdn.shapes(LI[ln]).insert(metal[(net, ln)])
@@ -348,8 +381,16 @@ for net in ('VDD', 'VSS'):
 barcell = ly.create_cell('pt_island_bar') if bars else None
 man['island_bars'] = []
 for bd in bars:
-    barcell.shapes(LI['Metal5']).insert(bd['region'])
-    nv = 0
+    barcell.shapes(LI['Metal5']).insert(bd['region']); barcell.shapes(LI['Metal4']).insert(bd['m4'])
+    nv = via_fill(barcell, VIA['Via4'], bd['m4'] & bd['region'], inset=0.5) if not bd['m4'].is_empty() else 0
+    if bd.get('tie_vias') and bd['tie_vias'][0] in man['blocks']:
+        st_ = C.STAGED.get(CHIP, {}).get(bd['tie_vias'][0], {}); rp_ = R+st_.get('report', '')
+        if os.path.isfile(rp_):
+            ties_ = json.load(open(rp_)).get('ties', {}).get('VDD', {}); bx_, by_ = man['blocks'][bd['tie_vias'][0]]['bbox'][:2]
+            for tn_ in bd['tie_vias'][1]:
+                if tn_ in ties_:
+                    t_ = ties_[tn_]; land_ = bd['m4'] & db.Region(db.Box(um(bx_+t_[0]), um(by_+t_[2]), um(bx_+t_[1]), um(by_+t_[3])))
+                    nv += via_fill(barcell, VIA['Via4'], land_, inset=0.4)
     for i_, p_ in bd['vias']:
         for ln, b in pin_shapes_die(i_, p_):
             land = db.Region(b) & bd['region']
@@ -376,6 +417,7 @@ comps.append(('pdn', 'pt_pdn', 0.0, 0.0, 'N'))
 macro_of = {c[0]: c[1] for c in comps}
 def has_pin(i, p): return p in MJ.get(macro_of.get(i, ''), {}).get('pins', {})
 def cls(net):
+    if net in ('LO_IP', 'LO_IN', 'LO_QP', 'LO_QN'): return 'lo'      # coordinator: shielded differential pair to the mixers
     if net.startswith(('RAIL_', 'VREG_', 'VDD_')): return 'supply'
     u = net.upper()
     if u.startswith(('RF_', 'LNA_', 'LO_', 'BB_', 'MIX', 'RFI', 'RFO', 'TXRF', 'RX_LO', 'TX_LO', 'LOI', 'LOQ')) or 'LO_' in u: return 'rf'

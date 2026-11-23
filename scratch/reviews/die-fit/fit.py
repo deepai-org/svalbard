@@ -121,6 +121,10 @@ RULES = [('digital', 'adc_i', 210), ('digital', 'adc_q', 210), ('digital', 'core
          # along the edge from the RF_TX pads. Applied to the cell edge (spiral centres are about 200 um inside it):
          # 1500 um / 800 um against virtual rectangles.
          ('west_edge', 'qvco', 1500), ('rf_tx_band', 'qvco', 800)]
+RULES += [tuple(r) for r in json.loads(os.environ.get('KEEPAWAY', '[]'))]     # assembly: extra keep-aways
+ADJ = {}
+for a_, b_, d_, w_ in json.loads(os.environ.get('ADJ', '[]')):   # assembly: [block, partner, max gap um, weight]
+    ADJ.setdefault(a_, []).append((b_, d_, w_))
 KA = {}
 for a, v, d in RULES:
     KA.setdefault(a, []).append((v, d)); KA.setdefault(v, []).append((a, d))
@@ -184,6 +188,7 @@ def run(mw, mx0, rng=None, strat=0):
     if CH > 0:
         rsv['chan_macro_s'] = (dig[0], dig[1]-HALO-CH, dig[2], dig[1]-HALO)
         rsv['chan_macro_e'] = (dig[2]+HALO, dig[1]-HALO-CH, min(dig[2]+HALO+CH, CORE[2]), CORE[3])
+        rsv['chan_macro_w'] = (max(dig[0]-HALO-CH, CORE[0]), dig[1]-HALO-CH, dig[0]-HALO, CORE[3])
     # assembly: keep the pocket east of the macro free of blocks (POCKET=1): on pt_wired it is walled off by the macro and
     # pad_wire_tx, so blocks there pull their nets through the corner gap
     if os.environ.get('POCKET') == '1':
@@ -230,6 +235,8 @@ def run(mw, mx0, rng=None, strat=0):
             tg.append((f'isw_{g}', ISLW*b['mA']))    # supply flow: every island block is pulled to its switch in proportion to its current (G5/G6 strap)
         if b['mA'] > 20.0 and f'isw_{g}' in blocks:
             mg.append((f'isw_{g}', 500.0))      # power-delivery.md G6: blocks above 20 mA within ~500 um of their switch
+        for t_, d_, w_ in ADJ.get(n, []):           # assembly adjacency (signal-flow distances, relaxable)
+            tg.append((t_, w_)); mg.append((t_, d_))
         p.place(n, b['w'], b['h'], halo=b['halo'], rot=b['rot'], targets=tg, anchor=(anchor[0], anchor[1], aw),
                 keepaway=KA.get(n, []), maxgap=mg, ring=ring, lam=0.6, step=2)
     return p, fixed, dig

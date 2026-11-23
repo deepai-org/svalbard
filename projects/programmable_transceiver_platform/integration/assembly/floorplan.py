@@ -15,7 +15,7 @@ chip = sys.argv[1]; RUN = os.environ.get('ASM_RUN', f'{C.ROOT}/scratch/integrati
 pads = json.load(open(RUN+'/pads.json')); MJ = json.load(open(RUN+'/masters.json'))
 inst, ports, masters = C.load(chip)
 
-g = C.PAD_CLEAR
+g = float(os.environ.get('PAD_CLEAR', {'rf': 34.0, 'wired': C.PAD_CLEAR}[chip]))   # pt_rf: 34 um and a 6 um halo, else the LNA spirals do not place (2026-11-22)
 pj = {}
 for n, v in pads['pads'].items():
     pj[n] = [[r[0]-g if v['side'] == 'east' else r[0], r[1]-g, r[2]+g if v['side'] == 'west' else r[2], r[3]+g] for r in v['footprint']]
@@ -42,10 +42,12 @@ def msize(m):
     st = C.STAGED.get(chip, {}).get(m)
     mm = st['master'] if st else inst0[m]['master']
     return (MJ[mm]['w']+(70 if st else 0), MJ[mm]['h'])
+mw_ = MJ.get('pt_digital_macro', {}).get('w')     # the baseline macro GDS sets the outline when it exists
 macro = {'rf': '1716:1108', 'wired': '1676:971'}[chip]      # wired: DG9-11 outline 1676 x 1592.96, 32 um to pad_ref (west, x 939) and pad_wire_tx (east, x 2679)
-env = dict(os.environ, CHIP=chip, SCEN='S', TAG='s', TRIES=os.environ.get('TRIES', '6'), PADS_JSON=RUN+'/fp_pads.json',
-           SIZES_JSON=RUN+'/fp_sizes.json', RUNDIR=RUN+'/fit', CHANNEL=os.environ.get('CHANNEL', '40'), ISLAND_W=os.environ.get('ISLAND_W', '0.3'), NOROT=','.join(list(C.STAGED.get(chip, {}))+list(C.GROUP_BOOK.get(chip, {}))), POCKET='1' if chip == 'wired' else '0', DROP=','.join(C.STALE_BOOK.get(chip, [])+list(C.FIXED_PLACE.get(chip, {}))+['isw_wired_tx']), EXTRA_RSV=json.dumps(fixed_rects()), ITEM_SIZES=json.dumps({b: [sum(msize(m)[0] for m in ms)+4*(len(ms)-1), max(msize(m)[1] for m in ms)] for b, ms in C.GROUP_BOOK.get(chip, {}).items()}),
-           **({'MACRO_MM2': '2.669801'} if chip == 'wired' else {}), OMP_NUM_THREADS='1', MACRO=os.environ.get('MACRO', macro))
+env = dict(os.environ, ADJ=json.dumps([[a, b, d, w] for a, b, d, w in C.FLOW_ADJ.get(chip, [])]+[[b, a, d, w] for a, b, d, w in C.FLOW_ADJ.get(chip, [])]),
+           KEEPAWAY=json.dumps(C.FLOW_KEEPAWAY.get(chip, [])), HALO=os.environ.get('HALO', {'rf': '4', 'wired': '10'}[chip]), CHIP=chip, SCEN='S', TAG='s', TRIES=os.environ.get('TRIES', '6'), PADS_JSON=RUN+'/fp_pads.json',
+           SIZES_JSON=RUN+'/fp_sizes.json', RUNDIR=RUN+'/fit', CHANNEL=os.environ.get('CHANNEL', '40'), ISLAND_W=os.environ.get('ISLAND_W', '0.3'), NOROT=','.join(list(C.STAGED.get(chip, {}))+list(C.GROUP_BOOK.get(chip, {}))+[n for n, i in inst0.items() if i['master'] in C.GRID_SNAP]), POCKET='1' if chip == 'wired' else '0', DROP=','.join(C.STALE_BOOK.get(chip, [])+list(C.FIXED_PLACE.get(chip, {}))+['isw_wired_tx']), EXTRA_RSV=json.dumps(fixed_rects()), ITEM_SIZES=json.dumps({b: [sum(msize(m)[0] for m in ms)+4*(len(ms)-1), max(msize(m)[1] for m in ms)] for b, ms in C.GROUP_BOOK.get(chip, {}).items()}),
+           MACRO_MM2=str(round(MJ['pt_digital_macro']['w']*MJ['pt_digital_macro']['h']/1e6, 6)) if mw_ else ('2.669801' if chip == 'wired' else ''), OMP_NUM_THREADS='1', MACRO=os.environ.get('MACRO', macro))
 fit = C.ROOT+'/scratch/reviews/die-fit'
 r = subprocess.run(['true'] if os.environ.get('REUSE_FIT') else ['nice', '-n', '10', 'python3', 'fit.py'], cwd=fit, env=env, capture_output=True, text=True)
 if not os.environ.get('REUSE_FIT'): open(RUN+'/fit/fit.log', 'w').write(r.stdout+r.stderr)
@@ -55,7 +57,7 @@ L = {x['item']: x for x in json.load(open(f'{fit}/{chip}/ledger.json'))['rows']}
 
 blocks = {}
 for n, v in F['placed_rects'].items():
-    m = 'decap' if n.startswith(('decap_bank', 'decap_tile')) else L.get(n, {}).get('master', n)
+    m = 'decap' if n.startswith(('decap_bank', 'decap_tile')) else (inst[n]['master'] if n in inst else L.get(n, {}).get('master', n))
     if m == '(booked)': m = n
     blocks[n] = dict(master=m, rect=v['rect'], rot=v['rot'], in_conn=n in inst, gds=bool(MJ.get(m, {}).get('w')))
 # fixed placements (common.FIXED_PLACE): the packer kept their slots free (EXTRA_RSV)
@@ -164,6 +166,34 @@ for n, v in C.STAGED.get(chip, {}).items():
             staged[n] = dict(master=v['master'], rect=rr, x_origin_mod=round(rr[0] % mod, 3)); break
     else:
         print('staged', n, 'no x shift fits'); blocks[n] = old
+# grid-phase blocks (common.GRID_SNAP): lower-left moved to the nearest legal point with x0 = y0 = 0 (mod pitch)
+snapped = {}
+for n in [n for n in blocks if blocks[n]['master'] in C.GRID_SNAP]:
+    b = blocks[n]; r = b['rect']; P = C.GRID_SNAP[b['master']]; w, h = r[2]-r[0], r[3]-r[1]
+    def okr(q):
+        if q[0] < C.CORE[0] or q[1] < C.CORE[1] or q[2] > C.CORE[2] or q[3] > C.CORE[3]: return False
+        if any(ov(q, p) for ps in pj.values() for p in ps): return False
+        return all(not ov([q[0]-4, q[1]-4, q[2]+4, q[3]+4], o['rect']) for k, o in blocks.items() if k != n and not k.startswith('decap'))
+    cx = [round(r[0]/P)*P+d*P for d in (0, -1, 1, -2, 2)]; cy = [round(r[1]/P)*P+d*P for d in (0, -1, 1, -2, 2)]
+    hit = next(([x, y, x+w, y+h] for x in cx for y in cy if okr([x, y, x+w, y+h])), None)
+    if hit:
+        for k in [k for k in blocks if k.startswith('decap') and ov(hit, blocks[k]['rect'])]: dropped.append(k); del blocks[k]
+        b['rect'] = hit; b['rot'] = False; snapped[n] = hit
+    else: print('grid snap: no legal point for', n)
+# BOOK_NEAR reservations (common): touching their partner, decap tiles give way
+for bn, (w, h, t) in C.BOOK_NEAR.get(chip, {}).items():
+    if t not in blocks: continue
+    pk5 = Packer(C.CORE, G=2.0)
+    for k, q in pj.items(): pk5.fixed(k, q)
+    for k, b in blocks.items():
+        if not k.startswith('decap_tile'): pk5.fixed(k, [b['rect']], halo=4.0)
+    for k, q in reserves.items(): pk5.fixed(k, [q])
+    tr = blocks[t]['rect']
+    r = pk5.place(bn, w, h, halo=4.0, targets=[(t, 20.0)], anchor=((tr[0]+tr[2])/2, (tr[1]+tr[3])/2, 0.1), lam=2.0, step=2)
+    if r:
+        for k in [k for k in blocks if k.startswith('decap_tile') and ov(r, blocks[k]['rect'])]: dropped.append(k); del blocks[k]
+        reserves[bn] = list(r)
+    else: print('booking', bn, 'found no slot next to', t)
 missing = sorted(core_blocks-set(blocks))
 
 # independent legality check
@@ -179,7 +209,7 @@ for i, a in enumerate(names):
     for p, rp in padr:
         if ov(ra, rp): bad.append((a, p))
 out = dict(chip=chip, die=C.DIE, core=C.CORE, macro=F['macro'], blocks=blocks, reserves=reserves, unplaced=F['unplaced'],
-           relaxed=F['relaxed'], rule_audit=F['rule_audit'], rule_fails=F['rule_fails'], conn_not_placed=missing, second_pass=second, staged=staged, groups=C.GROUP_BOOK.get(chip, {}), decap_tiles_given_up=dropped, decap_tiles_unplaced=[u[0] for u in F['unplaced'] if u[0].startswith('decap')], decap_fixed=sum(1 for n in blocks if n.startswith('decap_fix')),
+           relaxed=F['relaxed'], rule_audit=F['rule_audit'], rule_fails=F['rule_fails'], conn_not_placed=missing, second_pass=second, staged=staged, grid_snapped=snapped, groups=C.GROUP_BOOK.get(chip, {}), decap_tiles_given_up=dropped, decap_tiles_unplaced=[u[0] for u in F['unplaced'] if u[0].startswith('decap')], decap_fixed=sum(1 for n in blocks if n.startswith('decap_fix')),
            overlaps=bad, switches=F['switches'], pad_clear_um=g)
 json.dump(out, open(RUN+'/floorplan.json', 'w'), indent=0)
 print(f"{chip}: placed {len(blocks)} (conn blocks without a place: {missing}), unplaced {F['unplaced']}, relaxed {len(F['relaxed'])}, "

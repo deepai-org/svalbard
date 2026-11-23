@@ -4,7 +4,7 @@
 #    bond map bonds to VDD / VSS (D-SPLIT-SUPSITE, PC-35 drop-in). -> /run/ring.gds, /run/pads.json (real footprints, pins)
 # 2. Every master of the chip conn that has a GDS (and the provider IO cells at signal sites) -> /run/lef/<master>.lef
 #    abstract from the GDS: outline, pins from the top-cell labels (metal under the label), OBS (see obs()) ; /run/masters.json
-import json, os, sys, collections
+import json, os, re, sys, collections
 import klayout.db as db
 sys.path.insert(0, '/asm')
 import common as C
@@ -213,7 +213,7 @@ for m in used:
         v = next(v for v in C.STAGED[CHIP].values() if v['master'] == m)
         cand = [dict(gds=v['gds'], cell=v['cell'], kind='staged', sha256='')]
     else:
-        cand = C.gds_candidates(masters, m)
+        cand = C.gds_candidates(masters, m, CHIP)
     if not cand:
         MJ[m] = dict(kind='none'); continue
     src = cand[0]
@@ -222,6 +222,18 @@ for m in used:
     except Exception as e:
         MJ[m] = dict(kind='error', error=str(e)[:300]); continue
     info.update(gds=src['gds'], sha=src['sha256'])
+    lefp = C.CHIP_LEF.get((CHIP, m))
+    if lefp and os.path.exists(R+lefp):          # owner's LEF: pins (and obstructions) as the owner abstracted them
+        txt = open(R+lefp).read(); pins = {}
+        for pm in re.finditer(r'\n\s*PIN (\S+)(.*?)\n\s*END \1', txt, re.S):
+            cur = None
+            for ln_ in pm.group(2).split('\n'):
+                t_ = ln_.split()
+                if t_[:1] == ['LAYER']: cur = t_[1]
+                elif t_[:1] == ['RECT'] and cur: pins.setdefault(pm.group(1), []).append((cur, [float(v) for v in t_[1:5]]))
+        info['pins'] = pins; info['origin'] = [0.0, 0.0]; info['lef'] = lefp
+        mm = re.search(r'MACRO (\S+)', txt).group(1)
+        open(f'/run/lef/{m}.lef', 'w').write(txt.replace(f'MACRO {mm}', f'MACRO {m}').replace(f'END {mm}', f'END {m}'))
     MJ[m] = info
     print(f"{m:28s} {info['w']:8.1f} x {info['h']:7.1f}  pins {len(info['pins']):3d}  missing {len(info['missing_pins']):3d}  obs {info['obs_rects']}", flush=True)
 json.dump(MJ, open('/run/masters.json', 'w'), indent=0)

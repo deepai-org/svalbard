@@ -231,3 +231,11 @@ Open: charge-pump VTUNE ceiling vs 2.69 V (not checked), phase noise, mismatch, 
 Published baseline LO cells for pt_rf: QVCO r9 (spiral 290 um, bank 9.0 um), pt_lo_vreg r2 (pins on edges), pt_lo_vtdet r2 (Metal4 pins), lo_vtdet instanced in rf/chip.conn. Divider = published lo_mmd (v7 dropped).
 Deferred until both chips are assembled, LVS-clean and through precheck: charge-pump VTUNE ceiling vs 2.69 V (`cpceil/bench.py`: the bias pin must be SOURCED 10 uA, sink gave ~0 current; run stopped), phase noise, closed-loop lock, regulator PSRR (PD2-11 78.125 MHz), external LO (LO-05, XT-08), obs_pre4 / lo_obs at 600 um, r9 independent review, RF-cell per-net C cross-check (rft9f RC vs C-only) and coverage report, extracted bench of lo_vtdet.
 Done for MANDATE 4a: mismatch known-answer through the LO bench header (`mcka/ka.json`, 2.19 vs 2.45 mV, off 0); r9 Monte Carlo tt b8 (20 seeds): f sigma ~0.7 MHz, Q-I -89.07...-89.82 deg (`q7/rmc/`).
+
+## 2026-11-23: TX-mixer LO route (coordinator question; `loext3/jtx.py`, runs `loext3/jruns/tx/`)
+Extracted lo_ext n4 (internal mode) driving the extracted RX mixers at its output and the TX-mixer gate load (4 x 10/0.28 um + 22 fF per leg) through a shielded Metal4 line (90 ohm/mm, 180 fF/mm, 10 RC sections per leg; estimate, not extracted), 2.1 mm vs none. LO at one TX gate (single-ended, peak-peak; centred ~2.5 V):
+| corner, tank | no line | 2.1 mm line | RX mixer gain (vs no line) |
+|---|---|---|---|
+| tt/3.3, 0.58 V | 0.89 Vpp (2.09-2.97 V) | 0.50 Vpp (2.28-2.78 V), -5.0 dB | 21.35 -> 20.39 dB |
+| ss/3.15, 0.40 V | 0.60 Vpp (2.22-2.82 V) | 0.34 Vpp (2.35-2.70 V), -4.9 dB | 20.06 -> 18.65 dB |
+txmix is designed and benched for a rail-to-rail (3.3 Vpp) CMOS square LO (rf_tx README); even next to lo_ext the TX gates see only 0.6-0.9 Vpp, and the 2.1 mm line also costs the RX mixers 1.0-1.4 dB. A repeater is required: a CML-to-CMOS rail-to-rail LO buffer (I and Q) at the TX mixers, fed from the line (post-baseline block). The differential measure in the bench failed (vector name), so numbers are single-ended per leg.

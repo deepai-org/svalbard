@@ -63,7 +63,10 @@ proc pt_h2d_restore {} {
         }
     }
     # also walk below each fixed row buffer (CTS may have built a subtree there)
-    set rowmap [dict create cbr {host.h2d.cap\[*\].cr.p.lr} cbf {host.h2d.cap\[*\].cf.n.lf} cbh {host.h2d.fhh\[*\].c.n.lf}]
+    # cbh also clocks the fhh pair-enable phase copies (hnc[g].c.lp / .ln, r10)
+    # values are lists of glob patterns (each braced, so list parsing keeps the \[ \] escapes)
+    set rowmap [dict create cbr [list {host.h2d.cap\[*\].cr.p.lr}] cbf [list {host.h2d.cap\[*\].cf.n.lf}] \
+        cbh [list {host.h2d.fhh\[*\].c.n.lf} {host.h2d.hnc\[*\].c.lp} {host.h2d.hnc\[*\].c.ln}]]
     dict for {cb pat} $rowmap {
         set cbi [pt_h2d_inst host.h2d.hio_$cb.cell]
         set todo [list [pt_h2d_out_net $cbi]]
@@ -84,17 +87,21 @@ proc pt_h2d_restore {} {
     set moved 0
     foreach nm $fixed { incr moved [pt_h2d_reconnect [[pt_h2d_inst $nm] findITerm I] $root_net] }
     set nflops 0
-    dict for {cb pat} $rowmap {
+    dict for {cb pats} $rowmap {
         set cb_net [pt_h2d_out_net [pt_h2d_inst host.h2d.hio_$cb.cell]]
         foreach i [$block getInsts] {
             # ODB names escape the brackets (cap\[3\]): compare without the backslashes
-            if {[string match $pat [string map {\\ {}} [$i getName]]]} {
-                incr moved [pt_h2d_reconnect [pt_h2d_clock_iterm $i] $cb_net]
-                incr nflops
+            set nm [string map {\\ {}} [$i getName]]
+            foreach pat $pats {
+                if {[string match $pat $nm]} {
+                    incr moved [pt_h2d_reconnect [pt_h2d_clock_iterm $i] $cb_net]
+                    incr nflops
+                    break
+                }
             }
         }
     }
-    if {$nflops != 30} { error "pt_cts_h2d: expected 30 capture flops, found $nflops" }
+    if {$nflops != 40} { error "pt_cts_h2d: expected 30 capture flops and 10 fhh enable phase flops, found $nflops" }
     # remove the now unloaded CTS buffers (and their output nets); chains unwind from the leaf end, so
     # repeat until nothing more can be removed
     set removed 0

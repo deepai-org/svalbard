@@ -203,6 +203,25 @@ module pt_hio_ibuf(input wire I,output wire Z);
 `endif
 endmodule
 
+// H2D pair-enable phase copy for the fhh capture row (r10): rising lp <= d, falling nsel <= lp, both
+// reset by rst_n (pt_ddr_nphase with the run gate folded into d by the caller), as fixed cells clocked
+// by the capture row's own clock buffer (hio_cbh) and hand-placed next to the fhh flops. lp -> nsel is
+// one direct half-period flop -> flop copy; nsel drives the two fhh selects through a local buffer
+// (like pt_hio_cap: the fixed flop never sees a heavy net).
+module pt_hio_nphase(input wire clk,rst_n,d,output wire nsel);
+`ifdef SYNTHESIS
+ wire lpq,nq;
+ gf180mcu_fd_sc_mcu7t5v0__dffrnq_1 lp(.D(d),.RN(rst_n),.CLK(clk),.Q(lpq));
+ gf180mcu_fd_sc_mcu7t5v0__dffnrnq_1 ln(.D(lpq),.RN(rst_n),.CLKN(clk),.Q(nq));
+ (* keep=1 *) gf180mcu_fd_sc_mcu7t5v0__buf_2 nb(.I(nq),.Z(nsel));
+`else
+ reg lp,ln;
+ always @(posedge clk or negedge rst_n) if(!rst_n) lp<=1'b0; else lp<=d;
+ always @(negedge clk or negedge rst_n) if(!rst_n) ln<=1'b0; else ln<=lp;
+ assign nsel=ln;
+`endif
+endmodule
+
 // H2D capture flop with a kept select in front (en=1 tied for r/f, the fh pair enable for fh):
 // every pin-capture path is hio_ib -> hio_m (I1 -> Z) -> D, so all 30 capture flops see one window.
 module pt_hio_cap #(parameter NEG=0) (input wire clk,rst_n,en,d,output wire q);

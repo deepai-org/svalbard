@@ -354,7 +354,8 @@ module pt_h2d_gearbox(input wire rst_n, input wire [1:0] mode, input wire h2d_cl
     pt_clock_buf cap_root(.I(h2d_clk), .Z(cka));
     pt_clock_buf core_root(.I(cka), .Z(ckb));
     // TC13 r4c (coordinator option a): the capture clock is hand-built, not CTS: cap_root -> one fixed
-    // clkbuf_8 per capture row (hio_cbr: 10 rising r flops, hio_cbf: 10 falling f, hio_cbh: 10 falling fh)
+    // clkbuf_8 per capture row (hio_cbr: 10 rising r flops, hio_cbf: 10 falling f, hio_cbh: 10 falling fh and,
+    // since r10, the 5 lp / nsel pairs that enable them, pt_hio_nphase)
     // -> flops; two clkbuf_8 like the data path's clkbuf_8 + mux2_2. CTS's own tree on h2d_cap (3 x
     // clkbuf_16, ~2.5 ns: hold -0.99) is undone by integration/pt_cts_h2d.tcl inside the CTS step.
     wire ckr, ckf, ckh;
@@ -401,9 +402,23 @@ module pt_h2d_gearbox(input wire rst_n, input wire [1:0] mode, input wire h2d_cl
         pt_hio_cap #(0) cr(.clk(ckr), .rst_n(rst_n), .en(1'b1), .d(hio_pin[gp]), .q(r[gp]));
         pt_hio_cap #(1) cf(.clk(ckf), .rst_n(rst_n), .en(1'b1), .d(hio_pin[gp]), .q(f[gp]));
     end endgenerate
-    generate for (gp = 0; gp < 10; gp = gp + 1) begin : fhh
-        pt_hio_cap #(1) c(.clk(ckh), .rst_n(rst_n), .en(nselg[gp/2]), .d(hio_pin[gp]), .q(fh_hi[gp]));
+    // r10 (routed h2d_cap worst path hnr[k].hn/nsel -> fhh[k].c.n.lf, -1.2..-1.9 ns both chips): the pair
+    // enable of the fhh flops came from nselg, clocked by the CTS tree behind core_root (~3.4 ns after
+    // ckh at ss), so the full-period nsel -> fhh path lost the whole skew. The fhh enables now come from
+    // their own phase-copy pairs pt_hio_nphase on ckh itself, hand-placed under the fhh row: same clock
+    // net as their loads, no skew. nselc[g] == nselg[g] at every time (same D ~phase[0] & hrun, same
+    // reset hr_n, same edges of the same pin clock); nselg keeps the lower half fh (CTS domain).
+    wire [4:0] nselc;
+    generate for (gn = 0; gn < 5; gn = gn + 1) begin : hnc
+        pt_hio_nphase c(.clk(ckh), .rst_n(hr_n), .d(~phase[0] & hrun), .nsel(nselc[gn]));
     end endgenerate
+    generate for (gp = 0; gp < 10; gp = gp + 1) begin : fhh
+        pt_hio_cap #(1) c(.clk(ckh), .rst_n(rst_n), .en(nselc[gp/2]), .d(hio_pin[gp]), .q(fh_hi[gp]));
+    end endgenerate
+`ifdef FORMAL
+    always @(posedge h2d_clk) assert(nselc == nselg);
+    always @(negedge h2d_clk) assert(nselc == nselg);
+`endif
     // Write side: one-hot pointer, per-entry enables registered one clock ahead (one flop per
     // entry, preserved); Gray pointer for the reader.
     reg  [7:0]  woh;

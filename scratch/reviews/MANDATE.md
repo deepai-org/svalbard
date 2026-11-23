@@ -6,7 +6,7 @@ Current work status is in `SESSION-STATE.md`, not here.
 
 ## 1. Scope and priorities
 
-- **Fix pass, largest issues first (user, 2026-11-23).** The baseline exists: both chips have no placeholders,
+- **Fix pass, largest issues first (user, 2026-11-23): target is "a chip that has a slim but possible chance of fully working".** The baseline exists: both chips have no placeholders,
   every net routes, and the remaining gaps are known. Now fix the many issues in order of size and obviousness:
   anything that would stop a function working on silicon (wrong connection, under-driven stage, missing pin, route
   shorts, LVS mismatch, precheck error) before performance margins; within margins, the largest spec miss first.

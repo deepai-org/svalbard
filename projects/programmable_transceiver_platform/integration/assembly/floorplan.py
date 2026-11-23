@@ -34,6 +34,7 @@ def fixed_rects():
         w, h = msize(m); w -= 70 if m in C.STAGED.get(chip, {}) else 0
         out['fix_'+m] = [x-SPREAD, y-SPREAD, round(x+w+SPREAD, 2), round(y+h+SPREAD, 2)]
     if C.FIXED_DECAP.get(chip): out['decapslot'] = list(C.FIXED_DECAP[chip]['slot'])
+    for k, r in C.ROUTE_CHANNELS.get(chip, {}).items(): out[k] = list(r)
     for k, bd in enumerate(C.ISLAND_BARS.get(chip, [])):          # island bars: no block under them
         for j, r in enumerate(bd['rects']): out[f'bar_{k}_{j}'] = list(r)
     return out

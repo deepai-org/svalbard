@@ -167,7 +167,7 @@ def pin_shapes_die0(n, p):
     m = man['blocks'][n]['master']; t = db.Trans.from_s(man['blocks'][n]['trans']); info = MJ.get(m, {}); o = info.get('origin', [0, 0])
     return [(ln, t*db.Box(um(r[0]+o[0]), um(r[1]+o[1]), um(r[2]+o[0]), um(r[3]+o[1]))) for ln, r in info.get('pins', {}).get(p, [])]
 bars = []          # island supply bars (common.ISLAND_BARS)
-for bd in C.ISLAND_BARS.get(CHIP, []):
+for bd in ([] if getattr(C, 'ISLAND_BARS_OFF', False) else C.ISLAND_BARS.get(CHIP, [])):
     reg = db.Region([db.Box(*[um(v) for v in r]) for r in bd['rects']]).merged()
     m4 = db.Region()
     if bd.get('rel') and bd['rel'][0] in man['blocks']:

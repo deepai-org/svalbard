@@ -248,3 +248,9 @@ Resume each by SendMessage to its ID (do not start new agents). State at the pau
 - 2026-11-22: coordinator merged WT50 + LO-DIG-1 (4 commits, via a clean temp worktree; conflicts only in interface-changes.md and rf/chip.conn, branch version taken) and pushed; clean-HEAD regfile check passes. pt_rf chip-top summary now demand=0 staged=0 (only the known 22 iso-audit findings). Uncommitted power-agent WIP in the main tree (converter publication + lo_vreg/txpad_bias bindings, spec/analog-architecture.json) makes the register map stale: on resume, the power agent must regenerate the map in the same commit, and finish the pt_wired txpad_bias binding (unbound=7).
 - 2026-11-23 baseline decision: pt_wired uses the published capture r6 (0.96 mm2, gearbox inside, matches conn and macro; known miss: no 2.5 Gb/s with real neighbours). The smaller r7e (0.30 mm2, LDE fix) needs the W7-GEAR 20->40 gearbox and DW/WSTB inputs in the digital macro: first post-baseline item for digital + wired RX.
 - Layout overview images: projects/programmable_transceiver_platform/docs/layout/ (drawchip.py). Found the floorplan ignores analog adjacency (LNA spirals 0.5-0.8 mm from the LNA, LO run ~2.5 mm to TX mixers, RX phases crossing ~1.5 mm); adjacency rules requested from assembly as baseline work.
+- 2026-11-23 fix pass started (user: "commit, and start fixing all the many issues, largest and most obvious first").
+  Cross-chip ranking: 1 route clean + LVS clean both chips (assembly); 2 pt_lo_txbuf (TX under-driven, LO);
+  3 shuttle precheck errors (assembly + owners); 4 digital timing closure 2-3 ns + GLS (digital);
+  5 wired capture fails 2.5 Gb/s with neighbours, r7e + W7-GEAR gearbox (wired RX + digital);
+  6 LO shields drawn, wired RX clock cluster adjacency (assembly); 7 isolation audit 22/36 (power);
+  8 requirements scorecard fails (40) by size, each owner; 9 TX TERM_TRIM register field (digital).

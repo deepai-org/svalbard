@@ -6,15 +6,13 @@ Current work status is in `SESSION-STATE.md`, not here.
 
 ## 1. Scope and priorities
 
-- **Baseline first (user, 2026-11-22).** Highest priority is a complete, finished-if-imperfect design of both chips:
-  every instance has real layout (no placeholders), both chips assemble, route, pass top-level LVS and the shuttle
-  precheck (or are close with each remaining item owned). Use each block's current best version with its known misses
-  recorded; performance work continues afterwards through many review passes before tapeout. Work that blocks the
-  baseline beats margin work. The user stressed (2026-11-22): push hard for this, as soon as possible. Concretely:
-  publish a block as soon as DRC, read-back LVS and its basic function pass, with misses recorded; do not start a
-  new candidate iteration, corner sweep or margin fix on anything until both chips are assembled with no
-  placeholders, routed, LVS-clean and through the precheck. Sub-agents doing margin work are paused unless
-  their result unblocks the baseline.
+- **Fix pass, largest issues first (user, 2026-11-23).** The baseline exists: both chips have no placeholders,
+  every net routes, and the remaining gaps are known. Now fix the many issues in order of size and obviousness:
+  anything that would stop a function working on silicon (wrong connection, under-driven stage, missing pin, route
+  shorts, LVS mismatch, precheck error) before performance margins; within margins, the largest spec miss first.
+  Keep both chips assembling at every commit: publish fixes with conn edits in the same commit, never break the
+  other owners' runs. Each owner works from its own ranked list; the coordinator keeps the cross-chip ranking in
+  SESSION-STATE.md.
 - **Two chips (user, 2026-11-19).** The design is split into two independent, self-sufficient chips on two
   shuttle slots: `pt_rf` (radio, LO, converters) and `pt_wired` (wired RX/TX, USB, Ethernet). Each has its own
   power-up, reset, SPI, host link, bias and debug; neither depends on the other. One block library and one RTL

@@ -6308,6 +6308,14 @@
           "maximum": 1,
           "unit": "code",
           "description": "TX pad termination request (interlock REQ_TERM)."
+        },
+        "term_trim": {
+          "bits": 4,
+          "default": 5,
+          "minimum": 0,
+          "maximum": 15,
+          "unit": "code",
+          "meaning": "CB8-15 / DG9-TERMTRIM: pad_txpad termination trim TERM_TRIM0..3 (binary-weighted 1/2/4/8 trim units of the native termination switches, analog/pads/README.md pad_txpad a16). Reset 5 = the qualified baseline code (termination within +-10 % over 23 corners; at ff/22 C/3.35 V only codes 2-3 qualify, so firmware/FPGA trims per die). Port c_txpad_term_trim (direct, reads 0 while the wired island is off); static: change only with the TX termination off (txpad.config.term_request = 0)."
         }
       },
       "update": "stopped"

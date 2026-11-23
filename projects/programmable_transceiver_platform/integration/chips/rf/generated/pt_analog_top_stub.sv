@@ -299,9 +299,6 @@ module pt_analog_top_stub(
  wire BIAS_bb_tap_q;
  wire ATBN_rf_ibias;
  wire ATBN_conv_ibias;
- wire ESD_RAIL_rf_rx;
- wire ESD_RAIL_rf_tx;
- wire ESD_RAIL_bb;
  wire RFA_I_P;
  wire RFA_I_N;
  wire RFA_Q_P;
@@ -349,6 +346,10 @@ module pt_analog_top_stub(
  wire CONV_CLK_C;
  wire ATBN_adc_bias;
  wire ATBN_dac_bias;
+ wire TXLO_IP;
+ wire TXLO_IN;
+ wire TXLO_QP;
+ wire TXLO_QN;
  wire TXI_P;
  wire TXI_N;
  wire ATBN_txmix_bias;
@@ -798,6 +799,10 @@ module pt_analog_top_stub(
  wire p_iso_rf_rx_clk__A = CONV_CLK;
  wire p_iso_rf_rx_clk__ISO = island_off[2];
  assign rf_rx_clk = CONV_CLK & ~island_off[2];
+ assign TXLO_IP = 1'b0;
+ assign TXLO_IN = 1'b0;
+ assign TXLO_QP = 1'b0;
+ assign TXLO_QN = 1'b0;
  wire p_txmix_i__en = c_txmix_i_en;
  wire p_txmix_i__sel_dac = c_txmix_sel_dac;
  wire p_txmix_i__sat = c_txmix_sat;

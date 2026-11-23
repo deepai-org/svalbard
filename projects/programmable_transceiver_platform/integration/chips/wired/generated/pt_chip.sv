@@ -238,6 +238,7 @@ module pt_chip(
  wire c_txpad_req_main;
  wire c_txpad_req_post;
  wire c_txpad_req_term;
+ wire[3:0] c_txpad_term_trim;
  wire c_txsum_en;
  wire c_usb_fs_en;
  wire c_usb_hs_drv;
@@ -841,9 +842,9 @@ module pt_chip(
   .c_wrx_cap_psel(c_wrx_cap_psel), .c_wrx_cap_slipp(c_wrx_cap_slipp), .c_wrx_cap_slipm(c_wrx_cap_slipm), .c_wiredtx_ser_en(c_wiredtx_ser_en), .c_wiredtx_ext(c_wiredtx_ext), .c_wiredtx_post_pol(c_wiredtx_post_pol),
   .c_wiredtx_main_code(c_wiredtx_main_code), .c_wiredtx_post_code(c_wiredtx_post_code), .c_wiredtx_bias_en(c_wiredtx_bias_en), .c_wiredtx_idle(c_wiredtx_idle), .c_wiredtx_idle_mode(c_wiredtx_idle_mode), .c_wiredtx_tr(c_wiredtx_tr),
   .c_txpad_req_main(c_txpad_req_main), .c_txpad_req_post(c_txpad_req_post), .c_txpad_req_detect(c_txpad_req_detect), .c_txpad_req_term(c_txpad_req_term), .c_hsbias_en(c_hsbias_en), .c_hsbias_c(c_hsbias_c),
-  .c_wtxfb_branch(c_wtxfb_branch), .c_wtxfb_state(c_wtxfb_state), .c_wtxfb_idle(c_wtxfb_idle), .c_wtxfb_stage_tmds(c_wtxfb_stage_tmds), .c_usb_hs_en(c_usb_hs_en), .c_usb_fs_en(c_usb_fs_en),
-  .c_usb_hs_drv(c_usb_hs_drv), .c_usb_tx_dp(c_usb_tx_dp), .c_usb_tx_dn(c_usb_tx_dn), .c_usb_tx_oe(c_usb_tx_oe), .c_usb_hs_str(c_usb_hs_str), .c_usb_pullup_p(c_usb_pullup_p),
-  .c_usb_pullup_n(c_usb_pullup_n), .c_usb_pulldown_p(c_usb_pulldown_p), .c_usb_pulldown_n(c_usb_pulldown_n), .c_usb_ls_slow(c_usb_ls_slow), .c_usb_term_trim(c_usb_term_trim));
+  .c_txpad_term_trim(c_txpad_term_trim), .c_wtxfb_branch(c_wtxfb_branch), .c_wtxfb_state(c_wtxfb_state), .c_wtxfb_idle(c_wtxfb_idle), .c_wtxfb_stage_tmds(c_wtxfb_stage_tmds), .c_usb_hs_en(c_usb_hs_en),
+  .c_usb_fs_en(c_usb_fs_en), .c_usb_hs_drv(c_usb_hs_drv), .c_usb_tx_dp(c_usb_tx_dp), .c_usb_tx_dn(c_usb_tx_dn), .c_usb_tx_oe(c_usb_tx_oe), .c_usb_hs_str(c_usb_hs_str),
+  .c_usb_pullup_p(c_usb_pullup_p), .c_usb_pullup_n(c_usb_pullup_n), .c_usb_pulldown_p(c_usb_pulldown_p), .c_usb_pulldown_n(c_usb_pulldown_n), .c_usb_ls_slow(c_usb_ls_slow), .c_usb_term_trim(c_usb_term_trim));
  // Host pads: provider cells only (integration/pt_provider_io.sv); the logical supply groups are one VDD / VSS here.
  pt_host_physical host(.RESET_N(RESET_N), .SPI_SCLK(SPI_SCLK), .SPI_CS_N(SPI_CS_N), .SPI_MOSI(SPI_MOSI), .SPI_MISO(SPI_MISO),
   .H2D(H2D), .H2D_CLK(H2D_CLK), .D2H(D2H), .D2H_CLK(D2H_CLK), .VDD_CORE(VDD), .VSS_CORE(VSS), .VDD_HOST_A(VDD), .VSS_HOST_A(VSS),
@@ -869,14 +870,15 @@ module pt_chip(
   .c_rxselect_direct(c_rxselect_direct), .c_rxselect_en(c_rxselect_en), .c_slicer_en(c_slicer_en), .c_slicer_trim_d0(c_slicer_trim_d0), .c_slicer_trim_d1(c_slicer_trim_d1), .c_slicer_trim_d2(c_slicer_trim_d2), .c_slicer_trim_d3(c_slicer_trim_d3), .c_slicer_trim_e0(c_slicer_trim_e0),
   .c_slicer_trim_e1(c_slicer_trim_e1), .c_slicer_trim_e2(c_slicer_trim_e2), .c_slicer_trim_e3(c_slicer_trim_e3), .c_slicer_vsel_e0(c_slicer_vsel_e0), .c_slicer_vsel_e1(c_slicer_vsel_e1), .c_slicer_vsel_e2(c_slicer_vsel_e2), .c_slicer_vsel_e3(c_slicer_vsel_e3), .c_term_en(c_term_en),
   .c_term_hs_en(c_term_hs_en), .c_term_hs_term_en(c_term_hs_term_en), .c_term_hs_trim(c_term_hs_trim), .c_term_mode(c_term_mode), .c_txpad_req_detect(c_txpad_req_detect), .c_txpad_req_main(c_txpad_req_main), .c_txpad_req_post(c_txpad_req_post), .c_txpad_req_term(c_txpad_req_term),
-  .c_usb_fs_en(c_usb_fs_en), .c_usb_hs_drv(c_usb_hs_drv), .c_usb_hs_en(c_usb_hs_en), .c_usb_hs_str(c_usb_hs_str), .c_usb_ls_slow(c_usb_ls_slow), .c_usb_pulldown_n(c_usb_pulldown_n), .c_usb_pulldown_p(c_usb_pulldown_p), .c_usb_pullup_n(c_usb_pullup_n),
-  .c_usb_pullup_p(c_usb_pullup_p), .c_usb_term_trim(c_usb_term_trim), .c_usb_tx_dn(c_usb_tx_dn), .c_usb_tx_dp(c_usb_tx_dp), .c_usb_tx_oe(c_usb_tx_oe), .c_vco_replica_en(c_vco_replica_en), .c_vthdac_a(c_vthdac_a), .c_vthdac_b(c_vthdac_b),
-  .c_vthdac_en(c_vthdac_en), .c_wiredtx_bias_en(c_wiredtx_bias_en), .c_wiredtx_ext(c_wiredtx_ext), .c_wiredtx_idle(c_wiredtx_idle), .c_wiredtx_idle_mode(c_wiredtx_idle_mode), .c_wiredtx_main_code(c_wiredtx_main_code), .c_wiredtx_post_code(c_wiredtx_post_code), .c_wiredtx_post_pol(c_wiredtx_post_pol),
-  .c_wiredtx_ser_en(c_wiredtx_ser_en), .c_wiredtx_tr(c_wiredtx_tr), .c_wmon_en(c_wmon_en), .c_wmon_obs_en(c_wmon_obs_en), .c_wmon_sel(c_wmon_sel), .c_wordclk_d10(c_wordclk_d10), .c_wordclk_d20(c_wordclk_d20), .c_wordclk_en(c_wordclk_en),
-  .c_wrx_cap_b1(c_wrx_cap_b1), .c_wrx_cap_b2(c_wrx_cap_b2), .c_wrx_cap_en(c_wrx_cap_en), .c_wrx_cap_psel(c_wrx_cap_psel), .c_wrx_cap_rcs(c_wrx_cap_rcs), .c_wrx_cap_slipm(c_wrx_cap_slipm), .c_wrx_cap_slipp(c_wrx_cap_slipp), .c_wtxfb_branch(c_wtxfb_branch),
-  .c_wtxfb_idle(c_wtxfb_idle), .c_wtxfb_stage_tmds(c_wtxfb_stage_tmds), .c_wtxfb_state(c_wtxfb_state), .clk_obs(clk_obs), .ct_det_clk(ct_det_clk), .fc_src(fc_src), .h2d_clk(h2d_clk), .host_word_clk(host_word_clk),
-  .island_en(island_en), .island_off(island_off), .island_on(island_on), .por_n(por_n), .ref_clk(ref_clk), .rx_en_aux(rx_en_aux), .rx_en_wtx_ext(rx_en_wtx_ext), .s_pg_debug(s_pg_debug),
-  .s_pg_pll(s_pg_pll), .s_pg_wired_cap(s_pg_wired_cap), .s_pg_wired_rx(s_pg_wired_rx), .s_pg_wired_tx(s_pg_wired_tx), .s_ref_present(s_ref_present), .wire_rx_ptrim_en(wire_rx_ptrim_en), .wire_tx_data(wire_tx_data), .wired_on_ext(wired_on_ext));
+  .c_txpad_term_trim(c_txpad_term_trim), .c_usb_fs_en(c_usb_fs_en), .c_usb_hs_drv(c_usb_hs_drv), .c_usb_hs_en(c_usb_hs_en), .c_usb_hs_str(c_usb_hs_str), .c_usb_ls_slow(c_usb_ls_slow), .c_usb_pulldown_n(c_usb_pulldown_n), .c_usb_pulldown_p(c_usb_pulldown_p),
+  .c_usb_pullup_n(c_usb_pullup_n), .c_usb_pullup_p(c_usb_pullup_p), .c_usb_term_trim(c_usb_term_trim), .c_usb_tx_dn(c_usb_tx_dn), .c_usb_tx_dp(c_usb_tx_dp), .c_usb_tx_oe(c_usb_tx_oe), .c_vco_replica_en(c_vco_replica_en), .c_vthdac_a(c_vthdac_a),
+  .c_vthdac_b(c_vthdac_b), .c_vthdac_en(c_vthdac_en), .c_wiredtx_bias_en(c_wiredtx_bias_en), .c_wiredtx_ext(c_wiredtx_ext), .c_wiredtx_idle(c_wiredtx_idle), .c_wiredtx_idle_mode(c_wiredtx_idle_mode), .c_wiredtx_main_code(c_wiredtx_main_code), .c_wiredtx_post_code(c_wiredtx_post_code),
+  .c_wiredtx_post_pol(c_wiredtx_post_pol), .c_wiredtx_ser_en(c_wiredtx_ser_en), .c_wiredtx_tr(c_wiredtx_tr), .c_wmon_en(c_wmon_en), .c_wmon_obs_en(c_wmon_obs_en), .c_wmon_sel(c_wmon_sel), .c_wordclk_d10(c_wordclk_d10), .c_wordclk_d20(c_wordclk_d20),
+  .c_wordclk_en(c_wordclk_en), .c_wrx_cap_b1(c_wrx_cap_b1), .c_wrx_cap_b2(c_wrx_cap_b2), .c_wrx_cap_en(c_wrx_cap_en), .c_wrx_cap_psel(c_wrx_cap_psel), .c_wrx_cap_rcs(c_wrx_cap_rcs), .c_wrx_cap_slipm(c_wrx_cap_slipm), .c_wrx_cap_slipp(c_wrx_cap_slipp),
+  .c_wtxfb_branch(c_wtxfb_branch), .c_wtxfb_idle(c_wtxfb_idle), .c_wtxfb_stage_tmds(c_wtxfb_stage_tmds), .c_wtxfb_state(c_wtxfb_state), .clk_obs(clk_obs), .ct_det_clk(ct_det_clk), .fc_src(fc_src), .h2d_clk(h2d_clk),
+  .host_word_clk(host_word_clk), .island_en(island_en), .island_off(island_off), .island_on(island_on), .por_n(por_n), .ref_clk(ref_clk), .rx_en_aux(rx_en_aux), .rx_en_wtx_ext(rx_en_wtx_ext),
+  .s_pg_debug(s_pg_debug), .s_pg_pll(s_pg_pll), .s_pg_wired_cap(s_pg_wired_cap), .s_pg_wired_rx(s_pg_wired_rx), .s_pg_wired_tx(s_pg_wired_tx), .s_ref_present(s_ref_present), .wire_rx_ptrim_en(wire_rx_ptrim_en), .wire_tx_data(wire_tx_data),
+  .wired_on_ext(wired_on_ext));
 endmodule
 
 // Declarations for interface-only checks. Define PT_EXTERNAL_IO and compile pt_provider_io.sv to bind the provider
@@ -1044,6 +1046,7 @@ endmodule
  input wire c_txpad_req_main,
  input wire c_txpad_req_post,
  input wire c_txpad_req_term,
+ input wire [3:0] c_txpad_term_trim,
  input wire c_usb_fs_en,
  input wire c_usb_hs_drv,
  input wire c_usb_hs_en,

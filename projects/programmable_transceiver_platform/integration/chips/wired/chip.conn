@@ -118,7 +118,7 @@ inst pad_usb pad_wirepad wired_tx
   TERM_TRIM{0:2}=c_usb_term_trim[\1] LS_SLOW=c_usb_ls_slow DVDD~VDD      # USB data pins: D-USB (MW-18); DVDD: ring landing (b7)
 inst pad_wire_tx pad_txpad wired_tx
   PAD_P~WIRE_TX_P PAD_N~WIRE_TX_N VDD~RAIL_wired_tx VSS~VSS CASCODE~RAIL_wired_tx DVDD_P~VDD DVDD_N~VDD      # DVDD_*: ring landings (PC-73)
-  TERM_TRIM0~RAIL_wired_tx TERM_TRIM1=VSS TERM_TRIM2~RAIL_wired_tx TERM_TRIM3=VSS      # baseline code 5 (as HS RX reset); field requested (CB8-15)
+  TERM_TRIM{0:3}=c_txpad_term_trim[\1]      # txpad.config.term_trim, reset 5 (CB8-15, DG9-TERMTRIM)
   MAIN_P=TX_MAIN_P MAIN_N=TX_MAIN_N MAIN_BIAS~TX_MAIN_BIAS POST_P=TX_POST_P POST_N=TX_POST_N POST_BIAS~TX_POST_BIAS
   TMDS_P=VSS TMDS_N=VSS TMDS_BIAS~VSS      # TMDS branch removed from pt_wiredtx (WT22): tied off (MW-17), D-TMDS
   DETECT_ENABLE=TX_EN_DETECT DETECT_PBIAS~TX_DETECT_PBIAS TERM_ENABLE=TX_EN_TERM TERM_VCM~TX_TERM_VCM

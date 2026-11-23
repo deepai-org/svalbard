@@ -75,6 +75,7 @@ module pt_ctl_decode(
  output wire c_wiredtx_ext, c_wiredtx_post_pol, output wire[7:0] c_wiredtx_main_code, c_wiredtx_post_code,
  output wire c_wiredtx_idle_mode, output wire[31:0] c_wiredtx_tr,      // pt_wiredtx8 IDLE_MODE, TR{k}_{b} (WT50)
  output wire c_hsbias_en, output wire[7:0] c_hsbias_c,
+ output wire[3:0] c_txpad_term_trim,                 // pad_txpad TERM_TRIM0..3 (DG9-TERMTRIM)
  // ---- USB pad static part
  output wire c_usb_pullup_p, c_usb_pullup_n, c_usb_pulldown_p, c_usb_pulldown_n, c_usb_ls_slow,
  output wire[2:0] c_usb_term_trim, output wire[1:0] c_usb_hs_str
@@ -332,6 +333,7 @@ module pt_ctl_decode(
  assign c_wiredtx_tr = f_wtx__phase_trim;              // TR{k}_{b} = bit 4k+b
  assign c_hsbias_en = f_usbhs_bias__enable;
  assign c_hsbias_c = f_usbhs_bias__code;
+ assign c_txpad_term_trim = f_txpad_config__term_trim;
  assign c_usb_pullup_p = f_usbfs_config__pullup_p;     assign c_usb_pullup_n = f_usbfs_config__pullup_n;
  assign c_usb_pulldown_p = f_usbfs_config__pulldown_p; assign c_usb_pulldown_n = f_usbfs_config__pulldown_n;
  assign c_usb_ls_slow = f_usbfs_config__ls_slow;

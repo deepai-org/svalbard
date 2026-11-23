@@ -144,6 +144,7 @@
  input wire c_txpad_req_main,
  input wire c_txpad_req_post,
  input wire c_txpad_req_term,
+ input wire [3:0] c_txpad_term_trim,
  input wire c_usb_fs_en,
  input wire c_usb_hs_drv,
  input wire c_usb_hs_en,

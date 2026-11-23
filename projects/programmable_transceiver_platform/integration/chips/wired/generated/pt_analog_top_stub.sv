@@ -145,6 +145,7 @@ module pt_analog_top_stub(
  input wire c_txpad_req_main,
  input wire c_txpad_req_post,
  input wire c_txpad_req_term,
+ input wire [3:0] c_txpad_term_trim,
  input wire c_usb_fs_en,
  input wire c_usb_hs_drv,
  input wire c_usb_hs_en,
@@ -301,7 +302,6 @@ module pt_analog_top_stub(
  wire BIAS_bb_tap_wmon;
  wire ATBN_wire_ibias;
  wire ISO_wired_tx;
- wire ESD_RAIL_wtx_ext;
  wire HS_TERM_VCM;
  wire HS_TERM_ENABLE;
  wire [3:0] HS_TERM_TRIM;
@@ -591,8 +591,10 @@ module pt_analog_top_stub(
  wire p_pad_usb__TERM_TRIM1 = c_usb_term_trim[1];
  wire p_pad_usb__TERM_TRIM2 = c_usb_term_trim[2];
  wire p_pad_usb__LS_SLOW = c_usb_ls_slow;
- wire p_pad_wire_tx__TERM_TRIM1 = VSS;
- wire p_pad_wire_tx__TERM_TRIM3 = VSS;
+ wire p_pad_wire_tx__TERM_TRIM0 = c_txpad_term_trim[0];
+ wire p_pad_wire_tx__TERM_TRIM1 = c_txpad_term_trim[1];
+ wire p_pad_wire_tx__TERM_TRIM2 = c_txpad_term_trim[2];
+ wire p_pad_wire_tx__TERM_TRIM3 = c_txpad_term_trim[3];
  wire p_pad_wire_tx__MAIN_P = TX_MAIN_P;
  wire p_pad_wire_tx__MAIN_N = TX_MAIN_N;
  wire p_pad_wire_tx__POST_P = TX_POST_P;

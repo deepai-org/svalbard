@@ -215,6 +215,7 @@ c_txpad_req_main | 1 | 0 | (wiredtx.state == active) & (branch != off) & !idle, 
 c_txpad_req_post | 1 | 0 | req_main & (postcursor_code != 0 or post_polarity) | txpad.config.branch+wiredtx.config.postcursor_code |
 c_txpad_req_detect | 1 | 0 | branch == detect | txpad.config.branch |
 c_txpad_req_term | 1 | 0 | txpad.config.term_request through the pad sequencer (rtl/pt_wtx_ctl.sv) | txpad.config.term_request | (was: new field (no TX termination enable exists))
+c_txpad_term_trim | 4 | 5 | direct | txpad.config.term_trim | pad_txpad TERM_TRIM0..3 (DG9-TERMTRIM); static, change with the termination off
 c_hsbias_en | 1 | 0 | direct | usbhs.bias.enable |
 c_hsbias_c | 8 | 0 | direct | usbhs.bias.code |
 c_wtxfb_branch | 2 | 0 | direct | txpad.config.branch | fallback control raw latch inputs

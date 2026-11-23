@@ -169,8 +169,11 @@ inst iso_rf_rx_clk iso_clamp_x4 core
   A=CONV_CLK ISO=island_off[2] Y>rf_rx_clk VDD~VDD VSS~VSS
 
 # ================= RF transmit (rf island) =================
+# TX LO repeater at the TX mixers (2026-11-23): LO_* arrive over ~2.1 mm shielded pairs from lo_ext; rail-to-rail TXLO_* out
+inst lo_txbuf pt_lo_txbuf rf_tx
+  IP~LO_IP IN~LO_IN QP~LO_QP QN~LO_QN OIP>TXLO_IP OIN>TXLO_IN OQP>TXLO_QP OQN>TXLO_QN VDD~RAIL_rf_tx VSS~VSS
 inst txmix_{i,q} pt_txmix_\1 rf_tx
-  VDD~RAIL_rf_tx VSS~VSS bb_p~BB\U1_TX_P bb_n~BB\U1_TX_N dac_p~DAC\U1_P dac_n~DAC\U1_N lo_p~LO_\U1P lo_n~LO_\U1N
+  VDD~RAIL_rf_tx VSS~VSS bb_p~BB\U1_TX_P bb_n~BB\U1_TX_N dac_p~DAC\U1_P dac_n~DAC\U1_N lo_p~TXLO_\U1P lo_n~TXLO_\U1N
   out_p~TX\U1_P out_n~TX\U1_N ibias~BIAS_txmix_\1 en=c_txmix_\1_en sel_dac=c_txmix_sel_dac sat=c_txmix_sat
   atb_bias~{ATBN_txmix_bias,-} atb_tail~-
 inst txsum pt_txsum rf_tx

@@ -239,3 +239,12 @@ Extracted lo_ext n4 (internal mode) driving the extracted RX mixers at its outpu
 | tt/3.3, 0.58 V | 0.89 Vpp (2.09-2.97 V) | 0.50 Vpp (2.28-2.78 V), -5.0 dB | 21.35 -> 20.39 dB |
 | ss/3.15, 0.40 V | 0.60 Vpp (2.22-2.82 V) | 0.34 Vpp (2.35-2.70 V), -4.9 dB | 20.06 -> 18.65 dB |
 txmix is designed and benched for a rail-to-rail (3.3 Vpp) CMOS square LO (rf_tx README); even next to lo_ext the TX gates see only 0.6-0.9 Vpp, and the 2.1 mm line also costs the RX mixers 1.0-1.4 dB. A repeater is required: a CML-to-CMOS rail-to-rail LO buffer (I and Q) at the TX mixers, fed from the line (post-baseline block). The differential measure in the bench failed (vector name), so numbers are single-ended per leg.
+
+## 2026-11-23: pt_lo_txbuf (TX LO repeater) published
+Per leg: 98 fF MIM AC coupling, resistor-self-biased inverter (4/8), three x2-tapered inverters (6/12, 12/24, 24/48); P and N legs independent (r0 with weak cross-coupling latched). Bench `loext3/jtxb.py` (extracted lo_ext n4 internal mode -> extracted RX mixers at its output + 2.1 mm shielded M4 line model -> txbuf (schematic) -> TX gate load), runs `jruns/txb3`:
+| case | TX gate swing (OIP min-max) | duty | Q-I | line diff pp | RX gain (no line / line, no buffer / line + buffer) |
+|---|---|---|---|---|---|
+| tt/3.3, tank 0.58 V | -0.06 ... 3.38 V (rail to rail) | 50.1 % | 90.5 deg | 1.08 V | 21.35 / 20.39 / 20.51 dB |
+| ss/3.15, tank 0.40 V | -0.03 ... 3.19 V (rail to rail) | 49.9 % | 89.0 deg | 0.74 V | 20.06 / 18.65 / 18.81 dB |
+I/Q skew: 0.5-1.0 deg (0.6-1.2 ps). RX recovery is small (+0.12-0.16 dB): the RX loss is the line's own capacitance at the lo_ext output, not the buffer input. Not run: ff, sf/fs, extracted txbuf, supply 3.50 V, mismatch. Earlier sizes: r1 (3 stages) ss 0.10-2.80 V; r2 (wider 2/3) worse.
+Differential measurement rerun correctly (E-sources): line 0.74 / 1.08 V pp diff at ss / tt.

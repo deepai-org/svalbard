@@ -22,6 +22,7 @@ Every check below was run on the final GDS read back from disk (`top/verify`). N
   - The mux TOPM / TOPQ plates lost their Metal4 (Metal1-3 remain). EM margin 23.4 / 26.4 % (was 40.6 / 42.9); the mux EM table passes (worst 13.6 %, unchanged).
   - The aux tap wires TD1 / TS / TD2 are now Metal2, and their dummy ends are 1.2 um shorter. Aux DRC 0, LVS unique, negative controls fail as required; MAIN_P / MAIN_N with the tap 122.4 / 114.8 fF.
   - Mux buses: MAIN_N 114.0 / MAIN_P 120.7 / POST_P 127.9 / POST_N 131.9 fF (was 114.3 / 121.1 / 128.2 / 132.2).
+- **Assembly Metal4 bar:** band x 340-744.5, y 410.9-430.8. It cannot reach T_main_0/1 (x 312.1-329.9), and it does not need to: they are tied to T_main_2/3 inside the block by the VDD Metal5 header strap and its Metal3/4 bridges. Without them as ties the VDD header drop is unchanged (3.34 / 7.00 mV nom / high R; `s18/top/ir_no_tmain01`). x 305-340 in the band holds non-VDD Metal4 (TAP_P / TAP_N, aux link net), so the band stays at x >= 340.
 - **New y for assembly:**
   - PH windows: y 404.96-409.56 (x unchanged). Lanes run from there to the top edge 430.8.
   - T_main / T_post ties: y 423.1-430.8.

@@ -3109,5 +3109,25 @@
   "pt_wiredtx8.ext.spice": "sha256:fa1d3bed280d340cc3534306a9df43907d93b8aa7f730f8cd0bd0a58b05992f7",
   "pt_wiredtx8.rc.spice": "sha256:824903169ef38e08f33b2587d4b8211c23fc228ae32143626a65aef292484301",
   "pt_wiredtx8.lvs.spice": "sha256:768973dbf48e5704c10cd5059595d009e1bc75535a45ff46c4c0cf2061c127ad"
+ },
+ "m4_bar_band": {
+  "x": [
+   340.0,
+   744.5
+  ],
+  "y": [
+   410.9,
+   430.8
+  ],
+  "content": "island VDD Metal4 only (read-back GDS)",
+  "bar_ties": [
+   "T_main_2",
+   "T_main_3",
+   "T_post_0",
+   "T_post_1",
+   "T_post_2",
+   "T_post_3"
+  ],
+  "note": "T_main_0 / T_main_1 (x 312.1-329.9) are west of the band; they are joined to T_main_2/3 inside the block by the VDD Metal5 header strap and its Metal3/4 bridges at the PH7 lane and grid_tie_2, so the bar need not reach them. x 305-340 holds non-VDD Metal4 (TAP_P / TAP_N y 419.46-420.76, aux link net y 413.61-414.01). IR without T_main_0/1: headers 3.34 / 7.00 mV nom / high R, unchanged."
  }
 }

@@ -114,12 +114,16 @@ module pt_wtx_ctl #(
     pt_sync_bit s_ok (.clk(ref_clk), .rst_n(ser_arst_n), .d(1'b1), .q(ok_s));
     pt_sync_bit s_fq (.clk(ref_clk), .rst_n(rst_n), .d(fc_tx_in_tol), .q(fq_s));
     pt_sync_bit s_i8 (.clk(ref_clk), .rst_n(rst_n), .d(w_idle8), .q(idle8_s));
-    reg [NV-1:0] v_q, v_q2, f;
+    // Three-sample agreement filter. r9 (routed pt_wired ref -3.3 ns: v_q -> 3-way compare -> enable of every f bit):
+    // the agreement is registered (st) with the matching sample (v_q3), so f takes the same value one REF_CLK later.
+    reg [NV-1:0] v_q, v_q2, v_q3, f;
+    reg st;
     always @(posedge ref_clk or negedge rst_n)
-        if (!rst_n) begin v_q <= {NV{1'b0}}; v_q2 <= {NV{1'b0}}; f <= {NV{1'b0}}; end
+        if (!rst_n) begin v_q <= {NV{1'b0}}; v_q2 <= {NV{1'b0}}; v_q3 <= {NV{1'b0}}; st <= 1'b0; f <= {NV{1'b0}}; end
         else begin
             v_q <= v_s; v_q2 <= v_q;
-            if (v_s == v_q && v_q == v_q2) f <= v_q2;
+            st <= v_s == v_q && v_q == v_q2; v_q3 <= v_q2;
+            if (st) f <= v_q3;
         end
     wire f_act = f[0], f_ext = f[1], f_won = f[2], f_fault = f[3], f_idle = f[4], f_bser = f[5], f_bdet = f[6],
          f_pnz = f[7], f_term = f[8], f_rdy = f[9];
@@ -174,7 +178,7 @@ module pt_wtx_ctl #(
     // rdy_q: the sequencer's readiness input (TERM requested ? filtered txpad_ready : 1) is a register too
     // (active_request -> mux -> pad_seq left was the next path). It lags active_request by one edge; the
     // change of active_request is followed by POST_CYCLES (>= 1) of blanking in which readiness is not used,
-    // and a ready loss reaches the sequencer one REF_CLK later (the sync + 3-sample filter already take ~5).
+    // and a ready loss reaches the sequencer one REF_CLK later (the sync + 3-sample filter already take ~6).
     reg        neq_q, commit_q, rdy_q;
     wire [4:0] seq_active;
     wire seq_cmd_ready, seq_traffic_ready, seq_fault, seq_qualified, seq_buffer_request;

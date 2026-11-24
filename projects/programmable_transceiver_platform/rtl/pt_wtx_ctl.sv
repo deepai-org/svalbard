@@ -207,6 +207,15 @@ module pt_wtx_ctl #(
     wire abort = f_fault | ~f_won | ~ron_s | f_ext | ~ok_s;
     reg ser_q, de_q, acked;
     reg [7:0] tmr;
+    // Timer compares registered (exact): drain_hit / off_hit = the compares of the value tmr takes next, so the
+    // state decision reads flops only (routed pt_wired ref tmr -> compare -> de_q was the worst ref path).
+    reg drain_hit, off_hit;
+    reg [7:0] tmr_n;
+    always @* begin
+        if (state == S_DRAIN) tmr_n = tmr + 8'd1;
+        else if (state == S_PADOFF && pad_down) tmr_n = tmr + 8'd1;
+        else tmr_n = 8'd0;
+    end
     reg [2:0] state_n;
     always @* begin
         state_n = state;
@@ -215,8 +224,8 @@ module pt_wtx_ctl #(
             S_FLUSH:  if (!go) state_n = S_OFF; else if (idle8_s) state_n = S_PAD;
             S_PAD:    if (!go) state_n = S_PADOFF; else if (pad_live) state_n = S_RUN;
             S_RUN:    if (!go || !pad_live) state_n = S_DRAIN;
-            S_DRAIN:  if ((acked && idle8_s) || tmr == DRAIN_TIMEOUT) state_n = go ? S_PAD : S_PADOFF;
-            S_PADOFF: if (pad_down && tmr == OFF_CYCLES - 1) state_n = S_OFF;
+            S_DRAIN:  if ((acked && idle8_s) || drain_hit) state_n = go ? S_PAD : S_PADOFF;
+            S_PADOFF: if (pad_down && off_hit) state_n = S_OFF;
             default:  state_n = S_OFF;
         endcase
         if (abort) state_n = S_OFF;
@@ -227,14 +236,14 @@ module pt_wtx_ctl #(
         if (!ser_arst_n) begin ser_q <= 1'b0; de_q <= 1'b0; end
         else begin ser_q <= state_n != S_OFF; de_q <= state_n == S_RUN; end
     always @(posedge ref_clk or negedge rst_n)
-        if (!rst_n) begin state <= S_OFF; acked <= 1'b0; tmr <= 8'd0; end
+        if (!rst_n) begin state <= S_OFF; acked <= 1'b0; tmr <= 8'd0; drain_hit <= DRAIN_TIMEOUT == 0; off_hit <= OFF_CYCLES == 1; end
         else begin
             state <= state_n;
             // acked: the wire_tx_clk domain has seen the data enable (its idle counter was cleared)
             if (state == S_RUN || state == S_DRAIN) begin if (!idle8_s) acked <= 1'b1; end else acked <= 1'b0;
-            if (state == S_DRAIN) tmr <= tmr + 8'd1;
-            else if (state == S_PADOFF && pad_down) tmr <= tmr + 8'd1;
-            else tmr <= 8'd0;
+            tmr <= tmr_n;
+            drain_hit <= tmr_n == DRAIN_TIMEOUT;
+            off_hit <= tmr_n == OFF_CYCLES - 1;
         end
     assign st_state = state;
 

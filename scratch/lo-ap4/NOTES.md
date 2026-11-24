@@ -281,3 +281,13 @@ Margin work stopped here (coordinator, 2026-11-23: function first).
   stages sit at their trip point (crowbar). Joint bench with lo_ext a4 + 2.1 / 3.5 mm line: rail to rail at ss and tt (jruns/txbr2a4).
 - Published lo_ext (Nov 11) vs a4 in the same joint bench, ss/3.15, 2.1 mm: RX mixer gain 1.1-2.3 dB vs 18.6 dB. The published lo_ext
   under-drives the RX mixers at ss; a4 (staged since 11-14, J1 10/10 pass, EM 0 / 3701, precheck clean, same ports) is not published.
+- **Correction:** r3 currents above were mislabelled by corner (glob order ff/ss/tt): r3 is ~47 tt / ~36 ss / ~60 ff mA. The "59 deg at ss"
+  was one cycle of a jittering output at the edge of its gain (8-cycle average 86.6 +- 6.2 deg at 0.17 V, fails at 0.10 V).
+- **r5 published (2026-11-24, coordinator: phase first, then current):** three AC-coupled (392 fF) self-biased 24/12 stages, 24/12, 48/24, 48/24
+  per leg (six inversions). 163.8 x 244.8 um, DRC 0, LVS unique, precheck 0/0, read-back 72 = 72. Extracted (`txbuf_ext/tvp.py`, 100 ns,
+  8-cycle averages, inputs 0.10 / 0.17 / 0.25 V per leg): Q-I 92.4-98.4 deg at every corner and level (input 89.9: 2.5-8.5 deg added,
+  constant per corner), cycle-to-cycle spread <= 0.1 deg; duty 0.50-0.53; rail to rail except ss at 0.10 V (0.73-3.19 V). Current 39-41 tt,
+  29-30 ss, 50-54 ff mA. Tried: weak P/N cross-coupled pair (latches: worse); 16/8 self-biased stages (25-47 mA, Q-I 104-140 deg at ss: rejected).
+  20-25 mA is not reachable with this topology without losing ss; next lever would be a CML input stage.
+  Pins (Metal5 0.4 um, top edge y 244.3-244.76, x um): IP 40.2, IN 41.4, QP 42.6, QN 43.8, OIP 132.6, OQP 133.8, OIN 143.4, OQN 144.6, VDD 158.8, VSS 161.8.
+- lo_ext a4 published (commit 27382841), read-back 497 = 497.

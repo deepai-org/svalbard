@@ -12,27 +12,31 @@ XCN INN AN cap_mim_2f0_m4m5_noshield c_width=14u c_length=14u
 XRP AP BP VSS ppolyf_u_1k r_width=1u r_length=40u
 XRN AN BN VSS ppolyf_u_1k r_width=1u r_length=40u
 * stage 1 (self-biased: R from output to input)
-XP1P BP AP VDD VDD pfet_03v3 w=32u l=0.28u
-XN1P BP AP VSS VSS nfet_03v3 w=16u l=0.28u
-XP1N BN AN VDD VDD pfet_03v3 w=32u l=0.28u
-XN1N BN AN VSS VSS nfet_03v3 w=16u l=0.28u
+XP1P BP AP VDD VDD pfet_03v3 w=24u l=0.28u
+XN1P BP AP VSS VSS nfet_03v3 w=12u l=0.28u
+XP1N BN AN VDD VDD pfet_03v3 w=24u l=0.28u
+XN1N BN AN VSS VSS nfet_03v3 w=12u l=0.28u
 * stages 2-4: taper x2 per stage (stage 4 drives the txmix gates); four inversions after the input -> OUTP follows INP
 XC2P BP GP cap_mim_2f0_m4m5_noshield c_width=14u c_length=14u
 XR2P GP EP VSS ppolyf_u_1k r_width=1u r_length=40u
-XP5P EP GP VDD VDD pfet_03v3 w=32u l=0.28u
-XN5P EP GP VSS VSS nfet_03v3 w=16u l=0.28u
-XP6P FP EP VDD VDD pfet_03v3 w=32u l=0.28u
-XN6P FP EP VSS VSS nfet_03v3 w=16u l=0.28u
-XP2P CP FP VDD VDD pfet_03v3 w=32u l=0.28u
-XN2P CP FP VSS VSS nfet_03v3 w=16u l=0.28u
+XP5P EP GP VDD VDD pfet_03v3 w=24u l=0.28u
+XN5P EP GP VSS VSS nfet_03v3 w=12u l=0.28u
+XC3P EP HP cap_mim_2f0_m4m5_noshield c_width=14u c_length=14u
+XR3P HP FP VSS ppolyf_u_1k r_width=1u r_length=40u
+XP6P FP HP VDD VDD pfet_03v3 w=24u l=0.28u
+XN6P FP HP VSS VSS nfet_03v3 w=12u l=0.28u
+XP2P CP FP VDD VDD pfet_03v3 w=24u l=0.28u
+XN2P CP FP VSS VSS nfet_03v3 w=12u l=0.28u
 XC2N BN GN cap_mim_2f0_m4m5_noshield c_width=14u c_length=14u
 XR2N GN EN VSS ppolyf_u_1k r_width=1u r_length=40u
-XP5N EN GN VDD VDD pfet_03v3 w=32u l=0.28u
-XN5N EN GN VSS VSS nfet_03v3 w=16u l=0.28u
-XP6N FN EN VDD VDD pfet_03v3 w=32u l=0.28u
-XN6N FN EN VSS VSS nfet_03v3 w=16u l=0.28u
-XP2N CN FN VDD VDD pfet_03v3 w=32u l=0.28u
-XN2N CN FN VSS VSS nfet_03v3 w=16u l=0.28u
+XP5N EN GN VDD VDD pfet_03v3 w=24u l=0.28u
+XN5N EN GN VSS VSS nfet_03v3 w=12u l=0.28u
+XC3N EN HN cap_mim_2f0_m4m5_noshield c_width=14u c_length=14u
+XR3N HN FN VSS ppolyf_u_1k r_width=1u r_length=40u
+XP6N FN HN VDD VDD pfet_03v3 w=24u l=0.28u
+XN6N FN HN VSS VSS nfet_03v3 w=12u l=0.28u
+XP2N CN FN VDD VDD pfet_03v3 w=24u l=0.28u
+XN2N CN FN VSS VSS nfet_03v3 w=12u l=0.28u
 XP3P DP CP VDD VDD pfet_03v3 w=48u l=0.28u
 XN3P DP CP VSS VSS nfet_03v3 w=24u l=0.28u
 XP3N DN CN VDD VDD pfet_03v3 w=48u l=0.28u

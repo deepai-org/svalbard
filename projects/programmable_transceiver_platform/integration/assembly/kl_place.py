@@ -166,13 +166,28 @@ avoid = {'Metal4': (blk4 + noover + padreg.sized(um(3))).merged(), 'Metal5': (bl
 def pin_shapes_die0(n, p):
     m = man['blocks'][n]['master']; t = db.Trans.from_s(man['blocks'][n]['trans']); info = MJ.get(m, {}); o = info.get('origin', [0, 0])
     return [(ln, t*db.Box(um(r[0]+o[0]), um(r[1]+o[1]), um(r[2]+o[0]), um(r[3]+o[1]))) for ln, r in info.get('pins', {}).get(p, [])]
+# signal-pin windows: the grid's Metal4 keeps 3 um off every block signal pin on Metal1-3, and its Metal5 off every signal
+# pin on Metal4, so the router can step up out of the pin (CHAR_RN_LNA / RAIL_rf_rx shorted into the Metal4 grid over
+# atb_leaf NODE pins, 2026-11-24)
+_pinwin = {'Metal4': db.Region(), 'Metal5': db.Region()}
+for net_, users_ in (nets.items() if C.PIN_WINDOWS.get(CHIP) else []):
+    if net_ in ('VDD', 'VSS'): continue
+    for n_, p_ in users_:
+        if n_ not in man['blocks'] or man['blocks'][n_]['master'] == 'decap': continue
+        for ln_, b_ in pin_shapes_die0(n_, p_):
+            if ln_ in ('Metal1', 'Metal2', 'Metal3'): _pinwin['Metal4'].insert(b_.enlarged(um(3), um(3)))
+            elif ln_ == 'Metal4': _pinwin['Metal5'].insert(b_.enlarged(um(3), um(3)))
+avoid['Metal4'] = (avoid['Metal4'] + _pinwin['Metal4']).merged(); avoid['Metal5'] = (avoid['Metal5'] + _pinwin['Metal5']).merged()
+man['pin_windows_mm2'] = {k: round(v.merged().area()/1e12, 4) for k, v in _pinwin.items()}
 bars = []          # island supply bars (common.ISLAND_BARS)
 for bd in ([] if getattr(C, 'ISLAND_BARS_OFF', False) else C.ISLAND_BARS.get(CHIP, [])):
     reg = db.Region([db.Box(*[um(v) for v in r]) for r in bd['rects']]).merged()
     m4 = db.Region()
     if bd.get('rel') and bd['rel'][0] in man['blocks']:
         bx_, by_ = man['blocks'][bd['rel'][0]]['bbox'][:2]
+        bw_ = man['blocks'][bd['rel'][0]]['bbox']
         for ln_, r_ in bd['rel'][1]:
+            if r_ == 'bbox': r_ = (0.0, 0.0, bw_[2]-bw_[0], bw_[3]-bw_[1])      # the whole outline, any orientation
             b_ = db.Box(um(bx_+r_[0]), um(by_+r_[1]), um(bx_+r_[2]), um(by_+r_[3]))
             if ln_ == 'Metal5': reg += db.Region(b_)
             else: m4 += db.Region(b_)
@@ -390,11 +405,26 @@ for net in GRID_NETS:
             for tz in poly.decompose_trapezoids(1): lst.append((ln, tz.bbox()))
     strap_pieces[net] = lst
 # every strap piece is cut into 20 um slots with 2 um between them; each hook takes the nearest free slot of its net
+# grid pieces cut off from the core ring (blocks round them cut every strap: the pt_lo_lf VSS hook landed on a floating
+# 929-via VSS island, 2026-11-24) carry no hook slots: keep only metal joined to the ring through same-net Metal4/Metal5
+# overlaps (Via4 sits at every same-net crossing)
+live = {}
+for net in [n_ for n_ in GRID_NETS if n_ in ring]:
+    m4_ = metal.get((net, 'Metal4'), db.Region()).merged(); m5_ = metal.get((net, 'Metal5'), db.Region()).merged()
+    seed = ring.get(net, db.Region())
+    keep4 = m4_.interacting(seed); keep5 = m5_.interacting(seed)
+    while True:
+        n4 = m4_.interacting(keep5 + seed); n5 = m5_.interacting(keep4 + seed)
+        if n4.count() == keep4.count() and n5.count() == keep5.count(): break
+        keep4, keep5 = n4, n5
+    live[net] = {'Metal4': keep4, 'Metal5': keep5}
+    man.setdefault('grid_floating', {})[net] = dict(m4=m4_.count()-keep4.count(), m5=m5_.count()-keep5.count(), m4_total=m4_.count(), m5_total=m5_.count(), m4_float_mm2=round((m4_-keep4).area()/1e12, 4), m5_float_mm2=round((m5_-keep5).area()/1e12, 4))
 slots = {}
 for net in GRID_NETS:
     lst = []
     for ln, b in strap_pieces[net]:
         if min(b.width(), b.height()) < um(5): continue          # slivers of the decomposition are no hook slots
+        if net in live and live[net][ln].interacting(db.Region(b)).is_empty(): continue
         horiz = b.width() >= b.height(); L = b.width() if horiz else b.height(); n_ = max(1, int(L // um(22)))
         for j in range(n_):
             a0 = (b.left if horiz else b.bottom)+j*um(22)
@@ -420,7 +450,7 @@ for net in GRID_NETS:
         direct = 0; touched = False
         for pl, pb in sh:
             for sl_ in ('Metal4', 'Metal5'):       # the drawn grid metal (cut round blocks), not the uncut strap pieces
-                ov = db.Region(pb) & metal.get((net, sl_), db.Region())
+                ov = db.Region(pb) & (live[net][sl_] if net in live else metal.get((net, sl_), db.Region()))
                 for on_ in GRID_NETS:
                     if on_ != net: ov -= metal.get((on_, sl_), db.Region()).sized(um(1))
                 if ov.is_empty(): continue

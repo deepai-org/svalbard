@@ -93,16 +93,20 @@ FIXED_PLACE = {'wired': {'isw_wired_tx_a': (2938.0, 2209.0), 'isw_wired_tx_b': (
 # x >= 598.7, y >= 266.36; island VDD ties T_main / T_post at y 423.1-430.8 (Metal5), east_island column; Metal4 band
 # y 410.9-430.8, x 340-744 is island VDD only
 ISLAND_BARS_OFF = False    # the VDD-VISL join (xy-overlap merge picked the VDD plate) is fixed: merge only Via4-joined Metal5
-ISLAND_BARS = {'wired': [dict(net='RAIL_wired_tx', rects=[(2658.5, 2265.0, 3400.0, 2640.0)],
+ISLAND_BARS = {'wired': [dict(net='RAIL_wired_tx', rects=[(2658.5, 2265.0, 3400.0, 2640.0)], expose=True,
                               rel=('wiredtx', [('Metal5', (598.9, 266.6, 744.5, 430.8)), ('Metal4', (340.0, 411.2, 744.5, 430.8))]),
                               tie_merge=('wiredtx', ['east_island']),
                               tie_vias=('wiredtx', ['T_main_2', 'T_main_3', 'T_post_0', 'T_post_1', 'T_post_2', 'T_post_3']),
-                              vias=[('isw_wired_tx_a', 'VISL'), ('isw_wired_tx_b', 'VISL')])],
+                              vias=[('isw_wired_tx_a', 'VISL'), ('isw_wired_tx_b', 'VISL')]),
+                          # wired_cap (PDS-19 72.9 mA design): bar over isw_wired_cap's outline, exposed, so the router never
+                          # digs into the switch for VISL (RAIL_wired_cap joined VDD/VSS there, 2026-11-24); trunk to wrx_cap / ptrim later
+                          dict(net='RAIL_wired_cap', rects=[], expose=True, rel=('isw_wired_cap', [('Metal5', 'bbox')]),
+                               vias=[('isw_wired_cap', 'VISL')])],
                 # pt_rf rf_tx (PDS-20, 91.6 mA design): Metal5 bar over isw_rf_tx (joined to its VISL plate, Via4 onto VISL) and
                 # 465 um south of it towards lo_txbuf / the TX mixers, cut round other blocks' Metal5 and the RF blocks; the bar
                 # is a pin of RAIL_rf_tx (expose), so the router reaches the loads and isw_rf_tx_b from it, never VISL itself
                 'rf': [dict(net='RAIL_rf_tx', rects=[], expose=True,
-                            rel=('isw_rf_tx', [('Metal5', (0.0, -465.0, 243.1, 263.6))]),
+                            rel=('isw_rf_tx', [('Metal5', 'bbox'), ('Metal5', (0.0, -465.0, 243.1, 0.0))]),
                             vias=[('isw_rf_tx', 'VISL')])]}
 # decap tiles the assembly places itself before the other blocks (power delivery 4.1d / PDS-16: the 14 tiles that did not
 # place go inboard of pad_hs_rx, within 500 um of bidir[14], restoring 5.4 nF and the CDM reach): slot, count
@@ -129,6 +133,8 @@ FLOW_KEEPAWAY = {'rf': [('lo_txbuf', 'lna', 300), ('lo_txbuf', 'qvco', 200), ('r
 # routing channels kept free of blocks (die um): pt_wired: wire_tx_data / controls from the macro's south edge straight down
 # to pt_wiredtx8's top-edge pins (ASM-11a; block pins at die x ~1944-2034)
 ROUTE_CHANNELS = {'wired': {'chan_wtxdata': (1924.0, 2650.0, 2134.0, 3027.0)}}
+# grid kept 3 um off block signal pins (kl_place); pt_wired off until its regression (WRX_DX opens, VDD/VSS join, 2026-11-24) is understood
+PIN_WINDOWS = {'rf': True}
 # masters whose supply pins are labelled only on Metal1 inside the cell: pins also on their own Metal4/5 of that net (kl_abstract)
 PIN_UP = {'por': ('vdd3v3', 'vss')}
 # blocks the packer must not rotate (none at present; pt_wrx_cap fixed south of the macro blocked the west routing, 2026-11-24)

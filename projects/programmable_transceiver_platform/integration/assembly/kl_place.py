@@ -188,6 +188,9 @@ for bd in ([] if getattr(C, 'ISLAND_BARS_OFF', False) else C.ISLAND_BARS.get(CHI
         bx_, by_ = man['blocks'][bd['rel'][0]]['bbox'][:2]
         bw_ = man['blocks'][bd['rel'][0]]['bbox']
         for ln_, r_ in bd['rel'][1]:
+            if isinstance(r_, str) and r_.startswith('pin:'):     # the named pin's shapes + 5 um (any orientation)
+                for _l, _b in pin_shapes_die0(bd['rel'][0], r_[4:]): reg += db.Region(_b.enlarged(um(5), um(5)))
+                continue
             if r_ == 'bbox': r_ = (0.0, 0.0, bw_[2]-bw_[0], bw_[3]-bw_[1])      # the whole outline, any orientation
             b_ = db.Box(um(bx_+r_[0]), um(by_+r_[1]), um(bx_+r_[2]), um(by_+r_[3]))
             if ln_ == 'Metal5': reg += db.Region(b_)
@@ -335,9 +338,13 @@ def via_fill(cell, lay, region, inset=0.5, single=False):
             b = t.bbox(); ox = -(-b.left//620)*620; oy = -(-b.bottom//620)*620
             nx = (b.right-260-ox)//620+1; ny = (b.top-260-oy)//620+1
             if nx < 1 or ny < 1:
-                if single and b.width() >= 260 and b.height() >= 260:       # small landing: one cut, centred, on the 5 nm grid
-                    cx = (b.left+b.right-260)//2//5*5; cy = (b.bottom+b.top-260)//2//5*5
-                    cell.insert(db.CellInstArray(vc.cell_index(), db.Trans(db.Vector(cx, cy)))); n += 1
+                if single and b.width() >= 260 and b.height() >= 260:       # narrow landing: one centred row of cuts at 620 nm pitch
+                    horiz = b.width() >= b.height(); L_ = b.width() if horiz else b.height(); k_ = max(1, (L_-260)//620+1)
+                    s0 = ((b.left if horiz else b.bottom) + (L_-260-(k_-1)*620)//2)//5*5
+                    c0 = ((b.bottom+b.top-260)//2 if horiz else (b.left+b.right-260)//2)//5*5
+                    v_ = db.Vector(620, 0) if horiz else db.Vector(0, 620)
+                    org_ = db.Vector(s0, c0) if horiz else db.Vector(c0, s0)
+                    cell.insert(db.CellInstArray(vc.cell_index(), db.Trans(org_), v_, db.Vector(0, 620) if horiz else db.Vector(620, 0), k_, 1)); n += k_
                 continue
             cell.insert(db.CellInstArray(vc.cell_index(), db.Trans(db.Vector(ox, oy)), db.Vector(620, 0), db.Vector(0, 620), nx, ny)); n += nx*ny
     return n
@@ -470,8 +477,9 @@ for net in GRID_NETS:
                 # only landings with room for >= 4 cuts (one-cut landings at a strap edge left isolated vias: atb_leaf_s
                 # VSS open, 2026-11-24); same-layer overlaps are hooked like any other pin (an abstract pin rectangle can be
                 # larger than its metal)
-                if pl == 'Metal4' and sl_ == 'Metal5' and ov.sized(-um(0.4)).area() >= um(1.24)*um(1.24):
-                    direct += via_fill(dland, VIA["Via4"], ov, inset=0.4)
+                if pl == 'Metal4' and sl_ == 'Metal5':
+                    if ov.sized(-um(0.4)).area() >= um(1.24)*um(1.24): direct += via_fill(dland, VIA["Via4"], ov, inset=0.4)
+                    elif min(pb.width(), pb.height()) >= um(0.46): direct += via_fill(dland, VIA["Via4"], ov, inset=0.1, single=True)   # thin pin strip under the strap (atb cells): a row of cuts
         if direct >= 4:
             man.setdefault('direct_landings', []).append(dict(net=net, inst=n, pin=p, via4=direct)); continue
         c = sh[0][1].center(); best = None

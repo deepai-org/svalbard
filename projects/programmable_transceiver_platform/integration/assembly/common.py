@@ -100,7 +100,7 @@ ISLAND_BARS = {'wired': [dict(net='RAIL_wired_tx', rects=[(2658.5, 2265.0, 3400.
                               vias=[('isw_wired_tx_a', 'VISL'), ('isw_wired_tx_b', 'VISL')]),
                           # wired_cap (PDS-19 72.9 mA design): bar over isw_wired_cap's outline, exposed, so the router never
                           # digs into the switch for VISL (RAIL_wired_cap joined VDD/VSS there, 2026-11-24); trunk to wrx_cap / ptrim later
-                          dict(net='RAIL_wired_cap', rects=[], expose=True, rel=('isw_wired_cap', [('Metal5', 'bbox')]),
+                          dict(net='RAIL_wired_cap', rects=[], expose=True, rel=('isw_wired_cap', [('Metal5', 'pin:VISL')]),      # VISL strips only: over the whole switch it crowded PG / ISO / EN
                                vias=[('isw_wired_cap', 'VISL')])],
                 # pt_rf rf_tx (PDS-20, 91.6 mA design): Metal5 bar over isw_rf_tx (joined to its VISL plate, Via4 onto VISL) and
                 # 465 um south of it towards lo_txbuf / the TX mixers, cut round other blocks' Metal5 and the RF blocks; the bar

@@ -121,17 +121,18 @@ hardware lives once per group (`atb_grp`, local bus to global bus) and once per 
 
 | Cell | Instances in the chip conns | Switch | Area (µm²) |
 | --- | ---: | --- | ---: |
-| `atb_leaf_s` (sense) | 58 | inverter + T-switch, middle node shunted to VSS while open | 1 027 |
-| `atb_leaf_f` (force) | 21 | same, wider devices | 1 287 |
-| `atb_grp` | 7 (2 on ATB0, 5 on ATB1) | with select pull-down and non-overlap control | 7 570 |
-| `atb_pad` | 2 | with auto-bulk PMOS well, bus shunted while open | 8 267 |
+| `atb_leaf_s` (sense) | 58 | inverter + T-switch, middle node shunted to VSS while open | 1 255 |
+| `atb_leaf_f` (force) | 21 | same, wider devices | 1 572 |
+| `atb_grp` | 7 (2 on ATB0, 5 on ATB1) | with select pull-down and non-overlap control | 8 088 |
+| `atb_pad` | 2 | with auto-bulk PMOS well, bus shunted while open | 8 830 |
 
-Cell area of that tree: 0.156 mm², without routing.
+Cell area of that tree: 0.177 mm², without routing.
 
 Pins (ASM-14, 2026-11-24): every port is a Metal4 track, 0.8 µm wide (VDD / VSS 1.2 µm) at >= 2 µm pitch, running
 to both side edges of the cell, pin label at the left edge; in the leaves and `atb_grp` VSS is the bottom track and
 VDD the top track; `NODE` is a 0.8 µm Metal4 stub to the left edge (NODE wiring C 1.52 -> 1.88 fF; BUS +4.7 fF per
-leaf). No Metal5. Magic DRC 0, KLayout DRC 0, shuttle decks main 0 / antenna 0, LVS unique, per cell
+leaf). SEL (gate-only input, 1-3 mm of chip Metal4) carries a 3.5 x 3.5 um diode_nd2ps_03v3 (12.25 um2, ASM-16) with its
+own p+ tap in a 6.8 um strip at the left edge; NODE gets no diode. No Metal5. Magic DRC 0, KLayout DRC 0, shuttle decks main 0 / antenna 0, LVS unique, per cell
 (`layout.py` EDGE_PINS; published into `scratch/island-support-20261108-075605/layout`).
 
 | Cell | Ron, functional max | Off load on the tapped node, extracted max | Off leakage 22–32 °C (85 °C) | Gap on one bus |

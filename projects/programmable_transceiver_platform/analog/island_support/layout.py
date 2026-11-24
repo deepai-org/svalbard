@@ -20,6 +20,10 @@ TRACK_PITCH = 1.3
 # of the cell with the pin at the left edge, VSS the bottom track and VDD the top track; NODE gets an M4 edge stub.
 EDGE_PINS = False
 EDGE_TRACK_PITCH = 2.0
+# ASM-16: antenna diode on the gate-only input SEL of every ATB cell, sized by antenna_diodes.need_area for >= 3 mm of
+# Metal4 (perimeter 6000 um) on the smallest SEL gate (0.82 um2): 11.6 um2 -> 3.5 x 3.5 um n+/psub, own p+ tap, placed
+# in a strip left of the cell; the SEL track runs over it to the new left edge.
+SEL_DIODE_SIDE = 3.5
 
 
 def parse_devices(netlist):
@@ -534,8 +538,18 @@ def atb_layout(name):
             logic_block(lay, devs, 0.0, 0.0, edge_net='PAD')
         else:
             tap_block(lay, devs, 'NODE')
+        sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+        import antenna_diodes as ad
+        x1, _, x2, _ = bbox(lay)
+        ysel = lay.track_y[('A', 'SEL')] if ('A', 'SEL') in lay.track_y else lay.track_y[('B', 'SEL')]
+        side = SEL_DIODE_SIDE
+        xd = x1 - 1.5 - side / 2
+        for r_ in ad._stack(xd, ysel, 4, side) + ad._tap(xd, ysel, side, 'W'):
+            lay.r(*r_)
+        lay.diodes = [('SEL', round(side * side, 4), round(4 * side, 4))]
         # cell edges = extent of everything drawn so far, widened by the track ends of the port nets
         x1, _, x2, _ = bbox(lay)
+        x1 -= .4
         lay.edge_x = (x1, x2)
         if lay.node_stub:
             xn, ym = lay.node_stub
@@ -573,6 +587,8 @@ def generate(outdir, cells):
         else:
             lay, meta = atb_layout(name)
             text = design.atb_pad_netlist(name) if name == 'atb_pad' else design.atb_tap_netlist(name)
+            dl = ''.join(f'DANT{i} VSS {n} diode_nd2ps_03v3 area={a:.4g}p pj={pj:.4g}u\n' for i, (n, a, pj) in enumerate(lay.diodes))
+            text = text.replace('.ends', dl + '.ends', 1)
         design.GEOM = True
         (outdir / f'{name}.tcl').write_text(lay.tcl('/work/layout'))
         (outdir / f'{name}.spice').write_text(text)

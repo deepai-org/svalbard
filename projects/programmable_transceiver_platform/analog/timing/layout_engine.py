@@ -718,7 +718,7 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
             L.via(xx, snap(top - 0.75), 4, 5)
             hw = (em or {}).get('pin_w', 0.4) / 2       # pin width (assembly asks >= 0.8 um, ASM-12)
             if hw > 0.2:
-                L.rect('metal4', xx - hw, top - 1.6, xx + hw, top - 0.5)
+                L.rect('metal4', xx - hw, top - 1.0, xx + hw, top - 0.5)   # r8: -1.6 hit a Metal4 track (M4.2a)
             L.net = None
             pm = 'metal4'
         hw = (em or {}).get('pin_w', 0.4) / 2 if pm == 'metal4' else 0.2

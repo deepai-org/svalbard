@@ -9,7 +9,8 @@ from pathlib import Path
 import numpy as np
 W = Path('/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/wired_rx'); sys.path.insert(0, str(W))
 import capture as c
-G = Path('/home/ubuntu/svalbard/scratch/wired_rx/r12/capgrid')
+import os as _o0
+G = Path(_o0.environ.get('OS_G', '/home/ubuntu/svalbard/scratch/wired_rx/r12/capgrid'))
 H = Path(__file__).resolve().parent
 c.FAST = G / 'fast'; c.GEN = G / 'gen'; c.SCRATCH = H / 'cap'
 import os as _o

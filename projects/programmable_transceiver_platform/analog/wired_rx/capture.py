@@ -449,9 +449,14 @@ def lane():
         c.inv(f'{nm}a', f'{nm}an', 1, 2)
         c.inv(f'{nm}b', f'{nm}bn', 1, 2)
         c.nand([f'{nm}an', f'{nm}bn'], nm)
+    # r8 (TIM-31 / review 1.5 minimum fix): DF / EF registered on CK, so in full rate the lanes see a flop output
+    # exactly as in quarter / half rate (r7e: the multiplexer path raced the slot clocks; one ring cycle of latency)
+    c.buf('CK', 'CKF')
+    c.ff('CKF', 'DF', 'DFq')
+    c.ff('CKF', 'EF', 'EFq')
     for j in range(4):
-        c.aoi3([('BQ', f'O{2 * j}'), ('BH', 'O0' if j % 2 == 0 else 'O4'), ('BF', 'DF')], f'DL{j}r')
-        c.aoi3([('BQ', f'O{2 * j + 1}'), ('BH', 'O2' if j % 2 == 0 else 'O6'), ('BF', 'EF')], f'EL{j}r')
+        c.aoi3([('BQ', f'O{2 * j}'), ('BH', 'O0' if j % 2 == 0 else 'O4'), ('BF', 'DFq')], f'DL{j}r')
+        c.aoi3([('BQ', f'O{2 * j + 1}'), ('BH', 'O2' if j % 2 == 0 else 'O6'), ('BF', 'EFq')], f'EL{j}r')
         # r2: each lane drives 5 pairs across the pair array (r1: NAND3 with a 2 um pull-up, ~1.3 ns)
         c.bufx(f'DL{j}r', f'DL{j}')
         c.bufx(f'EL{j}r', f'EL{j}')
@@ -460,7 +465,7 @@ def lane():
     # Miller doubling, O delay 1.1-1.5 ns after CKP0)
     ports = [x for j in range(8) for x in (f'O{j}', f'PS{j}')] + \
         [x for j, sel in zip(range(4, 8), ('BQ', 'BH', 'BF', None)) for x in ((f'OP{j}', sel) if sel else (f'OP{j}',))] + \
-        [f'DL{j}' for j in range(4)] + [f'EL{j}' for j in range(4)]
+        [f'DL{j}' for j in range(4)] + [f'EL{j}' for j in range(4)] + ['CK', 'ENB']
     return c.row(ports)
 
 
@@ -870,7 +875,7 @@ ROWS = [['FRONT1'], ['FRONT0', 'CTL'], ['LN', 'PD', 'CN'], ['SL0', 'SL1'],
         [f'P{i}' for i in (12, 16, 13, 17, 10, 14, 18, 11, 15, 19)]]
 
 
-def build_top(rows=None, max_row_width=1100.0, em=None):
+def build_top(rows=None, max_row_width=1100.0, em=None, net_space=None):
     """Assemble the compact rows with timing's generic macro placer/router (layout_engine), from this
     directory's generated/fast cells.  Writes generated/wrx_cap.{mag,gds,ext.spice,lvs.spice}."""
     import netlist as tn
@@ -893,7 +898,7 @@ def build_top(rows=None, max_row_width=1100.0, em=None):
     # 68 fF: 0.6 V spikes on UP3 with EN = 0 and an extra 68 fF on one ring phase)
     rep = le.generate(work, 'pt_wrx_cap', ports, devices, rows=rows, max_row_width=max_row_width,
                       trunk_groups=[['RCS'] + [f'UP{k}' for k in range(4)] + [f'DN{k}' for k in range(4)] + ['B2']], over_cell=True,
-                      em=em)   # em: layout_engine options (r7g: chip-grid Metal5 channels, ASM-8)
+                      em=em, net_space=net_space)   # em: layout_engine options (r7g: chip-grid Metal5 channels, ASM-8)
     defs = ''.join((FAST / f'{m}.spice').read_text() for m in CELLS)
     top_sp = tn.flat_spice(ports, devices, 'pt_wrx_cap')
     ant = le.ad.spice_lines(rep.get('antenna_diodes', []))   # K1 antenna diodes -> LVS reference

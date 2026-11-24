@@ -5,7 +5,7 @@
  "build_command": "scratch/pads-core/esdopt/hs/sec/q_s.sh a6 leg7 '{\"up\": [1, 1], \"dvdd_w\": 3.0, \"ring\": true}'  (leg: hs_leg_layout.py --lb=4.2 --sec=...; compose: hs_pad_compose.py ... --stacked --site-primary --no-core-array --esd-opt={\"neck_m1\": true} --sec)",
  "rebuild_check": "rebuilt 2026-11-20 from the committed generators: pad_hspad.gds and pt_hs_leg.gds identical to the candidate with GDS timestamps zeroed (normalised f16f9f05472ea423 / bcaa90e8c23a40c6); physical.spice identical up to Magic capacitor ordering; no-flag build XOR 0.0 um2 vs the previously published GDS 8c8e2533",
  "sha256": {
-  "pad_hspad.gds": "4d7fae991dc43e632d2847cafde64400228a35e54a2dc2d4f675269103ecbec5",
+  "pad_hspad.gds": "074d5fb5b9c1cc695355f13e46fb8dcd287d44748ac41c22937a44aa87a04540",
   "physical.spice": "1399bc07291959d99ccf3f2aa4935b4b26c417ad8ad01257bcec1a97261a02a1",
   "physical-r-low.spice": "045547de7934b4286d5c3e4a8e5224b8d75f75030188167ece0124dae81648fe",
   "physical-r-typ.spice": "e8402507b9d6c747e3e254b7e0edc40af896da5b35cded72cbc3934887e6f836",
@@ -14,7 +14,9 @@
   "physical-r-typ-rail.spice": "eadcf8d351683ee62cdd6f096c1cf561785d875a976bd11c8a1a8af59ed5d9be",
   "physical-r-high-rail.spice": "a2bc3ec3a87469d07e0fd92cb64dd67c8c75cc9b80ea854fe10ee701e623091e",
   "lvs-reference.spice": "50e63d1fa10e175aab1ee709d84f2bf2c7e20e3accf857cc9bc5c8397a0131fe",
-  "leg/pt_hs_leg.gds": "12b51cd3eafac9f312ec2fc61f51ded9e3546199c7068b4b5e1439a41f15b43b"
+  "leg/pt_hs_leg.gds": "12b51cd3eafac9f312ec2fc61f51ded9e3546199c7068b4b5e1439a41f15b43b",
+  "pad-lvs.txt": "58419ad648deba748817061af114e2867eebe76ce67367cd8d99e45f5e5ab331",
+  "pad_hspad-kldrc.json": "899f24da0ccf99c015611be7d9ba3e7766a0d0351526e40a8dfd9bf24876f3b1"
  },
  "generators_sha256_8": {
   "hs_pad_compose.py": "d00f1f37",
@@ -183,5 +185,7 @@
    "TERM_TRIM0..3": "41.4 / 52.2 / 51.8 / 53.1"
   },
   "known_item": "physical.spice and the R+C models physical-r-{low,typ,high}[-rail].spice are the a6 extractions and do NOT include the added pin-route C (RX_P/N +26 fF each, PAD_N +7.5 fF, of which +3.5 fF is the TERM_TRIM0 riser over the N leg). Not re-extracted."
- }
+ },
+ "magic_fix_2026_11_24": "a6m = a6 (top-edge pins, ddcaaf79) + analog/pads/hspad_magic_fix.py (PC-86): the shuttle precheck Magic script found 19 errors (18 MIMTM.2, 1 MIMTM.1) at the two riser landings beside the MIM caps; fixed by re-placing 15 Via4 cuts onto the Via3 grid (aligned stacks), removing 14 riser-landing Via4 at the edges of two new Metal4 enclosure boxes, and trimming one 1 um Metal4 strap to 0.8 um over 21 um. Checks on the published file: Magic 0 (block_drc L), KLayout main / antenna 0 (sha-matched kldrc), rail_site PASS, read-back LVS unique vs lvs-reference.spice, TERM_VCM<->VSS swap fails. No device change; models not re-extracted (via / strap edits only).",
+ "gds_sha256_now": "074d5fb5b9c1cc695355f13e46fb8dcd287d44748ac41c22937a44aa87a04540"
 }

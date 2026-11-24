@@ -24,10 +24,8 @@ pad_wire_tx `DNV*/DPV*.SUB` nets joining VSS in chip LVS are the diode legs' sub
 
 pad_txpad a16p (2026-11-24, PC-80): core pins widened/spread by `$P/analog/pads/tx_top_pins.py` (GDS sha bded3185).
 
-## Next (2026-11-24 late)
-1. pad_hspad: 19 Magic errors under the shuttle Magic script (MIMTM.2 x18 at the MIM caps' Via3/Via4 near the bottom-plate edges,
-   MIMTM.1 x1), report scratch/pads-core/hsmagic/pad_hspad-magic-L.rpt; fails the pt_wired precheck: fix + republish (PC-85).
-   Always run block_drc.py --cfg L --checks magic (the shuttle Magic script) on every pad publish: KLayout alone missed these.
-2. Assembly's precheck when it posts (pt_rf and pt_wired); re-abstraction of rftxpad t8, txpad a16p, rf_pair r4, wirepad b7v.
-3. RF answers: RF TX match with +0.40 pF/leg (PC-81b); RF RX with rf_pair 0.80 pF/leg (PC-84).
-4. SATA2 return loss: skipped (coordinator).
+## Next (2026-11-24 night)
+Rule: every pad publish runs block_drc.py --cfg L --checks magic (shuttle Magic script); all eight families are at 0 (PC-86).
+1. Assembly's precheck when it posts (pt_rf, pt_wired); re-abstraction of rftxpad t8, txpad a16p, rf_pair r4, wirepad b7v, hspad a6m.
+2. RF answers: RF TX match with +0.40 pF/leg (PC-81b); RF RX LNA rerun with rf_pair 0.80 pF/leg (PC-84a).
+3. SATA2 return loss: skipped (coordinator).

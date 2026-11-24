@@ -14,6 +14,34 @@ Circuit 1: nfet_06v0                       |Circuit 2: nfet_06v0
 Cell pin lists are equivalent.
 Device classes nfet_06v0 and nfet_06v0 are equivalent.
 
+Circuit 1 cell ppolyf_u and Circuit 2 cell ppolyf_u are black boxes.
+Warning: Equate pins:  cell ppolyf_u is a placeholder, treated as a black box.
+Warning: Equate pins:  cell ppolyf_u is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: ppolyf_u                        |Circuit 2: ppolyf_u                        
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes ppolyf_u and ppolyf_u are equivalent.
+
+Circuit 1 cell ppolyf_u_1k and Circuit 2 cell ppolyf_u_1k are black boxes.
+Warning: Equate pins:  cell ppolyf_u_1k is a placeholder, treated as a black box.
+Warning: Equate pins:  cell ppolyf_u_1k is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: ppolyf_u_1k                     |Circuit 2: ppolyf_u_1k                     
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes ppolyf_u_1k and ppolyf_u_1k are equivalent.
+
 Circuit 1 cell pfet_06v0 and Circuit 2 cell pfet_06v0 are black boxes.
 Warning: Equate pins:  cell pfet_06v0 is a placeholder, treated as a black box.
 Warning: Equate pins:  cell pfet_06v0 is a placeholder, treated as a black box.
@@ -29,19 +57,18 @@ Circuit 1: pfet_06v0                       |Circuit 2: pfet_06v0
 Cell pin lists are equivalent.
 Device classes pfet_06v0 and pfet_06v0 are equivalent.
 
-Circuit 1 cell ppolyf_u and Circuit 2 cell ppolyf_u are black boxes.
-Warning: Equate pins:  cell ppolyf_u is a placeholder, treated as a black box.
-Warning: Equate pins:  cell ppolyf_u is a placeholder, treated as a black box.
+Circuit 1 cell cap_mim_2f0_m4m5_noshield and Circuit 2 cell cap_mim_2f0_m4m5_noshield are black boxes.
+Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
+Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
 
 Subcircuit pins:
-Circuit 1: ppolyf_u                        |Circuit 2: ppolyf_u                        
+Circuit 1: cap_mim_2f0_m4m5_noshield       |Circuit 2: cap_mim_2f0_m4m5_noshield       
 -------------------------------------------|-------------------------------------------
 1                                          |1                                          
 2                                          |2                                          
-3                                          |3                                          
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
-Device classes ppolyf_u and ppolyf_u are equivalent.
+Device classes cap_mim_2f0_m4m5_noshield and cap_mim_2f0_m4m5_noshield are equivalent.
 
 Circuit 1 cell ppolyf_u_1k_6p0 and Circuit 2 cell ppolyf_u_1k_6p0 are black boxes.
 Warning: Equate pins:  cell ppolyf_u_1k_6p0 is a placeholder, treated as a black box.
@@ -57,42 +84,12 @@ Circuit 1: ppolyf_u_1k_6p0                 |Circuit 2: ppolyf_u_1k_6p0
 Cell pin lists are equivalent.
 Device classes ppolyf_u_1k_6p0 and ppolyf_u_1k_6p0 are equivalent.
 
-Circuit 1 cell cap_mim_2f0_m4m5_noshield and Circuit 2 cell cap_mim_2f0_m4m5_noshield are black boxes.
-Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
-Warning: Equate pins:  cell cap_mim_2f0_m4m5_noshield is a placeholder, treated as a black box.
-
-Subcircuit pins:
-Circuit 1: cap_mim_2f0_m4m5_noshield       |Circuit 2: cap_mim_2f0_m4m5_noshield       
--------------------------------------------|-------------------------------------------
-1                                          |1                                          
-2                                          |2                                          
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes cap_mim_2f0_m4m5_noshield and cap_mim_2f0_m4m5_noshield are equivalent.
-
-Circuit 1 cell ppolyf_u_1k and Circuit 2 cell ppolyf_u_1k are black boxes.
-Warning: Equate pins:  cell ppolyf_u_1k is a placeholder, treated as a black box.
-Warning: Equate pins:  cell ppolyf_u_1k is a placeholder, treated as a black box.
-
-Subcircuit pins:
-Circuit 1: ppolyf_u_1k                     |Circuit 2: ppolyf_u_1k                     
--------------------------------------------|-------------------------------------------
-1                                          |1                                          
-2                                          |2                                          
-3                                          |3                                          
----------------------------------------------------------------------------------------
-Cell pin lists are equivalent.
-Device classes ppolyf_u_1k and ppolyf_u_1k are equivalent.
-Flattening unmatched subcell pad_reference in circuit hs_reference (1)(1 instance)
-Flattening unmatched subcell network_flat in circuit hs_reference (1)(1 instance)
-Flattening unmatched subcell pt_hs_leg in circuit hs_reference (1)(2 instances)
-
-Class pad_hspad_flat (0):  Merged 363 parallel devices.
-Class pad_hspad_flat (0):  Merged 11 series devices.
-Class hs_reference (1):  Merged 363 parallel devices.
-Class hs_reference (1):  Merged 11 series devices.
+Class pad_hspad (0):  Merged 363 parallel devices.
+Class pad_hspad (0):  Merged 11 series devices.
+Class pad_hspad_flat (1):  Merged 363 parallel devices.
+Class pad_hspad_flat (1):  Merged 11 series devices.
 Subcircuit summary:
-Circuit 1: pad_hspad_flat                  |Circuit 2: hs_reference                    
+Circuit 1: pad_hspad                       |Circuit 2: pad_hspad_flat                  
 -------------------------------------------|-------------------------------------------
 nfet_06v0 (369->57)                        |nfet_06v0 (369->57)                        
 ppolyf_u_1k (2)                            |ppolyf_u_1k (2)                            
@@ -111,26 +108,26 @@ Resolving symmetries by net name.
 Netlists match with 32 symmetries.
 
 Subcircuit pins:
-Circuit 1: pad_hspad_flat                  |Circuit 2: hs_reference                    
+Circuit 1: pad_hspad                       |Circuit 2: pad_hspad_flat                  
 -------------------------------------------|-------------------------------------------
 TERM_TRIM2                                 |TERM_TRIM2                                 
 VDD                                        |VDD                                        
 TERM_TRIM3                                 |TERM_TRIM3                                 
-PAD_N                                      |PAD_N                                      
 PAD_P                                      |PAD_P                                      
+PAD_N                                      |PAD_N                                      
 DVDD                                       |DVDD                                       
 VBIAS                                      |VBIAS                                      
 TERM_TRIM0                                 |TERM_TRIM0                                 
-TERM_TRIM1                                 |TERM_TRIM1                                 
-RX_P                                       |RX_P                                       
 RX_N                                       |RX_N                                       
+RX_P                                       |RX_P                                       
+TERM_TRIM1                                 |TERM_TRIM1                                 
 TERM_VCM                                   |TERM_VCM                                   
 TERM_ENABLE                                |TERM_ENABLE                                
 VSS                                        |VSS                                        
 ESD_RAIL                                   |ESD_RAIL                                   
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
-Device classes pad_hspad_flat and hs_reference are equivalent.
+Device classes pad_hspad and pad_hspad_flat are equivalent.
 
 Final result: Circuits match uniquely.
 .

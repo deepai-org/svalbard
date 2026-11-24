@@ -43,28 +43,21 @@ named `asm-<chip>-<pid>`: stop a run only by that name (`docker kill asm-...`) o
 - **Net classes** (`kl_place.cls`): island rails / regulator outputs 3 um wide; hooks 1.2 um; clock, high-speed and RF
   nets twice the minimum spacing (no drawn shields). Booked ledger items without a conn instance are Metal1-3 blockages.
 
-## Results (current: commit 21bbb5e5; pt_rf route 2026-11-20 10:34, pt_wired route 14:17, pt_rf DRC 2026-11-21)
+## Results (2026-11-24, commit d48ca1a8 flow; both chips abstract -> LVS)
 
 | | `pt_rf` | `pt_wired` |
 |---|---|---|
-| Floorplan (`report/floorplan.png`) | all conn blocks placed, 0 overlaps, 0 keep-away fails; 40 um channels south / east of the macro; island blocks pulled to their switch | same; `isw_wired_rx` beside `dvdd_pads[1]` (PDS-9); `pt_wiredtx8` (staged, for instance `wiredtx`) R0 at cell x0 = 1493.75 (23.75 mod 70) |
-| Grid straps (`strap_widths.json`) | 10.5 um everywhere: M4 7.5-8.0 %, M5 10.8-11.2 % per net (passes IR, PDS-8) | 16 um in ME / SE, 10.5 um elsewhere: M4 8.6-8.9 %, M5 12.1-12.7 %; ME 7.1-11.0 %, SE 10.1-12.6 % (below 12 %: own Metal4/5 of wrx_cap / ptrim / wired TX, ASM-8) |
-| Nets routed (signal / clock / hs / rf / rail) | all | all |
-| Hooks routed | 227 / 275 | 228 / 265 |
-| Detailed-route violations (20 iterations); baselines 467 / 742 (rf), 1035 / 2919 (wired) | **164** (109 shorts: lna_deg_n placeholder 27, atb1_leaf18/29 35, grid 7; 55 spacing) — QVCO r8, pin-moved RF pads, orientation fixed; OpenROAD antenna check 0 | **~2400** on the option-B placement (power delivery 4.1c/d: switch pair on the east edge, pt_wiredtx8 west of it, RAIL_wired_tx Metal5 bar merged with the switches' VISL Metal5, LVS clean on that net): 1707 shorts + 946 spacing at 16 um straps, 1585 + 798 at 22 um in MC/ME/SE with the 14 decap tiles fixed inboard of pad_hs_rx. 1548 of the shorts are VSS hooks and 539 wire_tx_data in the field round pt_wiredtx8. The previous placement routed with 183 but fails IR. **Open: ASM-8** (wrx_cap / ptrim / pt_wiredtx8 free Metal5, with wired RX / TX after 2026-11-24) is the durable fix for IR and routability; straps are not iterated further |
-| pt_wiredtx8 grid ties | | VSS landings 4 of 6, channel tabs 3 of 6 (the others sit on VDD axes, untied by design); 10 old pins unconnected until the conn binds the new cell |
-| Shuttle precheck (pt_rf, filled, 2026-11-21; layout of the QVCO-r8 run, west pins still mirrored) | **exit 1**. Pad mask, ID, structure, zero-area 0, Magic DRC 0. KLayout DRC **1155**: provider ring at the custom pad sites 620 (V3.1 / V3.2a / V4.1 / V4.2a, SO-1, pads) + inside the pad cells 285 (same via stacks, SO-1) = 905 pads; top wiring 216 (assembly; many at x = 52 um, the mirrored west-pin routes); grid 7 (assembly); inside blocks 13 (atb_leaf_s 7, isw 2, core_bias 2, cdr 2) + 2 placeholder lo_vreg. Antenna **89**: top nets 51 + at atb_leaf_s gates 16 + others (assembly: jumpers next run); adc_i 7 (converters, known); txmix 6, clk_obs 3, clockmux 1. Density 5 DCF.1a inside blocks | not run |
-| Density after fill | not run | every global rule passes; 48 DCF.1a inside blocks |
-| LVS (black boxes, by name; first run) | 572 match, 150 short+internal | 741 match, 138 short |
+| Placement | packer, island clustering off (signal flow first); lo_txbuf r5 at the TX mixers, isw_rf_tx_b at isw_rf_tx | packer, clustering off; cascode_pump at pad_wire_tx; pt_wiredtx8 / switch pair fixed |
+| Nets routed | all (643), every supply hook wired (51 direct Via4 landings) | all, every hook wired (60 direct landings) |
+| Detailed-route violations (20 iterations) | 20 (64-iteration rerun pending) | 103: WRX_DX 31 (pt_wrx_cap Metal5 pin row, ASM-12), CKP 13, RAIL_wired_cap 8 |
+| LVS by name | 799 match; **no VDD/VSS join**; RAIL_lo-VSS short (route at 2957, 2770 Metal4 onto a VSS strap); VDD 4 pieces; s_pg_rf_tx_b open (digital, PDS-20) | 953 match; no VDD/VSS join; 19 signal shorts (WRX_DX, CKP, TXPH[0], atb1_sw, island_off[2] onto supplies; DETECT_PBIAS pair; HS_TERM_TRIM2 / c_term_hs_en); s_pg_wired_tx_b open (digital, DG9-19) |
+| LO branch (ASM-RF-1, LO-ASM-6) | LO_IP/IN 3.4 / 4.2 mm, LO_QP/QN 5.7 / 5.2 mm total (both branches); lo_ext -> lo_txbuf ~2.5 mm by placement: over the 2.1 mm target; rxmix_i / rxmix_q 1.5 mm apart | |
+| Precheck | not rerun since 2026-11-21 (1155 DRC / 89 antenna then) | not run |
 
-Ruling (2026-11-21): on pt_wired the macro sits at x0 = 951 with 12 um clearance to `pad_ref` and `pad_wire_tx` (the 1740 um between them; accepted for
-that corner; digital is asked for a ~40 um narrower outline).
-Agreed, not yet built (no GDS staged): `pt_ptrim` r12 goes R0 with x0 = 313.05 (mod 70) so a grid VSS Metal5 strap lies on
-its VSS Metal4 strap (block x 186.7-191.7, Via4 full height); that strap is 10.5 um wide over ptrim (16 um would reach
-VDD_WIRE_SW); grid VDD never lands on the block.
-Picked up: QVCO r8 (ASM-1) on pt_rf; staged pad cells with core-edge pins (`common.STAGED_PADS`: txpad a12, wirepad b7,
-pin-moved rf_pair / rftxpad / single_leg / hspad) on pt_wired; pt_rf reroute with them pending. `pad_refpad` not yet moved. Open: V4.2a / M4.1 / MT.1 in the grid, full precheck.
-Owner rows ASM-1..9 in `scratch/reviews/interface-changes.md`.
+Tools: `kl_shortcheck.py [drop-cell ...]` (VDD/VSS one net, with cells removed: `pt_top_wiring`, `pt_direct_land`),
+`kl_netprobe.py NET ...` (non-router shapes a routed net touches; `HALO=0` for overlaps only). Block pins in the abstract are
+the label's own polygon; `common.PIN_UP` masters (por) also get their own Metal4/5 of the pin net. LVS (`signoff/lvs/top_lvs.py`)
+merges reference nets through declared DC joins (LNA inductors, QVCO tank) when the layout shows them.
 
 ## Known violations (current)
 
@@ -72,7 +65,7 @@ Owner rows ASM-1..9 in `scratch/reviews/interface-changes.md`.
   19-75 mA design currents (spec/power-delivery.md section 2): EM and IR fail. Island strap regions (`ISLAND_STRAPS=1`
   in `kl_place.py`) fragment on today's floorplan (loads 1.8-3.3 mm apart, straps cut by blocks' own Metal4/5);
   decision pending on clustering loads / more switches per island.
-- LO pair: 1.2 um spacing reserved, VSS shields not drawn. Double-spacing class for clock / hs / rf nets off (pin windows).
+- LO pair: 1.2 um spacing (LOSH), VSS shields not drawn; LO nets not yet kept >= 200 um from LNA / spirals / RF pad / QVCO (ASM-RF-1). Double-spacing class for clock / hs / rf nets off (pin windows).
 
 ## Island rail plan (coordinator ruling 2026-11-24; power owner review PDS-18 applied)
 

@@ -44,6 +44,8 @@ Current work status is in `SESSION-STATE.md`, not here.
   (shared guard rings, abutted rows, MIM over devices, no generator-default channels), and keep a short list of
   its next area levers. The coordinator keeps the ledger and reruns the packer.
 - **Schedule is the user's concern** (mid-December 2026 shuttle). Do not raise it or trade scope for it.
+- **ESD: basic handling level only (user, 2026-11-24).** Target HBM 1 kV / CDM 1 A class on every pad; do not chase
+  further ESD margin. When ESD conflicts with pad capacitance or signal performance, favour the signal.
 - **Scope and AI-driven design are intentional.** Counter blind spots with many varied checks and
   cross-references against public data. The user is the gauge of tapeout readiness.
 

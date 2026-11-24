@@ -26,11 +26,13 @@ see "Hop plan" below. Not yet laid out.
 - Block `pt_wiredtx8` handed to assembly (WT57, commit 19367351 + 7cd4956f); bound in wired/chip.conn (WT50). WT53-d final.
 - Done 2026-11-24: term_buffer on always-on VDD (257c62da, WT58); pump `wtx8_casbias` starts at every corner
   (b1c79575; extracted results `s18/tran/ext_*.json`).
-- Pump is a separate pt_wired instance `cascode_pump` (663437fd, WT59), interim CB_EN = c_wiredtx_post_pol; 100BASE-TX
-  986 mV cal. at ss-pess with the extracted 4.12 V (dcd56b93). Island limit superseded by PDS-19 (105 / 131 mA on 2x isw_wired).
-- Next, ranked: (1) when digital lands c_wiredtx_cascode_boost, check it binds cascode_pump.CB_EN (not wiredtx);
-  (2) 100BASE-TX at ss 85 C 2.97 V (pump 3.84 V); (3) in-block VSS IR 3.95 vs 3.0 mV; (4) lever 2 only if assembly's
-  trunk cannot carry the island current.
+- Pump: separate pt_wired instance `cascode_pump` (663437fd, WT59), CB_EN = c_wiredtx_cascode_boost (digital d6aef321,
+  verified in wired/chip.conn). 100BASE-TX 986 mV cal. at ss-pess with the extracted 4.12 V (dcd56b93). Island limit
+  superseded by PDS-19 (105 / 131 mA on 2x isw_wired).
+- Closed by coordinator ruling (2026-11-24): no pt_wiredtx8 ASM-12 rebuild (WT60) unless assembly names a concrete
+  short / IR fail at the block; ss 85 C 2.97 V 100BASE-TX run skipped (outside the performance window).
+- Open, ranked: (1) WT60 options A/B/C only on an assembly fail report; (2) in-block VSS IR 3.95 vs 3.0 mV;
+  (3) lever 2 (mux pre-driver current) only if assembly's trunk cannot carry the island current.
 - Rules: commit with a pathspec; scratch is gitignored (git add -f). Extraction flow: `s16/net/fixcap16.py`.
 
 ## State at 2026-11-18 07:05 UTC

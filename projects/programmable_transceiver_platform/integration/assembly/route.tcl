@@ -37,14 +37,14 @@ proc assign_classes {} {
       if {$use_ndr && $cls == "supply"} { assign_ndr -ndr WIDE -net $cur; incr nwide }
       if {$use_ndr && $cls == "hook"} { assign_ndr -ndr HOOK -net $cur; incr nwide }
       if {$use_ndr && $cls == "lo"} { assign_ndr -ndr LOSH -net $cur; incr nspc }
-      if {$use_ndr && ($cls == "clock" || $cls == "hs" || $cls == "rf")} { assign_ndr -ndr SPC2 -net $cur; incr nspc }
+      if {$use_ndr && [info exists ::env(SPC2)] && ($cls == "clock" || $cls == "hs" || $cls == "rf")} { assign_ndr -ndr SPC2 -net $cur; incr nspc }   ;# off by default: double spacing could not enter the pin windows (TXPH, WIRE_TX)
     }
   }
   puts "NDR WIDE/HOOK $nwide nets, SPC2 $nspc nets"
 }
 # net classes
 set fp [open /run/nets.json r]; set txt [read $fp]; close $fp
-create_ndr -name WIDE -width {Metal2 3.0 Metal3 3.0 Metal4 3.0 Metal5 3.0} -spacing {Metal2 0.6 Metal3 0.6 Metal4 0.6 Metal5 0.9}
+create_ndr -name WIDE -width {Metal2 1.6 Metal3 1.6 Metal4 1.6 Metal5 1.6} -spacing {Metal2 0.6 Metal3 0.6 Metal4 0.6 Metal5 0.9}   ;# 3 um could not enter the switch VISL pins
 set hw [expr {[info exists ::env(HOOK_W)] ? $::env(HOOK_W) : 1.2}]
 create_ndr -name HOOK -width "Metal2 $hw Metal3 $hw Metal4 $hw Metal5 $hw" -spacing {Metal2 0.3 Metal3 0.3 Metal4 0.3 Metal5 0.6}
 create_ndr -name LOSH -width {Metal2 0.56 Metal3 0.56 Metal4 0.56 Metal5 0.9} -spacing {Metal2 3.0 Metal3 3.0 Metal4 3.0 Metal5 3.0}

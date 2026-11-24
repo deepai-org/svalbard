@@ -39,7 +39,8 @@ nc = json.load(open(f'{HERE}/netcounts.json'))
 SHAPE = {'tx_interlock': (139.4, 345.0), 'pt_ptrim': (190.0, 211.2), 'pt_lo_vreg': (407.4, 1081.6), 'pt_ctle': (194.0, 354.0), 'pt_wiredtx': (543.9, 152.0),
          'd2h_strip': (1312.3, 24.0), 'wtx_tcoil_rsv': (570.0, 120.0)}
 SIZES = json.load(open(os.environ['SIZES_JSON'])) if os.environ.get('SIZES_JSON') else {}
-ITEM_SIZES = json.loads(os.environ.get('ITEM_SIZES', '{}'))   # item -> [w, h] (assembly: a booking that stands for a group)   # master -> [w, h] measured on the GDS (assembly flow)
+ITEM_SIZES = json.loads(os.environ.get('ITEM_SIZES', '{}'))
+HALO_ITEMS = json.loads(os.environ.get('HALO_ITEMS', '{}'))   # assembly: per-item halo (routing room round busy blocks)   # item -> [w, h] (assembly: a booking that stands for a group)   # master -> [w, h] measured on the GDS (assembly flow)
 def shape(r, area):
     if ITEM_SIZES.get(r['item']): return tuple(ITEM_SIZES[r['item']])
     if SIZES.get(r['master']): return tuple(SIZES[r['master']])
@@ -56,7 +57,7 @@ for r in L['rows']:
         continue
     w, h = shape(r, a)
     small = a < 2500
-    blocks[n] = dict(w=w, h=h, grp=r['group'], master=m, halo=(4.0 if small else 25.0 if n.startswith(SPIRAL) else HALO),
+    blocks[n] = dict(w=w, h=h, grp=r['group'], master=m, halo=float(HALO_ITEMS.get(n, 4.0 if small else 25.0 if n.startswith(SPIRAL) else HALO)),
                      rot=True, mA=mA.get(n, 0.0), nets=nc['ctl_per_inst'].get(n, 0)+nc['direct_per_inst'].get(n, 0))
 for n in filter(None, os.environ.get('NOROT', '').split(',')):     # assembly: blocks that must stay unrotated (grid phase)
     if n in blocks: blocks[n]['rot'] = False

@@ -107,12 +107,14 @@ FIXED_DECAP = {'wired': dict(slot=(2453.0, 960.0, 2953.0, 1440.0), count=14)}
 FLOW_ADJ = {
  'rf': [('lna_ind_p', 'lna', 8, 20), ('lna_ind_n', 'lna', 8, 20), ('lna_deg_p', 'lna', 8, 20), ('lna_deg_n', 'lna', 8, 20),
         ('rxmix_i', 'lo_ext', 120, 14), ('rxmix_q', 'lo_ext', 120, 14),
-        ('dac_i', 'txmix_i', 200, 3), ('dac_q', 'txmix_q', 200, 3), ('txsum', 'txmix_i', 100, 4), ('rfdriver', 'txsum', 150, 4), ('rfdriver', 'pad_rf_tx', 150, 10), ('txmix_i', 'rfdriver', 150, 6), ('txmix_q', 'rfdriver', 150, 6),
+        ('dac_i', 'txmix_i', 200, 10), ('dac_q', 'txmix_q', 200, 10), ('dac_q', 'dac_i', 150, 6), ('txsum', 'txmix_i', 100, 4), ('rfdriver', 'txsum', 150, 4), ('rfdriver', 'pad_rf_tx', 150, 10), ('txmix_i', 'rfdriver', 150, 6), ('txmix_q', 'rfdriver', 150, 6),
         ('bbfilter_i', 'rxmix_i', 100, 5), ('bbfilter_q', 'rxmix_q', 100, 5), ('adc_i', 'bbfilter_i', 100, 5), ('adc_q', 'bbfilter_q', 100, 5),
         ('rx_ref_in', 'pad_ref', 100, 5), ('rxmix_i', 'lna', 100, 10), ('rxmix_q', 'lna', 150, 10)],
- 'wired': [('ctle', 'pad_hs_rx', 60, 30), ('slicer', 'ctle', 60, 12), ('ptrim', 'slicer', 60, 12), ('pll_cdr', 'ptrim', 80, 10),
+ 'wired': [('ctle', 'pad_hs_rx', 60, 30), ('detect', 'pad_hs_rx', 150, 8), ('detect', 'ctle', 150, 6), ('slicer', 'ctle', 60, 12), ('ptrim', 'slicer', 60, 12), ('pll_cdr', 'ptrim', 80, 10),
            ('pll_tx', 'fix_wiredtx', 150, 8), ('ptrim', 'pll_cdr', 60, 8), ('slicer', 'ptrim', 60, 8), ('ctle', 'slicer', 100, 6), ('cdr', 'pll_cdr', 100, 4),
            ('wrx_cap', 'digital', 300, 2), ('wrx_cap', 'slicer', 200, 3)]}
+# per-block halo (um) where many top-level nets meet: room for the router round the RF / LO chain (pt_rf at a 4 um default)
+HALO_ITEMS = {'rf': {n: 15.0 for n in ('lo_ext', 'bbfilter_i', 'bbfilter_q', 'rxmix_i', 'rxmix_q', 'adc_i', 'adc_q', 'lna', 'lo_mmd', 'qvco', 'lo_txbuf', 'txmix_i', 'txmix_q', 'dac_i', 'dac_q', 'clockmux', 'core_bias')}}
 FLOW_KEEPAWAY = {'rf': [('rfdriver', 'pll_tx', 300), ('rfdriver', 'pll_cdr', 300), ('txmix_i', 'pll_cdr', 300), ('txmix_q', 'pll_cdr', 300)], 'wired': []}
 # reserved slots for blocks not yet drawn, placed touching a partner (kept free of blocks; Metal1-3 blockage):
 # name -> (w, h, partner). pt_lo_txbuf (LO owner, 2026-11-23): CML-to-CMOS I/Q buffer at the TX mixers; size provisional

@@ -88,7 +88,7 @@
   ]
  ],
  "misses_and_conditions": [
-  "CDM 2 A not met (12.5 V vs 11 V): closing it needs a low-R PAD path from the bond (a parallel Metal2 strip through the ring depth: +0.44 pF per leg measured, variant t3) - a pad C vs CDM decision for the coordinator / RF TX.",
+  "CDM 2 A not met (12.5 V vs 11 V): ACCEPTED known miss (coordinator 2026-11-24; COB, controlled handling). t3 (+0.44 pF) rejected.",
   "Pad C +0.37/+0.38 pF per leg over the +0.3 pF RF limit; levers: 4 up-diodes (-47 fF, HBM/CDM 1 A margin drops), or accept.",
   "Models are the t2 lumped model + a lumped band (not a fresh mkmodel of t7); C bench (cbench) not run; no independent review.",
   "Inherited from t2: site down-diode rebuild drift note, old network generator not rerunnable."
@@ -99,5 +99,6 @@
   "checks": "scratch/pads-core/esdopt/rf/chk/t7/summary.txt",
   "netres": "scratch/pads-core/esdopt/rf/res/t7.json, spec_tx5.json",
   "variants": "scratch/pads-core/esdopt/rf/STATUS.md"
- }
+ },
+ "ruling_2026_11_24": "Coordinator: keep t7 (6 up-diodes), not t3. CDM 2 A on RF_TX is an accepted known miss (COB, controlled handling). RF TX checks its match with +0.38 pF per leg; the 4-diode fallback only on their request. Independent review of t7 with a full re-extraction requested."
 }

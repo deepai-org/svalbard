@@ -22,19 +22,15 @@ at 320 ps. Streams 1-4 are captured at phases 5, 6, 7, 0 and have 0.24-1.3 ns.
 Fix: new hop plan in `ser8d_macro.py` (first capture at phase 6 or 7, final hop 6 slots before the slice window),
 see "Hop plan" below. Not yet laid out.
 
-## RESUME HERE (state at 2026-11-22; nothing published; several agents at the weekly usage limit until Nov 24 21:00 UTC)
-- **Block:** `pt_wiredtx8` final for the table at commit 3e90f876.
-  - PH inputs gated by NAND2(PH, SER_EN); placed R0, x0 = 23.75 mod 70.
-  - Moved by assembly to x 1913.95-2658.05, y 2209.0-2610.7 (ea04a04a).
-  - Report: `s13/top/REPORT.md`. The s17 NAND benches were lost to the clean-up; results are in the 3e90f876 message and REPORT.
-- **Running / pending:**
-  - **Publishing table** (`s16/QUEUE.md`): re-extract of 3e90f876, then two runners.
-  - **Conn bind** (prepared in `s16/bind/`): term_buffer ENABLE = island_on[0]; PH waiver; FP_ALIAS steer_0..3; acceptance set; row WT50 to digital. The bind worker has edited `integration/chips/*` in the working tree, not yet committed.
-  - **100BASE-TX** (`s16/fe100/RESULT.md`, rows WT53-c / WT54): the confirmation at CT = VDD + 0.30 V (PC-71 / B54) with 1:0.88-0.90 magnetics is running. Then update WT53-c with the final combination.
-  - **Doc fold:** INTEGRATION.md + USB-INTEGRATION.md into README (DOC-4 / DOC-6) NOT started; the worker stopped at the usage limit. Phase rows for README are in the 3e90f876 notes (PH load 36.0-37.6 fF; SER_EN low while pll is off).
-  - **Assembly:** east-facing island VDD (y 318-401) and VSS (y 236-318) landings on the L's inner edge x = 598.2, then an IR rerun (in-block budget 6.6 mV) and report.json ties east_island / east. Promised to assembly; not built.
-  - **Not designed yet:** CASCODE pump + replica (limits in WT54).
-- **Rules:** commit with a pathspec (`git commit -m ... -- <paths>`). Extraction flow: `s16/net/fixcap16.py` (WT42-b).
+## RESUME HERE (2026-11-24)
+- Block `pt_wiredtx8` handed to assembly (WT57, commit 19367351 + 7cd4956f); bound in wired/chip.conn (WT50). WT53-d final.
+- Done 2026-11-24: term_buffer on always-on VDD (257c62da, WT58); pump `wtx8_casbias` starts at every corner
+  (b1c79575; extracted results `s18/tran/ext_*.json`).
+- Next, ranked: (1) put the pump in the block (PUMP=True, CB_EN + CASCODE pins; needs digital port
+  `c_wiredtx_cascode_boost`, WT58) and bind pad CASCODE to it; (2) re-run the 100BASE-TX amplitude with the extracted
+  pump level (4.12 V at ss 3.15 V vs 4.2 V in WT53-d); (3) island current still 67 / 89 mA (ss / ff, POST on) vs 56 mA:
+  wait for the power decision, else lever 2 (mux revision); (4) in-block VSS IR 3.95 mV vs 3.0 mV.
+- Rules: commit with a pathspec; scratch is gitignored (git add -f). Extraction flow: `s16/net/fixcap16.py`.
 
 ## State at 2026-11-18 07:05 UTC
 - `wtx_ser8d` rebuilt with the final hop plan (`ser8d_macro.HOPS`, docstring = timing data): 744.12 x 197.68 um

@@ -51,7 +51,10 @@ macro = {'rf': '1716:1108', 'wired': '1676:971'}[chip]      # wired: DG9-11 outl
 # island clustering (coordinator / PDS-18): every island load above 1 mA within 400 um of its switch (weight 2; the RF / HS
 # signal-flow pairs above weigh more); currents from spec/budgets/power-budget.json instance_worst_ma
 ISL_ADJ = []
+# off by default (coordinator 2026-11-24): signal-flow placement wins; island loads may sit far from their switch, the drawn
+# trunks carry them. ISL_CLUSTER=1 turns the pulls back on.
 try:
+    if os.environ.get('ISL_CLUSTER') != '1': raise KeyError('island clustering off')
     _iw = json.load(open(C.P+'/spec/budgets/power-budget.json'))['instance_worst_ma'][chip]
     _sw = {}
     for n, i in inst0.items():
@@ -64,7 +67,7 @@ try:
 except (OSError, KeyError): pass
 env = dict(os.environ, ADJ=json.dumps([[a, b, d, w] for a, b, d, w in C.FLOW_ADJ.get(chip, [])]+[[b, a, d, w] for a, b, d, w in C.FLOW_ADJ.get(chip, [])]+ISL_ADJ),
            KEEPAWAY=json.dumps(C.FLOW_KEEPAWAY.get(chip, [])), HALO_ITEMS=json.dumps(C.HALO_ITEMS.get(chip, {})), HALO=os.environ.get('HALO', {'rf': '4', 'wired': '10'}[chip]), CHIP=chip, SCEN='S', TAG='s', TRIES=os.environ.get('TRIES', '6'), PADS_JSON=RUN+'/fp_pads.json',
-           SIZES_JSON=RUN+'/fp_sizes.json', RUNDIR=RUN+'/fit', CHANNEL=os.environ.get('CHANNEL', '40'), ISLAND_W=os.environ.get('ISLAND_W', '0.3'), NOROT=','.join(list(C.STAGED.get(chip, {}))+list(C.GROUP_BOOK.get(chip, {}))+[n for n, i in inst0.items() if i['master'] in C.GRID_SNAP]), POCKET='1' if chip == 'wired' else '0', DROP=','.join(C.STALE_BOOK.get(chip, [])+list(C.FIXED_PLACE.get(chip, {}))+['isw_wired_tx']+[m for b, ms in C.GROUP_BOOK.get(chip, {}).items() for m in ms if m != b]), EXTRA_RSV=json.dumps(fixed_rects()), ITEM_SIZES=json.dumps({**{n: list(sizes[inst0[n]['master']]) for n, m_ in LEDGER_MASTER.items() if n in inst0 and inst0[n]['master'] != m_ and inst0[n]['master'] in sizes},
+           SIZES_JSON=RUN+'/fp_sizes.json', RUNDIR=RUN+'/fit', CHANNEL=os.environ.get('CHANNEL', '40'), ISLAND_W=os.environ.get('ISLAND_W', '0.3'), NOROT=','.join(C.NOROT.get(chip, [])+list(C.STAGED.get(chip, {}))+list(C.GROUP_BOOK.get(chip, {}))+[n for n, i in inst0.items() if i['master'] in C.GRID_SNAP]), POCKET='1' if chip == 'wired' else '0', DROP=','.join(C.STALE_BOOK.get(chip, [])+list(C.FIXED_PLACE.get(chip, {}))+['isw_wired_tx']+[m for b, ms in C.GROUP_BOOK.get(chip, {}).items() for m in ms if m != b]), EXTRA_RSV=json.dumps(fixed_rects()), ITEM_SIZES=json.dumps({**{n: list(sizes[inst0[n]['master']]) for n, m_ in LEDGER_MASTER.items() if n in inst0 and inst0[n]['master'] != m_ and inst0[n]['master'] in sizes},
                                    **{b: [sum(msize(m)[0] for m in ms)+4*(len(ms)-1), max(msize(m)[1] for m in ms)] for b, ms in C.GROUP_BOOK.get(chip, {}).items()}}),
            MACRO_MM2=str(round(MJ['pt_digital_macro']['w']*MJ['pt_digital_macro']['h']/1e6, 6)) if mw_ else ('2.669801' if chip == 'wired' else ''), OMP_NUM_THREADS='1', MACRO=os.environ.get('MACRO', macro))
 fit = C.ROOT+'/scratch/reviews/die-fit'

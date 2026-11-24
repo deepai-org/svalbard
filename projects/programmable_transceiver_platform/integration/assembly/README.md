@@ -92,7 +92,7 @@ instance_worst_ma (per instance, with source), else pd2_reconciliation rows.
 | lod | isw_lod | lo_mmd 34.8, lo_ext 13.7, lo_mmd_qdum 10.0, lo_obs 8.0, lo_obs_q 8.0, qvco 4.0 | 0 | 78.6 | 79 um |
 | pll | isw_pll | pll_vreg2 20.9, prescale 2.4, prescale_hf 2.4, prescale_conv 2.4, cdr 2.0 | 5 | 30.6 | 31 um |
 | rf_rx | isw_rf_rx | lna 21.4, bbfilter_i 5.3, bbfilter_q 5.3, rxmix_i 3.1, rxmix_q 3.1 | 2 | 38.4 | 38 um |
-| rf_tx | isw_rf_tx | rfdriver 24.3, lo_txbuf 10.0, txmix_i 2.0, txmix_q 2.0, txsum 2.0 | 0 | 40.4 | 40 um |
+| rf_tx | isw_rf_tx (isw_wired master) | rfdriver 24.3, lo_txbuf 19.3, txmix_i 2.0, txmix_q 2.0, txsum 2.0 | 0 | 45.6 / 56.5 | 57 um |
 
 **pt_wired**
 
@@ -104,5 +104,7 @@ instance_worst_ma (per instance, with source), else pd2_reconciliation rows.
 | wired_rx | isw_wired_rx | slicer 9.8, ctle 5.3, detect 2.4, rxselect 2.0, termination 1.6 | 6 | 22.0 | 22 um |
 | wired_tx | isw_wired_tx_a, isw_wired_tx_b | wiredtx 60.0, pad_wire_tx 21.0, usb_txdrv 20.0, term_buffer 2.0 | 10 | 103.6 | 104 um |
 
-Flags (PDS-18): pt_rf lod island ~79 mA on an 80 mA master (tight); rf_tx 42.8 mA design against the 40 mA isw_debug
-master until lo_txbuf is measured: room for an isw_rf (55 mA) footprint kept at the switch.
+Currents are PDS-19 (power owner, 2026-11-24, worst / design mA from power-budget.json pd2_reconciliation); every trunk is
+sized on the **design** figure: pt_rf rf_rx 43.6, rf_tx 56.5, lod 74.1 (keep the 79 um trunk), lo 28.1, pll 30.7, conv 18.7,
+debug 40; pt_wired wired_cap 72.9, wired_tx 131.3 (2 x isw_wired), wired_rx 30.9, pll 29.4, debug 40. Where a table row is
+lower than its PDS-19 design figure, the PDS-19 figure governs. lod and rf_tx run on isw_wired masters (CB8-16).

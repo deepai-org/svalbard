@@ -19,14 +19,14 @@ for n, g in names:
 for a, v, b in (('M1', 'V1', 'M2'), ('M2', 'V2', 'M3'), ('M3', 'V3', 'M4'), ('M4', 'V4', 'M5')):
     l2n.connect(lay[a]); l2n.connect(lay[v]); l2n.connect(lay[b]); l2n.connect(lay[a], lay[v]); l2n.connect(lay[v], lay[b])
 l2n.extract_netlist()
-nl = l2n.netlist(); nl.make_top_level_pins(); nl.purge()
+nl = l2n.netlist()      # no purge: it drops device-less nets, and probe_net then finds nothing (vdd_nets = 0)
 man = json.load(open('/run/place.json'))
 # probe points: the centres of grid strap pieces of each net (the hook slots, place.json), several per net
 lmap = {'Metal4': 'M4', 'Metal5': 'M5'}
 def nid(h):
     p = db.DPoint((h['piece'][0]+h['piece'][2])/2, (h['piece'][1]+h['piece'][3])/2)
     n = l2n.probe_net(lay[lmap[h['layer']]], p)
-    return None if n is None else (n.circuit.name, n.cluster_id)
+    return None if n is None else (n.circuit().name, n.cluster_id)
 ids = {'VDD': set(), 'VSS': set()}
 for h in man['hooks'][:400]:
     k = h['net'].split('__')[0]; v = nid(h)

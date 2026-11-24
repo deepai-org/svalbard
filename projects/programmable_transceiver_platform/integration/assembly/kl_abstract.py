@@ -193,13 +193,40 @@ def abstract(key, path, cellname, full_all, kind, want_pins):
                 if dl is None: continue
                 around = db.Box(pt.x-um(25), pt.y-um(25), pt.x+um(25), pt.y+um(25))
                 reg = db.Region(c.begin_shapes_rec_touching(dl, db.Box(pt, pt).enlarged(1, 1))).merged()
-                hit = [p for p in reg.each() if p.inside(pt) or p.bbox().contains(pt)]
+                hit = [p for p in reg.each() if p.inside(pt)]      # not bbox: a ring-shaped other-net polygon round the label became the pin (VDD/VSS joins, 2026-11-24)
                 if not hit: continue
                 for p in hit:
                     rr = db.Region(p) & db.Region(around)
                     for q in rr.each():
                         for t in q.decompose_trapezoids(1):
                             if t.bbox().width() >= 200 and t.bbox().height() >= 200: pins[name].append((ln, t.bbox()))
+    # PIN_UP masters (common): a pin labelled only on Metal1 deep in the cell also gets the cell's own Metal4/5 of the same
+    # net (traced through Via1-4 from the label), so the router lands from above instead of dropping a Via1 stack next to
+    # other-net metal (por: VDD hook shorted to its internal Metal2, VDD/VSS join, 2026-11-24)
+    if key in C.PIN_UP:
+        l2n = db.LayoutToNetlist(db.RecursiveShapeIterator(ly2, c, []))
+        lay = {}
+        for ln, d, l, v in C.METALS:
+            li = ly2.find_layer(*d); lay[ln] = l2n.make_layer(li, ln) if li is not None else l2n.make_layer(ln)
+            if v:
+                vi = ly2.find_layer(*v); lay['V'+ln] = l2n.make_layer(vi, 'V'+ln) if vi is not None else l2n.make_layer('V'+ln)
+        prev = None
+        for ln, d, l, v in C.METALS:
+            l2n.connect(lay[ln])
+            if v: l2n.connect(lay['V'+ln]); l2n.connect(lay[prev], lay['V'+ln]); l2n.connect(lay['V'+ln], lay[ln])
+            prev = ln
+        l2n.extract_netlist()
+        li1 = ly2.find_layer(*C.METALS[0][2])
+        for s in (c.shapes(li1).each() if li1 is not None else []):
+            if not s.is_text() or s.text.string not in C.PIN_UP[key]: continue
+            net = l2n.probe_net(lay['Metal1'], db.Point(s.text.trans.disp))
+            if net is None: continue
+            for up in ('Metal4', 'Metal5'):
+                reg = l2n.shapes_of_net(net, lay[up], True).merged()
+                for p in reg.each():
+                    for t in p.decompose_trapezoids(1):
+                        if t.bbox().width() >= 1000 and t.bbox().height() >= 1000: pins[s.text.string].append((up, t.bbox()))
+            if any(x[0] != 'Metal1' for x in pins[s.text.string]): pins[s.text.string] = [x for x in pins[s.text.string] if x[0] != 'Metal1']
     pins = {k: v[:40] for k, v in pins.items()}
     o = obs(c, pins, full_all)
     L = [f'MACRO {key}', '  CLASS BLOCK ;', '  ORIGIN 0 0 ;', f'  FOREIGN {key} 0 0 ;', f'  SIZE {b.width()/1000:.3f} BY {b.height()/1000:.3f} ;', '  SYMMETRY X Y R90 ;']

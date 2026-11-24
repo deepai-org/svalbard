@@ -132,6 +132,25 @@ if G.get('manifest'):
         pins = ref[master]['pins']
         if name not in bound or name in skip: unbound_inst.add(name); continue
         for p, n in zip(pins, nets): refnet[n].add((name, p))
+    # pins joined by metal inside a block by design (inductor / tank terminals: a DC path, so the black-box view sees one
+    # net): reference nets on such pins are merged before the comparison. Only joins both declared here and seen in
+    # the layout (pins_joined_inside) count.
+    DC_JOINED = {'pt_lna_deg': [('A', 'B')], 'pt_lna_ind': [('A', 'B')], 'pt_lc_qvco5': [('IN', 'IP'), ('QN', 'QP')]}
+    seen = {(b, frozenset(g)) for b, gs in res.get('pins_joined_inside', {}).items() for g in gs}
+    par = {}
+    def fnd(x):
+        while par.get(x, x) != x: x = par[x]
+        return x
+    for name, nets, master in ref[top]['x']:
+        if name not in bound or name in skip: continue
+        pn = dict(zip(ref[master]['pins'], nets))
+        for a, b2 in DC_JOINED.get(master, []):
+            if (master, frozenset((a, b2))) in seen and a in pn and b2 in pn: par[fnd(pn[a])] = fnd(pn[b2])
+    if par:
+        merged = collections.defaultdict(set)
+        for n_, mem_ in refnet.items(): merged[fnd(n_)] |= mem_
+        res['dc_joined_ref_nets'] = sorted('+'.join(sorted(n_ for n_ in refnet if fnd(n_) == r)) for r in merged if sum(fnd(n_) == r for n_ in refnet) > 1)
+        refnet = merged
     where = {}
     for nid, mem in lay_net.items():
         for x in mem: where.setdefault(x, set()).add(nid)

@@ -303,7 +303,8 @@ for net in GRID_NETS:
         rg = rg - (blkmetal[ln] if ln == 'Metal5' else blk4)
         m_ = (rg + straps[(net, ln)]).merged()
         metal[(net, ln)] = m_.sized(-um(0.6)).sized(um(0.6)).merged()     # no piece narrower than 1.2 um (M4.1 / MT.1)
-def via_fill(cell, lay, region, inset=0.5):
+GCELL = 8400        # FastRoute gcell (dbu) of the route stage
+def via_fill(cell, lay, region, inset=0.5, single=False):
     vc = ly.cell('via_'+str(lay)) or ly.create_cell('via_'+str(lay))
     if vc.shapes(lay).is_empty(): vc.shapes(lay).insert(db.Box(0, 0, 260, 260))
     n = 0
@@ -312,7 +313,11 @@ def via_fill(cell, lay, region, inset=0.5):
             # cuts on one global 620 nm lattice, so arrays of neighbouring rectangles keep the array spacing (V4.2a)
             b = t.bbox(); ox = -(-b.left//620)*620; oy = -(-b.bottom//620)*620
             nx = (b.right-260-ox)//620+1; ny = (b.top-260-oy)//620+1
-            if nx < 1 or ny < 1: continue
+            if nx < 1 or ny < 1:
+                if single and b.width() >= 260 and b.height() >= 260:       # small landing: one cut, centred, on the 5 nm grid
+                    cx = (b.left+b.right-260)//2//5*5; cy = (b.bottom+b.top-260)//2//5*5
+                    cell.insert(db.CellInstArray(vc.cell_index(), db.Trans(db.Vector(cx, cy)))); n += 1
+                continue
             cell.insert(db.CellInstArray(vc.cell_index(), db.Trans(db.Vector(ox, oy)), db.Vector(620, 0), db.Vector(0, 620), nx, ny)); n += nx*ny
     return n
 # Via4 from the grid VSS Metal5 straps onto a staged block's declared VSS Metal4 pin (ptrim r12 VSS strap, full height)
@@ -396,6 +401,7 @@ for net in GRID_NETS:
             lst.append([ln, cb, False])
     slots[net] = lst
 hook_pins = {}; man['digital_ties_not_hooked'] = 0
+dland = ly.create_cell('pt_direct_land'); top.insert(db.CellInstArray(dland.cell_index(), db.Trans()))   # direct pin landings (own cell: checks can drop it)
 k = 0
 for net in GRID_NETS:
     for n, p in nets.get(net, []):
@@ -407,11 +413,31 @@ for net in GRID_NETS:
         if not sh:
             if n in man['blocks'] or n in PADS['pads']: man['unconnectable'].append(dict(inst=n, pin=p, net=net, why='no pin shape (label) in the abstract'))
             continue
+        # pin under (or on) its own strap: land it directly (Via4 from a Metal5 strap onto a Metal4 pin, or plain overlap)
+        # instead of a hook net. Such a hook has both ends in one gcell: FastRoute gives it no guide and TritonRoute
+        # leaves it unwired (43 rf / 59 wired open hooks, 2026-11-24).
+        direct = 0; touched = False
+        for pl, pb in sh:
+            for sl_ in ('Metal4', 'Metal5'):       # the drawn grid metal (cut round blocks), not the uncut strap pieces
+                ov = db.Region(pb) & metal.get((net, sl_), db.Region())
+                for on_ in GRID_NETS:
+                    if on_ != net: ov -= metal.get((on_, sl_), db.Region()).sized(um(1))
+                if ov.is_empty(): continue
+                if sl_ == pl: touched = True
+                elif pl == 'Metal4' and sl_ == 'Metal5': direct += via_fill(dland, VIA["Via4"], ov, inset=0.1, single=True)
+        if direct or touched:
+            man.setdefault('direct_landings', []).append(dict(net=net, inst=n, pin=p, via4=direct)); continue
         c = sh[0][1].center(); best = None
         for sl in slots[net]:
             if sl[2]: continue
             b = sl[1]; d = max(b.left-c.x, c.x-b.right, 0)+max(b.bottom-c.y, c.y-b.top, 0)
-            if best is None or d < best[0]: best = (d, sl)
+            # a slot sharing a global-route gcell (8.4 um grid) with the pin gives a local net that FastRoute leaves
+            # without a guide and TritonRoute leaves unwired: such slots rank behind every other one
+            pb_ = sh[0][1]; gx = lambda v: v // GCELL
+            same = not (gx(b.right) < gx(pb_.left) or gx(pb_.right) < gx(b.left) or gx(b.top) < gx(pb_.bottom) or gx(pb_.top) < gx(b.bottom))
+            key = (same, d)
+            if best is None or key < best[0]: best = (key, sl)
+        if best is not None: best = (best[0][1], best[1])
         if best is None: man['unconnectable'].append(dict(inst=n, pin=p, net=net, why='no free strap slot')); continue
         d, sl = best; sl[2] = True; ln, cb = sl[0], sl[1]
         hn = f'HK{k}'; k += 1; hook_pins[hn] = (ln, cb, net)
@@ -492,6 +518,18 @@ blk = [(n, r, ('Metal1', 'Metal2', 'Metal3')) for n, r in list(booked.items())+l
        if n != 'd2h_strip' and not n.startswith(('chan_', 'corridor', 'pocket'))]
 e = C.IO_INNER-5; W_, H_ = C.DIE[2], C.DIE[3]; ML = tuple(n for n, *_ in C.METALS)
 for r in ((0, 0, W_, e), (0, H_-e, W_, H_), (0, 0, e, H_), (W_-e, 0, W_, H_)): blk.append(('ring_band', r, ML))
+# the provider ring's filler / rail / corner cells carry supply rails up to their inner edge, inside the 5 um access margin
+# above: those cells (no pins) are blocked on every metal out to their full extent + 0.3 um (WSMP_CK ran 0.11 um into
+# the fill10 / METAL_RAIL rails on pt_wired and joined VDD to VSS, 2026-11-24)
+_pr = ly.cell('retained_provider_ring')
+_prt = next((i.cplx_trans for i in top.each_inst() if i.cell.name == 'retained_provider_ring'), None)
+if _pr is not None and _prt is not None:
+    _rg = db.Region()
+    for _i in _pr.each_inst():
+        if any(k in _i.cell.name for k in ('fill', 'RAIL', '__cor')): _rg.insert(_i.bbox().transformed(_prt).enlarged(um(0.3), um(0.3)))
+    for _poly in _rg.merged().each():
+        for _t in _poly.decompose_trapezoids(1):
+            _b = _t.bbox(); blk.append(('ring_fill', (fu(_b.left), fu(_b.bottom), fu(_b.right), fu(_b.top)), ML))
 D.append(f'BLOCKAGES {sum(len(l) for n, r, l in blk)} ;')
 for n, r, lays in blk:
     for ln in lays: D.append(f'- LAYER {ln} RECT ( {um(r[0])} {um(r[1])} ) ( {um(r[2])} {um(r[3])} ) ;')
@@ -505,6 +543,6 @@ ly.write('/run/placed.gds')
 json.dump(man, open('/run/place.json', 'w'), indent=0)
 cnt = collections.Counter(v['cls'] for v in NETS.values())
 print(f"{CHIP}: {len(man['blocks'])} blocks ({len(man['placeholders'])} placeholder masters), {len(comps)} components, nets {dict(cnt)}, "
-      f"hooks {len(man['hooks'])}, unconnectable pins {len(man['unconnectable'])}, single-pin nets {len(man['single_pin_nets'])}")
+      f"hooks {len(man['hooks'])}, direct landings {len(man.get('direct_landings', []))}, unconnectable pins {len(man['unconnectable'])}, single-pin nets {len(man['single_pin_nets'])}")
 print('pdn', man['pdn'])
 for n in man['notes'][:20]: print(' note:', n)

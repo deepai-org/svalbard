@@ -109,18 +109,24 @@ FLOW_ADJ = {
         ('rxmix_i', 'lo_ext', 120, 14), ('rxmix_q', 'lo_ext', 120, 14),
         ('dac_i', 'txmix_i', 200, 10), ('dac_q', 'txmix_q', 200, 10), ('dac_q', 'dac_i', 150, 6), ('txsum', 'txmix_i', 100, 4), ('rfdriver', 'txsum', 150, 4), ('rfdriver', 'pad_rf_tx', 150, 10), ('txmix_i', 'rfdriver', 150, 6), ('txmix_q', 'rfdriver', 150, 6),
         ('bbfilter_i', 'rxmix_i', 100, 5), ('bbfilter_q', 'rxmix_q', 100, 5), ('adc_i', 'bbfilter_i', 100, 5), ('adc_q', 'bbfilter_q', 100, 5),
-        ('rx_ref_in', 'pad_ref', 100, 5), ('rxmix_i', 'lna', 100, 10), ('rxmix_q', 'lna', 150, 10)],
+        ('rx_ref_in', 'pad_ref', 100, 5), ('rxmix_i', 'lna', 100, 10), ('rxmix_q', 'lna', 150, 10),
+        ('isw_rf_tx_b', 'isw_rf_tx', 8, 20), ('lo_txbuf', 'txmix_i', 60, 12), ('lo_txbuf', 'txmix_q', 60, 12), ('lo_txbuf', 'lo_ext', 1200, 8)],   # LO-ASM-6: LO branch <= ~2.1 mm   # PDS-20 switch pair; lo_txbuf r3 at the TX mixers
  'wired': [('ctle', 'pad_hs_rx', 60, 30), ('detect', 'pad_hs_rx', 150, 8), ('detect', 'ctle', 150, 6), ('slicer', 'ctle', 60, 12), ('ptrim', 'slicer', 60, 12), ('pll_cdr', 'ptrim', 80, 10),
            ('pll_tx', 'fix_wiredtx', 150, 8), ('ptrim', 'pll_cdr', 60, 8), ('slicer', 'ptrim', 60, 8), ('ctle', 'slicer', 100, 6), ('cdr', 'pll_cdr', 100, 4),
-           ('wrx_cap', 'digital', 300, 2), ('wrx_cap', 'slicer', 200, 3)]}
+           ('wrx_cap', 'digital', 300, 2), ('wrx_cap', 'slicer', 200, 3),
+           ('cascode_pump', 'pad_wire_tx', 60, 20)]}   # WT59: TX_CASCODE route <= 0.3 pF
 # per-block halo (um) where many top-level nets meet: room for the router round the RF / LO chain (pt_rf at a 4 um default)
 HALO_ITEMS = {'rf': {n: 15.0 for n in ('lo_ext', 'bbfilter_i', 'bbfilter_q', 'rxmix_i', 'rxmix_q', 'adc_i', 'adc_q', 'lna', 'lo_mmd', 'qvco', 'lo_txbuf', 'txmix_i', 'txmix_q', 'dac_i', 'dac_q', 'clockmux', 'core_bias')}}
-FLOW_KEEPAWAY = {'rf': [('rfdriver', 'pll_tx', 300), ('rfdriver', 'pll_cdr', 300), ('txmix_i', 'pll_cdr', 300), ('txmix_q', 'pll_cdr', 300)], 'wired': []}
+FLOW_KEEPAWAY = {'rf': [('lo_txbuf', 'lna', 300), ('lo_txbuf', 'qvco', 200), ('rfdriver', 'pll_tx', 300), ('rfdriver', 'pll_cdr', 300), ('txmix_i', 'pll_cdr', 300), ('txmix_q', 'pll_cdr', 300)], 'wired': []}
 # reserved slots for blocks not yet drawn, placed touching a partner (kept free of blocks; Metal1-3 blockage):
 # name -> (w, h, partner). pt_lo_txbuf (LO owner, 2026-11-23): CML-to-CMOS I/Q buffer at the TX mixers; size provisional
 # routing channels kept free of blocks (die um): pt_wired: wire_tx_data / controls from the macro's south edge straight down
 # to pt_wiredtx8's top-edge pins (ASM-11a; block pins at die x ~1944-2034)
 ROUTE_CHANNELS = {'wired': {'chan_wtxdata': (1924.0, 2650.0, 2134.0, 3027.0)}}
+# masters whose supply pins are labelled only on Metal1 inside the cell: pins also on their own Metal4/5 of that net (kl_abstract)
+PIN_UP = {'por': ('vdd3v3', 'vss')}
+# blocks the packer must not rotate (none at present; pt_wrx_cap fixed south of the macro blocked the west routing, 2026-11-24)
+NOROT = {}
 # conn blocks the second pass must put touching a named partner (hard: decap gives way, else reported)
 HARD_NEXT_TO = {}
 BOOK_NEAR = {}     # pt_lo_txbuf is published (LO-ASM-4) and placed as a conn block next to the TX mixers

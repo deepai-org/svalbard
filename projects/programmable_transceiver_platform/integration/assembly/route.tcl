@@ -44,10 +44,10 @@ proc assign_classes {} {
 }
 # net classes
 set fp [open /run/nets.json r]; set txt [read $fp]; close $fp
-create_ndr -name WIDE -width {Metal2 1.6 Metal3 1.6 Metal4 1.6 Metal5 1.6} -spacing {Metal2 0.6 Metal3 0.6 Metal4 0.6 Metal5 0.9}   ;# 3 um could not enter the switch VISL pins
+create_ndr -name WIDE -width {Metal2 1.0 Metal3 1.0 Metal4 1.0 Metal5 1.0} -spacing {Metal2 0.6 Metal3 0.6 Metal4 0.6 Metal5 0.9}   ;# 3 um could not enter the switch VISL pins
 set hw [expr {[info exists ::env(HOOK_W)] ? $::env(HOOK_W) : 1.2}]
 create_ndr -name HOOK -width "Metal2 $hw Metal3 $hw Metal4 $hw Metal5 $hw" -spacing {Metal2 0.3 Metal3 0.3 Metal4 0.3 Metal5 0.6}
-create_ndr -name LOSH -width {Metal2 0.56 Metal3 0.56 Metal4 0.56 Metal5 0.9} -spacing {Metal2 3.0 Metal3 3.0 Metal4 3.0 Metal5 3.0}
+create_ndr -name LOSH -width {Metal2 0.56 Metal3 0.56 Metal4 0.56 Metal5 0.9} -spacing {Metal2 1.2 Metal3 1.2 Metal4 1.2 Metal5 1.2}
 create_ndr -name SPC2 -spacing {Metal2 0.56 Metal3 0.56 Metal4 0.56 Metal5 0.92} -width {Metal2 0.28 Metal3 0.28 Metal4 0.28 Metal5 0.44}
 set PA {-via_in_pin_bottom_layer Metal2 -via_in_pin_top_layer Metal5}
 if {[info exists ::env(PA_ONLY)]} { assign_classes; pin_access {*}$PA -verbose 0; puts "PA CLEAN"; exit }

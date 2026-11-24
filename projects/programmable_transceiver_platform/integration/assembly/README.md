@@ -65,3 +65,11 @@ VDD_WIRE_SW); grid VDD never lands on the block.
 Picked up: QVCO r8 (ASM-1) on pt_rf; staged pad cells with core-edge pins (`common.STAGED_PADS`: txpad a12, wirepad b7,
 pin-moved rf_pair / rftxpad / single_leg / hspad) on pt_wired; pt_rf reroute with them pending. `pad_refpad` not yet moved. Open: V4.2a / M4.1 / MT.1 in the grid, full precheck.
 Owner rows ASM-1..9 in `scratch/reviews/interface-changes.md`.
+
+## Known violations (current)
+
+- **Island rails** other than RAIL_wired_tx are routed nets 1.0 um wide (`route.tcl` WIDE class): far below their
+  19-75 mA design currents (spec/power-delivery.md section 2): EM and IR fail. Island strap regions (`ISLAND_STRAPS=1`
+  in `kl_place.py`) fragment on today's floorplan (loads 1.8-3.3 mm apart, straps cut by blocks' own Metal4/5);
+  decision pending on clustering loads / more switches per island.
+- LO pair: 1.2 um spacing reserved, VSS shields not drawn. Double-spacing class for clock / hs / rf nets off (pin windows).

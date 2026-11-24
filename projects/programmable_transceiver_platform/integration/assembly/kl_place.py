@@ -248,6 +248,39 @@ for (net, ln), reg in straps.items():
     reg = (reg & reach[net]) - avoid[ln] - (ring['VSS' if net == 'VDD' else 'VDD'] if net == 'VSS' else db.Region())
     keep = db.Region([p for p in reg.merged().each() if p.area() >= um(10.5)*um(20)])
     straps[(net, ln)] = keep
+# island strap regions (coordinator 2026-11-24: island rails sized for their current, not 1 um routes): inside the box round
+# an island's switch and its loads (+40 um), the grid VDD straps become that island's rail (RAIL_<island>, same width,
+# Via4 at its own crossings); the loads' rail pins and the switch VISL hook to them like VDD pins hook to the grid. Smaller
+# islands claim first; a 3 um gap separates a rail strap from the VDD straps round it. RAIL_wired_tx keeps its bar.
+ISL = sorted({n for n in nets if n.startswith('RAIL_')} - {bd['net'] for bd in bars}) if os.environ.get('ISLAND_STRAPS') == '1' else []   # experimental, off: rails fragment (see README)
+isl_box = {}
+for net in ISL:
+    mem = [man['blocks'][n]['bbox'] for n, p in nets[net] if n in man['blocks'] and man['blocks'][n]['master'] != 'decap']
+    if len(mem) < 2: continue
+    # region = each member's outline + 25 um, joined by 70 um-wide L corridors along a Manhattan minimum spanning tree of the
+    # member centres (a 70 um corridor always holds one VDD axis of the 70 um grid pitch per layer, so the rail is continuous)
+    cen = [((b[0]+b[2])/2, (b[1]+b[3])/2) for b in mem]
+    rg = db.Region([db.Box(um(b[0]-25), um(b[1]-25), um(b[2]+25), um(b[3]+25)) for b in mem])
+    done = {0}; rest = set(range(1, len(cen)))
+    while rest:
+        i_, j_ = min(((i, j) for i in done for j in rest), key=lambda e: abs(cen[e[0]][0]-cen[e[1]][0])+abs(cen[e[0]][1]-cen[e[1]][1]))
+        (x1, y1), (x2, y2) = cen[i_], cen[j_]
+        rg.insert(db.Box(um(min(x1, x2)-35), um(y1-35), um(max(x1, x2)+35), um(y1+35)))
+        rg.insert(db.Box(um(x2-35), um(min(y1, y2)-35), um(x2+35), um(max(y1, y2)+35)))
+        done.add(j_); rest.discard(j_)
+    isl_box[net] = rg.merged()
+claimed = db.Region(); man['island_straps'] = {}
+for net in sorted(isl_box, key=lambda n: isl_box[n].area()):
+    reg_ = (isl_box[net] - claimed.sized(um(3))) - (ring['VDD'] + ring['VSS']).sized(um(3))
+    claimed += reg_
+    for ln in ('Metal4', 'Metal5'):
+        piece = (straps[('VDD', ln)] & reg_).merged()
+        straps[('VDD', ln)] = (straps[('VDD', ln)] - reg_.sized(um(3))).merged()
+        straps[(net, ln)] = db.Region([p_ for p_ in piece.each() if p_.area() >= um(10.5)*um(20)])
+    bb_ = isl_box[net].bbox(); pieces_ = (straps[(net, 'Metal4')] + straps[(net, 'Metal5')]).merged().count()
+    man['island_straps'][net] = dict(box=[fu(bb_.left), fu(bb_.bottom), fu(bb_.right), fu(bb_.top)], area_mm2=round(reg_.area()/1e12, 3), pieces=pieces_,
+                                     m4_mm2=round(straps[(net, 'Metal4')].area()/1e12, 4), m5_mm2=round(straps[(net, 'Metal5')].area()/1e12, 4))
+GRID_NETS = ['VDD', 'VSS']+[n for n in man['island_straps'] if not (straps[(n, 'Metal4')].is_empty() and straps[(n, 'Metal5')].is_empty())]
 # staged blocks with declared grid ties (owner report: ties.VSS chan*): the VSS Metal5 strap in each Metal5-free channel is
 # carried onto its tab (the 2.5 um cut is closed there); grid VDD never ties to a block (its VDD is an island rail)
 man['tab_ties'] = []
@@ -263,9 +296,9 @@ for n, v in C.STAGED.get(CHIP, {}).items():
         man['tab_ties'].append(dict(inst=n, tab=tn, tied=not hit.is_empty(), at=[round(x0+t[0], 2), round(y0+t[2], 2)]))
 # the VSS ring gives way where a VDD strap crosses it on the same layer (the other layer stays continuous)
 metal = {}
-for net in ('VDD', 'VSS'):
+for net in GRID_NETS:
     for ln in ('Metal4', 'Metal5'):
-        rg = ring[net]
+        rg = ring.get(net, db.Region())
         if net == 'VSS': rg = rg - straps[('VDD', ln)].sized(um(2))
         rg = rg - (blkmetal[ln] if ln == 'Metal5' else blk4)
         m_ = (rg + straps[(net, ln)]).merged()
@@ -290,7 +323,7 @@ for n_, v_ in C.STAGED.get(CHIP, {}).items():
         land_ = pr_ & straps[('VSS', 'Metal5')]
         man.setdefault('staged_vias', {})[n_] = via_fill(pdn, VIA['Via4'], land_, inset=0.3) if not land_.is_empty() else 0
 nvia = 0
-for net in ('VDD', 'VSS'):
+for net in GRID_NETS:
     for ln in ('Metal4', 'Metal5'): pdn.shapes(LI[ln]).insert(metal[(net, ln)])
     nvia += via_fill(pdn, VIA['Via4'], metal[(net, 'Metal4')] & metal[(net, 'Metal5')])
 # supply pads: Metal2 strips at the inner edge of every dvdd / dvss cell, extended into their ring; Metal3 + Via2/Via3 there
@@ -344,7 +377,7 @@ def pin_shapes_die(n, p):
         out.append((ln, t*b))
     return out
 strap_pieces = {}
-for net in ('VDD', 'VSS'):
+for net in GRID_NETS:
     lst = []
     for ln in ('Metal4', 'Metal5'):
         for poly in straps[(net, ln)].each():
@@ -352,7 +385,7 @@ for net in ('VDD', 'VSS'):
     strap_pieces[net] = lst
 # every strap piece is cut into 20 um slots with 2 um between them; each hook takes the nearest free slot of its net
 slots = {}
-for net in ('VDD', 'VSS'):
+for net in GRID_NETS:
     lst = []
     for ln, b in strap_pieces[net]:
         if min(b.width(), b.height()) < um(5): continue          # slivers of the decomposition are no hook slots
@@ -364,8 +397,9 @@ for net in ('VDD', 'VSS'):
     slots[net] = lst
 hook_pins = {}; man['digital_ties_not_hooked'] = 0
 k = 0
-for net in ('VDD', 'VSS'):
+for net in GRID_NETS:
     for n, p in nets.get(net, []):
+        if net != 'VDD' and net != 'VSS' and man['blocks'].get(n, {}).get('master') == 'decap': continue
         if n in man['blocks'] and man['blocks'][n]['master'] == 'decap': continue
         if n == 'digital': man['digital_ties_not_hooked'] += 1; continue      # tie-offs belong inside the macro (tie cells)
         if n in PADS['pads']: continue      # pad-family supply pins land on the provider ring rails (DVDD / VSS bands), not on the grid
@@ -430,7 +464,7 @@ def cls(net):
     return 'signal'
 NETS = {}
 for net, users in nets.items():
-    if net in SUP: continue
+    if net in SUP or net in GRID_NETS: continue      # grid and island-strap nets reach their pins through hooks
     ends = []
     for n, p in users:
         if inst[n]['master'].startswith(C.PROVIDER): continue

@@ -1,7 +1,7 @@
 {
  "generated_by": "spec/budgets/power_budget.py",
  "inputs": {
-  "spec/analog-architecture.json": "4cdaae0354c71c97",
+  "spec/analog-architecture.json": "32cad7b0aec11ab0",
   "evidence/digital-hardening-evidence.json": "e31e29c0caa1f5d1",
   "evidence/host-power-allocation-screen.json": "edb8eeb4ad534cfe",
   "evidence/artix-load-power-screen.json": "953a22d507e7d6da",
@@ -1647,6 +1647,252 @@
     }
    ],
    "switch_area_mm2": 0.3033
+  }
+ },
+ "instance_worst_ma": {
+  "rf": {
+   "conv": {
+    "core_bias": {
+     "ma": 0.15,
+     "src": "calc"
+    }
+   },
+   "debug": {
+    "rx_aux_clk": {
+     "ma": 5.1,
+     "src": "ev diff_clk_rx-evidence.json"
+    },
+    "ring_osc": {
+     "ma": 0.53,
+     "src": "ev ring_osc-evidence.json"
+    },
+    "vco_replica": {
+     "ma": 11.78,
+     "src": "ev vco_replica-evidence.json VCTRL 3.3 V"
+    },
+    "core_bias": {
+     "ma": 0.1,
+     "src": "calc"
+    },
+    "bb_tap_i": {
+     "ma": 1.03,
+     "src": "ev bb_tap-evidence.json"
+    },
+    "bb_tap_q": {
+     "ma": 1.03,
+     "src": "ev bb_tap-evidence.json"
+    },
+    "clk_obs": {
+     "ma": 5.14,
+     "src": "ev clk_obs-evidence.json, each"
+    }
+   },
+   "lo": {
+    "lo_vreg": {
+     "ma": 27.5,
+     "src": "calc: qvco 25.0 ev + lo_pfdcp 1.5 est + regulator 1.0 est"
+    },
+    "core_bias": {
+     "ma": 0.1,
+     "src": "calc"
+    }
+   },
+   "lod": {
+    "lo_ext": {
+     "ma": 13.74,
+     "src": "ev scratch/lo/r4_lo11/results.json"
+    },
+    "qvco": {
+     "ma": 4.0,
+     "src": "est: VDDB pre-buffer on VDD_LOD"
+    },
+    "lo_obs": {
+     "ma": 8.03,
+     "src": "ev scratch/timing/lo_obs/results.json"
+    },
+    "lo_obs_q": {
+     "ma": 8.03,
+     "src": "ev as lo_obs"
+    }
+   },
+   "pll": {
+    "pll_vreg2": {
+     "ma": 20.9,
+     "src": "calc: 2 x 10.2 ring worst + 0.5"
+    },
+    "cdr": {
+     "ma": 2.0,
+     "src": "est pt_cdr analog (pll_misc)"
+    },
+    "prescale": {
+     "ma": 2.4,
+     "src": "ev prescale-evidence.json"
+    },
+    "prescale_hf": {
+     "ma": 2.4,
+     "src": "est = prescale"
+    },
+    "prescale_conv": {
+     "ma": 2.4,
+     "src": "est = prescale"
+    },
+    "refvcm": {
+     "ma": 0.03,
+     "src": "ev CORE-SUPPORT-CELLS.md"
+    },
+    "core_bias": {
+     "ma": 0.1,
+     "src": "calc"
+    }
+   },
+   "rf_rx": {
+    "bbfilter_i": {
+     "ma": 5.32,
+     "src": "ev bbfilter_i-evidence.json"
+    },
+    "bbfilter_q": {
+     "ma": 5.32,
+     "src": "ev bbfilter_q-evidence.json"
+    },
+    "core_bias": {
+     "ma": 0.22,
+     "src": "calc"
+    }
+   },
+   "rf_tx": {
+    "lo_txbuf": {
+     "ma": 10.0,
+     "src": "est: CML LO buffer class (lo_mmd_qdum 8-10 mA); no bench, to measure"
+    }
+   }
+  },
+  "wired": {
+   "debug": {
+    "rx_aux_clk": {
+     "ma": 5.1,
+     "src": "ev diff_clk_rx-evidence.json"
+    },
+    "rx_wtx_ext": {
+     "ma": 5.1,
+     "src": "ev diff_clk_rx-evidence.json"
+    },
+    "ring_osc": {
+     "ma": 0.53,
+     "src": "ev"
+    },
+    "vco_replica": {
+     "ma": 11.78,
+     "src": "ev"
+    },
+    "bb_tap_wmon": {
+     "ma": 1.03,
+     "src": "ev"
+    },
+    "clk_obs": {
+     "ma": 5.14,
+     "src": "ev, each"
+    },
+    "core_bias": {
+     "ma": 0.1,
+     "src": "calc"
+    }
+   },
+   "pll": {
+    "pll_vreg2": {
+     "ma": 20.9,
+     "src": "calc"
+    },
+    "cdr": {
+     "ma": 2.0,
+     "src": "est"
+    },
+    "clockmux": {
+     "ma": 1.55,
+     "src": "ev clockmux-evidence.json"
+    },
+    "prescale": {
+     "ma": 2.4,
+     "src": "ev"
+    },
+    "prescale_hf": {
+     "ma": 2.4,
+     "src": "est"
+    },
+    "refvcm": {
+     "ma": 0.03,
+     "src": "ev"
+    },
+    "core_bias": {
+     "ma": 0.1,
+     "src": "calc"
+    }
+   },
+   "wired_cap": {
+    "wordclk_rx": {
+     "ma": 2.42,
+     "src": "ev wordclk-evidence.json"
+    }
+   },
+   "wired_rx": {
+    "core_bias": {
+     "ma": 0.1,
+     "src": "calc"
+    },
+    "pad_hs_rx": {
+     "ma": 0.0,
+     "src": "calc: termination current booked under termination"
+    },
+    "wmon_sel": {
+     "ma": 0.1,
+     "src": "est"
+    }
+   },
+   "wired_tx": {
+    "pad_wire_tx": {
+     "ma": 21.0,
+     "src": "ev WT40: pad tail 16-21 mA"
+    },
+    "usb_txdrv": {
+     "ma": 20.0,
+     "src": "ev pads README 18.2 x 1.1, U mode only"
+    },
+    "pad_usb": {
+     "ma": 0.0,
+     "src": "calc: drive current booked under usb_txdrv"
+    },
+    "term_buffer": {
+     "ma": 2.0,
+     "src": "est, to measure"
+    },
+    "txpad_bias": {
+     "ma": 0.2,
+     "src": "ev CORE-SUPPORT-CELLS.md 195 uA"
+    },
+    "hsbias": {
+     "ma": 0.1,
+     "src": "calc 10 uA ref + sources"
+    },
+    "attached_tx_interlock": {
+     "ma": 0.1,
+     "src": "est"
+    },
+    "wtx_fallback_control": {
+     "ma": 0.05,
+     "src": "est"
+    },
+    "steer_4": {
+     "ma": 0.0,
+     "src": "calc: no source (WT22)"
+    },
+    "steer_5": {
+     "ma": 0.0,
+     "src": "calc"
+    },
+    "core_bias": {
+     "ma": 0.11,
+     "src": "calc"
+    }
+   }
   }
  }
 }

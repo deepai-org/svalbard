@@ -92,7 +92,7 @@ def ring_ripple(c, t, vin, am, fm, byp, vct=1.5, T=300e-9):
     d += f'VIN VIN 0 sin({vin} {am} {fm} 0)\nVB BYP 0 {3.3*byp}\nX1 VIN VR 0 BYP AO AG pt_pll_vreg\nRAO AO 0 1g\nRAG AG 0 1g\n'
     d += f'VEN en 0 pwl(0 0 2n 0 2.1n 3.3)\nIB VR ibias 10u\nVREF ref 0 0\nVCT vctrl 0 {vct}\nVN4 n4 0 0\nVN8 n8 0 0\nVHOLD hold 0 0\n'
     d += 'VN5 n5 0 0\nVN10 n10 0 0\nVFT kp0 0 0\n'  # r9 ports: N5/N10 off, CDR fast-tune idle
-    d += 'XR ref en n4 n8 hold ibias ph0 ph1 ph2 ph3 ph4 ph5 ph6 ph7 lock fbck refo vctrl n5 n10' + ' kp0' * 11 + ' VR 0 pt_pll_ring\n'
+    d += 'XR ref en n4 n8 hold ibias ph0 ph1 ph2 ph3 ph4 ph5 ph6 ph7 lock fbck refo vctrl n5 n10' + ' kp0' * 11 + ' VR VR 0 pt_pll_ring\n'
     d += ''.join(f'CP{k} ph{k} 0 20f\n' for k in range(8)) + 'CRO refo 0 20f\n.option method=gear reltol=1e-3\n'
     d += f'.tran 2p {T}\n'
     x = run('sch', n, d, 'v(ph0) v(VR)')

@@ -262,7 +262,8 @@ def main(check=False):
         'evidence_substitutions': evidence,
         'cases': out_cases, 'island_switch': island, 'supply_drop': drop, 'thermal': thermal,
     }
-    res['pd2_reconciliation'] = {c: pd2_reconcile(c, aa) for c in CHIP_CASES}   # per chip: measured-evidence reconciliation, islands, switches, ceilings
+    res['pd2_reconciliation'] = {c: pd2_reconcile(c, aa) for c in CHIP_CASES}
+    res['instance_worst_ma'] = {c: {i: {n: {'ma': v[0], 'src': v[1]} for n, v in loads.items()} for i, loads in isl.items()} for c, isl in INSTANCE_WORST_MA.items()}   # per chip: measured-evidence reconciliation, islands, switches, ceilings
     OUT.write_text(json.dumps(res, indent=1) + '\n')
     fails = [n for n, c in out_cases.items() if c['allocation_margin_ma'] < 0 and n not in ('rf_autonomous', 'rf_tx_autonomous')]
     print(json.dumps({k: {kk: c[kk] for kk in ('ceiling_ma', 'allocation_ma', 'evidence_bound_ma', 'with_digital_requirement_ma')} for k, c in out_cases.items()}, indent=1))
@@ -372,6 +373,44 @@ HOST_MEAS = {'nominal': 95.24, 'worst': 116.82, 'src': 'evidence/host-power-allo
 # pt_rf 1.053 / 1.375, pt_wired 1.299 / 1.375. Same RTL, same clocks, same density: current ~ cell count. The unscaled
 # 81.79 mA stays as the pessimistic bound ('worst_unscaled') until a per-chip power run exists.
 DIG_AREA_MM2 = {'both': 1.375, 'rf': 1.053, 'wired': 1.299}
+# Worst in-window current per conn INSTANCE on its island rail, for the assembly's rail plan (integration/assembly/README.md,
+# "Island rail plan"). ev = evidence file, est = estimate / allocation (to be measured), calc = derived from cell structure.
+# core_bias: (bank outputs + diode) x 12.14 uA x 2 per bank on that rail. pll_vreg2: both ring cores (pll_tx, pll_cdr 10.2 mA
+# each, worst) + 0.5 mA regulator bias; the ring cores themselves sit on its regulated outputs, not on RAIL_pll.
+# qvco sits on VDD_LO (lo_vreg output): the lo island load is lo_vreg = qvco 25.0 + lo_pfdcp 1.5 + regulator 1.0.
+INSTANCE_WORST_MA = {
+ 'rf': {
+  'conv': {'core_bias': (0.15, 'calc')},
+  'debug': {'rx_aux_clk': (5.10, 'ev diff_clk_rx-evidence.json'), 'ring_osc': (0.53, 'ev ring_osc-evidence.json'),
+            'vco_replica': (11.78, 'ev vco_replica-evidence.json VCTRL 3.3 V'), 'core_bias': (0.10, 'calc'),
+            'bb_tap_i': (1.03, 'ev bb_tap-evidence.json'), 'bb_tap_q': (1.03, 'ev bb_tap-evidence.json'),
+            'clk_obs': (5.14, 'ev clk_obs-evidence.json, each')},
+  'lo': {'lo_vreg': (27.5, 'calc: qvco 25.0 ev + lo_pfdcp 1.5 est + regulator 1.0 est'), 'core_bias': (0.10, 'calc')},
+  'lod': {'lo_ext': (13.74, 'ev scratch/lo/r4_lo11/results.json'), 'qvco': (4.0, 'est: VDDB pre-buffer on VDD_LOD'),
+          'lo_obs': (8.03, 'ev scratch/timing/lo_obs/results.json'), 'lo_obs_q': (8.03, 'ev as lo_obs')},
+  'pll': {'pll_vreg2': (20.9, 'calc: 2 x 10.2 ring worst + 0.5'), 'cdr': (2.0, 'est pt_cdr analog (pll_misc)'),
+          'prescale': (2.4, 'ev prescale-evidence.json'), 'prescale_hf': (2.4, 'est = prescale'),
+          'prescale_conv': (2.4, 'est = prescale'), 'refvcm': (0.03, 'ev CORE-SUPPORT-CELLS.md'), 'core_bias': (0.10, 'calc')},
+  'rf_rx': {'bbfilter_i': (5.32, 'ev bbfilter_i-evidence.json'), 'bbfilter_q': (5.32, 'ev bbfilter_q-evidence.json'),
+            'core_bias': (0.22, 'calc')},
+  'rf_tx': {'lo_txbuf': (10.0, 'est: CML LO buffer class (lo_mmd_qdum 8-10 mA); no bench, to measure')},
+ },
+ 'wired': {
+  'debug': {'rx_aux_clk': (5.10, 'ev diff_clk_rx-evidence.json'), 'rx_wtx_ext': (5.10, 'ev diff_clk_rx-evidence.json'),
+            'ring_osc': (0.53, 'ev'), 'vco_replica': (11.78, 'ev'), 'bb_tap_wmon': (1.03, 'ev'), 'clk_obs': (5.14, 'ev, each'),
+            'core_bias': (0.10, 'calc')},
+  'pll': {'pll_vreg2': (20.9, 'calc'), 'cdr': (2.0, 'est'), 'clockmux': (1.55, 'ev clockmux-evidence.json'),
+          'prescale': (2.4, 'ev'), 'prescale_hf': (2.4, 'est'), 'refvcm': (0.03, 'ev'), 'core_bias': (0.10, 'calc')},
+  'wired_cap': {'wordclk_rx': (2.42, 'ev wordclk-evidence.json')},
+  'wired_rx': {'core_bias': (0.10, 'calc'), 'pad_hs_rx': (0.0, 'calc: termination current booked under termination'),
+               'wmon_sel': (0.1, 'est')},
+  'wired_tx': {'pad_wire_tx': (21.0, 'ev WT40: pad tail 16-21 mA'), 'usb_txdrv': (20.0, 'ev pads README 18.2 x 1.1, U mode only'),
+               'pad_usb': (0.0, 'calc: drive current booked under usb_txdrv'), 'term_buffer': (2.0, 'est, to measure'),
+               'txpad_bias': (0.20, 'ev CORE-SUPPORT-CELLS.md 195 uA'), 'hsbias': (0.1, 'calc 10 uA ref + sources'),
+               'attached_tx_interlock': (0.1, 'est'), 'wtx_fallback_control': (0.05, 'est'), 'steer_4': (0.0, 'calc: no source (WT22)'),
+               'steer_5': (0.0, 'calc'), 'core_bias': (0.11, 'calc')},
+ },
+}
 CHIPS = json.loads((ROOT / 'spec/chips.json').read_text())['chips']
 CHIP_CASES = {'rf': ['RXe', 'RXa', 'TXe', 'TXa', 'DXe', 'DXa', 'stopped'], 'wired': ['W', 'U', 'T', 'stopped']}
 def dig_meas(chip):

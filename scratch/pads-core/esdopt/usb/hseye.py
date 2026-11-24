@@ -30,7 +30,7 @@ known answer +-400 mV at TP and host, inner margin 100 mV, outer 75 mV, RL > 40 
 --cal: B11 per-board amplitude calibration: the bias DAC (ideal IHSREF) is scaled so the static J level at TP is 400 mV (OP with
 HS_P on; scale x 0.4 / level, 3 passes); without it the nominal 17.78 mA / 14 reference.
 Output: bench/<tag>-hseye.json / -hsrl.json."""
-import sys, json, re, math, argparse
+import os, sys, json, re, math, argparse
 from pathlib import Path
 import numpy as np
 sys.path.insert(0, '/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/pads')
@@ -40,6 +40,7 @@ HERE = Path(__file__).resolve().parent
 SPEC = Path('/home/ubuntu/svalbard/projects/programmable_transceiver_platform/spec')
 UI = 1 / 480e6
 GATE_RAMP = 1.2e-9   # default; --gate-ramp
+TRAN_END = [None]
 T0 = 40e-9
 HS_SCALE = [1.0]   # bias DAC scale (B11 per-board amplitude calibration, --cal)
 TPL1 = dict(inner=[(0.075, 0.0), (0.375, 0.300), (0.625, 0.300), (0.925, 0.0)], outer_after=0.525, outer_other=0.475)
@@ -135,12 +136,42 @@ def dut(a, mode, vdd):
         if p == 'HS_PBIAS':
             d += 'XHSREF HS_PBIAS HS_PBIAS VDD VDD pfet_03v3 w=20u l=1u nf=1 m=1 ad=8.8p as=8.8p pd=40.88u ps=40.88u\n'
             d += f'IHSREF HS_PBIAS 0 {17.78e-3 / 14 * HS_SCALE[0]:.6g}\nCPBIAS HS_PBIAS VDD 20p\n'; continue
+        if p in ('HS_P', 'HS_N') and mode == 'eye' and a.realdrv: continue      # driven by the real pt_usb_txdrv below
         if p in ('HS_P', 'HS_N') and mode == 'eye': d += f'V{p} {p} 0 {gate_pwl(vdd, p == "HS_N")}\n'; continue
         if p in ('HS_P', 'HS_N') and mode == 'cal': d += f'V{p} {p} 0 {vdd if p == "HS_P" else 0}\n'; continue
         d += f'V{p} {p} 0 {on.get(p, 0)}\n'
     d += 'VTERM_VCM TERM_VCM 0 0\nVDVDD DVDD 0 {}\n'.format(vdd) if 'DVDD' in ports else 'VTERM_VCM TERM_VCM 0 0\n'
     d += 'Xpad ' + ' '.join(p for p in ports) + f' {cell}\n'
+    if a.realdrv and mode == 'eye': d += realdrv(a, vdd)
     return d, code
+
+
+def realdrv(a, vdd):
+    """(2026-11-24, review-b7 C1) the published extracted pt_usb_txdrv drives HS_P / HS_N, as analog/wired_tx/sim_usbdrv.py wires it:
+    HS_EN = HS_DRV = 1, FS / LS / ISLAND_OFF = 0, HS_STR = that bench's per-corner strength, HS_PBIAS shared with the pad, data on
+    CMD_P / CMD_N from 100 ps sources through 500 ohm / 20 fF (the serializer NAND output it sees), route 60 ohm / 0.15 pF per output
+    (sim_usbdrv default).  Idle before the data: CMD_N = 1 (HS_N on), as gate_pwl."""
+    sys.path.insert(0, '/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/wired_tx')
+    import sim_usbdrv as U
+    body = U.strip_lib(U.DUT_EXT.read_text()); dp = U.S.ports_of(U.DUT_EXT.read_text(), 'pt_usb_txdrv')
+    strength = U.STRENGTH.get(a.process, 1)
+    d = body + '\n'
+    for x, inv in (('P', 0), ('N', 1)):
+        d += f'VCMD{x} CMD{x}_s 0 {gate_pwl_edge(vdd, inv, 100e-12)}\nRCMD{x} CMD{x}_s CMD_{x} 500\nCCMD{x} CMD_{x} 0 20f\n'
+    m = dict(CMD_P='CMD_P', CMD_N='CMD_N', HS_EN='VDD', HS_DRV='VDD', VDD='VDD', VSS='0', HS_PBIAS='HS_PBIAS')
+    for k in (0, 1): m[f'HS_STR{k}'] = 'VDD' if (strength >> k) & 1 else '0'
+    for o in ('HS_P', 'HS_N', 'FS_HIGH_P', 'FS_HIGH_N', 'FS_LOW_P', 'FS_LOW_N'): m[o] = f'O_{o}'
+    d += 'XDRV ' + ' '.join(m.get(p, '0') for p in dp) + ' pt_usb_txdrv\n'
+    for o in ('HS_P', 'HS_N'): d += f'CRA{o} O_{o} 0 0.075p\nRR{o} O_{o} {o} 60\nCRB{o} {o} 0 0.075p\n'
+    for o in ('FS_HIGH_P', 'FS_HIGH_N', 'FS_LOW_P', 'FS_LOW_N'): d += f'RFL{o} O_{o} 0 1g\n'
+    return d
+
+
+def gate_pwl_edge(vdd, inv, edge):
+    global GATE_RAMP
+    g = GATE_RAMP; GATE_RAMP = edge
+    try: return gate_pwl(vdd, inv)
+    finally: GATE_RAMP = g
 
 
 def cross(t, v, lvl, rising=None):
@@ -195,7 +226,7 @@ def levels_edges(t, d):
 def main():
     p = argparse.ArgumentParser(); p.add_argument('mode', choices=('eye', 'rl')); p.add_argument('dut'); p.add_argument('tag')
     p.add_argument('process'); p.add_argument('temp', type=int); p.add_argument('vdd', type=float)
-    p.add_argument('--code', type=int); p.add_argument('--termjson'); p.add_argument('--bond', default='nom'); p.add_argument('--tb-mm', type=float, default=30.); p.add_argument('--gate-ramp', type=float); p.add_argument('--cal', action='store_true')
+    p.add_argument('--code', type=int); p.add_argument('--termjson'); p.add_argument('--bond', default='nom'); p.add_argument('--tb-mm', type=float, default=30.); p.add_argument('--gate-ramp', type=float); p.add_argument('--cal', action='store_true'); p.add_argument('--realdrv', action='store_true')
     a = p.parse_args()
     global GATE_RAMP
     if a.gate_ramp: GATE_RAMP = a.gate_ramp
@@ -214,8 +245,9 @@ def main():
     d = f.header() + dd + ch + f'VDD VDD 0 {a.vdd}\nVSS VSS 0 0\n'
     if a.mode == 'eye':
         stop = T0 + len(BITS) * UI + 5e-9
-        d = corner(d, a.process, a.temp) + s.control(W, name, f'tran 5p {stop * 1e9:.1f}n 0 5p', 'v(TP_P) v(TP_N) v(H_P) v(H_N) v(PAD_P) v(PAD_N)')
+        d = corner(d, a.process, a.temp) + os.environ.get('HSEYE_OPTS', '') + '\n' + s.control(W, name, f'tran 5p {stop * 1e9:.1f}n 0 5p', 'v(TP_P) v(TP_N) v(H_P) v(H_N) v(PAD_P) v(PAD_N)')
         x = np.atleast_2d(s.run(W, name, d, timeout_s=7200))
+        TRAN_END[0] = (float(x[-1, 0]), float(stop))     # (2026-11-24) completeness: simulated end vs requested stop
         t = x[:, 0]; dtp = x[:, 1] - x[:, 2]; dh = x[:, 3] - x[:, 4]
         tpl = template1(t, dtp, T0); vh, vl, ed = levels_edges(t, dtp)
         lag = 5e-9 + float(np.argmax([np.dot(np.interp(t - 5e-9 - k * 5e-12, t, dtp), dh) for k in range(200)])) * 5e-12   # cable + host delay
@@ -244,10 +276,11 @@ def main():
                  tdr_zdiff_ohm=dict(min=round(float(zt.min()), 1), max=round(float(zt.max()), 1), final=round(float(zt[-1]), 1),
                                     t_min_ns=round(float(tt[m][zt.argmin()] * 1e9), 3)))
     out = dict(mode=a.mode, dut=a.dut, model_sha256=None if a.dut in ('ideal', 'ideal30', 'ctrl') else s.sha(a.dut), corner=[a.process, a.temp, a.vdd],
-               term_code=code, hs_scale=HS_SCALE[0], cal=cal, bond=a.bond, tb_mm=a.tb_mm, gate_ramp_s=GATE_RAMP, channel=info, result=r)
+               term_code=code, hs_scale=HS_SCALE[0], cal=cal, bond=a.bond, tb_mm=a.tb_mm, tran_end_s=TRAN_END[0], complete=bool(TRAN_END[0] and TRAN_END[0][0] >= TRAN_END[0][1] * 0.999), opts=os.environ.get('HSEYE_OPTS', ''), gate_ramp_s=GATE_RAMP, realdrv=bool(a.realdrv), channel=info, result=r)
     (HERE / 'bench').mkdir(exist_ok=True)
     (HERE / 'bench' / f'{a.tag}-hs{a.mode}.json').write_text(json.dumps(out, indent=1) + '\n')
     print(json.dumps(r))
+    if os.environ.get('HSEYE_KEEP'): return
     for q in list(W.glob('*.dat')) + list(W.glob('*.spice')) + list(W.glob('*.log')): q.unlink()
 
 

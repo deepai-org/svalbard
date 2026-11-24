@@ -259,3 +259,19 @@ touched at ff / tt nominal). P-N coupling in the channel (legs uncoupled). Cable
 HS path now has the plate + via4 array), DIFF mode limits. The 70-110 ohm TDR window is from memory, not applied as a limit.
 Open for review: CDM 2 A margin 0.34 V (8 um neck + Metal1 back); pad C up to 3.45 pF accepted only on the F4 evidence; template 1 outer margin at fast edges
 (a pt_usb_txdrv strength-rule item); B11 calibration scale 1.09-1.12 must be inside the hsbias DAC range (not checked here); PC-31 item 4 unchanged.
+
+## 2026-11-24: review-b7 conditions (function items; C2 = ESD monitor, dropped under the MANDATE 1 ESD rule)
+C1 eye with the REAL extracted pt_usb_txdrv (hseye.py --realdrv: CMD_P/N 100 ps sources via 500 ohm / 20 fF, HS_EN = HS_DRV = 1,
+HS_STR per sim_usbdrv STRENGTH, 60 ohm / 0.15 pF route, --cal), template 1 at TP:
+  ff/32/3.35 typ metal: inner 30.0 mV, outer 55.9 mV, 0 bit errors, edges 858-979 ps (>= 500 PASS; ideal-ramp run had 498 ps FAIL, outer 0.6 mV), jitter 230 ps pp
+  ss/22/3.15 high metal, bond max: inner 48.6, outer 47.9, 0 errors, edges 730-880 ps PASS, level +396.8 / -391.8 mV
+  tt/27/3.3 typ: first run aborted at 298 of 343 ns (timestep too small) -> bench now records tran_end / complete; rerun with method=gear, complete: inner 87.4, outer 51.3, 0 errors, edges 638-758 ps PASS
+  (ss / ff ran before the completeness field existed; their level / edge windows all filled and decoded 0 errors, i.e. complete)
+  => C1 CLOSED: template 1 passes at tt / ss / ff with the real driver; worst outer margin 47.9 mV (ss), inner 30.0 mV (ff).
+C3 HS-path EM (bench/b7-hs-em.json; netres r_b7 paths x current; 85 C ratings 0.58 mA/cut, 2.09 mA/um as the txpad screen;
+  HS current 19.4 mA per active leg at ff cal, half into the on-die termination; the TERM_VCM pin carries it whenever HS is active):
+  bond -> termination resistor heads 0.80 static / 0.40 average: PASS.
+  TERM_VCM pin -> main termination switch: 1.97 static (narrowest 2.35 um Metal4 on the pin route) -> 0.99 if the narrowest piece
+  is per leg; the trim-unit feeds (0.8 um Metal2) 5.8 x the full-current bound, ~1.1 x with the actual split (trim 105 ohm vs main 25 ohm).
+  At the 22-32 C operating junction the 85 C ratings are conservative by ~10 x (Black, Ea 0.9 eV, n = 2): not function-breaking;
+  widening the TERM_VCM Metal4 route (2.35 -> >= 5 um) is the cheap fix if a later b8 respin happens.

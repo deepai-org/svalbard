@@ -110,9 +110,9 @@
   ]
  ],
  "misses_and_conditions": [
-  "Review C1: eye not run with the real pt_usb_txdrv edge (ff outer-template margin 0.6 mV, edges 496-498 ps < 500 ps; the 1.2 ns gate stand-in is optimistic vs the 860 ps driver).",
-  "Review C2: the non-primary-junction ESD check (E2) is vacuous (reads 0 V even in the stripped-site control).",
-  "Review C3: HS-path EM not screened (plate + via4 array).",
+  "Review C1 CLOSED 2026-11-24: eye with the real extracted pt_usb_txdrv (hseye.py --realdrv): template 1 PASS tt / ss / ff, worst inner 30.0 mV (ff), outer 47.9 mV (ss), edges 638-979 ps (>= 500), 0 bit errors (scratch/pads-core/esdopt/usb/bench/b7rd_*-hseye.json).",
+  "Review C2 (ESD monitor E2): dropped under the MANDATE 1 ESD rule (basic handling class only).",
+  "Review C3 screened 2026-11-24 (bench/b7-hs-em.json): bond -> termination 0.80 static / 0.40 avg of the 85 C rating PASS; TERM_VCM pin route narrowest 2.35 um Metal4 1.97 x the 85 C rating with HS active (~10 x margin at the 22-32 C operating junction); fix (widen to >= 5 um) at the next USB respin.",
   "Review C4: F1-F3 not independently re-read.",
   "HS amplitude uncalibrated 362 mV vs 360 mV minimum: the per-board calibration (B11) must raise the bias 9-12 % to reach 400 mV (DAC range not checked).",
   "Eye bench simplified: 143 bits, no jitter / noise, uncoupled legs, lossless cable, receptacle values estimated; template values not checked against the USB 2.0 spec text.",

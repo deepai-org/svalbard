@@ -58,12 +58,13 @@
  },
  "wrx_cap": {
   "top": "pt_wrx_cap",
-  "rev": "published r6 + DCF taps (baseline: its ports DX0..39 / WCLK40 match chip.conn and the digital macro). r7e (WSTB / DW, W7-GEAR) needs the gearbox in the digital macro first; its grid-aligned build stays staged in scratch/wired_rx/r12/capgrid",
-  "size": "1454.3 x 658.1 (published)",
-  "checks": "shuttle main 0, antenna 0, DCF.1a 0 (13 -> 0, 22 604 taps); read-back LVS unique vs the published layout netlist (= published r6 LVS reference), negative control fails",
-  "misses": "as published r6: does not receive 2.5 Gb/s with real neighbours (WR11-4 / README); Metal5 not grid-aligned (no IR failure in its region per assembly, TIM-28)",
+  "rev": "r6 rebuilt with ASM-12 pins (scratch/wired_rx/r12/r6m4: Metal4 0.8 um pins at the top edge; DX/EW/WCLK40 pitch >= 2.0 um via net_space 0.4; Metal5 labels VDD/VSS only) + DCF taps; ports identical to r6 (no conn change)",
+  "size": "1454.3 x 690.9 (r6 658.1: +32.8 um north, +0.048 mm2)",
+  "checks": "Magic DRC 0, KLayout 0, LVS unique vs the r6 schematic; shuttle main 0, antenna 0, DCF.1a 0 (29 -> 0 taps); density deck block-level only (chip fill)",
+  "misses": "as r6: q625 tt 0/200 pass; q625 ss/32/3.15 7/200 errors, identical to the published r6 on the same bench (no 2.5 Gb/s at ss)",
   "gds": "wrx_cap.gds",
-  "gds_sha256_16": "925fac856dd9e6b7"
+  "gds_sha256_16": "861e8e4db06d0be5",
+  "grid": "pins per ASM-12; trunks Metal5 as r6"
  },
  "ctle": {
   "top": "pt_ctle",

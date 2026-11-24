@@ -301,6 +301,7 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
       'strap_x0' um: x of the first strap pair (default origin + 3);
       'm5_keep' [(x0, x1)]: extra Metal5 keep-out columns (chip grid channels, ASM-8);
       'pin_metal' 4: signal ports labelled on Metal4 (Via4 from the trunk end) at the top edge instead of Metal5 (ASM-12);
+      'pin_w' um: Metal4 pin width with pin_metal 4 (default 0.4);
       'm5_bars' [(net, x0, x1)]: full-height Metal5 bars of a power net with Via4 arrays on its tracks;
       'port_antenna_um' um: antenna diode on every gate-only port net, sized for that much top-level Metal5;
       'trunk_row'  {net: row}: the net's trunk is placed at the median of its pin columns in that row (default: all rows);
@@ -715,9 +716,13 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
             # routes land below the chip grid's Metal5; power ports stay on their Metal5 straps
             L.net = prt
             L.via(xx, snap(top - 0.75), 4, 5)
+            hw = (em or {}).get('pin_w', 0.4) / 2       # pin width (assembly asks >= 0.8 um, ASM-12)
+            if hw > 0.2:
+                L.rect('metal4', xx - hw, top - 1.6, xx + hw, top - 0.5)
             L.net = None
             pm = 'metal4'
-        L.cmds += [f'box values {snap(xx - 0.2)} {snap(top - 1.0)} {snap(xx + 0.2)} {snap(top - 0.5)}',
+        hw = (em or {}).get('pin_w', 0.4) / 2 if pm == 'metal4' else 0.2
+        L.cmds += [f'box values {snap(xx - hw)} {snap(top - 1.0)} {snap(xx + hw)} {snap(top - 0.5)}',
                    f'label {prt} FreeSans 0.3 0 0 0 c {pm}', f'port make {i}']
     flat = cell
     # Hierarchical (device PCells as subcells): flattening was observed to drop

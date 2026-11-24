@@ -12,7 +12,8 @@ import capture as c
 G = Path('/home/ubuntu/svalbard/scratch/wired_rx/r12/capgrid')
 H = Path(__file__).resolve().parent
 c.FAST = G / 'fast'; c.GEN = G / 'gen'; c.SCRATCH = H / 'cap'
-OS = 6
+import os as _o
+OS = int(_o.environ.get('OS_N', 6)); FR = float(_o.environ.get('OS_F', 750e6))
 tag, corner, temp, vdd, psel = sys.argv[1], sys.argv[2], int(sys.argv[3]), float(sys.argv[4]), int(sys.argv[5])
 words = int(sys.argv[6]) if len(sys.argv) > 6 else 8
 neg = len(sys.argv) > 7 and sys.argv[7] == 'neg'     # negative control: 2-sample displacement must be reported
@@ -21,7 +22,7 @@ def prbs_os(n, seed=0x5A):
     s = _p(n // OS + 2, seed)
     return [s[m // OS] for m in range(n)]
 c.prbs = prbs_os
-r = c.run_bench(tag, 1, ext=True, f=750e6, words=words, psel=psel, corner=corner, temp=temp, vdd=vdd)
+r = c.run_bench(tag, 1, ext=True, f=FR, words=words, psel=psel, corner=corner, temp=temp, vdd=vdd)
 # own analysis on the stored waveform: words sampled at WSTB rises (what the macro registers)
 d = np.loadtxt(c.SCRATCH / 'sim' / tag / 'out.txt'); t = d[:, 0]
 wsv = d[:, 50] > vdd / 2
@@ -40,7 +41,7 @@ for i in range(1, len(stream)):
     if stream[i] != stream[i - 1]:
         runs.append(k); k = 0
 runs = runs[1:]
-out = dict(tag=tag, corner=corner, temp=temp, vdd=vdd, psel=psel, ring_MHz=750, os=OS, neg=neg, samples=len(stream), strobe_words=len(sw),
+out = dict(tag=tag, corner=corner, temp=temp, vdd=vdd, psel=psel, ring_MHz=FR / 1e6, os=OS, neg=neg, samples=len(stream), strobe_words=len(sw),
            sample_errors=best[1], unexplained_by_1sample=len(unexpl), err_slots=sorted({i % 20 for i, b in enumerate(stream) if b != bits[off + i]}),
            run_min=min(runs) if runs else None, run_max=max(runs) if runs else None,
            pass_125M=bool(len(sw) >= words - 4 and not unexpl and runs and min(runs) >= OS - 1 and max(runs) % OS in (0, 1, OS - 1)),

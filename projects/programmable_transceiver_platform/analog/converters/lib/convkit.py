@@ -386,6 +386,7 @@ def instance_view(dev, g):
     return box, pins
 
 
+PORT_DIODE_UM2 = 12.0    # ASM-16a: chip-level antenna diode per digital port (>= 3 mm Metal4, as RF ASM-16a)
 MACRO_GATE_DERATE = 0.4   # see Layout._antenna (macro-internal routing unseen at block level)
 
 
@@ -436,6 +437,7 @@ class Layout:
         self.report = {}
         self.net = None           # net of the shapes being drawn (antenna-diode planning)
         self.shapes = []          # (layer, x1, y1, x2, y2, net)
+        self.port_trunk = {}      # port net -> (x, y_lo, y_hi) of its Metal4 trunk (ASM-16a port diodes)
         self.antenna_diodes = []
 
     # -- painting helpers
@@ -841,6 +843,7 @@ class Layout:
             w = wide.get(n, self.W)
             self.net = n
             self.rect('metal4', x - w / 2, lo - 0.3, x + w / 2, hi + 0.3)
+            self.port_trunk[n] = (x, lo - 0.3, hi + 0.3)
         self.net = None
         self._antenna(acc)
         labelled = set()
@@ -931,6 +934,20 @@ class Layout:
                 ga = _lef_gate_area(d.lef).get(pin, 0.)
                 terms.append((a['x'], a['y'], a['net'], 'g' if ga > 0 else 'sd', ga * MACRO_GATE_DERATE))
         req = ad.requests_from_shapes(self.shapes, terms)
+        # ASM-16a: digital ports (on a hardened macro pin; EN) see 1-3 mm of chip-level Metal4 whose ratio the block
+        # cannot see; each gets its own PORT_DIODE_UM2 diode on its port trunk, whether or not the block-level check
+        # asked for one (the deck counts a weak macro driver's diffusion only by its area).
+        mpins = {v for row in self.rows for u in row['units'] if isinstance(u['dev'], Macro) for v in u['pins'].values()}
+        for n in self.c.ports:
+            if n in mpins and n not in ('VDD', 'VSS') and n in self.port_trunk:
+                x, lo, hi = self.port_trunk[n]
+                segs = [('metal4', x, lo, x, hi)]
+                for l, x1, y1, x2, y2, nn in self.shapes:     # fallback landings: the net's other M4 / M3 wires
+                    if nn == n and l in ('metal4', 'metal3'):
+                        segs.append((l, x1, (y1 + y2) / 2, x2, (y1 + y2) / 2) if x2 - x1 >= y2 - y1 else
+                                    (l, (x1 + x2) / 2, y1, (x1 + x2) / 2, y2))
+                segs.sort(key=lambda g: -int(g[0][-1]))
+                req.append(dict(net=n, area=PORT_DIODE_UM2, segs=segs))
         cmds, self.antenna_diodes = ad.plan(req, [s[:5] for s in self.shapes], keep, taps=taps)
         self.cmds += cmds
         self.report['antenna_diodes'] = self.antenna_diodes

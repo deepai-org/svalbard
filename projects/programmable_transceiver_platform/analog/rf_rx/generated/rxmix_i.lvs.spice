@@ -170,6 +170,7 @@ X164 XX7_tail vbpf XX7_ts VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20
 X165 XX7_os enb VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X166 VDD enb XX7_ts VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X167 XX6_idac ofs3 XX6_m3 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+D0 VSS island_off diode_nd2ps_03v3 pj=13.88u area=12.0409p
 X168 XX7_ts2 enb VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X169 ibias enb VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
 X170 XX8_d1 x_n XX8_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
@@ -191,6 +192,7 @@ X185 XX7_d1 x_p XX7_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u
 X186 VDD enb XX8_os VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X187 VDD enb XX8_ts2 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X188 VDD enb XX8_ts VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+D1 VSS ofs_sign diode_nd2ps_03v3 pj=13.88u area=12.0409p
 X189 XX7_d2 atb_vcm XX7_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X190 XX8_ts3 hibb XX8_ts2 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X191 XX8_d2 atb_vcm XX8_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
@@ -295,9 +297,9 @@ X289 XX8_d2 atb_vcm XX8_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w
 X290 XX8_tail x_n XX8_d1 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X291 VDD enb XX8_ts2 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X292 XX8_ts enb VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
-X293 VSS XX6_nd XX6_m4 VSS nfet_03v3 ad=1.04p pd=4.52u as=1.04p ps=4.52u w=4u l=3.13u
-X294 XX7_d2 atb_vcm XX7_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X295 XX7_ts3 hibb XX7_ts2 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X293 XX7_ts3 hibb XX7_ts2 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X294 VSS XX6_nd XX6_m4 VSS nfet_03v3 ad=1.04p pd=4.52u as=1.04p ps=4.52u w=4u l=3.13u
+X295 XX7_d2 atb_vcm XX7_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X296 XX8_d2 atb_vcm XX8_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X297 XX7_d2 atb_vcm XX7_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X298 XX7_tail x_p XX7_d1 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
@@ -454,6 +456,7 @@ X448 VDD enb XX7_ts2 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28
 X449 VDD enb XX7_os VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X450 XX8_tail x_n XX8_d1 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X451 XX7_ts2 hibb XX7_ts3 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+D2 VSS ofs0 diode_nd2ps_03v3 pj=13.88u area=12.0409p
 X452 XX7_ts enb VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X453 XX7_d2 atb_vcm XX7_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X454 XX8_tail x_n XX8_d1 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
@@ -492,6 +495,7 @@ X486 XX7_ts2 enb VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28
 X487 XX6_m2 XX6_nd VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=3.13u
 X488 XX8_d1 x_n XX8_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X489 XX7_ts2 hibb XX7_ts3 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+D3 VSS ofs1 diode_nd2ps_03v3 pj=13.88u area=12.0409p
 X490 XX4_r1_s1 XX4_r1_s2 VSS ppolyf_u_1k r_width=1u r_length=16.67u
 X491 r1_s1 r1_s2 VSS ppolyf_u_1k r_width=1u r_length=20u
 X492 XX8_ts2 hibb XX8_ts3 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
@@ -542,10 +546,10 @@ X536 XX8_d2 atb_vcm XX8_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w
 X537 XX8_d1 x_n XX8_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X538 x_p bb_n VSS ppolyf_u_1k r_width=1u r_length=11.6u
 X539 XX8_ts enb VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
-X540 XX6_m3 XX6_nd VSS VSS nfet_03v3 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=3.13u
-X541 XX7_tail atb_vcm XX7_d2 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X542 XX7_d2 atb_vcm XX7_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X543 XX7_ts3 hibb XX7_ts2 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X540 XX7_ts3 hibb XX7_ts2 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X541 XX6_m3 XX6_nd VSS VSS nfet_03v3 ad=1.04p pd=4.52u as=1.76p ps=8.88u w=4u l=3.13u
+X542 XX7_tail atb_vcm XX7_d2 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+X543 XX7_d2 atb_vcm XX7_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X544 XX8_d2 atb_vcm XX8_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X545 XX8_tail x_n XX8_d1 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X546 XX7_os vbpf bb_n VDD pfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=1u
@@ -601,8 +605,8 @@ X595 XX8_os vbpf bb_p VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=1u
 X596 XX8_ts3 hibb XX8_ts2 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X597 XX6_idac ofs1 XX6_m1 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
 X598 XX8_ts enb VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
-X599 XX7_tail x_p XX7_d1 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X600 XX7_ts3 hibb XX7_ts2 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X599 XX7_ts3 hibb XX7_ts2 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X600 XX7_tail x_p XX7_d1 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X601 XX8_d2 atb_vcm XX8_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X602 XX8_tail x_n XX8_d1 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X603 XX8_tail x_n XX8_d1 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
@@ -743,6 +747,7 @@ X737 XX7_tail atb_vcm XX7_d2 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w
 X738 XX8_tail vbpf XX8_ts3 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X739 XX8_tail atb_vcm XX8_d2 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X740 XX8_d1 x_n XX8_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+D4 VSS en diode_nd2ps_03v3 pj=13.88u area=12.0409p
 X741 XX8_tail x_n XX8_d1 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X742 VDD enb XX8_ts2 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X743 VDD enb XX7_ts VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
@@ -811,6 +816,7 @@ X805 VDD enb XX8_ts2 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28
 X806 XX8_tail x_n XX8_d1 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X807 VDD enb XX8_ts VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X808 XX7_ts2 enb VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+D5 VSS ofs2 diode_nd2ps_03v3 pj=13.88u area=12.0409p
 X809 XX7_tail x_p XX7_d1 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X810 XX7_ts enb VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X811 XX7_d2 atb_vcm XX7_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
@@ -839,8 +845,8 @@ X833 XX8_ts3 hibb XX8_ts2 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l
 X834 XX7_ts vbpf XX7_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X835 XX7_d1 x_p XX7_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X836 XX7_tail atb_vcm XX7_d2 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X837 XX7_tail x_p XX7_d1 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
-X838 XX7_ts3 hibb XX7_ts2 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X837 XX7_ts3 hibb XX7_ts2 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X838 XX7_tail x_p XX7_d1 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X839 VDD enb XX8_ts2 VDD pfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
 X840 XX7_tail x_p XX7_d1 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X841 XX8_ts3 hibb XX8_ts2 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
@@ -916,6 +922,7 @@ X910 XX8_ts enb VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X911 x_n lo_n rf_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X912 rf_n lo_n x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X913 XX7_tail atb_vcm XX7_d2 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+D6 VSS ofs3 diode_nd2ps_03v3 pj=13.88u area=12.0409p
 X914 XX7_ts enb VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X915 XX7_tail atb_vcm XX7_d2 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X916 XX8_ts2 enb VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
@@ -946,6 +953,7 @@ X940 XX7_tail x_p XX7_d1 VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u
 X941 XX7_d2 atb_vcm XX7_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X942 XX8_ts2 hibb XX8_ts3 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X943 XX7_ts3 vbpf XX7_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
+D7 VSS ofs4 diode_nd2ps_03v3 pj=13.88u area=12.0409p
 X944 VDD enb XX8_ts VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X945 XX7_d2 atb_vcm XX7_tail VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=1u
 X946 XX7_ts2 hibb XX7_ts3 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
@@ -988,5 +996,6 @@ X982 XX7_tail vbpf XX7_ts VDD pfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20
 X983 XX8_ts2 hibb XX8_ts3 VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X984 XX7_ts enb VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X985 XX7_ts2 hibb XX7_ts3 VDD pfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+D8 VSS hib diode_nd2ps_03v3 pj=13.88u area=12.0409p
 .ends
 

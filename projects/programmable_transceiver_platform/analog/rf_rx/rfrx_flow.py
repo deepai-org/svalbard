@@ -347,6 +347,39 @@ class Painter:
         self.rect(layer, min(x1, x2) - h, min(y1, y2) - h, max(x1, x2) + h, max(y1, y2) + h)
 
 
+PORT_DIODE = 12.0     # ASM-16: um^2 on every gate-only control port of a top cell (>= 3 mm of chip Metal4)
+ANALOG_PREFIX = ('rf', 'lo', 'bb', 'tank', 'src', 'tail', 'vtk', 'atb', 'ib', 'in', 'out', 'inj', 'obs_n', 'obs_p', 'pad', 'rx_in',
+                 'tx_in', 'rx_direct', 'x_', 'VDD', 'VSS')
+
+
+def port_diode_requests(req, ports, terminals, shapes):
+    """Add (or enlarge to PORT_DIODE) a diode request for every gate-only, non-analog port, landing on its own
+    Metal3-5 wiring.  terminals: (x, y, net, kind, area); shapes: (layer, x1, y1, x2, y2, net)."""
+    kinds = {}
+    for t in terminals:
+        kinds.setdefault(t[2], set()).add(t[3])
+    out = []
+    for n in ports:
+        if n.startswith(ANALOG_PREFIX) or kinds.get(n, set()) != {'g'}:
+            continue
+        hit = [r for r in req if r['net'] == n]
+        if hit:
+            for r in hit:
+                r['area'] = max(r['area'], PORT_DIODE)
+            out.append(n)
+            continue
+        segs = []
+        for s_ in shapes:
+            if s_[5] == n and s_[0] in ('metal5', 'metal4', 'metal3'):
+                x1, y1, x2, y2 = s_[1:5]
+                segs.append((s_[0], x1, (y1 + y2) / 2, x2, (y1 + y2) / 2) if x2 - x1 >= y2 - y1 else
+                            (s_[0], (x1 + x2) / 2, y1, (x1 + x2) / 2, y2))
+        if segs:
+            req.append(dict(net=n, level=5, area=PORT_DIODE, segs=sorted(segs, key=lambda q: -int(q[0][-1]))))
+            out.append(n)
+    return out
+
+
 def _snap(v, g=.01):
     return round(round(v / g) * g, 3)
 
@@ -600,6 +633,8 @@ def layout_subckt(sub, work, geoms, macros, *, row_width=None, top=False):
     # antenna diodes (KLayout ANT.16): gate-only partial nets with long M2-M5 get an N+/Psub diode
     # under their own M3-M5 wire; reported as 'antenna_diodes' for the LVS reference.
     req = ad.requests_from_shapes(p.shapes, terminals)
+    if is_top:
+        port_diode_requests(req, sub.ports, terminals, p.shapes)
     dcmds, diodes = ad.plan(req, [s[:5] for s in p.shapes], keepouts, taps=taps)
     p.cmds += dcmds
     if is_top:

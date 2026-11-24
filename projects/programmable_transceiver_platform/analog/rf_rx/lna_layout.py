@@ -387,6 +387,7 @@ class Lay:
                 p.wire('metal3', xo + tx, ylo, xo + tx, max(yhi, ylo + 1.), width=tw)
         p.net = None
         req = ad.requests_from_shapes(p.shapes, terminals)
+        F.port_diode_requests(req, self.ports, terminals, p.shapes)
         dcmds, diodes = ad.plan(req, [s[:5] for s in p.shapes], keepouts, taps=taps)
         p.cmds += dcmds
         # Top-cell pins (assembly 2026-11-24, same rule as rfrx_flow): >= 2 um pitch, >= 0.8 um wide, on the bottom edge.

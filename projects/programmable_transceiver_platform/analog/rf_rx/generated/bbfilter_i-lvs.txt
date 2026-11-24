@@ -380,8 +380,8 @@ pt_bbf_tta (1)                             |pt_bbf_tta (1)
 pt_bbf_ttb (2)                             |pt_bbf_ttb (2)                             
 pt_bbf_ttq (1)                             |pt_bbf_ttq (1)                             
 pt_bbf_ctl (1)                             |pt_bbf_ctl (1)                             
-diode_nd2ps_03v3 (14)                      |diode_nd2ps_03v3 (14)                      
-Number of devices: 20                      |Number of devices: 20                      
+diode_nd2ps_03v3 (34)                      |diode_nd2ps_03v3 (34)                      
+Number of devices: 40                      |Number of devices: 40                      
 Number of nets: 78                         |Number of nets: 78                         
 ---------------------------------------------------------------------------------------
 Netlists match uniquely.
@@ -389,19 +389,7 @@ Netlists match uniquely.
 Subcircuit pins:
 Circuit 1: pt_bbfilter_i                   |Circuit 2: pt_bbfilter_i                   
 -------------------------------------------|-------------------------------------------
-qt0                                        |qt0                                        
-qt1                                        |qt1                                        
-qt2                                        |qt2                                        
-qt3                                        |qt3                                        
-VSS                                        |VSS                                        
-dcf_sign                                   |dcf_sign                                   
-en                                         |en                                         
-dir_tx                                     |dir_tx                                     
 rx_direct                                  |rx_direct                                  
-byp_s1                                     |byp_s1                                     
-byp_s23                                    |byp_s23                                    
-obs_sel0                                   |obs_sel0                                   
-obs_sel1                                   |obs_sel1                                   
 inj                                        |inj                                        
 ibias                                      |ibias                                      
 rx_in_p                                    |rx_in_p                                    
@@ -409,32 +397,36 @@ tx_in_p                                    |tx_in_p
 out_rx_p                                   |out_rx_p                                   
 out_tx_p                                   |out_tx_p                                   
 obs_p                                      |obs_p                                      
-island_off                                 |island_off                                 
 rx_in_n                                    |rx_in_n                                    
 tx_in_n                                    |tx_in_n                                    
 out_rx_n                                   |out_rx_n                                   
 out_tx_n                                   |out_tx_n                                   
 obs_n                                      |obs_n                                      
+qt0                                        |qt0                                        
+qt1                                        |qt1                                        
+qt2                                        |qt2                                        
+qt3                                        |qt3                                        
+VSS                                        |VSS                                        
 bw0                                        |bw0                                        
+atb_vcm                                    |atb_vcm                                    
+atb_vbp                                    |atb_vbp                                    
 bw1                                        |bw1                                        
 bw2                                        |bw2                                        
 bw3                                        |bw3                                        
 fc_fine0                                   |fc_fine0                                   
 fc_fine1                                   |fc_fine1                                   
 fc_fine2                                   |fc_fine2                                   
-atb_vcm                                    |atb_vcm                                    
-atb_vbp                                    |atb_vbp                                    
 VDD                                        |VDD                                        
-gainc0                                     |gainc0                                     
-gainc1                                     |gainc1                                     
-inj_p                                      |inj_p                                      
-inj_n                                      |inj_n                                      
 gain0                                      |gain0                                      
 gain1                                      |gain1                                      
 gain2                                      |gain2                                      
 gain3                                      |gain3                                      
 gain4                                      |gain4                                      
 gain5                                      |gain5                                      
+gainc0                                     |gainc0                                     
+gainc1                                     |gainc1                                     
+inj_p                                      |inj_p                                      
+inj_n                                      |inj_n                                      
 dcf0                                       |dcf0                                       
 dcf1                                       |dcf1                                       
 dcf2                                       |dcf2                                       
@@ -443,6 +435,14 @@ dcf4                                       |dcf4
 dcf5                                       |dcf5                                       
 dcf6                                       |dcf6                                       
 dcf7                                       |dcf7                                       
+dcf_sign                                   |dcf_sign                                   
+en                                         |en                                         
+dir_tx                                     |dir_tx                                     
+byp_s1                                     |byp_s1                                     
+byp_s23                                    |byp_s23                                    
+obs_sel0                                   |obs_sel0                                   
+obs_sel1                                   |obs_sel1                                   
+island_off                                 |island_off                                 
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes pt_bbfilter_i and pt_bbfilter_i are equivalent.

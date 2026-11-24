@@ -12,6 +12,7 @@ X5 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=1.18747n ps=4.79672m w=19.98
 X6 x2c_n ct2 x2c_p VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
 X7 tank_n cgk4 x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X8 x_p cgd5 vtk VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+D0 VSS ct1 diode_nd2ps_03v3 pj=13.88u area=12.0409p
 X9 x_n cgk3 tank_n VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
 X10 src_n gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X11 src_n gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
@@ -148,6 +149,7 @@ X141 VDD VSS vtk VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X142 x_p cgk3 tank_p VSS nfet_03v3 ad=2.0636p pd=10.26u as=1.2194p ps=5.21u w=4.69u l=0.28u
 X143 tank_p cgk5 x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X144 tailx vtc tail VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+D1 VSS att0 diode_nd2ps_03v3 pj=13.88u area=12.0409p
 X145 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
 X146 x3c_n ct3 x3c_p VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
 X147 vtk cgd5 x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
@@ -160,6 +162,7 @@ X153 se_x se VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X154 x_p gi_p src_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X155 x2c_n ct2 x2c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X156 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+D2 VSS rt diode_nd2ps_03v3 pj=13.88u area=12.0409p
 X157 VSS vtg tailx VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
 X158 tailx vtc tail VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
 X159 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
@@ -174,7 +177,6 @@ X167 cgd5 gain_lo_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l
 X168 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
 X169 x1c_n ct1 x1c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X170 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
-D0 VSS att1 diode_nd2ps_03v3 pj=2.52u area=0.3969p
 X171 src_n gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X172 vtk VSS VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X173 enb en VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
@@ -193,6 +195,7 @@ X185 VSS vtk VSS VSS nfet_06v0 ad=8.7912p pd=40.84u as=0 ps=0 w=19.98u l=2u
 X186 VSS se se_x VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X187 x0c_p ct0 x0c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X188 tailx vtg VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+D3 VSS en diode_nd2ps_03v3 pj=13.88u area=12.0409p
 X189 x_n gi_n src_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X190 x_p cgk3 tank_p VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
 X191 tank_p cgk5 x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
@@ -206,6 +209,7 @@ X198 vtk cgd5 x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X199 vtc pb VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.5u
 X200 g_p rf_in_p cap_mim_2f0_m4m5_noshield c_width=47u c_length=47u
 X201 tail vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+D4 VSS ct0 diode_nd2ps_03v3 pj=13.88u area=12.0409p
 X202 tank_p cgk2 x_p VSS nfet_03v3 ad=1.2194p pd=5.21u as=2.0636p ps=10.26u w=4.69u l=0.28u
 X203 src_p gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X204 cgd1 att1_b vcas VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
@@ -303,6 +307,7 @@ X295 vgr enb VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
 X296 ct2_b ct2 VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
 X297 tank_n cgk4 x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X298 x_p cgd5 vtk VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+D5 VSS att1 diode_nd2ps_03v3 pj=13.88u area=12.0409p
 X299 tailx vtg VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
 X300 src_n gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X301 x_p cgd4 vtk VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
@@ -353,6 +358,7 @@ X345 VDD VSS vtk VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X346 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X347 rf_out_p r15_s1 VSS ppolyf_u_1k r_width=1u r_length=10u
 X348 x_n gi_n src_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+D6 VSS ct3 diode_nd2ps_03v3 pj=13.88u area=12.0409p
 X349 VSS atb_nbias pb VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.5u
 X350 VDD VSS vtk VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X351 tank_n x2c_n cap_mim_2f0_m4m5_noshield c_width=10u c_length=10u
@@ -485,7 +491,6 @@ X477 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
 X478 rf_outq_p r16_s1 VSS ppolyf_u_1k r_width=1u r_length=10u
 X479 tailx vtg VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
 X480 tailx vtg VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
-D1 VSS att3 diode_nd2ps_03v3 pj=3.08u area=0.5929p
 X481 x_n gi_n src_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X482 VDD VSS vtk VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X483 VDD VSS vtk VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
@@ -507,7 +512,6 @@ X498 VSS vtg tailx VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
 X499 tailx vtc tail VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
 X500 vtk cgd2 x_n VSS nfet_03v3 ad=1.2194p pd=5.21u as=2.0636p ps=10.26u w=4.69u l=0.28u
 X501 tailx vtg VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
-D2 VSS gain_lo diode_nd2ps_03v3 pj=3u area=0.5625p
 X502 x_p gi_p src_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X503 x_p cgd5 vtk VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X504 src_n gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
@@ -542,6 +546,7 @@ X532 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
 X533 x_n cgd2 vtk VSS nfet_03v3 ad=2.0636p pd=10.26u as=1.2194p ps=5.21u w=4.69u l=0.28u
 X534 x_p cgk4 tank_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X535 tailx vtc tail VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+D7 VSS att2 diode_nd2ps_03v3 pj=13.88u area=12.0409p
 X536 src_p gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X537 x2c_p ct2 x2c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X538 vtk cgd5 x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
@@ -730,6 +735,7 @@ X720 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
 X721 src_n gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X722 vtk cgd3 x_p VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
 X723 vtk cgd4 x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+D8 VSS se diode_nd2ps_03v3 pj=13.88u area=12.0409p
 X724 vtk VSS VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X725 tail vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
 X726 x_p cgk1 tank_p VSS nfet_03v3 ad=2.0636p pd=10.26u as=1.2194p ps=5.21u w=4.69u l=0.28u
@@ -880,7 +886,6 @@ X870 tank_p atb_vdcm VSS ppolyf_u_1k r_width=1u r_length=10u
 X871 g_p rt_p VSS ppolyf_u_1k r_width=2u r_length=3u
 X872 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
 X873 r11_s2 r11_s3 VSS ppolyf_u_1k r_width=1u r_length=10u
-D3 VSS att0 diode_nd2ps_03v3 pj=2.6u area=0.4225p
 X874 x_n gi_n src_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X875 VDD VSS vtk VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X876 tank_p cgk5 x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
@@ -955,6 +960,7 @@ X944 rf_in_n se_x cap_mim_2f0_m4m5_noshield c_width=11.6u c_length=11.6u
 X945 tail vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
 X946 vtk cgd3 x_n VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
 X947 tailx vtg VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+D9 VSS gain_lo diode_nd2ps_03v3 pj=13.88u area=12.0409p
 X948 tank_n cgk5 x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X949 r4_s5 vg VSS ppolyf_u_1k r_width=1u r_length=10u
 X950 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
@@ -979,6 +985,7 @@ X968 VSS vtg tailx VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
 X969 x_p cgk3 tank_p VSS nfet_03v3 ad=1.2194p pd=5.21u as=1.2194p ps=5.21u w=4.69u l=0.28u
 X970 vgr r4_s1 VSS ppolyf_u_1k r_width=1u r_length=10u
 X971 VDD VSS vtk VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+D10 VSS island_off diode_nd2ps_03v3 pj=13.88u area=12.0409p
 X972 tank_p cgk5 x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X973 tailx vtc tail VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
 X974 ct3_b ct3 VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
@@ -996,6 +1003,7 @@ X985 r11_s4 r11_s5 VSS ppolyf_u_1k r_width=1u r_length=10u
 X986 se_x se VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X987 x_p gi_p src_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X988 tail vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+D11 VSS att4 diode_nd2ps_03v3 pj=13.88u area=12.0409p
 X989 x3c_n ct3 x3c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X990 tailx vtc tail VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
 X991 tank_n cgk2 x_n VSS nfet_03v3 ad=1.2194p pd=5.21u as=2.0636p ps=10.26u w=4.69u l=0.28u
@@ -1007,6 +1015,7 @@ X996 vtk cgd5 x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X997 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
 X998 src_n gi_n x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X999 tail vtc tailx VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
+D12 VSS byp diode_nd2ps_03v3 pj=13.88u area=12.0409p
 X1000 vtk VSS VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X1001 tank_n cgk5 x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X1002 vtk cgd5 x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
@@ -1037,7 +1046,6 @@ X1026 tailx vtc tail VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=
 X1027 x_n cgk4 tank_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X1028 VSS vtg tailx VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
 X1029 tailx vtg VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
-D4 VSS att2 diode_nd2ps_03v3 pj=3.08u area=0.5929p
 X1030 bpc_n byp rf_outq_n VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
 X1031 x2c_n ct2 x2c_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X1032 x_p cgd5 vtk VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
@@ -1072,11 +1080,12 @@ X1060 src_n gi_n x_n VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.2
 X1061 tailx vtc tail VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
 X1062 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
 X1063 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
-X1064 vtk VSS VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
-X1065 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X1064 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
+X1065 vtk VSS VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X1066 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
 X1067 VSS se se_x VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X1068 src_p gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+D13 VSS att3 diode_nd2ps_03v3 pj=13.88u area=12.0409p
 X1069 tank_n cgk5 x_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X1070 x3c_p ct3 x3c_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
 X1071 vtk VSS VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
@@ -1096,6 +1105,7 @@ X1084 cgd4 att4_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0
 X1085 tank_n x1c_n cap_mim_2f0_m4m5_noshield c_width=7.1u c_length=7.1u
 X1086 tank_n cgk0 x_n VSS nfet_03v3 ad=2.0636p pd=10.26u as=2.0636p ps=10.26u w=4.69u l=0.28u
 X1087 VSS vtk VSS VSS nfet_06v0 ad=5.1948p pd=20.5u as=0 ps=0 w=19.98u l=2u
+D14 VSS ct2 diode_nd2ps_03v3 pj=13.88u area=12.0409p
 X1088 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
 X1089 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
 X1090 tailx vtc tail VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
@@ -1113,7 +1123,6 @@ X1101 src_p gi_p x_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28
 X1102 tailx vtc tail VSS nfet_03v3 ad=0.65p pd=3.02u as=0.65p ps=3.02u w=2.5u l=0.28u
 X1103 bpc_p VDD VDD VDD pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
 X1104 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u
-D5 VSS att4 diode_nd2ps_03v3 pj=3.08u area=0.5929p
 X1105 VSS vg VSS VSS nfet_03v3 ad=2.6p pd=10.52u as=0 ps=0 w=10u l=3u
 X1106 VDD pb vtc VDD pfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.5u
 X1107 VSS vtk VSS VSS nfet_06v0 ad=5.2p pd=20.52u as=0 ps=0 w=20u l=2u

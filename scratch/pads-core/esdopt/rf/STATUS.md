@@ -43,3 +43,19 @@ Not judged here: the LNA / BB / WTX_EXT consumers' own inputs (not in the pad ce
 - r3 = r2 + `n_dn_left` 1 (4 dn + 4 up per leg): all layout checks PASS, GDS sent to the coordinator 2026-11-22 (baseline).
 - s2 (single_leg, 4 dn + 4 up) and t2 (rftxpad, 4 dn, no up row, no DVDD) both pass every layout check and were sent to the coordinator 2026-11-22. t1 / s1 (3 dn) superseded.
 - r3 / s2 / t2 are STAGED for assembly: do not delete or overwrite b/r3.gds, b/s2.gds, b/t2.gds until each family is published.
+
+## rftxpad positive-zap fix: diagnosis (2026-11-24, before any layout)
+Published t2 (high metal, bound ring, 1 nF site decap): P+VSS HBM 1 kV pad 13.9 V, CDM 2 A 18.1 V; the 4 site down-diodes
+avalanche at 9.15 mA/um (CDM 2 A, 474 mA each, `esd/cur_t2_cdm2.json`) and 5.95 mA/um (HBM 2 kV) against the 1 mA/um
+limit: a real 6-9x miss, not a model artefact. The positive path through the shell's core network is resistive in three
+places (lumped model: bond -> core diodes 62 ohm, core diodes -> ESD_RAIL 34 ohm, network VSS -> VSS 51 ohm).
+What-ifs on the model (`wi/`, P+VSS, pad / site reverse):
+  a published 13.9 / 18.1 V; b core 2 ohm 13.7 / 17.9; c ESD_RAIL 1 ohm 13.8 / 18.1; f VSS 0.5 ohm 13.8 / 18.0;
+  e core 1 + rail 0.5 13.5 / 17.5; g core 1 + rail 0.5 + VSS 0.5: HBM 1 kV 5.8 V (pass), CDM 2 A 12.8 V (still > 11).
+=> Re-routing the shell is not enough: the shell's rail clamp cannot take CDM 2 A even with ideal wiring.
+Fix to build: local positive path in each site: pd2nw up-diodes PAD -> local rail XR (not the supply: RF_TX swings
+~0.8 V above VDD, PC-31) + an RC-triggered nfet_06v0 clamp XR -> VSS in the freed up-row area and between the two sites
+(PC-31 estimate ~8 mm, ~74 % of two sites for 2 kV; target here: pad <= 10 V at CDM 2 A high metal, avalanche 0).
+XR charges to the RF peak and stays DC, so the RC trigger does not fire in operation. Costs to declare to rf_tx: added
+pad C (up-diode junction + rail), leakage at the RF peak. Diode-stack-to-supply rejected: rf_pair's single up-diode already
+reaches 10.9 V at CDM 2 A; a 2-3 stack doubles / triples that drop.

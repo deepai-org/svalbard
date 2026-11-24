@@ -22,8 +22,11 @@ Read first: scratch/reviews/MANDATE.md (1, 4a, 8), rows PC-72..79 in scratch/rev
 Rail-site check 2026-11-24, all eight families: PASS (main 0, antenna 0), `railcheck/out/` (PC-79).
 pad_wire_tx `DNV*/DPV*.SUB` nets joining VSS in chip LVS are the diode legs' substrate taps: intended.
 
-## Next (ranked)
-1. Wait for assembly's next pt_rf precheck; act on any item at a pad site.
+pad_txpad a16p (2026-11-24, PC-80): core pins widened/spread by `$P/analog/pads/tx_top_pins.py` (GDS sha bded3185).
+
+## Next (ranked, coordinator 2026-11-24)
+1. rftxpad positive-zap fix: diagnosis done (esdopt/rf/STATUS.md, last section): local up-diodes to a site rail + RC clamp
+   in the sites; build, ESD bench, layout checks, publish with chip-top edits, row to rf_tx (pad C).
 2. rf-shell evidence: pad C bench, single_leg ESD (two-pad model), independent review.
-3. rftxpad positive-zap path (site diodes avalanche at HBM 1 kV / CDM 2 A).
-4. USB b7 conditions C1-C4; SATA2 return loss; README section 8 items.
+3. Act on assembly's next pt_rf precheck.
+4. USB b7 conditions C1-C4. SATA2 return loss: skipped for now (coordinator).

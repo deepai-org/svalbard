@@ -189,5 +189,92 @@
    "i_mA": 35.3082,
    "error": null
   }
+ },
+ "r8_ss_p3": {
+  "tag": "r8_ss_p3",
+  "corner": "ss",
+  "temp": 32,
+  "vdd": 3.15,
+  "psel": 3,
+  "ring_MHz": 750.0,
+  "os": 6,
+  "neg": false,
+  "samples": 580,
+  "strobe_words": 29,
+  "sample_errors": 233,
+  "unexplained_by_1sample": 190,
+  "err_slots": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19
+  ],
+  "run_min": 1,
+  "run_max": 85,
+  "pass_125M": false,
+  "flow": {
+   "bit_errors": 10,
+   "edge_errors": 7,
+   "strobe_word_errors": 26,
+   "word_timing": {
+    "dw_after_wstb_rise_ns": [
+     0.871,
+     4.827
+    ],
+    "wstb_high_ns": 0.821,
+    "word_period_ns": 26.667
+   },
+   "i_mA": 33.0506,
+   "error": null
+  }
+ },
+ "r8_ss_p3_500": {
+  "tag": "r8_ss_p3_500",
+  "corner": "ss",
+  "temp": 32,
+  "vdd": 3.15,
+  "psel": 3,
+  "ring_MHz": 500.0,
+  "os": 4,
+  "neg": false,
+  "samples": 100,
+  "strobe_words": 5,
+  "sample_errors": 0,
+  "unexplained_by_1sample": 0,
+  "err_slots": [],
+  "run_min": 4,
+  "run_max": 16,
+  "pass_125M": true,
+  "flow": {
+   "bit_errors": 0,
+   "edge_errors": 0,
+   "strobe_word_errors": 3,
+   "word_timing": {
+    "dw_after_wstb_rise_ns": [
+     0.966,
+     1.096
+    ],
+    "wstb_high_ns": 1.146,
+    "word_period_ns": 40.0
+   },
+   "i_mA": 22.069200000000002,
+   "error": null
+  }
  }
 }

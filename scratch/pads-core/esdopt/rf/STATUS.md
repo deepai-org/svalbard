@@ -70,3 +70,10 @@ Variants (all layout checks PASS on t3 and t7; R high metal from netres, ESD on 
 CDM 2 A needs the strip (~+0.44 pF per leg on the pad: Metal2 over the rail cell's Metal1); decision for coordinator / RF TX.
 Junction C per finger (model): nd2ps 28.3 fF at 0 V / 19.1 at 3.3 V; pd2nw 28.1 / 23.4 at 0.8 V.
 Controls: t2 (no band) fails every positive case (13.3 V HBM 1 kV); read-back LVS controls (swap, drop-one) fail as required.
+
+## 2026-11-24 later: user rule (MANDATE 1): ESD class HBM 1 kV / CDM 1 A only, favour the signal -> t8 published (PC-81b)
+t8 = rftx_band.py n_up 4, n_dn 2: all layout checks PASS (chk/t8); HBM 1 kV 6.84 V / CDM 1 A 9.67 V worst reverse high (typ 5.90 / 8.25).
+cbench fixed (the ac inside .control only wrote the op point; now .ac lin 24 + wrdata i(V) and C computed in python; --vpad added; +100 fF control reads +100.0):
+pad C 2.4 GHz typ: t2 0.820/0.792 (0 V) 0.786/0.758 (3.3 V); t7 1.245/1.224; t8 1.172/1.153; r3 0.951/0.923 vs published shell 0.670/0.642; s2 0.932 vs 0.653.
+single_leg ESD rerun with single-leg cases only: HBM 2 kV 7.49, CDM 1 A 6.49, CDM 2 A 10.63 V (high): PASS.
+Light independent review of t7: GO with conditions (review-t7/REVIEW.md: F1 lumped band model, F2 their railcap step failed, F3 no per-net C cross-check).

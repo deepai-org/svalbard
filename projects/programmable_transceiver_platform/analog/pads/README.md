@@ -62,7 +62,7 @@ All under `generated/`. Every cell: Magic DRC 0, netgen LVS unique, independent 
 | `pad_txpad` | `stress-safe-families/wired-transmit/` (`combined.gds`) | 286 × 699.76 | 200,135 bbox | 409 (346) | `PAD_P PAD_N VDD VSS DVDD_P DVDD_N CASCODE MAIN_P/N MAIN_BIAS POST_P/N POST_BIAS TMDS_P/N TMDS_BIAS DETECT_ENABLE DETECT_PBIAS TERM_ENABLE TERM_TRIM0..3 TERM_VCM`; top-edge pins: TERM_VCM (Metal4 x 30.4-75), DETECT_ENABLE / DETECT_PBIAS / PAD_N / PAD_P / TERM_ENABLE (Metal4 1.2 um at x 17.2 / 20.2 / 23.2 / 26.2 / 29.2, `tx_top_pins.py`), VSS 12.5, VDD 14.5, TERM_TRIM0..3 |
 | `pad_refpad` | `stress-safe-families/reference/` (`combined.gds`) | 2.78..285 × 0..912.91 | 257,636 bbox | 42 diodes (0) | `PAD_P PAD_N VSS VCM DVDD`; top-edge pins PAD_P, PAD_N, VCM, VSS |
 | `pad_rf_pair` | `stress-safe-families/rf-pair/` (`pad.gds`) | 310 × 912.91 | 176,900 allocated | 404 | `PAD_P PAD_N VSS ESD_RAIL ATB_ESD_RAIL DVDD` |
-| `pad_rftxpad` | `stress-safe-families/rf-tx/` (`pad.gds`) | 310 × 912.91 | 176,900 allocated | 412 | `PAD_P PAD_N VSS ESD_RAIL ATB_ESD_RAIL` (no DVDD); t7: band of 6 up (to ESD_RAIL) + 2 down diodes per leg at depth 352-389 |
+| `pad_rftxpad` | `stress-safe-families/rf-tx/` (`pad.gds`) | 310 × 912.91 | 176,900 allocated | 412 | `PAD_P PAD_N VSS ESD_RAIL ATB_ESD_RAIL` (no DVDD); t8: band of 4 up (to ESD_RAIL) + 2 down diodes per leg at depth 352-389 |
 | `pad_single_leg` | `stress-safe-families/single-leg/` (`pad.gds`) | 302.14 × 912.91 | 157,853 allocated | 396 | `PAD_P VSS ESD_RAIL ATB_ESD_RAIL DVDD` |
 | `pad_tlp_flat` | `tlp-site/` | 68 × 124.34 | 8,455 bbox | 8 diodes | `PAD VSS VDD` |
 | `tx_steering_buffer_flat` | `steering-buffer-compact/` | 54.58 × 158.98 | 8,677 bbox | 128 | `VDD VSS IN OUT` |
@@ -80,7 +80,7 @@ Evidence files that belong to the published netlists:
 | `pad_wirepad` b7 (hashes in `pc76-wirepad-b7.json`) | `placement-layout.json`, `layout-screen.json`, `independent-device-audit.json`, `model-audit.json`, `marker-merge.json`, `lu.json`, `pad_wirepad-kldrc.json`, `combined-lvs.txt`, models `physical.spice` (C-only), `physical-r-{typ,high}[-rail].spice` (R+C) |
 | `pad_txpad` (GDS sha bded3185…, a16 + `tx_top_pins.py` 2026-11-24; hashes in `pc72-txpad-a16.json`) | `layout-info.json`, `lu.json`, `marker-merge.json`, `pad_txpad-kldrc.json`, `pad-lvs.txt`, `pc72-txpad-a16.json`, models `physical.spice` (C-only, wrapper `tx_protected_pad`), `physical-r-{typ,high}.spice` (R+C; model-only ports `DVSS_P/N`, tie to VSS) |
 | `pad_refpad` (GDS sha 96dc5a02…; hashes in `pc75-refpad-a1.json`) | `placement-layout.json`, `layout-screen.json`, `independent-device-audit.json`, `model-audit.json`, `marker-merge.json`, `lu.json`, `pad_refpad-kldrc.json`, `combined-lvs.txt`, `pc75-refpad-a1.json`, models `physical.spice` (C-only, wrapper `tx_protected_pad`), `physical-r-{typ,high}[-rail].spice` (R+C) |
-| `pad_rf_pair` r3, `pad_single_leg` s2, `pad_rftxpad` t7 (hashes in `pc74-rfpair-r3.json`, `pc74-singleleg-s2.json`, `pc81-rftxpad-t7.json`) | `pad.gds`, `pad-extracted.spice` (C-only, wrapper `rf_protected_pad`), `reference.spice` (LVS / chip-top master `pad_reference`), `physical-r-{typ,high}.spice` (lumped R+C), `pad-layout.json`, `pad-lvs.txt`, `lu.json`, `<cell>-kldrc.json` |
+| `pad_rf_pair` r3, `pad_single_leg` s2, `pad_rftxpad` t8 (hashes in `pc74-rfpair-r3.json`, `pc74-singleleg-s2.json`, `pc81-rftxpad-t8.json`) | `pad.gds`, `pad-extracted.spice` (C-only, wrapper `rf_protected_pad`), `reference.spice` (LVS / chip-top master `pad_reference`), `physical-r-{typ,high}.spice` (lumped R+C), `pad-layout.json`, `pad-lvs.txt`, `lu.json`, `<cell>-kldrc.json` |
 
 ## 3. Protection foundation
 
@@ -224,11 +224,10 @@ network stays as the core-side secondary. All layout checks pass (DRC, read-back
 | Cell | ESD (lumped R+C, ring model, 1 nF site decap) | Result |
 |---|---|---|
 | `pad_rf_pair` | HBM 2 kV gates ≤ 1.71 V; CDM 2 A site reverse 10.69 V high / 9.14 typ (bv 11) | PASS, 0.31 V margin |
-| `pad_rftxpad` t7 (PC-81, `rftx_band.py`) | local positive path (band up-diodes to ESD_RAIL + low-R clamp VSS / ESD_RAIL straps): HBM 1 kV worst reverse 6.15 V, CDM 1 A 8.64 V (t2: 13.3 / 14.0); CDM 2 A 12.5 V; pad C +0.37/+0.38 pF per leg | HBM 1 kV / CDM 1 A PASS; CDM 2 A and pad C (+0.3 pF limit) MISS |
-| `pad_single_leg` | bench runs invalid (pair cases on a one-leg model) | NOT JUDGED |
+| `pad_rftxpad` t8 (PC-81b, `rftx_band.py` n_up 4) | local positive path (band up-diodes to ESD_RAIL + low-R clamp VSS / ESD_RAIL straps): HBM 1 kV worst reverse 6.84 V, CDM 1 A 9.67 V (t2: 13.3 / 14.0); pad C +0.39/+0.40 pF per leg (cbench) | PASS at the project ESD class (MANDATE 1: HBM 1 kV / CDM 1 A); pad C over +0.3 pF (RF TX checks match) |
+| `pad_single_leg` | single-leg cases (2026-11-24): HBM 2 kV 7.49 V, CDM 1 A 6.49 V, CDM 2 A 10.63 V worst reverse high metal; gates <= 1.49 V | PASS |
 
-Known misses (all three): pad C not judged (C bench failed; Magic C only); the current generator rebuilds each with a
-17.4 µm² XOR per site (published = the checked candidate); the old network's generator cannot be rerun; no independent review.
+Pad C (cbench, 2.4 GHz, typ, fixed 2026-11-24; +100 fF control reads back +100.0 fF), per leg vs the pre-option-A published shell: rf_pair r3 0.951 / 0.923 pF vs 0.670 / 0.642 (+0.28, limit +0.3 PASS, +0.1 wanted MISS); single_leg s2 0.932 vs 0.653 (+0.28 PASS); rftxpad t8 +0.39 / +0.40 vs t2 (accepted, PC-81b). Known misses: rebuild drift 17.4 um2/site; old network generator cannot be rerun; independent review of rftxpad only (light, review-t7).
 
 ### POR_BYPASS strap (`scratch/reviews/pads-core/STRAP.md`)
 

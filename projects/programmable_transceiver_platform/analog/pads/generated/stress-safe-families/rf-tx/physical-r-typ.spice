@@ -1,4 +1,4 @@
-* models/t7_typ.spice: models/t2_typ.spice + rftx_band (6 up / 2 down per leg), R from res/t7.json (typ)
+* models/t8_typ.spice: models/t2_typ.spice + rftx_band (4 up / 2 down per leg), R from res/t8.json (typ)
 * models/t2_typ.spice: lumped R+C model, corner typ, from x/t2/pad_rftxpad_flat.spice + res/t2.json
 .subckt rf_pad PAD_P PAD_N VSS ATB_ESD_RAIL
 Xphysical PAD_P PAD_N ATB_ESD_RAIL VSS ESD_RAIL physical
@@ -484,28 +484,24 @@ RCOREN PAD_N PAD_N__core 24.3575
 RASN VSS__aN VSS 0.0604
 RERN ESD_RAIL__kN ESD_RAIL 19.7
 RNET VSS__net VSS 0.3391
-RXBE ESD_RAIL__b ESD_RAIL 0.3698
-RXBV VSS__b VSS 0.3586
-RXBUP PAD_P PAD_P__bu 1.4814
+RXBE ESD_RAIL__b ESD_RAIL 0.4138
+RXBV VSS__b VSS 0.3613
+RXBUP PAD_P PAD_P__bu 1.5267
 RXBDP PAD_P PAD_P__bd 1.5986
-CBXP PAD_P VSS 194.6f
+CBXP PAD_P VSS 176.2f
 DBUP0 PAD_P__bu ESD_RAIL__b diode_pd2nw_06v0 pj=51.8u area=22.5p
 DBUP1 PAD_P__bu ESD_RAIL__b diode_pd2nw_06v0 pj=51.8u area=22.5p
 DBUP2 PAD_P__bu ESD_RAIL__b diode_pd2nw_06v0 pj=51.8u area=22.5p
 DBUP3 PAD_P__bu ESD_RAIL__b diode_pd2nw_06v0 pj=51.8u area=22.5p
-DBUP4 PAD_P__bu ESD_RAIL__b diode_pd2nw_06v0 pj=51.8u area=22.5p
-DBUP5 PAD_P__bu ESD_RAIL__b diode_pd2nw_06v0 pj=51.8u area=22.5p
 DBDP0 VSS__b PAD_P__bd diode_nd2ps_06v0 pj=51.8u area=22.5p
 DBDP1 VSS__b PAD_P__bd diode_nd2ps_06v0 pj=51.8u area=22.5p
-RXBUN PAD_N PAD_N__bu 1.8001
+RXBUN PAD_N PAD_N__bu 1.9273
 RXBDN PAD_N PAD_N__bd 1.5998
-CBXN PAD_N VSS 201.5f
+CBXN PAD_N VSS 185.4f
 DBUN0 PAD_N__bu ESD_RAIL__b diode_pd2nw_06v0 pj=51.8u area=22.5p
 DBUN1 PAD_N__bu ESD_RAIL__b diode_pd2nw_06v0 pj=51.8u area=22.5p
 DBUN2 PAD_N__bu ESD_RAIL__b diode_pd2nw_06v0 pj=51.8u area=22.5p
 DBUN3 PAD_N__bu ESD_RAIL__b diode_pd2nw_06v0 pj=51.8u area=22.5p
-DBUN4 PAD_N__bu ESD_RAIL__b diode_pd2nw_06v0 pj=51.8u area=22.5p
-DBUN5 PAD_N__bu ESD_RAIL__b diode_pd2nw_06v0 pj=51.8u area=22.5p
 DBDN0 VSS__b PAD_N__bd diode_nd2ps_06v0 pj=51.8u area=22.5p
 DBDN1 VSS__b PAD_N__bd diode_nd2ps_06v0 pj=51.8u area=22.5p
 .ends physical

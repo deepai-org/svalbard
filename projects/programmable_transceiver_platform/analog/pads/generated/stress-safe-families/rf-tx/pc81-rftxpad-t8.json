@@ -1,0 +1,95 @@
+{
+ "row": "PC-81b",
+ "cell": "pad_rftxpad",
+ "state": "BASELINE fix (positive-zap path); known misses below",
+ "candidate": "t8 = published t2 + rftx_band.py {\"n_up\": 4, \"n_dn\": 2, \"strip\": false, \"pad_m4\": true, \"esd_y0\": 376} (replaces t7: user rule HBM 1 kV / CDM 1 A class, favour signal)",
+ "build_command": "python3 analog/pads/rftx_band.py <t2 pad.gds> <out> '{\"n_up\": 4, \"n_dn\": 2, \"strip\": false, \"pad_m4\": true, \"esd_y0\": 376}' (pad image; t2 = scratch/pads-core/esdopt/rf/b/t2.gds, sha ce837617)",
+ "sha256": {
+  "pad.gds": "3c1f0b36891bbd648cd03ed9efa264bb74208c2d3b4d5cd7d31affcec54743c0",
+  "pad-extracted.spice": "f956f620760720a6d475b582d37938d03010854ae017f3c61ea19c546c916954",
+  "reference.spice": "266c3fc008c55c8075b79eeb5303778973722a493865b0aeb986cc62aaf82a7d",
+  "physical-r-typ.spice": "9e78b991d7e0ed4b521347ccf7e9f1c468270ed72ec399ec7bd3ea69d2c234de",
+  "physical-r-high.spice": "82f20da3d027ea92ed4a35dfdacd1fe8b66f43028d8703f46fb8c499fa7e04ca",
+  "lu.json": "bfd4ce8aecffcc123ed965e0326fc0368d0482962dc5e3f60c32c570353faf92",
+  "pad-lvs.txt": "8c576e6fa6f6facea644ffc3fade9d7e77b15b5170dd492078bac08b7516db4c",
+  "pad_rftxpad-kldrc.json": "630e04b2256e40a54125a51ddcc35094333cfc10865aeeddca329f37778190af"
+ },
+ "generators_sha256_8": {
+  "rftx_band.py": "e754a649"
+ },
+ "bbox_um": [
+  0,
+  0,
+  310,
+  912.91
+ ],
+ "ports": [
+  "PAD_P",
+  "PAD_N",
+  "ATB_ESD_RAIL",
+  "VSS",
+  "ESD_RAIL"
+ ],
+ "ports_note": "unchanged (no DVDD; ESD_RAIL pad-local). New Metal5 VSS strap overlaps the ring DVSS band 342-348.39 (same net, no via): intended.",
+ "design": "Band at depth 352-389 (between the ring and the shell): per leg 4 pd2nw up-diodes PAD -> ESD_RAIL (not the supply, PC-31) and 2 nd2ps VSS -> PAD; Metal5 ESD_RAIL plane (376-385.5) + two 28 um straps (x 145-173, 177-205) to the shell ESD_RAIL Metal3 band 745-769 (rail clamp drains); Metal5 VSS straps (x 210-236, 239-265) from the ring DVSS band (overlap 343-348.39) to the clamp VSS Metal3 band 771-800 and the shell VSS Metal4 bar. PAD from the neck on Metal3+Metal4 rows. Diagnosis and variants: scratch/pads-core/esdopt/rf/STATUS.md.",
+ "resistance_high_ohm": {
+  "bond->band up anodes P/N": [
+   2.227,
+   2.686
+  ],
+  "bond->band down P/N": [
+   2.7,
+   2.7
+  ],
+  "band cathodes->clamp drains": 0.693,
+  "ring->clamp VSS": 0.446,
+  "ring->band VSS": 0.902,
+  "was (t2): clamp VSS -> site": 50.96
+ },
+ "models": {
+  "pad-extracted.spice": "C-only flat extraction of t7, wrapper rf_protected_pad",
+  "physical-r-typ/high.spice": "t2 lumped model + band (scratch/pads-core/esdopt/rf/mkmodel_band.py, R from netres of t7, band wiring C 195/202 fF at the bond)"
+ },
+ "limits": [
+  [
+   "Magic DRC / read-back LVS + 2 failing controls (VSS<->ESD_RAIL swap, one band diode dropped) / KLayout main+antenna (live deck, sha-matched) / rail_site / latch-up 15 um",
+   "0 / match + mismatch x2 / 0+0 / PASS / 0.0 um2",
+   "PASS"
+  ],
+  [
+   "HBM 1 kV all 10 cases: worst junction reverse high / typ (bv 11 / 10.5)",
+   "6.84 / 5.90 V (t2: 13.30 / 13.09)",
+   "PASS"
+  ],
+  [
+   "CDM 1 A all 10 cases: worst reverse high / typ",
+   "9.67 / 8.25 V (t2: 14.0)",
+   "PASS"
+  ],
+  [
+   "MOS gates",
+   "<= 2.79 V, 0 over",
+   "PASS"
+  ],
+  [
+   "Pad C per leg at 2.4 GHz, cbench (fixed 2026-11-24, +100 fF control reads +100.0), typ model, up-diodes at 0 V",
+   "1.172 / 1.153 pF vs t2 0.786 / 0.758: +0.386 / +0.395 pF (t7: +0.459 / +0.466)",
+   "over the +0.3 pF RF limit; accepted direction (user: favour signal, minimum diodes for HBM 1 kV / CDM 1 A)"
+  ]
+ ],
+ "misses_and_conditions": [
+  "CDM 2 A not met: accepted (PC-81a; user rule 2026-11-24 targets CDM 1 A class).",
+  "Pad C +0.39/+0.40 pF per leg (bench, conservative 0 V up-diode bias) over the +0.3 pF RF limit: RF TX checks its match (PC-81a).",
+  "Models: t2 lumped model + lumped band (independent review F1: not a full re-extraction; margins large). Light independent review of t7: GO with conditions (scratch/pads-core/esdopt/rf/review-t7/REVIEW.md); t8 = same generator, fewer fingers, own layout checks all PASS.",
+  "Inherited from t2: old network generator not rerunnable."
+ ],
+ "review": "none yet",
+ "evidence": {
+  "esd": "scratch/pads-core/esdopt/rf/esd/t8h.json, t8t.json",
+  "checks": "scratch/pads-core/esdopt/rf/chk/t8/summary.txt",
+  "netres": "scratch/pads-core/esdopt/rf/res/t8.json",
+  "cbench": "scratch/pads-core/esdopt/rf/esd/c_t8_v0.json, c_t2_typ.json, c_t2_ctest.json",
+  "review": "scratch/pads-core/esdopt/rf/review-t7/REVIEW.md"
+ },
+ "ruling_2026_11_24": "Coordinator: keep t7 (6 up-diodes), not t3. CDM 2 A on RF_TX is an accepted known miss (COB, controlled handling). RF TX checks its match with +0.38 pF per leg; the 4-diode fallback only on their request. Independent review of t7 with a full re-extraction requested."
+}

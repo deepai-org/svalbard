@@ -97,7 +97,13 @@ ISLAND_BARS = {'wired': [dict(net='RAIL_wired_tx', rects=[(2658.5, 2265.0, 3400.
                               rel=('wiredtx', [('Metal5', (598.9, 266.6, 744.5, 430.8)), ('Metal4', (340.0, 411.2, 744.5, 430.8))]),
                               tie_merge=('wiredtx', ['east_island']),
                               tie_vias=('wiredtx', ['T_main_2', 'T_main_3', 'T_post_0', 'T_post_1', 'T_post_2', 'T_post_3']),
-                              vias=[('isw_wired_tx_a', 'VISL'), ('isw_wired_tx_b', 'VISL')])]}
+                              vias=[('isw_wired_tx_a', 'VISL'), ('isw_wired_tx_b', 'VISL')])],
+                # pt_rf rf_tx (PDS-20, 91.6 mA design): Metal5 bar over isw_rf_tx (joined to its VISL plate, Via4 onto VISL) and
+                # 465 um south of it towards lo_txbuf / the TX mixers, cut round other blocks' Metal5 and the RF blocks; the bar
+                # is a pin of RAIL_rf_tx (expose), so the router reaches the loads and isw_rf_tx_b from it, never VISL itself
+                'rf': [dict(net='RAIL_rf_tx', rects=[], expose=True,
+                            rel=('isw_rf_tx', [('Metal5', (0.0, -465.0, 243.1, 263.6))]),
+                            vias=[('isw_rf_tx', 'VISL')])]}
 # decap tiles the assembly places itself before the other blocks (power delivery 4.1d / PDS-16: the 14 tiles that did not
 # place go inboard of pad_hs_rx, within 500 um of bidir[14], restoring 5.4 nF and the CDM reach): slot, count
 FIXED_DECAP = {'wired': dict(slot=(2453.0, 960.0, 2953.0, 1440.0), count=14)}

@@ -198,6 +198,7 @@ for bd in ([] if getattr(C, 'ISLAND_BARS_OFF', False) else C.ISLAND_BARS.get(CHI
                 if tn_ in ties_: t_ = ties_[tn_]; same += db.Region(db.Box(um(bx_+t_[0]), um(by_+t_[2]), um(bx_+t_[1]), um(by_+t_[3])))
     cut = ((blkmetal['Metal5'] - cells_.sized(um(2.5))) + other.sized(um(2.5))) - same.sized(um(2.5)) + (other.sized(um(2.5)))
     reg = (reg - cut - padreg.sized(um(3)) - (ring['VDD'] + ring['VSS']).sized(um(2.5))).merged() + (same & reg.sized(um(50)))   # never on the core ring
+    reg = (reg - noover).merged()      # never over the no-route-over (RF) blocks
     reg = db.Region([p for p in reg.each() if p.area() > um(20)*um(20)])
     bars.append(dict(bd, region=reg, m4=m4, merged=not same.is_empty()))
     avoid['Metal4'] = (avoid['Metal4'] + m4.sized(um(2.5))).merged()
@@ -466,9 +467,22 @@ if barcell: top.insert(db.CellInstArray(barcell.cell_index(), db.Trans()))
 Lp = ['MACRO pt_pdn', '  CLASS BLOCK ;', '  ORIGIN 0 0 ;', '  FOREIGN pt_pdn 0 0 ;', f'  SIZE {C.DIE[2]:.3f} BY {C.DIE[3]:.3f} ;', '  SYMMETRY X Y ;']
 for hn, (ln, cb, net) in hook_pins.items():
     Lp += [f'  PIN {hn}', '    DIRECTION INOUT ;', '    USE SIGNAL ;', '    PORT', f'      LAYER {ln} ; RECT {fu(cb.left):.3f} {fu(cb.bottom):.3f} {fu(cb.right):.3f} {fu(cb.top):.3f} ;', '    END', f'  END {hn}']
+# exposed bars (ISLAND_BARS expose=True): the bar's Metal5 is a pin of its rail net; the switch VISL pins under it leave the
+# routed net (the bar joins them by Via4), so the router never digs into the switch for VISL (RAIL_rf_tx-VDD, 2026-11-24)
+bar_pins = {}
+for k_, bd in enumerate(bars):
+    if not bd.get('expose'): continue
+    pn_ = f'BAR{k_}'; bar_pins[pn_] = bd
+    Lp += [f'  PIN {pn_}', '    DIRECTION INOUT ;', '    USE SIGNAL ;', '    PORT']
+    for poly in bd['region'].merged().each():
+        for tz in poly.decompose_trapezoids(1):
+            b = tz.bbox(); Lp.append(f'      LAYER Metal5 ; RECT {fu(b.left):.3f} {fu(b.bottom):.3f} {fu(b.right):.3f} {fu(b.top):.3f} ;')
+    Lp += ['    END', f'  END {pn_}']
 Lp.append('  OBS')
 for ln in ('Metal2', 'Metal3', 'Metal4', 'Metal5'):
     reg = (db.Region(pdn.begin_shapes_rec(LI[ln])) + (db.Region(barcell.begin_shapes_rec(LI[ln])) if barcell else db.Region())).merged() - db.Region([cb for hn, (l2, cb, net) in hook_pins.items() if l2 == ln])
+    if ln == 'Metal5':
+        for bd in bar_pins.values(): reg -= bd['region']
     Lp.append(f'    LAYER {ln} ;')
     for poly in reg.merged().each():
         for tz in poly.decompose_trapezoids(1):
@@ -498,6 +512,8 @@ for net, users in nets.items():
         else: man['unconnectable'].append(dict(inst=n, pin=p, net=net, why='pin not in the abstract (no label on the block edge or in the cell)' if n in macro_of else 'instance not placed'))
     for i, p, s, iop in prov:
         if inst[i]['pins'].get(p, ('', ''))[1] == net and s in iomap and has_pin(iomap[s], iop): ends.append((iomap[s], iop))
+    for pn_, bd in bar_pins.items():
+        if bd['net'] == net: ends = [e for e in ends if e not in [tuple(v) for v in bd['vias']]] + [('pdn', pn_)]
     ends = sorted(set(ends))
     if len(ends) >= 2: NETS[net] = dict(ends=ends, cls=cls(net))
     elif users: man['single_pin_nets'].append(net)

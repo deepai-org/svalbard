@@ -65,7 +65,7 @@ Flattening unmatched subcell pt_bbf_bank1 in circuit pt_bbf_s1 (1)(2 instances)
 
 Class pt_bbf_s1 (0):  Merged 275 parallel devices.
 Class pt_bbf_s1 (0):  Merged 34 series devices.
-Class pt_bbf_s1 (1):  Merged 275 parallel devices.
+Class pt_bbf_s1 (1):  Merged 277 parallel devices.
 Class pt_bbf_s1 (1):  Merged 34 series devices.
 Subcircuit summary:
 Circuit 1: pt_bbf_s1                       |Circuit 2: pt_bbf_s1                       
@@ -74,12 +74,14 @@ pfet_03v3 (219->24)                        |pfet_03v3 (219->24)
 nfet_03v3 (135->55)                        |nfet_03v3 (135->55)                        
 ppolyf_u_1k (54->20)                       |ppolyf_u_1k (54->20)                       
 cap_mim_2f0_m4m5_noshield (22)             |cap_mim_2f0_m4m5_noshield (22)             
-diode_nd2ps_03v3 (1)                       |diode_nd2ps_03v3 (1)                       
+diode_nd2ps_03v3 (1)                       |diode_nd2ps_03v3 (3->1)                    
 Number of devices: 122                     |Number of devices: 122                     
 Number of nets: 91                         |Number of nets: 91                         
 ---------------------------------------------------------------------------------------
 Resolving symmetries by property value.
-Netlists match uniquely.
+Netlists match uniquely with property errors.
+diode_nd2ps_03v3:0 vs. pt_bbf_bank1:X15/diode_nd2ps_03v3:ANT_pt_bbf_bank1_0:
+ area circuit1: 3.6e-13   circuit2: 1.08e-12   (delta=100%, cutoff=2%)
 
 Subcircuit pins:
 Circuit 1: pt_bbf_s1                       |Circuit 2: pt_bbf_s1                       
@@ -447,3 +449,6 @@ Device classes pt_bbfilter_i and pt_bbfilter_i are equivalent.
 
 Final result: Circuits match uniquely.
 .
+
+The following cells had property errors:
+ pt_bbf_s1

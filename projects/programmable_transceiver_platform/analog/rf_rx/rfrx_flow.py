@@ -81,6 +81,7 @@ _PIN_NAMES = {}
 def sub_pin_names(model, k):
     return _PIN_NAMES.get(model, [None] * 99)[k]
 POWER_TRUNK_W = 2.4
+PIN_W, PIN_W_PWR, PIN_SPACE = 0.8, 2.0, 1.2   # top-cell pins: width, supply width, edge-to-edge gap (pitch >= 2 um)
 
 
 def docker(image, workdir, command, *, timeout=3600):
@@ -358,6 +359,7 @@ def layout_subckt(sub, work, geoms, macros, *, row_width=None, top=False):
     vertical M5 trunk; trunks of nets whose vertical extents do not overlap share
     a bank column (interval packing), which keeps the bank narrow.
     """
+    is_top = top          # `top` is reused below for a cap-group height
     items = []
     capgroups = {}
     for d in sub.devices:
@@ -600,7 +602,48 @@ def layout_subckt(sub, work, geoms, macros, *, row_width=None, top=False):
     req = ad.requests_from_shapes(p.shapes, terminals)
     dcmds, diodes = ad.plan(req, [s[:5] for s in p.shapes], keepouts, taps=taps)
     p.cmds += dcmds
-    for i, n in enumerate(sub.ports, 1):
+    if is_top:
+        # Top-cell pins (assembly, 2026-11-24): the bank puts every port trunk at ~1 um pitch, too dense for the chip
+        # router (a VSS hook shorted onto dcf3).  Fan-out band below y = 0: each port's M5 trunk drops to its own M4
+        # row, runs right to a pin column, and a Metal3 drop ends on the bottom edge.  Pins >= PIN_PITCH apart,
+        # PIN_W wide (supplies PIN_W_PWR with via arrays).  Order by trunk x, rows rising with x: an M3 drop never
+        # meets another port's M4 row; M5 extensions stay in the bank's own columns.
+        order = sorted(sub.ports, key=lambda n: trunk[n][0])
+        rows_y, yy = {}, 3.0
+        for n in order:
+            hw = (PIN_W_PWR if n in POWER else .44)
+            yy += hw / 2
+            rows_y[n] = yy
+            yy += hw / 2 + .5
+        band = _snap(yy + 1.0)
+        px, prev_r = {}, -math.inf
+        for n in order:
+            w_ = PIN_W_PWR if n in POWER else PIN_W
+            x_ = max(trunk[n][0], prev_r + PIN_SPACE + w_ / 2)
+            px[n] = _snap(x_)
+            prev_r = px[n] + w_ / 2
+        def via_arr(x, y, lo_, hi_, size):
+            k_ = max(1, int((size - .4) // .8) + 1)
+            off = [(-(k_ - 1) / 2 + j) * .8 for j in range(k_)]
+            for dx in off:
+                for dy in off:
+                    p.via(x + dx, y + dy, lo_, hi_)
+        for i, n in enumerate(sub.ports, 1):
+            t_, w_ = trunk[n]
+            yr = rows_y[n] - band
+            pw_ = PIN_W_PWR if n in POWER else PIN_W
+            p.net = n
+            p.wire('metal5', t_, yr, t_, port_y, width=w_)
+            via_arr(t_, yr, 4, 5, pw_ if n in POWER else .4)
+            p.wire('metal4', t_, yr, px[n], yr, width=(PIN_W_PWR if n in POWER else .44))
+            via_arr(px[n], yr, 3, 4, pw_ if n in POWER else .4)
+            p.wire('metal3', px[n], yr, px[n], -band + pw_ / 2, width=pw_)
+            p.net = None
+            p.cmds += [f'box values {px[n] - pw_ / 2:.3f} {-band:.3f} {px[n] + pw_ / 2:.3f} {-band + 2.0:.3f}',
+                       f'label {n} FreeSans 0.25 0 0 0 c metal3', f'port make {i}']
+            pins.append((px[n], -band))
+    else:
+      for i, n in enumerate(sub.ports, 1):
         xx = trunk[n][0]
         p.via(xx, port_y, 3, 5)
         p.cmds += [f'box values {xx - .2:.3f} {port_y - .2:.3f} {xx + .2:.3f} {port_y + .2:.3f}',

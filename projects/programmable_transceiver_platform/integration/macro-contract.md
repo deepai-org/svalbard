@@ -79,7 +79,7 @@ bit 3 unused, bit 4 conv, bit 5 debug.
 |---|---|---|
 | `island_en[5:0]` | out | Switch enables |
 | `island_on[5:0]`, `island_off[5:0]` | out | Group is on and good (or overridden) and its complement; `island_off` drives the isolation cells outside the macro |
-| `s_pg_wired_rx`, `s_pg_wired_cap`, `s_pg_wired_tx`, `s_pg_rf_rx`, `s_pg_rf_tx`, `s_pg_lod`, `s_pg_lo`, `s_pg_pll`, `s_pg_conv`, `s_pg_debug` | in | Power-good of each switch; a group is good when all of its switches are |
+| `s_pg_wired_rx`, `s_pg_wired_cap`, `s_pg_wired_tx`, `s_pg_wired_tx_b`, `s_pg_rf_rx`, `s_pg_rf_tx`, `s_pg_lod`, `s_pg_lo`, `s_pg_pll`, `s_pg_conv`, `s_pg_debug` | in | Power-good of each switch; a group is good when all of its switches are (`s_pg_wired_tx_b`: pt_wired's second wired_tx switch, CB8-6; tied to VSS on pt_rf like the other wired PGs, masked there) |
 | `wired_on_ext` | in | Request from the bring-up fallback control, ORed into `island_on[0]` |
 | `fault` | in | External fault level, ORed with the internal monitor's fault |
 

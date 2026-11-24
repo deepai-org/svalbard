@@ -121,6 +121,7 @@ def main():
     ap.add_argument('--seed', type=int, default=20261108)
     ap.add_argument('--random', type=int, default=3000)
     ap.add_argument('--out', required=True)
+    ap.add_argument('--chip', choices=['rf', 'wired'], help='chip view of the model (read by check_regfile at import)')
     a = ap.parse_args()
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)

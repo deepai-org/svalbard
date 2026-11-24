@@ -210,6 +210,7 @@ c_wiredtx_post_code | 8 | 0 | direct | wiredtx.config.postcursor_code |
 c_wiredtx_bias_en | 1 | 0 | any c_txpad_req_* & island_on[0] | txpad.config.branch | core_bias EN_wiredtx
 c_wiredtx_idle | 1 | 1 | pt_core wire_idle (wire_tx_clk domain: 1 while no payload word is launched; wiredtx.idle.idle forces it) & !debug.wtx_ext & island_on[0] | wiredtx.idle.idle+debug.wtx_ext.enable | pt_wiredtx8 IDLE (WT50); dynamic (word-granular)
 c_wiredtx_idle_mode | 1 | 0 | direct | wtx.idle_mode | pt_wiredtx8 IDLE_MODE (WT50)
+c_wiredtx_cascode_boost | 1 | 0 | direct | wtx.cascode_boost | cascode_pump (wtx8_casbias) CB_EN: pad_wire_tx CASCODE boost, 100BASE-TX only (WT58 / WT59; validator rules wtx_boost_100base_only, wtx_mode_change_banks_off)
 c_wiredtx_tr | 32 | 0 | direct | wtx.phase_trim | pt_wiredtx8 TR{k}_{b} = bit 4k+b (WT50); TAP_EN is bound to c_usb_hs_en
 c_txpad_req_main | 1 | 0 | (wiredtx.state == active) & (branch != off) & !idle, OR the fallback request (branch == 2 & debug.wtx_ext & state active & !idle) | txpad.config.branch+wiredtx.state.state+wiredtx.idle.idle+debug.wtx_ext.enable | interlock REQ_MAIN (wired TX README.md section 3, WT28); dropping the request is a power-down, not a protocol idle (WT30)
 c_txpad_req_post | 1 | 0 | req_main & (postcursor_code != 0 or post_polarity) | txpad.config.branch+wiredtx.config.postcursor_code |

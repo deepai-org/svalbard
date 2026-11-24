@@ -40,16 +40,16 @@ module tb_top_boundary;
  wire [57:0] atb0_sw, atb1_sw; wire [1:0] atb0_grp; wire [4:0] atb1_grp; wire atb0_en, atb1_en;
  wire por_n, wired_on_ext, wire_rx_ptrim_en;
  // Per-switch power-good from the chip's island switches (the macro ANDs each enable group, PD2-2); absent switches read 0.
- wire s_pg_wired_rx, s_pg_wired_cap, s_pg_wired_tx, s_pg_rf_rx, s_pg_rf_tx, s_pg_lod, s_pg_lo, s_pg_pll, s_pg_conv, s_pg_debug;
+ wire s_pg_wired_rx, s_pg_wired_cap, s_pg_wired_tx, s_pg_wired_tx_b, s_pg_rf_rx, s_pg_rf_tx, s_pg_lod, s_pg_lo, s_pg_pll, s_pg_conv, s_pg_debug;
 `ifdef PT_CHIP_RF
- assign {s_pg_wired_rx, s_pg_wired_cap, s_pg_wired_tx} = 3'b0; assign wired_on_ext = 1'b0;
+ assign {s_pg_wired_rx, s_pg_wired_cap, s_pg_wired_tx, s_pg_wired_tx_b} = 4'b0; assign wired_on_ext = 1'b0;
 `else
  assign {s_pg_rf_rx, s_pg_rf_tx, s_pg_lod, s_pg_lo, s_pg_conv} = 5'b0;
 `endif
  // The real macro: every c_* port connects by name. Inputs this bench does not exercise are 0.
  pt_digital_macro #(.PT_CHIP(`PT_CHIP_ID)) dut(.reset_n_pad(rst_pad), .por_n(por_n), .por_bypass(1'b0), .spi_sclk(sclk), .spi_cs_n(cs_n), .spi_mosi(mosi),
   .spi_miso(miso), .spi_miso_oe(miso_oe), .island_en(island_en), .island_on(island_on), .island_off(island_off),
-  .s_pg_wired_rx(s_pg_wired_rx), .s_pg_wired_cap(s_pg_wired_cap), .s_pg_wired_tx(s_pg_wired_tx), .s_pg_rf_rx(s_pg_rf_rx),
+  .s_pg_wired_rx(s_pg_wired_rx), .s_pg_wired_cap(s_pg_wired_cap), .s_pg_wired_tx(s_pg_wired_tx), .s_pg_wired_tx_b(s_pg_wired_tx_b), .s_pg_rf_rx(s_pg_rf_rx),
   .s_pg_rf_tx(s_pg_rf_tx), .s_pg_lod(s_pg_lod), .s_pg_lo(s_pg_lo), .s_pg_pll(s_pg_pll), .s_pg_conv(s_pg_conv), .s_pg_debug(s_pg_debug),
   .wired_on_ext(wired_on_ext), .atb0_sw(atb0_sw), .atb1_sw(atb1_sw), .atb0_grp(atb0_grp),
   .atb1_grp(atb1_grp), .atb0_en(atb0_en), .atb1_en(atb1_en), .wire_rx_ptrim_en(wire_rx_ptrim_en), .fault(1'b0),
@@ -68,7 +68,7 @@ module tb_top_boundary;
 `ifdef PT_CHIP_RF
   .s_pg_rf_rx(s_pg_rf_rx), .s_pg_rf_tx(s_pg_rf_tx), .s_pg_lod(s_pg_lod), .s_pg_lo(s_pg_lo), .s_pg_conv(s_pg_conv),
 `else
-  .s_pg_wired_rx(s_pg_wired_rx), .s_pg_wired_cap(s_pg_wired_cap), .s_pg_wired_tx(s_pg_wired_tx), .wired_on_ext(wired_on_ext),
+  .s_pg_wired_rx(s_pg_wired_rx), .s_pg_wired_cap(s_pg_wired_cap), .s_pg_wired_tx(s_pg_wired_tx), .s_pg_wired_tx_b(s_pg_wired_tx_b), .wired_on_ext(wired_on_ext),
   .wire_rx_ptrim_en(wire_rx_ptrim_en),
 `endif
   .s_pg_pll(s_pg_pll), .s_pg_debug(s_pg_debug), .atb0_sw(atb0_sw), .atb1_sw(atb1_sw), .atb0_grp(atb0_grp),

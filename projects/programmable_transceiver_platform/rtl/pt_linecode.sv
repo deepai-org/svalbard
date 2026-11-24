@@ -55,10 +55,11 @@ module pt_lc_rx(input wire clk, rst_n, en, input wire [39:0] din, input wire din
         4'd8: sym_n = w1[47:8];  default: sym_n = w1[48:9];
     endcase
     // offset decision input: the lowest hit offset of the registered hits, registered (hr)
+    reg [9:0] hit;   // declared before the encoder below (iverilog: no use before declaration)
     reg [3:0] hit_off;
     integer h;
     always @* begin hit_off = 4'd0; for (h = 9; h >= 0; h = h - 1) if (hit[h]) hit_off = h[3:0]; end
-    reg [39:0] sym; reg [9:0] hit; reg s1v, s1ok; reg [3:0] hr; reg hany;
+    reg [39:0] sym; reg s1v, s1ok; reg [3:0] hr; reg hany;
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin hit <= 10'd0; s0v <= 1'b0; s1v <= 1'b0; s1ok <= 1'b0; hr <= 4'd0; hany <= 1'b0; end
         else if (!en_r) begin s0v <= 1'b0; s1v <= 1'b0; hit <= 10'd0; hany <= 1'b0; end

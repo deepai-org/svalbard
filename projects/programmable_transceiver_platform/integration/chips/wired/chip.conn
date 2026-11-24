@@ -35,7 +35,7 @@ inst digital pt_digital_macro chip
   island_en[{0,2,5}]>island_en[\1] island_en[{1,3,4}]>-
   island_on[{0,2,5}]>island_on[\1] island_on[{1,3,4}]>-
   island_off[{0,2,5}]>island_off[\1] island_off[{1,3,4}]>-
-  s_pg_{wired_rx,wired_cap,wired_tx,pll,debug}=s_pg_\1      # per-switch power-good; the macro ANDs each enable group
+  s_pg_{wired_rx,wired_cap,wired_tx,wired_tx_b,pll,debug}=s_pg_\1      # per-switch power-good; the macro ANDs each enable group
   s_pg_{rf_rx,rf_tx,lod,lo,conv}=VSS      # no rf / conv island on this chip
   wired_on_ext=wired_on_ext
   atb0_sw[{0,21,28,42,43,44,45,46,47,48,49,50,51,52,53,54,55,57}]>atb0_sw[\1] atb0_sw[{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,22,23,24,25,26,27,29,30,31,32,33,34,35,36,37,38,39,40,41,56,58,59}]>-
@@ -94,11 +94,11 @@ inst core_bias pt_core_bias_wired core
 inst isw_{wired_rx,debug} isw_debug core
   VDD~VDD VISL~RAIL_\1 VSS~VSS EN=island_en[{0,5}] ISO>- PG>s_pg_\1
 # wired_tx: 105 mA worst / 131 mA design (WT40 block + POST + pad tail): two isw_wired in parallel on one VISL bar,
-# symmetric feeds (spec/power-delivery.md, PDS-1). PG and ISO of switch a only; b's PG is not observed (CB8-4).
+# symmetric feeds (spec/power-delivery.md, PDS-1). ISO of switch a only; both PGs go to the macro (CB8-6).
 inst isw_wired_tx_a isw_wired core
   VDD~VDD VISL~RAIL_wired_tx VSS~VSS EN=island_en[0] ISO>ISO_wired_tx PG>s_pg_wired_tx      # ISO used by the fallback control only
 inst isw_wired_tx_b isw_wired core
-  VDD~VDD VISL~RAIL_wired_tx VSS~VSS EN=island_en[0] ISO>- PG>-
+  VDD~VDD VISL~RAIL_wired_tx VSS~VSS EN=island_en[0] ISO>- PG>s_pg_wired_tx_b      # CB8-6: both switches gate the wired group
 inst isw_wired_cap isw_wired core
   VDD~VDD VISL~RAIL_wired_cap VSS~VSS EN=island_en[0] ISO>- PG>s_pg_wired_cap
 inst pad_wtx_ext pad_rf_pair debug
@@ -232,10 +232,10 @@ inst attached_tx_interlock tx_interlock wired_tx
   EN_MAIN>TX_EN_MAIN EN_POST>TX_EN_POST EN_TMDS>- EN_DETECT>TX_EN_DETECT EN_TERM>TX_EN_TERM
 # pad cascode gate supply (WT53-c / WT59): VDD through the select switch, about 4.2 V when CB_EN = 1 (pump + replica shunt).
 # Separate instance (does not fit under pt_wiredtx8's ASM-11a top-pin field); place it beside pad_wire_tx, CASCODE route <= 0.3 pF, no DC.
-# CB_EN = c_wiredtx_post_pol until the macro has c_wiredtx_cascode_boost: post_polarity = 1 (same-sign / MLT-3) is 100BASE-TX only,
-# the same condition the regfile rule wtx_boost_100base_only enforces; the output reads 0 while the wired island is off.
+# CB_EN = c_wiredtx_cascode_boost (wtx.cascode_boost, WT58/WT59): regfile rule wtx_boost_100base_only allows it only in
+# 100BASE-TX (post_polarity = 1); the output reads 0 while the wired island is off.
 inst cascode_pump wtx8_casbias wired_tx
-  CB_EN=c_wiredtx_post_pol CASCODE~TX_CASCODE VDD~RAIL_wired_tx VSS~VSS
+  CB_EN=c_wiredtx_cascode_boost CASCODE~TX_CASCODE VDD~RAIL_wired_tx VSS~VSS
 inst term_buffer term_buffer core      # always-on VDD, not RAIL_wired_tx: the termination return (16-21 mA) stays off the wired_tx island (WT56-b lever 1, WT58)
   VDD~VDD VSS~VSS REF~TX_BUF_REF BIAS~TX_BUF_BIAS OUT~TX_TERM_VCM ENABLE=island_on[0]   # on whenever wired_tx is on (WT51 ruling); switches gated by TX_EN_TERM
 # buffer reference / bias are ideal sources in every pads bench (MW walk 6.3): build demand, D-TXTERM.

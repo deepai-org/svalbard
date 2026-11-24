@@ -165,8 +165,9 @@ def make_audit(work, facts):
                 rows.append(dict(inst=inst, **pins))
                 if pins.get('EN') != f'island_en[{bit}]':
                     fails.append(dict(rule='K3', inst=inst, detail=f"EN is {pins.get('EN')}, expected island_en[{bit}] (reset 0)"))
-                if pins.get('PG') != f's_pg_{isl}':
-                    fails.append(dict(rule='K3', inst=inst, detail=f"PG is {pins.get('PG')}, expected s_pg_{isl}"))
+                pg = f's_pg_{isl}' + ('_b' if inst.endswith('_b') else '')      # second paralleled switch: own PG port (CB8-6)
+                if pins.get('PG') != pg:
+                    fails.append(dict(rule='K3', inst=inst, detail=f"PG is {pins.get('PG')}, expected {pg}"))
                 if pins.get('VISL') != 'RAIL_'+GROUP[isl] or pins.get('VDD') != 'VDD':
                     fails.append(dict(rule='K3', inst=inst, detail='rail pins not VDD -> island rail'))
             return fails, rows

@@ -14,6 +14,7 @@
 `timescale 1ns/1ps
 `include "pt_regmap_defs.svh"
 module tb_digital_gl;
+ parameter integer PT_CHIP = 3;   // RTL run: the netlist's chip (gls.sh -P); ignored by the gate-level netlist
  reg reset_n_pad=1,por_n=1,sclk=0,cs_n=0,mosi=0,fault=0;
  reg[5:0]pgood=0;reg[20:0]sstat=0;
  reg fclk=0;reg run_clk=0;
@@ -24,7 +25,11 @@ module tb_digital_gl;
  // the looped clock is centred with a quarter host-DDR-clock delay (5 ns at the 50 MHz bench clock),
  // as the FPGA's input delay would; the SDR clock (reduced rates) is mid-word already and tolerates it.
  wire #5 d2h_clk_lb = o_d2h_clk_pin;
+`ifdef USE_POWER_PINS
  pt_digital_macro dut(
+`else
+ pt_digital_macro #(.PT_CHIP(PT_CHIP)) dut(
+`endif
 `ifdef USE_POWER_PINS
   .VDD(vdd),.VSS(vss),
 `endif
@@ -36,7 +41,7 @@ module tb_digital_gl;
 `endif
   .ref_clk(gclk),.wire_rx_clk(gclk),.wire_tx_clk(gclk),.rf_rx_clk(gclk),.rf_tx_clk(gclk),.ct_wclk(gclk),.fc_src({6{gclk}}),
   .fault(fault),
-  .s_pg_wired_rx(pgood[0]),.s_pg_wired_cap(pgood[0]),.s_pg_wired_tx(pgood[0]),
+  .s_pg_wired_rx(pgood[0]),.s_pg_wired_cap(pgood[0]),.s_pg_wired_tx(pgood[0]),.s_pg_wired_tx_b(pgood[0]),
   .s_pg_rf_rx(pgood[1]),.s_pg_rf_tx(pgood[1]),.s_pg_lod(pgood[1]),.s_pg_lo(pgood[1]),
   .s_pg_pll(pgood[2]),.s_pg_conv(pgood[4]),.s_pg_debug(pgood[5]),
   .s_pll_tx_lock(sstat[0]),.s_pll_cdr_lock(sstat[1]),.s_ref_present(sstat[2]),.s_refbuf_ready(sstat[3]),
@@ -45,6 +50,18 @@ module tb_digital_gl;
   .s_detect_diff_pos(sstat[12]),.s_detect_diff_neg(sstat[13]),.s_detect_se_p(sstat[14]),.s_detect_se_n(sstat[15]),
   .s_wrx_slp(sstat[16]),.s_wrx_slm(sstat[17]),.s_wtx_ext_data(sstat[18]),.s_aux_present(sstat[19]),.s_wtx_ext_present(sstat[20]),
   `PT_GL_IN_TIE, `PT_GL_OUT_CONN);
+`ifdef USE_POWER_PINS
+ // Gate level: the OBS-14 ring (pt_dig_ring, kept nand2 + 40 inv_1) is a zero-delay combinational loop with the
+ // FUNCTIONAL cell models and hangs the simulator once debug.replica.dig_ring_enable reaches it. Break the loop at
+ // the NAND output and drive it with the RTL behavioural model (half-period 6.5 ns while enabled), so the 40
+ // inverters, the divider and frequency-counter source 7 still run on the netlist.
+ reg gl_ring=1'b1;
+ always @(posedge dut.\debug_cfg[60] ) begin
+  while (dut.\debug_cfg[60] ) begin #6.5 gl_ring = dut.\debug_cfg[60] ? ~gl_ring : 1'b1; end
+  gl_ring = 1'b1;
+ end
+ initial force dut.\dring.n[0]  = gl_ring;
+`endif
  always #10 fclk=~fclk;  // 50 MHz shared fast clock, gated by run_clk (directed section only)
 
  integer fd,log,code,op,a,b,c,i,ncmd;

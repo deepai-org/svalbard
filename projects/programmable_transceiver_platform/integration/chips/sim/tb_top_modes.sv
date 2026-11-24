@@ -16,7 +16,7 @@ module tb_top_modes;
  wire [5:0] island_en, island_on, island_off;
  wire [57:0] atb0_sw, atb1_sw; wire [1:0] atb0_grp; wire [4:0] atb1_grp; wire atb0_en, atb1_en;
  wire por_n, wired_on_ext, wire_rx_ptrim_en, rx_en_aux, rx_en_wtx_ext;
- wire s_pg_wired_rx, s_pg_wired_cap, s_pg_wired_tx, s_pg_rf_rx, s_pg_rf_tx, s_pg_lod, s_pg_lo, s_pg_pll, s_pg_conv, s_pg_debug;
+ wire s_pg_wired_rx, s_pg_wired_cap, s_pg_wired_tx, s_pg_wired_tx_b, s_pg_rf_rx, s_pg_rf_tx, s_pg_lod, s_pg_lo, s_pg_pll, s_pg_conv, s_pg_debug;
  always #10 ref_clk = ~ref_clk;                       // 50 MHz reference (rx_ref_in output in the real chip)
 `ifdef PT_CHIP_WIRED
  reg wtx_clk = 0; always #10.4 wtx_clk = analog.p_wiredtx__SER_EN ? ~wtx_clk : 1'b0;   // WORD_CLK40 runs only with SER_EN
@@ -35,7 +35,7 @@ module tb_top_modes;
  task clear_mon_fault; begin setf(`F_MONITOR_RESET__CLEAR_FAULT, 1); commit(1, "monitor clear_fault 1"); setf(`F_MONITOR_RESET__CLEAR_FAULT, 0); commit(1, "monitor clear_fault 0"); #500; end endtask
  pt_digital_macro #(.PT_CHIP(`PT_CHIP_ID)) dut(.reset_n_pad(rst_pad), .por_n(por_n), .por_bypass(1'b0), .spi_sclk(sclk), .spi_cs_n(cs_n), .spi_mosi(mosi),
   .spi_miso(miso), .spi_miso_oe(miso_oe), .island_en(island_en), .island_on(island_on), .island_off(island_off),
-  .s_pg_wired_rx(s_pg_wired_rx), .s_pg_wired_cap(s_pg_wired_cap), .s_pg_wired_tx(s_pg_wired_tx), .s_pg_rf_rx(s_pg_rf_rx),
+  .s_pg_wired_rx(s_pg_wired_rx), .s_pg_wired_cap(s_pg_wired_cap), .s_pg_wired_tx(s_pg_wired_tx), .s_pg_wired_tx_b(s_pg_wired_tx_b), .s_pg_rf_rx(s_pg_rf_rx),
   .s_pg_rf_tx(s_pg_rf_tx), .s_pg_lod(s_pg_lod), .s_pg_lo(s_pg_lo), .s_pg_pll(s_pg_pll), .s_pg_conv(s_pg_conv), .s_pg_debug(s_pg_debug),
   .wired_on_ext(wired_on_ext), .atb0_sw(atb0_sw), .atb1_sw(atb1_sw), .atb0_grp(atb0_grp),
   .atb1_grp(atb1_grp), .atb0_en(atb0_en), .atb1_en(atb1_en), .wire_rx_ptrim_en(wire_rx_ptrim_en), .fault(fault_pin),
@@ -51,13 +51,13 @@ module tb_top_modes;
 `ifdef PT_CHIP_RF
   .s_pg_rf_rx(s_pg_rf_rx), .s_pg_rf_tx(s_pg_rf_tx), .s_pg_lod(s_pg_lod), .s_pg_lo(s_pg_lo), .s_pg_conv(s_pg_conv),
 `else
-  .s_pg_wired_rx(s_pg_wired_rx), .s_pg_wired_cap(s_pg_wired_cap), .s_pg_wired_tx(s_pg_wired_tx), .wired_on_ext(wired_on_ext),
+  .s_pg_wired_rx(s_pg_wired_rx), .s_pg_wired_cap(s_pg_wired_cap), .s_pg_wired_tx(s_pg_wired_tx), .s_pg_wired_tx_b(s_pg_wired_tx_b), .wired_on_ext(wired_on_ext),
   .rx_en_wtx_ext(rx_en_wtx_ext), .wire_rx_ptrim_en(wire_rx_ptrim_en),
 `endif
   .s_pg_pll(s_pg_pll), .s_pg_debug(s_pg_debug), .atb0_sw(atb0_sw), .atb1_sw(atb1_sw), .atb0_grp(atb0_grp), .rx_en_aux(rx_en_aux),
   .atb1_grp(atb1_grp), .atb0_en(atb0_en), .atb1_en(atb1_en), .por_n(por_n), `PT_CTL_CONNECT);
 `ifdef PT_CHIP_RF
- assign {s_pg_wired_rx, s_pg_wired_cap, s_pg_wired_tx} = 3'b0; assign wired_on_ext = 1'b0;   // no wired island on this chip
+ assign {s_pg_wired_rx, s_pg_wired_cap, s_pg_wired_tx, s_pg_wired_tx_b} = 4'b0; assign wired_on_ext = 1'b0;   // no wired island on this chip
 `else
  assign {s_pg_rf_rx, s_pg_rf_tx, s_pg_lod, s_pg_lo, s_pg_conv} = 5'b0;                         // no rf / conv island on this chip
 `endif

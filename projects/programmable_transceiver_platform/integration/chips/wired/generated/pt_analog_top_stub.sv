@@ -164,6 +164,7 @@ module pt_analog_top_stub(
  input wire [7:0] c_vthdac_b,
  input wire c_vthdac_en,
  input wire c_wiredtx_bias_en,
+ input wire c_wiredtx_cascode_boost,
  input wire c_wiredtx_ext,
  input wire c_wiredtx_idle,
  input wire c_wiredtx_idle_mode,
@@ -206,6 +207,7 @@ module pt_analog_top_stub(
  output wire s_pg_wired_cap,
  output wire s_pg_wired_rx,
  output wire s_pg_wired_tx,
+ output wire s_pg_wired_tx_b,
  output wire s_ref_present,
  input wire wire_rx_ptrim_en,
  input wire [39:0] wire_tx_data,
@@ -567,6 +569,7 @@ module pt_analog_top_stub(
  assign ISO_wired_tx = ~island_en[0];
  assign s_pg_wired_tx = island_en[0];
  wire p_isw_wired_tx_b__EN = island_en[0];
+ assign s_pg_wired_tx_b = island_en[0];
  wire p_isw_wired_cap__EN = island_en[0];
  assign s_pg_wired_cap = island_en[0];
  wire p_pad_hs_rx__TERM_ENABLE = HS_TERM_ENABLE;
@@ -1221,7 +1224,7 @@ module pt_analog_top_stub(
  assign TX_EN_POST = 1'b0;
  assign TX_EN_DETECT = 1'b0;
  assign TX_EN_TERM = 1'b0;
- wire p_cascode_pump__CB_EN = c_wiredtx_post_pol;
+ wire p_cascode_pump__CB_EN = c_wiredtx_cascode_boost;
  wire p_term_buffer__ENABLE = island_on[0];
  wire p_txpad_bias__EN = TX_EN_TERM;
  wire p_txpad_bias__EN_DET = TX_EN_DETECT;

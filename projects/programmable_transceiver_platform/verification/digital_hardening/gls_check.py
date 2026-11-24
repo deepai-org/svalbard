@@ -56,7 +56,11 @@ def isx(v):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--out', required=True)
+    ap.add_argument('--chip', choices=['rf', 'wired'], required=True)
     a = ap.parse_args()
+    # pt_digital_macro PG_MASK: the regfile model sees the raw power-good; the macro masks the enable groups the chip
+    # does not have (b0 wired, b1 rf, b2 pll, b3 reserved, b4 conv, b5 debug) before ISLAND_STATUS[13:8]
+    pg_mask = {'rf': 0x36, 'wired': 0x25}[a.chip]
     out = Path(a.out)
     exp = json.loads((out / 'expect.json').read_text())
     res = dict(status='fail')
@@ -104,7 +108,7 @@ def main():
                 continue
             n_reads += 1
             # ISLAND_STATUS (0x0A) b11 = power-good of the reserved island 3: no switch, tied 0 at the macro boundary
-            want_rd = e[2] & ~0x0800 if e[1] == 0x0A else e[2]
+            want_rd = e[2] & ~(0x3F00 & ~(pg_mask << 8)) if e[1] == 0x0A else e[2]
             if any(ch in 'xXzZ' for ch in got[2]) or int(got[2], 16) != want_rd:
                 mm.append(f'read 0x{e[1]:02X}: got {got[2]} expected 0x{want_rd:04X}')
         else:
@@ -171,7 +175,7 @@ def main():
     obs['FREQ_COUNT_A count'] = cnt[0][2] if cnt else None
     obs['FREQ_COUNT_A lock (source=off)'] = lockr[1][2] if len(lockr) > 1 else None
     want = {'ID': exp['id'], 'ABI': exp['abi'], 'MAP_HASH': exp['map_hash'], 'RESET_STATUS after POR': 3,
-            'RESET_STATUS after W1C': 0, 'RESET_STATUS after RESET_N': 2, 'ISLAND_STATUS pgood=0x2A': 0x2200,  # bit 3 (reserved island) has no switch
+            'RESET_STATUS after W1C': 0, 'RESET_STATUS after RESET_N': 2, 'ISLAND_STATUS pgood=0x2A': (0x2A & pg_mask) << 8,  # bit 3 (reserved island) has no switch
             'FAULT_STATUS fault=1': 1, 'ISLAND_STATUS pgood=0': 0, 'FAULT_STATUS fault=0': 0,
             'FREQ_COUNT_A lock (source=REF, target 256)': 1 << exp['pll_lock_lsb']['locked'],
             'FREQ_COUNT_A count': 256, 'FREQ_COUNT_A lock (source=off)': 0}

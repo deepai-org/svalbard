@@ -81,7 +81,7 @@ def expect(F, D, O):
     for k in range(8): E[f'c_ptrim_t{k}'] = f(f'cdr.phase_trim.p{k}')
     E['c_wrx_cap_rcs'] = f('slicer.capture.rcsel')
     # wired transmit / USB static
-    E['c_wiredtx_idle_mode'] = f('wtx.idle_mode'); E['c_wiredtx_tr'] = f('wtx.phase_trim')     # WT50 (MODE_H / MODE_F removed)
+    E['c_wiredtx_idle_mode'] = f('wtx.idle_mode'); E['c_wiredtx_cascode_boost'] = f('wtx.cascode_boost'); E['c_wiredtx_tr'] = f('wtx.phase_trim')     # WT50 (MODE_H / MODE_F removed)
     E['c_wiredtx_ext'] = f('debug.wtx_ext.enable'); E['c_wiredtx_post_pol'] = f('wiredtx.config.post_polarity')
     E['c_wiredtx_main_code'] = f('wiredtx.config.current_code'); E['c_wiredtx_post_code'] = f('wiredtx.config.postcursor_code')
     E['c_hsbias_en'] = f('usbhs.bias.enable'); E['c_hsbias_c'] = f('usbhs.bias.code')

@@ -119,10 +119,10 @@ sta)
   tail -n 20 "$OUT/sta/sta.log"
   ;;
 gls)
-  rm -rf "$OUT/gls"; mkdir -p "$OUT/gls"
-  python3 "$PROJ/verification/digital_hardening/gls_commands.py" --out "$OUT/gls"
+  rm -rf "$OUT/gls"; mkdir -p "$OUT/gls" "$OUT/home" "$OUT/tmp"
+  python3 "$PROJ/verification/digital_hardening/gls_commands.py" --out "$OUT/gls" --chip "$CHIP"
   dk "$DIGITAL_IMAGE" 2 8g "cd /out/gls && sh /src/verification/digital_hardening/gls.sh /out/design/runs/$TAG/final/pnl/pt_digital_macro.pnl.v > /out/gls/gls.log 2>&1" || true
-  python3 "$PROJ/verification/digital_hardening/gls_check.py" --out "$OUT/gls" | tail -n 30
+  python3 "$PROJ/verification/digital_hardening/gls_check.py" --out "$OUT/gls" --chip "$CHIP" | tail -n 30
   ;;
 pads)
   rm -rf "$OUT/pads"; mkdir -p "$OUT/pads"

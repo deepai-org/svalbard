@@ -33,13 +33,13 @@ DGROUPS = [([12, 4, 0, 8, 16, 24, 32, 20, 28, 36], 1110.0), ([13, 5, 25, 17, 9, 
            ([22, 14, 6, 2, 10, 18, 26, 34, 30, 38], 1451.0), ([15, 7, 3, 11, 19, 27, 35, 23, 31, 39], 1614.0)]
 CTRL_A = ['wire_tx_clk'] + bits('c_wiredtx_main_code', [1, 2, 3, 4, 7]) + bits('c_wiredtx_post_code', [0, 1, 2, 3]) + ['c_wiredtx_ser_en']
 CTRL_B = bits('c_wiredtx_main_code', [0, 5, 6]) + bits('c_wiredtx_post_code', [4, 5, 6, 7]) + ['c_wiredtx_post_pol']
-MOVED = r'c_wiredtx_(main_code|post_code|post_pol|ser_en)'
+MOVED = r'c_wiredtx_(main_code|post_code|post_pol|ser_en|cascode_boost)'
 # remaining south groups (regex lines, as in pin_order.cfg), left part then the filler for the data-group gaps
 LEFT_NAMES = ['rf_.*', 'reset_n_pad', 'por_n', 'por_bypass', 'host_word_clk', 'd2h_.*', 'spi_.*', 'wire_rx_.*',
               'c_txpad_.*', 'c_wtxfb_.*']
 # (regex, x start um or None): d2h_* starts under the hand-placed D2H block (macro x 630-851 on the south edge)
 LEFT = ['rf_.*', 'reset_n_pad', 'por_n', 'por_bypass', 'host_word_clk', ('d2h_.*', 640.0), 'spi_.*', 'wire_rx_.*',
-        'c_wiredtx_(?!main_code|post_code|post_pol|ser_en).*', 'c_txpad_.*', 'c_wtxfb_.*']
+        'c_wiredtx_(?!main_code|post_code|post_pol|ser_en|cascode_boost).*', 'c_txpad_.*', 'c_wtxfb_.*']
 GAP = ['c_usb_.*', 'c_hsbias_.*', 'c_adc_.*', 'c_dac_.*', 'c_refbuf_.*', 's_adc_.*', 's_refbuf_ready', 's_wtx_ext_.*']
 
 def south_extra(base):
@@ -62,7 +62,7 @@ def main():
     # ASM-11 rev 2 (pt_wiredtx8 inputs on its top edge): wire_tx_data[0..39] by increasing x, then the controls,
     # all in macro x 963-1223 at one slot (2.24 um) pitch
     put(['wire_tx_clk'] + bits('wire_tx_data', range(40)) + bits('c_wiredtx_main_code', range(8))
-        + bits('c_wiredtx_post_code', range(8)) + ['c_wiredtx_post_pol', 'c_wiredtx_ser_en'], 966.0)
+        + bits('c_wiredtx_post_code', range(8)) + ['c_wiredtx_post_pol', 'c_wiredtx_ser_en', 'c_wiredtx_cascode_boost'], 966.0)
     assert max(plan) < NSLOT, 'south pins past the east edge'
     # group-regex lines: LEFT packed from x 20 um, GAP into the gaps between the data groups
     lines = ['#S', '@min_distance=2.24']

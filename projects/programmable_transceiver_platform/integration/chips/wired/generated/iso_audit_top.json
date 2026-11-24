@@ -4,7 +4,7 @@
  "counts": {
   "K1": 21,
   "K2": 12,
-  "K3": 1,
+  "K3": 0,
   "K4": 0,
   "K5": 0,
   "K6": 0,
@@ -14,7 +14,6 @@
   "K1 island-to-island / island-to-core gate with no clamp": 21,
   "K2 core / digital source onto p-diffusion of an off island": 4,
   "K2 pad back-drive into an off island": 8,
-  "K3 switch": 1,
   "K7 ATB leaf not gated by its island": 4
  },
  "fails": [
@@ -382,11 +381,6 @@
    "detail": "core driver can be high while wired is off"
   },
   {
-   "rule": "K3",
-   "inst": "isw_wired_tx_b",
-   "detail": "PG is NC_111, expected s_pg_wired_tx"
-  },
-  {
    "rule": "K7",
    "leaf": "atb1_leaf29",
    "node": "ATBN_pll_ibias",
@@ -422,8 +416,8 @@
  "macro_internal_clamps": 78,
  "k1_clamped_ok": 92,
  "coverage": {
-  "instances": 260,
-  "nets": 1122,
+  "instances": 261,
+  "nets": 1124,
   "unbound_ports": 0,
   "iso_clamp_instances": 91
  },

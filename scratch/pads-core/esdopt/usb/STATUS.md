@@ -275,3 +275,9 @@ C3 HS-path EM (bench/b7-hs-em.json; netres r_b7 paths x current; 85 C ratings 0.
   is per leg; the trim-unit feeds (0.8 um Metal2) 5.8 x the full-current bound, ~1.1 x with the actual split (trim 105 ohm vs main 25 ohm).
   At the 22-32 C operating junction the 85 C ratings are conservative by ~10 x (Black, Ea 0.9 eV, n = 2): not function-breaking;
   widening the TERM_VCM Metal4 route (2.35 -> >= 5 um) is the cheap fix if a later b8 respin happens.
+
+## 2026-11-24: b7v published (coordinator: EM sign-off at 85 C; usb_vcm_pin.py)
+TERM_VCM top-edge pin widened (Metal4 x 195-310 on the edge, over the TERM_VCM plate; old 0.44 um pin demoted). EM (85 C, HS-active
+termination current 9.7 mA, bench/b7v-hs-em.json): TERM_VCM pin -> termination 0.49 (b7 1.97), bond -> termination 0.80. Also fixed the
+9 Magic MIMTM.2 errors of b7 (Metal4 landing cut + 0.4 at three Via4 cuts on the MIM feed lines): the shuttle's Magic script (block_drc L)
+now 0. Checks: Magic 0, KLayout main / antenna 0, rail_site PASS, read-back LVS unique + TERM_VCM<->VSS swap fails; run.sh wired PASS.

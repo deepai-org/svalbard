@@ -389,9 +389,47 @@ class Lay:
         req = ad.requests_from_shapes(p.shapes, terminals)
         dcmds, diodes = ad.plan(req, [s[:5] for s in p.shapes], keepouts, taps=taps)
         p.cmds += dcmds
+        # Top-cell pins (assembly 2026-11-24, same rule as rfrx_flow): >= 2 um pitch, >= 0.8 um wide, on the bottom edge.
+        # Wide trunks (WIDE: supplies / stage-current nets) run straight down to the edge at full width (no added R).
+        # Narrow ports: M3 trunk down to its own M4 row (rows rise with trunk x), M4 to a free pin column, M3 drop.
+        # A pin column keeps >= PIN_SPACE from every wide column and from the trunk extension of every port left of it.
+        order = sorted(self.ports, key=lambda n: self.trunk[n][0])
+        narrow = [n for n in order if n not in WIDE and n not in POWER]
+        rows_y, yy = {}, 3.0
+        for n in narrow:
+            yy += .22; rows_y[n] = yy; yy += .22 + .5
+        band = _snap(yy + 1.0)
+        cols = [(xo + self.trunk[n][0], self.trunk[n][1]) for n in order if n in WIDE or n in POWER]
+        px, pinned = {}, []
+        for n in narrow:
+            t_ = xo + self.trunk[n][0]
+            x_ = t_
+            left = [(xo + self.trunk[m][0], max(self.trunk[m][1], .4)) for m in narrow if self.trunk[m][0] < self.trunk[n][0]]
+            for _ in range(2000):
+                bad = [c for c in cols + left + pinned if abs(c[0] - x_) < c[1] / 2 + F.PIN_W / 2 + F.PIN_SPACE - 1e-6
+                       and not (c in left and abs(c[0] - t_) < 1e-6 and x_ == t_)]
+                if not bad:
+                    break
+                x_ = _snap(max(c[0] + c[1] / 2 for c in bad) + F.PIN_W / 2 + F.PIN_SPACE)
+            px[n] = x_
+            pinned.append((x_, F.PIN_W))
         for i, n in enumerate(self.ports, 1):
-            xx = xo + self.trunk[n][0]
-            p.cmds += [f'box values {xx - .2:.3f} {port_y - .2:.3f} {xx + .2:.3f} {port_y + .2:.3f}',
+            tx, tw = xo + self.trunk[n][0], self.trunk[n][1]
+            p.net = n
+            if n in WIDE or n in POWER:
+                p.rect('metal3', tx - tw / 2, -band, tx + tw / 2, port_y + .2)
+                p.net = None
+                p.cmds += [f'box values {tx - tw / 2:.3f} {-band:.3f} {tx + tw / 2:.3f} {-band + 2.0:.3f}',
+                           f'label {n} FreeSans 0.25 0 0 0 c metal3', f'port make {i}']
+                continue
+            yr = rows_y[n] - band
+            p.wire('metal3', tx, yr, tx, port_y, width=tw)
+            p.via(tx, yr, 3, 4)
+            p.wire('metal4', tx, yr, px[n], yr, width=.44)
+            p.via(px[n], yr, 3, 4)
+            p.wire('metal3', px[n], yr, px[n], -band + F.PIN_W / 2, width=F.PIN_W)
+            p.net = None
+            p.cmds += [f'box values {px[n] - F.PIN_W / 2:.3f} {-band:.3f} {px[n] + F.PIN_W / 2:.3f} {-band + 2.0:.3f}',
                        f'label {n} FreeSans 0.25 0 0 0 c metal3', f'port make {i}']
         # internal net names (readable extraction / probing): one M2 label per net on its first track
         done = set(self.ports) | set(POWER)

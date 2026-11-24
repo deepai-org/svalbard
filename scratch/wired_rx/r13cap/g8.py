@@ -5,7 +5,7 @@ W = Path('/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analo
 import capture as c
 S = Path(__file__).resolve().parent
 c.FAST = S / 'fast'; c.SCRATCH = S / 'cap'; c.GEN = S / 'gen'
-K = {'q625_ss': (4, dict(f=625e6, words=12, corner='ss', temp=32, vdd=3.15)), 'q625': (4, dict(f=625e6, words=12)),
+K = {'f500_ss': (1, dict(f=500e6, words=8, psel=3, corner='ss', temp=32, vdd=3.15)), 'q625_ss': (4, dict(f=625e6, words=12, corner='ss', temp=32, vdd=3.15)), 'q625': (4, dict(f=625e6, words=12)),
      'q625_ff': (4, dict(f=625e6, words=12, corner='ff', temp=22, vdd=3.35, d_lat=0.327e-9)),
      'h625_ss': (2, dict(f=625e6, words=12, corner='ss', temp=32, vdd=3.15))}
 tag = sys.argv[1]; pess = tag.startswith('pess_'); b, k = K[tag.replace('pess_', '')]

@@ -21,7 +21,7 @@ MIN_BITS = {4: 150, 2: 120, 1: 60}
 def run(ck, rate, rcs=0, psel=0, words=None, neg=None, cap=CAP, codes='auto', vd=0.12, lde_delay=0.3e-9):
     c, temp, vdd, bound = L.CORN[ck]
     mode, fring, bpc = MODE[rate]
-    key = f'{ck}_{rate:g}G_r{rcs}' + (f'_p{psel}' if bpc == 1 else '') + ('' if codes == 'auto' else f'_codes{codes}') + (f'_neg{neg}' if neg else '') + (f'_lde{lde_delay * 1e12:.0f}' if lde_delay != 0.3e-9 else '')
+    key = f'{ck}_{rate:g}G_r{rcs}' + (f'_p{psel}' if bpc == 1 else '') + ('' if codes == 'auto' else f'_codes{codes}') + (f'_neg{neg}' if neg else '') + (f'_lde{lde_delay * 1e12:.0f}' if lde_delay != 0.3e-9 else '') + ('' if cap == CAP else '_' + Path(cap).parent.parent.name)
     if key in rc11.jload('capb.json') and 'bit_errors' in rc11.jload('capb.json')[key]: return
     L.RUN = H / 'run'; L.RUN.mkdir(exist_ok=True)
     words = words or {4: 12, 2: 12, 1: 6}[bpc]

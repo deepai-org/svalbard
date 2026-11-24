@@ -177,6 +177,7 @@ for net_, users_ in (nets.items() if C.PIN_WINDOWS.get(CHIP) else []):
         for ln_, b_ in pin_shapes_die0(n_, p_):
             if ln_ in ('Metal1', 'Metal2', 'Metal3'): _pinwin['Metal4'].insert(b_.enlarged(um(3), um(3)))
             elif ln_ == 'Metal4': _pinwin['Metal5'].insert(b_.enlarged(um(3), um(3)))
+            elif ln_ == 'Metal5': _pinwin['Metal4'].insert(b_.enlarged(um(3), um(3)))      # HS_TERM_TRIM[2] into the Metal4 grid under a Metal5 pin
 avoid['Metal4'] = (avoid['Metal4'] + _pinwin['Metal4']).merged(); avoid['Metal5'] = (avoid['Metal5'] + _pinwin['Metal5']).merged()
 man['pin_windows_mm2'] = {k: round(v.merged().area()/1e12, 4) for k, v in _pinwin.items()}
 bars = []          # island supply bars (common.ISLAND_BARS)
@@ -578,6 +579,15 @@ D += ['END NETS']
 blk = [(n, r, ('Metal1', 'Metal2', 'Metal3')) for n, r in list(booked.items())+list(FP['reserves'].items())
        if n != 'd2h_strip' and not n.startswith(('chan_', 'corridor', 'pocket'))]
 e = C.IO_INNER-5; W_, H_ = C.DIE[2], C.DIE[3]; ML = tuple(n for n, *_ in C.METALS)
+# the 5 um access strip inside the IO inner edge is open only in front of pad cells (custom pads and provider signal cells,
+# whose pins are there); between pads it carries the provider ring's rails (atb1_sw[5/12/59] ran into 3LM/5LM_METAL_RAIL
+# and their via cells at y 4747.6-4749, joining VDD and VSS, 2026-11-24)
+_padx = db.Region([db.Box(um(v['bbox'][0]), um(v['bbox'][1]), um(v['bbox'][2]), um(v['bbox'][3])) for v in list(PADS['pads'].values())+[w for w in PADS['io'].values() if not w['cell'].endswith(('dvss', 'dvdd'))]]).merged()      # supply cells: no pins, rails only
+_strip = db.Region(db.Box(0, 0, um(W_), um(H_))) - db.Region(db.Box(um(C.IO_INNER+0.3), um(C.IO_INNER+0.3), um(W_-C.IO_INNER-0.3), um(H_-C.IO_INNER-0.3)))
+_strip -= db.Region(db.Box(0, 0, um(W_), um(H_))) - db.Region(db.Box(um(e), um(e), um(W_-e), um(H_-e)))      # the outer band is blocked below
+for _poly in (_strip - _padx.sized(um(0.5))).merged().each():
+    for _t in _poly.decompose_trapezoids(1):
+        _b = _t.bbox(); blk.append(('ring_strip', (fu(_b.left), fu(_b.bottom), fu(_b.right), fu(_b.top)), ML))
 # island switches: Metal2-3 blocked 1 um round the outline (the router ran RAIL_rf_tx along the switch edge into its own
 # Metal3 = VISL joined to VDD through the switch, 2026-11-24)
 for n_, b_ in man['blocks'].items():

@@ -2,8 +2,8 @@
  "direction_errors": [],
  "direction_listed": [],
  "counts": {
-  "K1": 20,
-  "K2": 11,
+  "K1": 21,
+  "K2": 12,
   "K3": 1,
   "K4": 0,
   "K5": 0,
@@ -11,9 +11,9 @@
   "K7": 4
  },
  "groups": {
-  "K1 island-to-island / island-to-core gate with no clamp": 20,
-  "K2 pad back-drive into an off island": 9,
-  "K2 core / digital source onto p-diffusion of an off island": 2,
+  "K1 island-to-island / island-to-core gate with no clamp": 21,
+  "K2 core / digital source onto p-diffusion of an off island": 4,
+  "K2 pad back-drive into an off island": 8,
   "K3 switch": 1,
   "K7 ATB leaf not gated by its island": 4
  },
@@ -218,6 +218,17 @@
   },
   {
    "rule": "K1",
+   "net": "TX_BUF_BIAS",
+   "driver_islands": [
+    "wired"
+   ],
+   "receiver": "term_buffer.BIAS",
+   "receiver_domain": "core",
+   "detail": "gate floats when the driving island is off (no iso_clamp)",
+   "severity": "high"
+  },
+  {
+   "rule": "K1",
    "net": "WIRE_CK",
    "driver_islands": [
     "pll"
@@ -240,14 +251,25 @@
   },
   {
    "rule": "K2",
-   "net": "TX_TERM_VCM",
-   "victim": "term_buffer.OUT",
-   "well": "~int",
+   "net": "TX_BUF_REF",
+   "victim": "txpad_bias.BUF_REF",
+   "well": "RAIL_wired",
    "island": "wired",
-   "via": "pdiff",
-   "source": "pad_wire_tx.TERM_VCM",
-   "source_domain": "pad",
-   "detail": "pad can be driven externally while the island is off"
+   "via": "pdiff:R",
+   "source": "term_buffer.REF",
+   "source_domain": "core",
+   "detail": "core driver can be high while wired is off"
+  },
+  {
+   "rule": "K2",
+   "net": "TX_TERM_VCM",
+   "victim": "pad_wire_tx.TERM_VCM",
+   "well": "RAIL_wired",
+   "island": "wired",
+   "via": "pdiff:R",
+   "source": "term_buffer.OUT",
+   "source_domain": "core",
+   "detail": "core driver can be high while wired is off"
   },
   {
    "rule": "K2",

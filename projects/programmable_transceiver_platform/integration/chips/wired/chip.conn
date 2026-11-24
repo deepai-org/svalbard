@@ -230,8 +230,8 @@ inst attached_tx_interlock tx_interlock wired_tx
   VDD~RAIL_wired_tx VSS~VSS REQ_MAIN=c_txpad_req_main REQ_POST=c_txpad_req_post REQ_TMDS=VSS REQ_DETECT=c_txpad_req_detect
   REQ_TERM=c_txpad_req_term RESET=island_off[0] QUALIFIED=island_on[0] SUPPLY_OK=s_pg_wired_tx CONFLICT>- VALID>-
   EN_MAIN>TX_EN_MAIN EN_POST>TX_EN_POST EN_TMDS>- EN_DETECT>TX_EN_DETECT EN_TERM>TX_EN_TERM
-inst term_buffer term_buffer wired_tx
-  VDD~RAIL_wired_tx VSS~VSS REF~TX_BUF_REF BIAS~TX_BUF_BIAS OUT~TX_TERM_VCM ENABLE=island_on[0]   # on whenever wired_tx is on (WT51 ruling); switches gated by TX_EN_TERM
+inst term_buffer term_buffer core      # always-on VDD, not RAIL_wired_tx: the termination return (16-21 mA) stays off the wired_tx island (WT56-b lever 1, WT58)
+  VDD~VDD VSS~VSS REF~TX_BUF_REF BIAS~TX_BUF_BIAS OUT~TX_TERM_VCM ENABLE=island_on[0]   # on whenever wired_tx is on (WT51 ruling); switches gated by TX_EN_TERM
 # buffer reference / bias are ideal sources in every pads bench (MW walk 6.3): build demand, D-TXTERM.
 inst txpad_bias pt_txpad_bias wired_tx
   BUF_REF~TX_BUF_REF BUF_BIAS~TX_BUF_BIAS EN=TX_EN_TERM EN_DET=TX_EN_DETECT IBIAS_DET~BIAS_txpad_det

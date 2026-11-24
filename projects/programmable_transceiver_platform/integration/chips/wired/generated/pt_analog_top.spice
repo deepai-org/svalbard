@@ -130,7 +130,7 @@ Xwiredtx TXPH[0] TXPH[1] TXPH[2] TXPH[3] TXPH[4] TXPH[5] TXPH[6] TXPH[7] wire_tx
 Xsteer_4 RAIL_wired_tx VSS VSS NC_steer_4_OUT tx_steering_buffer_flat_physical
 Xsteer_5 RAIL_wired_tx VSS VSS NC_steer_5_OUT tx_steering_buffer_flat_physical
 Xattached_tx_interlock RAIL_wired_tx VSS c_txpad_req_main c_txpad_req_post VSS c_txpad_req_detect c_txpad_req_term island_off[0] island_on[0] s_pg_wired_tx NC_attached_tx_interlock_CONFLICT NC_attached_tx_interlock_VALID TX_EN_MAIN TX_EN_POST NC_attached_tx_interlock_EN_TMDS TX_EN_DETECT TX_EN_TERM tx_mode_interlock_flat_physical
-Xterm_buffer RAIL_wired_tx VSS TX_BUF_REF TX_BUF_BIAS TX_TERM_VCM island_on[0] buffer_compensated_flat
+Xterm_buffer VDD VSS TX_BUF_REF TX_BUF_BIAS TX_TERM_VCM island_on[0] buffer_compensated_flat
 Xtxpad_bias RAIL_wired_tx VSS TX_EN_TERM TX_BUF_REF TX_BUF_BIAS TX_EN_DETECT BIAS_txpad_det TX_DETECT_PBIAS pt_txpad_bias
 Xusb_txdrv WTX_TAP_P WTX_TAP_N c_usb_hs_en c_usb_hs_drv c_usb_fs_en c_usb_tx_dp c_usb_tx_dn c_usb_tx_oe island_off[0] c_usb_hs_str[0] c_usb_hs_str[1] HS_PBIAS USB_HS_P USB_HS_N USB_FS_HIGH_P USB_FS_HIGH_N USB_FS_LOW_P USB_FS_LOW_N RAIL_wired_tx VSS pt_usb_txdrv
 Xhsbias BIAS_hsbias c_hsbias_en c_hsbias_c[0] c_hsbias_c[1] c_hsbias_c[2] c_hsbias_c[3] c_hsbias_c[4] c_hsbias_c[5] c_hsbias_c[6] c_hsbias_c[7] HS_PBIAS RAIL_wired_tx VSS pt_wtx_hsbias

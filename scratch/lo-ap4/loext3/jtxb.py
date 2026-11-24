@@ -92,8 +92,11 @@ def one(case):
             lo += f'XTX{n} txd o{n} txs 0 nfet_03v3 w=10u l=0.28u m=4\nCW{n} o{n} 0 22f\n'
         if kw.get('buf', 1):
             lo += 'XTB tip tin tqp tqn oip oin oqp oqn vdd 0 pt_lo_txbuf\n'
-            for f_ in ('lo_txbuf.spice', 'timing_cells.spice'):
-                (wd / f_).write_text(Path(T, f_).read_text())
+            if kw.get('ext'):   # published extracted cell (generated/lo_txbuf.ext.spice) instead of the schematic
+                (wd / 'lo_txbuf.spice').write_text(tf.uniquify_subckts(Path(os.environ.get('TXBUF_EXT', str(Path(T, 'generated', 'lo_txbuf.ext.spice')))).read_text(), 'lo_txbuf', keep=('pt_lo_txbuf',)))   # p_* names collide with lo_ext / rxmix primitives
+            else:
+                for f_ in ('lo_txbuf.spice', 'timing_cells.spice'):
+                    (wd / f_).write_text(Path(T, f_).read_text())
             inc += '.include lo_txbuf.spice\n'
         else:
             lo += ''.join(f'RB{n} t{n} o{n} 1m\n' for n in ('ip', 'in', 'qp', 'qn'))

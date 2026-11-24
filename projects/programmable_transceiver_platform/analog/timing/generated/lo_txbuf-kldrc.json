@@ -1,7 +1,24 @@
 {
- "ran": true,
- "violations": 0,
- "by_rule": {},
- "deck": "gf180mcuD KLayout (sak-drc.sh -k)",
- "note": "GDS after Metal4 edge pins (2026-11-23); engine precheck main 0 / antenna 0 before the pin edit"
+ "block": "lo_txbuf",
+ "gds_sha256": "e6b31bb1ece57c5d257c2d05704be4db71fa134669dac35bbb19f13511d1486c",
+ "top": "pt_lo_txbuf",
+ "klayout": "KLayout 0.30.9",
+ "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+ "variant": "D",
+ "run_mode": "deep",
+ "clean": true,
+ "gds": "lo_txbuf.gds",
+ "deck": "gf180mcu.drc (precheck decks: main=all,-antenna,-density,-cup; antenna=antenna)",
+ "decks": {
+  "main": {
+   "total": 0,
+   "rules": {},
+   "error": null
+  },
+  "antenna": {
+   "total": 0,
+   "rules": {},
+   "error": null
+  }
+ }
 }

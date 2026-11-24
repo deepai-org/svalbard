@@ -263,3 +263,21 @@ plus numerical phase error at 1 ps steps), not phase noise. The true L(f) is bel
 spur (divider kick-back onto the tank) to quantify by a spectral-line analysis with the divider off / on. The r5 record (no
 divider on the tank) was -115.5 / -117.4 dBc/Hz at 1 MHz. Requirement RF-RX-LOPN -107 dBc/Hz at 3 MHz: not shown.
 Margin work stopped here (coordinator, 2026-11-23: function first).
+
+## 2026-11-24: pt_lo_txbuf r1 was dead as laid out -> r3 published (RF chain owner, fresh agent)
+- r1 bench (`loext3/jtxb.py`, txb3) used the SCHEMATIC txbuf and the UNPUBLISHED lo_ext a4. Extracted r1 (`generated/lo_txbuf.ext.spice`)
+  into the same bench: TX gate swing 0.03-0.20 V at ss and 0.12-0.58 V at tt (dead), with either lo_ext. Isolated (`txbuf_ext/t*.py`):
+  DC point identical to the schematic; ext with all C stripped works; with only ground C works; the top-level node-to-node coupling
+  (P/N/I/Q legs and stage-to-stage, 2-11 fF each) drops stage-1 gain from 2.8 to 1.2. Not a bench artefact (subckt names uniquified:
+  same result; jtxb now uniquifies the ext txbuf, TXBUF_EXT overrides the netlist).
+- r3 (`analog/timing/lo_txbuf.spice`): per leg 392 fF MIM + self-biased 32/16 inverter, second 392 fF MIM + self-biased 32/16 (DC reset),
+  32/16, 32/16, 48/24, 48/24 (six inversions, OUTP follows INP). Layout build_layout default: 158.7 x 250.9 um, Magic DRC 0, LVS unique,
+  precheck main 0 / antenna 0, read-back LVS 64 = 64 match. Pins are the engine's Metal5 labels on the TOP edge (y 249.9-250.4, 0.4 um):
+  IP 40.2, IN 41.4, OQP 42.6, VDD 45.0, VSS 48.0, OQN 51.0, QP 72.6, OIN 73.8, OIP 75.0, QN 133.8 (x centres, um). (M4 pads as in r1
+  gave M4.2a errors; not used.)
+- Extracted r3, isolated (`txbuf_ext/tvl.py`, 60 ns, settled; inputs 0.25 / 0.17 / 0.20 V per leg tt / ss / ff, 4 x 10/0.28 + 30 fF loads):
+  rail to rail every corner (ss -0.06 ... 3.19 V), duty 0.50, Q-I 93 / 94 deg tt / ff, **59 deg at ss** (31 deg quadrature error: miss);
+  bias settles in ~20-50 ns after power-up. Supply 35.6 / 46.2 / 59.3 mA tt / ss / ff (r1 schematic 15.0 / 19.3 worst): self-biased
+  stages sit at their trip point (crowbar). Joint bench with lo_ext a4 + 2.1 / 3.5 mm line: rail to rail at ss and tt (jruns/txbr2a4).
+- Published lo_ext (Nov 11) vs a4 in the same joint bench, ss/3.15, 2.1 mm: RX mixer gain 1.1-2.3 dB vs 18.6 dB. The published lo_ext
+  under-drives the RX mixers at ss; a4 (staged since 11-14, J1 10/10 pass, EM 0 / 3701, precheck clean, same ports) is not published.

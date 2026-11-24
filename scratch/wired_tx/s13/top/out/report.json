@@ -2043,7 +2043,7 @@
  },
  "verify_from_disk": {
   "gds": "/home/ubuntu/svalbard/scratch/wired_tx/s13/top/build/pt_wiredtx8.gds",
-  "sha256": "sha256:e56ed25a704390116236331926215a8eeda7ed3b13d7ab1db5cfc51e3a6ed6c4",
+  "sha256": "sha256:fc054a240e53a5f4a9bbe4e86bb51afda4c3f7dcfd24ddb0de233633b4bd0b1f",
   "magic_drc": 0,
   "lvs": {
    "unique_match": true,
@@ -2121,9 +2121,9 @@
    "VDD": 3.32,
    "POST_P": 0.03,
    "MAIN_N": 0.01,
+   "PS0": 0.0,
    "F2": 0.0,
-   "MAIN_P": 0.0,
-   "PS0": 0.0
+   "MAIN_P": 0.0
   },
   "PH1": {
    "total": 37.0,
@@ -2171,8 +2171,8 @@
    "POST_P": 0.03,
    "MAIN_N": 0.01,
    "PS4": 0.0,
-   "MAIN_P": 0.0,
-   "F6": 0.0
+   "F6": 0.0,
+   "MAIN_P": 0.0
   },
   "PH5": {
    "total": 37.0,
@@ -2210,8 +2210,8 @@
    "aux": 0.02,
    "MAIN_N": 0.01,
    "PS7": 0.0,
-   "MAIN_P": 0.0,
-   "F1": 0.0
+   "F1": 0.0,
+   "MAIN_P": 0.0
   },
   "PS0": {
    "total": 67.4,
@@ -2222,8 +2222,8 @@
    "F0": 0.1,
    "F4": 0.1,
    "PS1": 0.09,
-   "mux": 0.0,
-   "PH0": 0.0
+   "PH0": 0.0,
+   "mux": 0.0
   },
   "PS1": {
    "total": 66.9,
@@ -2303,8 +2303,8 @@
    "PS3": 0.05,
    "PS7": 0.05,
    "PS6": 0.05,
-   "F3": 0.05,
    "F5": 0.05,
+   "F3": 0.05,
    "PH5": 0.0
   },
   "PS6": {
@@ -2359,11 +2359,11 @@
    "ser8d": 2.62,
    "PS0": 0.1,
    "PS1": 0.08,
+   "F2": 0.06,
    "PS7": 0.06,
    "PS6": 0.06,
    "F3": 0.06,
    "F1": 0.06,
-   "F2": 0.06,
    "PH6": 0.0
   },
   "F1": {
@@ -2642,8 +2642,8 @@
    "F5": 0.1,
    "PS4": 0.1,
    "PS2": 0.09,
-   "F7": 0.06,
    "F2": 0.06,
+   "F7": 0.06,
    "PS7": 0.05,
    "PS5": 0.05,
    "PS6": 0.05,
@@ -2673,8 +2673,8 @@
    "PS3": 0.05,
    "PS7": 0.05,
    "PS6": 0.05,
-   "F5": 0.05,
    "F3": 0.05,
+   "F5": 0.05,
    "PS4": 0.05
   },
   "PS6": {
@@ -2722,12 +2722,12 @@
    "VSS": 19.55,
    "VDD": 2.74,
    "PS0": 0.1,
-   "PS6": 0.06,
    "PS1": 0.06,
    "F1": 0.06,
    "PS7": 0.06,
    "F3": 0.06,
-   "F2": 0.06
+   "F2": 0.06,
+   "PS6": 0.06
   },
   "F1": {
    "total": 19.6,
@@ -2741,9 +2741,9 @@
    "F0": 0.06,
    "F2": 0.05,
    "PS1": 0.05,
+   "PS2": 0.05,
    "PS7": 0.05,
-   "PS3": 0.05,
-   "PS2": 0.05
+   "PS3": 0.05
   },
   "F2": {
    "total": 44.0,
@@ -2752,8 +2752,8 @@
    "VDD": 1.14,
    "F3": 0.12,
    "F7": 0.11,
-   "PS6": 0.11,
    "PS5": 0.11,
+   "PS6": 0.11,
    "PS7": 0.1,
    "PS4": 0.06,
    "F0": 0.06,
@@ -3105,29 +3105,9 @@
   "note": "Rails, plate, bars, header strap and the children's supply metal: raster run s13/top/ir (2-D, drawn geometry)."
  },
  "sha256": {
-  "pt_wiredtx8.gds": "sha256:e56ed25a704390116236331926215a8eeda7ed3b13d7ab1db5cfc51e3a6ed6c4",
-  "pt_wiredtx8.ext.spice": "sha256:fa1d3bed280d340cc3534306a9df43907d93b8aa7f730f8cd0bd0a58b05992f7",
-  "pt_wiredtx8.rc.spice": "sha256:824903169ef38e08f33b2587d4b8211c23fc228ae32143626a65aef292484301",
+  "pt_wiredtx8.gds": "sha256:fc054a240e53a5f4a9bbe4e86bb51afda4c3f7dcfd24ddb0de233633b4bd0b1f",
+  "pt_wiredtx8.ext.spice": "sha256:5a6aac36713bbdd9e852f9f2e5171699ae9aa5e51f97d597c5ac93d2610fb0c5",
+  "pt_wiredtx8.rc.spice": "sha256:61f4c777dd27bf4fe903023bd0dd40070bb90b2e387019010fb923dba97b01e2",
   "pt_wiredtx8.lvs.spice": "sha256:768973dbf48e5704c10cd5059595d009e1bc75535a45ff46c4c0cf2061c127ad"
- },
- "m4_bar_band": {
-  "x": [
-   340.0,
-   744.5
-  ],
-  "y": [
-   410.9,
-   430.8
-  ],
-  "content": "island VDD Metal4 only (read-back GDS)",
-  "bar_ties": [
-   "T_main_2",
-   "T_main_3",
-   "T_post_0",
-   "T_post_1",
-   "T_post_2",
-   "T_post_3"
-  ],
-  "note": "T_main_0 / T_main_1 (x 312.1-329.9) are west of the band; they are joined to T_main_2/3 inside the block by the VDD Metal5 header strap and its Metal3/4 bridges at the PH7 lane and grid_tie_2, so the bar need not reach them. x 305-340 holds non-VDD Metal4 (TAP_P / TAP_N y 419.46-420.76, aux link net y 413.61-414.01). IR without T_main_0/1: headers 3.34 / 7.00 mV nom / high R, unchanged."
  }
 }

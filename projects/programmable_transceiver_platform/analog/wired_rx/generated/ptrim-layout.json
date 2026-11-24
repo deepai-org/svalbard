@@ -39,5 +39,14 @@
   "columns": 16,
   "rows": 36,
   "pitch_um": 11.0
+ },
+ "publish_2026_11_24": {
+  "rev": "r12c (fixed per-channel offsets, DCF taps, grid VSS strap)",
+  "gds_sha256": "6a758708225d748908fc0f41838a8300a1f29801627707ba34d61c38756c8d45",
+  "source": "scratch/timing/handoff (assembled master since 860f6502)",
+  "checks": "shuttle main 0, antenna 0, DCF.1a 0 (handoff MANIFEST); read-back LVS from disk unique, negative control fails (scratch/timing/drc12/rbl/ptrim_r12c/readback.json)",
+  "rc": "ptrim.rc.spice: full-coverage R+C, scratch/timing/ringrc/ptrim_out/rc.json",
+  "results": "TIM-30 / TIM-34: chain 3.24 Gb/s ss/3.50 V 0/112 with R+C ring + ptrim; R+C ring max 740 MHz at ss/3.15 V (3.0-3.24 Gb/s need the 3.50 V trim, ruling TIM-35)",
+  "superseded": "older sections of this file describe the previous published revision"
  }
 }

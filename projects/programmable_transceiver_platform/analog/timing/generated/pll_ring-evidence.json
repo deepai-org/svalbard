@@ -782,5 +782,14 @@
  ],
  "excluded_coverage": [
   "non-gating nominal cases (cold start, HOLD, open-loop VCTRL ends) and the 24 corner cases were not rerun on r9v; corner range: scratch/wired_rx/r8ring range table (README Resume 7 / RING ECO)"
- ]
+ ],
+ "publish_2026_11_24": {
+  "rev": "r12 (TIM-19 duty pairs, ECO over r9d core, DCF taps)",
+  "gds_sha256": "3613314afedaea081321c44c395468b2a52e3642d0653311b16e065d5a2c9e02",
+  "source": "scratch/timing/handoff (assembled master since 860f6502)",
+  "checks": "shuttle main 0, antenna 0, DCF.1a 0 (handoff MANIFEST); read-back LVS from disk unique, negative control fails (scratch/timing/drc12/rbl/pll_ring_r12/readback.json)",
+  "rc": "pll_ring.rc.spice: full-coverage R+C, scratch/timing/ringrc/out/rc.json",
+  "results": "TIM-30 / TIM-34: chain 3.24 Gb/s ss/3.50 V 0/112 with R+C ring + ptrim; R+C ring max 740 MHz at ss/3.15 V (3.0-3.24 Gb/s need the 3.50 V trim, ruling TIM-35)",
+  "superseded": "older sections of this file describe the previous published revision"
+ }
 }

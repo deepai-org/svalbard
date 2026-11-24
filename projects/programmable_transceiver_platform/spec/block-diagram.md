@@ -41,7 +41,7 @@ LO [lo, lod]
 
 Wired receive [wired_rx, wired_cap]
   WIRE_RX_P/N -> pad_hs_rx (termination trim from `termination`) -> ctle -> rxselect -> slicer -> wrx_cap
-            -> digital (wire_rx_data 40 bit, wire_rx_edge 20 bit, clock WCLK40)
+            -> digital (wire_rx_word 20 bit, wire_rx_edge 20 bit, strobe WSTB; 20 -> 40 gear in the macro, W7-GEAR)
   USB_DP/DN -> pad_usb (levels from rxlevel) -> rxselect (direct), detect, wmon_sel
   sampling clocks: pll_cdr PH0..7 [pll] -> ptrim -> CKP0..7 -> slicer, wrx_cap, wordclk_rx
   CDR loop: wrx_cap UP/DN -> iso_cdr_up/dn -> cdr and pll_cdr [pll];  thresholds: vthdac -> slicer
@@ -231,7 +231,7 @@ The register file rejects RF payload blocks and wired payload blocks being activ
 | Ring reference `PREF` | `clockmux` (from `ref_clk`, AUX or H2D_CLK) | `pll_tx`, `cdr` |
 | TX ring phases | `pll_tx` | `wiredtx` (PH0/2/4/6), `clockmux` (PH0), `obs_pre4_pll` (PH1) |
 | CDR ring phases | `pll_cdr` (reference from `cdr`) | `ptrim` -> `slicer`, `wrx_cap`, `wordclk_rx`; `prescale_hf`, `clockmux`, `obs_pre4_cdr` |
-| Receive word clock WCLK40 | `wrx_cap` | macro `wire_rx_clk` |
+| Receive word strobe WSTB | `wrx_cap` (r7) | macro `wire_rx_wstb` |
 | Transmit word clock | `wiredtx` | macro `wire_tx_clk` |
 | Wire clock `WIRE_CK` | `clockmux` (TX ring, `ref_clk`, AUX or forwarded wire clock) | `prescale` -> macro `ct_wclk` and host clock option; `prescale_conv` -> converter clock option |
 | Converter clock `CONV_CLK` | `clockmux` (divided wire clock, `ref_clk`, AUX or host-follow) | `adc_i/q` through `iso_conv_clk`; macro `rf_rx_clk` (outside clamp) and `rf_tx_clk` |

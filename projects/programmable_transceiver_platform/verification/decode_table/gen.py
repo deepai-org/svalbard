@@ -47,8 +47,8 @@ def write_tb(nvec, settle, out='tb_dec.sv'):
           '  .island_en(island_en), .island_on(island_on), .island_off(island_off), .s_pg_wired_rx(pg[0]), .s_pg_wired_cap(pg[1]), .s_pg_wired_tx(pg[2]), .s_pg_wired_tx_b(pg[2]), .s_pg_rf_tx_b(pg[4]), .s_pg_rf_rx(pg[3]),',
           '  .s_pg_rf_tx(pg[4]), .s_pg_lod(pg[5]), .s_pg_lo(pg[6]), .s_pg_pll(pg[7]), .s_pg_conv(pg[8]), .s_pg_debug(pg[9]), .wired_on_ext(wired_on_ext),',
           '  .wire_rx_ptrim_en(wire_rx_ptrim_en), .fault(fault_pin), .rx_en_aux(rx_en_aux), .rx_en_wtx_ext(rx_en_wtx_ext), .wire_tx_data(wire_tx_data), .rf_tx_sample(rf_tx_sample),',
-          '  .host_word_clk(1\'b0), .h2d_clk(1\'b0), .h2d_pin(10\'b0), .ref_clk(ref_clk), .wire_rx_clk(1\'b0), .wire_tx_clk(wtx_clk), .rf_rx_clk(1\'b0), .rf_tx_clk(1\'b0), .ct_wclk(1\'b0),',
-          '  .fc_src(6\'b0), .wire_rx_data(40\'b0), .wire_rx_edge(20\'b0), .rf_rx_sample(24\'b0), .rf_rx_sample_b(24\'b0), .rf_rx_ph_i(1\'b0), .rf_rx_ph_q(1\'b0),',
+          '  .host_word_clk(1\'b0), .h2d_clk(1\'b0), .h2d_pin(10\'b0), .ref_clk(ref_clk), .wire_rx_wstb(1\'b0), .wire_tx_clk(wtx_clk), .rf_rx_clk(1\'b0), .rf_tx_clk(1\'b0), .ct_wclk(1\'b0),',
+          '  .fc_src(6\'b0), .wire_rx_word(20\'b0), .wire_rx_edge(20\'b0), .rf_rx_sample(24\'b0), .rf_rx_sample_b(24\'b0), .rf_rx_ph_i(1\'b0), .rf_rx_ph_q(1\'b0),',
           '  .s_pll_tx_lock(1\'b0), .s_pll_cdr_lock(1\'b0), .s_ref_present(1\'b1), .s_refbuf_ready(1\'b0), .s_adc_i_ovl(1\'b0), .s_adc_i_b_ovl(1\'b0), .s_adc_q_ovl(1\'b0), .s_adc_q_b_ovl(1\'b0),',
           '  .s_adc_i_done(1\'b0), .s_adc_i_b_done(1\'b0), .s_adc_q_done(1\'b0), .s_adc_q_b_done(1\'b0), .s_detect_diff_pos(1\'b0), .s_detect_diff_neg(1\'b0), .s_detect_se_p(1\'b0),',
           '  .s_detect_se_n(1\'b0), .s_wrx_slp(1\'b0), .s_wrx_slm(1\'b0), .s_wtx_ext_data(1\'b0), .s_aux_present(1\'b0), .s_wtx_ext_present(1\'b0), .s_wtx_run(1\'b0), .s_lo_vtdet(1\'b0),']

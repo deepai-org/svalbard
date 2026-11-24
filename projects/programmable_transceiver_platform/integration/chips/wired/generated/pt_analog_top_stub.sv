@@ -28,11 +28,11 @@ module pt_analog_top_stub(
  inout wire WIRE_TX_N,
  inout wire WIRE_TX_P,
  inout wire WMON,
- output wire [39:0] WRX_DX,
+ output wire [19:0] WRX_DW,
  output wire [19:0] WRX_EW,
  output wire WRX_SLM,
  output wire WRX_SLP,
- output wire WRX_WCLK40,
+ output wire WRX_WSTB,
  output wire WTX_EXT_DATA,
  inout wire WTX_EXT_N,
  inout wire WTX_EXT_P,
@@ -1024,6 +1024,26 @@ module pt_analog_top_stub(
  wire p_wrx_cap__PSEL2 = c_wrx_cap_psel[2];
  wire p_wrx_cap__SLIPP = c_wrx_cap_slipp;
  wire p_wrx_cap__SLIPM = c_wrx_cap_slipm;
+ assign WRX_DW[0] = 1'b0;
+ assign WRX_DW[1] = 1'b0;
+ assign WRX_DW[2] = 1'b0;
+ assign WRX_DW[3] = 1'b0;
+ assign WRX_DW[4] = 1'b0;
+ assign WRX_DW[5] = 1'b0;
+ assign WRX_DW[6] = 1'b0;
+ assign WRX_DW[7] = 1'b0;
+ assign WRX_DW[8] = 1'b0;
+ assign WRX_DW[9] = 1'b0;
+ assign WRX_DW[10] = 1'b0;
+ assign WRX_DW[11] = 1'b0;
+ assign WRX_DW[12] = 1'b0;
+ assign WRX_DW[13] = 1'b0;
+ assign WRX_DW[14] = 1'b0;
+ assign WRX_DW[15] = 1'b0;
+ assign WRX_DW[16] = 1'b0;
+ assign WRX_DW[17] = 1'b0;
+ assign WRX_DW[18] = 1'b0;
+ assign WRX_DW[19] = 1'b0;
  assign WRX_EW[0] = 1'b0;
  assign WRX_EW[1] = 1'b0;
  assign WRX_EW[2] = 1'b0;
@@ -1054,47 +1074,7 @@ module pt_analog_top_stub(
  assign WRX_DN[1] = 1'b0;
  assign WRX_DN[2] = 1'b0;
  assign WRX_DN[3] = 1'b0;
- assign WRX_DX[0] = 1'b0;
- assign WRX_DX[1] = 1'b0;
- assign WRX_DX[2] = 1'b0;
- assign WRX_DX[3] = 1'b0;
- assign WRX_DX[4] = 1'b0;
- assign WRX_DX[5] = 1'b0;
- assign WRX_DX[6] = 1'b0;
- assign WRX_DX[7] = 1'b0;
- assign WRX_DX[8] = 1'b0;
- assign WRX_DX[9] = 1'b0;
- assign WRX_DX[10] = 1'b0;
- assign WRX_DX[11] = 1'b0;
- assign WRX_DX[12] = 1'b0;
- assign WRX_DX[13] = 1'b0;
- assign WRX_DX[14] = 1'b0;
- assign WRX_DX[15] = 1'b0;
- assign WRX_DX[16] = 1'b0;
- assign WRX_DX[17] = 1'b0;
- assign WRX_DX[18] = 1'b0;
- assign WRX_DX[19] = 1'b0;
- assign WRX_DX[20] = 1'b0;
- assign WRX_DX[21] = 1'b0;
- assign WRX_DX[22] = 1'b0;
- assign WRX_DX[23] = 1'b0;
- assign WRX_DX[24] = 1'b0;
- assign WRX_DX[25] = 1'b0;
- assign WRX_DX[26] = 1'b0;
- assign WRX_DX[27] = 1'b0;
- assign WRX_DX[28] = 1'b0;
- assign WRX_DX[29] = 1'b0;
- assign WRX_DX[30] = 1'b0;
- assign WRX_DX[31] = 1'b0;
- assign WRX_DX[32] = 1'b0;
- assign WRX_DX[33] = 1'b0;
- assign WRX_DX[34] = 1'b0;
- assign WRX_DX[35] = 1'b0;
- assign WRX_DX[36] = 1'b0;
- assign WRX_DX[37] = 1'b0;
- assign WRX_DX[38] = 1'b0;
- assign WRX_DX[39] = 1'b0;
- assign WRX_WCLK40 = 1'b0;
+ assign WRX_WSTB = 1'b0;
  wire p_wiredtx__PH0 = TXPH[0];
  wire p_wiredtx__PH1 = TXPH[1];
  wire p_wiredtx__PH2 = TXPH[2];

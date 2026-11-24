@@ -23,11 +23,12 @@ inst digital pt_digital_macro chip
   # CP4-1: every macro input that comes from a switched island is clamped INSIDE the macro (AND2 standard cell with
   # island_on[k], first gate after the pin, excluded from port buffering / hold fixing); see the macroclamp lines below.
   # Three clock nets keep an outside clamp because clk_obs also uses them: rf_rx_clk, host_word_clk, fc_src[0].
-  ref_clk=ref_clk wire_rx_clk=WRX_WCLK40 wire_tx_clk=WTX_WCLK40 rf_rx_clk=VSS rf_tx_clk=VSS
+  ref_clk=ref_clk wire_rx_wstb=WRX_WSTB wire_tx_clk=WTX_WCLK40 rf_rx_clk=VSS rf_tx_clk=VSS
   ct_wclk=PRE_CK ct_det_clk>ct_det_clk
   fc_src[0]=fc_src[0] fc_src[1]=PLL_CDR_FBCK fc_src[2]=RING_OSC_CK fc_src[3]=VCO_REPLICA_CK fc_src[4]=fc_src[4] fc_src[5]=VSS
   # wired datapath.  wire_rx_valid / wire_tx_request are made inside the macro (pt_wrx_ctl / pt_wtx_ctl; D-VALID, TOP-3): no pins
-  wire_rx_data[{0:39}]=WRX_DX[\1] wire_rx_edge[{0:19}]=WRX_EW[\1]
+  # W7-GEAR: wire_rx_word = DW, wire_rx_edge = EW, wire_rx_wstb = WSTB of pt_wrx_cap r8 (TIM-35).
+  wire_rx_word[{0:19}]=WRX_DW[\1] wire_rx_edge[{0:19}]=WRX_EW[\1]
   wire_tx_data[{0:39}]>wire_tx_data[\1]
   # RF datapath: not on this chip
   rf_rx_sample[{0:23}]=VSS rf_rx_sample_b[{0:23}]=VSS rf_rx_ph_i=VSS rf_rx_ph_q=VSS rf_tx_sample[{0:23}]>- rf_tx_clk_out>-
@@ -61,7 +62,7 @@ inst digital pt_digital_macro chip
 # macroclamp <island> <macro pin regex>: inputs the macro must AND with island_on[bit(island)] before any other gate
 macroclamp pll ct_wclk|fc_src\[1\]|s_pll_(tx|cdr)_lock
 macroclamp debug fc_src\[[23]\]|s_(aux|wtx_ext)_present
-macroclamp wired wire_rx_data\[\d+\]|wire_rx_edge\[\d+\]|wire_rx_clk|wire_tx_clk|s_detect_\w+|s_wrx_sl[pm]|s_wtx_ext_data|s_wtx_run
+macroclamp wired wire_rx_word\[\d+\]|wire_rx_edge\[\d+\]|wire_rx_wstb|wire_tx_clk|s_detect_\w+|s_wrx_sl[pm]|s_wtx_ext_data|s_wtx_run
 # per-chip core bias (D8, integration/core_bias.py TRUNKS): each bank on the rail of its consumers
 inst core_bias pt_core_bias_wired core
   VDD~VDD VSS~VSS RAIL_pll~RAIL_pll RAIL_wired_rx~RAIL_wired_rx RAIL_wired_tx~RAIL_wired_tx RAIL_debug~RAIL_debug
@@ -202,8 +203,8 @@ inst slicer pt_slicer wired_rx
 inst wrx_cap pt_wrx_cap wired_cap
   S{0:7}=SLS[\1] CKP{0:7}=CKP[\1] EN=c_wrx_cap_en LDE=WRX_LDE RCS=c_wrx_cap_rcs B2=c_wrx_cap_b2 B1=c_wrx_cap_b1
   PSEL{0:2}=c_wrx_cap_psel[\1] SLIPP=c_wrx_cap_slipp SLIPM=c_wrx_cap_slipm
-  DW{0:19}>- EW{0:19}>WRX_EW[\1] SLP>WRX_SLP SLM>WRX_SLM UP{0:3}>WRX_UP[\1] DN{0:3}>WRX_DN[\1]
-  DX{0:39}>WRX_DX[\1] WCLK40>WRX_WCLK40 VDD~RAIL_wired_cap VSS~VSS
+  DW{0:19}>WRX_DW[\1] EW{0:19}>WRX_EW[\1] SLP>WRX_SLP SLM>WRX_SLM UP{0:3}>WRX_UP[\1] DN{0:3}>WRX_DN[\1]
+  WSTB>WRX_WSTB VDD~RAIL_wired_cap VSS~VSS      # r8 (TIM-35): DX / WCLK40 removed, WSTB = word strobe to the macro
 
 # ================= wired transmit (wired island) =================
 # all eight ring phases go straight to pt_wiredtx8 (analog/wired_tx/README.md section 2; WT47 / TIM-23 matched

@@ -192,6 +192,13 @@ MODES = {
              'termination.config.hs_term_enable': 1, 'ctle.config.peak': 5, 'ring_c.config.modulus': 3, 'ring_c.config.kp': 6,
              'slicer.capture.rate_mode': 1},
             ('wait', 100), ('status', 'status.wired.rx_state', None)], True),
+        ('wired receive 2.5 Gb/s (quarter rate, capture r8 needs RCS = 1, TIM-35)', [
+            {'core.refchain.dist_en_wire': 1, 'ring_l.config.modulus': 1, 'ring_l.config.enable': 1},
+            {'cdr.state.state': 2},
+            {'ctle.state.state': 2, 'slicer.state.state': 2, 'termination.config.hs_enable': 1,
+             'termination.config.hs_term_enable': 1, 'ctle.config.peak': 5, 'ring_c.config.modulus': 3, 'ring_c.config.kp': 6,
+             'slicer.capture.rate_mode': 0, 'slicer.capture.rcsel': 1},
+            ('wait', 100), ('status', 'status.wired.rx_state', None)], True),
         ('USB full speed, forced J (direct stream)', [
             {'core.refchain.dist_en_wire': 1, 'ring_l.config.modulus': 1, 'ring_l.config.enable': 1},
             {'usbdrive.select.branch': 2, 'usbdrive.state.state': 2, 'usbfs.config.drive_enable': 1,

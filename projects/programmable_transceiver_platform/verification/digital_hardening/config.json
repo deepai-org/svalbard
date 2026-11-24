@@ -48,7 +48,7 @@
     "host_word_clk",
     "h2d_clk",
     "wire_tx_clk",
-    "wire_rx_clk",
+    "wire_rx_wstb",
     "rf_tx_clk",
     "rf_rx_clk",
     "ct_wclk",
@@ -477,7 +477,7 @@
     "s_wtx_ext_data",
     "s_wtx_run",
     "s_lo_vtdet",
-    "wire_rx_clk",
+    "wire_rx_wstb",
     "wire_tx_clk",
     "host.divider.c",
     "digital.fca.blk_clock_buf.I",
@@ -537,6 +537,6 @@
   ],
   "CTS_DELAY_BUFFER_DERATE_PCT": 0,
   "CTS_APPLY_NDR": "none",
-  "RSZ_DONT_TOUCH_RX": "^((rf_rx_sample|rf_rx_sample_b|wire_rx_data|wire_rx_edge|fc_src|h2d_pin|d2h_pin)\\[[0-9]+\\]|dring\\.n\\[[0-9]+\\])$",
+  "RSZ_DONT_TOUCH_RX": "^((rf_rx_sample|rf_rx_sample_b|wire_rx_word|wire_rx_edge|fc_src|h2d_pin|d2h_pin)\\[[0-9]+\\]|dring\\.n\\[[0-9]+\\])$",
   "DRT_OPT_ITERS": 24
 }

@@ -4,7 +4,8 @@
 //   pt_cdr.FUP/FDN            <- c_cdr_fup / c_cdr_fdn          (reference domain, level pulses)
 //   pt_wrx_cap.PSEL[2:0]      <- c_wrx_cap_psel                 (wire_rx_clk domain)
 //   pt_wrx_cap.SLIPP/SLIPM    <- c_wrx_cap_slipp / _slipm       (wire_rx_clk domain, slip TAGS)
-//   pt_wrx_cap.DX/EW/WCLK40   -> wire_rx_data / wire_rx_edge / wire_rx_clk (r6 capture, D-CAP)
+//   pt_wrx_cap.DW/EW/WSTB     -> macro gear pt_wrx_gear (W7-GEAR) -> wire_rx_data (40 bit) / wire_rx_edge (the
+//                                20-bit edge word of the half selected by cfg_ew_half) / wire_rx_clk (= WSTB / 2)
 //   pt_wrx_cap.SLP/SLM        -> s_wrx_slp / s_wrx_slm ; pt_pll_ring(cdr).LOCK -> s_pll_cdr_lock
 //
 // 1. Frequency loop (reference domain). AC-3 pt_cdr has no hand-over: the ring PFD is held
@@ -48,7 +49,7 @@
 `default_nettype none
 module pt_wrx_ctl (
     input  wire        ref_clk,
-    input  wire        wire_rx_clk,          // WCLK40 from the capture, may stop
+    input  wire        wire_rx_clk,          // WSTB / 2 from the macro gear (W7-GEAR), may stop
     input  wire        rst_n,
     // ---------------- configuration (static levels)
     input  wire        cfg_en,

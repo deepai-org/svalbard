@@ -75,7 +75,8 @@ OCV_ALL = float(os.environ.get('PT_STA_OCV_ALL', '0.08'))
 # reduced-rate select: pad-edge DDR and gearboxes), hcore (hddr/2: 40-bit transport core); shared
 # ingress/egress banks have mux clocks.
 CLOCKS = ['sclk', 'ref', 'hword', 'hddr', 'hsdr', 'hcore', 'h2d_pin', 'h2d', 'h2d_cap', 'd2h_oddr', 'd2h_osel', 'd2h_fwd', 'ingress_wrx', 'ingress_rfrx', 'egress_wtx',
-          'egress_rftx', 'egress_mem_sclk', 'wtx', 'wrx', 'rftx', 'rfhalf', 'rfrx', 'ctw', 'fc0', 'fc1', 'fc2', 'fc3', 'fc4', 'fc5', 'mon_host']
+          'egress_rftx', 'egress_mem_sclk', 'wtx', 'wstb', 'wrx', 'rftx', 'rfhalf', 'rfrx', 'ctw', 'fc0', 'fc1', 'fc2', 'fc3', 'fc4', 'fc5', 'mon_host']
+# wstb has no own period entry: the SDC derives WSTB_PERIOD = WRX_PERIOD / 2 when only WRX_PERIOD is set (W7-GEAR).
 PERIOD_VAR = dict(sclk='SCLK_PERIOD', ref='REF_PERIOD', hword='HWORD_PERIOD', wtx='WTX_PERIOD', wrx='WRX_PERIOD',
                   rftx='RFTX_PERIOD', rfrx='RFRX_PERIOD', ctw='CTW_PERIOD', ctdet='CTDET_PERIOD',
                   fc0='FC_PERIOD')

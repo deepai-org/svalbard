@@ -39,7 +39,7 @@ module tb_digital_gl;
 `else
   .h2d_clk(gclk),.h2d_pin(10'h155),
 `endif
-  .ref_clk(gclk),.wire_rx_clk(gclk),.wire_tx_clk(gclk),.rf_rx_clk(gclk),.rf_tx_clk(gclk),.ct_wclk(gclk),.fc_src({6{gclk}}),
+  .ref_clk(gclk),.wire_rx_wstb(gclk),.wire_tx_clk(gclk),.rf_rx_clk(gclk),.rf_tx_clk(gclk),.ct_wclk(gclk),.fc_src({6{gclk}}),
   .fault(fault),
   .s_pg_wired_rx(pgood[0]),.s_pg_wired_cap(pgood[0]),.s_pg_wired_tx(pgood[0]),.s_pg_wired_tx_b(pgood[0]),.s_pg_rf_tx_b(pgood[1]),
   .s_pg_rf_rx(pgood[1]),.s_pg_rf_tx(pgood[1]),.s_pg_lod(pgood[1]),.s_pg_lo(pgood[1]),

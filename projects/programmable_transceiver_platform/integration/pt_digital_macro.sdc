@@ -21,9 +21,13 @@
 #             gearboxes), hcore = hddr/2 (78.125 MHz: the whole 40-bit transport core).
 #   h2d       forwarded H2D_CLK pin clock: DDR = hddr rate (one word per edge), SDR = 2 x hddr
 #             (reduced rates only). Constrained as DDR.
-#   wtx/wrx   wired 40-bit quad clocks (AC-1 S3): pt_wiredtx WORD_CLK40 / pt_wrx_cap WCLK40,
-#             line/40: 62.5 MHz at 2.5 Gb/s, constrained at 12.3 ns = 3.24 Gb/s (IX-1 continuous
-#             range top; IX-2 3.0/3.125 Gb/s with the 8b/10b offload).
+#   wtx       wired TX 40-bit quad clock (AC-1 S3): pt_wiredtx WORD_CLK40, line/40: 62.5 MHz at
+#             2.5 Gb/s, constrained at 12.3 ns = 3.24 Gb/s (IX-1 continuous range top; IX-2 3.0/3.125
+#             Gb/s with the 8b/10b offload).
+#   wstb/wrx  wired RX (W7-GEAR): wstb = pt_wrx_cap r7 WSTB at the port wire_rx_wstb, one rising edge per
+#             20-bit word (20 UI), WSTB_PERIOD 6.0 ns (ring 834 MHz quarter rate; 8.0 ns at the WT21
+#             625 MHz cap). wrx = WSTB / 2 generated at the kept gear toggle flop wgear.t_ff (the 40-bit
+#             word domain: pt_wrx_ctl, pt_wrx_lane, pt_usb RX, pattern checker, ingress FIFO), 12.0 ns.
 #   rftx/rfrx RF sample clocks: 50 MHz (covers the 40 MS/s stretch profile).
 #   ctw       pt_clocktree_slow word-divider clock (pt_prescale CK_OUT, <=156.25 MHz).
 #   ctref     word reference into pt_clocktree_slow = ctw/10 (modulus 10).
@@ -50,7 +54,9 @@ if {[info exists ::env(PT_CHIP)]} { set PT_CHIP_NAME $::env(PT_CHIP) }
 if {[lsearch -exact {rf wired both} $PT_CHIP_NAME] < 0} {error "PT_CHIP must be rf, wired or unset"}
 # Experiment hook: PT_SCLK_PERIOD in the environment overrides the SCLK constraint (area/closure studies).
 if {[info exists ::env(PT_SCLK_PERIOD)]} { set SCLK_PERIOD $::env(PT_SCLK_PERIOD) }
-foreach {v d} {SCLK_PERIOD 200.0 REF_PERIOD 10.0 HWORD_PERIOD 6.4 WTX_PERIOD 12.3 WRX_PERIOD 12.3
+# W7-GEAR: a caller that sets only WRX_PERIOD (sta_signoff fmax sweep) sets the WSTB period to half of it.
+if {[info exists WRX_PERIOD] && ![info exists WSTB_PERIOD]} { set WSTB_PERIOD [expr {$WRX_PERIOD / 2.0}] }
+foreach {v d} {SCLK_PERIOD 200.0 REF_PERIOD 10.0 HWORD_PERIOD 6.4 WTX_PERIOD 12.3 WSTB_PERIOD 6.0
                RFTX_PERIOD 20.0 RFRX_PERIOD 20.0 CTW_PERIOD 6.4 CTDET_PERIOD 6.4 FC_PERIOD 6.4
                FC_FAST_PERIOD 3.6 DRING_PERIOD 5.0} {
     if {![info exists $v]} { set $v $d }
@@ -61,6 +67,7 @@ if {![info exists HOST_RATE_DIV]} {
     if {[info exists ::env(PT_HOST_RATE_DIV)]} { set HOST_RATE_DIV $::env(PT_HOST_RATE_DIV) }
 }
 if {[lsearch -exact {1 2 4} $HOST_RATE_DIV] < 0} {error "HOST_RATE_DIV must be 1, 2 or 4"}
+set WRX_PERIOD [expr {2.0 * $WSTB_PERIOD}]
 set SCLK_XING [expr {$SCLK_PERIOD < 100.0 ? $SCLK_PERIOD : 100.0}]
 set HDDR_PERIOD [expr {$HOST_RATE_DIV * $HWORD_PERIOD}]
 set HCORE_PERIOD [expr {2.0 * $HDDR_PERIOD}]
@@ -107,7 +114,14 @@ if {[llength $h2d_cap_root] != 1 || [llength $h2d_core_root] != 1} {error "Expec
 create_generated_clock -name h2d_cap -source [get_ports h2d_clk] -divide_by 1 $h2d_cap_root
 create_generated_clock -name h2d -master_clock h2d_cap -source $h2d_cap_root -divide_by 1 $h2d_core_root
 create_clock -name wtx   -period $WTX_PERIOD   [get_ports wire_tx_clk]
-create_clock -name wrx   -period $WRX_PERIOD   [get_ports wire_rx_clk]
+# W7-GEAR: WSTB at the port; wrx = WSTB / 2 at the gear's kept toggle flop (rtl/pt_boundary.sv pt_wrx_gear). The 40-bit
+# registers wgear.dx_s / wgear.ewx_s are loaded only at the WSTB rises where wrx falls (gear enable te = 1) and are captured
+# at the next rise of wrx one WSTB period later: setup is a single WSTB period (OpenSTA's worst launch edge already),
+# hold is checked one wrx period earlier (multicycle hold 1 below), not against the same WSTB edge.
+create_clock -name wstb  -period $WSTB_PERIOD  [get_ports wire_rx_wstb]
+set wrx_q [get_pins -quiet -hierarchical *wgear.t_ff.cell/Q]
+if {[llength $wrx_q] != 1} {error "Expected one wired RX gear toggle flop wgear.t_ff (W7-GEAR)"}
+create_generated_clock -name wrx -master_clock wstb -source [get_ports wire_rx_wstb] -divide_by 2 $wrx_q
 # SP-03 TX interpolator mode (rtl/pt_interp2x.sv, digital.transport_config.tx_interp, stopped-only):
 # PT_TX_INTERP 0 (bypass, reset): rf_tx_clk at RFTX_PERIOD clocks the core's RF TX side directly.
 # PT_TX_INTERP 1 (halfband): rf_tx_clk is the 80 MHz DAC clock and the core RF TX side, playback
@@ -211,12 +225,12 @@ set ingress_clks {}
 set ingress_mux [get_pins -quiet -hierarchical *core.ingress_clock_mux.cell/Z]
 if {[llength $ingress_mux]} {
     if {[llength $ingress_mux] != 1} {error "Expected one shared ingress clock mux"}
-    create_generated_clock -name ingress_wrx -master_clock wrx -source [get_ports wire_rx_clk] -combinational $ingress_mux
+    create_generated_clock -name ingress_wrx -master_clock wrx -source $wrx_q -combinational $ingress_mux
     create_generated_clock -name ingress_rfrx -master_clock rfrx -source [get_ports rf_rx_clk] -combinational -add $ingress_mux
     set ingress_clks {ingress_wrx ingress_rfrx}
     set_clock_groups -logically_exclusive -group ingress_wrx -group ingress_rfrx
     set_false_path -from [get_clocks rfrx] -to [get_clocks ingress_wrx]
-    set_false_path -from [get_ports {wire_rx_data* wire_rx_edge*}] -to [get_clocks ingress_rfrx]
+    set_false_path -from [get_ports {wire_rx_word* wire_rx_edge*}] -to [get_clocks ingress_rfrx]
 }
 # The egress bank is shared by stopped-only exclusive owners. Define clocks
 # after its physical mux so only these local alternatives are exclusive;
@@ -322,7 +336,7 @@ if {[llength $mem_mux]} {
     set_clock_groups -physically_exclusive -group hcore -group egress_mem_sclk
     set mem_on 1
 }
-set all_clk_names [concat {sclk ref hword h2d h2d_cap h2d_pin wtx wrx rftx rfrx ctw} $fc_clks $host_clks $ingress_clks $egress_clks $mem_clks $mon_clks]
+set all_clk_names [concat {sclk ref hword h2d h2d_cap h2d_pin wtx wstb wrx rftx rfrx ctw} $fc_clks $host_clks $ingress_clks $egress_clks $mem_clks $mon_clks]
 
 set_clock_uncertainty 0.25 [all_clocks]
 
@@ -375,8 +389,19 @@ proc pt_io {clk period ins outs} {
     if {[llength $outs]} { set_output_delay [expr {0.2 * $period}] -clock $clk [get_ports $outs] }
 }
 # r6: wire_rx_valid / wire_tx_request are made in the macro (pt_wrx_ctl / pt_wtx_ctl). The capture's phase picker
-# pins change between words (wire_rx_clk registers).
-pt_io wrx  $WRX_PERIOD  {wire_rx_data* wire_rx_edge*} {c_wrx_cap_psel* c_wrx_cap_slipp c_wrx_cap_slipm}
+# pins change between words (wrx registers).
+pt_io wrx  $WRX_PERIOD  {} {c_wrx_cap_psel* c_wrx_cap_slipp c_wrx_cap_slipm}
+# W7-GEAR word inputs, registered on the WSTB rise (rows W7-GEAR, W7-GEAR-T, WRX10-DG67): DW / EW change after the WSTB
+# rise at the capture pins 0.596 ns at the earliest (ff/22/3.35, extracted C x 0.9, W7-GEAR-T) and 1.672 ns at the
+# latest (ss/32/3.15, W7-GEAR-T; r7e: tt 0.75-0.86, ss 0.97-1.11). The WSTB and DW / EW routes to the macro are taken
+# as equal (assembly: route them as one bundle). Hold: the macro's WSTB insertion to the front flops must stay below
+# 0.596 ns + data path (the resizer pads the data path otherwise); setup: 1.672 ns + path within one WSTB period.
+set_input_delay -clock wstb -min 0.596 [get_ports {wire_rx_word* wire_rx_edge*}]
+set_input_delay -clock wstb -max 1.672 [get_ports {wire_rx_word* wire_rx_edge*}]
+# The only wstb -> wrx data paths are the gear's 40-bit registers wgear.dx_s / wgear.ewx_s (into wgear.dx / ewx) (enabled by te, see the clock
+# definitions); synthesis names them after the macro nets they drive (or their consumers), so the exception is set by
+# clock: any new wstb -> wrx path must be an enabled register of the same kind.
+set_multicycle_path 1 -hold -from [get_clocks wstb] -to [get_clocks wrx]
 # wire_tx_data (pt_wiredtx D0..D39, AC-1 S3): the serializer loads D0..D19 at the WORD_CLK
 # falling edge after WORD_CLK40 rises (0.4 x T20 = 0.2 x T40 after it, conservative by T20/5) and
 # D20..D39 one 20-bit word later (0.7 x T40), setup 0.5 ns / hold 0.3 ns (integration/pt_wired_tx.sdc).
@@ -621,7 +646,7 @@ if {[llength $sync_first]} { set_false_path -to $sync_first }
 #     asynchronous by design and release is re-timed by the two-flop chain itself. Only the
 #     async RN/SN pins of these flops are cut; their D paths stay timed in their own domain.
 set rst_sync_pins {}
-foreach pat {*.wr_reset* *.rd_reset* *.wr_active* *.rd_active* *.release_state* *.e?.active* *host.h2d.hrs* *host.drs* *host.crs* *host.pingpong.wt* *.rd_rel_rep*} {
+foreach pat {*.wr_reset* *.rd_reset* *.wr_active* *.rd_active* *.release_state* *.e?.active* *host.h2d.hrs* *host.drs* *host.crs* *host.pingpong.wt* *.rd_rel_rep* *wgear.grs*} {
     foreach c [pt_cells $pat] {
         foreach pin [get_pins -quiet -of_objects $c -filter "direction == input"] {
             if {[lsearch -exact {RN SETN SN} [get_property $pin lib_pin_name]] >= 0} { lappend rst_sync_pins $pin }
@@ -629,6 +654,11 @@ foreach pat {*.wr_reset* *.rd_reset* *.wr_active* *.rd_active* *.release_state* 
     }
 }
 if {[llength $rst_sync_pins]} { set_false_path -to $rst_sync_pins }
+# W7-GEAR: the gear release synchronizer wgear.grs is cleared asynchronously by run (SCLK-domain decode AND rst_n); the
+# assertion through its RN -> Q arc is asynchronous by design (WSTB is stopped then); its release is timed in wstb.
+set grs_rn {}
+foreach c [pt_cells *wgear.grs*] { foreach pin [get_pins -quiet -of_objects $c -filter "direction == input"] { if {[get_property $pin lib_pin_name] eq "RN"} { lappend grs_rn $pin } } }
+if {[llength $grs_rn]} { set_false_path -through $grs_rn }
 # 1c. Rate-switch hold (pt_host_rate_clock hold_n, hword domain) asynchronously resets the host
 #     link and transport core. Its release reaches every other domain only through a reset
 #     synchronizer (host.drs for hddr, host.crs for hcore, host.h2d.hrs, the FIFO and ENABLE

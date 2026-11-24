@@ -389,7 +389,7 @@ transceiver-por-bypass:
 .PHONY: transceiver-ctl-blocks transceiver-top-modes
 transceiver-ctl-blocks:
 	cd projects/programmable_transceiver_platform && OMP_NUM_THREADS=1 $(PYTHON) verification/check_monitor.py && \
-	$(PYTHON) verification/check_usb.py && $(PYTHON) verification/check_wtx_ctl.py && $(PYTHON) verification/check_wrx_ctl.py && \
+	$(PYTHON) verification/check_usb.py && $(PYTHON) verification/check_wtx_ctl.py && $(PYTHON) verification/check_wrx_ctl.py && $(PYTHON) verification/check_wrx_gear.py && \
 	$(PYTHON) verification/check_por_path.py && $(PYTHON) verification/check_spi_csn_race.py
 # Chip-level control plane per mode family, per chip: generated pt_chip.sv files are current, register map vs cell pins
 # (0 mismatches), the real macro against the stub analog top of integration/chips/<chip>/chip.conn (decode mutants must

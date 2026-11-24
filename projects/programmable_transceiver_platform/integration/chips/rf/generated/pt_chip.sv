@@ -380,8 +380,8 @@ module pt_chip(
  assign d2h_sl = m_d2h_sl;
  wire m_ref_clk;
  assign m_ref_clk = ref_clk;
- wire m_wire_rx_clk;
- assign m_wire_rx_clk = 1'b0;
+ wire m_wire_rx_wstb;
+ assign m_wire_rx_wstb = 1'b0;
  wire m_wire_tx_clk;
  assign m_wire_tx_clk = 1'b0;
  wire m_rf_rx_clk;
@@ -398,47 +398,27 @@ module pt_chip(
  assign m_fc_src[3] = VCO_REPLICA_CK;
  assign m_fc_src[4] = fc_src[4];
  assign m_fc_src[5] = LO_FB;
- wire[39:0] m_wire_rx_data;
- assign m_wire_rx_data[0] = 1'b0;
- assign m_wire_rx_data[1] = 1'b0;
- assign m_wire_rx_data[2] = 1'b0;
- assign m_wire_rx_data[3] = 1'b0;
- assign m_wire_rx_data[4] = 1'b0;
- assign m_wire_rx_data[5] = 1'b0;
- assign m_wire_rx_data[6] = 1'b0;
- assign m_wire_rx_data[7] = 1'b0;
- assign m_wire_rx_data[8] = 1'b0;
- assign m_wire_rx_data[9] = 1'b0;
- assign m_wire_rx_data[10] = 1'b0;
- assign m_wire_rx_data[11] = 1'b0;
- assign m_wire_rx_data[12] = 1'b0;
- assign m_wire_rx_data[13] = 1'b0;
- assign m_wire_rx_data[14] = 1'b0;
- assign m_wire_rx_data[15] = 1'b0;
- assign m_wire_rx_data[16] = 1'b0;
- assign m_wire_rx_data[17] = 1'b0;
- assign m_wire_rx_data[18] = 1'b0;
- assign m_wire_rx_data[19] = 1'b0;
- assign m_wire_rx_data[20] = 1'b0;
- assign m_wire_rx_data[21] = 1'b0;
- assign m_wire_rx_data[22] = 1'b0;
- assign m_wire_rx_data[23] = 1'b0;
- assign m_wire_rx_data[24] = 1'b0;
- assign m_wire_rx_data[25] = 1'b0;
- assign m_wire_rx_data[26] = 1'b0;
- assign m_wire_rx_data[27] = 1'b0;
- assign m_wire_rx_data[28] = 1'b0;
- assign m_wire_rx_data[29] = 1'b0;
- assign m_wire_rx_data[30] = 1'b0;
- assign m_wire_rx_data[31] = 1'b0;
- assign m_wire_rx_data[32] = 1'b0;
- assign m_wire_rx_data[33] = 1'b0;
- assign m_wire_rx_data[34] = 1'b0;
- assign m_wire_rx_data[35] = 1'b0;
- assign m_wire_rx_data[36] = 1'b0;
- assign m_wire_rx_data[37] = 1'b0;
- assign m_wire_rx_data[38] = 1'b0;
- assign m_wire_rx_data[39] = 1'b0;
+ wire[19:0] m_wire_rx_word;
+ assign m_wire_rx_word[0] = 1'b0;
+ assign m_wire_rx_word[1] = 1'b0;
+ assign m_wire_rx_word[2] = 1'b0;
+ assign m_wire_rx_word[3] = 1'b0;
+ assign m_wire_rx_word[4] = 1'b0;
+ assign m_wire_rx_word[5] = 1'b0;
+ assign m_wire_rx_word[6] = 1'b0;
+ assign m_wire_rx_word[7] = 1'b0;
+ assign m_wire_rx_word[8] = 1'b0;
+ assign m_wire_rx_word[9] = 1'b0;
+ assign m_wire_rx_word[10] = 1'b0;
+ assign m_wire_rx_word[11] = 1'b0;
+ assign m_wire_rx_word[12] = 1'b0;
+ assign m_wire_rx_word[13] = 1'b0;
+ assign m_wire_rx_word[14] = 1'b0;
+ assign m_wire_rx_word[15] = 1'b0;
+ assign m_wire_rx_word[16] = 1'b0;
+ assign m_wire_rx_word[17] = 1'b0;
+ assign m_wire_rx_word[18] = 1'b0;
+ assign m_wire_rx_word[19] = 1'b0;
  wire[19:0] m_wire_rx_edge;
  assign m_wire_rx_edge[0] = 1'b0;
  assign m_wire_rx_edge[1] = 1'b0;
@@ -785,9 +765,9 @@ module pt_chip(
  assign rf_tx_sample[13] = 1'b0;   // no macro driver in the conn
  pt_digital_macro #(.PT_CHIP(1)) digital(.reset_n_pad(m_reset_n_pad), .por_n(m_por_n), .por_bypass(m_por_bypass), .spi_sclk(m_spi_sclk), .spi_cs_n(m_spi_cs_n), .spi_mosi(m_spi_mosi),
   .spi_miso(m_spi_miso), .spi_miso_oe(m_spi_miso_oe), .host_word_clk(m_host_word_clk), .h2d_clk(m_h2d_clk), .h2d_pin(m_h2d_pin), .d2h_pin(m_d2h_pin),
-  .d2h_clk_pin(m_d2h_clk_pin), .d2h_oe(m_d2h_oe), .d2h_pdrv(m_d2h_pdrv), .d2h_sl(m_d2h_sl), .ref_clk(m_ref_clk), .wire_rx_clk(m_wire_rx_clk),
+  .d2h_clk_pin(m_d2h_clk_pin), .d2h_oe(m_d2h_oe), .d2h_pdrv(m_d2h_pdrv), .d2h_sl(m_d2h_sl), .ref_clk(m_ref_clk), .wire_rx_wstb(m_wire_rx_wstb),
   .wire_tx_clk(m_wire_tx_clk), .rf_rx_clk(m_rf_rx_clk), .rf_tx_clk(m_rf_tx_clk), .ct_wclk(m_ct_wclk), .ct_det_clk(m_ct_det_clk), .fc_src(m_fc_src),
-  .wire_rx_data(m_wire_rx_data), .wire_rx_edge(m_wire_rx_edge), .wire_tx_data(m_wire_tx_data), .rf_rx_sample(m_rf_rx_sample), .rf_rx_sample_b(m_rf_rx_sample_b), .rf_rx_ph_i(m_rf_rx_ph_i),
+  .wire_rx_word(m_wire_rx_word), .wire_rx_edge(m_wire_rx_edge), .wire_tx_data(m_wire_tx_data), .rf_rx_sample(m_rf_rx_sample), .rf_rx_sample_b(m_rf_rx_sample_b), .rf_rx_ph_i(m_rf_rx_ph_i),
   .rf_rx_ph_q(m_rf_rx_ph_q), .rf_tx_sample(m_rf_tx_sample), .rf_tx_clk_out(m_rf_tx_clk_out), .fault(m_fault), .s_pg_wired_tx_b(m_s_pg_wired_tx_b), .s_pg_rf_tx_b(m_s_pg_rf_tx_b),
   .s_pg_wired_rx(m_s_pg_wired_rx), .s_pg_wired_cap(m_s_pg_wired_cap), .s_pg_wired_tx(m_s_pg_wired_tx), .s_pg_rf_rx(m_s_pg_rf_rx), .s_pg_rf_tx(m_s_pg_rf_tx), .s_pg_lod(m_s_pg_lod),
   .s_pg_lo(m_s_pg_lo), .s_pg_pll(m_s_pg_pll), .s_pg_conv(m_s_pg_conv), .s_pg_debug(m_s_pg_debug), .island_en(m_island_en), .island_on(m_island_on),

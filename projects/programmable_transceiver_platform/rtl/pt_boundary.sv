@@ -61,23 +61,60 @@ module pt_iso_and #(parameter W = 1, CLK = 0, PRESENT = 1)(input wire[W-1:0] a, 
  end endgenerate
 endmodule
 
-// IX-12 raw lane select at the wired ingress. The published capture (pt_wrx_cap r6) gives the 40-bit data
-// quad DX on WCLK40 and a 20-bit edge word EW per 20-bit word, i.e. two edge words per WCLK40 period with no
-// strobe of their own: the first is registered on the falling WCLK40 edge, the second on the rising edge
-// together with DX (the wired RX owner must confirm this alignment: row DIG-EW).
-//   lane 0: data quad (mission mode)            {DX[39:0]}   (one WCLK40 register stage in all lanes)
-//   lane 1: edge quad                           {EW second word, EW first word}
-//   lane 2: first half word of both lanes       {EW first word, DX[19:0]}   (half the line time, both lanes)
-// Continuous export of BOTH full lanes needs 80 bits per WCLK40 period, which the 40-bit ingress cannot
-// carry: not implemented (see NOTES r6, what remains).
-module pt_wrx_lane(input wire clk, rst_n, input wire[1:0] lane, input wire valid_in, input wire[39:0] dx, input wire[19:0] ew,
+// W7-GEAR word front end of the wired RX (pt_wrx_cap r7: DW / EW / WSTB; interface rows W7-GEAR, W7-GEAR-T, DG9-W7GEAR).
+// WSTB domain (clock wstb, the capture's word strobe, rising edge only: DW / EW change ~0.6-1.7 ns after the rise,
+// at about the WSTB fall, so the fall is never used):
+//   front register   dw_q / ew_q <= DW / EW at every WSTB rise (captures the word loaded at the previous strobe);
+//   second EW flop   ew_q2 <= ew_q (slicer r7 metastability request: E samplers are metastable by design); dw_q2
+//                    keeps DW aligned with it;
+//   gear             toggle T (te, and its kept clock copy t_ff): T = 0 stores the earlier word (lo), T = 1 loads
+//                    dx / ewx = {this (later) word, earlier word}, earlier word in [19:0] (AC3-W5 convention).
+// wclk = T through a kept buffer = WSTB / 2: it rises at the strobes with T = 0 -> 1, one WSTB period after dx / ewx
+// were loaded into dx_s / ewx_s, which are then registered on wclk (dx / ewx, wrx domain) (SDC: generated clock wrx,
+// divide_by 2; dx_s / ewx_s only change at the strobes where wclk falls: multicycle hold 1 from them into wrx).
+// Reset / restart: run = 0 (capture or word divider off, or reset) clears the two-flop release synchronizer grs
+// asynchronously (WSTB is stopped then: capture EN = 0 holds it low); T and every register here are reset from
+// grs[1], released two WSTB rises after run rises. The first word after the release is therefore always an earlier
+// word: the pairing is re-zeroed at every LDE word restart. The first strobes after EN carry stale words (contract);
+// the word qualification of pt_wrx_ctl discards them.
+module pt_wrx_gear(input wire wstb, run, input wire[19:0] dw, ew, output wire wclk, output reg[39:0] dx, ewx);
+ reg[39:0] dx_s, ewx_s;   // WSTB-domain pair registers (loaded with te = 1)
+ reg[1:0] grs;
+ always @(posedge wstb or negedge run) if (!run) grs <= 2'd0; else grs <= {grs[0], 1'b1};
+ wire g_rn = grs[1];
+ reg[19:0] dw_q, ew_q, dw_q2, ew_q2, lo_d, lo_e;
+ reg te;
+ always @(posedge wstb or negedge g_rn)
+  if (!g_rn) begin
+   dw_q <= 20'd0; ew_q <= 20'd0; dw_q2 <= 20'd0; ew_q2 <= 20'd0; lo_d <= 20'd0; lo_e <= 20'd0; te <= 1'b0;
+   dx_s <= 40'd0; ewx_s <= 40'd0;
+  end else begin
+   dw_q <= dw; ew_q <= ew; dw_q2 <= dw_q; ew_q2 <= ew_q;
+   te <= ~te;
+   if (!te) begin lo_d <= dw_q2; lo_e <= ew_q2; end
+   else begin dx_s <= {dw_q2, lo_d}; ewx_s <= {ew_q2, lo_e}; end
+  end
+ // clock copy of te: the toggle Q drives only its own inverter and the kept clock-root buffer (as fc_half2)
+ wire t;
+ pt_clock_dff t_ff(.clk(wstb), .rst_n(g_rn), .d(~t), .q(t));
+ pt_clock_buf t_buf(.I(t), .Z(wclk));
+ // wrx-domain output register: the only wstb -> wrx paths are dx_s / ewx_s -> D here (one WSTB period of setup), and every
+ // wrx consumer gets a full wrx period from these flops (the pt_wrx_ctl stage-0 cone does not fit in one WSTB period).
+ // Reset with the gear (g_rn): a restart never shows the last pair of the previous epoch. g_rn rises at a WSTB rise and
+ // wclk rises one WSTB period later at the earliest, so the release is one WSTB period of recovery (timed, wstb -> wrx).
+ always @(posedge wclk or negedge g_rn) if (!g_rn) begin dx <= 40'd0; ewx <= 40'd0; end else begin dx <= dx_s; ewx <= ewx_s; end
+endmodule
+
+// IX-12 raw lane select at the wired ingress (wrx domain, after the W7-GEAR gear): dx = the 40-bit data word,
+// ew = the two 20-bit edge words of the same two line words, {later, earlier}.
+//   lane 0: data quad (mission mode)            {DX[39:0]}   (one wrx register stage in all lanes)
+//   lane 1: edge quad                           {EW later word, EW earlier word}
+//   lane 2: earlier half word of both lanes     {EW earlier word, DX[19:0]}   (half the line time, both lanes)
+// Continuous export of BOTH full lanes needs 80 bits per wrx period, which the 40-bit ingress cannot carry.
+module pt_wrx_lane(input wire clk, rst_n, input wire[1:0] lane, input wire valid_in, input wire[39:0] dx, input wire[39:0] ew,
  output reg[39:0] quad, output reg valid);
- // The selected quad and its valid are registered on the rising edge (one word of latency in every lane), so the
- // falling-edge edge-word register is a plain half-cycle flop-to-flop path and the ingress sees registers only.
- reg[19:0] ew_f;
- always @(negedge clk or negedge rst_n) if (!rst_n) ew_f <= 20'd0; else ew_f <= ew;
  always @(posedge clk or negedge rst_n)
   if (!rst_n) begin quad <= 40'd0; valid <= 1'b0; end
-  else begin quad <= (lane == 2'd1) ? {ew, ew_f} : (lane == 2'd2) ? {ew_f, dx[19:0]} : dx; valid <= valid_in; end
+  else begin quad <= (lane == 2'd1) ? ew : (lane == 2'd2) ? {ew[19:0], dx[19:0]} : dx; valid <= valid_in; end
 endmodule
 `default_nettype wire

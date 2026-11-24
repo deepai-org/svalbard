@@ -21,11 +21,11 @@ inst digital pt_digital_macro chip
   # CP4-1: every macro input that comes from a switched island is clamped INSIDE the macro (AND2 standard cell with
   # island_on[k], first gate after the pin, excluded from port buffering / hold fixing); see the macroclamp lines below.
   # Three clock nets keep an outside clamp because clk_obs also uses them: rf_rx_clk, host_word_clk, fc_src[0].
-  ref_clk=ref_clk wire_rx_clk=VSS wire_tx_clk=VSS rf_rx_clk=rf_rx_clk rf_tx_clk=CONV_CLK
+  ref_clk=ref_clk wire_rx_wstb=VSS wire_tx_clk=VSS rf_rx_clk=rf_rx_clk rf_tx_clk=CONV_CLK
   ct_wclk=PRE_CK ct_det_clk>-
   fc_src[0]=fc_src[0] fc_src[1]=PLL_CDR_FBCK fc_src[2]=RING_OSC_CK fc_src[3]=VCO_REPLICA_CK fc_src[4]=fc_src[4] fc_src[5]=LO_FB
   # wired datapath: not on this chip
-  wire_rx_data[{0:39}]=VSS wire_rx_edge[{0:19}]=VSS wire_tx_data[{0:39}]>-
+  wire_rx_word[{0:19}]=VSS wire_rx_edge[{0:19}]=VSS wire_tx_data[{0:39}]>-
   # RF datapath: 10-bit two's complement, MSB-justified in 12-bit I [11:0] / Q [23:12] fields; low 2 bits tied
   rf_rx_sample[{0:1}]=VSS rf_rx_sample[{2:11}]=ADCI_CODE[{0:9}] rf_rx_sample[{12:13}]=VSS rf_rx_sample[{14:23}]=ADCQ_CODE[{0:9}]
   rf_rx_sample_b[{0:1}]=VSS rf_rx_sample_b[{2:11}]=ADCI_CODEB[{0:9}] rf_rx_sample_b[{12:13}]=VSS rf_rx_sample_b[{14:23}]=ADCQ_CODEB[{0:9}]

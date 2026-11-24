@@ -40,15 +40,17 @@ module pt_digital_macro(
  input  wire h2d_clk, input wire[9:0] h2d_pin,
  output wire[9:0] d2h_pin, output wire d2h_clk_pin, output wire d2h_oe,
  output wire[1:0] d2h_pdrv, output wire d2h_sl,  // hostio.controls drive/slew to the pad cells
- // clocks. ref_clk: rx_ref_in on the always-on rail. wire_rx_clk = pt_wrx_cap WCLK40, wire_tx_clk = pt_wiredtx
- // WORD_CLK40, rf_tx_clk = CONV_CLK, ct_wclk = prescaled line clock: raw island nets, clamped here (CP4-1).
- // rf_rx_clk = CONV_CLK through an outside clamp (shared with CLK_OBS).
- input  wire ref_clk, wire_rx_clk, wire_tx_clk, rf_rx_clk, rf_tx_clk, ct_wclk,
+ // clocks. ref_clk: rx_ref_in on the always-on rail. wire_rx_wstb = pt_wrx_cap WSTB (one rising edge per 20-bit
+ // word, W7-GEAR), wire_tx_clk = pt_wiredtx WORD_CLK40, rf_tx_clk = CONV_CLK, ct_wclk = prescaled line clock: raw
+ // island nets, clamped here (CP4-1). rf_rx_clk = CONV_CLK through an outside clamp (shared with CLK_OBS).
+ input  wire ref_clk, wire_rx_wstb, wire_tx_clk, rf_rx_clk, rf_tx_clk, ct_wclk,
  output wire ct_det_clk,                        // pt_detect det_clk
  input  wire[5:0] fc_src,                       // frequency-counter sources (P3-7, see pt_digital)
- // Wired boundary (AC-1 S3): 40-bit quads per edge of wire_rx_clk (DX[39:0]) and wire_tx_clk (D0..D39); word 0
- // (earliest on the line) in [9:0]. wire_rx_edge = capture edge word EW (IX-12).
- input  wire[39:0] wire_rx_data, input wire[19:0] wire_rx_edge, output wire[39:0] wire_tx_data,
+ // Wired boundary. RX (W7-GEAR): 20-bit words from pt_wrx_cap r7, registered on the WSTB rising edge only:
+ // wire_rx_word = DW0..19 (bit 0 earliest on the line), wire_rx_edge = EW0..19 (EW[i] = edge sample between data bits
+ // i and i+1); the 20 -> 40 gear (AC-1 S3) is inside the macro (pt_wrx_gear). TX (AC-1 S3): 40-bit quads per edge
+ // of wire_tx_clk (D0..D39); word 0 (earliest on the line) in [9:0].
+ input  wire[19:0] wire_rx_word, input wire[19:0] wire_rx_edge, output wire[39:0] wire_tx_data,
  // RF boundary: ADC core A / core B codes and the ADC interleave phase outputs; DAC codes with the forwarded clock.
  input  wire[23:0] rf_rx_sample, rf_rx_sample_b, input wire rf_rx_ph_i, rf_rx_ph_q,
  output wire[23:0] rf_tx_sample,
@@ -367,16 +369,17 @@ module pt_digital_macro(
  pt_iso_and #(1, 1, ON_RF) iso_fc_src_5(.a(fc_src[5]), .on(island_on[1]), .y(fc[5]));   // lo_mmd.FB: lo island = rf enable group
  pt_iso_and #(1, 1, ON_RF) iso_rf_tx_clk(.a(rf_tx_clk), .on(island_on[2]), .y(rf_tx_clk_c));
  pt_iso_and #(2) iso_s_pll(.a({s_pll_tx_lock, s_pll_cdr_lock}), .on(island_on[2]), .y({pll_tx_lock, pll_cdr_lock}));
- wire det_diff_pos, det_diff_neg, det_se_p, det_se_n, wrx_slp, wrx_slm, wtx_ext_data, wire_rx_clk_c, wire_tx_clk_c;
+ wire det_diff_pos, det_diff_neg, det_se_p, det_se_n, wrx_slp, wrx_slm, wtx_ext_data, wire_rx_wstb_c, wire_tx_clk_c;
+ wire wire_rx_clk_c;   // wrx domain clock = WSTB / 2 from the gear (wgear below)
  wire wtx_run;     // pt_wiredtx8 TX_RUN (WT50)
  pt_iso_and #(1, 0, ON_WIRED) iso_s_wtx_run(.a(s_wtx_run), .on(island_on[0]), .y(wtx_run));
  pt_iso_and #(7, 0, ON_WIRED) iso_s_wired(.a({s_wtx_ext_data, s_wrx_slm, s_wrx_slp, s_detect_se_n, s_detect_se_p, s_detect_diff_neg, s_detect_diff_pos}),
   .on(island_on[0]), .y({wtx_ext_data, wrx_slm, wrx_slp, det_se_n, det_se_p, det_diff_neg, det_diff_pos}));
- pt_iso_and #(1, 1, ON_WIRED) iso_wire_rx_clk(.a(wire_rx_clk), .on(island_on[0]), .y(wire_rx_clk_c));
+ pt_iso_and #(1, 1, ON_WIRED) iso_wire_rx_wstb(.a(wire_rx_wstb), .on(island_on[0]), .y(wire_rx_wstb_c));
  pt_iso_and #(1, 1, ON_WIRED) iso_wire_tx_clk(.a(wire_tx_clk), .on(island_on[0]), .y(wire_tx_clk_c));
- wire[39:0] wrx_dx; wire[19:0] wrx_ew;
- pt_iso_and #(40, 0, ON_WIRED) iso_wire_rx_data(.a(wire_rx_data), .on(island_on[0]), .y(wrx_dx));
- pt_iso_and #(20, 0, ON_WIRED) iso_wire_rx_edge(.a(wire_rx_edge), .on(island_on[0]), .y(wrx_ew));
+ wire[19:0] wrx_dw, wrx_ew_in;
+ pt_iso_and #(20, 0, ON_WIRED) iso_wire_rx_word(.a(wire_rx_word), .on(island_on[0]), .y(wrx_dw));
+ pt_iso_and #(20, 0, ON_WIRED) iso_wire_rx_edge(.a(wire_rx_edge), .on(island_on[0]), .y(wrx_ew_in));
 
  // ---------------- register file, transport, pattern, counters (pt_digital)
  // INT6 / review finding 5: until a real reset has been seen every register-file output is forced to 0 here (fields,
@@ -724,6 +727,19 @@ module pt_digital_macro(
  // wired island is off (every port of a switched island reads 0 then).
  assign c_wiredtx_idle = wire_idle & island_on[0] & ~f_debug_wtx_ext__enable[0];
 
+ // ---------------- wired RX word front end and 20 -> 40 gear (W7-GEAR, rtl/pt_boundary.sv pt_wrx_gear)
+ // DW / EW are registered on the WSTB rising edge (EW gets a second flop, slicer r7 metastability request), paired
+ // into 40-bit words {later, earlier} and handed to the wrx domain wire_rx_clk_c = WSTB / 2 (kept toggle flop
+ // wgear.t_ff, SDC generated clock wrx), which is the domain of pt_wrx_ctl, pt_wrx_lane, pt_usb RX, the pattern
+ // checker and the core's ingress FIFO as before. The pairing restarts whenever the capture's word boundary does:
+ // the gear is held while capture or word divider is off (cap_en = c_wrx_cap_en & c_wordclk_en = 0; LDE restarts
+ // only through these, rate_mode is update = stopped). wrx_ew = the 20-bit edge word of the half selected by
+ // wrx.picker.edge_half (0 earlier word, 1 later word), as with the r6 capture.
+ wire[39:0] wrx_dx, wrx_ew40; wire[19:0] wrx_ew;
+ pt_wrx_gear wgear(.wstb(wire_rx_wstb_c), .run(rst_n & c_wrx_cap_en & c_wordclk_en), .dw(wrx_dw), .ew(wrx_ew_in),
+  .wclk(wire_rx_clk_c), .dx(wrx_dx), .ewx(wrx_ew40));
+ assign wrx_ew = f_wrx_picker__edge_half ? wrx_ew40[39:20] : wrx_ew40[19:0];
+
  // ---------------- wired RX control plane (rtl/pt_wrx_ctl.sv): FLL pulses, phase picker, wire_rx_valid
  wire wrx_en = (f_cdr_state__state == 2'd2) & ion[2] & (f_slicer_state__state == 2'd2) & ion[0];
  // Review finding 4: these are registers of clocks that can stop (REF_CLK, WCLK40); each output is also ANDed with the
@@ -755,7 +771,7 @@ module pt_digital_macro(
   .st_sig_ok(wrx_sig_ok), .st_idle(wrx_idle), .st_viol(wrx_viol), .st_pick_acc(wrx_pick_acc), .st_slip_cnt(wrx_slip_cnt),
   .st_slp_seen(wrx_slp_seen), .st_slm_seen(wrx_slm_seen));
  wire[39:0] wrx_quad; wire wrx_quad_valid;
- pt_wrx_lane lane(.clk(wire_rx_clk_c), .rst_n(rst_n), .lane(f_slicer_capture__raw_lane), .valid_in(wire_rx_valid_q), .dx(wrx_dx), .ew(wrx_ew),
+ pt_wrx_lane lane(.clk(wire_rx_clk_c), .rst_n(rst_n), .lane(f_slicer_capture__raw_lane), .valid_in(wire_rx_valid_q), .dx(wrx_dx), .ew(wrx_ew40),
   .quad(wrx_quad), .valid(wrx_quad_valid));
 
  // ---------------- USB direct stream (rtl/pt_usb.sv; MW-18, D-USB). With digital.transport_config.direct_stream_enable

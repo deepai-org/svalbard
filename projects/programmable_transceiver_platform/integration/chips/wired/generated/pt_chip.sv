@@ -48,11 +48,11 @@ module pt_chip(
  wire PRE_CK;
  wire RING_OSC_CK;
  wire VCO_REPLICA_CK;
- wire[39:0] WRX_DX;
+ wire[19:0] WRX_DW;
  wire[19:0] WRX_EW;
  wire WRX_SLM;
  wire WRX_SLP;
- wire WRX_WCLK40;
+ wire WRX_WSTB;
  wire WTX_EXT_DATA;
  wire WTX_EXT_PRESENT;
  wire WTX_RUN;
@@ -377,8 +377,8 @@ module pt_chip(
  assign d2h_sl = m_d2h_sl;
  wire m_ref_clk;
  assign m_ref_clk = ref_clk;
- wire m_wire_rx_clk;
- assign m_wire_rx_clk = WRX_WCLK40;
+ wire m_wire_rx_wstb;
+ assign m_wire_rx_wstb = WRX_WSTB;
  wire m_wire_tx_clk;
  assign m_wire_tx_clk = WTX_WCLK40;
  wire m_rf_rx_clk;
@@ -396,47 +396,27 @@ module pt_chip(
  assign m_fc_src[3] = VCO_REPLICA_CK;
  assign m_fc_src[4] = fc_src[4];
  assign m_fc_src[5] = 1'b0;
- wire[39:0] m_wire_rx_data;
- assign m_wire_rx_data[0] = WRX_DX[0];
- assign m_wire_rx_data[1] = WRX_DX[1];
- assign m_wire_rx_data[2] = WRX_DX[2];
- assign m_wire_rx_data[3] = WRX_DX[3];
- assign m_wire_rx_data[4] = WRX_DX[4];
- assign m_wire_rx_data[5] = WRX_DX[5];
- assign m_wire_rx_data[6] = WRX_DX[6];
- assign m_wire_rx_data[7] = WRX_DX[7];
- assign m_wire_rx_data[8] = WRX_DX[8];
- assign m_wire_rx_data[9] = WRX_DX[9];
- assign m_wire_rx_data[10] = WRX_DX[10];
- assign m_wire_rx_data[11] = WRX_DX[11];
- assign m_wire_rx_data[12] = WRX_DX[12];
- assign m_wire_rx_data[13] = WRX_DX[13];
- assign m_wire_rx_data[14] = WRX_DX[14];
- assign m_wire_rx_data[15] = WRX_DX[15];
- assign m_wire_rx_data[16] = WRX_DX[16];
- assign m_wire_rx_data[17] = WRX_DX[17];
- assign m_wire_rx_data[18] = WRX_DX[18];
- assign m_wire_rx_data[19] = WRX_DX[19];
- assign m_wire_rx_data[20] = WRX_DX[20];
- assign m_wire_rx_data[21] = WRX_DX[21];
- assign m_wire_rx_data[22] = WRX_DX[22];
- assign m_wire_rx_data[23] = WRX_DX[23];
- assign m_wire_rx_data[24] = WRX_DX[24];
- assign m_wire_rx_data[25] = WRX_DX[25];
- assign m_wire_rx_data[26] = WRX_DX[26];
- assign m_wire_rx_data[27] = WRX_DX[27];
- assign m_wire_rx_data[28] = WRX_DX[28];
- assign m_wire_rx_data[29] = WRX_DX[29];
- assign m_wire_rx_data[30] = WRX_DX[30];
- assign m_wire_rx_data[31] = WRX_DX[31];
- assign m_wire_rx_data[32] = WRX_DX[32];
- assign m_wire_rx_data[33] = WRX_DX[33];
- assign m_wire_rx_data[34] = WRX_DX[34];
- assign m_wire_rx_data[35] = WRX_DX[35];
- assign m_wire_rx_data[36] = WRX_DX[36];
- assign m_wire_rx_data[37] = WRX_DX[37];
- assign m_wire_rx_data[38] = WRX_DX[38];
- assign m_wire_rx_data[39] = WRX_DX[39];
+ wire[19:0] m_wire_rx_word;
+ assign m_wire_rx_word[0] = WRX_DW[0];
+ assign m_wire_rx_word[1] = WRX_DW[1];
+ assign m_wire_rx_word[2] = WRX_DW[2];
+ assign m_wire_rx_word[3] = WRX_DW[3];
+ assign m_wire_rx_word[4] = WRX_DW[4];
+ assign m_wire_rx_word[5] = WRX_DW[5];
+ assign m_wire_rx_word[6] = WRX_DW[6];
+ assign m_wire_rx_word[7] = WRX_DW[7];
+ assign m_wire_rx_word[8] = WRX_DW[8];
+ assign m_wire_rx_word[9] = WRX_DW[9];
+ assign m_wire_rx_word[10] = WRX_DW[10];
+ assign m_wire_rx_word[11] = WRX_DW[11];
+ assign m_wire_rx_word[12] = WRX_DW[12];
+ assign m_wire_rx_word[13] = WRX_DW[13];
+ assign m_wire_rx_word[14] = WRX_DW[14];
+ assign m_wire_rx_word[15] = WRX_DW[15];
+ assign m_wire_rx_word[16] = WRX_DW[16];
+ assign m_wire_rx_word[17] = WRX_DW[17];
+ assign m_wire_rx_word[18] = WRX_DW[18];
+ assign m_wire_rx_word[19] = WRX_DW[19];
  wire[19:0] m_wire_rx_edge;
  assign m_wire_rx_edge[0] = WRX_EW[0];
  assign m_wire_rx_edge[1] = WRX_EW[1];
@@ -802,9 +782,9 @@ module pt_chip(
  assign island_on[4] = 1'b0;   // no macro driver in the conn
  pt_digital_macro #(.PT_CHIP(2)) digital(.reset_n_pad(m_reset_n_pad), .por_n(m_por_n), .por_bypass(m_por_bypass), .spi_sclk(m_spi_sclk), .spi_cs_n(m_spi_cs_n), .spi_mosi(m_spi_mosi),
   .spi_miso(m_spi_miso), .spi_miso_oe(m_spi_miso_oe), .host_word_clk(m_host_word_clk), .h2d_clk(m_h2d_clk), .h2d_pin(m_h2d_pin), .d2h_pin(m_d2h_pin),
-  .d2h_clk_pin(m_d2h_clk_pin), .d2h_oe(m_d2h_oe), .d2h_pdrv(m_d2h_pdrv), .d2h_sl(m_d2h_sl), .ref_clk(m_ref_clk), .wire_rx_clk(m_wire_rx_clk),
+  .d2h_clk_pin(m_d2h_clk_pin), .d2h_oe(m_d2h_oe), .d2h_pdrv(m_d2h_pdrv), .d2h_sl(m_d2h_sl), .ref_clk(m_ref_clk), .wire_rx_wstb(m_wire_rx_wstb),
   .wire_tx_clk(m_wire_tx_clk), .rf_rx_clk(m_rf_rx_clk), .rf_tx_clk(m_rf_tx_clk), .ct_wclk(m_ct_wclk), .ct_det_clk(m_ct_det_clk), .fc_src(m_fc_src),
-  .wire_rx_data(m_wire_rx_data), .wire_rx_edge(m_wire_rx_edge), .wire_tx_data(m_wire_tx_data), .rf_rx_sample(m_rf_rx_sample), .rf_rx_sample_b(m_rf_rx_sample_b), .rf_rx_ph_i(m_rf_rx_ph_i),
+  .wire_rx_word(m_wire_rx_word), .wire_rx_edge(m_wire_rx_edge), .wire_tx_data(m_wire_tx_data), .rf_rx_sample(m_rf_rx_sample), .rf_rx_sample_b(m_rf_rx_sample_b), .rf_rx_ph_i(m_rf_rx_ph_i),
   .rf_rx_ph_q(m_rf_rx_ph_q), .rf_tx_sample(m_rf_tx_sample), .rf_tx_clk_out(m_rf_tx_clk_out), .fault(m_fault), .s_pg_wired_tx_b(m_s_pg_wired_tx_b), .s_pg_rf_tx_b(m_s_pg_rf_tx_b),
   .s_pg_wired_rx(m_s_pg_wired_rx), .s_pg_wired_cap(m_s_pg_wired_cap), .s_pg_wired_tx(m_s_pg_wired_tx), .s_pg_rf_rx(m_s_pg_rf_rx), .s_pg_rf_tx(m_s_pg_rf_tx), .s_pg_lod(m_s_pg_lod),
   .s_pg_lo(m_s_pg_lo), .s_pg_pll(m_s_pg_pll), .s_pg_conv(m_s_pg_conv), .s_pg_debug(m_s_pg_debug), .island_en(m_island_en), .island_on(m_island_on),
@@ -862,7 +842,7 @@ module pt_chip(
  pt_analog_top analog(.ATB0(ATB0), .ATB1(ATB1), .AUX_CLK_N(AUX_CLK_N), .AUX_CLK_P(AUX_CLK_P), .AUX_PRESENT(AUX_PRESENT), .DET_DIFF_NEG(DET_DIFF_NEG), .DET_DIFF_POS(DET_DIFF_POS), .DET_SE_N(DET_SE_N),
   .DET_SE_P(DET_SE_P), .PLL_CDR_FBCK(PLL_CDR_FBCK), .PLL_CDR_LOCK(PLL_CDR_LOCK), .PLL_TX_LOCK(PLL_TX_LOCK), .PRE_CK(PRE_CK), .REF_IN(REF_IN), .REF_IN_N(REF_IN_N), .RING_OSC_CK(RING_OSC_CK),
   .TLP_TEST(TLP_TEST), .USB_DN(USB_DN), .USB_DP(USB_DP), .VCO_REPLICA_CK(VCO_REPLICA_CK), .VDD(VDD), .VSS(VSS), .WIRE_RX_N(WIRE_RX_N), .WIRE_RX_P(WIRE_RX_P),
-  .WIRE_TX_N(WIRE_TX_N), .WIRE_TX_P(WIRE_TX_P), .WMON(WMON), .WRX_DX(WRX_DX), .WRX_EW(WRX_EW), .WRX_SLM(WRX_SLM), .WRX_SLP(WRX_SLP), .WRX_WCLK40(WRX_WCLK40),
+  .WIRE_TX_N(WIRE_TX_N), .WIRE_TX_P(WIRE_TX_P), .WMON(WMON), .WRX_DW(WRX_DW), .WRX_EW(WRX_EW), .WRX_SLM(WRX_SLM), .WRX_SLP(WRX_SLP), .WRX_WSTB(WRX_WSTB),
   .WTX_EXT_DATA(WTX_EXT_DATA), .WTX_EXT_N(WTX_EXT_N), .WTX_EXT_P(WTX_EXT_P), .WTX_EXT_PRESENT(WTX_EXT_PRESENT), .WTX_RUN(WTX_RUN), .WTX_WCLK40(WTX_WCLK40), .atb0_en(atb0_en), .atb0_grp(atb0_grp),
   .atb0_sw(atb0_sw), .atb1_en(atb1_en), .atb1_grp(atb1_grp), .atb1_sw(atb1_sw), .c_aosc_en(c_aosc_en), .c_bb_tap_wmon_bias_en(c_bb_tap_wmon_bias_en), .c_bgap_ena(c_bgap_ena), .c_bgap_trim(c_bgap_trim),
   .c_bias_dist_en_debug(c_bias_dist_en_debug), .c_bias_dist_en_pll(c_bias_dist_en_pll), .c_bias_dist_en_wire(c_bias_dist_en_wire), .c_biasgen_bandgap_sink1(c_biasgen_bandgap_sink1), .c_biasgen_bandgap_sink2(c_biasgen_bandgap_sink2), .c_biasgen_ena(c_biasgen_ena), .c_biasgen_idac1_source(c_biasgen_idac1_source), .c_biasgen_idac2_source(c_biasgen_idac2_source),
@@ -936,11 +916,11 @@ endmodule
  inout wire WIRE_TX_N,
  inout wire WIRE_TX_P,
  inout wire WMON,
- output wire [39:0] WRX_DX,
+ output wire [19:0] WRX_DW,
  output wire [19:0] WRX_EW,
  output wire WRX_SLM,
  output wire WRX_SLP,
- output wire WRX_WCLK40,
+ output wire WRX_WSTB,
  output wire WTX_EXT_DATA,
  inout wire WTX_EXT_N,
  inout wire WTX_EXT_P,

@@ -46,7 +46,7 @@ receiver enable and observation enable is forced to 0.
 | Port | Dir | Source |
 |---|---|---|
 | `ref_clk` | in | `REF_IN` receiver on the always-on rail |
-| `wire_rx_clk` | in | Capture word clock `WCLK40` (line rate / 40) |
+| `wire_rx_wstb` | in | Capture word strobe `WSTB` (pt_wrx_cap r7, one rising edge per 20-bit word); the macro's wrx domain is `WSTB` / 2 (W7-GEAR) |
 | `wire_tx_clk` | in | Serializer word clock `WORD_CLK40` |
 | `rf_rx_clk`, `rf_tx_clk` | in | Converter clock `CONV_CLK`; `rf_rx_clk` through an outside clamp shared with `CLK_OBS` |
 | `ct_wclk` | in | Prescaled line clock |
@@ -60,8 +60,8 @@ Clock definitions and I/O constraints: `integration/pt_digital_macro.sdc`.
 
 | Port | Dir | Meaning |
 |---|---|---|
-| `wire_rx_data[39:0]` | in | Received quad per `wire_rx_clk` edge; the earliest ten bits on the line in [9:0] |
-| `wire_rx_edge[19:0]` | in | Edge-sample word of the capture |
+| `wire_rx_word[19:0]` | in | Capture data word `DW`, bit 0 earliest on the line, registered on the `WSTB` rise; the 20 -> 40 gear is in the macro |
+| `wire_rx_edge[19:0]` | in | Capture edge word `EW` (`EW[i]` between data bits i and i+1), registered on the `WSTB` rise plus a second flop |
 | `wire_tx_data[39:0]` | out | Transmit quad per `wire_tx_clk` edge; forced to 0 while the wired group is off |
 | `rf_rx_sample[23:0]`, `rf_rx_sample_b[23:0]` | in | ADC codes of core A and core B, I in [11:0], Q in [23:12] |
 | `rf_rx_ph_i`, `rf_rx_ph_q` | in | ADC interleave phase outputs (core select) |

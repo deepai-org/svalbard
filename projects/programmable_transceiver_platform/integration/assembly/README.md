@@ -74,37 +74,35 @@ Owner rows ASM-1..9 in `scratch/reviews/interface-changes.md`.
   decision pending on clustering loads / more switches per island.
 - LO pair: 1.2 um spacing reserved, VSS shields not drawn. Double-spacing class for clock / hs / rf nets off (pin windows).
 
-## Island rail plan (coordinator ruling 2026-11-24; power owner to review the currents and extra switches)
+## Island rail plan (coordinator ruling 2026-11-24; power owner review PDS-18 applied)
 
-Scheme: a drawn Metal5 trunk (+ Metal4 where it must cross Metal5-using blocks) from each switch's VISL bar to its load
-cluster, sized at about 1 mA per um for the worst segment current; drawn drops (Via4 / short Metal4) onto every load
-above about 1 mA; loads at or below about 1 mA (ATB leaves, observers, small debug cells) stay on 1 um routed leaves.
-(a) = cluster the island's loads round its switch in the floorplan (signal-flow rules of the RF / HS chains keep
-priority); (c) = more switch masters per island, one per load cluster (needs conn instances, chip top). Currents:
-`spec/budgets/power-budget.json` pd2_reconciliation, worst in window; "no figure" = no row there (power owner to give
-one or confirm <= 1 mA).
+Scheme: one switch per island (power owner: option (c) not needed; isw_pll beside pll_vreg2), the island's loads
+clustered round it in the floorplan (RF / HS signal-flow rules keep priority), a drawn Metal5 trunk (+ Metal4 where it must
+cross Metal5-using blocks) from the switch's VISL bar, about 1 mA per um at the worst segment current, drawn drops onto
+every load above about 1 mA, 1 um routed leaves for the rest. Currents: `spec/budgets/power-budget.json`
+instance_worst_ma (per instance, with source), else pd2_reconciliation rows.
 
 **pt_rf**
 
-| Island | Plan | Switches | Bar loads (> 1 mA, worst mA) | Leaf loads (<= 1 mA, 1 um routed) | Island total mA | Trunk width at 1 mA/um |
-|---|---|---|---|---|---|---|
-| conv | (a) | isw_conv | adc_i 6.3, adc_q 6.3, dac_i 2.3, dac_q 2.3, refbuf 1.6; no figure: core_bias | 2 | 18.7 | 19 um |
-| debug | (c) | isw_debug | ; no figure: rx_aux_clk, ring_osc, vco_replica, core_bias, bb_tap_i, bb_tap_q, clk_obs | 8 | 0.0 | 0 um |
-| lo | (a) | isw_lo | ; no figure: core_bias | 1 | 0.0 | 0 um |
-| lod | (a) | isw_lod | lo_mmd 34.8, lo_mmd_qdum 10.0; no figure: lo_ext, qvco, lo_obs, lo_obs_q | 0 | 44.8 | 45 um |
-| pll | (c) | isw_pll | cdr 10.2, prescale 2.4; no figure: refvcm, prescale_hf, pll_vreg2, core_bias, prescale_conv | 3 | 12.6 | 13 um |
-| rf_rx | (a) | isw_rf_rx | lna 21.4, rxmix_i 3.1, rxmix_q 3.1; no figure: core_bias, bbfilter_i, bbfilter_q | 1 | 27.6 | 28 um |
-| rf_tx | (a) | isw_rf_tx | rfdriver 61.7, txmix_i 2.0, txmix_q 2.0, txsum 2.0; no figure: lo_txbuf | 0 | 67.8 | 68 um |
+| Island | Switch | Bar loads (> 1 mA, worst mA) | Leaf loads (<= 1 mA) | Island mA | Trunk at 1 mA/um |
+|---|---|---|---|---|---|
+| conv | isw_conv | adc_i 6.3, adc_q 6.3, dac_i 2.3, dac_q 2.3, refbuf 1.6 | 3 | 18.9 | 19 um |
+| debug | isw_debug | vco_replica 11.8, clk_obs 5.1, rx_aux_clk 5.1, bb_tap_i 1.0, bb_tap_q 1.0 | 10 | 24.7 | 25 um |
+| lo | isw_lo | lo_vreg 27.5 | 1 | 27.6 | 28 um |
+| lod | isw_lod | lo_mmd 34.8, lo_ext 13.7, lo_mmd_qdum 10.0, lo_obs 8.0, lo_obs_q 8.0, qvco 4.0 | 0 | 78.6 | 79 um |
+| pll | isw_pll | pll_vreg2 20.9, prescale 2.4, prescale_hf 2.4, prescale_conv 2.4, cdr 2.0 | 5 | 30.6 | 31 um |
+| rf_rx | isw_rf_rx | lna 21.4, bbfilter_i 5.3, bbfilter_q 5.3, rxmix_i 3.1, rxmix_q 3.1 | 2 | 38.4 | 38 um |
+| rf_tx | isw_rf_tx | rfdriver 24.3, lo_txbuf 10.0, txmix_i 2.0, txmix_q 2.0, txsum 2.0 | 0 | 40.4 | 40 um |
 
 **pt_wired**
 
-| Island | Plan | Switches | Bar loads (> 1 mA, worst mA) | Leaf loads (<= 1 mA, 1 um routed) | Island total mA | Trunk width at 1 mA/um |
-|---|---|---|---|---|---|---|
-| debug | (c) | isw_debug | ; no figure: rx_aux_clk, ring_osc, vco_replica, core_bias, bb_tap_wmon, rx_wtx_ext, clk_obs | 10 | 0.0 | 0 um |
-| pll | (c) | isw_pll | cdr 10.2, clockmux 1.6; no figure: refvcm, prescale, prescale_hf, pll_vreg2, core_bias | 10 | 11.8 | 12 um |
-| wired_cap | (a) | isw_wired_cap | wrx_cap 46.6, ptrim 21.0; no figure: wordclk_rx | 0 | 67.6 | 68 um |
-| wired_rx | (a) | isw_wired_rx | slicer 9.8, ctle 5.3, detect 2.4, rxselect 2.0, termination 1.6; no figure: core_bias, pad_hs_rx, wmon_sel | 3 | 21.1 | 21 um |
-| wired_tx | bar (built) | isw_wired_tx_a, isw_wired_tx_b | wiredtx 60.0; no figure: core_bias, pad_usb, pad_wire_tx, steer_4, steer_5, attached_tx_interlock, term_buffer, txpad_bias, usb_txdrv, hsbias, wtx_fallback_control | 2 | 60.0 | 60 um |
+| Island | Switch | Bar loads (> 1 mA, worst mA) | Leaf loads (<= 1 mA) | Island mA | Trunk at 1 mA/um |
+|---|---|---|---|---|---|
+| debug | isw_debug | vco_replica 11.8, clk_obs 5.1, rx_aux_clk 5.1, rx_wtx_ext 5.1, bb_tap_wmon 1.0 | 12 | 28.8 | 29 um |
+| pll | isw_pll | pll_vreg2 20.9, prescale 2.4, prescale_hf 2.4, cdr 2.0, clockmux 1.6 | 12 | 29.4 | 29 um |
+| wired_cap | isw_wired_cap | wrx_cap 46.6, ptrim 21.0, wordclk_rx 2.4 | 0 | 70.1 | 70 um |
+| wired_rx | isw_wired_rx | slicer 9.8, ctle 5.3, detect 2.4, rxselect 2.0, termination 1.6 | 6 | 22.0 | 22 um |
+| wired_tx | isw_wired_tx_a, isw_wired_tx_b | wiredtx 60.0, pad_wire_tx 21.0, usb_txdrv 20.0, term_buffer 2.0 | 10 | 103.6 | 104 um |
 
-Open: currents for the "no figure" loads (pll_vreg2 and lo_ext / qvco are large; core_bias rails per island), the split
-of debug and pll into clusters with their own switches (c), and per-segment widths once the trunks are drawn.
+Flags (PDS-18): pt_rf lod island ~79 mA on an 80 mA master (tight); rf_tx 42.8 mA design against the 40 mA isw_debug
+master until lo_txbuf is measured: room for an isw_rf (55 mA) footprint kept at the switch.

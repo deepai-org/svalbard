@@ -1,0 +1,74 @@
+{
+ "row": "PC-84",
+ "cell": "pad_rf_pair",
+ "state": "BASELINE (MANDATE 1 ESD rule: HBM 1 kV / CDM 1 A class, favour the signal)",
+ "candidate": "r4: 2 down + 2 up site diodes per leg (r3 had 4 + 4)",
+ "build_command": "scratch/pads-core/esdopt/rf/build.sh rf_pair r4 '{\"n_dn\": 2, \"n_up\": 2, \"n_up_left\": 0, \"n_dn_left\": 0, \"pin_vias\": true}' (rf_compose.py + pad_site_primary.py on the pin-move variant)",
+ "sha256": {
+  "pad.gds": "b31297779cb2b78ad01857bb2e51c7c2d4d9190b4e6bbc9206a0d698076d810c",
+  "pad-extracted.spice": "e028cd39541ea82f11b4cebd78a53ad33030b40ab4eeff58bcf624b83d14fbbc",
+  "reference.spice": "e8a7acf17c817bf89bbe828af7b314858ff268b4a1f0ed649dd74a03b934012e",
+  "physical-r-typ.spice": "75e757edecead38c59578521fd15e7773ba736eba90b670fce0502e00ac0a72b",
+  "physical-r-high.spice": "47ce76bcb2fd13a70f5f61d3b290cfc1937f73d6763e6e9379b5362633459f5b",
+  "lu.json": "75c85d992cbba6835adda8450e3c849080afc0422b52264522d3032a65d42a6a",
+  "pad-lvs.txt": "666031facd2a13290c40e8fab77f1522120a6bf6014f85f3391ed347c431fc02",
+  "pad_rf_pair-kldrc.json": "3aa2285381a5ec7828346463870a36ab00cccf6b8e6c91d465c7b4a38df2bf48"
+ },
+ "bbox_um": [
+  0,
+  0,
+  310,
+  912.91
+ ],
+ "ports": [
+  "PAD_P",
+  "PAD_N",
+  "ATB_ESD_RAIL",
+  "VSS",
+  "ESD_RAIL",
+  "DVDD"
+ ],
+ "ports_note": "DVDD = ring landing of the pad-site up-diodes (chip top DVDD~VDD, bound in b3fff60f).",
+ "limits": [
+  [
+   "Magic DRC / read-back LVS + 2 failing controls / KLayout main+antenna / rail_site / latch-up 15 um",
+   "0 / match + mismatch x2 / 0+0 / PASS / 0.0 um2",
+   "PASS"
+  ],
+  [
+   "HBM 1 kV all 10 cases, worst junction reverse high / typ (bv 11 / 10.5)",
+   "6.74 / 5.83 V",
+   "PASS"
+  ],
+  [
+   "CDM 1 A all 10 cases high / typ",
+   "9.45 / 7.93 V",
+   "PASS"
+  ],
+  [
+   "HBM 2 kV (old class, dropped by the MANDATE 1 rule)",
+   "11.42 V high (r3: 7.63)",
+   "info"
+  ],
+  [
+   "MOS gates",
+   "<= 1.71 V, 0 over",
+   "PASS"
+  ],
+  [
+   "Pad C per leg, cbench 2.4 GHz typ (absolute, incl. bond pad, network, site diodes)",
+   "0.801 / 0.773 pF (P/N); r3 0.951 / 0.923; pre-option-A shell 0.670 / 0.642",
+   "+0.13 pF over the old shell, -0.15 vs r3"
+  ]
+ ],
+ "misses_and_conditions": [
+  "HBM 2 kV no longer met (11.4 V vs 11): accepted by the MANDATE 1 ESD rule (RF_RX README class was 2 kV).",
+  "Models: mkmodel.py lumped R+C from the r4 extraction + netres (same method as r3).",
+  "Rebuild from the current generators (not the r3 candidate GDS); the old network generator is still not rerunnable."
+ ],
+ "evidence": {
+  "checks": "scratch/pads-core/esdopt/rf/chk/r4/summary.txt",
+  "esd": "scratch/pads-core/esdopt/rf/esd/r4h.json, r4t.json",
+  "cbench": "scratch/pads-core/esdopt/rf/esd/c_r4_v0.json"
+ }
+}

@@ -80,7 +80,7 @@ Evidence files that belong to the published netlists:
 | `pad_wirepad` b7 (hashes in `pc76-wirepad-b7.json`) | `placement-layout.json`, `layout-screen.json`, `independent-device-audit.json`, `model-audit.json`, `marker-merge.json`, `lu.json`, `pad_wirepad-kldrc.json`, `combined-lvs.txt`, models `physical.spice` (C-only), `physical-r-{typ,high}[-rail].spice` (R+C) |
 | `pad_txpad` (GDS sha bded3185…, a16 + `tx_top_pins.py` 2026-11-24; hashes in `pc72-txpad-a16.json`) | `layout-info.json`, `lu.json`, `marker-merge.json`, `pad_txpad-kldrc.json`, `pad-lvs.txt`, `pc72-txpad-a16.json`, models `physical.spice` (C-only, wrapper `tx_protected_pad`), `physical-r-{typ,high}.spice` (R+C; model-only ports `DVSS_P/N`, tie to VSS) |
 | `pad_refpad` (GDS sha 96dc5a02…; hashes in `pc75-refpad-a1.json`) | `placement-layout.json`, `layout-screen.json`, `independent-device-audit.json`, `model-audit.json`, `marker-merge.json`, `lu.json`, `pad_refpad-kldrc.json`, `combined-lvs.txt`, `pc75-refpad-a1.json`, models `physical.spice` (C-only, wrapper `tx_protected_pad`), `physical-r-{typ,high}[-rail].spice` (R+C) |
-| `pad_rf_pair` r3, `pad_single_leg` s2, `pad_rftxpad` t8 (hashes in `pc74-rfpair-r3.json`, `pc74-singleleg-s2.json`, `pc81-rftxpad-t8.json`) | `pad.gds`, `pad-extracted.spice` (C-only, wrapper `rf_protected_pad`), `reference.spice` (LVS / chip-top master `pad_reference`), `physical-r-{typ,high}.spice` (lumped R+C), `pad-layout.json`, `pad-lvs.txt`, `lu.json`, `<cell>-kldrc.json` |
+| `pad_rf_pair` r4, `pad_single_leg` s2, `pad_rftxpad` t8 (hashes in `pc84-rfpair-r4.json`, `pc74-singleleg-s2.json`, `pc81-rftxpad-t8.json`) | `pad.gds`, `pad-extracted.spice` (C-only, wrapper `rf_protected_pad`), `reference.spice` (LVS / chip-top master `pad_reference`), `physical-r-{typ,high}.spice` (lumped R+C), `pad-layout.json`, `pad-lvs.txt`, `lu.json`, `<cell>-kldrc.json` |
 
 ## 3. Protection foundation
 
@@ -223,11 +223,11 @@ network stays as the core-side secondary. All layout checks pass (DRC, read-back
 
 | Cell | ESD (lumped R+C, ring model, 1 nF site decap) | Result |
 |---|---|---|
-| `pad_rf_pair` | HBM 2 kV gates ≤ 1.71 V; CDM 2 A site reverse 10.69 V high / 9.14 typ (bv 11) | PASS, 0.31 V margin |
+| `pad_rf_pair` r4 (PC-84, 2 + 2 site diodes) | HBM 1 kV 6.74 V / CDM 1 A 9.45 V worst reverse high; HBM 2 kV 11.4 V (old class, dropped); pad C 0.801 / 0.773 pF per leg | PASS at the MANDATE 1 class |
 | `pad_rftxpad` t8 (PC-81b, `rftx_band.py` n_up 4) | local positive path (band up-diodes to ESD_RAIL + low-R clamp VSS / ESD_RAIL straps): HBM 1 kV worst reverse 6.84 V, CDM 1 A 9.67 V (t2: 13.3 / 14.0); pad C +0.39/+0.40 pF per leg (cbench) | PASS at the project ESD class (MANDATE 1: HBM 1 kV / CDM 1 A); pad C over +0.3 pF (RF TX checks match) |
 | `pad_single_leg` | single-leg cases (2026-11-24): HBM 2 kV 7.49 V, CDM 1 A 6.49 V, CDM 2 A 10.63 V worst reverse high metal; gates <= 1.49 V | PASS |
 
-Pad C (cbench, 2.4 GHz, typ, fixed 2026-11-24; +100 fF control reads back +100.0 fF), per leg vs the pre-option-A published shell: rf_pair r3 0.951 / 0.923 pF vs 0.670 / 0.642 (+0.28, limit +0.3 PASS, +0.1 wanted MISS); single_leg s2 0.932 vs 0.653 (+0.28 PASS); rftxpad t8 +0.39 / +0.40 vs t2 (accepted, PC-81b). Known misses: rebuild drift 17.4 um2/site; old network generator cannot be rerun; independent review of rftxpad only (light, review-t7).
+Pad C (cbench, 2.4 GHz, typ, fixed 2026-11-24; +100 fF control reads back +100.0 fF), per leg vs the pre-option-A published shell: rf_pair r4 0.801 / 0.773 pF vs 0.670 / 0.642 (+0.13, limit +0.3 PASS; r3 was +0.28); single_leg s2 0.932 vs 0.653 (+0.28 PASS); rftxpad t8 +0.39 / +0.40 vs t2 (accepted, PC-81b). Known misses: rebuild drift 17.4 um2/site; old network generator cannot be rerun; independent review of rftxpad only (light, review-t7).
 
 ### POR_BYPASS strap (`scratch/reviews/pads-core/STRAP.md`)
 

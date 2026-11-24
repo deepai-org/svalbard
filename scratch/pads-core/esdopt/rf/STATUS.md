@@ -77,3 +77,7 @@ cbench fixed (the ac inside .control only wrote the op point; now .ac lin 24 + w
 pad C 2.4 GHz typ: t2 0.820/0.792 (0 V) 0.786/0.758 (3.3 V); t7 1.245/1.224; t8 1.172/1.153; r3 0.951/0.923 vs published shell 0.670/0.642; s2 0.932 vs 0.653.
 single_leg ESD rerun with single-leg cases only: HBM 2 kV 7.49, CDM 1 A 6.49, CDM 2 A 10.63 V (high): PASS.
 Light independent review of t7: GO with conditions (review-t7/REVIEW.md: F1 lumped band model, F2 their railcap step failed, F3 no per-net C cross-check).
+
+## 2026-11-24: rf_pair r4 published (PC-84; coordinator ruling under the MANDATE 1 ESD rule)
+r4 = 2 dn + 2 up site diodes per leg (build.sh rf_pair r4 '{"n_dn":2,"n_up":2,"n_up_left":0,"n_dn_left":0,"pin_vias":true}'); all layout checks PASS (chk/r4).
+ESD high / typ: HBM 1 kV 6.74 / 5.83 V, CDM 1 A 9.45 / 7.93 V worst reverse PASS; HBM 2 kV 11.42 V (old class, dropped). Pad C 0.801 / 0.773 pF (r3 0.951 / 0.923).

@@ -133,8 +133,8 @@ FLOW_KEEPAWAY = {'rf': [('lo_txbuf', 'lna', 300), ('lo_txbuf', 'qvco', 200), ('r
 # routing channels kept free of blocks (die um): pt_wired: wire_tx_data / controls from the macro's south edge straight down
 # to pt_wiredtx8's top-edge pins (ASM-11a; block pins at die x ~1944-2034)
 ROUTE_CHANNELS = {'wired': {'chan_wtxdata': (1924.0, 2650.0, 2134.0, 3027.0)}}
-# grid kept 3 um off block signal pins (kl_place); pt_wired off until its regression (WRX_DX opens, VDD/VSS join, 2026-11-24) is understood
-PIN_WINDOWS = {'rf': True}
+# grid kept 3 um off block signal pins (kl_place); pt_wired retried with wrx_cap r6 (Metal4 pins, TIM-33)
+PIN_WINDOWS = {'rf': True, 'wired': True}
 # masters whose supply pins are labelled only on Metal1 inside the cell: pins also on their own Metal4/5 of that net (kl_abstract)
 PIN_UP = {'por': ('vdd3v3', 'vss')}
 # blocks the packer must not rotate (none at present; pt_wrx_cap fixed south of the macro blocked the west routing, 2026-11-24)

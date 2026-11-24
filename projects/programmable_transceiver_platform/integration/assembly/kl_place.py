@@ -422,9 +422,11 @@ for net in [n_ for n_ in GRID_NETS if n_ in ring]:
 slots = {}
 for net in GRID_NETS:
     lst = []
-    for ln, b in strap_pieces[net]:
+    # slots are cut from the drawn, ring-joined metal (the uncut strap pieces gave pdn pins where blocks / pin windows had
+    # removed the metal: iso_clamp_x4 VSS hooks landed on nothing, 2026-11-24)
+    pieces_ = [(ln_, tz.bbox()) for ln_ in ('Metal4', 'Metal5') for poly in live[net][ln_].each() for tz in poly.decompose_trapezoids(1)] if net in live else strap_pieces[net]
+    for ln, b in pieces_:
         if min(b.width(), b.height()) < um(5): continue          # slivers of the decomposition are no hook slots
-        if net in live and live[net][ln].interacting(db.Region(b)).is_empty(): continue
         horiz = b.width() >= b.height(); L = b.width() if horiz else b.height(); n_ = max(1, int(L // um(22)))
         for j in range(n_):
             a0 = (b.left if horiz else b.bottom)+j*um(22)
@@ -454,9 +456,12 @@ for net in GRID_NETS:
                 for on_ in GRID_NETS:
                     if on_ != net: ov -= metal.get((on_, sl_), db.Region()).sized(um(1))
                 if ov.is_empty(): continue
-                if sl_ == pl: touched = True
-                elif pl == 'Metal4' and sl_ == 'Metal5': direct += via_fill(dland, VIA["Via4"], ov, inset=0.1, single=True)
-        if direct or touched:
+                # only landings with room for >= 4 cuts (one-cut landings at a strap edge left isolated vias: atb_leaf_s
+                # VSS open, 2026-11-24); same-layer overlaps are hooked like any other pin (an abstract pin rectangle can be
+                # larger than its metal)
+                if pl == 'Metal4' and sl_ == 'Metal5' and ov.sized(-um(0.4)).area() >= um(1.24)*um(1.24):
+                    direct += via_fill(dland, VIA["Via4"], ov, inset=0.4)
+        if direct >= 4:
             man.setdefault('direct_landings', []).append(dict(net=net, inst=n, pin=p, via4=direct)); continue
         c = sh[0][1].center(); best = None
         for sl in slots[net]:

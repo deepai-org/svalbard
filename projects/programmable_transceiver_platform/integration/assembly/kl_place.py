@@ -213,6 +213,10 @@ for bd in ([] if getattr(C, 'ISLAND_BARS_OFF', False) else C.ISLAND_BARS.get(CHI
                 if tn_ in ties_: t_ = ties_[tn_]; same += db.Region(db.Box(um(bx_+t_[0]), um(by_+t_[2]), um(bx_+t_[1]), um(by_+t_[3])))
     cut = ((blkmetal['Metal5'] - cells_.sized(um(2.5))) + other.sized(um(2.5))) - same.sized(um(2.5)) + (other.sized(um(2.5)))
     reg = (reg - cut - padreg.sized(um(3)) - (ring['VDD'] + ring['VSS']).sized(um(2.5))).merged() + (same & reg.sized(um(50)))   # never on the core ring
+    for i_, p_ in bd['vias']:       # the bar keeps 3 um off the listed cells' other pins (PG / EN joined RAIL_wired_cap, 2026-11-24)
+        for pn_ in MJ.get(man['blocks'][i_]['master'], {}).get('pins', {}):
+            if pn_ != p_ and pn_ not in ('VDD', 'VSS'):
+                for ln_, b_ in pin_shapes_die0(i_, pn_): reg -= db.Region(b_.enlarged(um(3), um(3)))
     reg = (reg - noover).merged()      # never over the no-route-over (RF) blocks
     reg = db.Region([p for p in reg.each() if p.area() > um(20)*um(20)])
     bars.append(dict(bd, region=reg, m4=m4, merged=not same.is_empty()))
@@ -412,13 +416,18 @@ live = {}
 for net in [n_ for n_ in GRID_NETS if n_ in ring]:
     m4_ = metal.get((net, 'Metal4'), db.Region()).merged(); m5_ = metal.get((net, 'Metal5'), db.Region()).merged()
     seed = ring.get(net, db.Region())
+    # Metal4 and Metal5 count as joined only where their overlap is large enough for the Via4 lattice to place a cut
+    # (a thin overlap gets none: two pt_rf VSS hooks landed on such an island, 2026-11-24)
+    cx_ = (m4_ & m5_).merged().sized(-um(0.75)).sized(um(0.75))
     keep4 = m4_.interacting(seed); keep5 = m5_.interacting(seed)
     while True:
-        n4 = m4_.interacting(keep5 + seed); n5 = m5_.interacting(keep4 + seed)
+        n4 = m4_.interacting(cx_.interacting(keep5 + seed)) + m4_.interacting(seed); n5 = m5_.interacting(cx_.interacting(keep4 + seed)) + m5_.interacting(seed)
+        n4 = n4.merged(); n5 = n5.merged()
         if n4.count() == keep4.count() and n5.count() == keep5.count(): break
         keep4, keep5 = n4, n5
     live[net] = {'Metal4': keep4, 'Metal5': keep5}
     man.setdefault('grid_floating', {})[net] = dict(m4=m4_.count()-keep4.count(), m5=m5_.count()-keep5.count(), m4_total=m4_.count(), m5_total=m5_.count(), m4_float_mm2=round((m4_-keep4).area()/1e12, 4), m5_float_mm2=round((m5_-keep5).area()/1e12, 4))
+_blkreg = db.Region([db.Box(*[um(v) for v in b_['bbox']]) for n_, b_ in man['blocks'].items() if b_['master'] != 'decap']).merged()
 slots = {}
 for net in GRID_NETS:
     lst = []
@@ -431,6 +440,7 @@ for net in GRID_NETS:
         for j in range(n_):
             a0 = (b.left if horiz else b.bottom)+j*um(22)
             cb = db.Box(a0, b.bottom, min(a0+um(20), b.right), b.top) if horiz else db.Box(b.left, a0, b.right, min(a0+um(20), b.top))
+            if not _blkreg.interacting(db.Region(cb)).is_empty(): continue     # no slot over a block: the hook dropped into adc_q's own Metal4 (SEN_A), 2026-11-24
             lst.append([ln, cb, False])
     slots[net] = lst
 hook_pins = {}; man['digital_ties_not_hooked'] = 0
@@ -582,7 +592,7 @@ _prt = next((i.cplx_trans for i in top.each_inst() if i.cell.name == 'retained_p
 if _pr is not None and _prt is not None:
     _rg = db.Region()
     for _i in _pr.each_inst():
-        if any(k in _i.cell.name for k in ('fill', 'RAIL', '__cor')): _rg.insert(_i.bbox().transformed(_prt).enlarged(um(0.3), um(0.3)))
+        if any(k in _i.cell.name for k in ('fill', 'RAIL', '__cor', 'CDNS')): _rg.insert(_i.bbox().transformed(_prt).enlarged(um(0.3), um(0.3)))
     for _poly in _rg.merged().each():
         for _t in _poly.decompose_trapezoids(1):
             _b = _t.bbox(); blk.append(('ring_fill', (fu(_b.left), fu(_b.bottom), fu(_b.right), fu(_b.top)), ML))

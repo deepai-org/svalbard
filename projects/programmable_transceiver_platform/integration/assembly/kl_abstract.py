@@ -228,6 +228,8 @@ def abstract(key, path, cellname, full_all, kind, want_pins):
                         if t.bbox().width() >= 1000 and t.bbox().height() >= 1000: pins[s.text.string].append((up, t.bbox()))
             if any(x[0] != 'Metal1' for x in pins[s.text.string]): pins[s.text.string] = [x for x in pins[s.text.string] if x[0] != 'Metal1']
     pins = {k: v[:40] for k, v in pins.items()}
+    extra_ = sorted(set(pins)-set(want_pins)) if want_pins else []
+    if want_pins: pins = {k: v for k, v in pins.items() if k in want_pins}     # labels that are not conn pins (e.g. adc SEN_A test labels) stay obstruction: a VSS hook was routed into SEN_A, 2026-11-24
     o = obs(c, pins, full_all)
     L = [f'MACRO {key}', '  CLASS BLOCK ;', '  ORIGIN 0 0 ;', f'  FOREIGN {key} 0 0 ;', f'  SIZE {b.width()/1000:.3f} BY {b.height()/1000:.3f} ;', '  SYMMETRY X Y R90 ;']
     pin_out = {}
@@ -248,7 +250,7 @@ def abstract(key, path, cellname, full_all, kind, want_pins):
     open(f'/run/lef/{key}.lef', 'w').write('\n'.join(L))
     missing = [p for p in want_pins if p not in pins] if want_pins else []
     return dict(w=b.width()/1000, h=b.height()/1000, origin=[org.x/1000, org.y/1000], cell=c.name, pins=pin_out, kind=kind,
-                full_obs=full_all, obs_rects=nobs, missing_pins=missing, extra_labels=sorted(set(pins)-set(want_pins)) if want_pins else [])
+                full_obs=full_all, obs_rects=nobs, missing_pins=missing, extra_labels=extra_)
 
 MJ = {}
 used = sorted({i['master'] for i in inst.values() if not i['master'].startswith(C.PROVIDER)} | {'gf180mcu_fd_io__'+x for x in ('bi_24t', 'in_c', 'asig_5p0')})

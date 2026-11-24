@@ -63,7 +63,7 @@ Outline = bounding box of the published GDS (`generated/<block>.gds`). Island na
 | `pt_obs_pre4` | `CK EN OUT VDD VSS` | /4 in front of `clk_obs16` for sources above 500 MHz | 127.8 x 28.7, 0.0037 | debug, six instances |
 | `pt_ring_osc` | `EN OUT VDD VSS` | NAND-enabled 21-stage ring, process monitor | 195.7 x 48.7, 0.0095 | debug |
 | `pt_aosc` (r3) | `EN CLK ATB_X VDD VSS` | Two-capacitor RC relaxation oscillator, no bias input | 199.6 x 64.5, 0.013 | core (always on) |
-| `pt_lo_ext` | `EXT_IP EXT_IN EXT_QP EXT_QN LOI_IP LOI_IN LOI_QP LOI_QN EXT INT CMLSEL LO_IP LO_IN LO_QP LO_QN ATB_VB VDD VSS` | LO driver onto the mixer gates: one CML driver per phase pair with two inputs (QVCO tank, AC-coupled pad) and a passive pad path | 322.1 x 482.4, 0.155 | lod |
+| `pt_lo_ext` | `EXT_IP EXT_IN EXT_QP EXT_QN LOI_IP LOI_IN LOI_QP LOI_QN EXT INT CMLSEL LO_IP LO_IN LO_QP LO_QN ATB_VB VDD VSS` | LO driver onto the mixer gates: one CML driver per phase pair with two inputs (QVCO tank, AC-coupled pad) and a passive pad path | 345.1 x 387.2, 0.134 | lod |
 | `pt_lc_qvco5` | `EN CMLSEL VTUNE IBIAS BAND0..BAND3 PRE IP IN QP QN VDD VDDB VSS ATB_EN ATB_VTUNE ATB_ITAIL` | Quadrature LC VCO at the RF carrier, 4-bit band bank, two 300 um spirals | 898.0 x 652.9, 0.586 (includes the 25 um fill keep-out halo) | lo (`VDD_LO`) |
 | `pt_lo_mmd` | `LP LN EN N0..N5 FB VDD VSS` | Feedback divider, VCO/FB = 2 x N | 377.8 x 955.8, 0.361 | lod |
 | `pt_lo_mmd_qdum` | `LP LN EN QDP QDN VDD VSS` | Q-tank dummy of the divider input | 216.7 x 157.2, 0.034 | lod |
@@ -137,7 +137,7 @@ ss/0 C/3.63 V. The table between the markers is written by `evidence.py`.
 | `wordclk` | 53 | 24,969 (reserve) | 0 | unique | nom_480m_d5: pass, nom_480m_d10: pass, nom_480m_d20: pass, nom_810m_d5: pass, nom_810m_d10: pass, nom_810m_d20: pass | pass (max avg 0.0568 µA) | pass |
 <!-- results:end -->
 
-The `lo_ext` row describes a superseded cell (its evidence file predates the published layout; Open items).
+The `lo_ext` row above is the Nov-11 cell; the published cell is a4 (2026-11-24): `generated/lo_ext-evidence.json`, EM 0 of 3701, precheck 0 / 0, read-back 497 = 497.
 
 Every published GDS in `generated/` (the 18 blocks of the table in "Blocks" except the QVCO) has Magic DRC 0
 (`<block>-drc.txt`), LVS unique (`<block>-lvs.txt`) and a clean KLayout precheck, main 0 / antenna 0
@@ -216,7 +216,7 @@ these blocks has one. Bench results live in `scratch/lo-ap4/` until published.
 | Loop filter `pt_lo_lf` | `lo_lf.spice` | yes | unique | `lock/lock_rc.json` | lock 60-65 us at the slow filter corner vs 50 us; C3 must move to the QVCO (INT23-3) |
 | Observation `pt_lo_obs` (+ `lo_obs_q`) | `lo_obs.spice` | yes | unique | 20 of 24 corner cases | does not divide at ss / 3.15 V; repack staged, not benched |
 | `obs_pre4` | `obs_pre4.spice` | yes | unique | 20 of 24 corner cases | as `pt_lo_obs` |
-| External LO / mixer driver `pt_lo_ext` | `lo_ext.spice` | yes | unique | `loext3/` revision n4: -1.2 / -1.5 dB vs square (tt / ss) | published -3.3 / -9.8 dB; revision not published; external modes not co-simulated with the pads (LO-05) |
+| External LO / mixer driver `pt_lo_ext` | `lo_ext.spice` | yes | unique | a4 (n4) published 2026-11-24: -1.2 / -1.5 dB vs square (tt / ss) | external modes not co-simulated with the pads (LO-05) |
 | AUX_CLK / REF_IN receiver `pt_diff_clk_rx` | `diff_clk_rx.spice` | yes | unique | `auxrx/` | does not drive a 3.1 mm route at 810 MHz unbuffered |
 | Runaway guard `pt_lo_vtdet` | `lo_vtdet.spice` | `generated/lo_vtdet.*` 157.5 x 434.5 um, DRC 0, KLayout 0 | read-back unique | `scratch/lo-ap4/vtdet/`: trip VDD - 0.26...0.29 V, hysteresis 82-93 mV, 31-64 uA, all corners (schematic) | not extracted-benched; RTL LO-DIG-1 pending |
 | LO distribution to mixers | - | no routed top | - | 0-40 fF route assumption | no chip-top route extraction |
@@ -284,7 +284,7 @@ Bindings: `integration/chips/{rf,wired}/chip.conn`; control decode: `integration
 | `lo_mmd_qdum` | `pt_lo_mmd_qdum` | `generated/lo_mmd_qdum.*` | 216.7 x 157.2 | lod |
 | `lo_pfdcp` | `pt_lo_pfdcp` | `generated/lo_pfdcp.*` | 257.0 x 482.9 | lo, on `VDD_LO` |
 | `lo_lf` | `pt_lo_lf` | `generated/lo_lf.*` | 402.8 x 482.0 | lo (passive, VSS only) |
-| `lo_ext` | `pt_lo_ext` | `generated/lo_ext.*` | 322.1 x 482.4 | lod |
+| `lo_ext` | `pt_lo_ext` | `generated/lo_ext.*` | 345.1 x 387.2 | lod |
 | `lo_obs` | `pt_lo_obs` | `generated/lo_obs.*` | 200.3 x 87.0 | lod |
 | `lo_obs_q` | `pt_lo_obs`, `EN` tied to VSS (matched Q-tank load) | same | same | lod |
 | `lo_vreg` | `pt_lo_vreg` | none (build demand) | - | lo |
@@ -454,7 +454,7 @@ Risks: `spec/risk-register.md` LO-02, LO-03, LO-10, LO-11, LO-12, LO-13, SP-02, 
 DBG-02, MT-03. LO-01 is listed there as closed but applies again (the QVCO runs at the carrier).
 
 1. Evidence currency. `run_timing.py`, `timing_flow.py` and `layout_engine.py` changed after every evidence
-   file. `lo_ext-evidence.json`, `lo_ext-pad-evidence.json` and `lcvco-evidence.json` describe superseded cells
+   file. `lo_ext-pad-evidence.json` and `lcvco-evidence.json` describe superseded cells (`lo_ext-evidence.json` is current: a4)
    (netlist and GDS hashes differ) and are not quoted here. The GDS hash differs from the evidence record for
    `aosc`, `clockmux`, `prescale`, `vco_replica`, `wordclk` (GDS re-exported; `.mag` and extraction unchanged)
    and `ring_osc` (layout rebuilt after the evidence).

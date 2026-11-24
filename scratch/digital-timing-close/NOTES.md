@@ -29,8 +29,9 @@ known answer reproduces DG9-16 WNS exactly: rf -1.663, wired -2.059 ns):
   rf WNS -1.29 (d2h_fwd -1.29, h2d_cap -0.93, d2h_oddr -0.63, ref -0.20, hcore -0.16, hddr -0.11);
   wired WNS -1.41 (d2h_fwd -1.41, d2h_oddr -0.62, h2d_cap -0.61, hcore -0.45, fc4 -0.37, wtx -0.29, ref -0.22, hddr -0.14).
   So with the trim the host-link pin windows (hand-placed D2H ODDR / H2D capture) dominate; the rest is <= 0.45 ns and
-  fc4 / hcore reset are already fixed in HEAD RTL (aa737acc, dfc47642). A full 3.50 V library (libchar.py run --cells used)
-  is still to be built for sign-off.
+  fc4 / hcore reset are already fixed in HEAD RTL (aa737acc, dfc47642). Real 3.50 V library now built (liberty/..ss_032C_3v50.lib, anchored, 115 cells; sta_signoff corner
+  ss32_trim3v50): DG9-16 at 3.50 V: rf WNS -1.20 (d2h_fwd -1.20, h2d_cap -0.57, d2h_oddr -0.26), wired -1.32 (d2h_fwd -1.32,
+  d2h_oddr -0.35, h2d_cap -0.27); every core domain passes. Host-link windows: DG9-21 (FPGA training).
 GLS: the 5 h job was hung (zero-delay loop of the OBS-14 ring pt_dig_ring in FUNCTIONAL cell models once
 dig_ring_enable is written); fixed in tb_digital_gl.sv (loop broken at dring.n[0], driven by the behavioural model);
 RTL reference failed to compile (pt_linecode hit used before declaration, fixed) and was elaborated as PT_CHIP 3 instead

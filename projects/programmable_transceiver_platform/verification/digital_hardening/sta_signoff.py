@@ -33,6 +33,7 @@ CHAR_LIB = str(Path(__file__).resolve().parent / 'liberty' / 'gf180mcu_fd_sc_mcu
 CORNERS = [  # (name, liberty pvt, rc, envelope timing corner, host rate divider)
     ('ss32_window_max_rate1', 'char:ss_032C_3v15', 'max', 'ss_window', 1),
     ('ss22_window_max_rate1', 'char:ss_022C_3v15', 'max', 'ss_window', 1),
+    ('ss32_trim3v50_max_rate1', 'char:ss_032C_3v50', 'max', 'ss_window', 1),   # per-die supply trim point (MANDATE 2)
     ('tt_nom_rate1', 'tt_025C_3v30', 'nom', 'tt', 1),
     ('ff22_window_min_rate1', 'char:ff_022C_3v35', 'min', 'ff_window', 1),
     ('ff32_window_min_rate1', 'char:ff_032C_3v35', 'min', 'ff_window', 1),

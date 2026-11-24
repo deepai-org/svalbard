@@ -578,6 +578,7 @@ module pt_analog_top_stub(
  assign s_pg_debug = island_en[5];
  wire p_isw_rf_tx__EN = island_en[1];
  assign s_pg_rf_tx = island_en[1];
+ wire p_isw_rf_tx_b__EN = island_en[1];
  wire p_isw_lod__EN = island_en[1];
  assign s_pg_lod = island_en[1];
  wire p_isw_rf_rx__EN = island_en[1];

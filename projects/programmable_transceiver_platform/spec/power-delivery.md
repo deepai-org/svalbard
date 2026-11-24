@@ -16,7 +16,7 @@ up to a 3.50 V setpoint.
 | --- | --- | --- |
 | Islands (`spec/chips.json`) | rf_rx, rf_tx, lod, lo, pll, conv, debug | wired_rx, wired_cap, wired_tx, pll, debug |
 | Bonds (`integration/chips/<chip>/bond_map.txt`) | 10 supply, 19 ground | 10 supply, 17 ground |
-| Mode ceilings (digital at PWR-DIG) | Pass; DXe +6.6 mA, DXa +5.6. At the area-scaled macro (62.6 mA) TXe, TXa, DXe, DXa exceed by 3.5-17 mA | Pass against 430 mA (thermal-set, section 1.1), POST on: W 410 (+20), U 364 (+66); W at the area-scaled macro +2.6, at 81.8 mA -1.9 |
+| Mode ceilings (digital at PWR-DIG) | Pass against 430 mA (same physical limits as pt_wired, CB8-16) with lo_txbuf r3 59.3 mA: DXa 393.7 (+36.3), at the area-scaled macro +13.7, at 81.8 mA -5.5 | Pass against 430 mA (thermal-set, section 1.1), POST on: W 410 (+20), U 364 (+66); W at the area-scaled macro +2.6, at 81.8 mA -1.9 |
 | Island switches | Pass, 7 masters, 0.289 mm2 | Pass with **two `isw_wired` in parallel on wired_tx**; 6 masters, 0.303 mm2 |
 | Static drop (117 mV) | Pass: worst 94.3 mV (`lo_mmd`), 96.0 at 81.8 mA | Pass: worst 109.0 mV (`wrx_cap`), 109.2 at 81.8 mA |
 | Decap | 5.40 nF as packed | 5.41 nF as packed |
@@ -46,12 +46,12 @@ Mode totals (mA), worst in-window analog:
 
 | Chip | Case | Analog worst | Total, digital area-scaled | Total, digital 81.8 | Total, digital at PWR-DIG | Board feed | Ceiling | Margin at PWR-DIG | Margin at 81.8 |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| pt_rf | RXe | 94.7 | 215.8 | 234.9 | 193.2 | 0 | 260 | +66.8 | +25.1 |
-| pt_rf | RXa | 175.7 | 296.7 | 315.9 | 274.1 | 0 | 340 | +65.9 | +24.1 |
-| pt_rf | TXe | 142.4 | 263.5 | 282.6 | 240.8 | 37.5 | 260 | +19.2 | -22.6 |
-| pt_rf | TXa | 223.4 | 344.4 | 363.6 | 321.8 | 37.5 | 340 | +18.2 | -23.6 |
-| pt_rf | DXe | 155.0 | 276.1 | 295.2 | 253.4 | 37.5 | 260 | +6.6 | -35.2 |
-| pt_rf | DXa | 236.0 | 357.0 | 376.2 | 334.4 | 37.5 | 340 | +5.6 | -36.2 |
+| pt_rf | RXe | 94.7 | 215.8 | 234.9 | 193.2 | 0.0 | 430 | +236.8 | +195.1 |
+| pt_rf | RXa | 175.7 | 296.7 | 315.9 | 274.1 | 0.0 | 430 | +155.9 | +114.1 |
+| pt_rf | TXe | 201.7 | 322.8 | 341.9 | 300.1 | 37.5 | 430 | +129.9 | +88.1 |
+| pt_rf | TXa | 282.7 | 403.7 | 422.9 | 381.1 | 37.5 | 430 | +48.9 | +7.1 |
+| pt_rf | DXe | 214.3 | 335.4 | 354.5 | 312.7 | 37.5 | 430 | +117.3 | +75.5 |
+| pt_rf | DXa | 295.3 | 416.3 | 435.5 | 393.7 | 37.5 | 430 | +36.3 | -5.5 |
 | pt_wired | W | 233.3 | 427.4 | 431.9 | 410.1 | 0 | 430 | +19.9 | -1.9 |
 | pt_wired | U | 186.7 | 380.8 | 385.4 | 363.6 | 0 | 430 | +66.4 | +44.6 |
 | pt_wired | T | 79.0 | 273.1 | 277.6 | 255.8 | 0 | 430 | +174.2 | +152.4 |
@@ -70,7 +70,7 @@ Requirement IDs (traced in `performance-requirements.json`; the numbers come fro
 Notes on the requirements:
 
 - **PWR-MODE-CEIL:** total current per chip, including the 37.5 mA rfdriver board feed, within 430 mA on both chips
-  (pt_wired with POST; pt_rf worst DXa 353.7 mA with lo_txbuf 19.3 mA) at worst in-window analog currents, digital at PWR-DIG.
+  (pt_wired with POST; pt_rf worst DXa 393.7 mA with lo_txbuf r3 59.3 mA) at worst in-window analog currents, digital at PWR-DIG.
   What the pt_wired value protects: section 1.1.
 - **PWR-DIG-WIRED / PWR-DIG-RF:** macro <= 60 mA (pt_wired) and <= 40 mA (pt_rf), unused domains clock-gated, signed off
   with activity-annotated power per chip. pt_rf at its area-scaled 62.6 mA exceeds the TX and DX ceilings by 3.5-17 mA.
@@ -115,7 +115,7 @@ Ron / n, n x area). Masters (`analog/island_support`): `isw_wired` 80 mA / 0.248
 | Chip | Island | Worst (mA) | Design (mA) | Case | Master | n | Capacity (mA) | Drop at design (mV) | Area (mm2) | Smallest single master that passes |
 | --- | --- | ---: | ---: | --- | --- | ---: | ---: | ---: | ---: | --- |
 | pt_rf | rf_rx | 38.2 | 43.6 | RXe | isw_rf | 1 | 55 | 13.1 | 0.0500 | isw_rf |
-| pt_rf | rf_tx | 26.3 | 32.3 | DXa | isw_debug | 1 | 40 | 12.5 | 0.0370 | isw_debug |
+| pt_rf | rf_tx | 85.6 | 91.6 | DXa | **isw_wired** | **2** | 160 | 11.4 | 0.1282 | none |
 | pt_rf | lod | 70.6 | 74.1 | RXa | isw_wired | 1 | 80 | 18.4 | 0.0641 | isw_wired |
 | pt_rf | lo | 27.5 | 28.1 | DXa | isw_conv | 1 | 30 | 13.5 | 0.0320 | isw_conv |
 | pt_rf | pll | 27.6 | 30.7 | RXe | isw_debug | 1 | 40 | 11.9 | 0.0370 | isw_debug |

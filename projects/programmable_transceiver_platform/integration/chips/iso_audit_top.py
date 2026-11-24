@@ -26,6 +26,7 @@ sys.path.insert(0, HERE)
 import check_top as ct
 AUD = ct.ROOT+'/scratch/integration/m6-powerup/audit'
 GROUP = {k: ct.GROUP_NAME[v] for k, v in ct.GROUP_BIT.items()}
+MACRO_GATED_DATA = {'rf_tx_sample': 4}      # macro data output -> island_on bit that ANDs it in RTL
 
 
 def audit_net(n):
@@ -137,6 +138,12 @@ def build(work, chip):
             named = {ct.GROUP_NAME[int(k)] for k in re.findall(r'island_on\[(\d)', ctl[base]['enc']) if int(k) in ct.GROUP_NAME}
             if named: isl = sorted(named)       # the row states its own gating: use it, so a wrong group shows as K2
             cbit[n] = dict(field=base, islands=isl, reset=(ctl[base]['reset'] >> (idx or 0)) & 1)
+    # data ports the macro gates by an island in RTL (not readable from the ctl table): reset/off value 0 while the island is off
+    # rf_tx_sample: pt_digital_macro.sv `assign rf_tx_sample = rf_tx_sample_q & {24{island_on[4]}}` (conv, CB8-15 item 4)
+    for n in nets:
+        base, idx = ct.bus(n)
+        if base in MACRO_GATED_DATA:
+            cbit[n] = dict(field=base, islands=[ct.GROUP_NAME[MACRO_GATED_DATA[base]]], reset=0)
     return dict(direction=direction, cbit=cbit, empty=empty, note=note, mc=mc, inst=inst, masters=masters)
 
 

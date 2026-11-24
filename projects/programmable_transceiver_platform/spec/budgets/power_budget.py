@@ -304,7 +304,7 @@ MEASURED = [
  ('rfdriver', 'rf_tx', {'TD': (58.4, 61.7)}, ('rfdriver',), 'ext',
   'rf_tx-sim-ext.json chain_zero 58.40, scratch/rf-tx-d3/imax.json 61.694 ff/22/3.35 overdriven; TOTAL incl. the board feed: '
   'die rail = 0.393 x total (22.9 / 24.3 mA), board feed through the RF_TX pads = 0.607 x total, returning through die VSS'),
- ('lo_txbuf', 'rf_tx', {'TD': (15.0, 19.3)}, (), 'est', 'scratch/lo-ap4/txbuf_i/result.json: pt_lo_txbuf schematic, 2.45 GHz LO, txmix gate load: tt/27/3.3 15.0, ff/22/3.5 18.5, ff/125/3.5 19.3 mA'),
+ ('lo_txbuf', 'rf_tx', {'TD': (35.6, 59.3)}, (), 'ext', 'pt_lo_txbuf r3 extracted (4eae72cd, LO-PWR-2), 2.4 GHz LO, 4 x txmix gate load: tt/27/3.3 35.6, ss/32/3.15 46.2, ff/22/3.5 59.3 mA'),
  # ---- conv island
  ('adc_i', 'conv', {'RD': (5.73, 6.3)}, ('adc_i',), 'ext', 'converters/generated/adc_i-evidence.json 5.731 at 40 MS/s; no corner current recorded: worst = 1.1 x (assumed)'),
  ('adc_q', 'conv', {'RD': (5.72, 6.3)}, ('adc_q',), 'ext', 'adc_q-evidence.json 5.721; worst assumed 1.1 x'),
@@ -394,7 +394,7 @@ INSTANCE_WORST_MA = {
           'prescale_conv': (2.4, 'est = prescale'), 'refvcm': (0.03, 'ev CORE-SUPPORT-CELLS.md'), 'core_bias': (0.10, 'calc')},
   'rf_rx': {'bbfilter_i': (5.32, 'ev bbfilter_i-evidence.json'), 'bbfilter_q': (5.32, 'ev bbfilter_q-evidence.json'),
             'core_bias': (0.22, 'calc')},
-  'rf_tx': {'lo_txbuf': (19.3, 'ev scratch/lo-ap4/txbuf_i/result.json schematic, ff/125/3.5 (LO-PWR-1)')},
+  'rf_tx': {'lo_txbuf': (59.3, 'ev pt_lo_txbuf r3 extracted ff/22/3.5 (LO-PWR-2)')},
  },
  'wired': {
   'debug': {'rx_aux_clk': (5.10, 'ev diff_clk_rx-evidence.json'), 'rx_wtx_ext': (5.10, 'ev diff_clk_rx-evidence.json'),
@@ -422,7 +422,7 @@ def dig_meas(chip):
 SWITCH_MASTER = {'isw_wired': (80, 0.2484, 0.0641), 'isw_pll': (60, 0.2877, 0.0530), 'isw_rf': (55, 0.3007, 0.0500),
                  'isw_debug': (40, 0.3878, 0.0370), 'isw_conv': (30, 0.4807, 0.0320)}   # (mA, ohm, mm2)
 ISLAND_SWITCH = {
-    'rf': {'rf_rx': ('isw_rf', 1), 'rf_tx': ('isw_wired', 1), 'lod': ('isw_wired', 1), 'lo': ('isw_conv', 1), 'pll': ('isw_debug', 1),
+    'rf': {'rf_rx': ('isw_rf', 1), 'rf_tx': ('isw_wired', 2), 'lod': ('isw_wired', 1), 'lo': ('isw_conv', 1), 'pll': ('isw_debug', 1),
            'conv': ('isw_conv', 1), 'debug': ('isw_debug', 1)},
     'wired': {'wired_rx': ('isw_debug', 1), 'wired_cap': ('isw_wired', 1), 'wired_tx': ('isw_wired', 2), 'pll': ('isw_debug', 1),
               'debug': ('isw_debug', 1)}}
@@ -438,7 +438,7 @@ EST_MARGIN = 1.25
 # cold finger (<= 5.2 C/W, 2 C control tolerance: 8 C span), bond / supply-cell EM (125 mA per cell at 85 C, one open bond
 # included), the board regulator (B2a >= 0.45 A). Thermal binds: 430 mA at 3.35 V = 1.49 W needs <= 5.42 C/W.
 # pt_rf: the 260 / 340 mA values were allocations, not limits; the same package, cold finger, regulator and bond rating
-# apply to both chips, so both carry the thermal-set 430 mA (pt_rf worst DXa 353.7 at PWR-DIG, 395.5 at the unscaled macro).
+# apply to both chips, so both carry the thermal-set 430 mA (pt_rf worst DXa 393.7 at PWR-DIG, 435.5 at the unscaled macro, lo_txbuf r3).
 PD2_CEILING_MA = {'wired_usb': 430, 'rf_external_lo': 430, 'rf_autonomous_lo': 430}   # pt_wired / pt_rf, mA at PWR-DIG
 
 

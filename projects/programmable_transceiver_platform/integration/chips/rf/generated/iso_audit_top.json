@@ -3,8 +3,8 @@
  "direction_listed": [],
  "counts": {
   "K1": 8,
-  "K2": 6,
-  "K3": 0,
+  "K2": 2,
+  "K3": 1,
   "K4": 0,
   "K5": 0,
   "K6": 0,
@@ -13,7 +13,7 @@
  "groups": {
   "K1 island-to-island / island-to-core gate with no clamp": 8,
   "K2 pad back-drive into an off island": 2,
-  "K2 core / digital source onto p-diffusion of an off island": 4,
+  "K3 switch": 1,
   "K7 ATB leaf not gated by its island": 8
  },
  "fails": [
@@ -128,48 +128,9 @@
    "detail": "pad can be driven externally while the island is off"
   },
   {
-   "rule": "K2",
-   "net": "rf_tx_sample[14]",
-   "victim": "dac_q.CODE0",
-   "well": "RAIL_conv",
-   "island": "conv",
-   "via": "pdiff",
-   "source": "digital.rf_tx_sample[14]",
-   "source_domain": "core",
-   "detail": "no reset/off-state rule"
-  },
-  {
-   "rule": "K2",
-   "net": "rf_tx_sample[15]",
-   "victim": "dac_q.CODE1",
-   "well": "RAIL_conv",
-   "island": "conv",
-   "via": "pdiff",
-   "source": "digital.rf_tx_sample[15]",
-   "source_domain": "core",
-   "detail": "no reset/off-state rule"
-  },
-  {
-   "rule": "K2",
-   "net": "rf_tx_sample[2]",
-   "victim": "dac_i.CODE0",
-   "well": "RAIL_conv",
-   "island": "conv",
-   "via": "pdiff",
-   "source": "digital.rf_tx_sample[2]",
-   "source_domain": "core",
-   "detail": "no reset/off-state rule"
-  },
-  {
-   "rule": "K2",
-   "net": "rf_tx_sample[3]",
-   "victim": "dac_i.CODE1",
-   "well": "RAIL_conv",
-   "island": "conv",
-   "via": "pdiff",
-   "source": "digital.rf_tx_sample[3]",
-   "source_domain": "core",
-   "detail": "no reset/off-state rule"
+   "rule": "K3",
+   "inst": "isw_rf_tx_b",
+   "detail": "PG is NC_125, expected s_pg_rf_tx_b"
   },
   {
    "rule": "K7",
@@ -247,8 +208,8 @@
  "macro_internal_clamps": 61,
  "k1_clamped_ok": 68,
  "coverage": {
-  "instances": 253,
-  "nets": 945,
+  "instances": 254,
+  "nets": 947,
   "unbound_ports": 0,
   "iso_clamp_instances": 68
  },

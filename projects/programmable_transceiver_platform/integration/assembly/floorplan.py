@@ -28,6 +28,9 @@ for n, v in C.STAGED.get(chip, {}).items():
         for m_ in {inst0[n]['master'], led.get(n, inst0[n]['master'])}: sizes[m_] = [round(MJ[v['master']]['w']+70, 2), round(MJ[v['master']]['h'], 2)]
 json.dump(pj, open(RUN+'/fp_pads.json', 'w')); json.dump(sizes, open(RUN+'/fp_sizes.json', 'w'))
 SPREAD = float(os.environ.get('SPREAD', '40'))     # routing margin the packer keeps round fixed placements (coordinator 2026-11-21)
+# ledger item -> master as the die-fit ledger books it; where the conn now uses another master (e.g. isw_rf_tx -> isw_wired,
+# CB8-16), the packer books the conn master's outline
+LEDGER_MASTER = {x['item']: x['master'] for x in json.load(open(f"{C.ROOT}/scratch/reviews/die-fit/{chip}/ledger.json"))['rows']}
 def fixed_rects():
     out = {}
     for m, (x, y) in C.FIXED_PLACE.get(chip, {}).items():
@@ -61,7 +64,8 @@ try:
 except (OSError, KeyError): pass
 env = dict(os.environ, ADJ=json.dumps([[a, b, d, w] for a, b, d, w in C.FLOW_ADJ.get(chip, [])]+[[b, a, d, w] for a, b, d, w in C.FLOW_ADJ.get(chip, [])]+ISL_ADJ),
            KEEPAWAY=json.dumps(C.FLOW_KEEPAWAY.get(chip, [])), HALO_ITEMS=json.dumps(C.HALO_ITEMS.get(chip, {})), HALO=os.environ.get('HALO', {'rf': '4', 'wired': '10'}[chip]), CHIP=chip, SCEN='S', TAG='s', TRIES=os.environ.get('TRIES', '6'), PADS_JSON=RUN+'/fp_pads.json',
-           SIZES_JSON=RUN+'/fp_sizes.json', RUNDIR=RUN+'/fit', CHANNEL=os.environ.get('CHANNEL', '40'), ISLAND_W=os.environ.get('ISLAND_W', '0.3'), NOROT=','.join(list(C.STAGED.get(chip, {}))+list(C.GROUP_BOOK.get(chip, {}))+[n for n, i in inst0.items() if i['master'] in C.GRID_SNAP]), POCKET='1' if chip == 'wired' else '0', DROP=','.join(C.STALE_BOOK.get(chip, [])+list(C.FIXED_PLACE.get(chip, {}))+['isw_wired_tx']+[m for b, ms in C.GROUP_BOOK.get(chip, {}).items() for m in ms if m != b]), EXTRA_RSV=json.dumps(fixed_rects()), ITEM_SIZES=json.dumps({b: [sum(msize(m)[0] for m in ms)+4*(len(ms)-1), max(msize(m)[1] for m in ms)] for b, ms in C.GROUP_BOOK.get(chip, {}).items()}),
+           SIZES_JSON=RUN+'/fp_sizes.json', RUNDIR=RUN+'/fit', CHANNEL=os.environ.get('CHANNEL', '40'), ISLAND_W=os.environ.get('ISLAND_W', '0.3'), NOROT=','.join(list(C.STAGED.get(chip, {}))+list(C.GROUP_BOOK.get(chip, {}))+[n for n, i in inst0.items() if i['master'] in C.GRID_SNAP]), POCKET='1' if chip == 'wired' else '0', DROP=','.join(C.STALE_BOOK.get(chip, [])+list(C.FIXED_PLACE.get(chip, {}))+['isw_wired_tx']+[m for b, ms in C.GROUP_BOOK.get(chip, {}).items() for m in ms if m != b]), EXTRA_RSV=json.dumps(fixed_rects()), ITEM_SIZES=json.dumps({**{n: list(sizes[inst0[n]['master']]) for n, m_ in LEDGER_MASTER.items() if n in inst0 and inst0[n]['master'] != m_ and inst0[n]['master'] in sizes},
+                                   **{b: [sum(msize(m)[0] for m in ms)+4*(len(ms)-1), max(msize(m)[1] for m in ms)] for b, ms in C.GROUP_BOOK.get(chip, {}).items()}}),
            MACRO_MM2=str(round(MJ['pt_digital_macro']['w']*MJ['pt_digital_macro']['h']/1e6, 6)) if mw_ else ('2.669801' if chip == 'wired' else ''), OMP_NUM_THREADS='1', MACRO=os.environ.get('MACRO', macro))
 fit = C.ROOT+'/scratch/reviews/die-fit'
 r = subprocess.run(['true'] if os.environ.get('REUSE_FIT') else ['nice', '-n', '10', 'python3', 'fit.py'], cwd=fit, env=env, capture_output=True, text=True)

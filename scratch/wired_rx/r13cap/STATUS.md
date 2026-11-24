@@ -33,6 +33,31 @@ conn hunk in TIM-35 + MANIFEST switch, one commit). Next revision: slot-enable c
   TSPC hold / CKN-gated GCK timing relies on that delay). Next: two-period-wide enables or even/odd interleaved chains, with a
   hold check at ff in the same step.
 
+## r10 probe + r10a try (2026-11-24, NOT kept; capture.py stays r8)
+Probe of r8 extracted (5 words, ss/32/3.15, times after the slot-0 local clock CKL0 rise, period 1.6 ns), nominal / pessimistic:
+| node | nom | pess |
+|---|---|---|
+| CKL1 vs CKL0 skew | +0.02 | +0.02 |
+| ELQ4q (flop out) | 0.38 | 0.48 |
+| ELQ4 (export bufx) | 0.67 | 0.83 |
+| E8 (in-cell AOI out, slot0) | 1.03 | 1.27 |
+| E12 (cross SL0 -> SL1) | 1.14 | 1.41 |
+| ELQ15 (bufx) / E19C at wc_ctl | 0.74 / 1.15 | 0.88 / 1.39 |
+So clock skew is NOT the r9 cause (CKL0/CKL1 within 20 ps). The slowest hops are the long ones: SL0 -> SL1 (E12) and
+SL1 -> wc_ctl (E19C, then ctl's ELQ19 -> GW = the strobe errors).
+**r10a** (in-cell successors from a local 2/4 -> 4/8 buffer ELQ<i>L, bufx only on exported 6..9/15/17/18, AOI NAND2 4/4,
+NAND3 6/4; cells DRC 0 / LVS unique, top 1241.2 x 262.5, DRC 0, LVS unique): q625 ss nominal **7/200 (r8 0)**, pess ss 77/200
+(r8 72), pess 3.50 V 23/200 (r8 23). Probe: E8 only 0.08 ns earlier (the "local" net still spans the 480 um slot row: ELQ4L
+0.81 pess), while E12 1.45 and E19C 1.47 (pess) / 1.23 (nom) got LATER (extra load on ELQq, re-route) -> nominal broke on the
+ctl word path. Lesson (also explains r9): in-cell hop speed is not the limiter; the cross-macro hops are, and any change that
+adds load to ELQq or reroutes CK-tree-adjacent nets moves E19C past the edge.
+**Next (r10b, recommended): two-period cross hops.** The chain is a pure shift register (INJ-seeded, no wrap), so
+ELQ_i(s) = ELQ_(i-2k)(s-2). Replace each long hop by a hop from TWO slots back plus one extra local flop at the destination:
+wc_ctl: E19C' = BQ&ELQ11 | BH&ELQ15 | BF&ELQ17 -> ff -> ff -> ELQ19; slot1 pairs fed from slot0 (quarter 10..13, half 10/11,
+full 10): predecessor i-8 / i-4 / i-2 (all >= 2, exist) -> local ff -> chain ff. Gives 3.2 ns for the route + AOI, adds ~6 flops,
+new ports ELQ2..5/ELQ11 (exports), no change to ELQq load if the extra exports use their own bufx. Hold: flop->flop, fine.
+Untouched: in-cell hops (E8 1.19-1.27 pess) may then be the limit; if so, also fold the slot rows (pairs per slot adjacent).
+
 ## Plan for r10 (slot-enable re-architecture), handed to the next session
 1. Probe first (r10cap/probe_top.py pattern on the r8 extraction, pessimistic ss 625): per hop, ELQ(i-k)q clk-to-q, export
    buffer, route, AOI, setup at ELQ_i; and the CKL0/CKL1/CNL skew. r9 (direct in-cell hops) broke NOMINAL ss (15/200): check

@@ -43,16 +43,18 @@ named `asm-<chip>-<pid>`: stop a run only by that name (`docker kill asm-...`) o
 - **Net classes** (`kl_place.cls`): island rails / regulator outputs 3 um wide; hooks 1.2 um; clock, high-speed and RF
   nets twice the minimum spacing (no drawn shields). Booked ledger items without a conn instance are Metal1-3 blockages.
 
-## Results (2026-11-24, commit d48ca1a8 flow; both chips abstract -> LVS)
+## Results (2026-11-24 evening; flow cb6ee0a7)
 
-| | `pt_rf` | `pt_wired` |
+| | `pt_rf` (b98f21a6 layout) | `pt_wired` (cb6ee0a7) |
 |---|---|---|
-| Placement | packer, island clustering off (signal flow first); lo_txbuf r5 at the TX mixers, isw_rf_tx_b at isw_rf_tx | packer, clustering off; cascode_pump at pad_wire_tx; pt_wiredtx8 / switch pair fixed |
-| Nets routed | all (643), every supply hook wired (51 direct Via4 landings) | all, every hook wired (60 direct landings) |
-| Detailed-route violations (20 iterations) | 20 (64-iteration rerun pending) | 103: WRX_DX 31 (pt_wrx_cap Metal5 pin row, ASM-12), CKP 13, RAIL_wired_cap 8 |
-| LVS by name | 799 match; **no VDD/VSS join**; RAIL_lo-VSS short (route at 2957, 2770 Metal4 onto a VSS strap); VDD 4 pieces; s_pg_rf_tx_b open (digital, PDS-20) | 953 match; no VDD/VSS join; 19 signal shorts (WRX_DX, CKP, TXPH[0], atb1_sw, island_off[2] onto supplies; DETECT_PBIAS pair; HS_TERM_TRIM2 / c_term_hs_en); s_pg_wired_tx_b open (digital, DG9-19) |
-| LO branch (ASM-RF-1, LO-ASM-6) | LO_IP/IN 3.4 / 4.2 mm, LO_QP/QN 5.7 / 5.2 mm total (both branches); lo_ext -> lo_txbuf ~2.5 mm by placement: over the 2.1 mm target; rxmix_i / rxmix_q 1.5 mm apart | |
-| Precheck | not rerun since 2026-11-21 (1155 DRC / 89 antenna then) | not run |
+| Placement | packer, island clustering off; rf_tx bar (Metal5, exposed pin of RAIL_rf_tx) on isw_rf_tx; isw_rf_tx_b 2.4 mm away, joined by the routed rail (trunk pending) | packer, clustering off; wrx_cap r6, ATB cells PDS-22, RAIL_wired_tx + RAIL_wired_cap bars exposed |
+| Detailed route (64 iterations) | 1 violation (spacing) | 5 (por hook, isw_wired_cap, RAIL_pll / iso_cdr_dn_3, one hook spacing) |
+| LVS by name | **801 match, no short, no open** (VDD, VSS one net each) | **971 match, no short**; open: pad_tlp VDD/VSS, s_pg_wired_tx_b (digital DG9-19); pad_wire_tx DNV/DPV.SUB on VSS (substrate taps, pads: expected) |
+| Shuttle precheck | KLayout DRC **180** (was 1155): MT.2b 119 + M4.2b 29 + MIMTM.1 17 in the router wiring (wide-metal spacing next to bars / straps), MSLOT5.1 9 in blocks; Magic 0; density 0; **antenna 2483** (was 89): ANT.5 2071 on top-level routes between blocks; under attribution | not run |
+| LO branch (ASM-RF-1, LO-ASM-6) | lo_ext -> lo_txbuf ~2.5 mm by placement (target 2.1, marginal); rxmix_i/q 1.5 mm apart; LO floorplan after the first clean precheck | |
+
+Grid: hooks land only on metal joined to the core ring through Via4-sized Metal4/5 overlaps; 0.09 / 0.17 mm2 (Metal4 / Metal5) per
+net on pt_rf and about 0.13 / 0.26 on pt_wired is cut off from the ring (strap fragments over blocks): dead metal for IR.
 
 Tools: `kl_shortcheck.py [drop-cell ...]` (VDD/VSS one net, with cells removed: `pt_top_wiring`, `pt_direct_land`),
 `kl_netprobe.py NET ...` (non-router shapes a routed net touches; `HALO=0` for overlaps only). Block pins in the abstract are

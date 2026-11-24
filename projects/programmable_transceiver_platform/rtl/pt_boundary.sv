@@ -84,16 +84,38 @@ module pt_wrx_gear(input wire wstb, run, input wire[19:0] dw, ew, output wire wc
  wire g_rn = grs[1];
  reg[19:0] dw_q, ew_q, dw_q2, ew_q2, lo_d, lo_e;
  reg te;
+// te fans out to 120 enable bits (lo_d / lo_e / dx_s / ewx_s): 12 kept copies (pt_dff_rep, same next value ~te), one per
+ // 10-bit slice, so each copy drives 10 flops (routed pt_wired wstb te -> dx_s was -2.9 ns at ss 3.15 V). Exact.
+ wire[11:0] tc;
+ genvar gi;
+ generate for (gi = 0; gi < 12; gi = gi + 1) begin : tcopy
+  pt_dff_rep r(.clk(wstb), .rst_n(g_rn), .d(~te), .q(tc[gi]));
+ end endgenerate
  always @(posedge wstb or negedge g_rn)
-  if (!g_rn) begin
-   dw_q <= 20'd0; ew_q <= 20'd0; dw_q2 <= 20'd0; ew_q2 <= 20'd0; lo_d <= 20'd0; lo_e <= 20'd0; te <= 1'b0;
-   dx_s <= 40'd0; ewx_s <= 40'd0;
-  end else begin
-   dw_q <= dw; ew_q <= ew; dw_q2 <= dw_q; ew_q2 <= ew_q;
-   te <= ~te;
-   if (!te) begin lo_d <= dw_q2; lo_e <= ew_q2; end
-   else begin dx_s <= {dw_q2, lo_d}; ewx_s <= {ew_q2, lo_e}; end
-  end
+  if (!g_rn) begin dw_q <= 20'd0; ew_q <= 20'd0; dw_q2 <= 20'd0; ew_q2 <= 20'd0; te <= 1'b0; end
+  else begin dw_q <= dw; ew_q <= ew; dw_q2 <= dw_q; ew_q2 <= ew_q; te <= ~te; end
+ generate for (gi = 0; gi < 2; gi = gi + 1) begin : lo_sl
+  always @(posedge wstb or negedge g_rn)
+   if (!g_rn) begin lo_d[gi*10 +: 10] <= 10'd0; lo_e[gi*10 +: 10] <= 10'd0; end
+   else begin
+    if (!tc[gi]) lo_d[gi*10 +: 10] <= dw_q2[gi*10 +: 10];
+    if (!tc[2+gi]) lo_e[gi*10 +: 10] <= ew_q2[gi*10 +: 10];
+   end
+ end endgenerate
+ generate for (gi = 0; gi < 4; gi = gi + 1) begin : hi_sl
+  wire[9:0] src_d, src_e;
+  if (gi < 2) begin : l assign src_d = lo_d[gi*10 +: 10]; assign src_e = lo_e[gi*10 +: 10]; end
+  else begin : h assign src_d = dw_q2[(gi-2)*10 +: 10]; assign src_e = ew_q2[(gi-2)*10 +: 10]; end
+  always @(posedge wstb or negedge g_rn)
+   if (!g_rn) begin dx_s[gi*10 +: 10] <= 10'd0; ewx_s[gi*10 +: 10] <= 10'd0; end
+   else begin
+    if (tc[4+gi]) dx_s[gi*10 +: 10] <= src_d;
+    if (tc[8+gi]) ewx_s[gi*10 +: 10] <= src_e;
+   end
+ end endgenerate
+`ifndef SYNTHESIS
+ always @(posedge wstb) if (g_rn && tc !== {12{te}}) $fatal(1, "pt_wrx_gear: te copies differ from te");
+`endif
  // clock copy of te: the toggle Q drives only its own inverter and the kept clock-root buffer (as fc_half2)
  wire t;
  pt_clock_dff t_ff(.clk(wstb), .rst_n(g_rn), .d(~t), .q(t));

@@ -20,16 +20,17 @@ P = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TB = os.path.join(P, 'sim', 'tb_wrx_gear.sv')
 # name, file in rtl/, [(old, new), ...] (each old must occur exactly once)
 MUTANTS = [
-    ('halves_swapped', 'pt_boundary.sv', [('else begin dx_s <= {dw_q2, lo_d}; ewx_s <= {ew_q2, lo_e}; end',
-                                           'else begin dx_s <= {lo_d, dw_q2}; ewx_s <= {lo_e, ew_q2}; end')]),
+    ('halves_swapped', 'pt_boundary.sv', [('if (gi < 2) begin : l assign src_d = lo_d[gi*10 +: 10];', 'if (gi >= 2) begin : l assign src_d = lo_d[(gi-2)*10 +: 10];'),
+                                           ('else begin : h assign src_d = dw_q2[(gi-2)*10 +: 10];', 'else begin : h assign src_d = dw_q2[gi*10 +: 10];')]),
     ('no_restart_rezero', 'pt_digital_macro.sv', [('.run(rst_n & c_wrx_cap_en & c_wordclk_en)', '.run(rst_n)')]),
-    ('no_second_ew_flop', 'pt_boundary.sv', [('if (!te) begin lo_d <= dw_q2; lo_e <= ew_q2; end',
-                                              'if (!te) begin lo_d <= dw_q2; lo_e <= ew_q; end'),
-                                             ('ewx_s <= {ew_q2, lo_e}; end', 'ewx_s <= {ew_q, lo_e}; end')]),
+    ('no_second_ew_flop', 'pt_boundary.sv', [('if (!tc[2+gi]) lo_e[gi*10 +: 10] <= ew_q2[gi*10 +: 10];',
+                                              'if (!tc[2+gi]) lo_e[gi*10 +: 10] <= ew_q[gi*10 +: 10];'),
+                                             ('assign src_e = ew_q2[(gi-2)*10 +: 10];', 'assign src_e = ew_q[(gi-2)*10 +: 10];')]),
     ('edge_half_inverted', 'pt_digital_macro.sv', [('assign wrx_ew = f_wrx_picker__edge_half ? wrx_ew40[39:20] : wrx_ew40[19:0];',
                                                     'assign wrx_ew = f_wrx_picker__edge_half ? wrx_ew40[19:0] : wrx_ew40[39:20];')]),
     ('lane2_halves_swapped', 'pt_boundary.sv', [('(lane == 2\'d2) ? {ew[19:0], dx[19:0]}', '(lane == 2\'d2) ? {dx[19:0], ew[19:0]}')]),
-    ('valid_every_strobe', 'pt_boundary.sv', [('   te <= ~te;\n', '   te <= 1\'b1;\n')]),
+    ('valid_every_strobe', 'pt_boundary.sv', [('ew_q2 <= ew_q; te <= ~te; end', "ew_q2 <= ew_q; te <= 1'b1; end"),
+                                               ('.d(~te), .q(tc[gi])', ".d(1'b1), .q(tc[gi])")]),
 ]
 
 

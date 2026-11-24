@@ -67,7 +67,7 @@ try:
 except (OSError, KeyError): pass
 env = dict(os.environ, ADJ=json.dumps([[a, b, d, w] for a, b, d, w in C.FLOW_ADJ.get(chip, [])]+[[b, a, d, w] for a, b, d, w in C.FLOW_ADJ.get(chip, [])]+ISL_ADJ),
            KEEPAWAY=json.dumps(C.FLOW_KEEPAWAY.get(chip, [])), HALO_ITEMS=json.dumps(C.HALO_ITEMS.get(chip, {})), HALO=os.environ.get('HALO', {'rf': '4', 'wired': '10'}[chip]), CHIP=chip, SCEN='S', TAG='s', TRIES=os.environ.get('TRIES', '6'), PADS_JSON=RUN+'/fp_pads.json',
-           SIZES_JSON=RUN+'/fp_sizes.json', RUNDIR=RUN+'/fit', CHANNEL=os.environ.get('CHANNEL', '40'), ISLAND_W=os.environ.get('ISLAND_W', '0.3'), NOROT=','.join(C.NOROT.get(chip, [])+list(C.STAGED.get(chip, {}))+list(C.GROUP_BOOK.get(chip, {}))+[n for n, i in inst0.items() if i['master'] in C.GRID_SNAP]), POCKET='1' if chip == 'wired' else '0', DROP=','.join(C.STALE_BOOK.get(chip, [])+list(C.FIXED_PLACE.get(chip, {}))+['isw_wired_tx']+[m for b, ms in C.GROUP_BOOK.get(chip, {}).items() for m in ms if m != b]), EXTRA_RSV=json.dumps(fixed_rects()), ITEM_SIZES=json.dumps({**{n: list(sizes[inst0[n]['master']]) for n, m_ in LEDGER_MASTER.items() if n in inst0 and inst0[n]['master'] != m_ and inst0[n]['master'] in sizes},
+           SIZES_JSON=RUN+'/fp_sizes.json', RUNDIR=RUN+'/fit', CHANNEL=os.environ.get('CHANNEL', '40'), ISLAND_W=os.environ.get('ISLAND_W', '0.3'), NOROT=','.join(C.NOROT.get(chip, [])+list(C.STAGED.get(chip, {}))+list(C.GROUP_BOOK.get(chip, {}))+[n for n, i in inst0.items() if i['master'] in C.GRID_SNAP]), POCKET='1' if chip == 'wired' else '0', DROP=','.join(C.STALE_BOOK.get(chip, [])+C.PASS2.get(chip, [])+list(C.FIXED_PLACE.get(chip, {}))+['isw_wired_tx']+[m for b, ms in C.GROUP_BOOK.get(chip, {}).items() for m in ms if m != b]), EXTRA_RSV=json.dumps(fixed_rects()), ITEM_SIZES=json.dumps({**{n: list(sizes[inst0[n]['master']]) for n, m_ in LEDGER_MASTER.items() if n in inst0 and inst0[n]['master'] != m_ and inst0[n]['master'] in sizes},
                                    **{b: [sum(msize(m)[0] for m in ms)+4*(len(ms)-1), max(msize(m)[1] for m in ms)] for b, ms in C.GROUP_BOOK.get(chip, {}).items()}}),
            MACRO_MM2=str(round(MJ['pt_digital_macro']['w']*MJ['pt_digital_macro']['h']/1e6, 6)) if mw_ else ('2.669801' if chip == 'wired' else ''), OMP_NUM_THREADS='1', MACRO=os.environ.get('MACRO', macro))
 fit = C.ROOT+'/scratch/reviews/die-fit'
@@ -126,28 +126,50 @@ def partner(n):
     return max(sc, key=sc.get) if sc and max(sc.values()) else None
 second = {}; dropped = []
 def ov(a, b): return min(a[2], b[2])-max(a[0], b[0]) > 1e-6 and min(a[3], b[3])-max(a[1], b[1]) > 1e-6
-for n in sorted(missing, key=lambda n: -(sizes.get(inst[n]['master'], [50, 50])[0]*sizes.get(inst[n]['master'], [50, 50])[1])):
-    m = inst[n]['master']; w, h = sizes.get(m, [100.0, 100.0]); t = C.HARD_NEXT_TO.get(chip, {}).get(n) or partner(n)
+def gap_(a, b): return max(b[0]-a[2], a[0]-b[2], 0)+max(b[1]-a[3], a[1]-b[3], 0)
+SMALL = ('atb0_', 'atb1_', 'iso_')        # small movable cells that give way to a hard placement and are re-placed afterwards
+displaced = []
+def try_place(n, w, h, t, hard, gmax, giveway):
+    pk2 = Packer(C.CORE, G=2.0)
+    for k, v in pj.items(): pk2.fixed(k, v)
+    for k, b in blocks.items():
+        if not giveway(k): pk2.fixed(k, [b['rect']], halo=2.0 if (k == t and hard) else (4.0 if hard else 10.0) if not k.startswith('decap') else 0.0)   # hard: partner 2 um, others 4 um (the RF channel halo is 10)
+    for k, rr in reserves.items(): pk2.fixed(k, [rr])
+    if t in pads['pads']: pk2.rects[t] = tuple(pads['pads'][t]['footprint'][0])
+    r = pk2.place(n, w, h, halo=2.0 if hard else 10.0, targets=[(t, 1.0)] if t else [], anchor=None, lam=0.6, step=1 if hard else 2, maxgap=[(t, gmax)] if hard else ())
+    if r is not None and hard and gap_(r, blocks[t]['rect'] if t in blocks else pk.rects[t]) > gmax: return None, pk2
+    return r, pk2
+for n in sorted(missing, key=lambda n: (n not in C.HARD_NEXT_TO.get(chip, {}), -(sizes.get(inst[n]['master'], [50, 50])[0]*sizes.get(inst[n]['master'], [50, 50])[1]))):
+    m = inst[n]['master']; w, h = sizes.get(m, [100.0, 100.0])
+    hv = C.HARD_NEXT_TO.get(chip, {}).get(n); t, gmax = (hv if isinstance(hv, tuple) else (hv, 12.0)) if hv else (partner(n), 12.0)
     if t in pads['pads']: pk.rects[t] = tuple(pads['pads'][t]['footprint'][0])
-    hard = n in C.HARD_NEXT_TO.get(chip, {})
-    r = pk.place(n, w, h, halo=4.0 if hard else 10.0, targets=[(t, 1.0)] if t else [], anchor=None, lam=0.6, step=2, maxgap=[(t, 12.0)] if hard else ())
-    def gap_(a, b): return max(b[0]-a[2], a[0]-b[2], 0)+max(b[1]-a[3], a[1]-b[3], 0)
-    if r is not None and hard and gap_(r, blocks[t]['rect']) > 12.0: r = None      # hard: retry with decap moved out
-    if r is None:          # no hole: decap tiles give way (conn blocks before decap; the shortfall is reported)
-        pk2 = Packer(C.CORE, G=2.0)
-        for k, v in pj.items(): pk2.fixed(k, v)
-        for k, b in blocks.items():
-            if not k.startswith(('decap_tile', 'decap_bank')): pk2.fixed(k, [b['rect']], halo=10.0 if not k.startswith('decap') else 0.0)
-        for k, rr in reserves.items(): pk2.fixed(k, [rr])
-        if t in pads['pads']: pk2.rects[t] = tuple(pads['pads'][t]['footprint'][0])
-        r = pk2.place(n, w, h, halo=4.0 if hard else 10.0, targets=[(t, 1.0)] if t else [], anchor=None, lam=0.6, step=2, maxgap=[(t, 12.0)] if hard else ())
-        if r is not None and hard and gap_(r, blocks[t]['rect']) > 12.0: print('HARD next-to not met:', n, t, round(gap_(r, blocks[t]['rect'])))
-        if r:
-            for k in [k for k in blocks if k.startswith(('decap_tile', 'decap_bank')) and ov([r[0]-10, r[1]-10, r[2]+10, r[3]+10], blocks[k]['rect'])]:
-                dropped.append(k); del blocks[k]
-            pk.mark(r, 10.0); pk.rects[n] = r; pk.placed[n] = pk2.placed[n]
+    hard = hv is not None
+    r = pk.place(n, w, h, halo=4.0 if hard else 10.0, targets=[(t, 1.0)] if t else [], anchor=None, lam=0.6, step=2, maxgap=[(t, gmax)] if hard else ())
+    if r is not None and hard and gap_(r, blocks[t]['rect']) > gmax: r = None
+    src = pk
+    for gw in ((lambda k: k.startswith(('decap_tile', 'decap_bank'))),) + (((lambda k: k.startswith(('decap_tile', 'decap_bank')+SMALL) and k not in C.HARD_NEXT_TO.get(chip, {})),) if hard else ()):
+        if r is not None: break
+        r, src = try_place(n, w, h, t, hard, gmax, gw)
+        if r:            # whatever it displaced gives way (decap tiles / small cells are re-placed below)
+            for k in [k for k in blocks if gw(k) and ov([r[0]-10, r[1]-10, r[2]+10, r[3]+10], blocks[k]['rect'])]:
+                displaced.append((k, blocks[k])); del blocks[k]
+            pk.mark(r, 10.0); pk.rects[n] = r; pk.placed[n] = src.placed[n]
+    if r is None and hard: print('HARD next-to not met:', n, t)
     print("pass2", n, m, w, h, t, r)
     if r: blocks[n] = dict(master=m, rect=list(r), rot=pk.placed[n]['rot'], in_conn=True, gds=bool(MJ.get(m, {}).get('w')), pass2=t); second[n] = t
+# displaced cells are re-placed into the free area (moved, not dropped): small cells near their partner, decap anywhere
+pk6 = Packer(C.CORE, G=2.0)
+for k, v in pj.items(): pk6.fixed(k, v)
+for k, b in blocks.items(): pk6.fixed(k, [b['rect']], halo=10.0 if not k.startswith('decap') else 0.0)
+for k, rr in reserves.items(): pk6.fixed(k, [rr])
+for k, b in sorted(displaced, key=lambda kb: kb[0].startswith('decap')):
+    r0 = b['rect']; w, h = r0[2]-r0[0], r0[3]-r0[1]
+    t = partner(k) if k in inst else None
+    if t in pads['pads']: pk6.rects[t] = tuple(pads['pads'][t]['footprint'][0])
+    r = pk6.place(k, w, h, halo=0.0 if k.startswith('decap') else 10.0, targets=[(t, 1.0)] if t else [], anchor=((r0[0]+r0[2])/2, (r0[1]+r0[3])/2, 0.3), lam=0.6, step=2)
+    if r: b = dict(b, rect=list(r)); blocks[k] = b; pk6.mark(r, 0.0 if k.startswith('decap') else 10.0)
+    elif k.startswith('decap'): dropped.append(k)
+    else: print('displaced cell not re-placed:', k)
 missing = sorted(core_blocks-set(blocks))
 # staged replacements (common.STAGED): the instance is re-placed unrotated at the staged cell's outline near where the
 # packer put the old block, then moved along x (<= half the modulus) so its x origin meets the owner's grid rule

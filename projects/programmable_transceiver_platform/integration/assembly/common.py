@@ -135,12 +135,16 @@ FLOW_KEEPAWAY = {'rf': [('lo_txbuf', 'lna', 300), ('lo_txbuf', 'qvco', 200), ('r
 ROUTE_CHANNELS = {'wired': {'chan_wtxdata': (1924.0, 2650.0, 2134.0, 3027.0)}}
 # grid kept 3 um off block signal pins (kl_place); pt_wired retried with wrx_cap r6 (Metal4 pins, TIM-33)
 PIN_WINDOWS = {'rf': True, 'wired': True}
+PIN_GATE_UM2 = 0.4      # gate area per analog block signal pin for the router antenna model: the SMALLEST gate seen in the deck (0.4-4.5 um2) is the pessimistic value (a 4.0 model left 2334 ANT.5)
 # masters whose supply pins are labelled only on Metal1 inside the cell: pins also on their own Metal4/5 of that net (kl_abstract)
 PIN_UP = {'por': ('vdd3v3', 'vss')}
+# conn blocks placed by the second pass, where decap tiles give way (2026-11-24: with the taller RF / ATB cells the packer
+# left lna_deg_p, isw_rf_tx_b and char_rffet unplaced)
+PASS2 = {'rf': ['lna_deg_p', 'isw_rf_tx_b', 'char_rffet']}
 # blocks the packer must not rotate (none at present; pt_wrx_cap fixed south of the macro blocked the west routing, 2026-11-24)
 NOROT = {}
 # conn blocks the second pass must put touching a named partner (hard: decap gives way, else reported)
-HARD_NEXT_TO = {}     # isw_rf_tx_b may sit away from isw_rf_tx (coordinator 2026-11-24): the drawn rf_tx trunk joins both outputs
+HARD_NEXT_TO = {'rf': {'lna_deg_p': ('lna', 8.0), 'isw_rf_tx_b': ('isw_rf_tx', 5000.0), 'char_rffet': ('digital', 5000.0)}}     # coordinator ASM-15 ruling: lna_deg_p within 8 um of the LNA; isw_rf_tx_b touching the rf_tx bar (it reaches 465 um south of isw_rf_tx)
 BOOK_NEAR = {}     # pt_lo_txbuf is published (LO-ASM-4) and placed as a conn block next to the TX mixers
 TWIN = {'pt_adc_q': 'pt_adc_i', 'pt_dac_q': 'pt_dac_i'}
 # provider-ring instances of the conn (not core blocks): their pins are on the template's IO cells

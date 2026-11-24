@@ -234,7 +234,12 @@ def abstract(key, path, cellname, full_all, kind, want_pins):
     L = [f'MACRO {key}', '  CLASS BLOCK ;', '  ORIGIN 0 0 ;', f'  FOREIGN {key} 0 0 ;', f'  SIZE {b.width()/1000:.3f} BY {b.height()/1000:.3f} ;', '  SYMMETRY X Y R90 ;']
     pin_out = {}
     for pn, sh in sorted(pins.items()):
-        L += [f'  PIN {pn}', '    DIRECTION INOUT ;', '    USE SIGNAL ;', '    PORT']
+        L += [f'  PIN {pn}', '    DIRECTION INOUT ;', '    USE SIGNAL ;']
+        # antenna model for the top-level router (repair_antennas): every analog block signal pin is taken as a gate of
+        # C.PIN_GATE_UM2 (pessimistic for logic inputs; no diffusion assumed). Without it OpenROAD saw no gates and inserted
+        # no jumpers (pt_rf precheck ANT.5 2071 on the ATB select nets, 2026-11-24)
+        if pn.upper() not in ('VDD', 'VSS', 'VDD3V3', 'VISL') and not pn.upper().startswith(('VDD', 'VSS', 'RAIL')): L.append(f'    ANTENNAGATEAREA {C.PIN_GATE_UM2:.3f} ;')
+        L += ['    PORT']
         for ln, bx in sh:
             q = bx.moved(-db.Vector(org))
             L.append(f'      LAYER {ln} ; RECT {q.left/1000:.3f} {q.bottom/1000:.3f} {q.right/1000:.3f} {q.top/1000:.3f} ;')

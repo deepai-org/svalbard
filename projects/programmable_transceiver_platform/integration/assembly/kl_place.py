@@ -517,6 +517,11 @@ D += ['END NETS']
 blk = [(n, r, ('Metal1', 'Metal2', 'Metal3')) for n, r in list(booked.items())+list(FP['reserves'].items())
        if n != 'd2h_strip' and not n.startswith(('chan_', 'corridor', 'pocket'))]
 e = C.IO_INNER-5; W_, H_ = C.DIE[2], C.DIE[3]; ML = tuple(n for n, *_ in C.METALS)
+# island switches: Metal2-3 blocked 1 um round the outline (the router ran RAIL_rf_tx along the switch edge into its own
+# Metal3 = VISL joined to VDD through the switch, 2026-11-24)
+for n_, b_ in man['blocks'].items():
+    if b_['master'].startswith('isw'):
+        bb_ = b_['bbox']; blk.append(('isw_halo', (bb_[0]-1.0, bb_[1]-1.0, bb_[2]+1.0, bb_[3]+1.0), ('Metal2', 'Metal3')))
 for r in ((0, 0, W_, e), (0, H_-e, W_, H_), (0, 0, e, H_), (W_-e, 0, W_, H_)): blk.append(('ring_band', r, ML))
 # the provider ring's filler / rail / corner cells carry supply rails up to their inner edge, inside the 5 um access margin
 # above: those cells (no pins) are blocked on every metal out to their full extent + 0.3 um (WSMP_CK ran 0.11 um into

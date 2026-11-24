@@ -16,6 +16,10 @@ import design  # noqa: E402
 
 COL_PITCH = 1.0       # minimum centre spacing of different-net M3 columns
 TRACK_PITCH = 1.3
+# ATB cells (ASM-14): every M4 track 0.8 um wide (power 1.2 um) at >= 2 um pitch, port tracks run to both side edges
+# of the cell with the pin at the left edge, VSS the bottom track and VDD the top track; NODE gets an M4 edge stub.
+EDGE_PINS = False
+EDGE_TRACK_PITCH = 2.0
 
 
 def parse_devices(netlist):
@@ -192,17 +196,22 @@ def build_tracks(lay, bank, nets, y0):
     y = y0
     for net in nets:
         wide = net in POWER_NETS
-        y += .15 if wide else 0
+        y += (.2 if EDGE_PINS else .15) if wide else 0
         lay.track_y[(bank, net)] = y
-        y += TRACK_PITCH + (.15 if wide else 0)
+        y += (EDGE_TRACK_PITCH if EDGE_PINS else TRACK_PITCH) + ((.2 if EDGE_PINS else .15) if wide else 0)
     return y
 
 
 def finish_tracks(lay, ports):
     for (bank, net), xs in lay.net_x.items():
         y = lay.track_y[(bank, net)]
-        half = .38 if net in POWER_NETS else .23
-        lay.r('metal4', min(xs) - .38, y - half, max(xs) + .38, y + half)
+        if EDGE_PINS:
+            half = .6 if net in POWER_NETS else .4
+            x1, x2 = (lay.edge_x if net in ports else (min(xs) - .4, max(xs) + .4))
+        else:
+            half = .38 if net in POWER_NETS else .23
+            x1, x2 = min(xs) - .38, max(xs) + .38
+        lay.r('metal4', x1, y - half, x2, y + half)
     done = set()
     for net in list(ports) + sorted({n for _, n in lay.net_x}):
         if net in done:
@@ -212,6 +221,8 @@ def finish_tracks(lay, ports):
                 x = min(lay.net_x[(bank, net)])
                 y = lay.track_y[(bank, net)]
                 # Ports are pins; other nets get plain labels so extraction keeps names.
+                if EDGE_PINS and net in ports:
+                    x = lay.edge_x[0] + .4
                 if net in ports or net not in ('VDD', 'VISL'):
                     lay.labels.append((net, 'metal4', (x - .3, y - .2, x + .3, y + .2), net in ports))
                 done.add(net)
@@ -313,6 +324,9 @@ def tap_block(lay, devs, edge='NODE'):
     assert sum(edge in (d['d'], d['g'], d['s']) for d in devs) == 2
     nets_a = [n for n in _ordered([n for d in nm for n in (d['d'], d['g'], d['s'])] + ['VSS']) if n != edge]
     nets_b = [n for n in _ordered([n for d in pm for n in (d['d'], d['g'], d['s'])] + ['VDD']) if n != edge]
+    if EDGE_PINS:      # supply tracks on the outer edges: VSS bottom, VDD top
+        nets_a = ['VSS'] + [n for n in nets_a if n != 'VSS']
+        nets_b = [n for n in nets_b if n != 'VDD'] + ['VDD']
     bank_a1 = build_tracks(lay, 'A', nets_a, 0.0)
     y_ptap = bank_a1 + 1.6
     goff_n = max(max(mos_geometry(d)[3] + .88, d['w'] / 2 + .7) for d in nm)
@@ -335,7 +349,10 @@ def tap_block(lay, devs, edge='NODE'):
     lay.cols.append((xn, yn, yp, edge))
     lay.r('metal3', xn - .23, yn - .38, xn + .23, yp + .38)
     ym = (yn + yp) / 2
-    lay.labels.append((edge, 'metal3', (xn - .2, ym - .3, xn + .2, ym + .3), True))
+    if EDGE_PINS:      # M4 stub from the strap to the left cell edge (set by atb_layout), pin at the edge
+        lay.node_stub = (xn, ym)
+    else:
+        lay.labels.append((edge, 'metal3', (xn - .2, ym - .3, xn + .2, ym + .3), True))
     for placed, bank in ((placed_n, 'A'), (placed_p, 'B')):
         for dev, info in placed:
             for term in ('d', 's', 'g'):
@@ -509,12 +526,25 @@ def atb_layout(name):
     devs = parse_devices(net)
     _, ports = ports_of(net)
     lay = Layout(name)
-    if name == 'atb_pad':
-        logic_block(lay, devs, 0.0, 0.0, edge_net='PAD')
-        finish_tracks(lay, ports)
-    else:
-        tap_block(lay, devs, 'NODE')
+    global EDGE_PINS
+    EDGE_PINS = True
+    try:
+        lay.node_stub = None
+        if name == 'atb_pad':
+            logic_block(lay, devs, 0.0, 0.0, edge_net='PAD')
+        else:
+            tap_block(lay, devs, 'NODE')
+        # cell edges = extent of everything drawn so far, widened by the track ends of the port nets
+        x1, _, x2, _ = bbox(lay)
+        lay.edge_x = (x1, x2)
+        if lay.node_stub:
+            xn, ym = lay.node_stub
+            lay.via('via3', xn, ym)
+            lay.r('metal4', x1, ym - .4, xn + .38, ym + .4)
+            lay.labels.append(('NODE', 'metal4', (x1 + .1, ym - .2, x1 + .7, ym + .2), True))
         finish_tracks(lay, [p for p in ports if p != 'NODE'])
+    finally:
+        EDGE_PINS = False
     return lay, {}
 
 

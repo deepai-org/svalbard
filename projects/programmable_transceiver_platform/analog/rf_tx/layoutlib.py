@@ -26,8 +26,10 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))   # analog/antenna_diodes.py
 import antenna_diodes as ad  # noqa: E402
-PORT_DIODE = 6.0       # um^2 antenna diode on every gate-only port (chip-top nets), except PORT_DIODE_SKIP
+PORT_DIODE = 12.0      # um^2 antenna diode on every gate-only control port (ASM-16: sized for >= 3 mm of chip-top Metal4,
+                       # antenna_diodes.need_area({'metal4': 6000}, 0) = 11.45)
 PORT_DIODE_SKIP = {'lo_p', 'lo_n'}   # txmix LO pins: driven ~0.1 mm from pt_lo_txbuf (LO-ASM-4); keep the GHz node light
+ANALOG_PREFIX = ('lo', 'in', 'out', 'pad', 'bb', 'dac', 'rf', 'atb', 'ib', 'sum', 'i_', 'q_')   # analog signal ports: no diode
 
 DIGITAL_IMAGE = 'svalbard/librelane-gf180-canary:2026.08'
 PDK = '/pdk/gf180mcuD'
@@ -520,7 +522,7 @@ def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=N
         kinds.setdefault(t[2], set()).add(t[3])
     have = {r['net'] for r in req}
     for port in ports:
-        if port in PORT_DIODE_SKIP or kinds.get(port, set()) != {'g'}:
+        if port in PORT_DIODE_SKIP or port.lower().startswith(ANALOG_PREFIX) or kinds.get(port, set()) != {'g'}:
             continue
         if port in have:
             for r_ in req:

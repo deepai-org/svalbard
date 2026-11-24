@@ -235,6 +235,13 @@ loses against `ext`.
    0.78–0.99 Ω from about 5 GHz, where the disabled LNA still reads above 1 Ω. (b) With lossless lumped rails the supply anti-resonance (45–100 MHz) and an undamped
    island decap still give negative common-mode resistance; with the pads owner's coupled model every row is ≥ 2.1 Ω
    below 1 GHz. Supply rules RQ-3 / RQ-3a are requirements on power delivery.
+   (c) **On the pt_rf supply as assembled (2026-11-24, `scratch/rf-lna-q/pdn_rf/`):** rext view, 5 MHz–1 GHz, die
+   decap 4.74 nF, 0.44 nH per rail, isw_rf 0.05 Ω, decap loss 0.05–0.1 Ω (lower than the plan's Q 1.8): common-mode
+   Re(Zin) ≥ 1.78 Ω (ff), 2.48 (tt), 3.16 (ss) in RX bias, 0.94 Ω in duplex bias (ff); no dip at the anti-resonance
+   (every minimum at the 1 GHz end). Negative control (lossless 3 nF / 2 nH) −13.9 Ω at 47 MHz, as it must. So the
+   receiver does not see negative common-mode resistance on the real supply; what remains is the margin miss of
+   RF-LNA-STAB (duplex 0.94 Ω here; 0.74–0.93 Ω at 5–8 GHz, 5a). No rf_rx block draws ≥ 50 pF VDD–VSS (MIM or MOS)
+   on the island rail (largest local capacitor: the 10 pF `vtk` return behind ~12 Ω).
 3. **S11 misses at tt / ff (−9.69 / −9.07 dB, rext)**, IIP3 −11.0 dBm (previous layout, tt, ideal match), pessimistic-end LNA NF 7.1–7.4 dB: see 5a. The match is
    fitted per chip (per-board tuned carrier parts, B18/B25); one fixed BOM over tolerance is not shown.
 4. **LNA layout: metal resistance of the stage-current routes** (5a). The earlier DC-point error of the R+C netlist was a real

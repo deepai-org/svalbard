@@ -1,192 +1,21 @@
 {
- "block": "wrx_cap",
- "subckt": "pt_wrx_cap",
- "source_hashes": {
-  "capture.py": "sha256:85a09e73070f1bf49ca4e98192e8f1d16bbe46f51694f801956420d74f35dade",
-  "wrx_compact.py": "sha256:e805d4719748f6f27527b37adb480d1da1c67eee33aee0c4a560b7b3c3159e8f",
-  "run_capture.py": "sha256:ca9ab006705ff5bba194452810c21e894c305a417571d8f9bca587f815d9b5ec",
-  "generated/wrx_cap.ext.spice": "sha256:469357beb638442de8ab4a02352dc0e0d1164b5419ce62b8c0345351e07bfe49",
-  "generated/wrx_cap.lvs.spice": "sha256:a3c9101965a3484211fa59499cfd5de6dbf065ddf1e9bad062e65d756099f291"
+ "block": "pt_wrx_cap",
+ "rev": "r8 (capture.py 2a74f811: DF/EF registered on CK; grid channels; ASM-12 Metal4 pins) + DCF taps",
+ "gds_sha256": "9c0afef16036ae6f7a5ebd0eb3d94f53864c92de552cf136ba6bcd449654aa21",
+ "size_um": [
+  1241.23,
+  260.51
+ ],
+ "checks": "Magic DRC 0, KLayout 0, shuttle main 0 / antenna 0 / DCF.1a 0; read-back LVS from disk unique, negative control fails (scratch/timing/drc12/rbl/wrx_cap_r8)",
+ "results_ss315": {
+  "q625_nominal": "0/200",
+  "q625_pessimistic": "72/200 FAIL",
+  "q625_pessimistic_3v50": "23/200 FAIL",
+  "full_500MHz_4x": "0/100",
+  "full_750MHz_6x": "FAIL (multiple WSTB)",
+  "bench_B_2.5G_RCS1": "0/200"
  },
- "scope": "Capture front end only (ideal ring phases and ideal sampler outputs). Slicer, ring PLL and CDR loop are outside these benches; WCLK_IN -> slicer -> capture is not covered here.",
- "tests": {
-  "safe": {
-   "state": "fail",
-   "criterion": "EN=0 with CKP0..7, S0..7 and LDE toggling at 625 MHz: VDD current < 10 uA and every DW/EW < 0.3 V (schematic and extracted)",
-   "benches": {
-    "ext_safe_q625": {
-     "netlist": "extracted",
-     "i_uA": 238.506,
-     "outputs_max_v": 0.0471025141,
-     "pass": false,
-     "error": null
-    },
-    "sch_safe_q625": {
-     "netlist": "schematic",
-     "i_uA": 122.67499999999998,
-     "outputs_max_v": 1.33394203e-06,
-     "pass": false,
-     "error": null
-    }
-   }
-  },
-  "clean": {
-   "state": "fail",
-   "cells": {
-    "wc_pair": {
-     "drc_errors": 0,
-     "lvs": true,
-     "area_um2": 1340.4
-    },
-    "wc_cnt": {
-     "drc_errors": 0,
-     "lvs": true,
-     "area_um2": 607.1
-    },
-    "wc_slot0": {
-     "drc_errors": 0,
-     "lvs": true,
-     "area_um2": 15577.1
-    },
-    "wc_slot1": {
-     "drc_errors": 0,
-     "lvs": true,
-     "area_um2": 17014.5
-    },
-    "wc_ctl": {
-     "drc_errors": 0,
-     "lvs": true,
-     "area_um2": 17061.7
-    },
-    "wc_front": {
-     "drc_errors": 0,
-     "lvs": true,
-     "area_um2": 61650.7
-    },
-    "wc_lane": {
-     "drc_errors": 0,
-     "lvs": true,
-     "area_um2": 12531.5
-    },
-    "wc_pd": {
-     "drc_errors": 0,
-     "lvs": true,
-     "area_um2": 16318.5
-    },
-    "wc_gear": {
-     "drc_errors": 0,
-     "lvs": true,
-     "area_um2": 84088.8
-    }
-   },
-   "top": {
-    "drc_errors": 0,
-    "lvs_unique": true,
-    "gds_export": {
-     "magic": "8.3.678",
-     "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
-     "marker_shapes": {
-      "HRES 62/0": 0,
-      "RES_MK 110/5": 0
-     },
-     "ppolyf_u_1k_devices": 0,
-     "klayout_drc": {
-      "violations": 0,
-      "by_rule": {},
-      "rc": "0",
-      "lyrdb_files": 1
-     },
-     "hres_ok": true,
-     "pass": true
-    },
-    "devices": 28
-   },
-   "benches": {
-    "ext_q625": {
-     "netlist": "extracted",
-     "bpc": 4,
-     "f": 625000000.0,
-     "psel": null,
-     "corner": null,
-     "temp": null,
-     "vdd": null,
-     "lde_delay": null,
-     "words": 12,
-     "bits": 200,
-     "bit_errors": 0,
-     "edge_bits": 200,
-     "edge_errors": 0,
-     "ber_95_upper": 0.0075,
-     "i_mA": 46.642500000000005,
-     "i_uA": null,
-     "outputs_max_v": null,
-     "pass": true,
-     "error": null
-    },
-    "ext_safe_q625": {
-     "netlist": "extracted",
-     "bpc": 4,
-     "f": 625000000.0,
-     "psel": null,
-     "corner": null,
-     "temp": null,
-     "vdd": null,
-     "lde_delay": null,
-     "words": 4,
-     "bits": null,
-     "bit_errors": null,
-     "edge_bits": null,
-     "edge_errors": null,
-     "ber_95_upper": null,
-     "i_mA": null,
-     "i_uA": 238.506,
-     "outputs_max_v": 0.0471025141,
-     "pass": false,
-     "error": null
-    },
-    "sch_q625": {
-     "netlist": "schematic",
-     "bpc": 4,
-     "f": 625000000.0,
-     "psel": null,
-     "corner": null,
-     "temp": null,
-     "vdd": null,
-     "lde_delay": null,
-     "words": 12,
-     "bits": 200,
-     "bit_errors": 0,
-     "edge_bits": 200,
-     "edge_errors": 0,
-     "ber_95_upper": 0.0075,
-     "i_mA": 19.7762,
-     "i_uA": null,
-     "outputs_max_v": null,
-     "pass": true,
-     "error": null
-    },
-    "sch_safe_q625": {
-     "netlist": "schematic",
-     "bpc": 4,
-     "f": 625000000.0,
-     "psel": null,
-     "corner": null,
-     "temp": null,
-     "vdd": null,
-     "lde_delay": null,
-     "words": 4,
-     "bits": null,
-     "bit_errors": null,
-     "edge_bits": null,
-     "edge_errors": null,
-     "ber_95_upper": null,
-     "i_mA": null,
-     "i_uA": 122.67499999999998,
-     "outputs_max_v": 1.33394203e-06,
-     "pass": false,
-     "error": null
-    }
-   }
-  }
- }
+ "binding": "ee6f7273 (W7-GEAR, DG9-25); 2.5 Gb/s needs RCS=1; 100BASE-TX at ring 500 MHz 4x (TIM-32)",
+ "next": "r10 slot-enable re-architecture (scratch/wired_rx/r13cap/STATUS.md)",
+ "rows": "TIM-35, TIM-36"
 }

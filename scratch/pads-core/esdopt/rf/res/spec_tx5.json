@@ -1,0 +1,482 @@
+{
+ "nets": [
+  {
+   "name": "PAD_P",
+   "label": "PAD_P",
+   "max_step": 0.5,
+   "min_width": 2.0,
+   "min_cuts": 4,
+   "terminals": [
+    {
+     "name": "bond",
+     "layer": "M5",
+     "box": [
+      7.5,
+      2,
+      67.5,
+      62
+     ]
+    },
+    {
+     "name": "pin",
+     "layer": "M5",
+     "box": [
+      286,
+      912.0,
+      290,
+      912.91
+     ]
+    },
+    {
+     "auto_contacts": "dio",
+     "window": [
+      15.0,
+      62,
+      75.0,
+      128.5
+     ]
+    },
+    {
+     "auto_contacts": "cd",
+     "window": [
+      0,
+      430,
+      320,
+      912
+     ]
+    },
+    {
+     "auto_contacts": "bd",
+     "window": [
+      50,
+      352,
+      140,
+      388
+     ]
+    }
+   ],
+   "groups": {
+    "dn": {
+     "prefix": "dio",
+     "kind": "ndiode"
+    },
+    "cdn": {
+     "prefix": "cd",
+     "kind": "ndiode"
+    },
+    "cup": {
+     "prefix": "cd",
+     "kind": "pdiode"
+    },
+    "bup": {
+     "prefix": "bd",
+     "kind": "pdiode"
+    },
+    "bdn": {
+     "prefix": "bd",
+     "kind": "ndiode"
+    }
+   },
+   "pairs": [
+    [
+     "bond",
+     "pin"
+    ],
+    [
+     "bond",
+     "dn"
+    ],
+    [
+     "bond",
+     "cdn"
+    ],
+    [
+     "bond",
+     "cup"
+    ],
+    [
+     "pin",
+     "cdn"
+    ],
+    [
+     "bond",
+     "bup"
+    ],
+    [
+     "bond",
+     "bdn"
+    ]
+   ]
+  },
+  {
+   "name": "VSS_SITE_P",
+   "seed": [
+    "M2",
+    60.0,
+    91.5
+   ],
+   "clip": [
+    -1.0,
+    60,
+    76.0,
+    160
+   ],
+   "max_step": 0.25,
+   "min_cuts": 4,
+   "min_width": 2.0,
+   "terminals": [
+    {
+     "name": "land",
+     "layer": "M3",
+     "box": [
+      -1.0,
+      70,
+      76.0,
+      117
+     ]
+    },
+    {
+     "auto_contacts": "an",
+     "window": [
+      15.0,
+      68,
+      75.0,
+      96
+     ]
+    }
+   ],
+   "groups": {
+    "anodes": {
+     "prefix": "an",
+     "kind": "ptap"
+    }
+   },
+   "pairs": [
+    [
+     "land",
+     "anodes"
+    ]
+   ]
+  },
+  {
+   "name": "PAD_N",
+   "label": "PAD_N",
+   "max_step": 0.5,
+   "min_width": 2.0,
+   "min_cuts": 4,
+   "terminals": [
+    {
+     "name": "bond",
+     "layer": "M5",
+     "box": [
+      218.5,
+      2,
+      278.5,
+      62
+     ]
+    },
+    {
+     "name": "pin",
+     "layer": "M5",
+     "box": [
+      302,
+      912.0,
+      306,
+      912.91
+     ]
+    },
+    {
+     "auto_contacts": "dio",
+     "window": [
+      226.0,
+      62,
+      286.0,
+      128.5
+     ]
+    },
+    {
+     "auto_contacts": "cd",
+     "window": [
+      0,
+      430,
+      320,
+      912
+     ]
+    },
+    {
+     "auto_contacts": "bd",
+     "window": [
+      139,
+      352,
+      290,
+      388
+     ]
+    }
+   ],
+   "groups": {
+    "dn": {
+     "prefix": "dio",
+     "kind": "ndiode"
+    },
+    "cdn": {
+     "prefix": "cd",
+     "kind": "ndiode"
+    },
+    "cup": {
+     "prefix": "cd",
+     "kind": "pdiode"
+    },
+    "bup": {
+     "prefix": "bd",
+     "kind": "pdiode"
+    },
+    "bdn": {
+     "prefix": "bd",
+     "kind": "ndiode"
+    }
+   },
+   "pairs": [
+    [
+     "bond",
+     "pin"
+    ],
+    [
+     "bond",
+     "dn"
+    ],
+    [
+     "bond",
+     "cdn"
+    ],
+    [
+     "bond",
+     "cup"
+    ],
+    [
+     "pin",
+     "cdn"
+    ],
+    [
+     "bond",
+     "bup"
+    ],
+    [
+     "bond",
+     "bdn"
+    ]
+   ]
+  },
+  {
+   "name": "VSS_SITE_N",
+   "seed": [
+    "M2",
+    271.0,
+    91.5
+   ],
+   "clip": [
+    210.0,
+    60,
+    287.0,
+    160
+   ],
+   "max_step": 0.25,
+   "min_cuts": 4,
+   "min_width": 2.0,
+   "terminals": [
+    {
+     "name": "land",
+     "layer": "M3",
+     "box": [
+      210.0,
+      70,
+      287.0,
+      117
+     ]
+    },
+    {
+     "auto_contacts": "an",
+     "window": [
+      226.0,
+      68,
+      286.0,
+      96
+     ]
+    }
+   ],
+   "groups": {
+    "anodes": {
+     "prefix": "an",
+     "kind": "ptap"
+    }
+   },
+   "pairs": [
+    [
+     "land",
+     "anodes"
+    ]
+   ]
+  },
+  {
+   "name": "VSS_NET",
+   "seed": [
+    "M2",
+    60.0,
+    91.5
+   ],
+   "max_step": 0.5,
+   "terminals": [
+    {
+     "name": "land",
+     "layer": "M3",
+     "boxes": [
+      [
+       -1,
+       70,
+       76,
+       117
+      ],
+      [
+       210,
+       70,
+       287,
+       117
+      ]
+     ]
+    },
+    {
+     "name": "pin",
+     "layer": "M4",
+     "box": [
+      8,
+      912,
+      18,
+      912.91
+     ]
+    },
+    {
+     "auto_contacts": "c",
+     "window": [
+      0,
+      430,
+      320,
+      912
+     ]
+    },
+    {
+     "name": "ring",
+     "layer": "M5",
+     "box": [
+      210,
+      343,
+      265,
+      348.39
+     ]
+    },
+    {
+     "auto_contacts": "bv",
+     "window": [
+      50,
+      352,
+      290,
+      388
+     ]
+    }
+   ],
+   "groups": {
+    "clampsrc": {
+     "prefix": "c",
+     "kind": "nmos"
+    },
+    "anP": {
+     "prefix": "c",
+     "kind": "ptap",
+     "window": [
+      0,
+      430,
+      160,
+      912
+     ]
+    },
+    "bandv": {
+     "prefix": "bv",
+     "kind": "ptap"
+    }
+   },
+   "pairs": [
+    [
+     "land",
+     "clampsrc"
+    ],
+    [
+     "land",
+     "pin"
+    ],
+    [
+     "pin",
+     "clampsrc"
+    ],
+    [
+     "ring",
+     "clampsrc"
+    ],
+    [
+     "ring",
+     "bandv"
+    ],
+    [
+     "land",
+     "bandv"
+    ]
+   ]
+  },
+  {
+   "name": "ESD_RAIL",
+   "label": "ESD_RAIL",
+   "max_step": 0.5,
+   "terminals": [
+    {
+     "auto_contacts": "e",
+     "window": [
+      0,
+      430,
+      320,
+      912
+     ]
+    },
+    {
+     "auto_contacts": "b",
+     "window": [
+      50,
+      352,
+      210,
+      388
+     ]
+    }
+   ],
+   "groups": {
+    "cath": {
+     "prefix": "e",
+     "kind": "ntap"
+    },
+    "drn": {
+     "prefix": "e",
+     "kind": "nmos"
+    },
+    "bcath": {
+     "prefix": "b",
+     "kind": "ntap"
+    }
+   },
+   "pairs": [
+    [
+     "cath",
+     "drn"
+    ],
+    [
+     "bcath",
+     "drn"
+    ]
+   ]
+  }
+ ]
+}

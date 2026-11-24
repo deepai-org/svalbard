@@ -59,3 +59,14 @@ Fix to build: local positive path in each site: pd2nw up-diodes PAD -> local rai
 XR charges to the RF peak and stays DC, so the RC trigger does not fire in operation. Costs to declare to rf_tx: added
 pad C (up-diode junction + rail), leakage at the RF peak. Diode-stack-to-supply rejected: rf_pair's single up-diode already
 reaches 10.9 V at CDM 2 A; a 2-3 stack doubles / triples that drop.
+
+## rftxpad t7 PUBLISHED (2026-11-24, PC-81; generator analog/pads/rftx_band.py)
+Variants (all layout checks PASS on t3 and t7; R high metal from netres, ESD on the t2 model + lumped band, mkmodel_band.py):
+| variant | band per leg | PAD path | pad C wiring P/N (+junction ~179 fF) | HBM 1 kV | CDM 1 A | CDM 2 A |
+| t3 | 10 up / 4 dn | neck + Metal2 strip + M3/M4 row, ESD plane 356-385.5 | +738 / +718 fF | pass | pass | ~9.4 V est. (pass) |
+| t4 | 10 / 4 | no strip, M3 row | +242 / +230 | 5.5 V | 7.7 V | 12.2 V |
+| t5 | 6 / 2 | no strip, M3 row | +191 / +182 | 5.9 V | 8.3 V | 12.5 V |
+| t7 (published) | 6 / 2 | no strip, M3+M4 row | +195 / +202 | 6.15 V | 8.64 V | 12.53 V |
+CDM 2 A needs the strip (~+0.44 pF per leg on the pad: Metal2 over the rail cell's Metal1); decision for coordinator / RF TX.
+Junction C per finger (model): nd2ps 28.3 fF at 0 V / 19.1 at 3.3 V; pd2nw 28.1 / 23.4 at 0.8 V.
+Controls: t2 (no band) fails every positive case (13.3 V HBM 1 kV); read-back LVS controls (swap, drop-one) fail as required.

@@ -322,6 +322,7 @@ module pt_analog_top_stub(
  wire USB_FS_HIGH_N;
  wire USB_FS_LOW_P;
  wire USB_FS_LOW_N;
+ wire TX_CASCODE;
  wire TX_MAIN_P;
  wire TX_MAIN_N;
  wire TX_MAIN_BIAS;
@@ -1220,6 +1221,7 @@ module pt_analog_top_stub(
  assign TX_EN_POST = 1'b0;
  assign TX_EN_DETECT = 1'b0;
  assign TX_EN_TERM = 1'b0;
+ wire p_cascode_pump__CB_EN = c_wiredtx_post_pol;
  wire p_term_buffer__ENABLE = island_on[0];
  wire p_txpad_bias__EN = TX_EN_TERM;
  wire p_txpad_bias__EN_DET = TX_EN_DETECT;

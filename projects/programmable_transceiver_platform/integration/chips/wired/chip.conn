@@ -117,7 +117,7 @@ inst pad_usb pad_wirepad wired_tx
   PULLUP_P=c_usb_pullup_p PULLUP_N=c_usb_pullup_n PULLDOWN_P=c_usb_pulldown_p PULLDOWN_N=c_usb_pulldown_n
   TERM_TRIM{0:2}=c_usb_term_trim[\1] LS_SLOW=c_usb_ls_slow DVDD~VDD      # USB data pins: D-USB (MW-18); DVDD: ring landing (b7)
 inst pad_wire_tx pad_txpad wired_tx
-  PAD_P~WIRE_TX_P PAD_N~WIRE_TX_N VDD~RAIL_wired_tx VSS~VSS CASCODE~RAIL_wired_tx DVDD_P~VDD DVDD_N~VDD      # DVDD_*: ring landings (PC-73)
+  PAD_P~WIRE_TX_P PAD_N~WIRE_TX_N VDD~RAIL_wired_tx VSS~VSS CASCODE~TX_CASCODE DVDD_P~VDD DVDD_N~VDD      # DVDD_*: ring landings (PC-73)
   TERM_TRIM{0:3}=c_txpad_term_trim[\1]      # txpad.config.term_trim, reset 5 (CB8-15, DG9-TERMTRIM)
   MAIN_P=TX_MAIN_P MAIN_N=TX_MAIN_N MAIN_BIAS~TX_MAIN_BIAS POST_P=TX_POST_P POST_N=TX_POST_N POST_BIAS~TX_POST_BIAS
   TMDS_P=VSS TMDS_N=VSS TMDS_BIAS~VSS      # TMDS branch removed from pt_wiredtx (WT22): tied off (MW-17), D-TMDS
@@ -230,6 +230,12 @@ inst attached_tx_interlock tx_interlock wired_tx
   VDD~RAIL_wired_tx VSS~VSS REQ_MAIN=c_txpad_req_main REQ_POST=c_txpad_req_post REQ_TMDS=VSS REQ_DETECT=c_txpad_req_detect
   REQ_TERM=c_txpad_req_term RESET=island_off[0] QUALIFIED=island_on[0] SUPPLY_OK=s_pg_wired_tx CONFLICT>- VALID>-
   EN_MAIN>TX_EN_MAIN EN_POST>TX_EN_POST EN_TMDS>- EN_DETECT>TX_EN_DETECT EN_TERM>TX_EN_TERM
+# pad cascode gate supply (WT53-c / WT59): VDD through the select switch, about 4.2 V when CB_EN = 1 (pump + replica shunt).
+# Separate instance (does not fit under pt_wiredtx8's ASM-11a top-pin field); place it beside pad_wire_tx, CASCODE route <= 0.3 pF, no DC.
+# CB_EN = c_wiredtx_post_pol until the macro has c_wiredtx_cascode_boost: post_polarity = 1 (same-sign / MLT-3) is 100BASE-TX only,
+# the same condition the regfile rule wtx_boost_100base_only enforces; the output reads 0 while the wired island is off.
+inst cascode_pump wtx8_casbias wired_tx
+  CB_EN=c_wiredtx_post_pol CASCODE~TX_CASCODE VDD~RAIL_wired_tx VSS~VSS
 inst term_buffer term_buffer core      # always-on VDD, not RAIL_wired_tx: the termination return (16-21 mA) stays off the wired_tx island (WT56-b lever 1, WT58)
   VDD~VDD VSS~VSS REF~TX_BUF_REF BIAS~TX_BUF_BIAS OUT~TX_TERM_VCM ENABLE=island_on[0]   # on whenever wired_tx is on (WT51 ruling); switches gated by TX_EN_TERM
 # buffer reference / bias are ideal sources in every pads bench (MW walk 6.3): build demand, D-TXTERM.

@@ -37,7 +37,7 @@ from wtx_mux8 import fet, inv, nand2, nor2
 HERE = Path(__file__).resolve().parent
 FAST = HERE / 'generated' / 'fast'
 NAME = 'pt_wiredtx8'
-PUMP = False        # session 18: wtx8_casbias (CB_EN / CASCODE) is in the block only once its extracted transients pass (WT54)
+PUMP = False        # wtx8_casbias is a separate top-level instance (cascode_pump, WT59): it does not fit under the ASM-11a top-pin field
 FROT = 2            # slice k of the mux takes stream (k + FROT) mod 8 (see ser8d_macro.py)
 PH = [f'PH{k}' for k in range(8)]
 SER_PH = [f'PH{a}' for a in (0, 45, 90, 135, 180, 225, 270, 315)]

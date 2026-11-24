@@ -26,6 +26,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))   # analog/antenna_diodes.py
 import antenna_diodes as ad  # noqa: E402
+PORT_DIODE = 6.0       # um^2 antenna diode on every gate-only port (chip-top nets), except PORT_DIODE_SKIP
+PORT_DIODE_SKIP = {'lo_p', 'lo_n'}   # txmix LO pins: driven ~0.1 mm from pt_lo_txbuf (LO-ASM-4); keep the GHz node light
 
 DIGITAL_IMAGE = 'svalbard/librelane-gf180-canary:2026.08'
 PDK = '/pdk/gf180mcuD'
@@ -510,6 +512,27 @@ def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=N
     # antenna diodes (KLayout ANT.16): gate-only partial nets with long M2-M5 get an N+/Psub diode
     # (with its own substrate tap) under their own M3-M5 wire; returned as 'antenna_diodes'.
     req = ad.requests_from_shapes(P.shapes, terminals)
+    # gate-only PORTS get a diode regardless of the block-local estimate: at chip top they sit on long routed nets
+    # (pt_rf precheck ASM-10: txmix 3 + 3 ANT.16).  Routed pt_rf: c_txmix_i_en 1.31 mm Metal3 on 3.92 um^2 of gate,
+    # ratio ~360 without a diode; PORT_DIODE keeps metal/(gate + 2 diode) < 200 (MARGIN) at twice that route.
+    kinds = {}
+    for t in terminals:
+        kinds.setdefault(t[2], set()).add(t[3])
+    have = {r['net'] for r in req}
+    for port in ports:
+        if port in PORT_DIODE_SKIP or kinds.get(port, set()) != {'g'}:
+            continue
+        if port in have:
+            for r_ in req:
+                if r_['net'] == port:
+                    r_['area'] = max(r_['area'], PORT_DIODE)
+            continue
+        segs = [('metal5', (s[1] + s[3]) / 2, s[2], (s[1] + s[3]) / 2, s[4]) for s in P.shapes
+                if s[0] == 'metal5' and s[5] == port and s[4] - s[2] >= s[3] - s[1]]
+        segs += [('metal4', s[1], (s[2] + s[4]) / 2, s[3], (s[2] + s[4]) / 2) for s in P.shapes
+                 if s[0] == 'metal4' and s[5] == port and s[3] - s[1] > s[4] - s[2]]
+        if segs:
+            req.append(dict(net=port, level=5, area=PORT_DIODE, segs=segs))
     dcmds, diodes = ad.plan(req, [s[:5] for s in P.shapes], keepouts)
     P.cmds += dcmds
     cmds += P.cmds

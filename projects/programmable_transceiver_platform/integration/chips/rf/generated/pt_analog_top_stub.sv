@@ -574,10 +574,10 @@ module pt_analog_top_stub(
  wire p_core_bias__EN_lo_pfdcp = c_lo_pfdcp_en;
  wire p_core_bias__EN_bb_tap_i = c_bb_tap_i_bias_en;
  wire p_core_bias__EN_bb_tap_q = c_bb_tap_q_bias_en;
- wire p_isw_rf_tx__EN = island_en[1];
- assign s_pg_rf_tx = island_en[1];
  wire p_isw_debug__EN = island_en[5];
  assign s_pg_debug = island_en[5];
+ wire p_isw_rf_tx__EN = island_en[1];
+ assign s_pg_rf_tx = island_en[1];
  wire p_isw_lod__EN = island_en[1];
  assign s_pg_lod = island_en[1];
  wire p_isw_rf_rx__EN = island_en[1];

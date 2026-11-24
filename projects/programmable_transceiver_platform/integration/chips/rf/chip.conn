@@ -95,8 +95,11 @@ inst core_bias pt_core_bias_rf core
 # pll (2), conv (4), debug (5). Switches of a group start together; each PG goes to the macro (s_pg_*), which ANDs the
 # group (replaces island_pgood[5:0]). Switch ISO outputs are unused: the remaining outside clamps follow the macro's
 # island_off[group bit], which honours pgood_override (D-ISO; PD2-2 asks for the switch ISO instead).
-inst isw_{rf_tx,debug} isw_debug core
-  VDD~VDD VISL~RAIL_\1 VSS~VSS EN=island_en[{1,5}] ISO>- PG>s_pg_\1
+inst isw_debug isw_debug core
+  VDD~VDD VISL~RAIL_debug VSS~VSS EN=island_en[5] ISO>- PG>s_pg_debug
+# rf_tx: 45.6 mA worst / 56.5 mA design with lo_txbuf 19.3 mA (LO-PWR-1): isw_wired (80 mA) master (CB8-16)
+inst isw_rf_tx isw_wired core
+  VDD~VDD VISL~RAIL_rf_tx VSS~VSS EN=island_en[1] ISO>- PG>s_pg_rf_tx
 inst isw_lod isw_wired core
   VDD~VDD VISL~RAIL_lod VSS~VSS EN=island_en[1] ISO>- PG>s_pg_lod
 inst isw_rf_rx isw_rf core

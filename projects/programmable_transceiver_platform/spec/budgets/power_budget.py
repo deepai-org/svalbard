@@ -394,7 +394,7 @@ INSTANCE_WORST_MA = {
           'prescale_conv': (2.4, 'est = prescale'), 'refvcm': (0.03, 'ev CORE-SUPPORT-CELLS.md'), 'core_bias': (0.10, 'calc')},
   'rf_rx': {'bbfilter_i': (5.32, 'ev bbfilter_i-evidence.json'), 'bbfilter_q': (5.32, 'ev bbfilter_q-evidence.json'),
             'core_bias': (0.22, 'calc')},
-  'rf_tx': {'lo_txbuf': (10.0, 'est: CML LO buffer class (lo_mmd_qdum 8-10 mA); no bench, to measure')},
+  'rf_tx': {'lo_txbuf': (19.3, 'ev scratch/lo-ap4/txbuf_i/result.json schematic, ff/125/3.5 (LO-PWR-1)')},
  },
  'wired': {
   'debug': {'rx_aux_clk': (5.10, 'ev diff_clk_rx-evidence.json'), 'rx_wtx_ext': (5.10, 'ev diff_clk_rx-evidence.json'),
@@ -422,7 +422,7 @@ def dig_meas(chip):
 SWITCH_MASTER = {'isw_wired': (80, 0.2484, 0.0641), 'isw_pll': (60, 0.2877, 0.0530), 'isw_rf': (55, 0.3007, 0.0500),
                  'isw_debug': (40, 0.3878, 0.0370), 'isw_conv': (30, 0.4807, 0.0320)}   # (mA, ohm, mm2)
 ISLAND_SWITCH = {
-    'rf': {'rf_rx': ('isw_rf', 1), 'rf_tx': ('isw_debug', 1), 'lod': ('isw_wired', 1), 'lo': ('isw_conv', 1), 'pll': ('isw_debug', 1),
+    'rf': {'rf_rx': ('isw_rf', 1), 'rf_tx': ('isw_wired', 1), 'lod': ('isw_wired', 1), 'lo': ('isw_conv', 1), 'pll': ('isw_debug', 1),
            'conv': ('isw_conv', 1), 'debug': ('isw_debug', 1)},
     'wired': {'wired_rx': ('isw_debug', 1), 'wired_cap': ('isw_wired', 1), 'wired_tx': ('isw_wired', 2), 'pll': ('isw_debug', 1),
               'debug': ('isw_debug', 1)}}
@@ -437,7 +437,9 @@ EST_MARGIN = 1.25
 # What a ceiling protects (spec/power-delivery.md section 1): junction 22-32 C across the stopped-to-max step with the B2a
 # cold finger (<= 5.2 C/W, 2 C control tolerance: 8 C span), bond / supply-cell EM (125 mA per cell at 85 C, one open bond
 # included), the board regulator (B2a >= 0.45 A). Thermal binds: 430 mA at 3.35 V = 1.49 W needs <= 5.42 C/W.
-PD2_CEILING_MA = {'wired_usb': 430, 'rf_external_lo': 260, 'rf_autonomous_lo': 340}   # pt_wired / pt_rf, mA at PWR-DIG
+# pt_rf: the 260 / 340 mA values were allocations, not limits; the same package, cold finger, regulator and bond rating
+# apply to both chips, so both carry the thermal-set 430 mA (pt_rf worst DXa 353.7 at PWR-DIG, 395.5 at the unscaled macro).
+PD2_CEILING_MA = {'wired_usb': 430, 'rf_external_lo': 430, 'rf_autonomous_lo': 430}   # pt_wired / pt_rf, mA at PWR-DIG
 
 
 def pd2_expand(row):

@@ -60,7 +60,7 @@ Requirement IDs (traced in `performance-requirements.json`; the numbers come fro
 
 | ID | Requirement |
 | --- | --- |
-| PWR-MODE-CEIL | Total chip current stays within 430 mA in wired and USB modes (pt_wired; set by PWR-THERM with the B2a cold finger), 260 mA in RF modes with the external LO and 340 mA in RF modes with the on-chip LO, at worst in-window analog currents, including the 37.5 mA rfdriver board feed. |
+| PWR-MODE-CEIL | Total chip current stays within 430 mA on either chip in every mode (set by PWR-THERM with the B2a cold finger; same package, regulator and bond rating on both chips), at worst in-window analog currents, including the 37.5 mA rfdriver board feed. |
 | PWR-DIG-WIRED | The digital macro draws at most 60 mA in wired and USB modes, with unused domains clock-gated, signed off with activity-annotated power. |
 | PWR-DIG-RF | The digital macro draws at most 40 mA in RF modes, same sign-off. |
 | PWR-HOST-RF | RF modes run the host link at div2 (`debug.host_link.rate`). |
@@ -69,8 +69,8 @@ Requirement IDs (traced in `performance-requirements.json`; the numbers come fro
 
 Notes on the requirements:
 
-- **PWR-MODE-CEIL:** total current per chip, including the 37.5 mA rfdriver board feed, within 430 mA (pt_wired, POST
-  allowed), 260 mA (pt_rf, external LO), 340 mA (pt_rf, on-chip LO) at worst in-window analog currents, digital at PWR-DIG.
+- **PWR-MODE-CEIL:** total current per chip, including the 37.5 mA rfdriver board feed, within 430 mA on both chips
+  (pt_wired with POST; pt_rf worst DXa 353.7 mA with lo_txbuf 19.3 mA) at worst in-window analog currents, digital at PWR-DIG.
   What the pt_wired value protects: section 1.1.
 - **PWR-DIG-WIRED / PWR-DIG-RF:** macro <= 60 mA (pt_wired) and <= 40 mA (pt_rf), unused domains clock-gated, signed off
   with activity-annotated power per chip. pt_rf at its area-scaled 62.6 mA exceeds the TX and DX ceilings by 3.5-17 mA.

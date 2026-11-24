@@ -26,10 +26,11 @@ see "Hop plan" below. Not yet laid out.
 - Block `pt_wiredtx8` handed to assembly (WT57, commit 19367351 + 7cd4956f); bound in wired/chip.conn (WT50). WT53-d final.
 - Done 2026-11-24: term_buffer on always-on VDD (257c62da, WT58); pump `wtx8_casbias` starts at every corner
   (b1c79575; extracted results `s18/tran/ext_*.json`).
-- Next, ranked: (1) put the pump in the block (PUMP=True, CB_EN + CASCODE pins; needs digital port
-  `c_wiredtx_cascode_boost`, WT58) and bind pad CASCODE to it; (2) re-run the 100BASE-TX amplitude with the extracted
-  pump level (4.12 V at ss 3.15 V vs 4.2 V in WT53-d); (3) island current still 67 / 89 mA (ss / ff, POST on) vs 56 mA:
-  wait for the power decision, else lever 2 (mux revision); (4) in-block VSS IR 3.95 mV vs 3.0 mV.
+- Pump is a separate pt_wired instance `cascode_pump` (663437fd, WT59), interim CB_EN = c_wiredtx_post_pol; 100BASE-TX
+  986 mV cal. at ss-pess with the extracted 4.12 V (dcd56b93). Island limit superseded by PDS-19 (105 / 131 mA on 2x isw_wired).
+- Next, ranked: (1) when digital lands c_wiredtx_cascode_boost, check it binds cascode_pump.CB_EN (not wiredtx);
+  (2) 100BASE-TX at ss 85 C 2.97 V (pump 3.84 V); (3) in-block VSS IR 3.95 vs 3.0 mV; (4) lever 2 only if assembly's
+  trunk cannot carry the island current.
 - Rules: commit with a pathspec; scratch is gitignored (git add -f). Extraction flow: `s16/net/fixcap16.py`.
 
 ## State at 2026-11-18 07:05 UTC

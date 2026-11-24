@@ -300,6 +300,7 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
       'strap_pitch' um: pitch of the Metal5 power strap pairs (default 40);
       'strap_x0' um: x of the first strap pair (default origin + 3);
       'm5_keep' [(x0, x1)]: extra Metal5 keep-out columns (chip grid channels, ASM-8);
+      'pin_metal' 4: signal ports labelled on Metal4 (Via4 from the trunk end) at the top edge instead of Metal5 (ASM-12);
       'm5_bars' [(net, x0, x1)]: full-height Metal5 bars of a power net with Via4 arrays on its tracks;
       'port_antenna_um' um: antenna diode on every gate-only port net, sized for that much top-level Metal5;
       'trunk_row'  {net: row}: the net's trunk is placed at the median of its pin columns in that row (default: all rows);
@@ -708,8 +709,16 @@ def generate(work, cell, ports, devices, rows=None, max_row_width=160.0, image=D
             xx = next(sx for n, sx in straps if n == prt)
         else:
             xx = trunk_x[prt]
+        pm = 'metal5'
+        if (em or {}).get('pin_metal') == 4 and prt not in power_nets:
+            # ASM-12: signal pins on Metal4 at the top edge (Via4 from the net's Metal5 trunk end), so top-level
+            # routes land below the chip grid's Metal5; power ports stay on their Metal5 straps
+            L.net = prt
+            L.via(xx, snap(top - 0.75), 4, 5)
+            L.net = None
+            pm = 'metal4'
         L.cmds += [f'box values {snap(xx - 0.2)} {snap(top - 1.0)} {snap(xx + 0.2)} {snap(top - 0.5)}',
-                   f'label {prt} FreeSans 0.3 0 0 0 c metal5', f'port make {i}']
+                   f'label {prt} FreeSans 0.3 0 0 0 c {pm}', f'port make {i}']
     flat = cell
     # Hierarchical (device PCells as subcells): flattening was observed to drop
     # the ppolyf_u_1k device from extraction in Magic 8.3.623.

@@ -304,6 +304,7 @@ MEASURED = [
  ('rfdriver', 'rf_tx', {'TD': (58.4, 61.7)}, ('rfdriver',), 'ext',
   'rf_tx-sim-ext.json chain_zero 58.40, scratch/rf-tx-d3/imax.json 61.694 ff/22/3.35 overdriven; TOTAL incl. the board feed: '
   'die rail = 0.393 x total (22.9 / 24.3 mA), board feed through the RF_TX pads = 0.607 x total, returning through die VSS'),
+ ('lo_txbuf', 'rf_tx', {'TD': (15.0, 19.3)}, (), 'est', 'scratch/lo-ap4/txbuf_i/result.json: pt_lo_txbuf schematic, 2.45 GHz LO, txmix gate load: tt/27/3.3 15.0, ff/22/3.5 18.5, ff/125/3.5 19.3 mA'),
  # ---- conv island
  ('adc_i', 'conv', {'RD': (5.73, 6.3)}, ('adc_i',), 'ext', 'converters/generated/adc_i-evidence.json 5.731 at 40 MS/s; no corner current recorded: worst = 1.1 x (assumed)'),
  ('adc_q', 'conv', {'RD': (5.72, 6.3)}, ('adc_q',), 'ext', 'adc_q-evidence.json 5.721; worst assumed 1.1 x'),

@@ -32,3 +32,15 @@ conn hunk in TIM-35 + MANIFEST switch, one commit). Next revision: slot-enable c
   WORSE: nominal ss q625 15/200 (r8 0/200), pess ss 72/180, pess 3.50 V 23/200. Faster hops alone break the chain (likely the
   TSPC hold / CKN-gated GCK timing relies on that delay). Next: two-period-wide enables or even/odd interleaved chains, with a
   hold check at ff in the same step.
+
+## Plan for r10 (slot-enable re-architecture), handed to the next session
+1. Probe first (r10cap/probe_top.py pattern on the r8 extraction, pessimistic ss 625): per hop, ELQ(i-k)q clk-to-q, export
+   buffer, route, AOI, setup at ELQ_i; and the CKL0/CKL1/CNL skew. r9 (direct in-cell hops) broke NOMINAL ss (15/200): check
+   hold against CKL0/CKL1 skew and the extra load on ELQ..q slowing GCK before choosing the fix.
+2. Candidates: (a) even/odd interleaved chains clocked on alternate... no: a shift register cannot skip cycles, so a
+   two-period path needs two-period-wide enables W_i (high for slots s, s+1; GCK_i = CKN & W_i & !W_next or a local
+   one-period re-time) so the route + mode AOI becomes a two-cycle path; (b) keep one-period hops but make every hop local
+   (chain flops abutted in slot order per mode, mode mux only at the start), exporting ELQ to the pairs through a separate
+   buffer off the chain path, with a hold delay sized from the probe.
+3. Gates for r10: q625 nominal ss/tt/ff, pessimistic ss 3.15 and 3.50 V, ff hold (C x0.9), full rate 500 MHz ss, bench B
+   2.5 Gb/s RCS=1, then grid/pins/taps/readback LVS as for r8.

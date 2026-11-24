@@ -183,7 +183,11 @@ for bd in ([] if getattr(C, 'ISLAND_BARS_OFF', False) else C.ISLAND_BARS.get(CHI
         b_ = man['blocks'][i_]; c_ = ly.cell(b_['master']); t_ = db.Trans.from_s(b_['trans'])
         m5 = db.Region(c_.begin_shapes_rec(LI['Metal5'])).merged().transformed(t_)
         pins_ = db.Region([b for ln, b in pin_shapes_die0(i_, p_)])
-        same += m5.interacting(pins_); other += m5.not_interacting(pins_)
+        # same net = Metal5 joined to the pin's Metal4 by the cell's own Via4 (an xy overlap alone also catches the other
+        # plate where the VDD and VISL fingers interleave over the pin strips: that joined VDD to VISL, 2026-11-23)
+        v4 = db.Region(c_.begin_shapes_rec(ly.layer(41, 0))).transformed(t_) & pins_
+        m5j = m5.interacting(v4)
+        same += m5j; other += m5 - m5j
         cells_ += db.Region(db.Box(*[um(v) for v in b_['bbox']]))
     # cut: every other block's Metal5 (2.5 um), and the listed cells' other-net Metal5 (2.5 um); their same-net Metal5 is joined
     if bd.get('tie_merge') and bd['tie_merge'][0] in man['blocks']:      # same-net Metal5 ties of a block (e.g. the east island column)
@@ -193,7 +197,7 @@ for bd in ([] if getattr(C, 'ISLAND_BARS_OFF', False) else C.ISLAND_BARS.get(CHI
             for tn_ in bd['tie_merge'][1]:
                 if tn_ in ties_: t_ = ties_[tn_]; same += db.Region(db.Box(um(bx_+t_[0]), um(by_+t_[2]), um(bx_+t_[1]), um(by_+t_[3])))
     cut = ((blkmetal['Metal5'] - cells_.sized(um(2.5))) + other.sized(um(2.5))) - same.sized(um(2.5)) + (other.sized(um(2.5)))
-    reg = (reg - cut - padreg.sized(um(3))).merged() + (same & reg.sized(um(50)))
+    reg = (reg - cut - padreg.sized(um(3)) - (ring['VDD'] + ring['VSS']).sized(um(2.5))).merged() + (same & reg.sized(um(50)))   # never on the core ring
     reg = db.Region([p for p in reg.each() if p.area() > um(20)*um(20)])
     bars.append(dict(bd, region=reg, m4=m4, merged=not same.is_empty()))
     avoid['Metal4'] = (avoid['Metal4'] + m4.sized(um(2.5))).merged()

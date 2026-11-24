@@ -92,7 +92,7 @@ FIXED_PLACE = {'wired': {'isw_wired_tx_a': (2938.0, 2209.0), 'isw_wired_tx_b': (
 # Via4 where the Metal4 bar meets those Metal5 ties. pt_wiredtx8 WT57 (19367351): outline L 744.5 x 430.8, free corner
 # x >= 598.7, y >= 266.36; island VDD ties T_main / T_post at y 423.1-430.8 (Metal5), east_island column; Metal4 band
 # y 410.9-430.8, x 340-744 is island VDD only
-ISLAND_BARS_OFF = True     # 2026-11-23: LVS without router wiring shows VDD joined to the isw VISL through the bar; off until traced
+ISLAND_BARS_OFF = False    # the VDD-VISL join (xy-overlap merge picked the VDD plate) is fixed: merge only Via4-joined Metal5
 ISLAND_BARS = {'wired': [dict(net='RAIL_wired_tx', rects=[(2658.5, 2265.0, 3400.0, 2640.0)],
                               rel=('wiredtx', [('Metal5', (598.9, 266.6, 744.5, 430.8)), ('Metal4', (340.0, 411.2, 744.5, 430.8))]),
                               tie_merge=('wiredtx', ['east_island']),

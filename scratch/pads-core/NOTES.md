@@ -24,7 +24,8 @@ pad_wire_tx `DNV*/DPV*.SUB` nets joining VSS in chip LVS are the diode legs' sub
 
 pad_txpad a16p (2026-11-24, PC-80): core pins widened/spread by `$P/analog/pads/tx_top_pins.py` (GDS sha bded3185).
 
-## Next (ranked, 2026-11-24 evening; user ESD rule in MANDATE 1: HBM 1 kV / CDM 1 A, favour the signal)
-1. Assembly's pt_rf precheck: act on any pad-site item. rftxpad t8 (PC-81b) and txpad a16p (PC-80) need re-abstraction.
-2. RF TX answer on pad C (+0.40 pF per leg, PC-81b); no more ESD margin work.
-3. USB b7 conditions C1-C4 (function items only). SATA2 return loss: skipped (coordinator).
+## Next (2026-11-24 late; user ESD rule MANDATE 1: HBM 1 kV / CDM 1 A, favour the signal)
+1. Assembly's pt_rf precheck (not posted yet): act on any pad-site item. rftxpad t8 (PC-81b) and txpad a16p (PC-80) need re-abstraction.
+2. RF answers: RF TX match with +0.40 pF/leg (PC-81b); RF RX trimmed rf_pair offer (PC-82, ~-0.1 pF/leg) if they ask.
+3. USB: C1 closed / C3 screened (PC-83); at the next USB respin widen the TERM_VCM Metal4 route (2.35 -> >= 5 um).
+4. HS amplitude calibration note (362 mV uncal, B11) unchanged; SATA2 return loss skipped (coordinator).

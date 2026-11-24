@@ -44,7 +44,7 @@ def write_tb(nvec, settle, out='tb_dec.sv'):
     for n, w, _ in PORTS: L.append(f' wire [{w-1}:0] {n};')
     L += [' wire [5:0] island_on, island_en, island_off; wire wire_rx_ptrim_en, rx_en_aux, rx_en_wtx_ext; wire [39:0] wire_tx_data; wire [23:0] rf_tx_sample;',
           f' pt_digital_macro #(.PT_CHIP({PT_CHIP})) dut(.reset_n_pad(rst_pad), .por_n(1\'b1), .por_bypass(1\'b0), .spi_sclk(sclk), .spi_cs_n(cs_n), .spi_mosi(mosi),',
-          '  .island_en(island_en), .island_on(island_on), .island_off(island_off), .s_pg_wired_rx(pg[0]), .s_pg_wired_cap(pg[1]), .s_pg_wired_tx(pg[2]), .s_pg_wired_tx_b(pg[2]), .s_pg_rf_rx(pg[3]),',
+          '  .island_en(island_en), .island_on(island_on), .island_off(island_off), .s_pg_wired_rx(pg[0]), .s_pg_wired_cap(pg[1]), .s_pg_wired_tx(pg[2]), .s_pg_wired_tx_b(pg[2]), .s_pg_rf_tx_b(pg[4]), .s_pg_rf_rx(pg[3]),',
           '  .s_pg_rf_tx(pg[4]), .s_pg_lod(pg[5]), .s_pg_lo(pg[6]), .s_pg_pll(pg[7]), .s_pg_conv(pg[8]), .s_pg_debug(pg[9]), .wired_on_ext(wired_on_ext),',
           '  .wire_rx_ptrim_en(wire_rx_ptrim_en), .fault(fault_pin), .rx_en_aux(rx_en_aux), .rx_en_wtx_ext(rx_en_wtx_ext), .wire_tx_data(wire_tx_data), .rf_tx_sample(rf_tx_sample),',
           '  .host_word_clk(1\'b0), .h2d_clk(1\'b0), .h2d_pin(10\'b0), .ref_clk(ref_clk), .wire_rx_clk(1\'b0), .wire_tx_clk(wtx_clk), .rf_rx_clk(1\'b0), .rf_tx_clk(1\'b0), .ct_wclk(1\'b0),',

@@ -4,7 +4,7 @@
  "counts": {
   "K1": 8,
   "K2": 2,
-  "K3": 1,
+  "K3": 0,
   "K4": 0,
   "K5": 0,
   "K6": 0,
@@ -13,7 +13,6 @@
  "groups": {
   "K1 island-to-island / island-to-core gate with no clamp": 8,
   "K2 pad back-drive into an off island": 2,
-  "K3 switch": 1,
   "K7 ATB leaf not gated by its island": 8
  },
  "fails": [
@@ -126,11 +125,6 @@
    "source": "<pad>.RF_TX_P",
    "source_domain": "pad",
    "detail": "pad can be driven externally while the island is off"
-  },
-  {
-   "rule": "K3",
-   "inst": "isw_rf_tx_b",
-   "detail": "PG is NC_125, expected s_pg_rf_tx_b"
   },
   {
    "rule": "K7",

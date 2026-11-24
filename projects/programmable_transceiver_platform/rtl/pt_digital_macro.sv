@@ -61,6 +61,8 @@ module pt_digital_macro(
  // s_pg_wired_tx_b (CB8-6): pt_wired's wired_tx island has two switches in parallel (isw_wired_tx_a / _b); _b's PG
  // is ANDed into the wired group and into the status bit of wired_tx. Tied 0 on pt_rf (masked by PG_MASK / ON_WIRED).
  input  wire s_pg_wired_tx_b,
+ // s_pg_rf_tx_b (PDS-20): pt_rf's rf_tx island has two switches in parallel (isw_rf_tx / _b), same rule. Tied 0 on pt_wired.
+ input  wire s_pg_rf_tx_b,
  input  wire s_pg_wired_rx, s_pg_wired_cap, s_pg_wired_tx, s_pg_rf_rx, s_pg_rf_tx, s_pg_lod, s_pg_lo, s_pg_pll, s_pg_conv, s_pg_debug,
  output wire[`PT_ISLAND_W-1:0] island_en, island_on, island_off, // island_on drives the iso clamps (0 = isolated)
  // PD8: pt_wtx_fallback_control.WIRED_ON, ORed into island_on[0].
@@ -312,7 +314,7 @@ module pt_digital_macro(
  localparam ON_RF = (PT_CHIP & 1) != 0, ON_WIRED = (PT_CHIP & 2) != 0;
  // enable groups of the chip: 0 wired, 1 rf, 2 pll, 4 conv, 5 debug (3 reserved)
  localparam[`PT_ISLAND_W-1:0] PG_MASK = {1'b1, ON_RF ? 1'b1 : 1'b0, 1'b0, 1'b1, ON_RF ? 1'b1 : 1'b0, ON_WIRED ? 1'b1 : 1'b0};
- wire[`PT_ISLAND_W-1:0] island_pgood = {s_pg_debug, s_pg_conv, 1'b0, s_pg_pll, s_pg_rf_rx & s_pg_rf_tx & s_pg_lod & s_pg_lo,
+ wire[`PT_ISLAND_W-1:0] island_pgood = {s_pg_debug, s_pg_conv, 1'b0, s_pg_pll, s_pg_rf_rx & s_pg_rf_tx & s_pg_rf_tx_b & s_pg_lod & s_pg_lo,
   s_pg_wired_rx & s_pg_wired_cap & s_pg_wired_tx & s_pg_wired_tx_b} & PG_MASK;
  wire[`PT_ISLAND_W-1:0] island_en_reg, island_on_reg; // register file: switch enable; switch on AND (pgood OR override)
  wire[`PT_ISLAND_W-1:0] ion = island_on_reg & {`PT_ISLAND_W{reset_seen}};
@@ -429,7 +431,7 @@ module pt_digital_macro(
  wire h2d_ovf, h2d_unf;
  wire lo_vt_high, lo_vt_runaway, lo_vt_runaway_clr;   // LO-DIG-1 guard (below): rfpll.status, DBG_OBS codes 53 / 54
  wire[9:0] sw_pg = {s_pg_debug, s_pg_conv, s_pg_pll, s_pg_wired_tx & s_pg_wired_tx_b & ON_WIRED, s_pg_wired_cap & ON_WIRED, s_pg_wired_rx & ON_WIRED,
-  s_pg_lo & ON_RF, s_pg_lod & ON_RF, s_pg_rf_tx & ON_RF, s_pg_rf_rx & ON_RF};
+  s_pg_lo & ON_RF, s_pg_lod & ON_RF, s_pg_rf_tx & s_pg_rf_tx_b & ON_RF, s_pg_rf_rx & ON_RF};
  pt_digital #(.PT_CHIP(PT_CHIP)) digital(.rst_n(rst_n), .ref_clk(ref_clk), .host_sclk(spi_sclk), .host_cs_n(spi_cs_n), .host_mosi(spi_mosi),
   .host_miso(spi_miso), .host_miso_oe(spi_miso_oe), .host_tx_clk(core_clk), .host_rx_clk(core_clk), .core_rst_n(core_rst_n), .core_rel_n(core_rel_n),
   .wire_rx_clk(wire_rx_clk_c), .wire_tx_clk(wire_tx_clk_c), .rf_rx_clk(rf_rx_clk_i), .rf_tx_clk(rf_tx_clk_c),

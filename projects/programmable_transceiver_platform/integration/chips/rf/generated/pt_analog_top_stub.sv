@@ -195,6 +195,7 @@ module pt_analog_top_stub(
  output wire s_pg_pll,
  output wire s_pg_rf_rx,
  output wire s_pg_rf_tx,
+ output wire s_pg_rf_tx_b,
  output wire s_ref_present
 );
  wire RESET_N;
@@ -579,6 +580,7 @@ module pt_analog_top_stub(
  wire p_isw_rf_tx__EN = island_en[1];
  assign s_pg_rf_tx = island_en[1];
  wire p_isw_rf_tx_b__EN = island_en[1];
+ assign s_pg_rf_tx_b = island_en[1];
  wire p_isw_lod__EN = island_en[1];
  assign s_pg_lod = island_en[1];
  wire p_isw_rf_rx__EN = island_en[1];

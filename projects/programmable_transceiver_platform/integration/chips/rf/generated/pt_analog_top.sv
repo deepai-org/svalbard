@@ -194,6 +194,7 @@
  output wire s_pg_pll,
  output wire s_pg_rf_rx,
  output wire s_pg_rf_tx,
+ output wire s_pg_rf_tx_b,
  output wire s_ref_present
 );
 endmodule

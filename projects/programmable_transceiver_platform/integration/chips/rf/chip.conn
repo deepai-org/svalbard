@@ -37,7 +37,7 @@ inst digital pt_digital_macro chip
   island_en[{1,2,4,5}]>island_en[\1] island_en[{0,3}]>-
   island_on[{1,2,4,5}]>island_on[\1] island_on[{0,3}]>-
   island_off[{1,2,5}]>island_off[\1] island_off[{0,3,4}]>-
-  s_pg_{rf_rx,rf_tx,lod,lo,pll,conv,debug}=s_pg_\1      # per-switch power-good; the macro ANDs each enable group
+  s_pg_{rf_rx,rf_tx,rf_tx_b,lod,lo,pll,conv,debug}=s_pg_\1      # per-switch power-good; the macro ANDs each enable group
   s_pg_{wired_rx,wired_cap,wired_tx,wired_tx_b}=VSS wired_on_ext=VSS      # no wired island on this chip
   atb0_sw[{0,13,28,34,35,42,43,44,45,46,47,48,49,50,51,52,53,54,55,57}]>atb0_sw[\1] atb0_sw[{1,2,3,4,5,6,7,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,29,30,31,32,33,36,37,38,39,40,41,56,58,59}]>-
   atb1_sw[{0,1,2,3,4,5,7,8,10,11,12,13,14,15,16,17,18,19,20,24,28,29,30,31,32,33,34,35,36,37,38,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57}]>atb1_sw[\1]
@@ -98,11 +98,11 @@ inst core_bias pt_core_bias_rf core
 inst isw_debug isw_debug core
   VDD~VDD VISL~RAIL_debug VSS~VSS EN=island_en[5] ISO>- PG>s_pg_debug
 # rf_tx: 85.6 mA worst / 91.7 mA design with lo_txbuf r3 59.3 mA extracted (LO-PWR-2): two isw_wired in parallel on one
-# VISL bar (160 mA, 11.4 mV at design), as pt_wired wired_tx (PDS-20). _b's PG waits on a macro port s_pg_rf_tx_b (digital).
+# VISL bar (160 mA, 11.4 mV at design), as pt_wired wired_tx (PDS-20). both PGs go to the macro (s_pg_rf_tx_b, PDS-20).
 inst isw_rf_tx isw_wired core
   VDD~VDD VISL~RAIL_rf_tx VSS~VSS EN=island_en[1] ISO>- PG>s_pg_rf_tx
 inst isw_rf_tx_b isw_wired core
-  VDD~VDD VISL~RAIL_rf_tx VSS~VSS EN=island_en[1] ISO>- PG>-
+  VDD~VDD VISL~RAIL_rf_tx VSS~VSS EN=island_en[1] ISO>- PG>s_pg_rf_tx_b      # PDS-20: both switches gate the rf group
 inst isw_lod isw_wired core
   VDD~VDD VISL~RAIL_lod VSS~VSS EN=island_en[1] ISO>- PG>s_pg_lod
 inst isw_rf_rx isw_rf core

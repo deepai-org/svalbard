@@ -41,7 +41,7 @@ module tb_digital_gl;
 `endif
   .ref_clk(gclk),.wire_rx_clk(gclk),.wire_tx_clk(gclk),.rf_rx_clk(gclk),.rf_tx_clk(gclk),.ct_wclk(gclk),.fc_src({6{gclk}}),
   .fault(fault),
-  .s_pg_wired_rx(pgood[0]),.s_pg_wired_cap(pgood[0]),.s_pg_wired_tx(pgood[0]),.s_pg_wired_tx_b(pgood[0]),
+  .s_pg_wired_rx(pgood[0]),.s_pg_wired_cap(pgood[0]),.s_pg_wired_tx(pgood[0]),.s_pg_wired_tx_b(pgood[0]),.s_pg_rf_tx_b(pgood[1]),
   .s_pg_rf_rx(pgood[1]),.s_pg_rf_tx(pgood[1]),.s_pg_lod(pgood[1]),.s_pg_lo(pgood[1]),
   .s_pg_pll(pgood[2]),.s_pg_conv(pgood[4]),.s_pg_debug(pgood[5]),
   .s_pll_tx_lock(sstat[0]),.s_pll_cdr_lock(sstat[1]),.s_ref_present(sstat[2]),.s_refbuf_ready(sstat[3]),

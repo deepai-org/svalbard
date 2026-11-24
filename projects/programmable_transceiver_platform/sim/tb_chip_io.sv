@@ -25,7 +25,7 @@ module tb_chip_io;
  initial begin
   force dut.por_n=por;
 `ifdef PT_CHIP_RF
-  force dut.s_pg_rf_rx=pg_w; force dut.s_pg_rf_tx=pg_w; force dut.s_pg_lod=pg_w; force dut.s_pg_lo=pg_w; force dut.s_pg_conv=1'b0;
+  force dut.s_pg_rf_rx=pg_w; force dut.s_pg_rf_tx=pg_w; force dut.s_pg_rf_tx_b=pg_w; force dut.s_pg_lod=pg_w; force dut.s_pg_lo=pg_w; force dut.s_pg_conv=1'b0;
   force dut.rf_rx_clk=1'b0;
 `else
   force dut.s_pg_wired_rx=pg_w; force dut.s_pg_wired_cap=pg_w; force dut.s_pg_wired_tx=pg_w; force dut.s_pg_wired_tx_b=pg_w; force dut.wired_on_ext=1'b0;

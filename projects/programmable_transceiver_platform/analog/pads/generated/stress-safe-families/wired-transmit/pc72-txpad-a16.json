@@ -6,19 +6,21 @@
  "build_command": "python3 $P/analog/pads/tx_pad_layout.py OUT --nvt '{\"wb\": 23.5, \"wt\": 23.5, \"lb\": 2.2, \"lt\": 1.0, \"merged\": true, \"disc2\": [24, 0.28, 64, 2], \"disch\": 20, \"riser_wide\": true, \"em\": 2, \"t0_shift\": 2.5, \"b_col_hw\": 1.8, \"t_col_hw\": 1.45, \"bus_h\": 22, \"pad_pins\": true, \"disc_m3\": true, \"drop_m3\": true, \"head3\": true}' --upx '{\"x\": [63, 69], \"yu\": 107}' --top-pins",
  "rebuild_check": "2026-11-22 rebuild from the committed generator (646750f5, sha ebc3c65a): GDS with timestamps zeroed 395dfda2 == candidate sec/b/a16; DRC 0, LVS unique. No-option build normalises to 3a706943 == a4 baseline. The previously published combined.gds (ae75af97, normalised ded5b844) came from the pd12 stress-safe flow (scratch/pads-pd12/v2/wired_transmit, wired_protection_layout_ss.py); it is replaced, not reproduced (GDS is git-ignored; the pd12 build dir no longer exists).",
  "sha256": {
-  "combined.gds": "131af8696accbd410948869dcd9e1524c0b3a528f3b0d49f6f6ec4b0c66cb297",
+  "combined.gds": "bded31855de3867a97aa1ba33284aa020d5cee80e0a4dc9169ddfab729d6ddbb",
   "physical.spice": "82958369ed9fd041da1b99472e479f8149dec8397d7fd55a1671841edadc687f",
   "physical-r-typ.spice": "5e0a7322d732706bc005f815dc6daef2f5512898d15be149cf9d9b569339afd8",
   "physical-r-high.spice": "0047a3d7c9e1ddcd532c700b3cabf9672ac6bbaf7ad717ad1ab5f092b0d5ae8b",
   "lvs-reference.spice": "e4d722e33e0cc13a702ad8c182d7a8a66ef5849d968341997cf51b4cd5954174",
   "layout-info.json": "96478a1b6d45edf08f46da7fe7c898522498effd8cbc4fbbe9f5cf786626fe34",
   "lu.json": "6a3f7a5bc4ac5581f54f1418311f5c4b1fa475ef9b09ca4275e9ffa46e8e2906",
-  "pad-lvs.txt": "86a2f65abc0176ea53b1d703a6d84006d450ac03bbd0ca79c5bc0a9fe4e1dd71"
+  "pad-lvs.txt": "701d9c6d1ff7523d8946323ae5d5a3504520557c9cc0748f10230ee168303a77",
+  "pad_txpad-kldrc.json": "d26c76ce29b00f24e0182bc80bf5c7a1f4bc529d96d4c40e8a8f12673fe993f9"
  },
  "generators_sha256_8": {
   "tx_pad_layout.py": "ebc3c65a",
   "em_check.py (scratch, now)": "f9563c12",
-  "em_check.py (as reviewed)": "c7b5ab5e"
+  "em_check.py (as reviewed)": "c7b5ab5e",
+  "tx_top_pins.py": "a33a2fad"
  },
  "bbox_um": [
   0,
@@ -138,5 +140,6 @@
   "em_check": "scratch/pads-core/esdopt/tx/sec/em_check.py",
   "benches": "scratch/pads-core/esdopt/tx/bench/a16*.json, ct16b-ctdc.json, w53*.json, hd0-drv100.json",
   "benches_scripts": "scratch/pads-core/esdopt/tx/sec/hd/{drv100,ctdc2,idle}.py"
- }
+ },
+ "pin_update_2026_11_24": "a16p = a16 + analog/pads/tx_top_pins.py (assembly: 0.4 um pins at 1 um pitch shorted WIRE_TX_P/N). TERM_ENABLE, PAD_P, PAD_N, DETECT_PBIAS, DETECT_ENABLE: Metal4 pins 1.2 um wide at 3.0 um pitch on the top edge, x 16.6-29.8 (DETECT_ENABLE 17.2, DETECT_PBIAS 20.2, PAD_N 23.2, PAD_P 26.2, TERM_ENABLE 29.2), fed by Metal2/3 rows from the control-cell trunks, which now stop below the edge; VDD 14.5 / VSS 12.5 keep their 1 um pins; TERM_VCM top pad now x 30.4-75 (was 25-75; 21 of its Via4s removed, Metal5 plate unchanged). No device change. Checks on the published file: Magic DRC 0 and KLayout main 0 (live precheck config L), kl_block_drc main 0 / antenna 0 (sha-matched), rail_site_check PASS, read-back LVS match unique vs lvs-reference.spice; negative control (PAD_P <-> TERM_ENABLE labels swapped) fails pin matching. Models not re-extracted: the new rows add an estimated 2-4 fF on PAD_P / PAD_N core side (pad C margin was 9 fF)."
 }

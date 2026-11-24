@@ -25,3 +25,10 @@ only is not yet understood (check the ring's VCTRL->current path R and the regul
 Handoff master `scratch/timing/handoff/wrx_cap_r8.gds` (taps, main/antenna/DCF.1a 0). r8 vs r6 at ss/3.15: q625 0/200 vs 7/200; pess
 q625 72/200 vs dead; f500 0/100 vs 29/120; bench B 2.5 Gb/s RCS=1 0/200 (r6 misses). Binding waits on digital (W7-GEAR rebase +
 conn hunk in TIM-35 + MANIFEST switch, one commit). Next revision: slot-enable chain (pess q625, full 750).
+
+## Slot-enable chain attempts (2026-11-24)
+- r8 pessimistic ss 625 at 3.50 V: 23/200 (3.15 V: 72/200) -> the trim does not rescue it; re-architecture required.
+- r9 try (scratch/wired_rx/r14cap, NOT kept, capture.py reverted to r8): in-cell hops from the flop output (no export buffer).
+  WORSE: nominal ss q625 15/200 (r8 0/200), pess ss 72/180, pess 3.50 V 23/200. Faster hops alone break the chain (likely the
+  TSPC hold / CKN-gated GCK timing relies on that delay). Next: two-period-wide enables or even/odd interleaved chains, with a
+  hold check at ff in the same step.

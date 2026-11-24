@@ -20,3 +20,8 @@ Full-coverage extraction (RCOV recipe, supplies not resisted): ring 291/355 nets
 1.74 V.** tt 810 MHz at 1.335 V; ss/3.50 V 810 MHz at 2.08 V. Chain 3.24 Gb/s T3 with R+C ring + ptrim: ss/3.50 V 0/112, eye
 100.2 mV, margin 0.125 UI. So 3.24 (and 3.125, ring 781 MHz) at slow dies need the 3.50 V trim. Why R+C costs ~15 % at ss
 only is not yet understood (check the ring's VCTRL->current path R and the regulated rail R).
+
+## Update (end of session 2026-11-24): r8 better than bound r6 in every case run -> ready to bind (TIM-35)
+Handoff master `scratch/timing/handoff/wrx_cap_r8.gds` (taps, main/antenna/DCF.1a 0). r8 vs r6 at ss/3.15: q625 0/200 vs 7/200; pess
+q625 72/200 vs dead; f500 0/100 vs 29/120; bench B 2.5 Gb/s RCS=1 0/200 (r6 misses). Binding waits on digital (W7-GEAR rebase +
+conn hunk in TIM-35 + MANIFEST switch, one commit). Next revision: slot-enable chain (pess q625, full 750).

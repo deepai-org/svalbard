@@ -537,6 +537,14 @@ for ln in ('Metal2', 'Metal3', 'Metal4', 'Metal5'):
     reg = (db.Region(pdn.begin_shapes_rec(LI[ln])) + (db.Region(barcell.begin_shapes_rec(LI[ln])) if barcell else db.Region())).merged() - db.Region([cb for hn, (l2, cb, net) in hook_pins.items() if l2 == ln])
     if ln == 'Metal5':
         for bd in bar_pins.values(): reg -= bd['region']
+    # wide-metal spacing (M4.2b / MT.2b: space to metal wider than 10 um) is not in the router's tech LEF: wide grid / ring /
+    # bar shapes are obstructions 0.5 um larger, so router wiring keeps the wide-metal spacing (165 of the 180 pt_rf precheck
+    # DRC errors were router wiring at the straps, 2026-11-24)
+    if ln in ('Metal4', 'Metal5'):
+        wide_ = reg.merged().sized(-um(5.0)).sized(um(5.0))
+        reg = (reg + wide_.sized(um(0.5))).merged() - db.Region([cb for hn, (l2, cb, net) in hook_pins.items() if l2 == ln])
+        if ln == 'Metal5':
+            for bd in bar_pins.values(): reg -= bd['region']
     Lp.append(f'    LAYER {ln} ;')
     for poly in reg.merged().each():
         for tz in poly.decompose_trapezoids(1):

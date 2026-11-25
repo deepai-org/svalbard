@@ -136,6 +136,9 @@ ROUTE_CHANNELS = {'wired': {'chan_wtxdata': (1924.0, 2650.0, 2134.0, 3027.0)}}
 # grid kept 3 um off block signal pins (kl_place); pt_wired retried with wrx_cap r6 (Metal4 pins, TIM-33)
 PIN_WINDOWS = {'rf': True, 'wired': True}
 PIN_GATE_UM2 = 0.4      # gate area per analog block signal pin for the router antenna model: the SMALLEST gate seen in the deck (0.4-4.5 um2) is the pessimistic value (a 4.0 model left 2334 ANT.5)
+# nets the deck still flags for antenna after the input diodes (2026-11-25, pt_rf tail 243): receiver pins modelled with a
+# 0.02 um2 gate so the router jumps to Metal5 at the receiver
+ANT_TIGHT = {'rf': ('HOST_CLK', 'BIAS_rfdriver', 'c_bbfilter_i_en', 'AUX_CK', 'ADCI_CODEB', 'CONV_CLK', 'CLK_OBS_DBG', 'c_lo_mmd_en', 'ATB1_LOCAL0', 'TXPH', 'ATBN_conv_ibias', 'ATB0')}
 # masters whose supply pins are labelled only on Metal1 inside the cell: pins also on their own Metal4/5 of that net (kl_abstract)
 PIN_UP = {'por': ('vdd3v3', 'vss')}
 # conn blocks placed by the second pass, where decap tiles give way (2026-11-24: with the taller RF / ATB cells the packer

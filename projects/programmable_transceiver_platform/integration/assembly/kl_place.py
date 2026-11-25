@@ -223,6 +223,12 @@ for bd in ([] if getattr(C, 'ISLAND_BARS_OFF', False) else C.ISLAND_BARS.get(CHI
                 for ln_, b_ in pin_shapes_die0(i_, pn_): reg -= db.Region(b_.enlarged(um(3), um(3)))
     reg = (reg - noover).merged()      # never over the no-route-over (RF) blocks
     reg = db.Region([p for p in reg.each() if p.area() > um(20)*um(20)])
+    # MSLOT5.1 (Metal5 wider than 30 um must be slotted): 3 x 3 um holes on a 24 um pitch where the bar is wider than 28 um
+    bb_ = reg.bbox(); holes_ = db.Region()
+    for xh in range(bb_.left + um(12), bb_.right, um(24)):
+        for yh in range(bb_.bottom + um(12), bb_.top, um(24)): holes_.insert(db.Box(xh-um(1.5), yh-um(1.5), xh+um(1.5), yh+um(1.5)))
+    wide5_ = reg.sized(-um(14)).sized(um(14))           # the parts wider than 28 um
+    reg = (reg - (holes_ & wide5_.sized(-um(3)))).merged()
     bars.append(dict(bd, region=reg, m4=m4, merged=not same.is_empty()))
     avoid['Metal4'] = (avoid['Metal4'] + m4.sized(um(2.5))).merged()
     avoid['Metal5'] = (avoid['Metal5'] + reg.sized(um(2.5))).merged()

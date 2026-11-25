@@ -12,6 +12,10 @@ import common as C
 CHIP = os.environ['CHIP']; R = '/repo/'
 um = lambda v: int(round(v*1000))
 inst, ports, masters = C.load(CHIP)
+# block pins on the deck-flagged antenna nets (common.ANT_TIGHT) get a tiny gate in the router model, so repair_antennas
+# sees them and inserts Metal4 -> Metal5 jumpers next to the receiver (the router's model under-reports the deck's ANT.16)
+ANT_TIGHT_PINS = {(v['master'], p) for n, v in inst.items() if v['master'] != 'pt_digital_macro'
+                  for p, (k, net) in v['pins'].items() if re.sub(r'\[\d+\]$', '', net) in C.ANT_TIGHT.get(CHIP, ())}
 os.makedirs('/run/lef', exist_ok=True)
 LAY = {n: d for n, d, l, v in C.METALS}; LAB = {l: n for n, d, l, v in C.METALS}
 # ------------------------------------------------------------------------------------------------ ring and pads
@@ -161,6 +165,9 @@ def obs(c, pins, full_all):
         metal = db.Region(c.begin_shapes_rec(li)).merged() if li is not None else db.Region()
         # Metal4/5 of an over-routable block: its drawn metal grown by 1 um (conservative, fewer rectangles)
         base = full if (ln in ('Metal1', 'Metal2', 'Metal3') or full_all) else (metal.sized(um(1)) & full).merged()
+        if ln == 'Metal4':           # MIMTM.1: routed Metal4 keeps 1.2 um from a MIM bottom plate (FuseTop 75/0 grown 1.06 um)
+            ft_ = ly2.find_layer(75, 0)
+            if ft_ is not None: base = (base + (db.Region(c.begin_shapes_rec(ft_)).merged().sized(um(2.3)) & full)).merged()
         w = win[ln].merged() & full
         o = (base - w) + (metal & w)
         o -= db.Region([bx for pn, sh in pins.items() for l2, bx in sh if l2 == ln])
@@ -238,7 +245,7 @@ def abstract(key, path, cellname, full_all, kind, want_pins):
         # antenna model for the top-level router (repair_antennas): every analog block signal pin is taken as a gate of
         # C.PIN_GATE_UM2 (pessimistic for logic inputs; no diffusion assumed). Without it OpenROAD saw no gates and inserted
         # no jumpers (pt_rf precheck ANT.5 2071 on the ATB select nets, 2026-11-24)
-        if pn.upper() not in ('VDD', 'VSS', 'VDD3V3', 'VISL') and not pn.upper().startswith(('VDD', 'VSS', 'RAIL')): L.append(f'    ANTENNAGATEAREA {C.PIN_GATE_UM2:.3f} ;')
+        if pn.upper() not in ('VDD', 'VSS', 'VDD3V3', 'VISL') and not pn.upper().startswith(('VDD', 'VSS', 'RAIL')): L.append(f'    ANTENNAGATEAREA {(0.02 if (key, pn) in ANT_TIGHT_PINS else C.PIN_GATE_UM2):.3f} ;')
         L += ['    PORT']
         for ln, bx in sh:
             q = bx.moved(-db.Vector(org))

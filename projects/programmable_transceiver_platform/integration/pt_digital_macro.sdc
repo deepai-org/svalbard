@@ -999,3 +999,12 @@ set pt_absent_clks [dict get {rf {wtx wrx egress_wtx ingress_wrx} wired {rftx rf
 foreach c $pt_absent_clks {
     if {[llength [get_clocks -quiet $c]]} { set_false_path -from [get_clocks $c]; set_false_path -to [get_clocks $c] }
 }
+# Kept self-toggle dividers (pt_clock_dff, D = ~Q of the same flop through one inverter): the D pin is reached only from
+# that flop's own Q, so hold is the cell's clk->Q + inverter against its own clock edge and cannot fail. STA reports
+# -10 ... -12 ns there (the generated clock at Q is the launch, the master at CLK the capture); repair_timing -hold
+# cannot buffer these dont-touch nets and stalled on them, leaving real hold endpoints unrepaired (pt_wired
+# lc_rx -> ingress -0.43 ns, 2026-11-25). Hold on these D pins only; setup stays timed.
+foreach pt_tg {wgear.t_ff cdiv fc_half2 dring_half mon_div} {
+    set pt_tgd [get_pins -quiet -hierarchical *${pt_tg}.cell/D]
+    if {[llength $pt_tgd]} { set_false_path -hold -to $pt_tgd }
+}

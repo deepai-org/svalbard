@@ -139,6 +139,8 @@ PIN_GATE_UM2 = 0.4      # gate area per analog block signal pin for the router a
 # nets the deck still flags for antenna after the input diodes (2026-11-25, pt_rf tail 243): receiver pins modelled with a
 # 0.02 um2 gate so the router jumps to Metal5 at the receiver
 ANT_TIGHT = {'rf': ('HOST_CLK', 'BIAS_rfdriver', 'c_bbfilter_i_en', 'AUX_CK', 'ADCI_CODEB', 'CONV_CLK', 'CLK_OBS_DBG', 'c_lo_mmd_en', 'ATB1_LOCAL0', 'TXPH', 'ATBN_conv_ibias', 'ATB0', 'ADCI_OVL', 'ADCI_DONE', 'RING_OSC_CK')}
+# nets that get top-level antenna diodes at their receivers (kl_place, pt_antdiode)
+ANT_DIODE = {'rf': ('c_bbfilter_i_en', 'BIAS_rfdriver', 'ADCI_CODEB[0]', 'ADCI_CODEB[1]', 'ADCI_CODEB[2]', 'ADCI_CODEB[3]', 'ADCI_CODEB[4]', 'ADCI_CODEB[5]', 'ADCI_CODEB[6]', 'ADCI_CODEB[7]', 'ADCI_CODEB[8]', 'ADCI_CODEB[9]', 'ADCI_CODEB[10]', 'ADCI_CODEB[11]', 'ADCI_OVL', 'CLK_OBS_DBG', 'AUX_CK', 'HOST_CLK', 'CONV_CLK')}
 # masters whose supply pins are labelled only on Metal1 inside the cell: pins also on their own Metal4/5 of that net (kl_abstract)
 PIN_UP = {'por': ('vdd3v3', 'vss')}
 # conn blocks placed by the second pass, where decap tiles give way (2026-11-24: with the taller RF / ATB cells the packer

@@ -588,6 +588,49 @@ for net, users in nets.items():
 for h in man['hooks']:
     NETS[h['net']] = dict(ends=[(h['inst'], h['pin']), ('pdn', h['net'].split('__')[1])], cls='hook')
 
+# ------------------------------------------------------------------------------------------- top-level antenna diodes
+# common.ANT_DIODE nets: a 2 x 2 um n+ / p-substrate diode (COMP 22/0 + Nplus 32/0, 3 x 3 contacts, Metal1, Via1, Metal2 pin) next to
+# every block receiver of the net, wired by the router (deck ANT.16 tail that router jumpers do not close, 2026-11-25)
+AD_NETS = set(C.ANT_DIODE.get(CHIP, ()))
+man['antenna_diodes'] = []
+if AD_NETS:
+    dc = ly.create_cell('pt_antdiode')
+    L_ = lambda a: ly.layer(a, 0)
+    dc.shapes(L_(22)).insert(db.Box(um(0.25), um(0.25), um(2.25), um(2.25)))           # COMP 2 x 2
+    dc.shapes(L_(32)).insert(db.Box(0, 0, um(2.5), um(2.5)))                          # Nplus, 0.25 enclosure
+    dc.shapes(L_(22)).insert(db.Box(um(3.3), um(0.25), um(3.9), um(2.25)))            # substrate tap (DF.14_LV: p+ within 20 um of n+)
+    dc.shapes(L_(31)).insert(db.Box(um(3.05), 0, um(4.15), um(2.5)))                   # Pplus
+    for i_ in range(3):
+        for j_ in range(3):
+            x_ = um(0.25+0.36+0.5*i_); y_ = um(0.25+0.36+0.5*j_)
+            dc.shapes(L_(33)).insert(db.Box(x_, y_, x_+um(0.22), y_+um(0.22)))       # contacts 0.22, 0.28 space, 0.36 COMP enclosure
+    dc.shapes(LI['Metal1']).insert(db.Box(um(0.45), um(0.45), um(2.05), um(2.05)))
+    dc.shapes(L_(35)).insert(db.Box(um(1.12), um(1.12), um(1.38), um(1.38)))         # Via1
+    dc.shapes(LI['Metal2']).insert(db.Box(um(0.85), um(0.85), um(1.65), um(1.65)))
+    open('/run/lef/pt_antdiode.lef', 'w').write('\n'.join(['MACRO pt_antdiode', '  CLASS BLOCK ;', '  ORIGIN 0 0 ;', '  FOREIGN pt_antdiode 0 0 ;',
+        '  SIZE 4.200 BY 2.500 ;', '  SYMMETRY X Y ;', '  PIN A', '    DIRECTION INOUT ;', '    USE SIGNAL ;', '    ANTENNADIFFAREA 4.0 ;', '    PORT',
+        '      LAYER Metal2 ; RECT 0.850 0.850 1.650 1.650 ;', '    END', '  END A', '  OBS', '    LAYER Metal1 ;', '      RECT 0.000 0.000 4.200 2.500 ;',
+        '  END', 'END pt_antdiode', '']))
+    occ = db.Region([db.Box(*[um(v) for v in b_['bbox']]) for b_ in man['blocks'].values()]).merged().sized(um(3))
+    occ += db.Region(db.Box(0, 0, um(C.DIE[2]), um(C.DIE[3]))) - db.Region(db.Box(*[um(v) for v in C.CORE]))
+    for net_ in sorted(AD_NETS & set(NETS)):
+        for i_, p_ in list(NETS[net_]['ends']):
+            if i_ in ('digital', 'pdn') or i_ not in man['blocks']: continue
+            sh_ = pin_shapes_die0(i_, p_)
+            if not sh_: continue
+            c_ = sh_[0][1].center(); spot = None
+            for r_ in range(4, 80, 4):
+                for dx_, dy_ in ((0, -r_), (0, r_), (-r_, 0), (r_, 0), (-r_, -r_), (r_, r_), (-r_, r_), (r_, -r_)):
+                    b_ = db.Box(c_.x+um(dx_)-um(2.1), c_.y+um(dy_)-um(1.25), c_.x+um(dx_)+um(2.1), c_.y+um(dy_)+um(1.25))
+                    if (occ & db.Region(b_.enlarged(um(2), um(2)))).is_empty(): spot = b_; break
+                if spot: break
+            if spot is None: man['antenna_diodes'].append(dict(net=net_, pin=f'{i_}.{p_}', placed=False)); continue
+            nm_ = f'antd_{len(man["antenna_diodes"])}'
+            top.insert(db.CellInstArray(dc.cell_index(), db.Trans(db.Vector(spot.left, spot.bottom))))
+            comps.append((nm_, 'pt_antdiode', fu(spot.left), fu(spot.bottom), 'N'))
+            NETS[net_]['ends'].append((nm_, 'A')); occ += db.Region(spot.enlarged(um(4), um(4)))
+            man['antenna_diodes'].append(dict(net=net_, pin=f'{i_}.{p_}', placed=True, at=[fu(spot.left), fu(spot.bottom)]))
+
 # ------------------------------------------------------------------------------------------- DEF
 D = ['VERSION 5.8 ;', 'DIVIDERCHAR "/" ;', 'BUSBITCHARS "[]" ;', 'DESIGN pt_chip_top ;', 'UNITS DISTANCE MICRONS 1000 ;',
      f'DIEAREA ( 0 0 ) ( {um(C.DIE[2])} {um(C.DIE[3])} ) ;', f'COMPONENTS {len(comps)} ;']

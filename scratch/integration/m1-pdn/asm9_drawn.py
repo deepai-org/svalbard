@@ -26,7 +26,7 @@ for k, v in D.items():          # experiments: tovdd=site[,site] converts bonds/
             nm, xy = it.split(':'); x0, y0 = map(float, xy.split(',')); r = M.RECTS[nm]; w, h = r[2]-r[0], r[3]-r[1]; M.RECTS[nm] = [x0, y0, x0+w, y0+h]
 REG = None
 if D.get('regions'):     # drawn per-region coverage: scratch/integration/assembly-<chip>/place.json pdn_regions_pct, 3 x 3 over the core
-    REG = json.load(open(f'{M.ROOT}/scratch/integration/assembly-{CH}/place.json'))['pdn_regions_pct']
+    REG = json.load(open(D.get('regfile', f'{M.ROOT}/scratch/integration/assembly-{CH}/place.json')))['pdn_regions_pct']   # regfile=: e.g. out/<chip>/grid_live.json (pad-fed metal only)
     for it in D.get('set', '').split(';'):          # overrides: set=SE:15;ME:12  (every net and layer of that region at least this %)
         if it:
             r, v = it.split(':'); REG[r] = {k: max(x, float(v)) for k, x in REG[r].items()}

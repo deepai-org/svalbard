@@ -69,7 +69,8 @@ def apply(chip=None):
     CHIP = chip
     global FIT, TILE_SCALE
     asm = os.environ.get('PDN_ASSEMBLY')      # =1: the chip assembly's floorplan (scratch/integration/assembly-<chip>) instead of the die fit
-    fit = json.load(open(f'{M.ROOT}/scratch/integration/assembly-{chip}/fit/fit-s.json' if asm else f'{DF}/run/{chip}/fit-s.json'))
+    fa = f'{M.ROOT}/scratch/integration/assembly-{chip}/fit/fit-s.json'
+    fit = json.load(open(fa if asm and os.path.exists(fa) else f'{DF}/run/{chip}/fit-s.json'))   # no assembly fit: die-fit pads / fixed, assembly blocks
     if asm:
         fp = json.load(open(f'{M.ROOT}/scratch/integration/assembly-{chip}/floorplan.json'))
         n_plan = sum(1 for k in fit['placed_rects'] if k.startswith('decap_tile'))+len(fp.get('decap_tiles_unplaced', []))

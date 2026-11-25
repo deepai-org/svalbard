@@ -222,7 +222,7 @@ if {[llength $nrn]} { set_false_path -to $nrn }
 # Shared ingress bank (exclusive owners, like egress below): its write clock is the selected
 # owner's input clock after one physical mux.
 set ingress_clks {}
-set ingress_mux [get_pins -quiet -hierarchical *core.ingress_clock_mux.cell/Z]
+set ingress_mux [get_pins -quiet -hierarchical *ingress_clock_mux.cell/Z]
 if {[llength $ingress_mux]} {
     if {[llength $ingress_mux] != 1} {error "Expected one shared ingress clock mux"}
     create_generated_clock -name ingress_wrx -master_clock wrx -source $wrx_q -combinational $ingress_mux
@@ -231,6 +231,9 @@ if {[llength $ingress_mux]} {
     set_clock_groups -logically_exclusive -group ingress_wrx -group ingress_rfrx
     set_false_path -from [get_clocks rfrx] -to [get_clocks ingress_wrx]
     set_false_path -from [get_ports {wire_rx_word* wire_rx_edge*}] -to [get_clocks ingress_rfrx]
+} elseif {$PT_CHIP_NAME eq "wired"} {
+    # pt_wired: no ingress clock mux (pt_core INGRESS_MUX = 0); the bank's write side is in the wrx domain
+    set ingress_clks {wrx}
 }
 # The egress bank is shared by stopped-only exclusive owners. Define clocks
 # after its physical mux so only these local alternatives are exclusive;
@@ -875,7 +878,7 @@ if {[info exists ::env(STEP_ID)] && $::env(STEP_ID) eq "OpenROAD.CTS"} {
     set eg_del [expr {$PT_CHIP_NAME eq "rf" ? "egress_wtx" : "egress_rftx"}]
     set in_del [expr {$PT_CHIP_NAME eq "rf" ? "ingress_wrx" : "ingress_rfrx"}]
     if {[llength $egress_clks]} { delete_clock [get_clocks $eg_del] }
-    if {[llength $ingress_clks]} { delete_clock [get_clocks $in_del] }
+    if {[llength [get_clocks -quiet $in_del]]} { delete_clock [get_clocks $in_del] }
     if {$mem_on} { delete_clock [get_clocks egress_mem_sclk] }
     # pt_freq_count block clocks: the six source alternatives share one buffer output per instance
     foreach inst {fca fcb} { for {set i 1} {$i < 7} {incr i} {

@@ -17,7 +17,8 @@
 // packing at a quad boundary and reports the boundary to the D2H engine, which completes the older
 // samples and then sends the opcode4 gain-status frame with the discarded-pair count.
 module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=24,WIRE_START=8,RF_START=5,
- GAIN_SETTLE=20)(
+ GAIN_SETTLE=20,
+ parameter INGRESS_MUX=1)(   // 0 on pt_wired (only the wired owner): ingress bank on the wired RX clock, no clock mux
  input wire rst_n,enable,mode8,
  input wire host_clk,wire_rx_clk,wire_tx_clk,rf_rx_clk,rf_tx_clk,
  input wire[39:0]h2d_quad,output wire[39:0]d2h_quad,
@@ -73,7 +74,13 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  // next to the converter). Disable holds both FIFO domains in reset even with
  // stopped clocks; changing owners requires disable and a flush.
  wire ingress_clk;
- pt_clock_mux ingress_clock_mux(.I0(wire_rx_clk),.I1(rf_rx_clk),.S(payload_iq),.Z(ingress_clk));
+ // pt_wired (INGRESS_MUX = 0): the bank is written on wire_rx_clk itself, so it shares the launching wrx tree
+ // (through the mux, CTS built a separate 1.8 ns later, 0.7 ns slew subtree: pt_wired lc_rx -> ingress hold -0.43 ns).
+ generate if(INGRESS_MUX)begin:imux
+  pt_clock_mux ingress_clock_mux(.I0(wire_rx_clk),.I1(rf_rx_clk),.S(payload_iq),.Z(ingress_clk));
+ end else begin:inomux
+  assign ingress_clk=wire_rx_clk;
+ end endgenerate
  wire[39:0]rf_quad;wire rf_quad_push;
  wire gain_flush,gain_drop;wire[3:0]pack_base;
  pt_sample_pack packer(rf_rx_clk,rst_n&&err,mode8,

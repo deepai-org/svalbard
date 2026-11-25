@@ -150,7 +150,7 @@ module pt_digital #(parameter integer PT_CHIP = 3)(input wire rst_n,ref_clk,
  wire core_reset_n=(capture_enable||playback_enable)?rst_n:core_rst_n;
  // the same select on the low-fanout copy (== core_reset_n at every time): pt_core's release flops only
  wire core_release_n=(capture_enable||playback_enable)?rst_n:core_rel_n;
- pt_core core(core_reset_n,enable,mode8,host_tx_clk,wire_rx_clk,wire_tx_clk,rf_rx_clk,rf_core_clk,
+ pt_core #(.INGRESS_MUX(PT_CHIP!=2)) core(core_reset_n,enable,mode8,host_tx_clk,wire_rx_clk,wire_tx_clk,rf_rx_clk,rf_core_clk,
  h2d_quad,d2h_quad,wire_rx_data,wire_rx_valid,stream_wire,stream_wire_valid,wire_tx_request,
  rf_rx_sample,rf_rx_valid,stream_rf,stream_rf_valid,rf_req_core,core_status,stream_wire_idle,stream_rf_mute,
  analog_cfg[`PT_A_DIGITAL_TRANSPORT_CONFIG__PAYLOAD_IQ_LSB],linecode,rx_gain,rx_gain_active,

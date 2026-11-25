@@ -610,6 +610,14 @@ _strip -= db.Region(db.Box(0, 0, um(W_), um(H_))) - db.Region(db.Box(um(e), um(e
 for _poly in (_strip - _padx.sized(um(0.5))).merged().each():
     for _t in _poly.decompose_trapezoids(1):
         _b = _t.bbox(); blk.append(('ring_strip', (fu(_b.left), fu(_b.bottom), fu(_b.right), fu(_b.top)), ML))
+# MIMTM.1: routed Metal4 keeps 1.2 um from a MIM bottom plate; plates near a block edge reach outside its abstract, so the
+# FuseTop (75/0) of every placed block, grown 2.3 um, is a top-level Metal4 blockage (10 MIMTM.1 in pt_rf router wiring)
+_ft = ly.find_layer(75, 0)
+if _ft is not None:
+    _mim = db.Region(top.begin_shapes_rec(_ft)).merged().sized(um(2.3)).merged()
+    for _poly in _mim.each():
+        for _t in _poly.decompose_trapezoids(1):
+            _b = _t.bbox(); blk.append(('mim_keepout', (fu(_b.left), fu(_b.bottom), fu(_b.right), fu(_b.top)), ('Metal4',)))
 # island switches: Metal2-3 blocked 1 um round the outline (the router ran RAIL_rf_tx along the switch edge into its own
 # Metal3 = VISL joined to VDD through the switch, 2026-11-24)
 for n_, b_ in man['blocks'].items():

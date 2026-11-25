@@ -62,6 +62,12 @@ assign_classes
 set iters [expr {[info exists ::env(DRT_ITERS)] ? $::env(DRT_ITERS) : 64}]
 detailed_route {*}$PA -output_drc /run/route/drt.rpt -output_maze /run/route/maze.log -droute_end_iter $iters -verbose 1 \
   -save_guide_updates
+# antenna: a second jumper pass on the detailed routes (the global-route pass misses nets whose layer use changes in DRT)
+if {![info exists ::env(NO_ANT2)]} {
+  if {[catch {repair_antennas -jumper_only -iterations 3} err]} { puts "ANTENNA REPAIR 2 skipped: $err" } else {
+    detailed_route {*}$PA -output_drc /run/route/drt.rpt -droute_end_iter 16 -verbose 1
+  }
+}
 write_def /run/route/routed.def
 catch {check_antennas -report_file /run/route/antenna.rpt}
 puts "ROUTE DONE"

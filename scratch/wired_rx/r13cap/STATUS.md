@@ -69,3 +69,18 @@ Untouched: in-cell hops (E8 1.19-1.27 pess) may then be the limit; if so, also f
    buffer off the chain path, with a hold delay sized from the probe.
 3. Gates for r10: q625 nominal ss/tt/ff, pessimistic ss 3.15 and 3.50 V, ff hold (C x0.9), full rate 500 MHz ss, bench B
    2.5 Gb/s RCS=1, then grid/pins/taps/readback LVS as for r8.
+
+## r10c (2026-11-25): NOT kept, capture.py stays r8 (bound master unchanged)
+r10c = r8 + 4 inverters before CKC in wc_ctl (ctl flop was ~0.24 ns ahead of the slot clocks). Build r15cap (deleted; diff is
+TIM-37): DRC 0, LVS unique, but **outline 1250.8 x 260.5 um (r8 1241.2: +9.6 um wide, wc_ctl row grew)** -> not drop-in for the
+bound r8. Extracted ss/32/3.15 unless noted:
+| case | r8 | r10c |
+|---|---|---|
+| q625 nominal ss | 0/200 pass | 0/200 pass |
+| q625 nominal ff/22/3.35 | not run | 0/200 pass |
+| q625 tt | pass | not run |
+| f500 full 4x ss (100BASE-TX) | 0/100 pass | 0/100 pass |
+| q625 pessimistic ss | 72/200, 35 strobe errors FAIL | 65/180 (only 180 bits decoded), 22 strobe errors FAIL |
+Probe: residual pess failure = doubled enables in slot1 lanes 1-3 (cross hop SL0 -> SL1), so the CKC skew was one of two causes.
+Verdict: not strictly better (pess still fails, nominal identical) and it breaks the bound outline -> r8 stays.
+Next: r10b two-period cross hops (see above) inside the r8 outline; wc_ctl delay must come from resizing, not added width.

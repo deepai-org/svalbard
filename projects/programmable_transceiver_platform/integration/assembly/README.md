@@ -43,18 +43,33 @@ named `asm-<chip>-<pid>`: stop a run only by that name (`docker kill asm-...`) o
 - **Net classes** (`kl_place.cls`): island rails / regulator outputs 3 um wide; hooks 1.2 um; clock, high-speed and RF
   nets twice the minimum spacing (no drawn shields). Booked ledger items without a conn instance are Metal1-3 blockages.
 
-## Results (2026-11-24 evening; flow cb6ee0a7)
+## Results and resume point (2026-11-25, flow 8a7cc92b)
 
-| | `pt_rf` (b98f21a6 layout) | `pt_wired` (cb6ee0a7) |
+| | `pt_rf` | `pt_wired` |
 |---|---|---|
-| Placement | packer, island clustering off; rf_tx bar (Metal5, exposed pin of RAIL_rf_tx) on isw_rf_tx; isw_rf_tx_b 2.4 mm away, joined by the routed rail (trunk pending) | packer, clustering off; wrx_cap r6, ATB cells PDS-22, RAIL_wired_tx + RAIL_wired_cap bars exposed |
-| Detailed route (64 iterations) | 1 violation (spacing) | 5 (por hook, isw_wired_cap, RAIL_pll / iso_cdr_dn_3, one hook spacing) |
-| LVS by name | **801 match, no short, no open** (VDD, VSS one net each) | **971 match, no short**; open: pad_tlp VDD/VSS, s_pg_wired_tx_b (digital DG9-19); pad_wire_tx DNV/DPV.SUB on VSS (substrate taps, pads: expected) |
-| Shuttle precheck | KLayout DRC **180** (was 1155): MT.2b 119 + M4.2b 29 + MIMTM.1 17 in the router wiring (wide-metal spacing next to bars / straps), MSLOT5.1 9 in blocks; Magic 0; density 0; **antenna 2483** (was 89): ANT.5 2071 on top-level routes between blocks; under attribution | not run |
-| LO branch (ASM-RF-1, LO-ASM-6) | lo_ext -> lo_txbuf ~2.5 mm by placement (target 2.1, marginal); rxmix_i/q 1.5 mm apart; LO floorplan after the first clean precheck | |
+| Inputs | DG9-28 macro, ASM-16 diode cells (ATB PDS-23, converters PDS-24, RF ASM-16a), RF RX ASM-RF-2 cells | indicative only: wrx_cap r6 + old macro (11-23 LEF); real run waits for DG9-25 macro + wrx_cap r8 (TIM-35) |
+| Floorplan | ASM-15 ruling: lna_deg_p 5 um from lna; isw_rf_tx_b (1876, 2994) and char_rffet placed by hard pass 2 (decap / ATB / iso give way, re-placed); decap ~3.7 nF (21/26 bank cells, 17-18/30 tiles), 0.83 nF within 500 um of the rf_rx loads | packer; clustering off |
+| Route / LVS by name | 2 DRT; 801 match, no short, no open (VDD, VSS one net each; por internal label only) | 5 DRT; 971 match, no short; open pad_tlp VDD/VSS (not investigated), s_pg_wired_tx_b (digital) |
+| Deck (shuttle 792ef67, `signoff/drc/run_drc.sh`) | main DRC 4 (M4.2b 2, V1.2a 2); antenna 182 (ANT.5 143: c_bbfilter_i_en, BIAS_rfdriver, ADCI_CODEB/OVL, CLK_OBS_DBG; ~39 inside blocks / pad ring, ~13 in the macro); full precheck last run on b98f21a6 (DRC 180, antenna 2483, Magic 0, density 0) | not run |
 
-Grid: hooks land only on metal joined to the core ring through Via4-sized Metal4/5 overlaps; 0.09 / 0.17 mm2 (Metal4 / Metal5) per
-net on pt_rf and about 0.13 / 0.26 on pt_wired is cut off from the ring (strap fragments over blocks): dead metal for IR.
+**Open items (ranked):** (1) pt_rf antenna tail: standard-cell antenna diodes (gf180mcu_fd_sc_mcu7t5v0__antenna) at the receivers of the
+remaining nets (router jumpers no longer reduce ANT.5); in-block items to owners as a row. (2) last 4 pt_rf DRC. (3) pt_wired on DG9-25 +
+r8, pad_tlp open, then precheck. (4) check_top both chips, push. (5) Island trunks (PDS-19/20; rf_tx trunk to isw_rf_tx_b), LO floorplan
+(lo_ext -> lo_txbuf ~2.5 mm, rxmix_i/q apart; fit.py fixes positions), grid dead metal.
+
+**Flow knobs added 2026-11-24/25 (common.py / kl_place.py / kl_abstract.py / route.tcl):** PIN_UP (por pins on own Metal4/5), labels that are
+not conn pins stay obstruction, label pins by containment, PIN_GATE_UM2 = 0.4 + ANT_TIGHT nets (0.02 um2 receiver gates) for the router antenna
+model, NOROT / PASS2 / HARD_NEXT_TO (partner, max gap) with decap / ATB / iso give-way and re-placement, PIN_WINDOWS (grid 3 um off signal
+pins), ISLAND_BARS expose=True (bar = rail pin, switch VISL off the routed net), rel 'bbox' / 'pin:NAME', bar slots (MSLOT5.1), direct Via4
+landings only with >= 4 cuts or a cut row on thin strips, hook slots only on ring-joined grid metal (Via4-sized overlaps) and never over a
+block, ring filler / rail / CDNS cells and the IO strip blocked, wide-metal obstruction +0.5 um (M4.2b / MT.2b), MIM keep-out (FuseTop +
+2.3 um) on Metal4, island switches Metal2-3 halo, DRT 64 iterations, second antenna pass, ISL_CLUSTER off by default.
+
+**Gotchas:** a run's wait loop must read the run's own PID (route deletes routed.def, so file-age checks pass early); never start a second
+run on a chip while its LVS / DRC reads chip/pt_chip_top.gds (LVS runs in an unnamed container: find it by its volume); the abstract stage
+must rerun whenever any block GDS or the macro LEF changes (check timestamps vs masters.json); `kl_netprobe.py NET` (HALO=0) and
+`kl_shortcheck.py [drop cells]` localise joins; antenna attribution: match deck polygons to routed.def segments (see this session's
+scratch scripts); pt_rf decap total is an estimate from the power-delivery per-cell figures.
 
 Tools: `kl_shortcheck.py [drop-cell ...]` (VDD/VSS one net, with cells removed: `pt_top_wiring`, `pt_direct_land`),
 `kl_netprobe.py NET ...` (non-router shapes a routed net touches; `HALO=0` for overlaps only). Block pins in the abstract are

@@ -66,9 +66,18 @@ detailed_route {*}$PA -output_drc /run/route/drt.rpt -output_maze /run/route/maz
 write_def /run/route/routed.def
 if {![info exists ::env(NO_ANT2)]} {
   # the second pass is optional: a failure (e.g. DRT-1231 pin without access point) keeps the first result written above
-  if {[catch {repair_antennas -jumper_only -iterations 3; detailed_route {*}$PA -output_drc /run/route/drt2.rpt -droute_end_iter 16 -verbose 1} err]} {
+  # a pin whose access was recomputed after the jumpers can lose its only access point (DRT-1231, pdn/HK170 under two
+  # crossing signal nets, 2026-11-25): retry once on the pin access of the first pass (-no_pin_access)
+  set ok 0
+  if {[catch {repair_antennas -jumper_only -iterations 3} err]} { puts "ANTENNA PASS 2 repair failed: $err" } else {
+    if {![catch {detailed_route {*}$PA -output_drc /run/route/drt2.rpt -droute_end_iter 16 -verbose 1} err]} { set ok 1 } else {
+      puts "ANTENNA PASS 2 retry without pin access: $err"
+      if {![catch {detailed_route {*}$PA -no_pin_access -output_drc /run/route/drt2.rpt -droute_end_iter 16 -verbose 1} err]} { set ok 1 }
+    }
+  }
+  if {$ok} { file rename -force /run/route/drt2.rpt /run/route/drt.rpt; write_def /run/route/routed.def; puts "ANTENNA PASS 2 done" } else {
     puts "ANTENNA PASS 2 failed, first routing kept: $err"
-  } else { file rename -force /run/route/drt2.rpt /run/route/drt.rpt; write_def /run/route/routed.def }
+  }
 }
 catch {check_antennas -report_file /run/route/antenna.rpt}
 puts "ROUTE DONE"

@@ -455,6 +455,7 @@ for net in GRID_NETS:
             a0 = (b.left if horiz else b.bottom)+j*um(22)
             cb = db.Box(a0, b.bottom, min(a0+um(20), b.right), b.top) if horiz else db.Box(b.left, a0, b.right, min(a0+um(20), b.top))
             if not _blkreg.interacting(db.Region(cb)).is_empty(): continue     # no slot over a block: the hook dropped into adc_q's own Metal4 (SEN_A), 2026-11-24
+            if any(cb.contains(db.Point(um(ax), um(ay))) for ax, ay in C.HOOK_SLOT_AVOID.get(CHIP, [])): continue   # common.HOOK_SLOT_AVOID
             lst.append([ln, cb, False])
     slots[net] = lst
 hook_pins = {}; man['digital_ties_not_hooked'] = 0

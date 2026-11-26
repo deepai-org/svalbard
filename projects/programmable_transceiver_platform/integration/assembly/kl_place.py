@@ -278,6 +278,122 @@ for (net, ln), reg in straps.items():
     reg = (reg & reach[net]) - avoid[ln] - (ring['VSS' if net == 'VDD' else 'VDD'] if net == 'VSS' else db.Region())
     keep = db.Region([p for p in reg.merged().each() if p.area() >= um(10.5)*um(20)])
     straps[(net, ln)] = keep
+for net_, ln_, r_ in C.GRID_STITCH.get(CHIP, []):      # common.GRID_STITCH
+    st_ = (db.Region(db.Box(*[um(v) for v in r_])) - avoid[ln_]).merged()
+    man.setdefault('grid_stitch', []).append(dict(net=net_, layer=ln_, rect=list(r_), kept_um2=round(st_.area()/1e6)))
+    straps[(net_, ln_)] = (straps[(net_, ln_)] + db.Region([q for q in st_.each() if q.area() >= um(4)*um(20)])).merged()
+# digital macro supply (PDS-25 finding 1): the grid never reached the macro's PDN. Digital's macros carry horizontal Metal5
+# VDD / VSS straps as LEF pins (5 um, 70 um pitch per net, Via4 inside the macro; coordinator 2026-11-25): the top level draws
+# Metal5 exactly over each such pin and carries it MSTRAP_EXT um out through both macro edges, where Via4 onto the same-net
+# Metal4 strap joins the grid (the vertical Metal5 straps give way in that zone). No top-level Via4 over the macro.
+# Older macros (vertical Metal4 stripes only): horizontal Metal5 straps on the Metal4 strap tracks with Via4 onto the stripes.
+# man['macro_supply'] is the check (place prints MACRO SUPPLY OPEN; run.sh lvs repeats it): LVS by name cannot see it.
+MSTRAP_EXT = 30.0
+MSTRAP_W = 10.0      # top-level width of a macro supply strap outside the outline (PDS-25)
+macro_vias = []
+if digi:
+    mb_ = db.Box(*[um(v) for v in digi]); zone_ = db.Region(mb_.enlarged(um(MSTRAP_EXT), um(3)))
+    _m5pins = any(ln_ == 'Metal5' for n_ in ('VDD', 'VSS') for ln_, b in pin_shapes_die0('digital', n_))
+    for net in ('VDD', 'VSS'):
+        straps[(net, 'Metal5')] = (straps[(net, 'Metal5')] - (db.Region(mb_) if _m5pins else zone_).sized(um(2.5))).merged()
+    for net in ('VDD', 'VSS'):
+        p5_ = [b for ln_, b in pin_shapes_die0('digital', net) if ln_ == 'Metal5']
+        p4_ = db.Region([b for ln_, b in pin_shapes_die0('digital', net) if ln_ == 'Metal4'])
+        if p5_:
+            # each pin strap runs out on Metal5 to the nearest same-net vertical Metal5 grid strap on either side that spans
+            # its height; the other net's vertical straps in between are cut round it (they stay joined by their Via4 onto the
+            # Metal4 straps); a block / window in the way leaves that end open (counted)
+            ends_ = []; hz_ = db.Region(p5_)
+            other_ = 'VSS' if net == 'VDD' else 'VDD'
+            o5_ = [b for ln_, b in pin_shapes_die0('digital', other_) if ln_ == 'Metal5']
+            for b in p5_:
+                ne_ = 0
+                for side_ in (-1, 1):
+                    best_ = None
+                    for q in straps[(net, 'Metal5')].each():
+                        qb_ = q.bbox()
+                        if qb_.bottom > b.bottom or qb_.top < b.top: continue
+                        if side_ < 0 and qb_.right < mb_.left - um(3): d_ = mb_.left - qb_.right
+                        elif side_ > 0 and qb_.left > mb_.right + um(3): d_ = qb_.left - mb_.right
+                        else: continue
+                        if d_ < um(100) and (best_ is None or d_ < best_[0]): best_ = (d_, qb_)
+                    if best_ is None: man.setdefault('macro_supply_open', []).append([net, side_, fu(b.bottom), 'no same-net vertical strap within 100 um']); continue
+                    qb_ = best_[1]
+                    # outside the outline the strap is MSTRAP_W wide, widened away from the nearest other-net pin strap (the
+                    # macro's VDD / VSS straps sit 1.7 um apart); inside, the 5 um pin is bridged to the outline at its own width
+                    up_ = min((ob.bottom - b.top for ob in o5_ if ob.bottom >= b.top), default=um(1e4)) > min((b.bottom - ob.top for ob in o5_ if ob.top <= b.bottom), default=um(1e4))
+                    lo_, hi_ = (b.bottom, max(b.top, b.bottom + um(MSTRAP_W))) if up_ else (min(b.bottom, b.top - um(MSTRAP_W)), b.top)
+                    e_ = db.Box(qb_.left, lo_, mb_.left, hi_) if side_ < 0 else db.Box(mb_.right, lo_, qb_.right, hi_)
+                    br_ = db.Box(mb_.left, b.bottom, b.left, b.top) if side_ < 0 else db.Box(b.right, b.bottom, mb_.right, b.top)
+                    if br_.width() > 0: hz_ += db.Region(br_)
+                    if not (db.Region(e_) & (avoid['Metal5'] - db.Region(mb_.enlarged(um(3), um(0))))).is_empty():
+                        man.setdefault('macro_supply_open', []).append([net, side_, fu(b.bottom), 'blocked', fu(qb_.left)]); continue
+                    hz_ += db.Region(e_); ne_ += 1
+                    straps[(other_, 'Metal5')] = (straps[(other_, 'Metal5')] - db.Region(e_).sized(um(1.5))).merged()      # 1.5 um: the macro's own VDD / VSS straps are 1.7 apart
+                ends_.append(ne_)
+            hz_ = hz_.merged()
+            straps[(net, 'Metal5')] = (straps[(net, 'Metal5')] + hz_).merged()
+            man.setdefault('macro_supply', {})[net] = dict(kind='metal5 pins', stripes=len(p5_), joined=sum(1 for e in ends_ if e == 2),
+                                                          one_end=sum(1 for e in ends_ if e == 1), via4=-1)
+        else:
+            tr_ = db.Region()
+            for poly in raw_straps[(net, 'Metal4')].each():
+                b_ = poly.bbox()
+                if b_.top < mb_.bottom or b_.bottom > mb_.top: continue
+                tr_.insert(db.Box(mb_.left-um(MSTRAP_EXT), b_.bottom, mb_.right+um(MSTRAP_EXT), b_.top))
+            tr_ = (tr_.merged() & db.Region(db.Box(mb_.left-um(MSTRAP_EXT), mb_.bottom+um(1), mb_.right+um(MSTRAP_EXT), mb_.top-um(1))))
+            tr_ = (tr_ - avoid['Metal5']).merged()        # macro / block Metal5 (2.5 um), no-route-over, pin windows, pads, bars
+            hz_ = db.Region([q for q in tr_.each() if q.area() >= um(10)*um(10)])
+            straps[(net, 'Metal5')] = (straps[(net, 'Metal5')] + hz_).merged()
+            macro_vias.append((net, (p4_ & hz_).merged()))
+            man.setdefault('macro_supply', {})[net] = dict(kind='metal4 stripes', stripes=p4_.count(), joined=p4_.interacting((p4_ & hz_).merged().sized(-um(0.4))).count(),
+                                                          crossings=(p4_ & hz_).merged().count(), strap_pieces=hz_.count())
+# island strap regions (coordinator 2026-11-24: island rails sized for their current, not 1 um routes): inside the box round
+# an island's switch and its loads (+40 um), the grid VDD straps become that island's rail (RAIL_<island>, same width,
+# Via4 at its own crossings); the loads' rail pins and the switch VISL hook to them like VDD pins hook to the grid. Smaller
+# islands claim first; a 3 um gap separates a rail strap from the VDD straps round it. RAIL_wired_tx keeps its bar.
+ISL = sorted({n for n in nets if n.startswith('RAIL_')} - {bd['net'] for bd in bars}) if os.environ.get('ISLAND_STRAPS') == '1' else []   # experimental, off: rails fragment (see README)
+isl_box = {}
+for net in ISL:
+    mem = [man['blocks'][n]['bbox'] for n, p in nets[net] if n in man['blocks'] and man['blocks'][n]['master'] != 'decap']
+    if len(mem) < 2: continue
+    # region = each member's outline + 25 um, joined by 70 um-wide L corridors along a Manhattan minimum spanning tree of the
+    # member centres (a 70 um corridor always holds one VDD axis of the 70 um grid pitch per layer, so the rail is continuous)
+    cen = [((b[0]+b[2])/2, (b[1]+b[3])/2) for b in mem]
+    rg = db.Region([db.Box(um(b[0]-25), um(b[1]-25), um(b[2]+25), um(b[3]+25)) for b in mem])
+    done = {0}; rest = set(range(1, len(cen)))
+    while rest:
+        i_, j_ = min(((i, j) for i in done for j in rest), key=lambda e: abs(cen[e[0]][0]-cen[e[1]][0])+abs(cen[e[0]][1]-cen[e[1]][1]))
+        (x1, y1), (x2, y2) = cen[i_], cen[j_]
+        rg.insert(db.Box(um(min(x1, x2)-35), um(y1-35), um(max(x1, x2)+35), um(y1+35)))
+        rg.insert(db.Box(um(x2-35), um(min(y1, y2)-35), um(x2+35), um(max(y1, y2)+35)))
+        done.add(j_); rest.discard(j_)
+    isl_box[net] = rg.merged()
+claimed = db.Region(); man['island_straps'] = {}
+for net in sorted(isl_box, key=lambda n: isl_box[n].area()):
+    reg_ = (isl_box[net] - claimed.sized(um(3))) - (ring['VDD'] + ring['VSS']).sized(um(3))
+    claimed += reg_
+    for ln in ('Metal4', 'Metal5'):
+        piece = (straps[('VDD', ln)] & reg_).merged()
+        straps[('VDD', ln)] = (straps[('VDD', ln)] - reg_.sized(um(3))).merged()
+        straps[(net, ln)] = db.Region([p_ for p_ in piece.each() if p_.area() >= um(10.5)*um(20)])
+    bb_ = isl_box[net].bbox(); pieces_ = (straps[(net, 'Metal4')] + straps[(net, 'Metal5')]).merged().count()
+    man['island_straps'][net] = dict(box=[fu(bb_.left), fu(bb_.bottom), fu(bb_.right), fu(bb_.top)], area_mm2=round(reg_.area()/1e12, 3), pieces=pieces_,
+                                     m4_mm2=round(straps[(net, 'Metal4')].area()/1e12, 4), m5_mm2=round(straps[(net, 'Metal5')].area()/1e12, 4))
+GRID_NETS = ['VDD', 'VSS']+[n for n in man['island_straps'] if not (straps[(n, 'Metal4')].is_empty() and straps[(n, 'Metal5')].is_empty())]
+# staged blocks with declared grid ties (owner report: ties.VSS chan*): the VSS Metal5 strap in each Metal5-free channel is
+# carried onto its tab (the 2.5 um cut is closed there); grid VDD never ties to a block (its VDD is an island rail)
+man['tab_ties'] = []
+for n, v in C.STAGED.get(CHIP, {}).items():
+    if n not in man['blocks'] or not os.path.exists(R+v['report']): continue
+    rep = json.load(open(R+v['report'])); x0, y0 = man['blocks'][n]['bbox'][:2]
+    for tn, t in rep.get('ties', {}).get('VSS', {}).items():
+        if not tn.startswith(('chan', 'grid_tie')): continue      # channel tabs and top-edge landings (WT47)
+        tab = db.Region(db.Box(um(x0+t[0]), um(y0+t[2]-3.0), um(x0+t[1]), um(y0+t[3]+3.0)))
+        hit = raw_straps[('VSS', 'Metal5')] & tab
+        if not hit.is_empty():
+            straps[('VSS', 'Metal5')] = (straps[('VSS', 'Metal5')] + hit).merged()
+        man['tab_ties'].append(dict(inst=n, tab=tn, tied=not hit.is_empty(), at=[round(x0+t[0], 2), round(y0+t[2], 2)]))
 # island strap regions (coordinator 2026-11-24: island rails sized for their current, not 1 um routes): inside the box round
 # an island's switch and its loads (+40 um), the grid VDD straps become that island's rail (RAIL_<island>, same width,
 # Via4 at its own crossings); the loads' rail pins and the switch VISL hook to them like VDD pins hook to the grid. Smaller
@@ -365,6 +481,9 @@ nvia = 0
 for net in GRID_NETS:
     for ln in ('Metal4', 'Metal5'): pdn.shapes(LI[ln]).insert(metal[(net, ln)])
     nvia += via_fill(pdn, VIA['Via4'], metal[(net, 'Metal4')] & metal[(net, 'Metal5')])
+for net_, land_ in macro_vias:       # Via4 from the horizontal Metal5 straps onto the macro's own Metal4 stripes
+    man['macro_supply'][net_]['via4'] = via_fill(pdn, VIA['Via4'], land_ & metal[(net_, 'Metal5')], inset=0.2)
+    nvia += man['macro_supply'][net_]['via4']
 # supply pads: Metal2 strips at the inner edge of every dvdd / dvss cell, extended into their ring; Metal3 + Via2/Via3 there
 stubs = {'VDD': db.Region(), 'VSS': db.Region()}
 rcache = {}
@@ -441,6 +560,7 @@ for net in [n_ for n_ in GRID_NETS if n_ in ring]:
         keep4, keep5 = n4, n5
     live[net] = {'Metal4': keep4, 'Metal5': keep5}
     man.setdefault('grid_floating', {})[net] = dict(m4=m4_.count()-keep4.count(), m5=m5_.count()-keep5.count(), m4_total=m4_.count(), m5_total=m5_.count(), m4_float_mm2=round((m4_-keep4).area()/1e12, 4), m5_float_mm2=round((m5_-keep5).area()/1e12, 4))
+    man.setdefault('grid_floating_big', {})[net] = [[ln_, [fu(q.bbox().left), fu(q.bbox().bottom), fu(q.bbox().right), fu(q.bbox().top)], round(q.area()/1e6)] for ln_, r_ in (('Metal4', m4_-keep4), ('Metal5', m5_-keep5)) for q in r_.merged().each() if q.area() >= um(50)*um(50)]
 _blkreg = db.Region([db.Box(*[um(v) for v in b_['bbox']]) for n_, b_ in man['blocks'].items() if b_['master'] != 'decap']).merged()
 slots = {}
 for net in GRID_NETS:
@@ -694,5 +814,8 @@ json.dump(man, open('/run/place.json', 'w'), indent=0)
 cnt = collections.Counter(v['cls'] for v in NETS.values())
 print(f"{CHIP}: {len(man['blocks'])} blocks ({len(man['placeholders'])} placeholder masters), {len(comps)} components, nets {dict(cnt)}, "
       f"hooks {len(man['hooks'])}, direct landings {len(man.get('direct_landings', []))}, unconnectable pins {len(man['unconnectable'])}, single-pin nets {len(man['single_pin_nets'])}")
-print('pdn', man['pdn'])
+_ms = man.get('macro_supply', {})
+# fail: a strap with no end on the grid (or no strap at all); one-end straps (the other end against a pad family) are reported
+_mv = 'OK' if _ms and all(v['stripes'] > 0 and v['joined'] + v.get('one_end', 0) == v['stripes'] and v.get('via4', 0) != 0 for v in _ms.values()) else 'MACRO SUPPLY OPEN'
+print("pdn", man["pdn"], "| macro supply", _mv, {k: (v["joined"], v.get("one_end", 0), v["stripes"]) for k, v in _ms.items()})
 for n in man['notes'][:20]: print(' note:', n)

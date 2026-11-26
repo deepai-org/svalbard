@@ -33,7 +33,9 @@ for S in $STAGES; do
     lvs)       python3 "$A/../signoff/lvs/gen_netlist.py" "$RUN/lvs/pt_chip_top.ref.spice" --chip "$CHIP" 2>/dev/null || { mkdir -p "$RUN/lvs"; python3 "$A/../signoff/lvs/gen_netlist.py" "$RUN/lvs/pt_chip_top.ref.spice" --chip "$CHIP"; }
                "$A/../signoff/kl.sh" -c 2 lvs/top_lvs.py -rd gds=chip/pt_chip_top.gds -rd top=pt_chip_top -rd ref=lvs/pt_chip_top.ref.spice \
                  -rd out=lvs/chip -rd manifest=chip/manifest.json -rd flatten=retained_provider_ring,pt_pdn,pt_direct_land,pt_antdiode,pt_top_wiring,pt_island_bar,VIA_* > "$RUN/lvs/lvs.log" 2>&1 || true
-               tail -5 "$RUN/lvs/lvs.log" ;;
+               tail -5 "$RUN/lvs/lvs.log"
+               # the macro's VDD/VSS stripes are not conn pins, so LVS by name cannot see them (PDS-25): place's check
+               grep -o "macro supply [A-Z ]*OPEN\|macro supply OK" "$RUN/place.log" || echo "macro supply: NOT CHECKED (rerun place)" ;;
     fill)      "$A/../signoff/fill/run_fill.sh" rf 2 chip/pt_chip_top.gds      # "rf" = the fill keep-out set (common.NO_OVER blocks), not the chip: used for both chips
                "$A/../signoff/drc/run_drc.sh" fill/rf_filled.gds pt_chip_top density chip_filled_density live 2 ;;
     precheck)  rm -rf "$RUN/precheck"      # the shuttle's own precheck on the filled chip (about 3 h, 4 threads)

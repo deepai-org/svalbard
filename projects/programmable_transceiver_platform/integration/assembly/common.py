@@ -138,13 +138,18 @@ PIN_WINDOWS = {'rf': True, 'wired': True}
 PIN_GATE_UM2 = 0.4      # gate area per analog block signal pin for the router antenna model: the SMALLEST gate seen in the deck (0.4-4.5 um2) is the pessimistic value (a 4.0 model left 2334 ANT.5)
 # nets the deck still flags for antenna after the input diodes (2026-11-25, pt_rf tail 243): receiver pins modelled with a
 # 0.02 um2 gate so the router jumps to Metal5 at the receiver
-ANT_TIGHT = {'rf': ('HOST_CLK', 'BIAS_rfdriver', 'c_bbfilter_i_en', 'AUX_CK', 'ADCI_CODEB', 'CONV_CLK', 'CLK_OBS_DBG', 'c_lo_mmd_en', 'ATB1_LOCAL0', 'TXPH', 'ATBN_conv_ibias', 'ATB0', 'ADCI_OVL', 'ADCI_DONE', 'RING_OSC_CK')}
+ANT_TIGHT = {'rf': ('HOST_CLK', 'BIAS_rfdriver', 'c_bbfilter_i_en', 'AUX_CK', 'ADCI_CODEB', 'CONV_CLK', 'CLK_OBS_DBG', 'c_lo_mmd_en', 'ATB1_LOCAL0', 'TXPH', 'ATBN_conv_ibias', 'ATB0', 'ADCI_OVL', 'ADCI_DONE', 'RING_OSC_CK', 'PLL_TX_FBCK')}
 # grid slots no hook may take (die um, any slot containing the point): the second antenna pass (route.tcl) re-derives pin
 # access after its jumpers and stops with DRT-1231 on a hook slot squeezed between two crossing signal nets
 # (pt_rf VSS slot 978-998 x 4209.5-4217.5 under ATB1_LOCAL4 / CHAR_RP_DRV, 2026-11-25)
 HOOK_SLOT_AVOID = {'rf': [(988.0, 4213.5)]}
+# grid stitches (die um): extra strap metal (net, layer, rect) drawn after the strap cuts and clipped by the same avoid set;
+# Via4 lands wherever it crosses its own net on the other layer. pt_rf: the Metal5 verticals over lo_lf (x 2837-3208,
+# y 1058-1223) were cut off below qvco and fed no pin; two Metal4 bars in the lo_lf / qvco channel join them to the grid
+# west of lo_lf (PDS-25 finding 3, 2026-11-25)
+GRID_STITCH = {'rf': [('VDD', 'Metal4', (2690.0, 1213.6, 3275.0, 1217.6)), ('VSS', 'Metal4', (2690.0, 1219.0, 3275.0, 1223.0))]}
 # nets that get top-level antenna diodes at their receivers (kl_place, pt_antdiode)
-ANT_DIODE = {'rf': ('c_bbfilter_i_en', 'BIAS_rfdriver', 'ADCI_CODEB[0]', 'ADCI_CODEB[1]', 'ADCI_CODEB[2]', 'ADCI_CODEB[3]', 'ADCI_CODEB[4]', 'ADCI_CODEB[5]', 'ADCI_CODEB[6]', 'ADCI_CODEB[7]', 'ADCI_CODEB[8]', 'ADCI_CODEB[9]', 'ADCI_CODEB[10]', 'ADCI_CODEB[11]', 'ADCI_OVL', 'CLK_OBS_DBG', 'AUX_CK', 'HOST_CLK', 'CONV_CLK')}
+ANT_DIODE = {'rf': ('c_bbfilter_i_en', 'BIAS_rfdriver', 'ADCI_CODEB[0]', 'ADCI_CODEB[1]', 'ADCI_CODEB[2]', 'ADCI_CODEB[3]', 'ADCI_CODEB[4]', 'ADCI_CODEB[5]', 'ADCI_CODEB[6]', 'ADCI_CODEB[7]', 'ADCI_CODEB[8]', 'ADCI_CODEB[9]', 'ADCI_CODEB[10]', 'ADCI_CODEB[11]', 'ADCI_OVL', 'CLK_OBS_DBG', 'AUX_CK', 'HOST_CLK', 'CONV_CLK', 'PLL_TX_FBCK', 'c_lo_mmd_en')}
 # masters whose supply pins are labelled only on Metal1 inside the cell: pins also on their own Metal4/5 of that net (kl_abstract)
 PIN_UP = {'por': ('vdd3v3', 'vss')}
 # conn blocks placed by the second pass, where decap tiles give way (2026-11-24: with the taller RF / ATB cells the packer

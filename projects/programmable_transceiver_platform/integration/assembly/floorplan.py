@@ -40,16 +40,28 @@ SPREAD = float(os.environ.get('SPREAD', '40'))     # routing margin the packer k
 LEDGER_MASTER = {x['item']: x['master'] for x in json.load(open(f"{C.ROOT}/scratch/reviews/die-fit/{chip}/ledger.json"))['rows']}
 # routing channel round the digital macro (KH-2 reroute, off by default): MACRO_FIX="x,y" keeps the macro at that lower-left
 # corner and MACRO_CHAN um round it stay free of blocks (its ~970 edge pins, the c_* control nets among them)
-FIXED = dict(C.FIXED_PLACE.get(chip, {})); MARGIN = {}
+FIXED = dict(C.FIXED_PLACE.get(chip, {})); MARGIN = {}; ORIENT = {}
+# connectivity-driven floorplan plan (FLOORPLAN_PLAN.md, PLAN_FP=1, off by default): every hand-placed block of
+# fp_plan/<chip>_place.json fixed at its lower-left with its DEF orientation and no packer margin (the plan's own gaps and
+# channels are the routing room); the plan's channels kept free of blocks and decap; the packer places only the rest
+PLAN = json.load(open(os.environ.get('PLAN_JSON', f'{A}/fp_plan/{chip}_place.json'))) if os.environ.get('PLAN_FP') == '1' else None
+if PLAN:
+    for n_, (x_, y_, o_) in list(PLAN['hand'].items())+list(PLAN.get('auto', {}).items()):     # small cells too: the plan is the model's
+        if n_ == 'digital' or n_.startswith('decap'): continue        # macro via MACRO below; fixed decap via common.FIXED_DECAP
+        FIXED[n_] = (x_, y_); ORIENT[n_] = o_; MARGIN[n_] = 0.0
+DECAP_PLAN = {k: v for k, v in (PLAN or {}).get('decap', {}).items() if not k.startswith('decap_fix')}   # decap tiles at planned spots (may sit in a channel: Metal1-2 only)
 if os.environ.get('MACRO_FIX'):
     FIXED['digital'] = tuple(float(v) for v in os.environ['MACRO_FIX'].split(',')); MARGIN['digital'] = float(os.environ.get('MACRO_CHAN', SPREAD))
 def fixed_rects():
     out = {}
     for m, (x, y) in FIXED.items():
         w, h = msize(m); w -= 70 if m in C.STAGED.get(chip, {}) else 0; g_ = MARGIN.get(m, SPREAD)
+        if ORIENT.get(m) in ('W', 'E', 'FW', 'FE'): w, h = h, w
         out['fix_'+m] = [x-g_, y-g_, round(x+w+g_, 2), round(y+h+g_, 2)]
     if C.FIXED_DECAP.get(chip): out['decapslot'] = list(C.FIXED_DECAP[chip]['slot'])
     for k, r in C.ROUTE_CHANNELS.get(chip, {}).items(): out[k] = list(r)
+    for k, r in (PLAN['channels'].items() if PLAN else ()): out['chan_plan_'+k] = list(r)
+    for k, r in DECAP_PLAN.items(): out['decapplan_'+k] = list(r)
     for k, bd in enumerate(C.ISLAND_BARS.get(chip, [])):          # island bars: no block under them
         for j, r in enumerate(bd['rects']): out[f'bar_{k}_{j}'] = list(r)
     return out
@@ -59,7 +71,8 @@ def msize(m):
     mm = st['master'] if st else inst0[m]['master']
     return (MJ[mm]['w']+(70 if st else 0), MJ[mm]['h'])
 mw_ = MJ.get('pt_digital_macro', {}).get('w')     # the baseline macro GDS sets the outline when it exists
-macro = {'rf': '1716:1108', 'wired': '1676:971'}[chip]      # wired: DG9-11 outline 1676 x 1592.96, 32 um to pad_ref (west, x 939) and pad_wire_tx (east, x 2679)
+macro = {'rf': '1716:1108', 'wired': '1676:971'}[chip]
+if PLAN: macro = f"{macro.split(':')[0]}:{PLAN['hand']['digital'][0]}"     # plan macro x (its y stays on the north core edge)      # wired: DG9-11 outline 1676 x 1592.96, 32 um to pad_ref (west, x 939) and pad_wire_tx (east, x 2679)
 # island clustering (coordinator / PDS-18): every island load above 1 mA within 400 um of its switch (weight 2; the RF / HS
 # signal-flow pairs above weigh more); currents from spec/budgets/power-budget.json instance_worst_ma
 ISL_ADJ = []
@@ -79,7 +92,7 @@ try:
 except (OSError, KeyError): pass
 env = dict(os.environ, ADJ=json.dumps([[a, b, d, w] for a, b, d, w in C.FLOW_ADJ.get(chip, [])]+[[b, a, d, w] for a, b, d, w in C.FLOW_ADJ.get(chip, [])]+ISL_ADJ),
            KEEPAWAY=json.dumps(C.FLOW_KEEPAWAY.get(chip, [])), HALO_ITEMS=json.dumps(C.HALO_ITEMS.get(chip, {})), HALO=os.environ.get('HALO', {'rf': '4', 'wired': '10'}[chip]), CHIP=chip, SCEN='S', TAG='s', TRIES=os.environ.get('TRIES', '6'), PADS_JSON=RUN+'/fp_pads.json',
-           SIZES_JSON=RUN+'/fp_sizes.json', RUNDIR=RUN+'/fit', CHANNEL=os.environ.get('CHANNEL', '40'), ISLAND_W=os.environ.get('ISLAND_W', '0.3'), NOROT=','.join(C.NOROT.get(chip, [])+list(C.STAGED.get(chip, {}))+list(C.GROUP_BOOK.get(chip, {}))+[n for n, i in inst0.items() if i['master'] in C.GRID_SNAP]), POCKET='1' if chip == 'wired' else '0', DROP=','.join(C.STALE_BOOK.get(chip, [])+C.PASS2.get(chip, [])+list(FIXED)+['isw_wired_tx']+[m for b, ms in C.GROUP_BOOK.get(chip, {}).items() for m in ms if m != b]), EXTRA_RSV=json.dumps(fixed_rects()), ITEM_SIZES=json.dumps({**{n: list(sizes[inst0[n]['master']]) for n, m_ in LEDGER_MASTER.items() if n in inst0 and inst0[n]['master'] != m_ and inst0[n]['master'] in sizes},
+           SIZES_JSON=RUN+'/fp_sizes.json', RUNDIR=RUN+'/fit', CHANNEL=os.environ.get('CHANNEL', '40'), ISLAND_W=os.environ.get('ISLAND_W', '0.3'), NOROT=','.join(C.NOROT.get(chip, [])+list(C.STAGED.get(chip, {}))+list(C.GROUP_BOOK.get(chip, {}))+[n for n, i in inst0.items() if i['master'] in C.GRID_SNAP]), POCKET='1' if chip == 'wired' and not PLAN else '0', DROP=','.join(list(DECAP_PLAN)+C.STALE_BOOK.get(chip, [])+C.PASS2.get(chip, [])+list(FIXED)+['isw_wired_tx']+[m for b, ms in C.GROUP_BOOK.get(chip, {}).items() for m in ms if m != b]), EXTRA_RSV=json.dumps(fixed_rects()), ITEM_SIZES=json.dumps({**{n: list(sizes[inst0[n]['master']]) for n, m_ in LEDGER_MASTER.items() if n in inst0 and inst0[n]['master'] != m_ and inst0[n]['master'] in sizes},
                                    **{b: [sum(msize(m)[0] for m in ms)+4*(len(ms)-1), max(msize(m)[1] for m in ms)] for b, ms in C.GROUP_BOOK.get(chip, {}).items()}}),
            MACRO_MM2=str(round(MJ['pt_digital_macro']['w']*MJ['pt_digital_macro']['h']/1e6, 6)) if mw_ else ('2.669801' if chip == 'wired' else ''), OMP_NUM_THREADS='1', MACRO=os.environ.get('MACRO', macro))
 fit = C.ROOT+'/scratch/reviews/die-fit'
@@ -99,7 +112,10 @@ for n, v in F['placed_rects'].items():
 for k_, r_ in fixed_rects().items():
     if not k_.startswith('fix_'): continue
     m = k_[4:]; g_ = MARGIN.get(m, SPREAD); r_ = [r_[0]+g_, r_[1]+g_, r_[2]-g_, r_[3]-g_]
-    blocks[m] = dict(master=(C.STAGED[chip][m]['master'] if m in C.STAGED.get(chip, {}) else inst0[m]['master']), rect=r_, rot=False, in_conn=True, gds=True, fixed=True)
+    blocks[m] = dict(master=(C.STAGED[chip][m]['master'] if m in C.STAGED.get(chip, {}) else inst0[m]['master']), rect=r_, rot=ORIENT.get(m, 'N') in ('W', 'E', 'FW', 'FE'), in_conn=True, gds=True, fixed=True)
+    if m in ORIENT: blocks[m]['orient'] = ORIENT[m]
+for k_, r_ in DECAP_PLAN.items():
+    blocks[k_] = dict(master='decap', rect=list(r_), rot=False, in_conn=False, gds=False, fixed=True)
 # fixed decap tiles (common.FIXED_DECAP): rows of 125 x 120 um tiles in the reserved slot, abutted
 fd = C.FIXED_DECAP.get(chip)
 if fd:
@@ -111,7 +127,7 @@ if fd:
         y += 120
 # group bookings (common.GROUP_BOOK): the packer placed one rectangle; its members go into it side by side, 4 um apart
 for bk, ms in C.GROUP_BOOK.get(chip, {}).items():
-    if bk not in blocks: continue
+    if bk not in blocks or blocks[bk].get('fixed'): continue      # plan-fixed members stay where the plan put them
     r0 = blocks.pop(bk)['rect']; x = r0[0]
     for m in ms:
         w, h = msize(m)
@@ -119,7 +135,7 @@ for bk, ms in C.GROUP_BOOK.get(chip, {}).items():
         blocks[m] = dict(master=inst0[m]['master'], rect=[round(x, 2), r0[1], round(x+w, 2), round(r0[1]+h, 2)], rot=(r0[2]-r0[0] < r0[3]-r0[1]), in_conn=True, gds=True, group=bk)
         x += w+4
 blocks['digital'] = dict(master='pt_digital_macro', rect=F['fixed']['digital'], rot=False, in_conn=True, gds=False)
-reserves = {n: r for n, r in F['fixed'].items() if n != 'digital' and not n.startswith(('fix_', 'bar_', 'decapslot'))}
+reserves = {n: r for n, r in F['fixed'].items() if n != 'digital' and not n.startswith(('fix_', 'bar_', 'decapslot', 'decapplan_'))}
 if 'digital' in MARGIN:      # the macro channel stays free in the second pass too (MACRO_CHAN)
     _r = fixed_rects()['fix_digital']; _b = blocks['digital']['rect']
     for _k, _q in (('w', [_r[0], _r[1], _b[0], _r[3]]), ('e', [_b[2], _r[1], _r[2], _r[3]]), ('s', [_b[0], _r[1], _b[2], _b[1]]), ('n', [_b[0], _b[3], _b[2], _r[3]])):
@@ -233,7 +249,7 @@ for n, v in C.STAGED.get(chip, {}).items():
         print('staged', n, 'no x shift fits'); blocks[n] = old
 # grid-phase blocks (common.GRID_SNAP): lower-left moved to the nearest legal point with x0 = y0 = 0 (mod pitch)
 snapped = {}
-for n in [n for n in blocks if blocks[n]['master'] in C.GRID_SNAP]:
+for n in [n for n in blocks if blocks[n]['master'] in C.GRID_SNAP and not blocks[n].get('orient')]:      # plan-fixed blocks keep their place
     b = blocks[n]; r = b['rect']; P = C.GRID_SNAP[b['master']]; w, h = r[2]-r[0], r[3]-r[1]
     def okr(q):
         if q[0] < C.CORE[0] or q[1] < C.CORE[1] or q[2] > C.CORE[2] or q[3] > C.CORE[3]: return False

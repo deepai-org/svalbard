@@ -55,17 +55,18 @@ class Plan:
                     if j != i and j in self.rect: c[j] += 1
         return c.most_common(1)[0][0] if c else None
 
-    def free(self, r, halo=2.0):
+    def free(self, r, halo=2.0, chan_ok=False):
         if r[0] < CORE[0] or r[1] < CORE[1] or r[2] > CORE[2] or r[3] > CORE[3]: return False
         for k in self.keep:
             if ov(r, k): return False
-        for k in self.chan.values():
+        for n_, k in self.chan.items():
+            if chan_ok and (chan_ok is True or n_ in chan_ok): continue
             if ov(r, k): return False
         for q in self.rect.values():
             if ov(r, q, halo): return False
         return True
 
-    def autoplace(self, names, near=None, step=10.0, halo=2.0):
+    def autoplace(self, names, near=None, step=10.0, halo=2.0, chan_ok=False):
         """small cells / decap tiles: nearest free spot to the partner (spiral over a 10 um lattice)"""
         out = []
         for i in names:
@@ -82,7 +83,7 @@ class Plan:
                         ww, hh = dims(o, w, h)
                         x = round((cx + rad * math.cos(a) - ww / 2) / 2) * 2; y = round((cy + rad * math.sin(a) - hh / 2) / 2) * 2
                         r = (x, y, x + ww, y + hh)
-                        if self.free(r, halo): best = (r, o); break
+                        if self.free(r, halo, chan_ok): best = (r, o); break
                     if best: break
                 if best: break
             if best: self.rect[i] = best[0]; self.orient[i] = best[1]
@@ -125,8 +126,21 @@ class Plan:
     def assign_macro(self, mac='digital', pitch=2.24, sides='NSEW', fixed_side=None, forbid=None):
         """every macro net gets one pin on the macro edge nearest the centroid of its other ends, legalised per side
         at `pitch`; fixed_side: {net: side} overrides. Returns {net: (side, x, y)}."""
-        r = self.rect[mac]; want = {}
+        r = self.rect[mac]; want = {}; out = {}
+        # host-link cluster (coordinator 2026-11-26): h2d_*, d2h_*, host_word_clk keep their hardened macro position
+        # (matched skew); their pins move with the macro, relative to its lower-left corner, and are routed as a bundle
+        import re as _re
+        c0 = self.C[mac]['rect']
         for n, v in self.D['nets'].items():
+            if v['cls'] == 'hook' or not _re.match(HOSTLINK, n): continue
+            e = [e for e in v['ends'] if e[0] == mac]
+            if not e: continue
+            x, y = e[0][2] - c0[0] + r[0], e[0][3] - c0[1] + r[1]
+            d = {'W': abs(x - r[0]), 'E': abs(r[2] - x), 'S': abs(y - r[1]), 'N': abs(r[3] - y)}
+            out[n] = (min(d, key=d.get), round(x, 2), round(y, 2))
+        fixedpos = {s_: sorted((x if s_ in 'SN' else y) for s2, x, y in out.values() if s2 == s_) for s_ in 'NSEW'}
+        for n, v in self.D['nets'].items():
+            if n in out: continue
             if v['cls'] == 'hook' or not any(e[0] == mac for e in v['ends']): continue
             oth = [self.pin_xy(e[0], e[1]) for e in v['ends'] if e[0] != mac and not e[0].startswith(('antd', 'pdn'))]
             if not oth: continue
@@ -143,15 +157,16 @@ class Plan:
                 if s in 'WE' and any(lo_ <= cy <= hi_ for lo_, hi_ in forbid[s]): s = 'S'
             pos = min(max(cx, r[0] + 1), r[2] - 1) if s in 'SN' else min(max(cy, r[1] + 1), r[3] - 1)
             want.setdefault(s, []).append((pos, n))
-        out = {}
         for s, L in want.items():
             L.sort(); lo, hi = (r[0], r[2]) if s in 'SN' else (r[1], r[3])
             n_ = len(L); cap = int((hi - lo) / pitch)
             if n_ > cap: self.msgs.append(f'macro side {s}: {n_} pins > {cap} slots at {pitch} um')
             # legalise: forward pass with min pitch, then backward to fit
             pos = []
+            fx = fixedpos.get(s, [])
             for p, n in L:
                 p = max(p, (pos[-1] + pitch) if pos else lo + pitch)
+                while any(abs(p - f) < pitch for f in fx): p += pitch
                 pos.append(p)
             over = pos[-1] - (hi - pitch) if pos else 0
             if over > 0:
@@ -168,26 +183,29 @@ class Plan:
     def grid(self, sig_m1=False, over_block_m45=0.0):
         nx = int(math.ceil((DIE[2]) / G)); ny = int(math.ceil((DIE[3]) / G))
         freeH = np.ones((nx, ny)); freeV = np.ones((nx, ny))   # free fraction of each gcell for M2/M3
+        freeV4 = np.ones((nx, ny))                              # Metal4 (swapped grid): decap does not block it
         def blk(r, val=0.0):
             x0, y0, x1, y1 = r
             for ix in range(max(0, int(x0 // G)), min(nx, int(math.ceil(x1 / G)))):
                 fx = (min(x1, (ix + 1) * G) - max(x0, ix * G)) / G
                 for iy in range(max(0, int(y0 // G)), min(ny, int(math.ceil(y1 / G)))):
                     fy = (min(y1, (iy + 1) * G) - max(y0, iy * G)) / G
-                    freeH[ix, iy] = max(0.0, freeH[ix, iy] - fx * fy); freeV[ix, iy] = max(0.0, freeV[ix, iy] - fx * fy)
+                    freeH[ix, iy] = max(0.0, freeH[ix, iy] - fx * fy); freeV[ix, iy] = max(0.0, freeV[ix, iy] - fx * fy); freeV4[ix, iy] = max(0.0, freeV4[ix, iy] - fx * fy)
         # outside core: the core ring (Metal4/5) and provider cells; signal routing stays inside the core
         for r in [(0, 0, DIE[2], CORE[1]), (0, CORE[3], DIE[2], DIE[3]), (0, 0, CORE[0], DIE[3]), (CORE[2], 0, DIE[2], DIE[3])]: blk(r)
         for k in self.keep: blk(k)
         for i, r in self.rect.items():
             if self.C[i]['master'] == 'decap':      # decap obstructs Metal1-2 only: horizontal Metal3 passes over it
-                sv = freeH.copy(); blk(r); freeH[:] = sv
+                sv = freeH.copy(); sv4 = freeV4.copy(); blk(r); freeH[:] = sv; freeV4[:] = sv4
             else: blk(r)
         trk = G / PITCH
         layersH = (2 if sig_m1 else 1)
-        self.capH = freeH * trk * layersH + (1 - freeH) * trk * over_block_m45      # horizontal wires (M3 [+M1])
         import os
-        layersV = 2 if os.environ.get('M4V') == '1' else 1      # hypothetical: grid Metal4 straps vertical, Metal4 free for vertical signals between them (70 %)
-        self.capV = freeV * trk * (1 if layersV == 1 else 1.7) + (1 - freeV) * trk * over_block_m45                 # vertical wires (M2)
+        swap = os.environ.get('GRID_SWAP', '1') == '1'      # coordinator 2026-11-26: grid Metal4 vertical, Metal5 horizontal (with the LEF)
+        # with the swap, signal Metal4 (vertical, 0.56 pitch) and Metal5 (horizontal, 0.9 pitch) run between the straps: 70 % of
+        # their tracks in channels (2 x 10.5 um straps per 70 um pitch); over blocks nothing (conservative)
+        self.capH = freeH * (trk * layersH + (0.7 * G / 0.9 if swap else 0)) + (1 - freeH) * trk * over_block_m45   # M3 [+M1] [+M5]
+        self.capV = freeV * trk + (freeV4 * trk * 0.7 if swap else 0) + (1 - freeV) * trk * over_block_m45          # M2 [+M4]
         self.nx, self.ny = nx, ny
 
     def cell(self, xy): return (min(self.nx - 1, max(0, int(xy[0] // G))), min(self.ny - 1, max(0, int(xy[1] // G))))
@@ -258,6 +276,8 @@ class Plan:
         while u != a and u in prev:
             p = prev[u]; path.append((u[0], u[1], 0 if p[1] == u[1] else 1)); u = p
         return path
+
+HOSTLINK = r'^(h2d_|d2h_|host_word_clk)'
 
 def cut_table(U, cuts, G, free_min=0.5):
     """cuts: {name: ('H'|'V', fixed coord, lo, hi)}; 'H' = horizontal cut line (vertical wires cross it: M2 usage/capacity

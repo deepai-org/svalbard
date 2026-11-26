@@ -12,7 +12,9 @@ r = E_['rect']['digital']
 L = ['# Planned macro pin sides and order (FLOORPLAN_PLAN.md). Each pin faces the centroid of the other ends of its net.',
      f'# Macro outline in the plan: x {r[0]:.1f}-{r[2]:.1f}, y {r[1]:.1f}-{r[3]:.1f} um (die). Order: N/S left to right (increasing x),',
      '# E/W bottom to top (increasing y). The number after each name is the planned offset along the edge from the macro',
-     '# lower-left corner (um); hardening may keep the order and spread the pins, 2.24 um minimum pitch.']
+     '# lower-left corner (um); hardening may keep the order and spread the pins, 2.24 um minimum pitch.',
+     '# Host-link cluster (h2d_*, d2h_*, host_word_clk) stays where it is hardened now (matched skew, coordinator 2026-11-26):',
+     '# listed at its current position for reference only; the other pins are placed round it.']
 for s in 'NSEW':
     L.append(f'#{s}')
     for pos, p, n in sorted(side[s]):

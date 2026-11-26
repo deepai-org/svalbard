@@ -8,8 +8,9 @@ Geometry constants of the 1x1 slot, the provider-site map and the no-route-over 
 import hashlib, json, os, re, sys
 A = os.path.dirname(os.path.abspath(__file__))
 ROOT = '/repo' if A == '/asm' else os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(A))))
+if A != '/asm' and os.environ.get('ASM_DATA'): ROOT = os.environ['ASM_DATA']      # worktree runs: code here, data (scratch, ignored GDS) from the main checkout
 P = ROOT+'/projects/programmable_transceiver_platform'
-sys.path.insert(0, P+'/integration/chips')
+sys.path.insert(0, os.path.join(os.path.dirname(A), 'chips') if A != '/asm' else P+'/integration/chips')
 import check_top as ct
 import provider_io as PIO
 # KH_CONN=1 (off by default until both chips route clean): macro c_* ports, provider cells with their ties, the tied macro

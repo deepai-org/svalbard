@@ -111,6 +111,7 @@ def import_cell(m):
 comps = []          # (name, macro, x, y, orient)
 # KLayout rotation/mirror -> DEF orientation
 ORIENT = {'r0': 'N', 'r90': 'W', 'r180': 'S', 'r270': 'E', 'm0': 'FS', 'm90': 'FN', 'm45': 'FW', 'm135': 'FE'}   # checked in OpenDB: FW = (y, x)
+ORIENT_INV = {v: k for k, v in ORIENT.items()}
 booked = {}
 for n, b in FP['blocks'].items():
     m = b['master']; r = b['rect']; W, H = r[2]-r[0], r[3]-r[1]
@@ -126,11 +127,18 @@ for n, b in FP['blocks'].items():
         c, w0, h0, pp = placeholder(n, m, W, H)       # cell drawn in the first instance's orientation
         bb = c.bbox(); rot = not (abs(w0-W) < 0.05 and abs(h0-H) < 0.05); kind = 'placeholder'
     X, Y = um(r[0])//10*10, um(r[1])//10*10          # placement on the 10 nm grid
-    tr = db.Trans(db.Trans.R90, db.Vector(X+bb.top, Y-bb.left)) if rot else db.Trans(db.Trans.R0, db.Vector(X-bb.left, Y-bb.bottom))
+    o_ = b.get('orient')       # floorplan plan (PLAN_FP=1): any DEF orientation of a real cell; else R0 / R90 from the outline
+    if o_ and kind != 'placeholder':
+        t0 = db.Trans.from_s(ORIENT_INV[o_] + ' 0,0'); g0 = t0*bb
+        tr = db.Trans(db.Vector(X-g0.left, Y-g0.bottom))*t0
+        if abs(fu(g0.width())-W) > 0.2 or abs(fu(g0.height())-H) > 0.2: man['notes'].append(f'{n}: orient {o_} gives {fu(g0.width())} x {fu(g0.height())} vs rect {W:.1f} x {H:.1f}')
+    else:
+        o_ = 'W' if rot else 'N'
+        tr = db.Trans(db.Trans.R90, db.Vector(X+bb.top, Y-bb.left)) if rot else db.Trans(db.Trans.R0, db.Vector(X-bb.left, Y-bb.bottom))
     top.insert(db.CellInstArray(c.cell_index(), tr))
     got = tr*bb
     man['blocks'][n] = dict(master=m, kind=kind, trans=str(tr), bbox=[fu(got.left), fu(got.bottom), fu(got.right), fu(got.top)], in_conn=b['in_conn'])
-    comps.append((n, m, fu(got.left), fu(got.bottom), 'W' if rot else 'N'))
+    comps.append((n, m, fu(got.left), fu(got.bottom), o_))
 for n, v in PADS['pads'].items():
     t = db.Trans.from_s(v['trans']); m = v['master']; o = MJ[m]['origin']
     # DEF location = lower-left of the placed outline; orientation from the transformation
@@ -237,6 +245,17 @@ for bd in ([] if getattr(C, 'ISLAND_BARS_OFF', False) else C.ISLAND_BARS.get(CHI
 PITCH, SW = 70.0, float(os.environ.get('STRAP_W', '10.5'))   # G1 15 % nominal; wider per region from strap_widths.json
 core = C.CORE
 straps = {('VDD', 'Metal4'): db.Region(), ('VSS', 'Metal4'): db.Region(), ('VDD', 'Metal5'): db.Region(), ('VSS', 'Metal5'): db.Region()}
+# strap directions (coordinator 2026-11-26, GRID_SWAP=1 default): Metal4 vertical and Metal5 horizontal, along the tech-LEF
+# preferred directions, so signal Metal4 / Metal5 run between the straps; GRID_SWAP=0 is the old G1 (Metal4 horizontal)
+GRID_SWAP = os.environ.get('GRID_SWAP', '1') == '1'
+HL, VL = ('Metal5', 'Metal4') if GRID_SWAP else ('Metal4', 'Metal5')
+# horizontal strap phase: with the swap the VDD rows sit on the macro's Metal5 VDD pin rows (DG9-29/30: 5 um pins, 70 um
+# per net), so each macro VDD pin strap continues straight into a grid VDD strap
+Y0 = core[1]+10
+if GRID_SWAP and digi:
+    _pv = sorted(b.center().y for ln_, b in pin_shapes_die0('digital', 'VDD') if ln_ == 'Metal5')
+    if _pv: Y0 = fu(_pv[0]) - 5.25 - math.floor((fu(_pv[0]) - 5.25 - core[1]) / PITCH) * PITCH
+man['grid'] = dict(swap=GRID_SWAP, horizontal=HL, vertical=VL, y0=round(Y0, 3))
 # strap width per core region (3 x 3: rows S/M/N, columns W/C/E, as in pdn_regions_pct): strap_widths.json
 # {"<chip>": {"default": um, "SE": um, ...}}, set from the power owner's IR/EM answer (PDS-8); the strap axis stays on
 # the 70 um pitch, so pieces of different width meet on the region border. The default is STRAP_W (10.5 um).
@@ -251,17 +270,17 @@ def cells3():
             yield ry+cx, (0 if i == 0 else x0, 0 if j == 0 else y0, C.DIE[2] if i == 2 else x1, C.DIE[3] if j == 2 else y1)
 for key, (x0, y0, x1, y1) in cells3():
     w = float(SWJ.get(key, SW)); cell = db.Region(db.Box(um(x0), um(y0), um(x1), um(y1)))
-    y = core[1]+10
+    y = Y0
     while y+PITCH <= core[3]+PITCH/2:
         for net, off in (('VDD', 0.0), ('VSS', PITCH/2)):
             c = y+off+5.25
-            if c+w/2 <= core[3]: straps[(net, 'Metal4')] += db.Region(db.Box(0, um(c-w/2), um(C.DIE[2]), um(c+w/2))) & cell
+            if c+w/2 <= core[3]: straps[(net, HL)] += db.Region(db.Box(0, um(c-w/2), um(C.DIE[2]), um(c+w/2))) & cell
         y += PITCH
     x = core[0]+10
     while x+PITCH <= core[2]+PITCH/2:
         for net, off in (('VDD', 0.0), ('VSS', PITCH/2)):
             c = x+off+5.25
-            if c+w/2 <= core[2]: straps[(net, 'Metal5')] += db.Region(db.Box(um(c-w/2), 0, um(c+w/2), um(C.DIE[3]))) & cell
+            if c+w/2 <= core[2]: straps[(net, VL)] += db.Region(db.Box(um(c-w/2), 0, um(c+w/2), um(C.DIE[3]))) & cell
         x += PITCH
 man['strap_widths'] = dict(SWJ, default=SW)
 # staged blocks with a strap-width rule over them (ptrim r12: a 16-22 um strap would reach its VDD_WIRE_SW strap)
@@ -269,7 +288,7 @@ for n_, v_ in C.STAGED.get(CHIP, {}).items():
     if v_.get('strap_w') and n_ in man['blocks']:
         bb_ = db.Box(*[um(x) for x in man['blocks'][n_]['bbox']]).enlarged(um(3), um(3)); box_ = db.Region(bb_)
         for key_ in list(straps):
-            if key_[1] != 'Metal5': continue
+            if key_[1] != VL: continue
             keep_ = straps[key_] - box_; thin_ = db.Region()
             for p_ in (straps[key_] & box_).each():
                 b_ = p_.bbox(); cx_ = b_.center().x; hw_ = um(v_['strap_w'])//2
@@ -280,7 +299,8 @@ for (net, ln), reg in straps.items():
     reg = (reg & reach[net]) - avoid[ln] - (ring['VSS' if net == 'VDD' else 'VDD'] if net == 'VSS' else db.Region())
     keep = db.Region([p for p in reg.merged().each() if p.area() >= um(10.5)*um(20)])
     straps[(net, ln)] = keep
-for net_, ln_, r_ in C.GRID_STITCH.get(CHIP, []):      # common.GRID_STITCH
+for net_, ln_, r_ in C.GRID_STITCH.get(CHIP, []) if os.environ.get('PLAN_FP') != '1' else []:      # common.GRID_STITCH (for the packer floorplan)
+    if GRID_SWAP: ln_ = {'Metal4': 'Metal5', 'Metal5': 'Metal4'}[ln_]      # stitch bars follow the horizontal layer
     st_ = (db.Region(db.Box(*[um(v) for v in r_])) - avoid[ln_]).merged()
     man.setdefault('grid_stitch', []).append(dict(net=net_, layer=ln_, rect=list(r_), kept_um2=round(st_.area()/1e6)))
     straps[(net_, ln_)] = (straps[(net_, ln_)] + db.Region([q for q in st_.each() if q.area() >= um(4)*um(20)])).merged()
@@ -293,7 +313,50 @@ for net_, ln_, r_ in C.GRID_STITCH.get(CHIP, []):      # common.GRID_STITCH
 MSTRAP_EXT = 30.0
 MSTRAP_W = 10.0      # top-level width of a macro supply strap outside the outline (PDS-25)
 macro_vias = []
-if digi:
+if digi and GRID_SWAP:
+    # swapped grid: no top-level grid over the macro (it draws its own Metal4 / Metal5); each macro Metal5 pin strap is drawn
+    # at pin width through the outline edge and out to MSTRAP_REACH um, where it meets the vertical Metal4 straps of the same
+    # net (Via4 at every crossing). The horizontal Metal5 grid rows are cut in that zone; the VDD rows line up with the VDD pin
+    # rows (Y0), so VDD runs on at full width beyond the zone, VSS ends at its last crossing.
+    mb_ = db.Box(*[um(v) for v in digi])
+    # reach per side: to the farther of the nearest VDD / VSS vertical Metal4 strap that spans the macro rows, plus the via
+    # landing; the horizontal grid rows give way only in that zone
+    def _reach(side_):
+        r_ = 0
+        for net in ('VDD', 'VSS'):
+            d_ = [ (mb_.left - q.bbox().right) if side_ < 0 else (q.bbox().left - mb_.right) for q in straps[(net, 'Metal4')].each()
+                   if q.bbox().bottom <= mb_.bottom and q.bbox().top >= mb_.top - um(20) and ((q.bbox().right < mb_.left) if side_ < 0 else (q.bbox().left > mb_.right))]
+            d_ = [d for d in d_ if d >= 0]
+            r_ = max(r_, (min(d_) + um(SW) + um(1)) if d_ else um(100))
+        return min(r_, um(100))
+    REACH_ = {-1: _reach(-1), 1: _reach(1)}
+    man['macro_strap_reach_um'] = {str(k): fu(v) for k, v in REACH_.items()}
+    MSTRAP_REACH = 100.0
+    for side_ in (-1, 1):
+        z_ = db.Box(mb_.left-REACH_[side_], mb_.bottom-um(6), mb_.left, mb_.top) if side_ < 0 else db.Box(mb_.right, mb_.bottom-um(6), mb_.right+REACH_[side_], mb_.top)
+        for net in ('VDD', 'VSS'): straps[(net, 'Metal5')] = (straps[(net, 'Metal5')] - db.Region(z_).sized(um(0), um(0))).merged()
+    for net in ('VDD', 'VSS'): straps[(net, 'Metal5')] = (straps[(net, 'Metal5')] - db.Region(mb_).sized(um(2.5))).merged()
+    for net in ('VDD', 'VSS'):
+        p5_ = [b for ln_, b in pin_shapes_die0('digital', net) if ln_ == 'Metal5']
+        ends_ = []; ext_ = db.Region()
+        for b in p5_:
+            ne_ = 0
+            for side_ in (-1, 1):
+                rch_ = REACH_[side_] - (0 if net == 'VDD' else um(6))      # VSS stops 6 um short of the full-width VDD row
+                e_ = db.Box(mb_.left-rch_, b.bottom, b.left, b.top) if side_ < 0 else db.Box(b.right, b.bottom, mb_.right+rch_, b.top)
+                inside_ = db.Box(mb_.left, b.bottom, b.left, b.top) if side_ < 0 else db.Box(b.right, b.bottom, mb_.right, b.top)
+                out_ = (db.Region(e_) - db.Region(mb_)) - (avoid['Metal5'] - db.Region(mb_.enlarged(um(3), um(0))))
+                # keep the part joined to the outline edge
+                out_ = out_.interacting(db.Region(db.Box(mb_.left-um(1), b.bottom, mb_.left, b.top) if side_ < 0 else db.Box(mb_.right, b.bottom, mb_.right+um(1), b.top)))
+                hit_ = out_ & straps[(net, 'Metal4')]
+                if hit_.is_empty(): man.setdefault('macro_supply_open', []).append([net, side_, fu(b.bottom), 'no same-net Metal4 strap within reach']); continue
+                if inside_.width() > 0: ext_ += db.Region(inside_)
+                ext_ += out_; ne_ += 1
+            ends_.append(ne_)
+        straps[(net, 'Metal5')] = (straps[(net, 'Metal5')] + ext_).merged()
+        man.setdefault('macro_supply', {})[net] = dict(kind='metal5 pins, swapped grid', stripes=len(p5_), joined=sum(1 for e in ends_ if e == 2),
+                                                      one_end=sum(1 for e in ends_ if e == 1), via4=-1)
+elif digi:
     mb_ = db.Box(*[um(v) for v in digi]); zone_ = db.Region(mb_.enlarged(um(MSTRAP_EXT), um(3)))
     _m5pins = any(ln_ == 'Metal5' for n_ in ('VDD', 'VSS') for ln_, b in pin_shapes_die0('digital', n_))
     for net in ('VDD', 'VSS'):
@@ -392,8 +455,18 @@ for n, v in C.STAGED.get(CHIP, {}).items():
     for tn, t in rep.get('ties', {}).get('VSS', {}).items():
         if not tn.startswith(('chan', 'grid_tie')): continue      # channel tabs and top-edge landings (WT47)
         tab = db.Region(db.Box(um(x0+t[0]), um(y0+t[2]-3.0), um(x0+t[1]), um(y0+t[3]+3.0)))
-        hit = raw_straps[('VSS', 'Metal5')] & tab
-        if not hit.is_empty():
+        if GRID_SWAP:
+            # swapped grid: the tie is a Metal5 run up the block's Metal5-free channel from the tab to the first horizontal
+            # VSS Metal5 strap above or below the block; the VDD rows it crosses give way 2 um round it
+            bx_ = man['blocks'][n]['bbox']
+            run_ = db.Region(db.Box(um(x0+t[0]), um(bx_[1]-PITCH), um(x0+t[1]), um(bx_[3]+PITCH))) - (blkmetal['Metal5'] - tab).sized(um(0))
+            run_ = run_.interacting(tab)
+            hit = run_ if not (run_ & straps[('VSS', 'Metal5')]).is_empty() else db.Region()
+            if not hit.is_empty():
+                straps[('VSS', 'Metal5')] = (straps[('VSS', 'Metal5')] + hit).merged()
+                straps[('VDD', 'Metal5')] = (straps[('VDD', 'Metal5')] - hit.sized(um(2))).merged()
+        else: hit = raw_straps[('VSS', 'Metal5')] & tab
+        if not hit.is_empty() and not GRID_SWAP:
             straps[('VSS', 'Metal5')] = (straps[('VSS', 'Metal5')] + hit).merged()
         man['tab_ties'].append(dict(inst=n, tab=tn, tied=not hit.is_empty(), at=[round(x0+t[0], 2), round(y0+t[2], 2)]))
 # island strap regions (coordinator 2026-11-24: island rails sized for their current, not 1 um routes): inside the box round
@@ -438,8 +511,18 @@ for n, v in C.STAGED.get(CHIP, {}).items():
     for tn, t in rep.get('ties', {}).get('VSS', {}).items():
         if not tn.startswith(('chan', 'grid_tie')): continue      # channel tabs and top-edge landings (WT47)
         tab = db.Region(db.Box(um(x0+t[0]), um(y0+t[2]-3.0), um(x0+t[1]), um(y0+t[3]+3.0)))
-        hit = raw_straps[('VSS', 'Metal5')] & tab
-        if not hit.is_empty():
+        if GRID_SWAP:
+            # swapped grid: the tie is a Metal5 run up the block's Metal5-free channel from the tab to the first horizontal
+            # VSS Metal5 strap above or below the block; the VDD rows it crosses give way 2 um round it
+            bx_ = man['blocks'][n]['bbox']
+            run_ = db.Region(db.Box(um(x0+t[0]), um(bx_[1]-PITCH), um(x0+t[1]), um(bx_[3]+PITCH))) - (blkmetal['Metal5'] - tab).sized(um(0))
+            run_ = run_.interacting(tab)
+            hit = run_ if not (run_ & straps[('VSS', 'Metal5')]).is_empty() else db.Region()
+            if not hit.is_empty():
+                straps[('VSS', 'Metal5')] = (straps[('VSS', 'Metal5')] + hit).merged()
+                straps[('VDD', 'Metal5')] = (straps[('VDD', 'Metal5')] - hit.sized(um(2))).merged()
+        else: hit = raw_straps[('VSS', 'Metal5')] & tab
+        if not hit.is_empty() and not GRID_SWAP:
             straps[('VSS', 'Metal5')] = (straps[('VSS', 'Metal5')] + hit).merged()
         man['tab_ties'].append(dict(inst=n, tab=tn, tied=not hit.is_empty(), at=[round(x0+t[0], 2), round(y0+t[2], 2)]))
 # the VSS ring gives way where a VDD strap crosses it on the same layer (the other layer stays continuous)

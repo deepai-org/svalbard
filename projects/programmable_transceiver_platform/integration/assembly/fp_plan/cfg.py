@@ -11,6 +11,9 @@ MACRO = 'digital'
 FIXED = {k: tuple(v) for k, v in PLACE['hand'].items()}
 CHANNELS = {k: tuple(v) for k, v in PLACE['channels'].items()}
 MPITCH = 2.24
+# channels decap tiles may occupy (they block Metal1-2 only; with the swapped grid Metal3 / Metal4 / Metal5 pass over them):
+# not the macro escape rows (Metal2 pins) or pin-dense gaps
+DECAP_CHANNELS = PLACE.get('decap_channels', [])
 if CHIP == 'rf':
     KEEPOUTS = [r for v in json.load(open(RUN + '/fp_pads.json')).values() for r in v]          # pad footprints + 34 um (floorplan.py PAD_CLEAR rf)
     MFORBID = {'E': [(3290.0, 3600.0)]}       # macro east edge facing pad_aux_clk: no pins

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """CHIP=rf|wired evalp.py cfg.py <chip>_place.json <tag> [G]: legality / rule check, small cells + decap placed next to partners,
 macro pins assigned facing their nets, gcell global route (M2 V, M3 H), utilisation report, SVG + ASCII drawing."""
-import json, sys, importlib.util, collections, math
+import json, sys, importlib.util, collections, math, os
 import numpy as np
 import plan_lib as P
 spec = importlib.util.spec_from_file_location('cfg', sys.argv[1]); cfg = importlib.util.module_from_spec(spec); spec.loader.exec_module(cfg)
@@ -15,7 +15,7 @@ sm.sort(key=lambda i: -C[i]['w'] * C[i]['h'])
 un = p.autoplace(sm, halo=4.0)
 # decap: macro-edge bank first (next to the macro), then tiles anywhere
 near = {i: cfg.MACRO for i in dec if 'bank' in i}
-und = p.autoplace(dec, near=near, step=20.0, halo=2.0)
+und = p.autoplace(dec, near=near, step=20.0, halo=2.0, chan_ok=set(getattr(cfg, 'DECAP_CHANNELS', ())))
 bad, ka, ad = p.check(cfg.RULES, [(a, b, d) for a, b, d, w in cfg.ADJ if not b.startswith('g4_')])
 # switch to supply-bond distance (G4)
 g4 = []

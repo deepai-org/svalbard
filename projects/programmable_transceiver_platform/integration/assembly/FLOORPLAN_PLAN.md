@@ -156,23 +156,23 @@ cells and decap the planning script put next to their partner; the packer may do
 |     bbbbOONNN.@@@@@@@@@@@@@@@@@@@@@@rrrw         |
 |     bbbbOONNN.@@@@@@@@@@@@@@@@@@@@@@############ |
 |     ...OOONNN.@@@@@@@@@@@@@@@@@@@@@@############ |
-|     ...OOONNN....HHHHHHHHH.zzzKKKKKKRRRRRq       |
-|     ....QQQQQ....HHHHHHHHH..  KKKKKKRRRRRq       |
-|     ccccQQQQQ......FFFFFFFFiiiKKKKKK############ |
-|     cccgggvv ......FFFFFFFFiii:::::############# |
-|############  ......FFFFFFFFBBBBBBBBBBBB::        |
-|############  ....::FFFFFFFFBBBBBBBBBBBB mm       |
-|############VVVVoo::FFFFFFFFBBBBBBBBBBBBdmm       |
-|############VVVVoo.ffff.LLLLLL::: xxxkk ddd       |
-|############MMMMMM.eeee.LLLLLL::AAAAAAAAAAA       |
+|     ...OOONNN::::HHHHHHHHH.zzzKKKKKKRRRRRq       |
+|     ....QQQQQ.:::HHHHHHHHH..  KKKKKKRRRRRq       |
+|     ccccQQQQQ::::::FFFFFFFFiiiKKKKKK############ |
+|     cccgggvv ::::::FFFFFFFFiii:::::############# |
+|############  ::::::FFFFFFFFBBBBBBBBBBBB::        |
+|############  ::.:::FFFFFFFFBBBBBBBBBBBB mm       |
+|############VVVVoo. FFFFFFFFBBBBBBBBBBBBdmm       |
+|############VVVVoo.ffff.LLLLLLkkxxx:::: ddd       |
+|############MMMMMM.eeee.LLLLLLkkAAAAAAAAAAA       |
 |############UUUUnn.eeeeELLLLXX::AAAAAAAAAAA       |
 |############UUUUnn..EEEEEEEEXX::AAAAAAAAAAA       |
 |############UUUUCCC.EEEEEEEEXX yAAAAAAAAAAA       |
 |     uu aaa::CCCCCC.EEEEEEEEXXGyGGGGGGGGGAA       |
 |     uulaaa::CCCCCC.EEEEEEEE GGGGGGGGGGGGjj       |
 |     lllZZZ::CCCCCC.IIIIIPPPPGGGGGGGGGGGGjj       |
-|      ::ZZZ::CCCCCC.IIIIIPPPPDDDDDDDDDDDDDD       |
-|      ::YYY::CCCCCC.IIIIIPPPPDDDDDDDDDDDDDD       |
+|        ZZZ::CCCCCC.IIIIIPPPPDDDDDDDDDDDDDD       |
+|        YYY  CCCCCC.IIIIIPPPPDDDDDDDDDDDDDD       |
 |        YYY  CCCCCC.IIIIIPPPPDDDDDDDDDDDDDD       |
 |                                                  |
 |                                                  |
@@ -223,25 +223,25 @@ Channels kept free of blocks and decap (die um):
 |                                                  |
 |                                                  |
 |                                                  |
-|        ::  @@@@@@@@@@@@@@@@@@@@@::::             |
-|        ::::@@@@@@@@@@@@@@@@@@@@@::::             |
-|       :::: @@@@@@@@@@@@@@@@@@@@@ :::::           |
-|      :::   @@@@@@@@@@@@@@@@@@@@@JJJ              |
-|      ::   f@@@@@@@@@@@@@@@@@@@@@JJJXee           |
-|######:::###@@@@@@@@@@@@@@@@@@@@@JJJXee           |
-|############@@@@@@@@@@@@@@@@@@@@@                 |
-|############@@@@@@@@@@@@@@@@@@@@@    ############ |
-|############@@@@@@@@@@@@@@@@@@@@@ccc ############ |
-|############@@@@@@@@@@@@@@@@@@@@@:::              |
-|     aaa    ..................::.::QQQQQ:         |
-|     bbbCCCCCCCCC::........   :::LLQQQQQ######### |
-|     SSSCCCCCCCCC::....BBBWWWBBBBLLLLLLL..####### |
-|      :::::::::::::....BBBBBBBBBB.........        |
-|      :::::::  ::::....BBBBBBBBBB...NNNNOOO       |
-|##      :::::TTT:::....BIIIIBVVBB###NNNNOOO###### |
+|          ::@@@@@@@@@@@@@@@@@@@@@::::             |
+|       :::::@@@@@@@@@@@@@@@@@@@@@::::             |
+|       :::  @@@@@@@@@@@@@@@@@@@@@:::::            |
+|      :::   @@@@@@@@@@@@@@@@@@@@@:JJJ             |
+|     ::::  f@@@@@@@@@@@@@@@@@@@@@:JJJXee          |
+|######:::###@@@@@@@@@@@@@@@@@@@@@.JJJXee          |
+|############@@@@@@@@@@@@@@@@@@@@@..               |
+|############@@@@@@@@@@@@@@@@@@@@@.cc ############ |
+|############@@@@@@@@@@@@@@@@@@@@@:cc ############ |
+|############@@@@@@@@@@@@@@@@@@@@@::: ::           |
+|     aaa    .....................::QQQQQ          |
+|     bbbCCCCCCCCC::........    ::LLQQQQQ######### |
+|     SSSCCCCCCCCC::....BBBWWWBBBBLLLLLLL######### |
+|        :::::::::::....BBBBBBBBBB:::::            |
+|          :::  ::::....BBBBBBBBBB:::NNNNOOO       |
+|##       ::::TTT:::....BIIIIBVVBB:::NNNNOOO###### |
 |###########ddFFFFFF.....IIII:VV################## |
 |###########ddFFFFFF.....IIII VV################## |
-|         ::::FFFFFF.....::: ..:::::::::           |
+|             FFFFFF.....::: ..:::::               |
 |            YYY::::.....::: ..::::UUU             |
 |            AAAAAAAAAAAAAAAA..::::   ############ |
 |            AAAAAAAAAAAAAAAA..:::::::############ |

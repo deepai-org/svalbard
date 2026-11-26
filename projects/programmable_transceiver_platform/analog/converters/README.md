@@ -53,12 +53,13 @@ empty (minimal run): not a corner pass.
 
 ## Known misses and not-yet-run items (current state)
 
-- Extracted R+C key runs on this GDS (ADC FFT/ENOB at 39.0625 and 40 MS/s, tt and ss 32 °C 3.15 V, ss trimmed
-  3.5 V; DAC static linearity and output range tt/ss) are running (`rc_bench.py`; results land as
-  `generated/<block>-rc-<tag>.json`). Until they land, the last extracted numbers are on the staged copy of the same
-  generator output (C-only, `scratch/converters-ap4/sim/`): ADC FFT 64 pt 40 MS/s tt ENOB 5.4 (corrected 5.5), ss
-  32 °C 3.15 V with C × 1.15 **ENOB 2.2, 20 of 64 conversions late** (MOD-04, CNV-07); DAC full scale ±0.998 V tt,
-  ±1.18 V ss, ±0.81 V ff against the ±1.0 V target, static error ≤ 0.65 LSB at 5 codes tt.
+- Extracted R+C key runs on the GDS with the ASM-16a port diodes (2026-11-26, `rc_bench.py`, 64-point FFT,
+  `generated/<block>-rc-<tag>.json`); ENOB after per-core offset/gain correction: tt 27 °C 3.3 V 40 MS/s 5.02 (SFDR
+  41.5 dB, DONE ≤ 33.5 ns); ff 22 °C 3.35 V 4.62 (39.4 dB, ≤ 25.8 ns); ss 32 °C 3.15 V at 39.06 MS/s 5.20 (44.6 ns);
+  ss trimmed 3.5 V at 40 MS/s 5.14 (adc_q the same); **ss 32 °C 3.15 V untrimmed at 40 MS/s 4.14 with 9 of 64
+  conversions late (MOD-04, CNV-07; 4.33 / 7 late before the diodes)**: ss dies need the 3.5 V trim at 40 MS/s.
+  DAC static (dac_i, dac_q identical): full scale ±1.02 V tt, ±1.21 V ss, ±0.84 V ff against ±1.0 V; worst code
+  error 0.92 LSB tt, 1.49 ss, 0.54 ff (limit 4). Diodes changed none of these by more than run noise.
 - ADC `safe` 1.30 µA vs 1 µA (CNV-07); ADC disabled input load 197.6 fF vs 100 fF (CNV-02); ADC over its 350 000 µm²
   ceiling (452 046 µm² Magic bbox).
 - DAC four-test evidence not regenerated on this GDS (the bench runs ~12 h); the earlier records were deleted as

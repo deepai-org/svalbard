@@ -16,11 +16,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "digital/hostio",
    "evidence": [
-    "evidence/digital-hardening-evidence.json"
+    "../../scratch/reviews/interface-changes.md"
    ],
    "status": "fails",
-   "basis": "hword fmax 65.3 MHz tt (stale, 18/26 sources)",
-   "primary_fix": "AC-1 pad-edge gearbox + 40-bit/78.125 MHz core; divider 8 (interface-changes S1-S3)",
+   "basis": "Full rate (312.5 Mb/s/pin) misses on slow dies even at the 3.50 V trim: routed STA, characterized libs, interface-changes DG9-29 (pt_rf) / DG9-30 (pt_wired): ss 3.50 V d2h_fwd -1.24 / -1.34 ns, d2h_oddr -0.27 / -0.51, hddr -0.12 / -0.42 ns; ss 3.15 V WNS -2.10 / -2.32 ns. ff 3.35 V setup passes (+1.0 ns, macro metrics.json). Per-pin windows are trainable by the FPGA (DG9-21/DG9-28: D2H eye >= 2.18 ns vs 1.72 ns needed at ss 3.15 V nominal), but the SDC paths still fail. Reduced rate (div2/div4) on slow dies; GLS loopback locks DDR/SDR/SDR-reduced on both netlists (DG9-29/30).",
+   "primary_fix": "Host-link timing fixes not yet in the macros (clock mux, fc_half2, h2d paths; DG9-30), then routed STA at ss 3.15 V and 3.50 V",
    "fallback": [
     "debug.host_link.rate div2/div4"
    ]
@@ -32,11 +32,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "digital",
    "evidence": [
-    "evidence/digital-hardening-evidence.json"
+    "../../scratch/reviews/interface-changes.md"
    ],
    "status": "fails",
-   "basis": "wtx/wrx 53.5/63.8 MHz tt at 20-bit boundary; no in-envelope Liberty",
-   "primary_fix": "AC-1; in-envelope STA",
+   "basis": "78.125 MHz core, routed STA on the delivered macros (interface-changes DG9-29 pt_rf, DG9-30 pt_wired): ss 3.15 V WNS -2.10 / -2.32 ns (untrimmed slow dies fail); at the 3.50 V trim pt_rf core passes except fc2 -0.44 ns, pt_wired hcore -0.06, wtx -0.07 ns (inside the 0.25 ns clock uncertainty), wrx pass; ff 3.35 V passes; hold reg-to-reg >= 0 at every fast corner. Wired PRBS checker predictor at 3.0-3.34 Gb/s -1.31 ns at 3.50 V (DG9-27, checker only). Meets only with the 3.50 V trim on slow dies, and then not yet for pt_rf fc2.",
+   "primary_fix": "fc_half2 fix (pt_rf fc2) and DG9-27 PRBS predictor in the next hardening of both macros; slow dies at the 3.50 V trim (MANDATE 2)",
    "fallback": [
     "debug.host_link.rate div2/div4"
    ]
@@ -48,11 +48,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "digital/hostio + board",
    "evidence": [
-    "evidence/digital-hardening-evidence.json"
+    "../../scratch/reviews/interface-changes.md",
+    "spec/fpga-connection-plan.md"
    ],
-   "status": "unverified",
-   "basis": "Budget margin 1140 ps on assumptions; FPGA not chosen; SSO unverified",
-   "primary_fix": "Select FPGA (board-requirements.md host-link section); board SI + SSO sim",
+   "status": "marginal",
+   "basis": "Per-pin routed STA (interface-changes DG9-21, DG9-28): rise/fall spread per pin 1.00-1.02 ns ss 3.15 V, 0.90 ns at 3.50 V, 0.43 ns ff; eye left >= 2.18 ns vs 1.72 ns Artix-7 budget (spec/fpga-connection-plan.md): +0.46 ns (0.14 UI) at ss 3.15 V, +0.56 ns at 3.50 V, nominal delays. With the 8 % OCV bound the spread is 3.8 ns (> 3.2 ns UI) at ss: full rate relies on per-die IDELAY training. No board SI/SSO in the margin. Verify: FPGA training on silicon (silicon/board).",
+   "primary_fix": "Per-bit IDELAY training per die (DG9-21); board SI + SSO check on the test board",
    "fallback": [
     "HL-B6"
    ]
@@ -64,11 +65,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "hostio",
    "evidence": [
-    "evidence/digital-hardening-evidence.json"
+    "../../scratch/reviews/interface-changes.md"
    ],
    "status": "marginal",
-   "basis": "612 ps tt pad-limited; in-envelope ss input f_max missing (ss_125C non-gating)",
-   "primary_fix": "Characterize bi_24t input at 22/32 C x 3.15/3.35 V",
+   "basis": "H2D window at the macro, routed STA (interface-changes DG9-28): ss 3.15 V width >= 1.07 ns nominal / 0.68 ns with the 8 % OCV bound (0.21 UI), centre 2.91-3.01 ns; ff 3.35 V >= 1.89 / 1.71 ns; centre moves ~0.9 ns ff->ss, so it needs a full-UI per-die MMCM phase sweep; h2d_pin input-window hold -0.12 / -0.14 ns at ff 3.35 V (placement by training). Meets the 0.15 UI only with FPGA training; board not included.",
+   "primary_fix": "Full-UI H2D MMCM phase training per die and temperature (DG9-21/DG9-28)",
    "fallback": [
     "HL-B6"
    ]
@@ -79,10 +80,12 @@
    "requirement": "Ground bounce <= 300 mV with 11 D2H outputs switching",
    "source": "spec/interface-requirements.md",
    "owner": "hostio + board",
-   "evidence": [],
-   "status": "unverified",
-   "basis": "supply-path simulations incomplete (evidence/supply-path-incomplete.json)",
-   "primary_fix": "Tractable bank SSO sim; board HL-B4",
+   "evidence": [
+    "spec/power-delivery.md"
+   ],
+   "status": "marginal",
+   "basis": "Lumped PDN model, pessimistic (spec/power-delivery.md 6.5 / 5.2): D2H noise at macro / core_bias pt_rf 136 / 292 mV pk-pk (div2), pt_wired 109 / 124 mV (156.25 MHz) vs 300 mV; full-rate D2H on pt_rf and the pad-bank ground bounce through package and board are not simulated. Verify: bank SSO transient on the assembled chip's extracted ring + package model (top level), then board HL-B4.",
+   "primary_fix": "Bank SSO transient on the assembled-chip ring with package model; slow slew + d2h_stagger default (in RTL)",
    "fallback": [
     "HL-B6"
    ]
@@ -97,8 +100,8 @@
     "spec/streaming-transport-v2.md"
    ],
    "status": "unverified",
-   "basis": "342 ns model at full clock only; ~2.4x slower at achieved clocks",
-   "primary_fix": "Re-run after AC-1 (+25.6 ns gearbox)",
+   "basis": "No current command-to-response measurement on the delivered RTL; only register-level IX-11 figures exist (138 ns full / 282 ns reduced rate, streaming-transport-v2.md). Verify: RTL/GLS bench timing a command frame to its response at full and div2 rate (simulation now).",
+   "primary_fix": "RTL/GLS latency bench at full and div2 host rate",
    "fallback": []
   },
   {
@@ -108,12 +111,11 @@
    "source": "spec/power-delivery.md",
    "owner": "digital",
    "evidence": [
-    "evidence/digital-hardening-evidence.json",
-    "spec/budgets/power-budget.json"
+    "spec/power-delivery.md"
    ],
    "status": "fails",
-   "basis": "Only post-route number: 0.684 W vectorless = 207 mA",
-   "primary_fix": "Clock gating + AC-1 half-rate core; SAIF power",
+   "basis": "Delivered pt_wired macro (DG9-30), post-route vectorless power 0.336 W (scratch/digital-macro-baseline/wired/metrics.json, untracked) = 102 mA at 3.3 V vs 60 mA; no SAIF (activity-annotated) number exists. Vectorless is pessimistic, so the real figure may be lower: verify with GLS-SAIF power (simulation now).",
+   "primary_fix": "SAIF-annotated power from the GLS vectors; clock gating of unused domains",
    "fallback": []
   },
   {
@@ -123,12 +125,11 @@
    "source": "spec/power-delivery.md",
    "owner": "digital",
    "evidence": [
-    "evidence/digital-hardening-evidence.json",
-    "spec/budgets/power-budget.json"
+    "spec/power-delivery.md"
    ],
    "status": "fails",
-   "basis": "as above",
-   "primary_fix": "as above",
+   "basis": "Delivered pt_rf macro (DG9-29), post-route vectorless power 0.193 W (scratch/digital-macro-baseline/rf/metrics.json, untracked) = 58 mA at 3.3 V vs 40 mA; no SAIF number. Verify with GLS-SAIF power (simulation now).",
+   "primary_fix": "SAIF-annotated power from the GLS vectors; clock gating of unused domains",
    "fallback": []
   },
   {
@@ -138,11 +139,11 @@
    "source": "spec/power-delivery.md",
    "owner": "digital (recipe)",
    "evidence": [
-    "spec/budgets/power-budget.json"
+    "spec/power-delivery.md"
    ],
    "status": "unverified",
-   "basis": "recipe change only",
-   "primary_fix": "Set default RF recipe",
+   "basis": "Requirement stated in spec/power-delivery.md; tools/bringup/sequence.py host_link() defaults to div4 (rate=2) for training and has no RF-mode recipe that sets div2. Verify: RF-mode recipe in tools/bringup plus a register-level check (simulation now).",
+   "primary_fix": "Add the RF-mode host rate (div2) to the bring-up/mode recipes",
    "fallback": []
   },
   {
@@ -152,11 +153,11 @@
    "source": "spec/power-delivery.md",
    "owner": "spec (power)",
    "evidence": [
-    "spec/budgets/power-budget.json"
+    "spec/power-delivery.md"
    ],
    "status": "marginal",
-   "basis": "Allocation: all fit except autonomous RF; evidence bound: all over by 110-208 mA; with PWR-DIG: +13.6 mA min margin",
-   "primary_fix": "PWR-DIG-*, PWR-HOST-RF",
+   "basis": "spec/power-delivery.md mode table, 430 mA ceiling per chip: with the digital macro at PWR-DIG, pt_rf DXa 393.7 mA (+36.3), pt_wired W 410.1 mA (+19.9); at 81.8 mA macro -5.5 / -1.9 mA. The delivered macros' vectorless power (58 / 102 mA) exceeds PWR-DIG, so the pass depends on PWR-DIG closing.",
+   "primary_fix": "PWR-DIG-* (SAIF power, clock gating), PWR-HOST-RF",
    "fallback": []
   },
   {
@@ -166,12 +167,12 @@
    "source": "spec/power-delivery.md",
    "owner": "spec (power) + integration",
    "evidence": [
-    "spec/budgets/power-budget.json",
-    "analog/island_support/evidence.json"
+    "../../scratch/reviews/grid-ir-2026-11-25.md",
+    "spec/power-delivery.md"
    ],
-   "status": "marginal",
-   "basis": "81.1 mV with PWR-DIG (+35.9 mV); evidence bound -1.3 mV; grid R is an allocation",
-   "primary_fix": "Extract ring/grid; PWR-DIG; island edge-bar straps",
+   "status": "fails",
+   "basis": "Grid/IR recheck on the assembled layouts (scratch/reviews/grid-ir-2026-11-25.md, pessimistic set, macro at 81.8 mA): pt_rf worst tap 120.1 mV drawn / 133.0 mV pad-fed (lo_mmd) vs 117 mV; pt_wired 113.4 drawn / 122.4 pad-fed (wrx_cap). Island-switch hooks 10-130x over EM there (function-breaking until relaid). Projected 111.4 mV pt_rf with SE/ME strap density at 12 %. Re-verify on the next assembled chip (top level).",
+   "primary_fix": "Island-switch landings and SE/ME strap density per grid-ir-2026-11-25.md fixes 1-3; rerun grid IR on the assembled chip",
    "fallback": [
     "B2a"
    ]
@@ -183,11 +184,11 @@
    "source": "spec/power-delivery.md",
    "owner": "board + spec",
    "evidence": [
-    "spec/budgets/power-budget.json"
+    "spec/power-delivery.md"
    ],
    "status": "unverified",
-   "basis": "theta(j->plate) <= 8.25 C/W required; COB theta not characterized",
-   "primary_fix": "B2a controlled plate",
+   "basis": "Needs theta(junction-plate) <= 5.42 C/W at 430 mA / 3.35 V (5.19 C/W at the 3.50 V trim) per spec/power-delivery.md 1.1; theta bounded 5.0-7.0 C/W from package-channel.md (B2a cold finger), not characterized. Verify: board/package thermal measurement (silicon/board).",
+   "primary_fix": "B2a controlled plate at <= 5.2 C/W",
    "fallback": [
     "B2a"
    ]
@@ -199,11 +200,13 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + wired_tx + digital",
    "evidence": [
-    "analog/wired_rx/generated/cdr-evidence.json"
+    "analog/wired_rx/generated/wrx_cap-evidence.json",
+    "analog/wired_rx/generated/cdr-evidence.json",
+    "../../scratch/reviews/interface-changes.md"
    ],
    "status": "fails",
-   "basis": "CDR tracking fails extracted; wrx_cap fails >480 MHz; digital caps ~1.07 Gb/s",
-   "primary_fix": "AC-3 CDR closure + AC-1",
+   "basis": "Bound capture r8 (wrx_cap-evidence.json, ss/32/3.15 V): quarter 625 MHz nominal 0/200 pass, 2.5 Gb/s bench B with RCS=1 0/200, but pessimistic-bound ss q625 72/200 FAIL and 23/200 at 3.50 V (slot-enable chain; trim does not rescue); CDR closed loop not run on the bound r13 pt_cdr with the r12 ring (cdr-evidence.json closed_loop: r11 extraction + r9w ring, tt only, data margin >= 0.357 UI). 1e-12 BER itself is a board measurement.",
+   "primary_fix": "Capture r10b slot-enable two-period cross hops (r13cap/STATUS.md) + AC-3 CDR closed loop on r13/r12",
    "fallback": [
     "wire_rx_board_retimer",
     "wire_board_phy_bypass",
@@ -218,10 +221,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + timing",
    "evidence": [
-    "analog/wired_rx/generated/cdr-evidence.json"
+    "analog/wired_rx/generated/cdr-evidence.json",
+    "../../scratch/reviews/interface-changes.md"
    ],
    "status": "unverified",
-   "basis": "no JTOL evidence; ring phase error 9-10.8 deg",
+   "basis": "No JTOL evidence on extracted blocks. Model only: per-die KP calibration (CDR7-KP) gives 1.03-1.19x mask (scratch/wired_rx/r7cdr gain-bound model, lat 8); r13 integral path 2.6-3.5x slower than r11 (cdr-evidence known_limits). Verify: closed-loop JTOL sweep on r13 + r12 ring R+C (sim now), then board. Quarter-rate capture also fails at the pessimistic ss bound (wrx_cap-evidence.json).",
    "primary_fix": "AC-3 per-UI Alexander PD, phase trim (S4/S5)",
    "fallback": [
     "wire_rx_board_retimer",
@@ -237,10 +241,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (cdr)",
    "evidence": [
-    "analog/wired_rx/generated/cdr-rtl-check.json"
+    "analog/wired_rx/generated/cdr-rtl-check.json",
+    "analog/wired_rx/generated/cdr-evidence.json"
    ],
    "status": "unverified",
-   "basis": "FLL locks -6000..+1000 ppm in behavioural model only; hand-over drift 5883 ppm extracted",
+   "basis": "Behavioural model only (cdr-rtl-check.json): +-300 ppm at bpc 4/2 and +-500 ppm at bpc 1, 29920 bits 0 errors; FLL hold-step +-20000..35000 ppm recovers. Not run on extracted r13 pt_cdr + r12 ring. Verify: extracted closed loop with ppm offset (sim now).",
    "primary_fix": "AC-3 continuous integral path",
    "fallback": [
     "wire_rx_board_retimer",
@@ -256,11 +261,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + wired_tx + digital",
    "evidence": [
+    "analog/wired_rx/generated/wrx_cap-evidence.json",
     "analog/wired_rx/generated/cdr-evidence.json"
    ],
-   "status": "fails",
-   "basis": "CDR tracking fails extracted; wrx_cap fails >480 MHz; digital caps ~1.07 Gb/s",
-   "primary_fix": "AC-3 CDR closure + AC-1",
+   "status": "unverified",
+   "basis": "Half rate (ring 625-810 MHz): no capture run on the bound r8 at half rate (h625_ss defined, not run); CDR closed loop not run on the bound r13 pt_cdr with the r12 ring (cdr-evidence.json closed_loop: r11 extraction + r9w ring, tt only, data margin >= 0.357 UI). No current failing evidence either. Verify: h625 ss nominal/pessimistic on r8 + closed loop r13/r12 (sim now); 1e-12 BER on the board.",
+   "primary_fix": "Half-rate capture run on r8 + AC-3 CDR closed loop on r13/r12",
    "fallback": [
     "wire_rx_board_retimer",
     "B13"
@@ -273,10 +279,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + timing",
    "evidence": [
-    "analog/wired_rx/generated/cdr-evidence.json"
+    "analog/wired_rx/generated/cdr-evidence.json",
+    "../../scratch/reviews/interface-changes.md"
    ],
    "status": "unverified",
-   "basis": "no JTOL evidence; ring phase error 9-10.8 deg",
+   "basis": "No JTOL evidence on extracted blocks. Model only: per-die KP calibration (CDR7-KP) gives 1.03-1.19x mask (scratch/wired_rx/r7cdr gain-bound model, lat 8); r13 integral path 2.6-3.5x slower than r11 (cdr-evidence known_limits). Verify: closed-loop JTOL sweep on r13 + r12 ring R+C (sim now), then board.",
    "primary_fix": "AC-3 per-UI Alexander PD, phase trim (S4/S5)",
    "fallback": [
     "wire_rx_board_retimer",
@@ -290,10 +297,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (cdr)",
    "evidence": [
-    "analog/wired_rx/generated/cdr-rtl-check.json"
+    "analog/wired_rx/generated/cdr-rtl-check.json",
+    "analog/wired_rx/generated/cdr-evidence.json"
    ],
    "status": "unverified",
-   "basis": "FLL locks -6000..+1000 ppm in behavioural model only; hand-over drift 5883 ppm extracted",
+   "basis": "Behavioural model only (cdr-rtl-check.json): +-300 ppm at bpc 4/2 and +-500 ppm at bpc 1, 29920 bits 0 errors; FLL hold-step +-20000..35000 ppm recovers. Not run on extracted r13 pt_cdr + r12 ring. Verify: extracted closed loop with ppm offset (sim now).",
    "primary_fix": "AC-3 continuous integral path",
    "fallback": [
     "wire_rx_board_retimer",
@@ -307,11 +315,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + wired_tx + digital",
    "evidence": [
+    "analog/wired_rx/generated/wrx_cap-evidence.json",
     "analog/wired_rx/generated/cdr-evidence.json"
    ],
-   "status": "fails",
-   "basis": "CDR tracking fails extracted; wrx_cap fails >480 MHz; digital caps ~1.07 Gb/s",
-   "primary_fix": "AC-3 CDR closure + AC-1",
+   "status": "unverified",
+   "basis": "Half rate (ring 625-810 MHz): no capture run on the bound r8 at half rate (h625_ss defined, not run); CDR closed loop not run on the bound r13 pt_cdr with the r12 ring (cdr-evidence.json closed_loop: r11 extraction + r9w ring, tt only, data margin >= 0.357 UI). No current failing evidence either. Verify: h625 ss nominal/pessimistic on r8 + closed loop r13/r12 (sim now); 1e-12 BER on the board.",
+   "primary_fix": "Half-rate capture run on r8 + AC-3 CDR closed loop on r13/r12",
    "fallback": [
     "wire_rx_board_retimer",
     "B13"
@@ -324,10 +333,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + timing",
    "evidence": [
-    "analog/wired_rx/generated/cdr-evidence.json"
+    "analog/wired_rx/generated/cdr-evidence.json",
+    "../../scratch/reviews/interface-changes.md"
    ],
    "status": "unverified",
-   "basis": "no JTOL evidence; ring phase error 9-10.8 deg",
+   "basis": "No JTOL evidence on extracted blocks. Model only: per-die KP calibration (CDR7-KP) gives 1.03-1.19x mask (scratch/wired_rx/r7cdr gain-bound model, lat 8); r13 integral path 2.6-3.5x slower than r11 (cdr-evidence known_limits). Verify: closed-loop JTOL sweep on r13 + r12 ring R+C (sim now), then board.",
    "primary_fix": "AC-3 per-UI Alexander PD, phase trim (S4/S5)",
    "fallback": [
     "wire_rx_board_retimer",
@@ -341,10 +351,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (cdr)",
    "evidence": [
-    "analog/wired_rx/generated/cdr-rtl-check.json"
+    "analog/wired_rx/generated/cdr-rtl-check.json",
+    "analog/wired_rx/generated/cdr-evidence.json"
    ],
    "status": "unverified",
-   "basis": "FLL locks -6000..+1000 ppm in behavioural model only; hand-over drift 5883 ppm extracted",
+   "basis": "Behavioural model only (cdr-rtl-check.json): +-300 ppm at bpc 4/2 and +-500 ppm at bpc 1, 29920 bits 0 errors; FLL hold-step +-20000..35000 ppm recovers. Not run on extracted r13 pt_cdr + r12 ring. Verify: extracted closed loop with ppm offset (sim now).",
    "primary_fix": "AC-3 continuous integral path",
    "fallback": [
     "wire_rx_board_retimer",
@@ -358,11 +369,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + wired_tx + digital",
    "evidence": [
+    "analog/wired_rx/generated/wrx_cap-evidence.json",
     "analog/wired_rx/generated/cdr-evidence.json"
    ],
-   "status": "fails",
-   "basis": "CDR tracking fails extracted; wrx_cap fails >480 MHz; digital caps ~1.07 Gb/s",
-   "primary_fix": "AC-3 CDR closure + AC-1",
+   "status": "unverified",
+   "basis": "Half rate (ring 625-810 MHz): no capture run on the bound r8 at half rate (h625_ss defined, not run); CDR closed loop not run on the bound r13 pt_cdr with the r12 ring (cdr-evidence.json closed_loop: r11 extraction + r9w ring, tt only, data margin >= 0.357 UI). No current failing evidence either. Verify: h625 ss nominal/pessimistic on r8 + closed loop r13/r12 (sim now); 1e-12 BER on the board.",
+   "primary_fix": "Half-rate capture run on r8 + AC-3 CDR closed loop on r13/r12",
    "fallback": [
     "wire_rx_board_retimer",
     "B13"
@@ -375,10 +387,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + timing",
    "evidence": [
-    "analog/wired_rx/generated/cdr-evidence.json"
+    "analog/wired_rx/generated/cdr-evidence.json",
+    "../../scratch/reviews/interface-changes.md"
    ],
    "status": "unverified",
-   "basis": "no JTOL evidence; ring phase error 9-10.8 deg",
+   "basis": "No JTOL evidence on extracted blocks. Model only: per-die KP calibration (CDR7-KP) gives 1.03-1.19x mask (scratch/wired_rx/r7cdr gain-bound model, lat 8); r13 integral path 2.6-3.5x slower than r11 (cdr-evidence known_limits). Verify: closed-loop JTOL sweep on r13 + r12 ring R+C (sim now), then board.",
    "primary_fix": "AC-3 per-UI Alexander PD, phase trim (S4/S5)",
    "fallback": [
     "wire_rx_board_retimer",
@@ -392,10 +405,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (cdr)",
    "evidence": [
-    "analog/wired_rx/generated/cdr-rtl-check.json"
+    "analog/wired_rx/generated/cdr-rtl-check.json",
+    "analog/wired_rx/generated/cdr-evidence.json"
    ],
    "status": "unverified",
-   "basis": "FLL locks -6000..+1000 ppm in behavioural model only; hand-over drift 5883 ppm extracted",
+   "basis": "Behavioural model only (cdr-rtl-check.json): +-300 ppm at bpc 4/2 and +-500 ppm at bpc 1, 29920 bits 0 errors; FLL hold-step +-20000..35000 ppm recovers. Not run on extracted r13 pt_cdr + r12 ring. Verify: extracted closed loop with ppm offset (sim now).",
    "primary_fix": "AC-3 continuous integral path",
    "fallback": [
     "wire_rx_board_retimer",
@@ -409,11 +423,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + wired_tx + digital",
    "evidence": [
+    "analog/wired_rx/generated/wrx_cap-evidence.json",
     "analog/wired_rx/generated/cdr-evidence.json"
    ],
-   "status": "fails",
-   "basis": "CDR tracking fails extracted; wrx_cap fails >480 MHz; digital caps ~1.07 Gb/s",
-   "primary_fix": "AC-3 CDR closure + AC-1",
+   "status": "unverified",
+   "basis": "Half rate (ring 625-810 MHz): no capture run on the bound r8 at half rate (h625_ss defined, not run); CDR closed loop not run on the bound r13 pt_cdr with the r12 ring (cdr-evidence.json closed_loop: r11 extraction + r9w ring, tt only, data margin >= 0.357 UI). No current failing evidence either. Verify: h625 ss nominal/pessimistic on r8 + closed loop r13/r12 (sim now); 1e-12 BER on the board.",
+   "primary_fix": "Half-rate capture run on r8 + AC-3 CDR closed loop on r13/r12",
    "fallback": [
     "wire_rx_board_retimer",
     "wire_tx_external_data",
@@ -428,10 +443,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + timing",
    "evidence": [
-    "analog/wired_rx/generated/cdr-evidence.json"
+    "analog/wired_rx/generated/cdr-evidence.json",
+    "../../scratch/reviews/interface-changes.md"
    ],
    "status": "unverified",
-   "basis": "no JTOL evidence; ring phase error 9-10.8 deg",
+   "basis": "No JTOL evidence on extracted blocks. Model only: per-die KP calibration (CDR7-KP) gives 1.03-1.19x mask (scratch/wired_rx/r7cdr gain-bound model, lat 8); r13 integral path 2.6-3.5x slower than r11 (cdr-evidence known_limits). Verify: closed-loop JTOL sweep on r13 + r12 ring R+C (sim now), then board.",
    "primary_fix": "AC-3 per-UI Alexander PD, phase trim (S4/S5)",
    "fallback": [
     "wire_rx_board_retimer",
@@ -447,10 +463,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (cdr)",
    "evidence": [
-    "analog/wired_rx/generated/cdr-rtl-check.json"
+    "analog/wired_rx/generated/cdr-rtl-check.json",
+    "analog/wired_rx/generated/cdr-evidence.json"
    ],
    "status": "unverified",
-   "basis": "FLL locks -6000..+1000 ppm in behavioural model only; hand-over drift 5883 ppm extracted",
+   "basis": "Behavioural model only (cdr-rtl-check.json): +-300 ppm at bpc 4/2 and +-500 ppm at bpc 1, 29920 bits 0 errors; FLL hold-step +-20000..35000 ppm recovers. Not run on extracted r13 pt_cdr + r12 ring. Verify: extracted closed loop with ppm offset (sim now).",
    "primary_fix": "AC-3 continuous integral path",
    "fallback": [
     "wire_rx_board_retimer",
@@ -466,10 +483,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (cdr)",
    "evidence": [
-    "analog/wired_rx/generated/cdr-rtl-check.json"
+    "analog/wired_rx/generated/cdr-rtl-check.json",
+    "analog/wired_rx/generated/cdr-evidence.json"
    ],
    "status": "unverified",
-   "basis": "no SSC test",
+   "basis": "Behavioural model only (cdr-rtl-check.json): SSC -5000 ppm at bpc 4 and 2, 139560 bits 0 errors. Not on extracted r13 pt_cdr + r12 ring (integral path 2.6-3.5x slower than modelled r11). Verify: extracted closed loop with 33 kHz triangle SSC (sim now).",
    "primary_fix": "AC-3 integral slew >= 400 ppm/us",
    "fallback": [
     "wire_rx_board_retimer",
@@ -483,10 +501,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (cdr)",
    "evidence": [
-    "analog/wired_rx/generated/cdr-rtl-check.json"
+    "analog/wired_rx/generated/cdr-rtl-check.json",
+    "analog/wired_rx/generated/cdr-evidence.json"
    ],
    "status": "unverified",
-   "basis": "no SSC test",
+   "basis": "Behavioural model only (cdr-rtl-check.json): SSC -5000 ppm at bpc 4 and 2, 139560 bits 0 errors. Not on extracted r13 pt_cdr + r12 ring (integral path 2.6-3.5x slower than modelled r11). Verify: extracted closed loop with 33 kHz triangle SSC (sim now).",
    "primary_fix": "AC-3 integral slew >= 400 ppm/us",
    "fallback": [
     "wire_rx_board_retimer",
@@ -500,10 +519,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (cdr)",
    "evidence": [
-    "analog/wired_rx/generated/cdr-rtl-check.json"
+    "analog/wired_rx/generated/cdr-rtl-check.json",
+    "analog/wired_rx/generated/cdr-evidence.json"
    ],
    "status": "unverified",
-   "basis": "no SSC test",
+   "basis": "Behavioural model only (cdr-rtl-check.json): SSC -5000 ppm at bpc 4 and 2, 139560 bits 0 errors. Not on extracted r13 pt_cdr + r12 ring (integral path 2.6-3.5x slower than modelled r11). Verify: extracted closed loop with 33 kHz triangle SSC (sim now).",
    "primary_fix": "AC-3 integral slew >= 400 ppm/us",
    "fallback": [
     "wire_rx_board_retimer",
@@ -517,11 +537,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx",
    "evidence": [
-    "analog/wired_tx/generated/wiredtx-evidence.json"
+    "analog/wired_tx/README.md",
+    "analog/pads/generated/stress-safe-families/wired-transmit/pc72-txpad-a16.json"
    ],
-   "status": "fails",
-   "basis": "578.5 mVppd tt",
-   "primary_fix": "S8 CML tail >= 16 mA",
+   "status": "unverified",
+   "basis": "No valid result for the bound pt_wiredtx8 (staged master, wired/chip.conn) with the published pad_txpad a16: the s16 real-chain table (extracted pt_wiredtx8 fullfix16 ada39d70, a16 RT pad) stopped on 2026-11-22 before any row (../../scratch/wired_tx/s16/QUEUE.md); the only run is the 40 ns sanity sp16b_ssp (ss-pess 3.15 V, 3.125 Gb/s, pad=C: 0.54 V pp at the pad, no eye). The 578.5 mVppd / 4:1-mux numbers in wiredtx-evidence.json are the retired pt_wiredtx. Limit 800-1200 mVppd. Verify: s16 real-chain table (sim now, chain16.py, one row per rate x corner incl. ss-pess 3.15 V and 3.50 V trim).",
+   "primary_fix": "Real-chain swing table on pt_wiredtx8 + pad_txpad a16 RT; MAIN code per corner (21 mA at code 255)",
    "fallback": [
     "wire_tx_board_serializer",
     "B14"
@@ -534,11 +555,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx + timing",
    "evidence": [
-    "analog/wired_tx/generated/wiredtx-evidence.json"
+    "analog/wired_tx/README.md",
+    "../../scratch/wired_tx/s16/QUEUE.md"
    ],
-   "status": "fails",
-   "basis": "4:1 mux fails 1.92-2.97 Gb/s; serializer DJ 0.38 UI at 1.25 G",
-   "primary_fix": "Compact-cell 4:1 mux and retiming (wired_tx)",
+   "status": "unverified",
+   "basis": "No valid result for the bound pt_wiredtx8 (staged master, wired/chip.conn) with the published pad_txpad a16: the s16 real-chain table (extracted pt_wiredtx8 fullfix16 ada39d70, a16 RT pad) stopped on 2026-11-22 before any row (../../scratch/wired_tx/s16/QUEUE.md); the only run is the 40 ns sanity sp16b_ssp (ss-pess 3.15 V, 3.125 Gb/s, pad=C: 0.54 V pp at the pad, no eye). The 578.5 mVppd / 4:1-mux numbers in wiredtx-evidence.json are the retired pt_wiredtx. Limit TJ <= 0.25 UI at 2.5 Gb/s. Risk: earlier mux-level runs with metal-R pad models (README sec. 6, revision-2 mux) had no passing row at ss above 2.7 Gb/s. Verify: s16 real-chain table (sim now, chain16.py, one row per rate x corner incl. ss-pess 3.15 V and 3.50 V trim). TJ needs ring RJ too (WR-PLL-JIT).",
+   "primary_fix": "Phase-trim calibration (cal16.py) + real-chain jitter table on pt_wiredtx8",
    "fallback": [
     "wire_tx_board_serializer",
     "B14"
@@ -551,11 +573,13 @@
    "source": "spec/interface-requirements.md",
    "owner": "pads + wired_rx/tx",
    "evidence": [
-    "analog/pads/README.md"
+    "analog/pads/generated/stress-safe-families/wired-transmit/pc72-txpad-a16.json",
+    "../../scratch/pads-core/esdopt/tx/bench/a16rt-ac.json",
+    "analog/pads/generated/stress-safe-families/wired-receive-hs/pc47-hspad-a6.json"
    ],
    "status": "fails",
-   "basis": "2.35/2.71 pF -> 7.6/6.6 dB at 1.25 GHz",
-   "primary_fix": "S7 pad C <= 1.6 pF or T-coil",
+   "basis": "Published pads, die-level differential RL (no package). TX pad_txpad a16 RT model (sha 5e0a7322 = published physical-r-typ), tt 27 C 3.3 V only (../../scratch/pads-core/esdopt/tx/bench/a16rt-ac.json): C per leg 3.21 pF @0.1 GHz / 3.03 @1 GHz; RL 14.09 dB @0.5, 7.41 @1.25, 6.22 @1.6, 4.39 @2.5 GHz. RX pad_hspad a6 _rail models typ/high/low metal x tt/ss/ff/sf/fs x 22/32 C x 3.15/3.35 V (sec/bench/a6r*_rail-ac.json, model sha = published): C per leg 1.29-1.39 pF; RL min 17.19 dB @0.625, 11.48 @1.25, 10.05 @1.5, 6.67 @2.4 GHz. Limit >= 10 dB to 1.25 GHz: TX 7.41 dB fails (RX 11.48 meets). CM RL not evaluated.",
+   "primary_fix": "Lower-C pad_txpad (switch/cascode MOS on PAD ~1.5 pF of the leg C) or T-coil",
    "fallback": [
     "B13"
    ]
@@ -567,11 +591,13 @@
    "source": "spec/interface-requirements.md",
    "owner": "pads",
    "evidence": [
-    "analog/pads/README.md"
+    "analog/pads/generated/stress-safe-families/wired-transmit/pc72-txpad-a16.json",
+    "../../scratch/pads-core/esdopt/tx/bench/a16rt-ac.json",
+    "analog/pads/generated/stress-safe-families/wired-receive-hs/pc47-hspad-a6.json"
    ],
    "status": "fails",
-   "basis": "RX 2.34-2.35 pF, TX 2.706/2.713 pF",
-   "primary_fix": "S7",
+   "basis": "Published pads, die-level differential RL (no package). TX pad_txpad a16 RT model (sha 5e0a7322 = published physical-r-typ), tt 27 C 3.3 V only (../../scratch/pads-core/esdopt/tx/bench/a16rt-ac.json): C per leg 3.21 pF @0.1 GHz / 3.03 @1 GHz; RL 14.09 dB @0.5, 7.41 @1.25, 6.22 @1.6, 4.39 @2.5 GHz. RX pad_hspad a6 _rail models typ/high/low metal x tt/ss/ff/sf/fs x 22/32 C x 3.15/3.35 V (sec/bench/a6r*_rail-ac.json, model sha = published): C per leg 1.29-1.39 pF; RL min 17.19 dB @0.625, 11.48 @1.25, 10.05 @1.5, 6.67 @2.4 GHz. Limit <= 1.6 pF effective at 1.25 GHz: TX 3.03 pF (1 GHz, tt) fails; RX 1.29-1.39 pF meets.",
+   "primary_fix": "Lower-C pad_txpad (a16 is at its 3.223 pF allowance, 9 fF left) or T-coil",
    "fallback": []
   },
   {
@@ -581,11 +607,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx",
    "evidence": [
-    "analog/wired_tx/generated/wiredtx-evidence.json"
+    "analog/wired_tx/README.md",
+    "analog/pads/generated/stress-safe-families/wired-transmit/pc72-txpad-a16.json"
    ],
-   "status": "marginal",
-   "basis": "578.5 mVppd tt; ss/3.15 V 0.50 V",
-   "primary_fix": "corner swing trim",
+   "status": "unverified",
+   "basis": "No valid result for the bound pt_wiredtx8 (staged master, wired/chip.conn) with the published pad_txpad a16: the s16 real-chain table (extracted pt_wiredtx8 fullfix16 ada39d70, a16 RT pad) stopped on 2026-11-22 before any row (../../scratch/wired_tx/s16/QUEUE.md); the only run is the 40 ns sanity sp16b_ssp (ss-pess 3.15 V, 3.125 Gb/s, pad=C: 0.54 V pp at the pad, no eye). The 578.5 mVppd / 4:1-mux numbers in wiredtx-evidence.json are the retired pt_wiredtx. Limit 400-600 mVppd. Verify: s16 real-chain table (sim now, chain16.py, one row per rate x corner incl. ss-pess 3.15 V and 3.50 V trim).",
+   "primary_fix": "Real-chain swing table on pt_wiredtx8 + pad_txpad a16 RT; MAIN code per corner (21 mA at code 255)",
    "fallback": [
     "B14"
    ]
@@ -597,11 +624,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (detect)",
    "evidence": [
-    "analog/wired_rx/generated/detect-evidence.json"
+    "analog/wired_rx/generated/detect-evidence.json",
+    "analog/wired_rx/README.md"
    ],
    "status": "unverified",
-   "basis": "detect block clean; no OOB burst timing",
-   "primary_fix": "OOB burst bench",
+   "basis": "Squelch level meets: pt_detect det_thr=2 fires at 150 mV, silent at 100 mV at all 12 corners (threshold inside 50-200 mV; README pt_detect r7). COMRESET/COMWAKE burst timing (RTL line-state) has no bench. Verify: OOB burst-timing RTL bench with the detect model (sim now).",
+   "primary_fix": "OOB burst-timing bench (RTL + detect)",
    "fallback": [
     "wire_cdr_fpga_oversample"
    ]
@@ -613,10 +641,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx/wired_rx (detect)",
    "evidence": [
-    "analog/wired_rx/generated/detect-evidence.json"
+    "analog/wired_rx/generated/detect-evidence.json",
+    "analog/wired_rx/README.md"
    ],
    "status": "unverified",
-   "basis": "no numeric evidence",
+   "basis": "Receiver-detect inject current 118 uA (96-130) per leg (README pt_detect r7); no detect-pulse timing or electrical-idle bench with the TX pad and channel load. Verify: detect pulse bench, pad + AC-coupled load / open (sim now).",
    "primary_fix": "Detect pulse bench",
    "fallback": [
     "wire_detect_via_wmon"
@@ -629,11 +658,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx",
    "evidence": [
-    "analog/wired_tx/generated/wiredtx-evidence.json"
+    "analog/wired_tx/README.md",
+    "analog/pads/generated/stress-safe-families/wired-transmit/pc72-txpad-a16.json"
    ],
-   "status": "marginal",
-   "basis": "578.5 mVppd tt; 1.25 Gb/s tt/ff only",
-   "primary_fix": "4:1/2:1 mux port + swing trim",
+   "status": "unverified",
+   "basis": "No valid result for the bound pt_wiredtx8 (staged master, wired/chip.conn) with the published pad_txpad a16: the s16 real-chain table (extracted pt_wiredtx8 fullfix16 ada39d70, a16 RT pad) stopped on 2026-11-22 before any row (../../scratch/wired_tx/s16/QUEUE.md); the only run is the 40 ns sanity sp16b_ssp (ss-pess 3.15 V, 3.125 Gb/s, pad=C: 0.54 V pp at the pad, no eye). The 578.5 mVppd / 4:1-mux numbers in wiredtx-evidence.json are the retired pt_wiredtx. Limit >= 500 mVppd. Verify: s16 real-chain table (sim now, chain16.py, one row per rate x corner incl. ss-pess 3.15 V and 3.50 V trim).",
+   "primary_fix": "Real-chain swing table on pt_wiredtx8 + pad_txpad a16 RT; MAIN code per corner (21 mA at code 255)",
    "fallback": [
     "wire_tx_external_data",
     "B12"
@@ -646,11 +676,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx (tmds) + pads",
    "evidence": [
-    "analog/wired_tx/generated/tmds-evidence.json"
+    "analog/wired_tx/README.md",
+    "analog/pads/generated/stress-safe-families/wired-transmit/pc72-txpad-a16.json"
    ],
-   "status": "marginal",
-   "basis": "1.25 Gb/s eye OK; 1.485 not simulated; ff clamp 5.1 mA at 3.3 V not in bench",
-   "primary_fix": "1.485 Gb/s bench with clamp",
+   "status": "unverified",
+   "basis": "No valid result for the bound pt_wiredtx8 (staged master, wired/chip.conn) with the published pad_txpad a16: the s16 real-chain table (extracted pt_wiredtx8 fullfix16 ada39d70, a16 RT pad) stopped on 2026-11-22 before any row (../../scratch/wired_tx/s16/QUEUE.md); the only run is the 40 ns sanity sp16b_ssp (ss-pess 3.15 V, 3.125 Gb/s, pad=C: 0.54 V pp at the pad, no eye). The 578.5 mVppd / 4:1-mux numbers in wiredtx-evidence.json are the retired pt_wiredtx. TMDS runs on the MAIN branch (WT22); the 1.485 Gb/s tt eye 1.05 V is pt_wiredtx with the old pad. Limit 400-600 mV SE into 50 ohm to 3.3 V incl. ff clamp leakage. Verify: pt_wiredtx8 + a16 bench with 50 ohm pull-ups at 742.5 Mb/s and 1.485 Gb/s, all corners (sim now).",
+   "primary_fix": "TMDS bench on pt_wiredtx8 + pad_txpad a16 (MAIN branch, termination off, ff clamp leakage)",
    "fallback": [
     "wire_tx_external_data",
     "B12"
@@ -663,11 +694,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + wired_tx",
    "evidence": [
-    "analog/wired_tx/generated/tmds-evidence.json",
-    "analog/wired_rx/generated/cdr-evidence.json"
+    "analog/wired_rx/generated/cdr-evidence.json",
+    "analog/wired_rx/generated/wrx_cap-evidence.json",
+    "analog/wired_tx/generated/tmds-evidence.json"
    ],
    "status": "unverified",
-   "basis": "TX 720p inferred OK; RX needs CDR",
+   "basis": "RX side needs the CDR (or forwarded TMDS clock): CDR closed loop not run on the bound r13 pt_cdr with the r12 ring (cdr-evidence.json closed_loop: r11 extraction + r9w ring, tt only, data margin >= 0.357 UI); 742.5 Mb/s / 1.485 Gb/s capture not run on the bound r8. Verify: capture + forwarded-clock run (sim now), BER on the board.",
    "primary_fix": "S6 forwarded TMDS clock into WCLK_IN",
    "fallback": [
     "wire_rx_tmds_forwarded_clock",
@@ -681,11 +713,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx",
    "evidence": [
-    "analog/wired_tx/generated/wiredtx-evidence.json"
+    "analog/wired_tx/README.md",
+    "analog/pads/generated/stress-safe-families/wired-transmit/pc72-txpad-a16.json"
    ],
    "status": "unverified",
-   "basis": "1.485 not simulated",
-   "primary_fix": "1.485 Gb/s bench",
+   "basis": "No valid result for the bound pt_wiredtx8 (staged master, wired/chip.conn) with the published pad_txpad a16: the s16 real-chain table (extracted pt_wiredtx8 fullfix16 ada39d70, a16 RT pad) stopped on 2026-11-22 before any row (../../scratch/wired_tx/s16/QUEUE.md); the only run is the 40 ns sanity sp16b_ssp (ss-pess 3.15 V, 3.125 Gb/s, pad=C: 0.54 V pp at the pad, no eye). The 578.5 mVppd / 4:1-mux numbers in wiredtx-evidence.json are the retired pt_wiredtx. Limit >= 400 mVppd. Verify: s16 real-chain table (sim now, chain16.py, one row per rate x corner incl. ss-pess 3.15 V and 3.50 V trim).",
+   "primary_fix": "Real-chain swing table on pt_wiredtx8 + pad_txpad a16 RT; MAIN code per corner (21 mA at code 255)",
    "fallback": [
     "B14"
    ]
@@ -697,11 +730,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx (usbhs)",
    "evidence": [
-    "analog/wired_tx/generated/usb_hs_bias-evidence.json"
+    "../../scratch/pads-core/esdopt/usb/STATUS.md",
+    "../../scratch/reviews/interface-changes.md"
    ],
    "status": "marginal",
-   "basis": "reachable; ss/3.15 V 372-379 at full scale; per-board cal",
-   "primary_fix": "B11 calibration",
+   "basis": "Published pad_wirepad b7(v) HS bench (scratch/pads-core/esdopt/usb/STATUS.md): tt nominal bias TP level 362 / -363 mV (in 360-440); with B11 board calibration (bias scale 1.09-1.12) template 1 passes tt / ss-22C-3.15V-high-metal / ff (ss level 397 / -391 mV); ff outer margin 0.6 mV; HS current 16.78-17.14 mA vs 17.78 +-10 %. Extracted pt_usb_txdrv eye passes template 1 tt/ss/ff (PC-83, inner >= 30 mV). Needs per-board cal; cal scale inside the hsbias DAC range not checked.",
+   "primary_fix": "B11 calibration; check scale 1.09-1.12 is inside the hsbias DAC range",
    "fallback": [
     "B8",
     "B11"
@@ -717,8 +751,8 @@
     "spec/streaming-transport-v2.md"
    ],
    "status": "unverified",
-   "basis": "model at full clock only",
-   "primary_fix": "HL-LATENCY re-run after AC-1",
+   "basis": "No current turnaround measurement on the delivered RTL (as HL-LATENCY). Verify: RTL/GLS bench, USB HS RX end to TX start through the host link at full and div2 rate (simulation now).",
+   "primary_fix": "RTL/GLS turnaround bench (with HL-LATENCY)",
    "fallback": [
     "B8"
    ]
@@ -730,11 +764,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "pads/usbdrive",
    "evidence": [
-    "analog/pads/generated/wired-receive-usb-screen.json"
+    "../../scratch/pads-core/esdopt/usb/STATUS.md"
    ],
-   "status": "fails",
-   "basis": "FS 5.8-11 ns meets; LS 33-67 ns fails",
-   "primary_fix": "LS slew control (no area) ",
+   "status": "meets",
+   "basis": "Published pad_wirepad b7(v) (b7v is a pin/Magic-only change, PC-85), R+C typ/high models (scratch/pads-core/esdopt/usb/STATUS.md F2): FS 50 pF rise 9.0-17.7 ns, fall 6.0-9.1 ns (4-20 ns); LS_SLOW 50/450 pF 103-128 / 147-236 ns (75-300 ns); VOH 3.28 V, VOL 0 V.",
+   "primary_fix": "—",
    "fallback": [
     "B8"
    ]
@@ -746,10 +780,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "timing (pll_ring)",
    "evidence": [
-    "analog/timing/generated/pll_ring-evidence.json"
+    "analog/timing/generated/pll_ring-evidence.json",
+    "../../scratch/reviews/interface-changes.md"
    ],
    "status": "unverified",
-   "basis": "no jitter evidence; pll_ring.spice stale",
+   "basis": "No RJ/DJ evidence on r12 ring. Static phase position spread (TIM-19, C-only): 63.3 ps at ss 625, 66.8 ps at ss 810, trimmed by ptrim to 1.8/2.6 ps (TIM-30); PDS-4 regulated-ring supply jitter estimate 7.3 ps single-phase / 4.3 two-phase (pt_rf). Verify: transient-noise or PSS/PNOISE on pll_ring.rc.spice closed loop + regulated rail (sim now).",
    "primary_fix": "Phase-noise sim (transient noise or PSS/PNOISE)",
    "fallback": [
     "wire_clk_wclk_in"
@@ -762,11 +797,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx",
    "evidence": [
-    "analog/wired_tx/generated/wiredtx-evidence.json"
+    "analog/wired_tx/README.md",
+    "../../scratch/wired_tx/s16/QUEUE.md"
    ],
-   "status": "fails",
-   "basis": "305 ps pp at 1.25 G (0.38 UI)",
-   "primary_fix": "Compact retiming",
+   "status": "unverified",
+   "basis": "No valid result for the bound pt_wiredtx8 (staged master, wired/chip.conn) with the published pad_txpad a16: the s16 real-chain table (extracted pt_wiredtx8 fullfix16 ada39d70, a16 RT pad) stopped on 2026-11-22 before any row (../../scratch/wired_tx/s16/QUEUE.md); the only run is the 40 ns sanity sp16b_ssp (ss-pess 3.15 V, 3.125 Gb/s, pad=C: 0.54 V pp at the pad, no eye). The 578.5 mVppd / 4:1-mux numbers in wiredtx-evidence.json are the retired pt_wiredtx. Limit serializer + pad DJ <= 0.15 UI. The 0.38 UI at 1.25 Gb/s was pt_wiredtx. Verify: s16 real-chain table (sim now, chain16.py, one row per rate x corner incl. ss-pess 3.15 V and 3.50 V trim).",
+   "primary_fix": "Phase-trim calibration + DJ extraction from the s16 real-chain rows",
    "fallback": [
     "wire_tx_external_data"
    ]
@@ -778,11 +814,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (slicer)",
    "evidence": [
-    "analog/wired_rx/generated/slicer-evidence.json"
+    "analog/wired_rx/generated/slicer-evidence.json",
+    "analog/wired_rx/README.md"
    ],
-   "status": "fails",
-   "basis": "-27 mV nominal, -31..-21 mV corners (stale)",
-   "primary_fix": "Finer trim (<= 2 mV step)",
+   "status": "unverified",
+   "basis": "Systematic offset meets: untrimmed worst of eight -3.8 mV (-4.6..-2.8 mV) at nominal, ss/32/3.15, ff/22/3.35 (README pt_slicer r7; slicer-evidence.json offset_trim0) vs 10 mV; trim range p7/n7 -76.3/+68.6 mV. Random mismatch not simulated (no live-mismatch Monte Carlo, MANDATE 4a); fine-trim residual not reported. Verify: matched-pair-validated MC + fine-trim step (sim now).",
+   "primary_fix": "Live-mismatch MC on r7 slicer; fine trim step <= 2 mV if residual exceeds",
    "fallback": [
     "wire_wmon_scope"
    ]
@@ -795,11 +832,14 @@
    "owner": "rf_rx",
    "evidence": [
     "analog/rf_rx/generated/lna-evidence.json",
-    "analog/rf_rx/generated/bbfilter_i-evidence.json"
+    "../../scratch/rf-lna-q/padc/result_r4.json",
+    "analog/converters/generated/adc_i-rc-fft_tt_40M.json",
+    "analog/converters/generated/adc_i-rc-fft_ss_32C_3v15_40M.json",
+    "analog/converters/generated/adc_i-rc-fft_ss_32C_3v50_40M.json"
    ],
    "status": "fails",
-   "basis": "On-chip NF 12.1 dB + 2.4 dB ADC penalty: MCS0 ~-79.7, MCS7 ~-57.7 dBm",
-   "primary_fix": "Restore PGA to 42 dB; LNA gain",
+   "basis": "Chain NF DSB (extracted LNA rext + mixers, real COB channel, LO as delivered; lna-evidence chain rows) tt 6.26 / ss 7.80 / pessimistic 15.19 dB, plus +0.42..0.47 dB for pad_rf_pair r4 (RQ-24, result_r4.json). Analytic (on-chip NF + 2.4 dB ADC penalty, board losses excluded): MCS0 tt -85.1 / ss -83.5 / pessimistic -76 dBm vs -82; MCS7 tt -63.1 / ss -61.6 vs -64 dBm (miss 0.9-2.4 dB). MCS7 is also ADC-limited: extracted R+C ADC SNDR 29.9 dB tt, 25.4 dB ss/3.15 V (9 late conversions) at 40 MS/s, 30.1 dB at the 3.50 V trim, near full scale; with ~10 dB OFDM back-off that is ~20 dB SNR against ~27 dB for MCS7. Evidence is on the 11-19 round-3 LNA / mixer GDS; the bound cells have since only had pins fanned out and antenna diodes added (11-24), not re-simulated.",
+   "primary_fix": "Placement-level LNA relayout (recover ~0.8 dB NF / 2.9 dB gain lost to route R); ADC SNDR >= ~35 dB at 40 MS/s for MCS7",
    "fallback": [
     "rf_lna_bypass",
     "B5"
@@ -812,11 +852,13 @@
    "source": "spec/interface-requirements.md",
    "owner": "converters (adc) + rf_rx filter",
    "evidence": [
-    "analog/converters/generated/adc_i-evidence.json"
+    "analog/rf_rx/generated/bbfilter_i-evidence.json",
+    "analog/converters/generated/adc_i-rc-fft_tt_40M.json",
+    "analog/converters/generated/adc_i-rc-fft_ss_32C_3v15_40M.json"
    ],
-   "status": "fails",
-   "basis": "20 MS/s + 15.2 MHz filter: adjacent aliases with 3-20 dB rejection",
-   "primary_fix": "ADC 40 MS/s",
+   "status": "unverified",
+   "basis": "ADC now runs 40 MS/s (adc_i R+C FFT fs 40 MHz) and the bbfilter Wi-Fi 20 MHz trim passes f3 10.5 +- 0.5 MHz, >= 38 dB at 31.25 MHz at 12 corners x 17 PGA codes (bbfilter_i-evidence, pre-11-24 GDS); no adjacent-channel run. ADC SNDR ~30 dB tt (25.4 ss/3.15 V untrimmed) leaves little room for a +16 dB adjacent after back-off. Verify: behavioural filter + ADC interferer sim using the extracted filter response and ADC SNDR (simulation now).",
+   "primary_fix": "Adjacent-channel sim with real filter trim and extracted ADC; raise ADC SNDR if short",
    "fallback": [
     "rf_bb_external_adc"
    ]
@@ -828,11 +870,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "rf_tx",
    "evidence": [
-    "analog/rf_tx/generated/rfdriver-evidence.json"
+    "analog/rf_tx/generated/rfdriver-evidence.json",
+    "../../scratch/reviews/interface-changes.md"
    ],
-   "status": "unverified",
-   "basis": "no EVM sim; driver gain 3.2x short",
-   "primary_fix": "Linear driver gain; EVM sim",
+   "status": "marginal",
+   "basis": "tt only, memoryless model of the extracted AM-AM/AM-PM (tx_modulation.py), ideal quadrature LO, ideal board; ss/ff not modelled: HE20 MCS7 EVM -27 dB met to +1.50 dBm mean (linear), MCS0-4 to +4.66 dBm; at -10.43 dBm mean EVM -30.6 dB (analog/rf_tx/generated/rfdriver-evidence.json). Real TX LO (pt_lo_txbuf r5) is Q-I 92.4-98.4 deg (LO-PWR-3): 10 ps / 6.8 deg skew gives -23.5 dB, so MCS7 needs per-part I/Q phase correction (no on-chip LO phase trim: timing README LO.4); not run with the real LO",
+   "primary_fix": "FPGA baseband I/Q phase/gain pre-correction from RX-loopback cal (RFT-11 method without LO14); rerun tx_modulation.py at ss/ff and with the txbuf phase error",
    "fallback": [
     "rf_tx_external_upconverter"
    ]
@@ -846,9 +889,9 @@
    "evidence": [
     "analog/rf_tx/generated/rfdriver-evidence.json"
    ],
-   "status": "unverified",
-   "basis": "not simulated",
-   "primary_fix": "Mask sim with real balun",
+   "status": "marginal",
+   "basis": "tt only, memoryless model of the extracted AM-AM/AM-PM (tx_modulation.py), ideal quadrature LO, ideal board; ss/ff not modelled: mask margin +3.38 dB at +0.09 dBm, but only +0.19..+0.45 dB at -12.0..-10.4 dBm mean (floor-limited); LO jitter 2 ps rms takes the 0 dBm margin to -0.1 dB (analog/rf_tx/generated/rfdriver-evidence.json); RF-LO-JIT unverified",
+   "primary_fix": "Mask run at ss/ff with real LO jitter and the real balun; find the floor source at low power (DAC/filter noise)",
    "fallback": [
     "rf_tx_external_upconverter"
    ]
@@ -862,9 +905,9 @@
    "evidence": [
     "analog/rf_tx/generated/rfdriver-evidence.json"
    ],
-   "status": "unverified",
-   "basis": "not simulated",
-   "primary_fix": "as above",
+   "status": "marginal",
+   "basis": "tt only, memoryless model of the extracted AM-AM/AM-PM (tx_modulation.py), ideal quadrature LO, ideal board; ss/ff not modelled: ACLR 39.0 dB at +0.09 dBm, 34.2 dB at -14.5 dBm, <= -28 dBc met up to +4.66 dBm (linear) (analog/rf_tx/generated/rfdriver-evidence.json); limit met with >= 6 dB margin at tt, corners not run",
+   "primary_fix": "ACLR run at ss/ff extracted AM-AM with real LO",
    "fallback": [
     "rf_tx_external_upconverter"
    ]
@@ -878,9 +921,9 @@
    "evidence": [
     "analog/rf_tx/generated/rfdriver-evidence.json"
    ],
-   "status": "unverified",
-   "basis": "not simulated",
-   "primary_fix": "Harmonic sim + board LPF",
+   "status": "fails",
+   "basis": "Extracted chain tt, ideal LO, pad side: H2 -37.7 dBc at +5.1 dBm (linear 0.3 V), -38.7 dBc at +2.0 dBm, -40.4 dBc at -0.5 dBm; saturated full drive H2 -39.0 dBc, H3 -44.8 dBc (limit -40 dBc) (analog/rf_tx/generated/rfdriver-evidence.json); corners not run",
+   "primary_fix": "Reduce H2 at the pad (driver symmetry / CM trap at the pad) or set the 0 dBm operating point at <= -0.5 dBm pad; board LPF covers radiated harmonics only",
    "fallback": [
     "B4"
    ]
@@ -892,11 +935,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "rf_tx",
    "evidence": [
-    "analog/rf_tx/generated/rfdriver-evidence.json"
+    "analog/rf_tx/generated/rfdriver-evidence.json",
+    "../../scratch/reviews/interface-changes.md"
    ],
    "status": "marginal",
-   "basis": "saturated -0.13 tt (-0.4..-3.1 env); linear -5.6 tt",
-   "primary_fix": "Driver gain fix",
+   "basis": "Extracted chain, board-matched, ideal LO: saturated +6.88..+10.96 dBm over tt/ss/ff x 22/32 C x 3.15/3.35 V (>= 0 dBm met); linear 0.3 V -0.72..+8.72 dBm; OFDM MCS0-4 to +4.66 dBm mean tt (analog/rf_tx/generated/rfdriver-evidence.json). Pessimistic ss (Rg 200, fT 11/5.5 GHz, 3.7 nH bond, 2 dB balun): Psat +0.87 dBm with the 400:50 balun, 0 dBm linear needs 0.71-0.74 V BB drive (RFT-10, scratch) -> per-part drive cal; pad t8 costs 0.13 dB with per-chip choke tuning (RFTX-81). No 3.50 V trim needed",
+   "primary_fix": "Per-part TX drive calibration (RFT-10); requalify through the real COB channel (BRD-01)",
    "fallback": [
     "rf_tx_external_upconverter"
    ]
@@ -908,11 +952,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx",
    "evidence": [
-    "analog/rf_rx/generated/lna-evidence.json"
+    "analog/rf_rx/generated/lna-evidence.json",
+    "../../scratch/rf-lna-q/padc/result_r4.json"
    ],
    "status": "meets",
-   "basis": "10-18 dB margin by cascade (analytic on extracted NF)",
-   "primary_fix": "\u2014",
+   "basis": "Chain NF DSB (extracted LNA rext + mixers, real COB channel, LO as delivered; lna-evidence chain rows) tt 6.26 / ss 7.80 / pessimistic 15.19 dB, plus +0.42..0.47 dB for pad_rf_pair r4 (RQ-24, result_r4.json). Analytic: -114 dBm (1 MHz) + pessimistic 15.6 dB + 3.3 dB board losses + ~10 dB SNR ~= -85 dBm vs -70 dBm: >= 15 dB margin at every corner. Evidence is on the 11-19 round-3 LNA / mixer GDS; the bound cells have since only had pins fanned out and antenna diodes added (11-24), not re-simulated.",
+   "primary_fix": "—",
    "fallback": []
   },
   {
@@ -925,8 +970,8 @@
     "analog/rf_tx/generated/rfdriver-evidence.json"
    ],
    "status": "unverified",
-   "basis": "not simulated",
-   "primary_fix": "Saturated-mode spectrum sim",
+   "basis": "No saturated-mode GFSK spectrum sim. Verify: tx_modulation.py GFSK on the extracted saturated AM-AM/AM-PM (sim now)",
+   "primary_fix": "Saturated-mode GFSK spectrum sim",
    "fallback": []
   },
   {
@@ -936,11 +981,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx",
    "evidence": [
-    "analog/rf_rx/generated/lna-evidence.json"
+    "analog/rf_rx/generated/lna-evidence.json",
+    "../../scratch/rf-lna-q/padc/result_r4.json"
    ],
    "status": "meets",
-   "basis": "margin by cascade",
-   "primary_fix": "\u2014",
+   "basis": "Chain NF DSB (extracted LNA rext + mixers, real COB channel, LO as delivered; lna-evidence chain rows) tt 6.26 / ss 7.80 / pessimistic 15.19 dB, plus +0.42..0.47 dB for pad_rf_pair r4 (RQ-24, result_r4.json). Analytic: -111 dBm (2 MHz) + pessimistic 15.6 dB + 3.3 dB board + ~5 dB SNR ~= -87 dBm vs -85 dBm (2 dB at the pessimistic end, ~13 dB at tt). Evidence is on the 11-19 round-3 LNA / mixer GDS; the bound cells have since only had pins fanned out and antenna diodes added (11-24), not re-simulated.",
+   "primary_fix": "—",
    "fallback": []
   },
   {
@@ -953,8 +999,8 @@
     "analog/rf_tx/generated/rfdriver-evidence.json"
    ],
    "status": "unverified",
-   "basis": "not simulated",
-   "primary_fix": "EVM sim",
+   "basis": "No O-QPSK EVM sim; HE20 BPSK/QPSK meet -13 dB EVM to +4.66 dBm tt (analog/rf_tx/generated/rfdriver-evidence.json), which suggests margin to 35 % (-9.1 dB). Verify: tx_modulation.py O-QPSK (sim now)",
+   "primary_fix": "O-QPSK EVM sim",
    "fallback": [
     "rf_tx_external_upconverter"
    ]
@@ -969,8 +1015,8 @@
     "analog/rf_tx/generated/rfdriver-evidence.json"
    ],
    "status": "unverified",
-   "basis": "linear -5.6 dBm; no DEVM",
-   "primary_fix": "Linear driver",
+   "basis": "No DEVM sim; linear chain +5.14 dBm tt, -0.72 dBm ss/32/3.15 matched (analog/rf_tx/generated/rfdriver-evidence.json). Verify: tx_modulation.py pi/4-DQPSK / 8DPSK (sim now)",
+   "primary_fix": "DEVM sim on the linear chain",
    "fallback": [
     "rf_tx_external_upconverter"
    ]
@@ -982,11 +1028,13 @@
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx",
    "evidence": [
-    "analog/rf_rx/generated/lna-evidence.json"
+    "../../scratch/rf_rx/ip3_keep/ip3_tt.json",
+    "../../scratch/rf_rx/ip3_keep/ip3_ff.json",
+    "analog/rf_rx/README.md"
    ],
-   "status": "unverified",
-   "basis": "not simulated",
-   "primary_fix": "Two-tone sim",
+   "status": "fails",
+   "basis": "Two-tone at max gain (LO+20/+37 MHz, rext LNA, real channel, x2 TIA, ideal square LO; scratch/rf_rx/ip3_keep): tt -10.2 dBm (slope 2.8), ss -9.3 (slope 1.9), ff -14.2 dBm (slope 3.5) at -40 dBm/tone vs >= -10 dBm: misses tt by 0.2 dB, ff by 4.2 dB. Evidence is on the 11-19 round-3 LNA / mixer GDS; the bound cells have since only had pins fanned out and antenna diodes added (11-24), not re-simulated.",
+   "primary_fix": "Placement-level LNA relayout; ff gain backed off by att code at max gain; rerun IIP3 on the real LO",
    "fallback": [
     "rf_lna_bypass"
    ]
@@ -998,11 +1046,12 @@
    "source": "analog/rf_rx/README.md",
    "owner": "rf_rx",
    "evidence": [
-    "analog/rf_rx/generated/lna-evidence.json"
+    "analog/rf_rx/generated/lna-evidence.json",
+    "analog/rf_rx/README.md"
    ],
    "status": "fails",
-   "basis": "metal-aware view, 41 rows: differential passes; common mode 0.93-0.99 ohm below 5 GHz in 18 rows (duplex bias / low-inductance ff) and 0.71 x LNA-off at 5 GHz in 40 rows",
-   "primary_fix": "placement-level LNA relayout (less source / tank route resistance), then common-mode loss retune",
+   "basis": "lna-evidence cm_limit (rext, pt_rf bond model x 3 bounds, 41 rows): differential passes (mu >= 1.008, K >= 2.95, Re >= 1.17 ohm); common mode min 0.93 ohm below 5 GHz in 18/41 rows vs 1.0, and 0.68-0.79 x LNA-off at 5 GHz in 40/41 rows vs 0.8. On the assembled pt_rf supply (RQ-21): common mode >= 1.78 ohm in RX bias, 0.94 ohm in duplex bias (ff), no negative resistance: a margin miss, not an oscillation. Evidence is on the 11-19 round-3 LNA / mixer GDS; the bound cells have since only had pins fanned out and antenna diodes added (11-24), not re-simulated.",
+   "primary_fix": "Placement-level LNA relayout (less source / tank route resistance), then common-mode loss retune",
    "fallback": [
     "rf_lna_bypass"
    ]
@@ -1014,11 +1063,13 @@
    "source": "spec/interface-requirements.md",
    "owner": "rf_tx",
    "evidence": [
-    "analog/rf_tx/generated/txmix_i-evidence.json"
+    "analog/rf_tx/generated/rfdriver-evidence.json",
+    "../../scratch/reviews/interface-changes.md",
+    "analog/timing/README.md"
    ],
-   "status": "marginal",
-   "basis": "61.6 dB ideal LO linear; 33.1 dB saturated",
-   "primary_fix": "Real-LO sim",
+   "status": "fails",
+   "basis": "Ideal LO tt: chain 54.5 dB linear, saturated 33.4 dB (analog/rf_tx/generated/rfdriver-evidence.json). Real TX LO pt_lo_txbuf r5: Q-I 92.4-98.4 deg (LO-PWR-3) -> about 23 dB uncorrected. Calibrated 43.5 dB at ss (RFT-11, scratch/rf-tx-d3) assumed an LO phase trim (LO14) that does not exist (timing README LO.4: no I/Q phase trim)",
+   "primary_fix": "FPGA baseband I/Q phase/gain pre-correction (per part, RX loopback); real-LO chain sim with lo_txbuf r5 to confirm >= 40 dB after cal",
    "fallback": [
     "rf_tx_external_upconverter"
    ]
@@ -1030,11 +1081,13 @@
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx",
    "evidence": [
-    "analog/rf_rx/generated/rxmix_i-evidence.json"
+    "analog/rf_rx/generated/rf_rx_chain.json",
+    "analog/timing/generated/lo_ext-evidence.json",
+    "../../scratch/lo-ap4/NOTES.md"
    ],
-   "status": "meets",
-   "basis": "~29 dB uncorrected from 0.6 dB I/Q gain (tt only)",
-   "primary_fix": "FPGA correction",
+   "status": "marginal",
+   "basis": "Chain IRR on the extracted chain with an ideal LO: 40.2 dB tt (rf_rx_chain.json, older LNA/mixer netlists). Real LO quadrature: QVCO r9 with published divider loads Q-I -86.9..-92.8 deg (3.1 deg worst, scratch/lo-ap4 NOTES 2026-11-22) plus lo_ext a4 Q-I -85.4..-87.7 deg (lo_ext-evidence joint bench): up to ~7.7 deg -> ~23 dB uncorrected at the worst combination vs 25 dB; ~32-40 dB typical. >= 35 dB after FPGA correction not demonstrated.",
+   "primary_fix": "FPGA I/Q correction; joint QVCO + lo_ext + mixer IRR run on the published cells",
    "fallback": []
   },
   {
@@ -1046,9 +1099,9 @@
    "evidence": [
     "analog/rf_tx/generated/rfdriver-evidence.json"
    ],
-   "status": "fails",
-   "basis": "22-24 dB",
-   "primary_fix": "Series mute switch / driver off",
+   "status": "marginal",
+   "basis": "Mute isolation 46.2 dB matched saturated, 46.93 dB unmatched chain (limit 40 dB), extracted tt, ideal LO (analog/rf_tx/generated/rfdriver-evidence.json); corners, package and LO-route coupling not included",
+   "primary_fix": "Mute isolation at ss/ff and on the assembled chip (LO coupling to RF_TX)",
    "fallback": []
   },
   {
@@ -1058,11 +1111,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "rf_tx",
    "evidence": [
-    "analog/rf_tx/generated/txmix_i-evidence.json"
+    "analog/rf_tx/generated/rfdriver-evidence.json",
+    "../../scratch/reviews/interface-changes.md"
    ],
-   "status": "meets",
-   "basis": "44.6 dBc linear, 38 dBc saturated (ideal LO)",
-   "primary_fix": "Real-LO confirm",
+   "status": "marginal",
+   "basis": "Ideal LO tt: LO suppression 30.05 dBc at the pad unmatched (limit 30), 39.8 dBc matched saturated (analog/rf_tx/generated/rfdriver-evidence.json). ss pessimistic uncalibrated 21.1 dBc linear 0.7 V; with I/Q DC offset cal 56.7 dBc, needs BB offset range >= +-70 mV diff, steps <= 2 mV (RFT-11, scratch). Met only with per-part DC-offset cal; real LO and top-level LO routing not simulated",
+   "primary_fix": "Per-part I/Q DC offset on the DAC path (RFT-11); real-LO and assembled-chip LO-coupling check",
    "fallback": []
   },
   {
@@ -1072,11 +1126,13 @@
    "source": "spec/interface-requirements.md",
    "owner": "timing (lo_ext) + board",
    "evidence": [
-    "analog/timing/generated/lo_ext-evidence.json"
+    "analog/timing/generated/lo_ext-evidence.json",
+    "../../scratch/lo-ap4/NOTES.md",
+    "analog/timing/README.md"
    ],
-   "status": "unverified",
-   "basis": "no additive jitter or skew evidence; refpad clamp conflict at ff",
-   "primary_fix": "lo_ext + refpad co-sim",
+   "status": "fails",
+   "basis": "I/Q skew: QVCO r9 with published loads Q-I up to 3.1 deg off (3.5 ps at 2.45 GHz) plus lo_ext a4 2.3-4.6 deg (2.6-5.2 ps) vs 1.16 ps, before calibration. Total jitter: behavioural loop on extracted block data 0.80 ps rms vs 0.923 ps synthesizer share (timing README), but QVCO phase noise is not resolved (transient bench floor -105.4 dBc/Hz at 1 MHz unchanged with noise off).",
+   "primary_fix": "D-LO-2 LO I/Q phase trim or FPGA I/Q correction; QVCO phase-noise run below the bench floor (divider-off spectral-line analysis)",
    "fallback": [
     "rf_lo_external_ref",
     "B3"
@@ -1089,12 +1145,14 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + wired_tx + timing + digital",
    "evidence": [
+    "analog/wired_rx/generated/wrx_cap-evidence.json",
+    "analog/timing/generated/pll_ring-evidence.json",
     "analog/wired_rx/generated/cdr-evidence.json",
-    "analog/wired_tx/generated/wiredtx-evidence.json"
+    "../../scratch/reviews/interface-changes.md"
    ],
    "status": "fails",
-   "basis": "CDR tracking fails extracted; 4:1 mux fails 1.92-2.97 Gb/s; ring 750 MHz in band but regulated-ss top 733-778 MHz",
-   "primary_fix": "AC-3 CDR + IX-1 ring/sampler range + IX-2 host fit",
+   "basis": "Bound capture r8 (wrx_cap-evidence.json, ss/32/3.15 V): quarter 625 MHz nominal 0/200 pass, 2.5 Gb/s bench B with RCS=1 0/200, but pessimistic-bound ss q625 72/200 FAIL and 23/200 at 3.50 V (slot-enable chain; trim does not rescue) (quarter rate, ring 750 MHz). R+C ring r12 tops out at 740 MHz at ss/32/3.15 V (TIM-34): 3.0 Gb/s on slow dies only with the 3.50 V trim (TIM-35 ruling). CDR closed loop not run on the bound r13 pt_cdr with the r12 ring (cdr-evidence.json closed_loop: r11 extraction + r9w ring, tt only, data margin >= 0.357 UI).",
+   "primary_fix": "Capture r10b slot-enable fix; 3.50 V trim on slow dies; AC-3 CDR closed loop on r13/r12",
    "fallback": [
     "wire_rx_board_retimer",
     "wire_board_phy_bypass",
@@ -1110,11 +1168,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx",
    "evidence": [
-    "analog/wired_tx/generated/wiredtx-evidence.json"
+    "analog/wired_tx/README.md",
+    "analog/pads/generated/stress-safe-families/wired-transmit/pc72-txpad-a16.json"
    ],
-   "status": "marginal",
-   "basis": "578.5 mVppd tt at lower rates; ss/3.15 V 0.50 V; 3.0 Gb/s not simulated",
-   "primary_fix": "Corner swing trim; 3.0 Gb/s extracted bench",
+   "status": "unverified",
+   "basis": "No valid result for the bound pt_wiredtx8 (staged master, wired/chip.conn) with the published pad_txpad a16: the s16 real-chain table (extracted pt_wiredtx8 fullfix16 ada39d70, a16 RT pad) stopped on 2026-11-22 before any row (../../scratch/wired_tx/s16/QUEUE.md); the only run is the 40 ns sanity sp16b_ssp (ss-pess 3.15 V, 3.125 Gb/s, pad=C: 0.54 V pp at the pad, no eye). The 578.5 mVppd / 4:1-mux numbers in wiredtx-evidence.json are the retired pt_wiredtx. Limit 400-700 mVppd. Verify: s16 real-chain table (sim now, chain16.py, one row per rate x corner incl. ss-pess 3.15 V and 3.50 V trim).",
+   "primary_fix": "Real-chain swing table on pt_wiredtx8 + pad_txpad a16 RT; MAIN code per corner (21 mA at code 255)",
    "fallback": [
     "wire_tx_board_serializer",
     "B14"
@@ -1127,11 +1186,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx + timing",
    "evidence": [
-    "analog/wired_tx/generated/wiredtx-evidence.json"
+    "analog/wired_tx/README.md",
+    "../../scratch/wired_tx/s16/QUEUE.md"
    ],
-   "status": "fails",
-   "basis": "4:1 mux fails 1.92-2.97 Gb/s; serializer DJ 0.38 UI at 1.25 G",
-   "primary_fix": "Compact-cell 4:1 mux to 3.34 Gb/s (IX-1)",
+   "status": "unverified",
+   "basis": "No valid result for the bound pt_wiredtx8 (staged master, wired/chip.conn) with the published pad_txpad a16: the s16 real-chain table (extracted pt_wiredtx8 fullfix16 ada39d70, a16 RT pad) stopped on 2026-11-22 before any row (../../scratch/wired_tx/s16/QUEUE.md); the only run is the 40 ns sanity sp16b_ssp (ss-pess 3.15 V, 3.125 Gb/s, pad=C: 0.54 V pp at the pad, no eye). The 578.5 mVppd / 4:1-mux numbers in wiredtx-evidence.json are the retired pt_wiredtx. Limit TJ <= 0.37 UI, DJ <= 0.19 UI at 3.0 Gb/s. Risk: earlier mux-level runs with metal-R pad models (README sec. 6, revision-2 mux) had no passing row at ss above 2.7 Gb/s. Verify: s16 real-chain table (sim now, chain16.py, one row per rate x corner incl. ss-pess 3.15 V and 3.50 V trim). TJ needs ring RJ too (WR-PLL-JIT).",
+   "primary_fix": "Phase-trim calibration + real-chain jitter table on pt_wiredtx8 at 3.0 Gb/s",
    "fallback": [
     "wire_tx_board_serializer",
     "B14"
@@ -1144,10 +1204,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + timing",
    "evidence": [
-    "analog/wired_rx/generated/cdr-evidence.json"
+    "analog/wired_rx/generated/cdr-evidence.json",
+    "../../scratch/reviews/interface-changes.md"
    ],
    "status": "unverified",
-   "basis": "no JTOL evidence; ring phase error 9-10.8 deg",
+   "basis": "No JTOL evidence on extracted blocks. Model only: per-die KP calibration (CDR7-KP) gives 1.03-1.19x mask (scratch/wired_rx/r7cdr gain-bound model, lat 8); r13 integral path 2.6-3.5x slower than r11 (cdr-evidence known_limits). Verify: closed-loop JTOL sweep on r13 + r12 ring R+C (sim now), then board. Quarter-rate capture also fails at the pessimistic ss bound (wrx_cap-evidence.json).",
    "primary_fix": "AC-3 per-UI Alexander PD, phase trim (S4/S5)",
    "fallback": [
     "wire_rx_board_retimer",
@@ -1162,11 +1223,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (ctle, slicer)",
    "evidence": [
-    "analog/wired_rx/generated/slicer-evidence.json"
+    "../../scratch/reviews/interface-changes.md",
+    "analog/timing/generated/pll_ring-evidence.json"
    ],
    "status": "unverified",
-   "basis": "no 3.0 Gb/s sensitivity sim; slicer offset fails 10 mV today",
-   "primary_fix": "Slicer trim (WR-SLICER-OFFSET) + 3.0 Gb/s statistical eye",
+   "basis": "No 275 mVppd 3.0 Gb/s sensitivity run on the bound chain. Real-neighbour chain at 3.24 Gb/s (TIM-30/34, C-only/R+C ring): ss/3.15 V 0/112, eye 92.6 mV, 0.10 UI; ss/3.50 V 100.2 mV, 0.125 UI (input amplitude per bench). R+C ring needs the 3.50 V trim for 750 MHz at ss. Staged CTLE r5 fails pessimistic ss at 3.125/3.24 Gb/s (40.7-68.5 mV, WR12-1). Verify: chain at 275 mVppd, 3.0 Gb/s, ss/3.50 V and pessimistic (sim now).",
+   "primary_fix": "CTLE r6 + 3.0 Gb/s statistical eye at 275 mVppd",
    "fallback": [
     "wire_rx_board_retimer",
     "wire_board_phy_bypass",
@@ -1180,12 +1242,13 @@
    "source": "spec/interface-requirements.md",
    "owner": "pads + wired_rx/tx",
    "evidence": [
-    "analog/pads/README.md",
-    "spec/package-channel.md"
+    "analog/pads/generated/stress-safe-families/wired-transmit/pc72-txpad-a16.json",
+    "../../scratch/pads-core/esdopt/tx/bench/a16rt-ac.json",
+    "analog/pads/generated/stress-safe-families/wired-receive-hs/pc47-hspad-a6.json"
    ],
    "status": "fails",
-   "basis": "needs C_pad <= 1.15 pF; today 2.35/2.71 pF, S7 target 1.6 pF gives 5.7 dB at 2.4 GHz",
-   "primary_fix": "IX-3 low-C pad or T-coil to <= 1.15 pF effective",
+   "basis": "Published pads, die-level differential RL (no package). TX pad_txpad a16 RT model (sha 5e0a7322 = published physical-r-typ), tt 27 C 3.3 V only (../../scratch/pads-core/esdopt/tx/bench/a16rt-ac.json): C per leg 3.21 pF @0.1 GHz / 3.03 @1 GHz; RL 14.09 dB @0.5, 7.41 @1.25, 6.22 @1.6, 4.39 @2.5 GHz. RX pad_hspad a6 _rail models typ/high/low metal x tt/ss/ff/sf/fs x 22/32 C x 3.15/3.35 V (sec/bench/a6r*_rail-ac.json, model sha = published): C per leg 1.29-1.39 pF; RL min 17.19 dB @0.625, 11.48 @1.25, 10.05 @1.5, 6.67 @2.4 GHz. Limit >= 8 dB to 2.4 GHz: RX 6.67-7.49 dB, TX 4.39 dB @2.5 GHz fail (needs about 1.15 pF per leg).",
+   "primary_fix": "T-coil or lower-C pads to <= 1.15 pF effective (both pads)",
    "fallback": [
     "B13"
    ]
@@ -1197,11 +1260,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx + timing",
    "evidence": [
-    "analog/wired_tx/generated/wiredtx-evidence.json"
+    "analog/wired_tx/README.md",
+    "../../scratch/wired_tx/s16/QUEUE.md"
    ],
-   "status": "fails",
-   "basis": "4:1 mux fails 1.92-2.97 Gb/s",
-   "primary_fix": "Compact-cell 4:1 mux (IX-1)",
+   "status": "unverified",
+   "basis": "No valid result for the bound pt_wiredtx8 (staged master, wired/chip.conn) with the published pad_txpad a16: the s16 real-chain table (extracted pt_wiredtx8 fullfix16 ada39d70, a16 RT pad) stopped on 2026-11-22 before any row (../../scratch/wired_tx/s16/QUEUE.md); the only run is the 40 ns sanity sp16b_ssp (ss-pess 3.15 V, 3.125 Gb/s, pad=C: 0.54 V pp at the pad, no eye). The 578.5 mVppd / 4:1-mux numbers in wiredtx-evidence.json are the retired pt_wiredtx. Limit HBR TJ at TP2 (2.7 Gb/s). Risk: earlier mux-level runs with metal-R pad models (README sec. 6, revision-2 mux) had no passing row at ss above 2.7 Gb/s. Verify: s16 real-chain table (sim now, chain16.py, one row per rate x corner incl. ss-pess 3.15 V and 3.50 V trim). TJ needs ring RJ too (WR-PLL-JIT).",
+   "primary_fix": "Phase-trim calibration + real-chain jitter table on pt_wiredtx8 at 2.7 Gb/s",
    "fallback": [
     "wire_tx_board_serializer",
     "B14"
@@ -1214,10 +1278,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + timing",
    "evidence": [
-    "analog/wired_rx/generated/cdr-evidence.json"
+    "analog/wired_rx/generated/cdr-evidence.json",
+    "../../scratch/reviews/interface-changes.md"
    ],
    "status": "unverified",
-   "basis": "no JTOL evidence",
+   "basis": "No JTOL evidence on extracted blocks. Model only: per-die KP calibration (CDR7-KP) gives 1.03-1.19x mask (scratch/wired_rx/r7cdr gain-bound model, lat 8); r13 integral path 2.6-3.5x slower than r11 (cdr-evidence known_limits). Verify: closed-loop JTOL sweep on r13 + r12 ring R+C (sim now), then board. Quarter-rate capture also fails at the pessimistic ss bound (wrx_cap-evidence.json).",
    "primary_fix": "AC-3 CDR closure",
    "fallback": [
     "wire_rx_board_retimer",
@@ -1232,11 +1297,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "pads + wired_rx",
    "evidence": [
-    "analog/pads/README.md"
+    "analog/pads/generated/stress-safe-families/wired-receive-hs/pc47-hspad-a6.json"
    ],
-   "status": "fails",
-   "basis": "needs C_pad <= 1.57 pF; today 2.35 pF",
-   "primary_fix": "S7 / IX-3",
+   "status": "marginal",
+   "basis": "Published pads, die-level differential RL (no package). TX pad_txpad a16 RT model (sha 5e0a7322 = published physical-r-typ), tt 27 C 3.3 V only (../../scratch/pads-core/esdopt/tx/bench/a16rt-ac.json): C per leg 3.21 pF @0.1 GHz / 3.03 @1 GHz; RL 14.09 dB @0.5, 7.41 @1.25, 6.22 @1.6, 4.39 @2.5 GHz. RX pad_hspad a6 _rail models typ/high/low metal x tt/ss/ff/sf/fs x 22/32 C x 3.15/3.35 V (sec/bench/a6r*_rail-ac.json, model sha = published): C per leg 1.29-1.39 pF; RL min 17.19 dB @0.625, 11.48 @1.25, 10.05 @1.5, 6.67 @2.4 GHz. Limit RX >= 10 dB to 1.35 GHz: RX >= 10.05 dB at 1.5 GHz at every corner (0.05 dB margin at the next sample; die level, package not included).",
+   "primary_fix": "Keep pad_hspad a6 C; check through the COB channel model",
    "fallback": [
     "B13"
    ]
@@ -1248,13 +1313,14 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + wired_tx + timing + digital",
    "evidence": [
+    "analog/wired_rx/generated/wrx_cap-evidence.json",
+    "analog/timing/generated/pll_ring-evidence.json",
     "analog/wired_rx/generated/cdr-evidence.json",
-    "analog/wired_tx/generated/wiredtx-evidence.json",
-    "analog/timing/generated/pll_ring-evidence.json"
+    "../../scratch/reviews/interface-changes.md"
    ],
    "status": "fails",
-   "basis": "ring 781 MHz needed: 3.6 % below 810 MHz edge, above regulated ss top 733-778 MHz; serializer fails > 1.92 Gb/s; host link 109 % of capacity",
-   "primary_fix": "IX-1 ring/sampler/serializer range + IX-2 8b/10b offload",
+   "basis": "Bound capture r8 (wrx_cap-evidence.json, ss/32/3.15 V): quarter 625 MHz nominal 0/200 pass, 2.5 Gb/s bench B with RCS=1 0/200, but pessimistic-bound ss q625 72/200 FAIL and 23/200 at 3.50 V (slot-enable chain; trim does not rescue) (quarter rate, ring 781 MHz). R+C ring ss/3.15 V max 740 MHz: 3.125 Gb/s on slow dies only at the 3.50 V trim (ring 810 MHz at VCTRL 2.08 V; chain 3.24 Gb/s ss/3.50 V 0/112, eye 100.2 mV, 0.125 UI, TIM-34). CDR closed loop not run on the bound r13 pt_cdr with the r12 ring (cdr-evidence.json closed_loop: r11 extraction + r9w ring, tt only, data margin >= 0.357 UI).",
+   "primary_fix": "Capture r10b slot-enable fix; 3.50 V trim on slow dies; AC-3 CDR closed loop; IX-2 host fit",
    "fallback": [
     "wire_rx_board_retimer",
     "wire_board_phy_bypass",
@@ -1270,11 +1336,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx",
    "evidence": [
-    "analog/wired_tx/generated/wiredtx-evidence.json"
+    "analog/wired_tx/README.md",
+    "analog/pads/generated/stress-safe-families/wired-transmit/pc72-txpad-a16.json"
    ],
-   "status": "fails",
-   "basis": "578.5 mVppd tt",
-   "primary_fix": "S8 CML tail >= 16 mA",
+   "status": "unverified",
+   "basis": "No valid result for the bound pt_wiredtx8 (staged master, wired/chip.conn) with the published pad_txpad a16: the s16 real-chain table (extracted pt_wiredtx8 fullfix16 ada39d70, a16 RT pad) stopped on 2026-11-22 before any row (../../scratch/wired_tx/s16/QUEUE.md); the only run is the 40 ns sanity sp16b_ssp (ss-pess 3.15 V, 3.125 Gb/s, pad=C: 0.54 V pp at the pad, no eye). The 578.5 mVppd / 4:1-mux numbers in wiredtx-evidence.json are the retired pt_wiredtx. Limit >= 800 mVppd. Verify: s16 real-chain table (sim now, chain16.py, one row per rate x corner incl. ss-pess 3.15 V and 3.50 V trim).",
+   "primary_fix": "Real-chain swing table on pt_wiredtx8 + pad_txpad a16 RT; MAIN code per corner (21 mA at code 255)",
    "fallback": [
     "wire_tx_board_serializer",
     "B14"
@@ -1287,11 +1354,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx + timing",
    "evidence": [
-    "analog/wired_tx/generated/wiredtx-evidence.json"
+    "analog/wired_tx/README.md",
+    "../../scratch/wired_tx/s16/QUEUE.md"
    ],
-   "status": "fails",
-   "basis": "serializer DJ 305 ps pp at 1.25 G; 810 MHz in BYP has ~29-33 ps pk supply DJ",
-   "primary_fix": "Compact retiming + IX-1 regulated 834 MHz ring",
+   "status": "unverified",
+   "basis": "No valid result for the bound pt_wiredtx8 (staged master, wired/chip.conn) with the published pad_txpad a16: the s16 real-chain table (extracted pt_wiredtx8 fullfix16 ada39d70, a16 RT pad) stopped on 2026-11-22 before any row (../../scratch/wired_tx/s16/QUEUE.md); the only run is the 40 ns sanity sp16b_ssp (ss-pess 3.15 V, 3.125 Gb/s, pad=C: 0.54 V pp at the pad, no eye). The 578.5 mVppd / 4:1-mux numbers in wiredtx-evidence.json are the retired pt_wiredtx. Limit TJ <= 0.35 UI, DJ <= 0.17 UI at 3.125 Gb/s. Risk: earlier mux-level runs with metal-R pad models (README sec. 6, revision-2 mux) had no passing row at ss above 2.7 Gb/s. Verify: s16 real-chain table (sim now, chain16.py, one row per rate x corner incl. ss-pess 3.15 V and 3.50 V trim). TJ needs ring RJ too (WR-PLL-JIT).",
+   "primary_fix": "Phase-trim calibration + real-chain jitter table on pt_wiredtx8 at 3.125 Gb/s",
    "fallback": [
     "wire_tx_board_serializer",
     "B14"
@@ -1304,10 +1372,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx + timing",
    "evidence": [
-    "analog/wired_rx/generated/cdr-evidence.json"
+    "analog/wired_rx/generated/cdr-evidence.json",
+    "../../scratch/reviews/interface-changes.md"
    ],
    "status": "unverified",
-   "basis": "no JTOL evidence",
+   "basis": "No JTOL evidence on extracted blocks. Model only: per-die KP calibration (CDR7-KP) gives 1.03-1.19x mask (scratch/wired_rx/r7cdr gain-bound model, lat 8); r13 integral path 2.6-3.5x slower than r11 (cdr-evidence known_limits). Verify: closed-loop JTOL sweep on r13 + r12 ring R+C (sim now), then board. Quarter-rate capture also fails at the pessimistic ss bound (wrx_cap-evidence.json).",
    "primary_fix": "AC-3 CDR closure at 781 MHz quarter rate",
    "fallback": [
     "wire_rx_board_retimer",
@@ -1322,10 +1391,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (cdr)",
    "evidence": [
-    "analog/wired_rx/generated/cdr-rtl-check.json"
+    "analog/wired_rx/generated/cdr-rtl-check.json",
+    "analog/wired_rx/generated/cdr-evidence.json"
    ],
    "status": "unverified",
-   "basis": "FLL behavioural only",
+   "basis": "Behavioural model only (cdr-rtl-check.json): +-300 ppm at bpc 4/2 and +-500 ppm at bpc 1, 29920 bits 0 errors; FLL hold-step +-20000..35000 ppm recovers. Not run on extracted r13 pt_cdr + r12 ring. Verify: extracted closed loop with ppm offset (sim now).",
    "primary_fix": "AC-3 continuous integral path",
    "fallback": [
     "wire_rx_board_retimer",
@@ -1340,12 +1410,13 @@
    "source": "spec/interface-requirements.md",
    "owner": "pads + wired_rx/tx",
    "evidence": [
-    "analog/pads/README.md",
-    "spec/package-channel.md"
+    "analog/pads/generated/stress-safe-families/wired-transmit/pc72-txpad-a16.json",
+    "../../scratch/pads-core/esdopt/tx/bench/a16rt-ac.json",
+    "analog/pads/generated/stress-safe-families/wired-receive-hs/pc47-hspad-a6.json"
    ],
-   "status": "fails",
-   "basis": "2.35/2.71 pF -> 6.0/5.1 dB at 1.5625 GHz; 1.6 pF gives 8.7 dB",
-   "primary_fix": "S7",
+   "status": "unverified",
+   "basis": "Published pads, die-level differential RL (no package). TX pad_txpad a16 RT model (sha 5e0a7322 = published physical-r-typ), tt 27 C 3.3 V only (../../scratch/pads-core/esdopt/tx/bench/a16rt-ac.json): C per leg 3.21 pF @0.1 GHz / 3.03 @1 GHz; RL 14.09 dB @0.5, 7.41 @1.25, 6.22 @1.6, 4.39 @2.5 GHz. RX pad_hspad a6 _rail models typ/high/low metal x tt/ss/ff/sf/fs x 22/32 C x 3.15/3.35 V (sec/bench/a6r*_rail-ac.json, model sha = published): C per leg 1.29-1.39 pF; RL min 17.19 dB @0.625, 11.48 @1.25, 10.05 @1.5, 6.67 @2.4 GHz. Limit >= 10 dB to 625 MHz, >= 6 dB at 1.5625 GHz: RX meets both (17.19 / >= 10.05 dB). TX 625 MHz not sampled (14.09 @0.5, 7.41 @1.25 GHz) and TX has tt only. Verify: a16 RT/RH AC sweep at 0.625 / 1.5625 GHz over corners (sim now).",
+   "primary_fix": "a16 AC sweep at the XAUI points; lower-C pad_txpad if it misses",
    "fallback": [
     "B13"
    ]
@@ -1358,10 +1429,11 @@
    "owner": "timing (pll_ring) + wired_rx + wired_tx + digital (clocktree)",
    "evidence": [
     "analog/timing/generated/pll_ring-evidence.json",
+    "../../scratch/reviews/interface-changes.md",
     "analog/timing/README.md"
    ],
    "status": "fails",
-   "basis": "ring 480-810 MHz modes: gaps 0.81-0.96 and 1.62-1.92 Gb/s",
+   "basis": "Ring modes span 480-810 MHz x full/half/quarter = 0.48-0.81, 0.96-1.62, 1.92-3.24 Gb/s: gaps 0.81-0.96 and 1.62-1.92 Gb/s remain (IX-1 not implemented; pll_ring-evidence closed 480/625/810 MHz). R+C ring max 740 MHz at ss/32/3.15 V: quarter top 2.96 Gb/s untrimmed; 3.0-3.24 Gb/s on slow dies need the 3.50 V trim (TIM-34/35).",
    "primary_fix": "IX-1 ring tuning ratio >= 2.12:1 (393-834 MHz regulated) with coarse bands",
    "fallback": [
     "wire_rx_board_retimer",
@@ -1377,10 +1449,11 @@
    "owner": "timing (pll_ring, pll_vreg) + wired_rx (samplers, wrx_cap) + wired_tx",
    "evidence": [
     "analog/timing/generated/pll_ring-evidence.json",
-    "analog/pll_vreg/README.md"
+    "../../scratch/timing/ringrc/out/rc.json",
+    "../../scratch/reviews/interface-changes.md"
    ],
    "status": "fails",
-   "basis": "regulated ss top 733-778 MHz; 810 MHz only in BYP; DP RBR on the 810 MHz edge; wrx_cap fails > 480 MHz",
+   "basis": "Needs ring <= 393 and >= 834 MHz regulated at ss. R+C ring r12: 740 MHz max at ss/32/3.15 V (VCTRL at 2.64 V limit), 810 MHz only at the 3.50 V trim (VCTRL 2.08 V) (TIM-34, ringrc rc.json); 810 < 834 even trimmed. DP RBR sits on the 810 MHz edge.",
    "primary_fix": "IX-1 ring resize >= 900 MHz at 2.6 V ss; samplers/wordclk to 834 MHz",
    "fallback": [
     "wire_rx_board_retimer",
@@ -1394,10 +1467,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "digital (clocktree) + wired_rx",
    "evidence": [
+    "analog/wired_rx/generated/wrx_cap-evidence.json",
     "analog/wired_rx/generated/cdr-evidence.json"
    ],
    "status": "unverified",
-   "basis": "oversample route exists as fallback only; no CDR run at ring/2^k",
+   "basis": "No CDR or capture run at ring/2^k; route exists only as FPGA oversampling of full-rate capture (full 500 MHz 4x on r8: ss/3.15 V 0/100, wrx_cap-evidence.json). Verify: one capture run at ring/2 and the divider range in the clocktree RTL (sim now).",
    "primary_fix": "Document and test the low-rate mode (IX-4)",
    "fallback": [
     "wire_cdr_fpga_oversample"
@@ -1410,13 +1484,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "digital (wired boundary, transport) + hostio",
    "evidence": [
-    "evidence/digital-hardening-evidence.json",
-    "spec/streaming-transport-v2.md",
-    "../../scratch/reviews/host-link-bandwidth.md"
+    "../../scratch/reviews/host-link-bandwidth.md",
+    "../../scratch/reviews/interface-changes.md"
    ],
    "status": "fails",
-   "basis": "today 2.88 Gb/s/dir (59/64): raw 3.0/3.125/3.24 = 104/109/112 %, 8b/10b 94/98/101 %; planned: 8b/10b at L=256 = 88/92/95 % each direction (full duplex), raw RX in RX2 = 52/54/56 % of 5.76 Gb/s; L=256, RX2 and d2h_stagger not yet in RTL",
-   "primary_fix": "HB-1..HB-6 (interface-changes.md): stagger + fast slew, L=256 frames, 8b/10b both ways, per-direction rate, hold-padding, RX2 bank reversal",
+   "basis": "Capacity at full rate 2.88 Gb/s/dir (host-link-bandwidth.md): raw 3.0/3.125/3.24 = 104/109/112 %; with the 8b/10b offload now in RTL (rtl/pt_linecode.sv) 94/98/101 %, below the 4 % margin and 3.24 over. L=256 frames and RX2 bank reversal are not in RTL (d2h_stagger is). Full host rate itself misses on slow dies (HL-RATE).",
+   "primary_fix": "HB-2 L=256 frames and HB-6 RX2 bank reversal in RTL; HL-RATE timing fixes",
    "fallback": [
     "wire_board_phy_bypass",
     "debug.host_link.rate div2/div4"
@@ -1429,11 +1502,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + FPGA demod",
    "evidence": [
-    "analog/rf_rx/generated/lna-evidence.json"
+    "analog/rf_rx/generated/lna-evidence.json",
+    "../../scratch/rf-lna-q/padc/result_r4.json"
    ],
-   "status": "unverified",
-   "basis": "projected -88..-100 dBm (S=8) from RF-BLE-SENS cascade + 8-12 dB coding gain; no coded demod sim",
-   "primary_fix": "Coded demod sim on extracted RX chain",
+   "status": "meets",
+   "basis": "Analytic from the RF-BLE-SENS cascade: 1 Mb/s sensitivity ~-85 dBm at the pessimistic end (chain NF 15.6 dB + 3.3 dB board) plus >= 8 dB S=8 / ~4 dB S=2 coding gain -> <= -93 / -89 dBm vs -82 / -75 dBm limits (target -95 / -90 not shown at the pessimistic end). FPGA coded demodulator not simulated. Evidence is on the 11-19 round-3 LNA / mixer GDS; the bound cells have since only had pins fanned out and antenna diodes added (11-24), not re-simulated.",
+   "primary_fix": "Coded demod sim on the extracted RX chain for the -95 / -90 targets",
    "fallback": [
     "rf_lna_bypass",
     "B5"
@@ -1446,10 +1520,10 @@
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + converters",
    "evidence": [
-    "analog/rf_rx/generated/lna-evidence.json"
+    "analog/rf_rx/generated/bbfilter_i-evidence.json"
    ],
    "status": "unverified",
-   "basis": "not simulated (as RF-BLE-BLOCK)",
+   "basis": "No co-channel / adjacent interferer run. Verify: behavioural sim with the extracted bbfilter response (bbfilter_i-evidence) and ADC SNDR (simulation now).",
    "primary_fix": "Interferer sim with real filter/ADC",
    "fallback": [
     "rf_bb_external_adc"
@@ -1465,8 +1539,8 @@
     "analog/timing/generated/lo_ext-evidence.json"
    ],
    "status": "unverified",
-   "basis": "no long-packet sim",
-   "primary_fix": "17 ms LO + DC-loop sim",
+   "basis": "No 17 ms run. With the integer-N loop locked, drift follows the reference (board B3/B35, +-50 kHz = +-20 ppm); gain/DC loops are FPGA recipes. Verify on silicon/board with a long-packet capture.",
+   "primary_fix": "17 ms LO + DC-loop check on the board",
    "fallback": [
     "rf_lo_external_ref",
     "B3"
@@ -1479,13 +1553,13 @@
    "source": "spec/interface-requirements.md",
    "owner": "timing (rf PLL/QVCO, lo_ext) + board LO + digital",
    "evidence": [
-    "analog/timing/generated/lo_ext-evidence.json",
-    "analog/timing/README.md",
-    "spec/block-diagram.md"
+    "../../scratch/lo-ap4/NOTES.md",
+    "../../scratch/lo-ap4/lock/lock_r9.json",
+    "analog/timing/README.md"
    ],
-   "status": "unverified",
-   "basis": "warm hop 50 us allocation is frequency settling (35 us external); on-chip QVCO frequency loop open",
-   "primary_fix": "IX-5 phase-settling spec for B3 synthesizer and on-chip PLL",
+   "status": "marginal",
+   "basis": "Behavioural loop on extracted block data with QVCO r9 (lock/lock_r9.py): every case locks, phase margin >= 48.7 deg, 2-deg phase settling 39-42 us nominal filter, 59-62 us at the slow filter corner vs 75 us (T_FCS 80 - 5 us): meets 75 us, misses the 50 us warm-hop allocation. No transistor-level closed-loop lock.",
+   "primary_fix": "Transistor-level lock run on the published LO cells; filter R trim (LO24) for 50 us",
    "fallback": [
     "rf_lo_external_ref",
     "B3"
@@ -1498,11 +1572,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "rf_tx + rf_rx + timing + digital",
    "evidence": [
-    "analog/timing/generated/lo_ext-evidence.json",
-    "analog/rf_tx/generated/rfdriver-evidence.json"
+    "analog/rf_rx/generated/bbfilter_i-evidence.json",
+    "analog/timing/generated/lo_ext-evidence.json"
    ],
    "status": "unverified",
-   "basis": "direction change not timed; warm-hop rejects direction change as hop",
+   "basis": "Filter TX->RX direction switch settles to 1 % in 0.15 us (bbfilter_i-evidence); LO phase continuity across the switch and the timed TDD command are not simulated. Verify: RTL sim of the timed direction change plus a QVCO pulling run with the TX driver switching (needs the assembled chip supply/coupling: top level).",
    "primary_fix": "IX-6 timed phase-continuous TDD switch",
    "fallback": [
     "rf_lo_external_ref"
@@ -1515,10 +1589,10 @@
    "source": "spec/interface-requirements.md",
    "owner": "timing (LO) + rf_rx + rf_tx",
    "evidence": [
-    "analog/timing/generated/lo_ext-evidence.json"
+    "../../scratch/lo-ap4/NOTES.md"
    ],
    "status": "unverified",
-   "basis": "lo_ext supply pushing 0.0025 ps/mV (not binding); no phase-drift sim",
+   "basis": "No phase-drift run; QVCO phase noise unresolved (bench floor). TX->RX LO drift is set by supply/pulling coupling on the assembled die. Verify: top-level supply + pulling sim, then loopback cal on silicon.",
    "primary_fix": "LO phase-drift sim across TX/RX switch + IX-7 loopback cal",
    "fallback": [
     "rf_lo_external_ref",
@@ -1532,10 +1606,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + timing (LO I/Q trim) + FPGA cal",
    "evidence": [
-    "analog/rf_rx/generated/rxmix_i-evidence.json"
+    "../../scratch/lo-ap4/NOTES.md",
+    "analog/timing/generated/lo_ext-evidence.json"
    ],
-   "status": "marginal",
-   "basis": "~29 dB uncorrected (tt); COB LO hybrid 6-10 deg needs D-LO-2 trim; no across-band cal",
+   "status": "unverified",
+   "basis": "Uncorrected LO quadrature error up to ~3 deg (QVCO r9, published loads) plus 2.3-4.6 deg (lo_ext a4); the <= 1 deg requirement holds only after per-bin calibration, which is not demonstrated. Verify on silicon with the IX-7 loopback per-bin cal.",
    "primary_fix": "D-LO-2 trim + IX-7 loopback per-bin cal",
    "fallback": [
     "rf_lo_external_ref",
@@ -1552,7 +1627,7 @@
     "spec/streaming-transport-v2.md"
    ],
    "status": "unverified",
-   "basis": "action clock 25.6 ns ticks; epoch FIFO latency not characterised",
+   "basis": "Action clock 25.6 ns ticks; epoch FIFO latency not characterised. Verify: RTL simulation of TX-launch to RX-sample latency across modes (simulation now).",
    "primary_fix": "IX-8 as reworded (HL-MARK): chip TX-launch/fast-apply marks in the D2H stream + fixed published per-mode latency; FPGA 64-bit sample counters and sub-tick timestamp",
    "fallback": [
     "rf_bb_external_adc"
@@ -1568,7 +1643,7 @@
     "spec/block-diagram.md"
    ],
    "status": "unverified",
-   "basis": "procedure-level only",
+   "basis": "Procedure-level only (FPGA-driven external switch, no chip pin). Verify on the board.",
    "primary_fix": "Board recipe; FPGA tone-boundary timing from action clock",
    "fallback": [
     "B17"
@@ -1585,7 +1660,7 @@
     "analog/rf_rx/generated/rxmix_i-evidence.json"
    ],
    "status": "unverified",
-   "basis": "depends on RF-CS-PHASE/-IQ/-RTT",
+   "basis": "System result; depends on RF-CS-PHASE / -IQ / -RTT. Verify on the board against a reference device.",
    "primary_fix": "Close RF-CS-PHASE, -IQ, -RTT; bench vs reference device",
    "fallback": [
     "rf_lo_external_ref",
@@ -1599,11 +1674,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "rf_tx + rf_rx + digital",
    "evidence": [
-    "spec/block-diagram.md"
+    "../../scratch/reviews/interface-changes.md",
+    "spec/register-map.json"
    ],
    "status": "unverified",
-   "basis": "warm hop 50 us; direction change not timed",
-   "primary_fix": "IX-6 TDD switch <= 40 us",
+   "basis": "rfdriver gated wake <= 1.95 us tt / 2.52 us ss (RF-PWR-1) is far inside 192 us; end-to-end RX<->TX direction change (validator, LO, filter direction is stopped-only in spec/register-map.json) not timed. Verify: RTL sim of the direction-change sequence plus block settle times (sim now)",
+   "primary_fix": "IX-6 TDD switch <= 40 us; RTL direction-change test",
    "fallback": [
     "rf_lo_external_ref"
    ]
@@ -1615,10 +1691,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + converters + digital",
    "evidence": [
-    "analog/rf_rx/generated/lna-evidence.json"
+    "analog/rf_rx/generated/lna-evidence.json",
+    "analog/rf_rx/generated/bbfilter_i-evidence.json"
    ],
    "status": "unverified",
-   "basis": "gain state + ADC RSSI not characterised",
+   "basis": "Gain-state table and ADC RSSI vs gain code not characterised. Verify: chain gain per att / PGA code from extracted blocks (simulation now), then per-die RSSI cal.",
    "primary_fix": "RSSI calibration vs gain code",
    "fallback": [
     "rf_bb_external_adc"
@@ -1631,10 +1708,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "timing (LO ref) + board",
    "evidence": [
-    "analog/timing/generated/lo_ext-evidence.json"
+    "analog/timing/generated/lo_ext-evidence.json",
+    "analog/timing/README.md"
    ],
    "status": "unverified",
-   "basis": "set by REF_IN / B3 source accuracy",
+   "basis": "Integer-N LO (f_LO = 2 N f_ref): accuracy equals the board reference (B3); no chip contribution once locked. Verify on the board with the chosen reference.",
    "primary_fix": "Board XO/synth accuracy",
    "fallback": [
     "B3"
@@ -1650,7 +1728,7 @@
     "spec/streaming-transport-v2.md"
    ],
    "status": "unverified",
-   "basis": "scheduler latency modelled at full clock only",
+   "basis": "Scheduler latency not characterised. Verify: RTL/GLS sim of the scheduled TX/RX path at the achieved clocks (sim now)",
    "primary_fix": "Latency characterisation (shared with RF-CS-RTT)",
    "fallback": [
     "rf_bb_external_adc"
@@ -1666,7 +1744,7 @@
     "spec/interface-requirements.md"
    ],
    "status": "unverified",
-   "basis": "inherits RF-154-*",
+   "basis": "Mapping row; inherits RF-154-* (RF-154-EVM, -TURN, -CCA unverified)",
    "primary_fix": "Close RF-154-*",
    "fallback": []
   },
@@ -1680,7 +1758,7 @@
     "spec/interface-requirements.md"
    ],
    "status": "unverified",
-   "basis": "inherits RF-THREAD-CSL, RF-154-*, RF-WIFI-*, RF-BLE-*",
+   "basis": "Mapping row; inherits RF-THREAD-CSL, RF-154-*, RF-WIFI-*, RF-BLE-* (several fail or are unverified)",
    "primary_fix": "Close inherited rows",
    "fallback": []
   },
@@ -1691,12 +1769,11 @@
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx",
    "evidence": [
-    "analog/rf_rx/generated/rxmix_i-evidence.json",
-    "analog/rf_rx/generated/lna-evidence.json"
+    "analog/rf_rx/README.md"
    ],
-   "status": "fails",
-   "basis": "Estimate: TIA clips at ~-34 dBm CW at LNA high gain (41.7 dB to TIA out, +-0.8 V swing assumed; +-6 dB), ~-20 dBm via bypass: ~24 dB short (RXR-01)",
-   "primary_fix": "TIA feedback-R steps + LNA stage-2 attenuation (>= 30 dB pre-filter range)",
+   "status": "unverified",
+   "basis": "The LNA now has a 64-unit current-steering attenuator (att[4:0] + gain_lo, rf_rx README) in front of the TIA; the -34 dBm TIA-clip estimate predates it. No compression run at any attenuator code. Verify: P1dB / clipping vs att code on the extracted LNA + mixers (simulation now).",
+   "primary_fix": "Compression sim vs att code; TIA feedback-R steps (RXR-D1) if still short",
    "fallback": [
     "rf_lna_bypass"
    ]
@@ -1708,11 +1785,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + digital (opcode4) + FPGA",
    "evidence": [
-    "analog/rf_rx/generated/bbfilter_i-evidence.json"
+    "analog/rf_rx/README.md",
+    "rtl/pt_core.sv"
    ],
-   "status": "fails",
-   "basis": "Pre-filter range 3 dB (+ bypass); opcode4 fast gain not in RTL; SPI write 1.6 us/step -> ~7.6 us for 2 steps vs 8 us L-STF (RXR-03)",
-   "primary_fix": "Implement opcode4 in receiver RTL; add pre-filter gain steps (RXR-01)",
+   "status": "unverified",
+   "basis": "Opcode4 fast gain is in RTL (pt_core.sv, pt_quad_link.sv); pre-filter range = LNA attenuator att[4:0] + gain_lo (up to ~36 dB of steering, not measured); decision->gain latency and step settling not simulated. Verify: RTL sim of opcode4 latency plus analog step-settle per gain code (simulation now).",
+   "primary_fix": "RTL + analog gain-step settle sims; LNA attenuator range characterisation",
    "fallback": []
   },
   {
@@ -1721,9 +1799,11 @@
    "requirement": "Pre-filter overload flag at TIA output within 0.2 us, in status + D2H stream",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + digital",
-   "evidence": [],
+   "evidence": [
+    "analog/rf_rx/rxmix_i.spice"
+   ],
    "status": "fails",
-   "basis": "No detector exists; RSSI is post-filter only (RXR-09)",
+   "basis": "No pre-filter overload detector exists: pt_rxmix_i / pt_lna ports have no comparator output and no rx_ovld status in RTL; RSSI is post-filter only (RXR-D4 not built).",
    "primary_fix": "2 latched comparators per path at the TIA output + status bit",
    "fallback": []
   },
@@ -1733,9 +1813,11 @@
    "requirement": "Recovery <= 2 us after pulsed in-band blocker at every gain state",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx",
-   "evidence": [],
+   "evidence": [
+    "analog/rf_rx/README.md"
+   ],
    "status": "unverified",
-   "basis": "Not simulated (RXR-08)",
+   "basis": "Not simulated. Verify: pulsed-blocker transient at each gain state on the extracted chain (simulation now).",
    "primary_fix": "Overload-recovery transient with the RXR-01 sim",
    "fallback": []
   },
@@ -1746,11 +1828,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + FPGA",
    "evidence": [
-    "analog/rf_rx/generated/rxmix_i-evidence.json"
+    "analog/rf_rx/generated/rxmix_i-evidence.json",
+    "analog/rf_rx/generated/bbfilter_i-evidence.json"
    ],
-   "status": "fails",
-   "basis": "TIA trim residual <= 4.5 mV x PGA: 24 dB 8 %, 30 dB 16 %, 42 dB 65 % FS; signal-dependent shift ~20 mV (RXR-02)",
-   "primary_fix": "Second offset DAC / finer LSB after the PGA, per-gain-code table; FPGA DC tracking; low IF for narrowband",
+   "status": "unverified",
+   "basis": "Static: TIA offset DAC residual 0.55 mV after cal (LSB 5.0 mV, rxmix_i-evidence, 10 corners <10 mV) plus the bbfilter fine offset DAC (LSB 0.33-0.47 mV, +-120 mV at the stage-1 output, ~1 % ADC FS at 42 dB, bbfilter_i-evidence): static offset meets <= 5 % FS. Dynamic (self-mixing vs RF level) offset not simulated. Verify: dynamic-offset sim vs RF level on the extracted chain (simulation now).",
+   "primary_fix": "Dynamic-offset sim; FPGA DC tracking; low IF for narrowband",
    "fallback": []
   },
   {
@@ -1759,10 +1842,12 @@
    "requirement": "IIP2 >= +47 dBm at max gain (or low-IF operation)",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx",
-   "evidence": [],
+   "evidence": [
+    "analog/rf_rx/README.md"
+   ],
    "status": "unverified",
-   "basis": "Not simulated (RXR-05)",
-   "primary_fix": "Two-tone sim; low-IF recipe for narrowband protocols",
+   "basis": "Not simulated; needs mismatch (MC) to be meaningful. Verify: two-tone + Monte Carlo on the extracted chain via the X-instance path (simulation now).",
+   "primary_fix": "Two-tone + MC sim; low-IF recipe for narrowband protocols",
    "fallback": []
   },
   {
@@ -1775,7 +1860,7 @@
     "analog/rf_rx/generated/lna-evidence.json"
    ],
    "status": "unverified",
-   "basis": "NF 4.45 dB (5-9 MHz) vs 5.97 dB (2-9 MHz), sub-2 MHz unmodelled (RXR-05)",
+   "basis": "Chain NF is evaluated only at 4-8.5 MHz IF (lna-evidence chain rows); sub-2 MHz flicker not modelled. Verify: noise vs IF 10 kHz-10 MHz on the extracted chain (simulation now).",
    "primary_fix": "Transient-noise NF vs IF 10 kHz-10 MHz; low-IF recipe",
    "fallback": []
   },
@@ -1785,9 +1870,11 @@
    "requirement": "LO phase noise mask <= -107 dBc/Hz @3 MHz, -120 @40 MHz, -130 @>=100 MHz",
    "source": "spec/interface-requirements.md",
    "owner": "board (B35) + timing (future on-chip LO)",
-   "evidence": [],
+   "evidence": [
+    "../../scratch/lo-ap4/NOTES.md"
+   ],
    "status": "unverified",
-   "basis": "No mask existed; reciprocal-mixing limits derived (RXR-06)",
+   "basis": "Primary is the board synth (B35 mask). On-chip QVCO r9 transient bench gives -108.1 dBc/Hz at 3 MHz (ss), but it is the bench floor (unchanged with noise off), not phase noise. Verify: board synth selection to B35 on the board; on-chip with a divider-off spectral analysis (simulation now).",
    "primary_fix": "Board synth selection to B35",
    "fallback": [
     "B35"
@@ -1801,7 +1888,7 @@
    "owner": "board (B35) + FPGA",
    "evidence": [],
    "status": "unverified",
-   "basis": "Not required before (RXR-11)",
+   "basis": "Board/FPGA requirement (common +-10 ppm TCXO, FPGA CFO >= +-250 kHz). Verify on the board.",
    "primary_fix": "B35 common TCXO; FPGA AFC/SFO tracking",
    "fallback": [
     "B35"
@@ -1814,10 +1901,10 @@
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + assembly",
    "evidence": [
-    "analog/rf_rx/generated/rxmix_i-evidence.json"
+    "analog/rf_rx/README.md"
    ],
    "status": "unverified",
-   "basis": "Estimate -50..-65 dBm (IQ-01/XT-08), 0-7 dB short at the pessimistic end",
+   "basis": "On-chip LO leakage to RF_RX not simulated (no routed LO). External-LO fallback at site B: -55.2 dBm into the matched port vs -57 (computed from pad mutuals; rf_rx README open item 5). Verify: extracted mixer + LNA reverse isolation with the routed top-level LO (top level).",
    "primary_fix": "Extracted mixer + LNA reverse-isolation sim with the routed LO (A4)",
    "fallback": []
   },
@@ -1828,11 +1915,12 @@
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + assembly + digital (clock plan)",
    "evidence": [
-    "analog/rf_rx/generated/lna-evidence.json"
+    "analog/rf_rx/generated/lna-evidence.json",
+    "analog/rf_rx/README.md"
    ],
    "status": "fails",
-   "basis": "A5: macro 31st harmonic -88..-69 dBm (moved by clock plan), conv 40 MHz 2400/2440/2480 -103..-84 dBm",
-   "primary_fix": "AGND_RX pad + clock plan; conv-clock selection per channel",
+   "basis": "D2H pickup at 2421.875 MHz (rf_rx README 5a): -100.1 dBm only with slow slew + div4 (0.1 dB margin at min package bound); div2 -94.1, nominal div2 -78.5 dBm vs -100. Die-VSS bounce through the LNA: about -91 / -83 / -90 dBm vs -100 (PD2-15). Evidence is on the 11-19 round-3 LNA / mixer GDS; the bound cells have since only had pins fanned out and antenna diodes added (11-24), not re-simulated.",
+   "primary_fix": "Slow-slew + div4 D2H in RF modes; AGND_RX / ground plan; conv-clock selection per channel",
    "fallback": []
   },
   {
@@ -1843,7 +1931,7 @@
    "owner": "board (B34) + rf_rx",
    "evidence": [],
    "status": "unverified",
-   "basis": "No on-chip selectivity; ~45 dB short without B34 (RXR-04)",
+   "basis": "No on-chip selectivity; met only by board BAW filter B34. Verify on the board.",
    "primary_fix": "Board BAW coex filter B34",
    "fallback": [
     "B34"
@@ -1856,12 +1944,16 @@
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + board",
    "evidence": [
-    "analog/rf_rx/generated/lna-evidence.json"
+    "analog/rf_rx/generated/lna-evidence.json",
+    "../../scratch/rf-lna-q/padc/result_r4.json",
+    "analog/rf_rx/README.md"
    ],
-   "status": "marginal",
-   "basis": "lna4_b 4.45 + pkg 0.61 + balun 0.8 + switch 0.5 + BAW 2.0 = 8.4 dB (scratch, unpublished; published chain 12.1 dB)",
-   "primary_fix": "Promote lna4_b; low-loss BAW/balun selection",
-   "fallback": []
+   "status": "fails",
+   "basis": "Chain NF DSB (extracted LNA rext + mixers, real COB channel, LO as delivered; lna-evidence chain rows) tt 6.26 / ss 7.80 / pessimistic 15.19 dB, plus +0.42..0.47 dB for pad_rf_pair r4 (RQ-24, result_r4.json). On-chip budget <= 4.1 dB DSB misses at every corner; with 3.3 dB board losses (balun 0.8, switch 0.5, BAW 2.0) system NF ~10.0 dB tt / ~11.6 ss vs 8 dB. Fallback B5 external LNA in front of the active LNA: 3.9 / 4.1 / 6.5 dB tt / ss / pessimistic (cascade). Evidence is on the 11-19 round-3 LNA / mixer GDS; the bound cells have since only had pins fanned out and antenna diodes added (11-24), not re-simulated.",
+   "primary_fix": "Placement-level LNA relayout; low-loss BAW/balun selection",
+   "fallback": [
+    "B5"
+   ]
   },
   {
    "id": "RF-RX-ESD",
@@ -1869,9 +1961,11 @@
    "requirement": "RF_RX: 2 kV HBM and +10 dBm CW survivable; board TVS for IEC +-8 kV",
    "source": "spec/interface-requirements.md",
    "owner": "pads + rf_rx + board (B36)",
-   "evidence": [],
+   "evidence": [
+    "analog/rf_rx/README.md"
+   ],
    "status": "unverified",
-   "basis": "+10 dBm estimate ~3.7 V gate peak vs ~3.6 V; HBM margin 0.105 V (ESD-02) (RXR-07)",
+   "basis": "pad_rf_pair r4 is built to the MANDATE class HBM 1 kV / CDM 1 A (PC-84); the 2 kV HBM and IEC levels rely on board TVS B36. +10 dBm CW survival not simulated. Verify: +10 dBm CW transient on the rf_pair r4 model, powered and unpowered (simulation now).",
    "primary_fix": "+10 dBm transient on the RF pad model; B36 TVS",
    "fallback": [
     "B36"
@@ -1883,9 +1977,11 @@
    "requirement": "RX with board ripple (B37): spurs <= RF-RX-SPUR, desense <= 0.5 dB",
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + board (B37)",
-   "evidence": [],
+   "evidence": [
+    "analog/rf_rx/README.md"
+   ],
    "status": "unverified",
-   "basis": "No RX PSRR evidence (RXR-10)",
+   "basis": "No RX PSRR run. Verify: AC PSRR of LNA + TIA + filter with the B37 ripple spectrum (simulation now).",
    "primary_fix": "AC PSRR sim of TIA+filter; B37",
    "fallback": [
     "B37"
@@ -1897,9 +1993,11 @@
    "requirement": "3-wire PTA in FPGA; grant-to-mute <= 2 us",
    "source": "spec/interface-requirements.md",
    "owner": "FPGA + digital",
-   "evidence": [],
+   "evidence": [
+    "spec/register-map.json"
+   ],
    "status": "unverified",
-   "basis": "No coex interface defined; no chip pin needed",
+   "basis": "PTA lives in the FPGA; rfdriver.mute is scheduled-update (spec/register-map.json) but grant-to-mute latency not measured. Verify: RTL sim of scheduled mute latency (sim now), PTA on the board",
    "primary_fix": "FPGA PTA block using the scheduled RF unmute",
    "fallback": []
   },
@@ -1909,10 +2007,13 @@
    "requirement": "100BASE-TX MLT-3 950-1050 mV peak, symmetry 0.98-1.02, overshoot <=5 % via MAIN+POST summed into the B39 network",
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx + pads + board (B39)",
-   "evidence": [],
-   "status": "unverified",
-   "basis": "Needs 40 mA: MAIN 25.4 + POST 21.05 mA FS tt (+16 %); POST is wired inverted (de-emphasis), so the same-sign sum is impossible today",
-   "primary_fix": "IX-9 POST polarity select + POST DAC x1.2; B39",
+   "evidence": [
+    "../../scratch/wired_tx/s16/fe100/RESULT.md",
+    "analog/pads/generated/stress-safe-families/wired-transmit/pc72-txpad-a16.json"
+   ],
+   "status": "marginal",
+   "basis": "fe100 bench (../../scratch/wired_tx/s16/fe100/RESULT.md), pad_txpad a16 RT, CASCODE boost 4.2 V (cascode_pump, WT59: 986 mV cal. with the extracted 4.12 V pump), magnetics 1:0.88 + rescaled B39, CT 3.45 V ss / 3.60 V tt-ff (B54): ss-pess code 255 998 mV cal. (950-1050), tt code 196 1044 mV, ff code 191 1039 mV raw; symmetry 0.999-1.001. Needs per-board code (255/196/191) and the carrier network. Overshoot <= 5 % not measured.",
+   "primary_fix": "Measure overshoot on the fe100 confirmation rows; per-board code calibration",
    "fallback": [
     "B38a",
     "B39"
@@ -1924,10 +2025,12 @@
    "requirement": "Rise/fall 3-5 ns, symmetry <=0.5 ns, 0-level cancellation residue <=1 % after the filter",
    "source": "spec/interface-requirements.md",
    "owner": "board (B39) + wired_tx",
-   "evidence": [],
+   "evidence": [
+    "../../scratch/wired_tx/s16/fe100/RESULT.md"
+   ],
    "status": "unverified",
-   "basis": "No sim with B39; MAIN/POST delay match at 2 Gb/s not characterized",
-   "primary_fix": "B39 LC filter sim with extracted pad; IX-9 matched CMD gating",
+   "basis": "No rise/fall, symmetry or 0-level residue measurement with B39 + magnetics; fe100 reports levels and RL only. Verify: edge/residue from the fe100 confirmation waveforms (sim now).",
+   "primary_fix": "Edge and 0-level residue on the fe100 rows (n = 0.88 network); matched MAIN/POST gating",
    "fallback": [
     "B38a",
     "B39"
@@ -1939,10 +2042,12 @@
    "requirement": "TX jitter <=1.4 ns pp (first die <=0.7 ns) at 125 MBd +/-50 ppm",
    "source": "spec/interface-requirements.md",
    "owner": "wired_tx + FPGA",
-   "evidence": [],
+   "evidence": [
+    "../../scratch/wired_tx/s16/fe100/RESULT.md"
+   ],
    "status": "unverified",
-   "basis": "0.5 ns parity DJ from the 16x pattern (analytic)",
-   "primary_fix": "Quarter-rate 2 Gb/s 16x pattern (WT12), FPGA parity alignment",
+   "basis": "No TX jitter sim at 125 MBd; 0.5 ns parity DJ from the 16x pattern is analytic. Verify: fe100 long-pattern run with the real ring (sim now).",
+   "primary_fix": "Quarter-rate 2 Gb/s 16x pattern (WT12), FPGA parity alignment; jitter run on the fe100 bench",
    "fallback": [
     "B38a"
    ]
@@ -1953,10 +2058,12 @@
    "requirement": "TX/RX RL >=16 dB 2-30 MHz, 30-60 MHz slope, >=10 dB 60-80 MHz",
    "source": "spec/interface-requirements.md",
    "owner": "board (B38/B39) + pads",
-   "evidence": [],
-   "status": "unverified",
-   "basis": "Analytic: ~24 dB at 30 MHz, ~12 dB at 60 MHz with B39; pad C negligible <80 MHz",
-   "primary_fix": "B39 49.9 ohm 1 %; RX PKG-W1a trim",
+   "evidence": [
+    "../../scratch/wired_tx/s16/fe100/RESULT.md"
+   ],
+   "status": "marginal",
+   "basis": "TX side at the RJ45, n = 0.88 network (../../scratch/wired_tx/s16/fe100/RESULT.md): min RL 10.15 dB at 79 MHz (tt held, limit 10 dB, +0.15), 10.70 dB ss-pess; worst point is the B39 filter roll-off at 79-80 MHz. RX-side RL not simulated.",
+   "primary_fix": "B39 filter fc / Bessel retune for RL margin; RX-side RL bench with PKG-W1a trim",
    "fallback": [
     "B38a",
     "B39"
@@ -1968,10 +2075,12 @@
    "requirement": "Operate 0-100 m Cat5 with NEXT: inner eye >=0.5 of outer level after EQ",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (CTLE)",
-   "evidence": [],
+   "evidence": [
+    "analog/wired_rx/README.md"
+   ],
    "status": "unverified",
-   "basis": "Model scratch/ethernet/fe100.py: eye closed at 50 m without EQ; 0.54 at 100 m with a 10 MHz zero; CTLE r2 has no MHz zero",
-   "primary_fix": "IX-13 CTLE low-frequency zero cap bank",
+   "basis": "CTLE lf_zero bank (IX-13) is in the block (README pt_ctle, lf_zero[2:0]); the 0-100 m Cat5 + NEXT eye has been modelled only behaviourally (scratch/ethernet/fe100.py: 0.54 inner eye at 100 m with a 10 MHz zero), not with the extracted CTLE response. Verify: fe100 model with the published CTLE lf_zero AC response (sim now), then board.",
+   "primary_fix": "Rerun fe100 with the extracted CTLE lf_zero response; IX-13 code choice",
    "fallback": [
     "B38a"
    ]
@@ -1982,10 +2091,13 @@
    "requirement": "Two decision thresholds +/-90..+/-135 mV plus +/-50 mV DC-restore headroom (range >= +/-250 mV, LSB <=4 mV)",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (slicer) + digital",
-   "evidence": [],
+   "evidence": [
+    "analog/wired_rx/README.md",
+    "analog/wired_rx/generated/vthdac-evidence.json"
+   ],
    "status": "unverified",
-   "basis": "Slicer r4c trim -52..+65 mV only",
-   "primary_fix": "IX-10 e-sampler threshold DACs",
+   "basis": "IX-10 threshold DACs exist (pt_vthdac r7: +-1.43 V full scale, LSB 11.2 mV (10.0-11.9) at the DAC output, settle 41.9 ns; README). Input-referred threshold range/LSB through the ws_sae auxiliary pair not reported (need +-250 mV, LSB <= 4 mV). Verify: e-sampler threshold transfer sweep (sim now).",
+   "primary_fix": "Characterise input-referred threshold of ws_sae aux pair",
    "fallback": [
     "B38a"
    ]
@@ -1996,9 +2108,11 @@
    "requirement": "Baseline wander incl. killer packet: residual after DC restore <= half-eye margin",
    "source": "spec/interface-requirements.md",
    "owner": "FPGA + digital + wired_rx",
-   "evidence": [],
+   "evidence": [
+    "../../scratch/reviews/interface-changes.md"
+   ],
    "status": "unverified",
-   "basis": "Model: held-level wander 26 % A/1 us; residual 13.5 % (0.5 us loop) vs 27 % half-eye at 100 m: marginal",
+   "basis": "Behavioural model only: residual wander 13.5 % (0.5 us loop) vs 27 % half-eye at 100 m (scratch/ethernet/fe100.py, untracked); IX-11 fast threshold update loop delay not measured end to end. Verify: model with RTL H2D threshold latency (sim now), board.",
    "primary_fix": "IX-10 + IX-11 fast threshold update, loop delay <=0.5 us",
    "fallback": [
     "B38a"
@@ -2010,10 +2124,13 @@
    "requirement": "125 MBd +/-50 ppm recovered by 6x FPGA oversampling on two lanes",
    "source": "spec/interface-requirements.md",
    "owner": "digital (capture raw mode) + FPGA",
-   "evidence": [],
+   "evidence": [
+    "analog/wired_rx/generated/wrx_cap-evidence.json",
+    "../../scratch/reviews/interface-changes.md"
+   ],
    "status": "unverified",
-   "basis": "Raw dual-lane export with forced odd psel not implemented",
-   "primary_fix": "IX-12 raw dual-lane full-rate mode; IX-4",
+   "basis": "Mode ruled to ring 500 MHz, full rate, 4x FPGA oversampling, psel odd (TIM-32; requirement text still says 6x, spec owner to update). Bound capture r8 full 500 MHz 4x ss/32/3.15 V 0/100 untrimmed (wrx_cap-evidence.json); raw dual-lane export in RTL (DG9-23). FPGA 4x oversampling CDR at +-50 ppm not simulated. Verify: FPGA CDR model on captured words (sim now), board.",
+   "primary_fix": "IX-12 raw dual-lane mode (in RTL) + FPGA 4x oversampling CDR",
    "fallback": [
     "B38a",
     "wire_cdr_fpga_oversample"
@@ -2025,9 +2142,12 @@
    "requirement": "Signal detect assert >1000 mVppd / deassert <200 mVppd",
    "source": "spec/interface-requirements.md",
    "owner": "wired_rx (detect) + FPGA",
-   "evidence": [],
+   "evidence": [
+    "analog/wired_rx/generated/detect-evidence.json",
+    "analog/wired_rx/README.md"
+   ],
    "status": "unverified",
-   "basis": "pt_detect codes 125/540 mV exist; no Ethernet bench",
+   "basis": "pt_detect thresholds 66 / 116 / 566-576 mV (codes 1/2/3, nominal; README); no Ethernet signal-detect bench mapping >1000 / <200 mVppd at MLT-3 over corners. Verify: detect bench with MLT-3 levels (sim now).",
    "primary_fix": "Detect codes + descrambler lock; IX-10 amplitude scan",
    "fallback": [
     "B38a"
@@ -2039,9 +2159,11 @@
    "requirement": "BER <=1e-10 at 95 % CL at 0/50/100 m",
    "source": "spec/interface-requirements.md",
    "owner": "FPGA + all above",
-   "evidence": [],
+   "evidence": [
+    "../../scratch/reviews/interface-changes.md"
+   ],
    "status": "unverified",
-   "basis": "No link sim beyond the behavioural model",
+   "basis": "Depends on RXEQ/RXTH/BLW/CDR, all unverified; no link-level sim beyond the behavioural model. Verify: board link test at 0/50/100 m.",
    "primary_fix": "Close RXEQ/RXTH/BLW/CDR",
    "fallback": [
     "B38a"
@@ -2053,10 +2175,13 @@
    "requirement": "D2H 1.5 Gb/s (2 x 750 Mb/s) and H2D 2.0 Gb/s simultaneously, plus threshold updates",
    "source": "spec/interface-requirements.md",
    "owner": "digital (transport) + hostio",
-   "evidence": [],
-   "status": "unverified",
-   "basis": "Fits 2.88 Gb/s/direction (52 % / 69 %) only if HL-RATE closes",
-   "primary_fix": "HL-RATE/AC-1; H2D 8x mode (1.0 Gb/s) if needed",
+   "evidence": [
+    "../../scratch/reviews/host-link-bandwidth.md",
+    "../../scratch/reviews/interface-changes.md"
+   ],
+   "status": "marginal",
+   "basis": "D2H 1.5 / H2D 2.0 Gb/s fit the 2.88 Gb/s/dir full-rate link (52 / 69 %, host-link-bandwidth.md), but full rate fails STA on slow dies even at 3.50 V (HL-RATE, DG9-29/30); at div2 (1.44 Gb/s/dir) H2D 2.0 Gb/s does not fit without the H2D 8x mode (1.0 Gb/s). Works on typical/fast dies or after FPGA training only.",
+   "primary_fix": "HL-RATE timing fixes; H2D 8x mode (1.0 Gb/s) on slow dies",
    "fallback": [
     "B38a",
     "debug.host_link.rate"
@@ -2068,10 +2193,12 @@
    "requirement": "Auto-negotiation FLP (non-compliant amplitude: 1.16-1.27 V vs 2.2 V); forced 100 FD primary",
    "source": "spec/interface-requirements.md",
    "owner": "FPGA + wired_tx",
-   "evidence": [],
+   "evidence": [
+    "../../scratch/wired_tx/s16/fe100/RESULT.md"
+   ],
    "status": "unverified",
-   "basis": "Amplitude bound of the current-mode TX (sec. 1.14)",
-   "primary_fix": "Best-effort FLP via IX-9 summed tails; forced mode",
+   "basis": "FLP amplitude not simulated on the final 100BASE-TX path (cascode boost, 1:0.88); best effort, forced 100 FD is primary. Verify: FLP pulse on the fe100 bench (sim now).",
+   "primary_fix": "Best-effort FLP via summed MAIN+POST with cascode boost; forced mode",
    "fallback": [
     "B38a"
    ]
@@ -2082,10 +2209,13 @@
    "requirement": "HT40/HE40 TX: 40 MHz mask, MCS0-4 EVM <= -19 dB at >= -13 dBm; DAC 80 MS/s host-fed",
    "source": "spec/interface-requirements.md",
    "owner": "digital + converters + rf_rx (filter) + rf_tx",
-   "evidence": [],
-   "status": "fails",
-   "basis": "Halfband passes only ~0.2 fs_in; 40 MS/s ZOH image at 21 MHz is 0.9 dB below the 19 MHz edge; widest filter corner 11.3 MHz worst corner",
-   "primary_fix": "GX-2 tx_interp=external (80 MS/s host-fed), GX-1 wide filter code, full-rate H2D in this mode",
+   "evidence": [
+    "analog/rf_rx/generated/bbfilter_i-evidence.json",
+    "../../scratch/reviews/interface-changes.md"
+   ],
+   "status": "unverified",
+   "basis": "GX-1 wide filter passes at all 12 corners (f3 20-30 MHz, droop <= 3 dB at 19.1 MHz, analog/rf_rx/generated/bbfilter_i-evidence.json); host-fed 80 MS/s is tx_interp bypass + 80 MHz rf_tx_clk (T18). No HT40 EVM/mask sim, no 80 MS/s DAC dynamic result in evidence, H2D rate for the mode depends on HB-4/MODE8. Verify: tx_modulation.py at HT40 with the wide code and 80 MS/s DAC (sim now)",
+   "primary_fix": "GX-2 = tx_interp bypass + 80 MHz rf_tx_clk (T18), GX-1 wide code, BAL + H2D div2 + MODE8 (HB-4); HT40 EVM/mask sim",
    "fallback": []
   },
   {
@@ -2095,13 +2225,18 @@
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx (bbfilter) + digital",
    "evidence": [
-    "analog/rf_rx/generated/rf_rx_chain.json"
+    "analog/rf_rx/generated/bbfilter_i-evidence.json",
+    "analog/rf_rx/generated/lna-evidence.json",
+    "analog/converters/generated/adc_i-rc-fft_tt_40M.json",
+    "analog/converters/generated/adc_i-rc-fft_ss_32C_3v15_40M.json",
+    "analog/converters/generated/adc_i-rc-fft_ss_32C_3v50_40M.json"
    ],
    "status": "fails",
-   "basis": "Widest corner 11.3-21.2 MHz over corners: -10.7 dB at 19 MHz for a 15 MHz corner; 40 MS/s complex is critically sampled",
-   "primary_fix": "GX-1 wide bw code (corner 20-30 MHz all corners after Q-trim)",
+   "basis": "Filter: wide range f3 20-30 MHz, droop <= 3 dB at 19.1 MHz, peaking <= 1 dB passes at 12 corners (bbfilter_i-evidence, pre-11-24 GDS). Sensitivity: MCS0 tt -82.1 / ss -80.5 dBm vs -79 (analytic, +3 dB bandwidth over RF-WIFI-SENS); MCS7 ss -58.6 vs -61 dBm and ADC-limited (SNDR 29.9 dB tt, 25.4 ss/3.15 V untrimmed, 30.1 at 3.50 V, 40 MS/s complex critically sampled).",
+   "primary_fix": "ADC SNDR >= ~35 dB at 40 MS/s; LNA relayout for NF",
    "fallback": [
-    "debug.rf_bb_bypass.rxfilter"
+    "debug.rf_bb_bypass.rxfilter",
+    "rf_bb_external_adc"
    ]
   },
   {
@@ -2111,10 +2246,10 @@
    "source": "spec/interface-requirements.md",
    "owner": "rf_rx + rf_tx + timing (lo_ext) + digital (clock plan) + board (B42)",
    "evidence": [
-    "analog/rf_rx/generated/rf_rx_chain.json"
+    "analog/timing/generated/lo_ext-evidence.json"
    ],
    "status": "unverified",
-   "basis": "Chain gain 45.4/50 dB at 1.2/0.6 GHz (ideal LO), TX +1.4..+3.1 dBm at 1.22/0.61 GHz unmatched; no 2.2-2.8 GHz or COB-model runs",
+   "basis": "No chain run off 2.4 GHz on the current netlists (rf_rx_chain.json predates the bound LNA/mixer netlists); lo_ext a4 external CML mode gives 15.2-20.4 dB mixer gain at 2.4 GHz for 0.4-4.5 Vpp (lo_ext-evidence). Verify: chain sims at 0.9/1.2/1.6/2.2/2.7 GHz with the COB model (simulation now).",
    "primary_fix": "Chain sims at 0.9/1.2/1.6/2.2/2.7 GHz with COB model; GX-5 converter clock from host_follow + per-band spur plan",
    "fallback": [
     "B42"
@@ -2126,10 +2261,13 @@
    "requirement": "QVCO band codes and frequency loop accept any target in the tank range; 2.40-2.50 GHz guaranteed, 2.3-2.7 GHz per-die",
    "source": "spec/interface-requirements.md",
    "owner": "timing (lcvco, frequency loop)",
-   "evidence": [],
-   "status": "unverified",
-   "basis": "Tank tt 2.16-2.82 GHz, all-corner 2.38-2.615 GHz (schematic r2); frequency loop not built",
-   "primary_fix": "GX-6 loop N/fraction and band codes over the full tank range",
+   "evidence": [
+    "../../scratch/lo-ap4/NOTES.md",
+    "analog/timing/README.md"
+   ],
+   "status": "marginal",
+   "basis": "QVCO r9 published (LO-ASM-3), extracted with published divider/dummy/lo_ext loads and the runaway-guard VTUNE limit: top 2.783 GHz ss (+5.6 %), pessimistic top 2.574 GHz (+0.62 % vs 0.5 % rule), bottom 2.293 GHz pessimistic; 2.40-2.4835 GHz inside the range at every corner incl. pessimistic, band 7/8 overlap >= 3.1 %. 2.3-2.7 GHz per-die: nominal corners yes, pessimistic top 2.574 no. Loop: integer-N with software band search, behavioural closed loop locks every case (N 44/56); other band transitions and transistor-level lock not run.",
+   "primary_fix": "Transistor-level closed-loop lock at 2.40 / 2.4835 GHz on the published cells; all band transitions",
    "fallback": [
     "rf_lo_external_ref"
    ]
@@ -2142,7 +2280,7 @@
    "owner": "FPGA + board (B42, B5)",
    "evidence": [],
    "status": "unverified",
-   "basis": "Mapping row; inherits RF-XLO-RANGE",
+   "basis": "Mapping row; inherits RF-XLO-RANGE (needs external LO and band board kits)",
    "primary_fix": "Close RF-XLO-RANGE; FPGA PHYs",
    "fallback": [
     "B5"
@@ -2156,7 +2294,7 @@
    "owner": "board (B44) + digital (clock plan) + FPGA",
    "evidence": [],
    "status": "unverified",
-   "basis": "78.125 MHz core 15th harmonic is 4.6 MHz from L5; 62.5 MHz core clears by 11.05 MHz",
+   "basis": "Clock-plan analysis only: 78.125 MHz core 15th harmonic 4.6 MHz from L5; 62.5 MHz core clears by 11.05 MHz. NF <= 3 dB relies on the B44 board front end; 1.1-1.6 GHz LO from the external route. Verify on the board with B44.",
    "primary_fix": "Per-band clock plan (GX-5); B44 front end",
    "fallback": [
     "B44"
@@ -2170,7 +2308,7 @@
    "owner": "digital (validator) + rf_rx + rf_tx + pads",
    "evidence": [],
    "status": "unverified",
-   "basis": "Hardware paths exist (rf_tx README, bbfilter decode); validator/warm-hop acceptance and isolation not checked",
+   "basis": "Hardware paths exist; validator acceptance and TX->RX isolation not checked. Verify: RTL validator test (sim now) and isolation on the assembled chip + COB model (top level)",
    "primary_fix": "GX-3 validator rule + RTL test; GX-9 isolation sim with COB model",
    "fallback": [
     "B43"
@@ -2184,7 +2322,7 @@
    "owner": "FPGA + board (B43) + rf_rx",
    "evidence": [],
    "status": "unverified",
-   "basis": "No system sim; depends on RF-DUPLEX",
+   "basis": "No system sim; depends on RF-DUPLEX isolation. Verify: leakage/PN-correlation system sim on the assembled chip model",
    "primary_fix": "RF-DUPLEX + leakage/PN-correlation system sim",
    "fallback": [
     "B43"
@@ -2198,7 +2336,7 @@
    "owner": "FPGA + digital (IX-8) + rf_rx + rf_tx (GX-8) + board (B41)",
    "evidence": [],
    "status": "unverified",
-   "basis": "No antenna-switch step-response or hot-switch sim",
+   "basis": "No antenna-switch step-response or hot-switch sim. Verify: bbfilter step response at the CTE bw code and rfdriver open/short transient (sim now)",
    "primary_fix": "Step-response sim at the CTE bw code; GX-8 open/short sim; IX-8 marks + published latency (HL-MARK)",
    "fallback": [
     "B41"
@@ -2210,10 +2348,12 @@
    "requirement": "Gap-free I/Q stream 40/20/10/5 MS/s >= 1 h, span >= 36 MHz (wide code), concurrent multi-protocol RX, RSSI +-3 dB after cal",
    "source": "spec/interface-requirements.md",
    "owner": "digital (transport) + rf_rx + FPGA",
-   "evidence": [],
+   "evidence": [
+    "analog/rf_rx/generated/bbfilter_i-evidence.json"
+   ],
    "status": "unverified",
-   "basis": "No soak test; span limited by widest corner 11.3 MHz worst corner",
-   "primary_fix": "Transport soak test; GX-1; per-board gain-table cal",
+   "basis": "Span: GX-1 wide code f3 20-30 MHz at all 12 corners (analog/rf_rx/generated/bbfilter_i-evidence.json); gap-free 1 h stream and RSSI cal need hardware. Verify: transport soak on silicon/board",
+   "primary_fix": "Transport soak test; per-board gain-table cal",
    "fallback": [
     "rf_bb_external_adc"
    ]
@@ -2224,9 +2364,11 @@
    "requirement": "Spectrum scan: warm hop <= 50 us/step, gain tagged per step; 2.2-2.7 GHz in <= 2 ms",
    "source": "spec/interface-requirements.md",
    "owner": "digital (warm hop) + board (B35/B42)",
-   "evidence": [],
+   "evidence": [
+    "spec/register-map.json"
+   ],
    "status": "unverified",
-   "basis": "Warm hop 50 us allocated; external synth range not specified beyond 2.4-2.5 GHz",
+   "basis": "Warm hop 50 us allocated (digital.hop_config in spec/register-map.json), not RTL-tested; external synth range beyond 2.4-2.5 GHz unspecified. Verify: warm-hop RTL test (sim now), B42 synthesizer on the board",
    "primary_fix": "Warm-hop RTL test; B42 synthesizer range",
    "fallback": [
     "B42"
@@ -2238,9 +2380,11 @@
    "requirement": "Loopback BIST: IRR, LO leakage, filter corner/Q-trim, DC table, gain steps via mute-leakage loopback",
    "source": "spec/interface-requirements.md",
    "owner": "FPGA + digital (GX-3) + rf_rx + rf_tx",
-   "evidence": [],
+   "evidence": [
+    "analog/rf_tx/generated/rfdriver-evidence.json"
+   ],
    "status": "unverified",
-   "basis": "Leakage 22-24 dB measured; recipe not written",
+   "basis": "Loopback level known: mute isolation 46.2 dB tt (analog/rf_tx/generated/rfdriver-evidence.json); recipe not written or simulated. Verify: loopback chain sim (TX mute leakage into RX) and FPGA recipe (sim now)",
    "primary_fix": "GX-3 duplex config; FPGA recipe into D-CAL-1",
    "fallback": []
   },
@@ -2250,10 +2394,12 @@
    "requirement": "Atomic profile switch (LO hop + bw/wide + rx_direct/tx_dac_direct + gain) at a warm-hop epoch <= 50 us",
    "source": "spec/interface-requirements.md",
    "owner": "digital (regfile update class, warm hop) + rf_rx",
-   "evidence": [],
+   "evidence": [
+    "spec/register-map.json"
+   ],
    "status": "fails",
-   "basis": "consolidation.bbfilter.* fields are stopped-only today",
-   "primary_fix": "GX-4 epoch-updatable bbfilter fields",
+   "basis": "consolidation.bbfilter.direction / tx_dac_direct / rx_direct and rfdriver.gain.code are update \"stopped\" in spec/register-map.json; only digital.hop_config is epoch-loadable",
+   "primary_fix": "GX-4 epoch-updatable bbfilter and rfdriver gain fields",
    "fallback": []
   },
   {
@@ -2264,7 +2410,7 @@
    "owner": "digital (clocktree sync) + board (B45)",
    "evidence": [],
    "status": "unverified",
-   "basis": "sync_arm/sync_epoch exist; cross-die determinism not verified",
+   "basis": "sync_arm/sync_epoch in rtl/pt_clocktree_slow.sv; cross-die determinism needs two dies on a board",
    "primary_fix": "GX-7 deterministic sync latency test",
    "fallback": [
     "B45"

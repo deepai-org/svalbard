@@ -1,6 +1,6 @@
 # Floorplan plan: pt_rf and pt_wired (connectivity-driven)
 
-Current state, 2026-11-26. This is a paper plan: no route was run. The plan sets the positions of the major blocks,
+Current state, 2026-11-26. The plan is coded behind `PLAN_FP=1` (section 9). The plan sets the positions of the major blocks,
 the routing channels that stay free of blocks, and the side and order of the digital macro's pins. It replaces the
 packer floorplan (die-fit `fit.py`, which does not see connectivity) once it is coded behind a switch (section 9).
 Files: `fp_plan/` (positions, channels, pin-order files, drawings, the planning scripts).
@@ -16,23 +16,24 @@ Files: `fp_plan/` (positions, channels, pin-order files, drawings, the planning 
 - **The plan:** blocks grouped by signal flow, explicit routing channels (trunks) from the macro's south edge to each
   consumer field, and every macro pin on the edge that faces its net (pt_rf: 360 S, 77 W, 59 E, 8 N; pt_wired: 510 S,
   47 W, 72 E, 14 N).
-- **Model result (section 7).** I ran a gcell global route at 20 um on Metal2 (V) and Metal3 (H) with 0.56 um pitch,
-  negotiated congestion, all 1059 / 1200 nets (KH_CONN=1). Compared with the current floorplan, on the same model:
+- **Rulings applied (coordinator, 2026-11-26).** The grid straps are swapped to Metal4 vertical / Metal5 horizontal,
+  so they run along the tech-LEF directions (`GRID_SWAP=1`, the default; section 7.1). The host-link cluster (`h2d_*`,
+  `d2h_*`, `host_word_clk`) keeps its hardened macro position for matched skew, and its bond nets are routed to the
+  pads as a bundle (section 6). Decap goes into the low-use channels: 36 of 36 tiles on pt_rf, 69 of 69 on pt_wired.
+- **Model result (section 7).** I ran a gcell global route at 20 um on all 1059 / 1200 nets (KH_CONN=1, `SIG_M1=1`,
+  swapped grid). Against the packer floorplan on the old grid, using the same model:
 
-| | pt_rf current | pt_rf plan | pt_wired current | pt_wired plan |
+| | pt_rf packer | pt_rf plan | pt_wired packer | pt_wired plan |
 |---|---|---|---|---|
-| Channel gcells over 70 % vertical (of about 5.5k / 11k) | 1093 | 74 | 536 | 104 |
-| Channel gcells over 100 % vertical | 459 | 0 | 311 | 30 (one sliver, section 7.3) |
-| Channel gcells over 70 % horizontal | 1019 | 28 | 501 | 13 |
-| Wire length (mm) | 2878 | 1239 | 3434 | 1767 |
-| Wire forced over block outlines (mm) | 199 | 53 | 407 | 55 |
-| Worst key cut line | 0.84 (trunk west of core_bias) | 0.36 | 1.37 (trunk to the HS RX field) | 0.44 |
+| Channel gcells over 70 % vertical | 1093 | 3 | 536 | 7 |
+| Channel gcells over 100 % vertical | 459 | 0 | 311 | 3 (pad sliver, 7.3) |
+| Worst key cut line | 0.84 | 0.27 | 1.37 | 0.18 |
+| Worst named channel | - | 0.60 | - | 0.58 |
+| Wire length (mm) | 2878 | 1189 | 3434 | 1592 |
 
-  Every key cut line is at or below 0.44. Every named channel is at or below 0.70 except three pin-cluster spots
-  (0.76-0.84, section 7.2). No isolation rule fails.
 - **Open (section 8).** Some items need an owner decision: the LO branch to lo_txbuf (2.8 mm, LO-ASM-6 asks for
-  2.1 mm), isw_pll away from its supply bond on both chips, adc_q 709 um from the macro (SUB-01 pessimistic case
-  asks for 782 um), and pt_rf decap (21 of 36 tiles placed outside the channels).
+  2.1 mm), isw_pll away from its supply bond on both chips, and adc_q 709 um from the macro (SUB-01 pessimistic case
+  asks for 782 um).
 
 ## 2. Inputs and block list
 
@@ -112,7 +113,7 @@ pt_wired S 265, N 16, E 209, W 223 (of 713). For both chips the consumers lie so
 | Island switch at its supply bond | power delivery G4 | rf_tx 4, conv 4, lod 0, lo 182, rf_rx 248, debug 314 um; isw_pll 2338 um (beside pll_vreg2) | **isw_pll open** |
 | isw_pll beside pll_vreg2 | power owner (README island plan) | 10 um | pass |
 | isw_rf_tx_b touching the RAIL_rf_tx bar (465 um south of isw_rf_tx) | HARD_NEXT_TO, ISLAND_BARS | touching | pass |
-| No block in the macro routing channel; decap at the macro | ASM-11 (channels), power delivery 5 (bank) | channels free; 21 of 36 decap tiles placed outside channels | **decap open** (PDS-10) |
+| No block in the macro escape rows; decap at the macro | ASM-11 (channels), power delivery 5 (bank) | escape rows free; 36 of 36 decap tiles placed (some in low-use channels, 7.4) | pass |
 | Noisy digital to sensitive analog guard rings, deep n-well | MANDATE 5: only where an analysis shows a need | none drawn by the plan; distances above | - |
 | ESD | MANDATE 1: basic class; no floorplan rule | - | - |
 
@@ -268,7 +269,7 @@ Regions:
   wrx_cap's 78 have room; wordclk_rx on wrx_cap.
 - **West:** core_bias under the macro's west half (119 um), pll_vreg2 + isw_pll and bb_tap_wmon at pad_wmon,
   isw_debug at its bond (W 2666), rx_ref_in / rx_aux_clk below pad_aux_clk, decap tiles in the rest.
-- **East of the macro:** clk_obs, char_cmldiv, vco_replica, rx_wtx_ext, decap.
+- **East of the macro:** a 120 um channel (`chan_macro_e`, decap allowed) for the macro supply joins, then clk_obs, rx_wtx_ext (W), small cells.
 
 | Channel | Rect | Carries |
 |---|---|---|
@@ -282,140 +283,144 @@ Regions:
 
 ## 6. Macro pin sides (re-hardening input)
 
-`fp_plan/rf_macro_pin_order.cfg` and `fp_plan/wired_macro_pin_order.cfg` list each port by side, in order, with its
-planned offset. Each pin faces the centroid of its net's other ends. Pins are kept off the edge stretches that face a
+`fp_plan/<chip>_macro_pin_order.cfg` lists each port by side, in order, with its planned offset from the macro's
+lower-left corner. Each pin faces the centroid of its net's other ends. Pins are kept off the edge stretches that face a
 pad keep-out (pt_rf east y 3290-3600; pt_wired west y 3000-3810, east y 3210-3625). Tie-off inputs are left unlisted
 (any side). Minimum pitch 2.24 um.
 
+**Host-link cluster: fixed.** `h2d_*`, `h2d_clk`, `d2h_*`, `d2h_clk_pin`, `d2h_oe` / `_sl` / `_pdrv`, `host_word_clk`
+stay at their hardened positions relative to the macro (digital keeps them, matched skew). On pt_rf that is the north
+edge, local x 75-198 (H2D), and the south edge, local x 454-538 (D2H and its controls). The model and the pin-order
+file hold them there and place the other pins around them. Their bond nets run to the pads as one bundle:
+- H2D goes straight up to the north ring.
+- D2H leaves the south edge as a 22-net bundle through trunk A and spine_low to the south ring, with the XT-05 shield
+  beside adc_i.
+
 | | N | S | E | W |
 |---|---|---|---|---|
-| pt_rf, all macro nets (504) | 8 (H2D 11 share the N ring; obs) | 360 | 59 | 77 |
-| pt_rf, `c_*` (279) | 0 | 216 | 42 | 21 |
-| pt_wired, all (643) | 14 | 510 | 72 | 47 |
-| pt_wired, `c_*` (409) | 0 | 335 | 41 | 33 |
+| pt_rf, all macro nets (504) | 12 | 362 | 54 | 76 |
+| pt_rf, `c_*` (279) | 0 | 217 | 41 | 21 |
+| pt_wired, all (643) | 18 | 516 | 57 | 52 |
+| pt_wired, `c_*` (409) | 0 | 343 | 25 | 41 |
 
-On pt_rf the south edge, 1716 um long, holds 360 pins at an average pitch of 4.8 um. Clusters (x of the 10th-90th percentile pin):
-core_bias 1670-2120, RX chain 1460-2200, adc_q and LO synthesiser 2130-2590, host link and debug 1330-2950. On pt_wired the south edge holds 510 pins at an average pitch of 3.3 um. Macro hardening must keep the
-order. It may compress pins toward each cluster, but it must not move a pin to another side.
+Macro hardening must keep the order. It may compress pins toward each cluster, but it must not move a pin to another
+side. Until the re-harden lands, the routed runs use the current macro pins (pt_rf `c_*`: N 112, W 137).
 
 ## 7. Routing demand against capacity
 
-### 7.1 Method
+### 7.1 Method and the grid swap
 
-Capacity per 20 um gcell: Metal2 tracks (vertical) and Metal3 tracks (horizontal) at 0.56 um pitch (tech LEF), times
-the cell's fraction free of block outlines, pad footprints and the core-ring band. Over blocks the capacity is zero,
-and so is Metal4/5 everywhere: the G1 straps cross their preferred direction every 70 um. Decap blocks only Metal2.
-`SIG_M1=1` adds Metal1 to the horizontal capacity. Demand: every non-hook net (KH_CONN=1, with its true pin positions
-after orientation; macro pins as planned), split into a Manhattan MST, maze-routed with negotiated congestion (penalty
-above 55 % utilisation, 5 passes). Supply and LO nets count 3 tracks (WIDE / LOSH rules). The 384 / 367 hook nets
-are left out: they are short, from a block's supply pin to the nearest strap. This is a capacity estimate, not a
-detailed route: pin access inside 15 um pin clusters, vias and DRC spacing are not modelled. For calibration, the
-same model applied to the current packer floorplan gives 459 / 311 over-full channel gcells, and the real router
-fails there with 250-2400 DRT.
+The grid keeps its VDD / VSS strap pairs, 10.5 um wide at a 70 um pitch, its ring and its pad feeds. Only the layers
+swap: vertical straps on Metal4, horizontal straps on Metal5 (`kl_place.py`, `GRID_SWAP=1`). The horizontal phase is
+set so that the VDD rows lie exactly on the macro's Metal5 VDD pin rows (DG9-29/30: 5 um pins, 70 um per net, VSS
+6.7 um above VDD). The VDD and VSS pairs (6.7 um apart in the macro, 35 um in the grid) cannot both line up, so I
+checked the join as follows:
+- There is no top-level grid over the macro.
+- Each macro Metal5 pin strap is drawn at pin width out through the outline to the nearest vertical Metal4 straps of
+  its net, within 100 um (reach 60-100 um), with a Via4 at each crossing.
+- The horizontal rows give way only in that zone. Each VDD pin strap then continues straight into its full-width grid
+  row; VSS stops 6 um short.
 
-### 7.2 Cut lines and channels
+Results:
+- **pt_rf:** 19 of 19 VDD and 19 of 19 VSS stripes joined at both ends; the old grid had VSS 0 at both ends and 19 at
+  one end.
+- **pt_wired:** VDD 22 + 1, VSS 7 + 15 (both ends + one end). The west ends face the 27 um gap to pad_ref /
+  pad_aux_clk, so the east side is kept clear for the joins (`chan_macro_e`).
 
-Utilisation = demand / capacity across the whole cut (the router may use any free gcell on the line).
+Grid metal on the same pt_rf floorplan, swapped against old: Metal4 VDD 1.256 / 1.298 mm2, VSS 1.207 / 1.214. Metal5
+VDD 1.347 / 1.516, VSS 1.262 / 1.441. The whole Metal5 difference is over the macro, where the old flow drew a
+duplicate of the macro's own pin straps. Outside the macro the two grids agree within ±0.01 mm2 per 0.33 mm2 tile.
 
-| pt_rf cut line | Nets crossing | Tracks | Plan | Current floorplan |
-|---|---|---|---|---|
-| S1 macro south escape, y 3210, x 1236-2952 | 352 | 2554 | 0.14 | 0.31 |
-| S2 trunk A, y 2900, x 1131-1500 | 200 | 643 | 0.31 | 0.84 |
-| S3 middle band, full core, y 2860 | 410 | 2310 | 0.18 | 0.51 |
-| S4 RX / LO entry, full core, y 2200 | 249 | 900 | 0.28 | 0.77 |
-| S5 LNA-mixer band, full core, y 1850 | 202 | 565 | 0.36 | 0.41 |
-| S6 south band, full core, y 1000 | 72 | 1508 | 0.05 | 0.47 |
-| V1 macro west edge, x 1230, y 2560-4670 | 131 | 3266 | 0.04 | 0.72 |
-| V2 macro east edge, x 2970, y 2560-4670 | 93 | 2189 | 0.04 | 0.10 |
-| V3 LNA cluster east, x 1500, y 452-2560 | 130 | 2092 | 0.06 | 0.26 |
-| V4 RX / LO, x 2260, y 452-2900 | 133 | 2073 | 0.06 | 0.06 |
+Capacity model: per 20 um gcell, signal Metal2 (vertical) and Metal3 (horizontal) at 0.56 um pitch. With the swap
+there is also Metal4 (vertical, 0.56) and Metal5 (horizontal, 0.9) at 70 % of their tracks in the channels: the
+straps take 21 of every 70 um. Metal1 is added with `SIG_M1=1`. Over block outlines I count no capacity on any layer.
+Decap blocks only Metal1-2. Demand: every non-hook net with its true pin positions, split into a Manhattan MST and
+maze-routed with negotiated congestion (penalty above 55 %). Supply and LO nets count 3 tracks. Pin access, vias and
+DRC spacing are not modelled. Calibration: the packer floorplan gives 459 / 311 over-full gcells, and there the real
+router fails with 250-2400 DRT.
 
-| pt_wired cut line | Nets crossing | Tracks | Plan | Current floorplan |
-|---|---|---|---|---|
-| S1 macro south escape, y 2990, x 971-2647 | 545 | 2988 | 0.18 | 0.61 |
-| S2 trunk T, y 2400, x 1520-1912 | 298 | 679 | 0.44 | 1.37 |
-| S3 middle band, full core, y 2400 | 375 | 1686 | 0.22 | 0.30 |
-| S4 above wrx_cap, full core, y 1600 | 316 | 3517 | 0.09 | 0.24 |
-| S5 HS RX row top, full core, y 1050 | 295 | 3632 | 0.08 | 0.21 |
-| V1 macro west edge, x 960, y 2000-4670 | 144 | 2470 | 0.06 | 0.38 |
-| V2 macro east edge, x 2660, y 2650-4670 | 199 | 2145 | 0.09 | 0.13 |
-| V3 trunk T east edge, x 1915, y 1110-2209 | 255 | 1498 | 0.17 | 0.15 |
-| V4 slicer / ctle, x 2435, y 452-1783 | 63 | 2050 | 0.03 | 0.09 |
+### 7.2 Cut lines and channels (swapped grid, SIG_M1=1, host-link fixed, decap placed)
 
-Peak gcell utilisation inside each channel (vertical / horizontal):
+| pt_rf cut line | Nets | Tracks | Util |
+|---|---|---|---|
+| S1 macro south escape, y 3210 | 340 | 4047 | 0.08 |
+| S2 trunk A, y 2900, x 1131-1500 | 178 | 655 | 0.27 |
+| S3 middle band, full core, y 2860 | 380 | 3266 | 0.12 |
+| S4 RX / LO entry, y 2200 | 249 | 1801 | 0.14 |
+| S5 LNA-mixer band, y 1850 | 204 | 847 | 0.24 |
+| S6 south band, y 1000 | 57 | 2705 | 0.02 |
+| V1-V4 (macro west / east edges, LNA cluster east, RX / LO) | 61-138 | 5050-7954 | 0.01-0.02 |
 
-- **pt_rf:**
-  - At or below 0.70: chan_macro_s 0.56 / 0.59, chan_macro_w 0.48 / 0.56, chan_macro_e 0.56 / 0.31,
-    trunk_a 0.56 / 0.53, chan_rx_top 0.53 / 0.53, chan_bbq_top 0.53 / 0.53, chan_core_e 0.67 / 0.48,
-    spine_low 0.53 / 0.53, chan_mix_lo 0.53 / 0.28.
-  - Over 0.70: **spine 0.78** (the LNA's 32 pins and rxmix pins sit on the 100 um LNA-mixer gap, which FLOW_ADJ
-    caps at 100 um) and **chan_bbq_adcq 0.84** (adc_q's 31 pins sit in one 15 um corner; with the macro pins facing
-    them this is a pin-access hotspot, not a channel shortage).
-- **pt_wired:**
-  - At or below 0.70: chan_macro_s 0.53 / 0.70, trunk_t 0.59 / 0.53, chan_wtxdata 0.53 / 0.59,
-    chan_slicer_top 0.56 / 0.56, chan_wrx_e 0.59 / 0.53, bar_wired_tx 0.56 / 0.31.
-  - Over 0.70: **chan_ptrim_slicer 0.78** (ptrim's 56 east-edge pins; FLOW_ADJ caps the gap at 60 um).
+pt_rf channel peaks (V / H): chan_macro_s 0.54 / 0.55, chan_macro_w 0.15 / 0.36, chan_macro_e 0.35 / 0.23,
+trunk_a 0.60 / 0.38, chan_rx_top 0.56 / 0.41, chan_bbq_top 0.49 / 0.09, chan_core_e 0.58 / 0.32,
+chan_bbq_adcq 0.59 / 0.17, spine 0.53 / 0.21, spine_low 0.38 / 0.39, chan_mix_lo 0.54 / 0.15. Channel gcells over 70 %:
+3 vertical, 15 horizontal (pin cells), of 8088.
 
-### 7.3 What is left and how to close it
+| pt_wired cut line | Nets | Tracks | Util |
+|---|---|---|---|
+| S1 macro south escape, y 2990 | 518 | 5080 | 0.10 |
+| S2 trunk T, y 2400 | 210 | 1154 | 0.18 |
+| S3 middle band, y 2400 | 373 | 3900 | 0.10 |
+| S4 above wrx_cap, y 1600 | 314 | 7072 | 0.04 |
+| S5 HS RX row top, y 1050 | 292 | 6800 | 0.04 |
+| V1-V4 | 38-190 | 3649-8785 | 0.01-0.05 |
 
-- The three pin-cluster spots above go below 0.70 without floorplan changes if the owner spreads the pins along the
-  edge (MANDATE 4a: block pins on the cell edge). Requests: adc_i/q (39 pins within 15 um at one corner), ptrim (56
-  pins on one 236 um edge), LNA (32 pins on one edge with RF in and out). The other way is `SIG_M1=1`: at the 0.70
-  penalty knee it cut the pt_rf over-70 % channel gcells from 334 to 289.
-- **Grid direction (largest lever).** If Metal4 could carry vertical signal and Metal5 horizontal signal between the
-  straps, vertical capacity in the channels would rise about 1.7x. That needs either G1's strap layers swapped
-  (Metal4 vertical, Metal5 horizontal) or the top-level tech-LEF preferred directions swapped. Modelled: pt_rf
-  over-70 % vertical gcells drop from 289 to 79, and every cut line halves. This is a power-delivery G1 decision
-  (power owner), not part of this plan.
-- pt_wired's 30 over-100 % gcells all sit in the 27 um sliver between the macro's west edge and pad_ref / pad_aux_clk
-  (x 944-971). The router should treat it as blocked: the macro has no pins there (pin-order file), and only the REF /
-  AUX / ATB pad nets need it.
+pt_wired channel peaks: chan_macro_s 0.46 / 0.47, trunk_t 0.56 / 0.52, chan_wtxdata 0.28 / 0.55, chan_slicer_top
+0.56 / 0.55, chan_wrx_e 0.58 / 0.47, chan_ptrim_slicer 0.56 / 0.05, chan_macro_e 0.44 / 0.16.
+
+### 7.3 Remaining spots
+
+- pt_wired: the 3 over-100 % gcells are in the 27 um gap between the macro's west edge and pad_ref / pad_aux_clk. The
+  macro has no pins there; only the REF / AUX / ATB pad nets use it.
+- The pin-cluster requests (adc_i/q, ptrim, LNA) are deferred until a route shows they matter (coordinator).
+
+### 7.4 Decap
+
+Decap tiles block Metal1-2 only, so Metal3, Metal4 and Metal5 pass over them. They go in trunk_a, chan_rx_top,
+chan_macro_w and chan_bbq_top on pt_rf, and in chan_macro_e on pt_wired. They stay out of the macro escape rows and the
+pin gaps. Their positions are in `<chip>_place.json` (`decap`): pt_rf 36 of 36 (PDS-10 shortfall closed in the plan),
+pt_wired 69 of 69 plus the 14 PAD-13 tiles. The channel peaks above already include them.
 
 ## 8. Deviations and open items (owners)
 
 1. **LO branch to lo_txbuf** is 2.8 mm (FLOW_ADJ 1.2, LO-ASM-6 about 2.1). The RF_RX and RF_TX pads are 2.5 mm apart,
    lo_ext must stay within 120 um of the mixers, and lo_txbuf must abut txmix. Today's routed LO pairs are 3.5-4.0 mm
    (XT-01). Timing / LO owner: accept with a shielded bundle up trunk A, or rule.
-2. **isw_pll** is 2.3 mm (pt_rf) / 4.1 mm (pt_wired) from its supply bond (E 4143). The power owner's ruling puts it
-   beside pll_vreg2, and pll_vreg2 does not fit in the north-east column beside pll_cdr (needs 666 um, the column has
-   481). Power owner: confirm the grid path from the bond to the switch, or give pll_vreg2 / isw_pll the area east of
-   the macro (pt_wired has room there; pt_rf needs the macro moved 136 um west, which puts dac_i inside the macro
-   outline, so no).
-3. **SUB-01**: adc_q is 709 um from the macro against the 782 um pessimistic figure (210 um nominal passes). Moving it
-   further needs adc_q under the LO synthesiser. Converters / substrate owner.
-4. **Decap, pt_rf**: 21 of 36 tiles fit outside the channels (pt_wired: 69 of 69). Tiles block only Metal2, so they may
-   sit in the horizontal channels (chan_bbq_top, chan_rx_top) at the cost of vertical tracks, or go to the grid MIM
-   plates of power-delivery 5.1b. PDS-10 owner.
-5. **Island trunks** become long where signal flow wins. pt_rf: RAIL_conv from isw_conv (W 978) to adc_q 3.6 mm,
-   RAIL_debug 4.1 mm, RAIL_rf_rx 2.4 mm. pt_wired: RAIL_wired_rx 4.6 mm. This follows the coordinator ruling of
-   2026-11-24 (signal flow first, drawn trunks carry the loads). Island-trunk agent: size per README.
-6. **D2H / SPI** (21 nets) leave the macro's south edge and reach the south ring through trunk A and spine_low, next
-   to adc_i. XT-05 asks for a shield under the lanes. Assembly: draw it.
-7. **pt_wired detect** is 238 um from pad_hs_rx (150), because the PAD-13 decap slot holds the pad's inner side.
-   **wrx_cap** is 1.6 mm from the macro (300), because it stays with the slicer. Coordinator: accept or swap with the
-   decap slot.
-8. **Pin clusters**: owner requests in 7.3.
+2. **isw_pll** is 2.3 mm (pt_rf) / 4.1 mm (pt_wired) from its supply bond (E 4143), beside pll_vreg2 (power owner's
+   ruling). pll_vreg2 does not fit in the pt_rf north-east column beside pll_cdr. Power owner: confirm the grid path
+   from the bond to the switch.
+3. **SUB-01**: adc_q is 709 um from the macro against the 782 um pessimistic figure (210 um nominal passes).
+   Converters / substrate owner.
+4. **Island trunks** are long where signal flow wins. pt_rf: RAIL_conv 3.6 mm, RAIL_debug 4.1 mm, RAIL_rf_rx 2.4 mm.
+   pt_wired: RAIL_wired_rx 4.6 mm. This follows the coordinator ruling of 2026-11-24. Island-trunk agent.
+5. **D2H bundle**: XT-05 shield beside adc_i (assembly).
+6. **pt_wired detect** is 238 um from pad_hs_rx (150), and **wrx_cap** is 1.6 mm from the macro (300). Coordinator:
+   accept.
+7. **pll_tx** (the only `GRID_SNAP` block, built with Metal5 channels on the old vertical grid phase) is plan-placed
+   rotated, with no snap. With the swap, the grid crossing it is vertical Metal4. The timing owner should confirm its
+   ties.
 
-## 9. Translating the plan into code
+## 9. Code (branch fp-plan-code)
 
-1. **floorplan.py, behind `PLAN_FP=1` (off by default):** read `fp_plan/<chip>_place.json`. Every `hand` instance goes
-   into `FIXED` (same mechanism as `common.FIXED_PLACE`: the packer books its slot and drops it from the ledger
-   placement), with its orientation. Every `channels` rect goes into the packer reserves (as `common.ROUTE_CHANNELS`
-   does), so no block or decap tile lands in them. Then pass 2 places the small cells and the decap next to their
-   partners, outside the channels. The `auto` positions are a guide only. FLOW_ADJ / keep-away checks stay as they
-   are; `relaxed` should list only section 8 items. `kl_place.py` needs the orientation passed through for fixed
-   blocks (today FIXED_PLACE is R0 only). Nothing else in the flow changes.
-2. **Macro pin order (digital re-hardening, DG owner):** `fp_plan/<chip>_macro_pin_order.cfg` (OpenLane
-   pin_order.cfg form; side headers `#N #S #E #W`, order left to right / bottom to top, planned offsets). The pin
-   order is tied to the macro position in the plan (pt_rf x0 1236, y0 3304.4; pt_wired x0 971, y0 3077). If either
-   moves by more than about 50 um, regenerate the file (`pinorder.py`). Until the macro is re-hardened, KH_CONN routing
-   still sees the old sides (pt_rf `c_*`: N 112, W 137).
-3. **Pad map:** no change (section 4).
-4. **Route flow (not floorplan):** `SIG_M1=1`. Pass the G1 grid-direction question (7.3) to the power owner. Treat the
-   pt_wired west sliver as a routing blockage.
-5. **Verification after coding:** run `KH_CONN=1 PLAN_FP=1 run.sh <chip> abstract floorplan place`, then
-   `fp_plan/extract.py` and `evalp.py` on the new run: the cut lines and channel peaks above should come back within
-   about 0.05. Then route.
+1. **`floorplan.py`, `PLAN_FP=1` (off by default):**
+   - Every `hand` and `auto` instance of `fp_plan/<chip>_place.json` is fixed at its lower-left with its DEF
+     orientation and no packer margin.
+   - Each `decap` tile goes to its planned spot.
+   - The plan `channels` are packer reserves.
+   - The macro x comes from the plan.
+   - GROUP_BOOK and GRID_SNAP leave plan-fixed blocks alone.
+   - The packer and pass 2 place only what the plan does not list.
+2. **`kl_place.py`:**
+   - Any DEF orientation for a real cell (`orient` in floorplan.json).
+   - `GRID_SWAP=1` (default): the swapped grid and the macro-strap join of 7.1.
+   - The VSS tab ties of staged blocks run on Metal5 up their channel to the nearest horizontal VSS row.
+   - GRID_STITCH (packer floorplan only) follows the horizontal layer.
+3. **Worktree runs:** `ASM_DATA=<main checkout>` makes the tool image mount that checkout as `/repo`, with this tree's
+   `integration/` mounted over it (`tool.sh`, `signoff/kl.sh`, `signoff/env.sh`, `common.py`).
+4. **Macro pin order:** the files of section 6, for the re-harden that is in progress.
+5. **Pad map:** no change.
+6. **Run:** `KH_CONN=1 PLAN_FP=1 SIG_M1=1 ASM_RUN=... ASM_DATA=... run.sh <chip>`, then `drc`, `lvs` (which includes
+   the check stage).
 
 ## 10. Reproduce
 

@@ -78,13 +78,13 @@ master pad_txpad         A/pads/generated/stress-safe-families/wired-transmit/ph
 master pad_hspad         A/pads/generated/stress-safe-families/wired-receive-hs/physical.spice:hs_protected_pad
 master isw_wired         A/island_support/generated/isw/isw_wired.pex.spice:isw_wired_pex
 master isw_rf            A/island_support/generated/isw/isw_rf.pex.spice:isw_rf_pex
-master isw_pll           A/island_support/generated/isw/isw_pll.pex.spice:isw_pll_pex
+master isw_pll           A/island_support/generated/views/pex/isw_pll/isw_pll.pex.spice:isw_pll_pex
 master isw_conv          A/island_support/generated/isw/isw_conv.pex.spice:isw_conv_pex
 master isw_debug         A/island_support/generated/isw/isw_debug.pex.spice:isw_debug_pex
-master atb_leaf_s        A/island_support/generated/atb/atb_leaf_s.pex.spice:atb_leaf_s_flat
-master atb_leaf_f        A/island_support/generated/atb/atb_leaf_f.pex.spice:atb_leaf_f_flat
-master atb_grp           A/island_support/generated/atb/atb_grp.pex.spice:atb_grp_flat
-master atb_pad           A/island_support/generated/atb/atb_pad.pex.spice:atb_pad_flat
+master atb_leaf_s        A/island_support/generated/views/pexd/atb_leaf_s/atb_leaf_s.pex.spice:atb_leaf_s_flat
+master atb_leaf_f        A/island_support/generated/views/pexd/atb_leaf_f/atb_leaf_f.pex.spice:atb_leaf_f_flat
+master atb_grp           A/island_support/generated/views/pexd/atb_grp/atb_grp.pex.spice:atb_grp_flat
+master atb_pad           A/island_support/generated/views/pexd/atb_pad/atb_pad.pex.spice:atb_pad_flat
 master iso_clamp         A/island_support/generated/iso-family/iso_clamp.pex.spice:iso_clamp_pex
 # unpublished (pads owner, scratch/iso-family, iso-placement.json): same ports as iso_clamp; iso_pd = Y ISO VSS
 master iso_clamp_x4      inline A ISO Y VDD VSS

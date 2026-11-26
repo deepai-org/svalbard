@@ -1,0 +1,32 @@
+* PEX produced on Wed Nov 25 12:25:56 AM CET 2026 using /foss/tools/sak/sak-pex.sh with m=2 and s=1
+* NGSPICE file created from atb_leaf_s_pex.ext - technology: gf180mcuD
+
+.subckt atb_leaf_s_pex NODE BUS SEL VDD VSS
+X0 VSS SWB MID VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X1 BUS SWB MID VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X2 BUS SEL MID VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X3 VDD SEL SWB VDD pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X4 MID SEL NODE VSS nfet_03v3 ad=0.1848p pd=1.72u as=0.1848p ps=1.72u w=0.42u l=0.28u
+D0 VSS SEL diode_nd2ps_03v3 pj=14u area=12.25p
+X5 MID SWB NODE VDD pfet_03v3 ad=0.3696p pd=2.56u as=0.3696p ps=2.56u w=0.84u l=0.28u
+X6 VSS SEL SWB VSS nfet_03v3 ad=0.22p pd=1.88u as=0.22p ps=1.88u w=0.5u l=0.28u
+C0 NODE SEL 0.06748f
+C1 SEL BUS 2.51034f
+C2 MID VDD 0.85791f
+C3 SWB NODE 0.44621f
+C4 SWB BUS 2.64982f
+C5 MID NODE 0.37139f
+C6 SWB SEL 1.57772f
+C7 MID BUS 1.57118f
+C8 MID SEL 5.48859f
+C9 SWB MID 4.84619f
+C10 NODE VDD 0.31811f
+C11 VDD BUS 2.4289f
+C12 SEL VDD 1.09746f
+C13 SWB VDD 2.33221f
+C14 BUS VSS 8.20049f
+C15 NODE VSS 1.10148f
+C16 VDD VSS 18.4901f
+C17 MID VSS 9.51855f
+.ends
+

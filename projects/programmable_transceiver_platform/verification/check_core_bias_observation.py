@@ -475,7 +475,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--output-dir', type=Path, help='default scratch/core-bias-observation-<chip> (-idac1 with --idac1-smu)')
     parser.add_argument('--pdk', type=Path, default=ROOT/'scratch/transceiver-pad-pdk')
-    parser.add_argument('--island-pex', type=Path, default=ROOT/'scratch/island-support-20261108-075605')
+    parser.add_argument('--island-pex', type=Path, default=ROOT/'projects/programmable_transceiver_platform/analog/island_support/generated/views')
     parser.add_argument('--ngspice-source', type=Path, default=ROOT/'scratch/pad-ngspice47/ngspice-47')
     parser.add_argument('--build-only', action='store_true')
     parser.add_argument('--reuse-build', action='store_true')

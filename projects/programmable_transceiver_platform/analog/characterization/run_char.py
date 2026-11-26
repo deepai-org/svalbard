@@ -32,7 +32,7 @@ ROOT = HERE.parents[3]
 SCRATCH = ROOT / 'scratch' / 'characterization'
 GEN = HERE / 'generated'
 ATB_DIR = GEN / 'atb_reference'     # extracted ATB cells (island_support, default-mode PEX)
-ATB_SRC = ROOT / 'scratch' / 'island-support-20261108-075605' / 'pexd'
+ATB_SRC = HERE.parent / 'island_support' / 'generated' / 'views' / 'pexd'
 CORNERS = [('typical', 27, 3.3), ('ss', 32, 3.15), ('ff', 22, 3.35), ('ss', 22, 3.15), ('ff', 32, 3.35)]
 
 

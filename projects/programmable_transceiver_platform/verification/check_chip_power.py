@@ -489,7 +489,7 @@ def main():
     parser.add_argument('--output-dir', type=Path, help='default scratch/chip-power-<chip>')
     parser.add_argument('--ngspice-source', type=Path, default=ROOT/'scratch/pad-ngspice47/ngspice-47')
     parser.add_argument('--pdk', type=Path, default=ROOT/'scratch/transceiver-pad-pdk')
-    parser.add_argument('--island-pex', type=Path, default=ROOT/'scratch/island-support-20261108-075605')
+    parser.add_argument('--island-pex', type=Path, default=ROOT/'projects/programmable_transceiver_platform/analog/island_support/generated/views')
     parser.add_argument('--reuse-bridge', action='store_true')
     parser.add_argument('--negative', choices=('group', 'pg_obs', 'rail'), help='negative control (must FAIL)')
     parser.add_argument('--timeout', type=float, default=7200, help='maximum analog simulation wall time in seconds')

@@ -278,7 +278,7 @@ def main():
     p.add_argument('--output-dir', type=Path, default=power.ROOT/'scratch/chip-fallback-live')
     p.add_argument('--ngspice-source', type=Path, default=power.ROOT/'scratch/pad-ngspice47/ngspice-47')
     p.add_argument('--pdk', type=Path, default=power.ROOT/'scratch/transceiver-pad-pdk')
-    p.add_argument('--island-pex', type=Path, default=power.ROOT/'scratch/island-support-20261108-075605')
+    p.add_argument('--island-pex', type=Path, default=power.ROOT/'projects/programmable_transceiver_platform/analog/island_support/generated/views')
     p.add_argument('--reuse-bridge', action='store_true')
     p.add_argument('--build-only', action='store_true')
     p.add_argument('--route-only', action='store_true')

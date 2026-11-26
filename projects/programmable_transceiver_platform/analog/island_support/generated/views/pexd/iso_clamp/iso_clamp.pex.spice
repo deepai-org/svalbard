@@ -1,0 +1,31 @@
+* NGSPICE file created from iso_clamp_flat.ext - technology: gf180mcuD
+
+.subckt iso_clamp_flat A ISO Y VDD VSS
+X0 VDD A AN VDD pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X1 VSS AN Y VSS nfet_03v3 ad=0.22p pd=1.88u as=0.22p ps=1.88u w=0.5u l=0.28u
+X2 VSS ISO Y VSS nfet_03v3 ad=0.22p pd=1.88u as=0.22p ps=1.88u w=0.5u l=0.28u
+X3 NY AN Y VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X4 VDD ISO NY VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X5 VSS A AN VSS nfet_03v3 ad=0.22p pd=1.88u as=0.22p ps=1.88u w=0.5u l=0.28u
+C0 AN NY 0.24714f
+C1 A VDD 1.7101f
+C2 VDD Y 0.44762f
+C3 ISO VDD 1.11036f
+C4 A Y 1.38183f
+C5 AN VDD 1.73272f
+C6 A ISO 0.35285f
+C7 ISO Y 3.66499f
+C8 NY VDD 1.9231f
+C9 AN A 4.47828f
+C10 AN Y 1.01536f
+C11 NY A 0.11786f
+C12 AN ISO 0.30166f
+C13 NY Y 0.69883f
+C14 NY ISO 1.18199f
+C15 Y VSS 4.01891f
+C16 A VSS 3.64323f
+C17 ISO VSS 3.37114f
+C18 VDD VSS 16.8126f
+C19 NY VSS 0.57226f ; **FLOATING
+C20 AN VSS 4.24091f ; **FLOATING
+.ends

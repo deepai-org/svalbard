@@ -3,7 +3,7 @@
 # Host-side wrapper (pinned image, offline, bounded). Usage: pd2_softstart.sh [EVIDENCE_RUN_DIR]
 set -euo pipefail
 HERE=$(cd "$(dirname "$0")" && pwd); ROOT=$(cd "$HERE/../../../.." && pwd); PROJ="$ROOT/projects/programmable_transceiver_platform"
-RUN="${1:-$ROOT/scratch/island-support-20261108-075605}"
+RUN="${1:-$HERE/generated/views}"
 IMG=docker.io/hpretl/iic-osic-tools@sha256:89641950bbf247c522188629992b6271e391e38372ca0f8e3c850480874948a3
 OUT="$ROOT/scratch/island-support-pd2"; mkdir -p "$OUT"
 docker run --rm --platform linux/arm64 --network none --cpus "${CPUS:-2}" --memory 8g --pids-limit 512 --cap-drop ALL \

@@ -19,7 +19,6 @@ PAD_CLEAR = float(os.environ.get('PAD_CLEAR', '40'))                            
 BASE_RING = 'projects/programmable_transceiver_platform/analog/pads/generated/packaging-assembly.gds'
 MASK = 'scratch/integration/signoff-gap/dl/precheck-live/assets/golden_masks/mask_1x1.gds'
 AN = 'projects/programmable_transceiver_platform/analog/'
-IS = 'scratch/island-support-20261108-075605/'
 
 # master -> [(gds relative to the repo root, top cell or None)], tried before the masters.txt netlist path
 SPECIAL = {
@@ -31,7 +30,7 @@ SPECIAL = {
     'pt_core_bias_wired': [('scratch/core-bias-wired/routing/pt_core_bias_routed.gds', 'pt_core_bias_wired')],
     'pt_lc_qvco5': [(AN+'timing/generated/lcvco/pt_lc_qvco5.gds', 'pt_lc_qvco5')],
     'pt_usb_txdrv': [(AN+'wired_tx/generated/usbdrv.gds', None)],
-    'iso_clamp': [(IS+'layout/iso_clamp.gds', 'iso_clamp')],
+    'iso_clamp': [(AN+'island_support/generated/views/layout/iso_clamp.gds', 'iso_clamp')],
     'pad_tlp': [(AN+'pads/generated/tlp-site/pad_tlp_flat.gds', 'pad_tlp_flat')],
     'pad_rf_pair': [(AN+'pads/generated/stress-safe-families/rf-pair/pad.gds', None)],
     'pad_rftxpad': [(AN+'pads/generated/stress-safe-families/rf-tx/pad.gds', None)],
@@ -55,8 +54,8 @@ for _d in HANDOFFS:
             SPECIAL[_v['top']] = [(f'{_d}/{_v["gds"]}', _v['top'])]+SPECIAL.get(_v['top'], [])
             if str(_v.get('grid', '')).startswith('m5_keep'): GRID_SNAP[_v['top']] = float(str(_v['grid']).split()[-1])
 for _n in ('isw_wired', 'isw_rf', 'isw_pll', 'isw_conv', 'isw_debug', 'atb_leaf_s', 'atb_leaf_f', 'atb_grp', 'atb_pad'):
-    _p = AN+f'island_support/generated/isw/{_n}.gds'            # published first, the island-support scratch copy after
-    SPECIAL[_n] = ([(_p, _n)] if os.path.exists(ROOT+'/'+_p) else [])+[(IS+f'layout/{_n}.gds', _n)]
+    _p = AN+f'island_support/generated/isw/{_n}.gds'            # isw / atb in isw/ first, then the tracked views (PDS-27)
+    SPECIAL[_n] = ([(_p, _n)] if os.path.exists(ROOT+'/'+_p) else [])+[(AN+f'island_support/generated/views/layout/{_n}.gds', _n)]
 # baseline (MANDATE 1, 2026-11-22): every instance real layout; owners' current best GDS before publication
 SPECIAL.update({
     'iso_clamp_x4': [(AN+'island_support/generated/iso-family/iso_clamp_x4.gds', 'iso_clamp_x4')],

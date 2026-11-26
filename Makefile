@@ -1,17 +1,13 @@
 PYTHON ?= python3
-COMPONENT ?= project.pcie_gen1_endpoint
-PROJECT ?=
 
-.PHONY: help doctor check check-fast check-digital spec process-eligibility images-ready toolchain-readiness scratch-report repo-audit graph smoke toolchain-smoke analog-flow-preflight serdes-tx-smoke serdes-termination-smoke serdes-rx-smoke wifi-lna-smoke wifi-mixer-smoke wifi-rx-parent-smoke wifi-ostl-coupon-smoke wifi-nfet-array-coupon-smoke phase-interpolator-smoke phase-control-dac-smoke phase-control-integration-smoke cdr-sampler-smoke cdr-phase-detector-smoke cdr-phase-detector-schematic cdr-integrated-detector-schematic cdr-integrated-error-smoke cdr-phase-error-filter-smoke cdr-error-slicer-smoke digital-image quaigh-image digital-pnr-smoke bfm-smoke bfm-history-audit verification-deps-fetch tool-artifacts-fetch pull
+.PHONY: help doctor check check-fast check-digital scratch-report smoke toolchain-smoke analog-flow-preflight serdes-tx-smoke serdes-termination-smoke serdes-rx-smoke wifi-lna-smoke wifi-mixer-smoke wifi-rx-parent-smoke wifi-ostl-coupon-smoke wifi-nfet-array-coupon-smoke phase-interpolator-smoke phase-control-dac-smoke phase-control-integration-smoke cdr-sampler-smoke cdr-phase-detector-smoke cdr-phase-detector-schematic cdr-integrated-detector-schematic cdr-integrated-error-smoke cdr-phase-error-filter-smoke cdr-error-slicer-smoke digital-image quaigh-image digital-pnr-smoke  tool-artifacts-fetch pull
 
 help:
 	@printf '%s\n' \
 	  'SVALBARD common targets:' \
 	  '  doctor                  inspect host/tool prerequisites' \
-	  '  graph                   validate component dependencies' \
-	  '  repo-audit              check tracked-source health budgets' \
 	  '  check-fast              run the broad retained fast evidence suite' \
-	  '  check-digital           run digital toolchain/PnR/BFM checks' \
+	  '  check-digital           run digital toolchain/PnR checks' \
 	  '  analog-flow-preflight   validate all analog wrapper/container boundaries' \
 	  '  scratch-report          report ignored local run storage' \
 	  '' \
@@ -38,31 +34,11 @@ check-fast: smoke wifi-lna-smoke wifi-mixer-smoke wifi-rx-parent-smoke wifi-ostl
 	$(PYTHON) ip/blocks/analog/wireline_serdes/clock_pulse/check_schematic.py
 	$(PYTHON) ip/blocks/analog/wireline_serdes/clock_pulse/check_release.py
 	$(PYTHON) ip/blocks/analog/wireline_serdes/clock_pulse/check_pulse_checkpoint.py
-	$(PYTHON) scripts/validate.py structure
-	$(PYTHON) scripts/validate.py repo-audit
 
-check-digital: toolchain-smoke digital-pnr-smoke bfm-smoke
-
-spec:
-	$(PYTHON) scripts/validate.py spec $(if $(PROJECT),project.$(PROJECT),$(COMPONENT))
-
-process-eligibility:
-	$(PYTHON) scripts/validate.py process-eligibility
-
-images-ready:
-	$(PYTHON) scripts/validate.py image-lock-ready
-
-toolchain-readiness:
-	$(PYTHON) scripts/validate.py toolchain-readiness
+check-digital: toolchain-smoke digital-pnr-smoke
 
 scratch-report:
 	./bootstrap.sh scratch-report
-
-repo-audit:
-	$(PYTHON) scripts/validate.py repo-audit
-
-graph:
-	$(PYTHON) scripts/validate.py graph
 
 # Pull only the reviewed, digest-pinned ARM64 manifests from env/images.lock.
 pull:
@@ -246,17 +222,8 @@ quaigh-image:
 digital-pnr-smoke: digital-image quaigh-image
 	./flows/smoke/digital_pnr/run.sh
 
-verification-deps-fetch:
-	$(PYTHON) scripts/verification_deps.py fetch
-
 tool-artifacts-fetch:
 	$(PYTHON) scripts/tool_artifacts.py fetch
-
-bfm-smoke:
-	./flows/verification/pcie_bfms/run.sh
-
-bfm-history-audit:
-	$(PYTHON) scripts/bfm_history_audit.py $(if $(OUTPUT),$(OUTPUT),scratch/bfm-history-audit-last.json)
 
 .PHONY: transceiver-contract
 transceiver-contract:

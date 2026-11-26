@@ -1958,14 +1958,14 @@
   {
    "id": "RF-RX-ESD",
    "chip": "rf",
-   "requirement": "RF_RX: 2 kV HBM and +10 dBm CW survivable; board TVS for IEC +-8 kV",
+   "requirement": "RF_RX: HBM 1 kV / CDM 1 A (MANDATE ESD class) and +10 dBm CW survivable; board TVS for IEC +-8 kV",
    "source": "spec/interface-requirements.md",
    "owner": "pads + rf_rx + board (B36)",
    "evidence": [
     "analog/rf_rx/README.md"
    ],
    "status": "unverified",
-   "basis": "pad_rf_pair r4 is built to the MANDATE class HBM 1 kV / CDM 1 A (PC-84); the 2 kV HBM and IEC levels rely on board TVS B36. +10 dBm CW survival not simulated. Verify: +10 dBm CW transient on the rf_pair r4 model, powered and unpowered (simulation now).",
+   "basis": "pad_rf_pair r4 is built to the MANDATE class HBM 1 kV / CDM 1 A (PC-84); IEC levels rely on board TVS B36. +10 dBm CW survival not simulated. Verify: +10 dBm CW transient on the rf_pair r4 model, powered and unpowered (simulation now).",
    "primary_fix": "+10 dBm transient on the RF pad model; B36 TVS",
    "fallback": [
     "B36"
@@ -2121,7 +2121,7 @@
   {
    "id": "WR-100TX-CDR",
    "chip": "wired",
-   "requirement": "125 MBd +/-50 ppm recovered by 6x FPGA oversampling on two lanes",
+   "requirement": "125 MBd +/-50 ppm recovered by 4x FPGA oversampling (RX ring 500 MHz, full rate) on two lanes",
    "source": "spec/interface-requirements.md",
    "owner": "digital (capture raw mode) + FPGA",
    "evidence": [
@@ -2129,7 +2129,7 @@
     "../../scratch/reviews/interface-changes.md"
    ],
    "status": "unverified",
-   "basis": "Mode ruled to ring 500 MHz, full rate, 4x FPGA oversampling, psel odd (TIM-32; requirement text still says 6x, spec owner to update). Bound capture r8 full 500 MHz 4x ss/32/3.15 V 0/100 untrimmed (wrx_cap-evidence.json); raw dual-lane export in RTL (DG9-23). FPGA 4x oversampling CDR at +-50 ppm not simulated. Verify: FPGA CDR model on captured words (sim now), board.",
+   "basis": "Mode ruled to ring 500 MHz, full rate, 4x FPGA oversampling, psel odd (TIM-32; 750 MHz / 6x fails at ss/3.15 V). Bound capture r8 full 500 MHz 4x ss/32/3.15 V 0/100 untrimmed (wrx_cap-evidence.json); raw dual-lane export in RTL (DG9-23). FPGA 4x oversampling CDR at +-50 ppm not simulated. Verify: FPGA CDR model on captured words (sim now), board.",
    "primary_fix": "IX-12 raw dual-lane mode (in RTL) + FPGA 4x oversampling CDR",
    "fallback": [
     "B38a",

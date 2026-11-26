@@ -43,38 +43,32 @@ named `asm-<chip>-<pid>`: stop a run only by that name (`docker kill asm-...`) o
 - **Net classes** (`kl_place.cls`): island rails / regulator outputs 3 um wide; hooks 1.2 um; clock, high-speed and RF
   nets twice the minimum spacing (no drawn shields). Booked ledger items without a conn instance are Metal1-3 blockages.
 
-## Results and resume point (2026-11-25, flow 8a7cc92b)
+## Results and resume point (2026-11-26)
 
 | | `pt_rf` | `pt_wired` |
 |---|---|---|
-| Inputs | DG9-28 macro, ASM-16 diode cells (ATB PDS-23, converters PDS-24, RF ASM-16a), RF RX ASM-RF-2 cells | indicative only: wrx_cap r6 + old macro (11-23 LEF); real run waits for DG9-25 macro + wrx_cap r8 (TIM-35) |
-| Floorplan | ASM-15 ruling: lna_deg_p 5 um from lna; isw_rf_tx_b (1876, 2994) and char_rffet placed by hard pass 2 (decap / ATB / iso give way, re-placed); decap ~3.7 nF (21/26 bank cells, 17-18/30 tiles), 0.83 nF within 500 um of the rf_rx loads | packer; clustering off |
-| Route / LVS by name | 2 DRT; 801 match, no short, no open (VDD, VSS one net each; por internal label only) | 5 DRT; 971 match, no short; open pad_tlp VDD/VSS (not investigated), s_pg_wired_tx_b (digital) |
-| Deck (shuttle 792ef67, `signoff/drc/run_drc.sh`) | main DRC 4 (M4.2b 2, V1.2a 2); antenna 182 (ANT.5 143: c_bbfilter_i_en, BIAS_rfdriver, ADCI_CODEB/OVL, CLK_OBS_DBG; ~39 inside blocks / pad ring, ~13 in the macro); full precheck last run on b98f21a6 (DRC 180, antenna 2483, Magic 0, density 0) | not run |
+| Last verified (committed) | b1c40f20: 2 DRT; LVS by name 801 match, no short / open (VDD, VSS one net each); deck antenna 22 (ANT.6 13 `c_lo_mmd_en`, ANT.5 7 `PLL_TX_FBCK`, ANT.12 2 at isw_rf_rx / isw_pll), main DRC 3 (V1.2a 2 por VDD hook, M4.2b 1) | none on current inputs (last clean: 11-24, old macro + wrx_cap r6) |
+| In progress (uncommitted, assembly agent 1) | DG9-29 macro with its Metal5 straps carried to the grid (`kl_place` macro supply, `macro supply OK` 19/19 VDD, 18+1 VSS); ME straps 15 um; SE lo_lf / qvco grid stitch (`common.GRID_STITCH`); antenna diodes on `PLL_TX_FBCK`, `c_lo_mmd_en`. Run 11-26: 2 DRT, no VDD/VSS short, KH-3 shorts gone (they came from a 400 um macro-strap reach and ME 21 um; now 100 um / 15 um); grid_conn MACRONET and deck pending | DG9-29 run 11-26: VDD-VSS short through router wiring (24 DRT: `ISO_wired_tx`, `s_pg_wired_tx_b` into the grid below isw_wired_tx_a/_b, `VDD__HK71`, RAIL_wired_tx at the bar edge); main DRC 6406 (Via3/Via4 rules in pad_txpad / wiredtx8 / bar), antenna 256. Next: rerun on DG9-30 (drop-in) and clear those shorts |
 
-**Open items (ranked):** (1) pt_rf antenna tail: standard-cell antenna diodes (gf180mcu_fd_sc_mcu7t5v0__antenna) at the receivers of the
-remaining nets (router jumpers no longer reduce ANT.5); in-block items to owners as a row. (2) last 4 pt_rf DRC. (3) pt_wired on DG9-25 +
-r8, pad_tlp open, then precheck. (4) check_top both chips, push. (5) Island trunks (PDS-19/20; rf_tx trunk to isw_rf_tx_b), LO floorplan
-(lo_ext -> lo_txbuf ~2.5 mm, rxmix_i/q apart; fit.py fixes positions), grid dead metal.
+**Chip killers and owners:** PDS-25 #1 (macro supply never reached the grid) and #3 (grid coverage / stitch): this agent (assembly 1).
+PDS-25 #2 (switch and heavy-load supply plates, island trunks, block mirroring / FACE_IN): assembly agent 2 (`island_trunks.py`, its rows).
+KH-1 / KH-2 (macro `c_*` ports unwired, pad tie-offs, output pads; `check_conn.py`, the `check` stage): top-connectivity agent (rows KH-1..3).
 
-**Flow knobs added 2026-11-24/25 (common.py / kl_place.py / kl_abstract.py / route.tcl):** PIN_UP (por pins on own Metal4/5), labels that are
-not conn pins stay obstruction, label pins by containment, PIN_GATE_UM2 = 0.4 + ANT_TIGHT nets (0.02 um2 receiver gates) for the router antenna
-model, NOROT / PASS2 / HARD_NEXT_TO (partner, max gap) with decap / ATB / iso give-way and re-placement, PIN_WINDOWS (grid 3 um off signal
-pins), ISLAND_BARS expose=True (bar = rail pin, switch VISL off the routed net), rel 'bbox' / 'pin:NAME', bar slots (MSLOT5.1), direct Via4
-landings only with >= 4 cuts or a cut row on thin strips, hook slots only on ring-joined grid metal (Via4-sized overlaps) and never over a
-block, ring filler / rail / CDNS cells and the IO strip blocked, wide-metal obstruction +0.5 um (M4.2b / MT.2b), MIM keep-out (FuseTop +
-2.3 um) on Metal4, island switches Metal2-3 halo, DRT 64 iterations, second antenna pass, ISL_CLUSTER off by default.
+**Open (assembly 1, ranked):** (1) commit pt_rf macro straps once grid_conn MACRONET=1 and the deck confirm; (2) pt_wired on DG9-30: the
+router shorts at isw_wired_tx_a/_b, LVS, deck, precheck; (3) pt_rf last DRC (por hook V1.2a, one M4.2b) and antenna tail (ANT.12 owner TBD).
 
-**Gotchas:** a run's wait loop must read the run's own PID (route deletes routed.def, so file-age checks pass early); never start a second
-run on a chip while its LVS / DRC reads chip/pt_chip_top.gds (LVS runs in an unnamed container: find it by its volume); the abstract stage
-must rerun whenever any block GDS or the macro LEF changes (check timestamps vs masters.json); `kl_netprobe.py NET` (HALO=0) and
-`kl_shortcheck.py [drop cells]` localise joins; antenna attribution: match deck polygons to routed.def segments (see this session's
-scratch scripts); pt_rf decap total is an estimate from the power-delivery per-cell figures.
+**Flow knobs (recent):** `ASM_RUN` is required (run.sh refuses the shared default dir); `PLATES=1`, `TRUNKS=1`, `FACE_IN=1` (island_trunks.py,
+agent 2, off by default); `HOOK_W` (hook width, default 0.56); route stops when it writes no routed.def; second antenna pass after detailed
+route, retried with `-no_pin_access` and kept only if it completes; `common.HOOK_SLOT_AVOID` (grid slots no hook takes: DRT-1231 after the
+jumpers); `common.GRID_STITCH`; `common.ANT_DIODE` / `ANT_TIGHT`; macro supply straps (`MSTRAP_EXT` 30 um / `MSTRAP_W` 10 um, reach to the
+first same-net vertical strap within 100 um) and the `macro supply OK / MACRO SUPPLY OPEN` check printed by place and repeated by `lvs`.
 
-Tools: `kl_shortcheck.py [drop-cell ...]` (VDD/VSS one net, with cells removed: `pt_top_wiring`, `pt_direct_land`),
-`kl_netprobe.py NET ...` (non-router shapes a routed net touches; `HALO=0` for overlaps only). Block pins in the abstract are
-the label's own polygon; `common.PIN_UP` masters (por) also get their own Metal4/5 of the pin net. LVS (`signoff/lvs/top_lvs.py`)
-merges reference nets through declared DC joins (LNA inductors, QVCO tank) when the layout shows them.
+**Gotchas:** every agent uses its own `ASM_RUN` (a run without it once overwrote route/chip/lvs/drc of another agent's placement); several
+agents share these scripts in one working tree, so commit your own hunks only (private index) and rebase first; check `df` before a heavy
+cycle (the disk filled on 11-26 and jobs died); a run's wait loop must read the run's own PID; never start a second run on a chip while its
+LVS / DRC reads chip/pt_chip_top.gds; the abstract stage must rerun whenever a block GDS or the macro LEF changes; `kl_shortcheck.py
+[drop cells]` (drop `pt_top_wiring` to see if a short is router wiring) and `kl_netprobe.py NET` localise joins; grid_conn.py MACRONET=1
+(scratch/integration/m1-pdn) audits macro stripes against the pad-fed grid.
 
 ## Known violations (current)
 

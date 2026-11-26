@@ -1,0 +1,501 @@
+* NGSPICE file created from pt_pll_vreg2.ext - technology: gf180mcuD
+
+.subckt pt_pll_vreg2 VIN VOUT_TX VOUT_CDR VSS BYP_TX BYP_CDR ATB_OUT ATB_G
+X0 VSS INP VSS VSS nfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=10u
+X1 RB_3 RB_4 VSS ppolyf_u_1k r_width=1u r_length=30u
+X2 R2_4 R2_5 VSS ppolyf_u_1k r_width=1u r_length=30u
+X3 BYPN_CDR BYP_CDR VIN VIN pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X4 VSS INP VSS VSS nfet_03v3 ad=0.8567n pd=3.94688m as=0 ps=0 w=10u l=10u
+X5 VSS INP VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=10u l=10u
+X6 VSS INP VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=10u l=10u
+X7 T NB VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X8 RB_1 RB_2 VSS ppolyf_u_1k r_width=1u r_length=30u
+X9 BYPN_TX BYP_TX VIN VIN pfet_03v3 ad=1.76p pd=8.88u as=0.88616n ps=4.0676m w=4u l=0.28u
+X10 R2_2 R2_3 VSS ppolyf_u_1k r_width=1u r_length=30u
+X11 VSS VG VSS VSS nfet_03v3 ad=17.0412p pd=78.34u as=17.0412p ps=78.34u w=38.73u l=38.73u
+X12 VSS VOUT_CDR VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=38.73u l=38.73u
+X13 VSS VG VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=38.73u l=38.73u
+X14 VSS VOUT_CDR VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=38.73u l=38.73u
+X15 VG VOUT_TX T VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X16 VOUT_TX BYPN_TX VIN VIN pfet_03v3 ad=22p pd=0.10088m as=22p ps=0.10088m w=50u l=0.28u
+X17 VG ATB_G VSS ppolyf_u_1k r_width=1u r_length=20u
+X18 VOUT_TX BYPN_TX VIN VIN pfet_03v3 ad=0.44n pd=2.0176m as=0 ps=0 w=50u l=0.28u
+X19 VSS VG VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=38.73u l=38.73u
+X20 INP R2_1 VSS ppolyf_u_1k r_width=1u r_length=30u
+X21 VOUT_TX BYPN_TX VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X22 VSS VG VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=38.73u l=38.73u
+X23 RB_16 NB VSS ppolyf_u_1k r_width=1u r_length=30u
+X24 VOUT_TX BYPN_TX VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X25 VOUT_TX BYPN_TX VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X26 VSS VG VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=38.73u l=38.73u
+X27 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 ad=0.44n pd=2.0176m as=0 ps=0 w=50u l=0.28u
+X28 VOUT_TX BYPN_TX VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X29 VOUT_TX BYPN_TX VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X30 VSS VG VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=38.73u l=38.73u
+X31 RB_8 RB_9 VSS ppolyf_u_1k r_width=1u r_length=30u
+X32 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X33 VOUT_TX BYPN_TX VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X34 VOUT_TX BYPN_TX VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X35 VSS VG VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=38.73u l=38.73u
+X36 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X37 RB_14 RB_15 VSS ppolyf_u_1k r_width=1u r_length=30u
+X38 VOUT_TX BYPN_TX VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X39 VOUT_TX BYPN_TX VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X40 VSS VG VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=38.73u l=38.73u
+X41 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X42 VG VOUT_TX VIN VIN pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+X43 VOUT_TX BYPN_TX VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X44 VOUT_TX BYPN_TX VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X45 VSS VG VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=38.73u l=38.73u
+X46 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X47 RB_6 RB_7 VSS ppolyf_u_1k r_width=1u r_length=30u
+X48 VOUT_TX BYPN_TX VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X49 X1 X1 VIN VIN pfet_03v3 ad=0.88p pd=4.88u as=0 ps=0 w=2u l=1u
+X50 VOUT_TX BYPN_TX VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X51 VSS VG VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=38.73u l=38.73u
+X52 R2_7 R2_8 VSS ppolyf_u_1k r_width=1u r_length=30u
+X53 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X54 RB_12 RB_13 VSS ppolyf_u_1k r_width=1u r_length=30u
+X55 VOUT_TX BYPN_TX VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X56 VOUT_TX BYPN_TX VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X57 VSS VG VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=38.73u l=38.73u
+X58 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X59 VOUT_TX BYPN_TX VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X60 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X61 RB_4 RB_5 VSS ppolyf_u_1k r_width=1u r_length=30u
+X62 VOUT_TX BYPN_TX VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X63 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X64 R2_5 R2_6 VSS ppolyf_u_1k r_width=1u r_length=30u
+X65 VOUT_TX BYPN_TX VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X66 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X67 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X68 RB_10 RB_11 VSS ppolyf_u_1k r_width=1u r_length=30u
+X69 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X70 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X71 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X72 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X73 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X74 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X75 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X76 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X77 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X78 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X79 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X80 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X81 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X82 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X83 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X84 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X85 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X86 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X87 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X88 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X89 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X90 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X91 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X92 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X93 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X94 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X95 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X96 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X97 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X98 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X99 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X100 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X101 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X102 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X103 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X104 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X105 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X106 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X107 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X108 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X109 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X110 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X111 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X112 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X113 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X114 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X115 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X116 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X117 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=44p pd=0.20088m as=26p ps=0.10052m w=100u l=2.7u
+X118 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X119 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X120 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X121 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=44p ps=0.20088m w=100u l=2.7u
+X122 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X123 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X124 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X125 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X126 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X127 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X128 VOUT_TX VG VIN VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X129 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X130 VIN VG VOUT_TX VSS nfet_06v0_nvt ad=26p pd=0.10052m as=26p ps=0.10052m w=100u l=2.7u
+X131 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X132 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=1.596n pd=6.23192m as=3.12n ps=0.01206 w=100u l=2.7u
+X133 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X134 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X135 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X136 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X137 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X138 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X139 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X140 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X141 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X142 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X143 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X144 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X145 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X146 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X147 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X148 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X149 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X150 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X151 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X152 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X153 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X154 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X155 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X156 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X157 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X158 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X159 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X160 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X161 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X162 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X163 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X164 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X165 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X166 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X167 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X168 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X169 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X170 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X171 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X172 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X173 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X174 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X175 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X176 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X177 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X178 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X179 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X180 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X181 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X182 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X183 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X184 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X185 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X186 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X187 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X188 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X189 VOUT_CDR VG VIN VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X190 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X191 VIN VG VOUT_CDR VSS nfet_06v0_nvt ad=0 pd=0 as=0 ps=0 w=100u l=2.7u
+X192 RB_2 RB_3 VSS ppolyf_u_1k r_width=1u r_length=30u
+X193 R2_3 R2_4 VSS ppolyf_u_1k r_width=1u r_length=30u
+X194 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X195 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X196 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X197 VIN RB_1 VSS ppolyf_u_1k r_width=1u r_length=30u
+X198 BYPN_CDR BYP_CDR VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X199 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X200 VSS VG VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=38.73u l=38.73u
+X201 VSS VOUT_TX VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=38.73u l=38.73u
+X202 R2_1 R2_2 VSS ppolyf_u_1k r_width=1u r_length=30u
+X203 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X204 VSS VG VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=38.73u l=38.73u
+X205 VSS VOUT_TX VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=38.73u l=38.73u
+X206 X1 INP T VSS nfet_03v3 ad=1.76p pd=8.88u as=4.4p ps=22.64u w=4u l=1u
+X207 VOUT_CDR BYPN_CDR VIN VIN pfet_03v3 ad=0 pd=0 as=0 ps=0 w=50u l=0.28u
+X208 VSS VG VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=38.73u l=38.73u
+X209 BYPN_TX BYP_TX VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0 ps=0 w=2u l=0.28u
+X210 VSS VG VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=38.73u l=38.73u
+X211 RB_9 RB_10 VSS ppolyf_u_1k r_width=1u r_length=30u
+X212 VSS VG VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=38.73u l=38.73u
+X213 RB_15 RB_16 VSS ppolyf_u_1k r_width=1u r_length=30u
+X214 VSS VG VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=38.73u l=38.73u
+X215 VOUT_TX ATB_OUT VSS ppolyf_u_1k r_width=1u r_length=20u
+X216 VSS VG VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=38.73u l=38.73u
+X217 RB_7 RB_8 VSS ppolyf_u_1k r_width=1u r_length=30u
+X218 VG X1 VIN VIN pfet_03v3 ad=1.76p pd=9.76u as=0 ps=0 w=2u l=1u
+X219 VSS VG VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=38.73u l=38.73u
+X220 R2_8 VSS VSS ppolyf_u_1k r_width=1u r_length=30u
+X221 VIN INP VSS ppolyf_u_1k r_width=1u r_length=30u
+X222 RB_13 RB_14 VSS ppolyf_u_1k r_width=1u r_length=30u
+X223 VSS VG VSS VSS nfet_03v3 ad=0 pd=0 as=0 ps=0 w=38.73u l=38.73u
+X224 NB NB VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0 ps=0 w=2u l=2u
+X225 RB_5 RB_6 VSS ppolyf_u_1k r_width=1u r_length=30u
+X226 R2_6 R2_7 VSS ppolyf_u_1k r_width=1u r_length=30u
+X227 RB_11 RB_12 VSS ppolyf_u_1k r_width=1u r_length=30u
+D0 VSS BYP_CDR diode_nd2ps_03v3 pj=3.6p area=0.81p
+D1 VSS BYP_TX diode_nd2ps_03v3 pj=3.56p area=0.7921p
+C0 RB_16 ATB_OUT 0
+C1 BYP_TX BYP_CDR 36.79014f
+C2 RB_10 VG 0.41098f
+C3 R2_6 VG 0.22594f
+C4 RB_3 NB 0.14105f
+C5 RB_10 RB_11 1.22733f
+C6 VOUT_TX RB_7 0.83921f
+C7 BYPN_CDR VIN 28.11469f
+C8 R2_3 VOUT_CDR 0.06983f
+C9 NB R2_5 0.43322f
+C10 ATB_OUT RB_7 0
+C11 R2_2 ATB_G 0
+C12 X1 INP 0.15834f
+C13 NB RB_14 0.14105f
+C14 BYPN_CDR VOUT_TX 1.92534f
+C15 BYP_TX VOUT_CDR 0.56912f
+C16 VOUT_TX VIN 0.36861p
+C17 R2_8 VIN 0.18194f
+C18 RB_13 VOUT_TX 0.83921f
+C19 RB_6 RB_5 1.22733f
+C20 ATB_G RB_15 0
+C21 BYP_TX BYPN_TX 0.05909f
+C22 ATB_G R2_7 0
+C23 ATB_OUT VIN 0.32744f
+C24 ATB_OUT RB_13 0
+C25 R2_8 VOUT_TX 0.84697f
+C26 R2_2 VG 0.22594f
+C27 VOUT_TX RB_2 0.81774f
+C28 NB RB_1 2.07615f
+C29 ATB_OUT VOUT_TX 0.32941f
+C30 NB BYP_CDR 0.05247f
+C31 R2_2 R2_1 1.25177f
+C32 R2_8 ATB_OUT 0
+C33 NB RB_5 0.14105f
+C34 R2_4 VOUT_TX 0.83921f
+C35 ATB_OUT RB_2 0
+C36 ATB_G RB_12 0
+C37 X1 BYPN_CDR 0.06513f
+C38 VG RB_15 0.41098f
+C39 ATB_OUT R2_4 0
+C40 R2_7 VG 0.22594f
+C41 X1 VIN 15.56207f
+C42 NB RB_9 0.14105f
+C43 BYP_CDR INP 0.06276f
+C44 X1 VOUT_TX 2.22456f
+C45 ATB_G R2_3 0
+C46 RB_3 VOUT_TX 0.83921f
+C47 RB_12 VG 0.41098f
+C48 NB VOUT_CDR 0.25865f
+C49 RB_3 RB_2 1.22733f
+C50 RB_3 ATB_OUT 0
+C51 BYP_TX ATB_G 0.11571f
+C52 NB BYPN_TX 0.48942f
+C53 RB_12 RB_11 1.22733f
+C54 R2_5 VOUT_TX 0.83921f
+C55 RB_14 RB_13 1.22733f
+C56 R2_7 R2_6 1.25177f
+C57 R2_3 VG 0.22594f
+C58 RB_14 VOUT_TX 0.83921f
+C59 R2_5 ATB_OUT 0
+C60 VOUT_CDR INP 3.01288f
+C61 NB RB_4 0.14105f
+C62 R2_5 R2_4 1.25177f
+C63 ATB_OUT RB_14 0
+C64 BYPN_CDR BYP_CDR 0.05909f
+C65 BYP_TX VG 0.09248f
+C66 BYPN_TX INP 0.05852f
+C67 VIN RB_1 0.21553f
+C68 BYP_CDR VIN 3.11599f
+C69 ATB_G RB_6 0
+C70 VOUT_TX RB_1 0.82288f
+C71 BYP_CDR VOUT_TX 17.2382f
+C72 R2_8 RB_1 0.00773f
+C73 RB_5 VOUT_TX 0.83921f
+C74 RB_2 RB_1 0.39549f
+C75 NB RB_8 0.14105f
+C76 ATB_OUT RB_1 0
+C77 ATB_OUT BYP_CDR 10.1229f
+C78 ATB_OUT RB_5 0
+C79 BYPN_CDR VOUT_CDR 12.84125f
+C80 RB_9 VOUT_TX 0.83921f
+C81 RB_6 VG 0.41098f
+C82 VOUT_CDR VIN 0.37971p
+C83 BYPN_TX BYPN_CDR 9.99833f
+C84 RB_9 ATB_OUT 0
+C85 NB T 0.14663f
+C86 BYPN_TX VIN 26.588f
+C87 VOUT_CDR VOUT_TX 49.95026f
+C88 ATB_G RB_16 0
+C89 X1 BYP_CDR 0.10903f
+C90 NB VG 4.95157f
+C91 ATB_OUT VOUT_CDR 0.32744f
+C92 BYPN_TX VOUT_TX 9.7276f
+C93 NB R2_1 0.43477f
+C94 VOUT_CDR R2_4 0.06983f
+C95 NB RB_11 0.14105f
+C96 R2_2 R2_3 1.25177f
+C97 RB_8 RB_7 1.22733f
+C98 T INP 0.28607f
+C99 RB_16 VG 0.4144f
+C100 RB_4 VOUT_TX 0.83921f
+C101 ATB_G RB_7 0
+C102 VG INP 0.23f
+C103 RB_4 ATB_OUT 0
+C104 X1 VOUT_CDR 1.14004f
+C105 R2_1 INP 0.23068f
+C106 RB_10 NB 0.14105f
+C107 NB R2_6 0.43322f
+C108 BYPN_TX X1 8.56652f
+C109 ATB_G VIN 0.24104f
+C110 RB_8 VOUT_TX 0.83921f
+C111 ATB_G RB_13 0
+C112 VG RB_7 0.41098f
+C113 R2_5 VOUT_CDR 0.07009f
+C114 ATB_OUT RB_8 0
+C115 BYPN_CDR T 0.15536f
+C116 ATB_G VOUT_TX 0.24368f
+C117 ATB_G R2_8 0
+C118 RB_3 RB_4 1.22733f
+C119 T VIN 0.93289f
+C120 ATB_G RB_2 0
+C121 ATB_G ATB_OUT 38.57158f
+C122 BYPN_CDR VG 0.10488f
+C123 ATB_G R2_4 0
+C124 VG VIN 0.51509p
+C125 T VOUT_TX 1.12776f
+C126 VG RB_13 0.41098f
+C127 VIN R2_1 0
+C128 VG VOUT_TX 0.27956p
+C129 R2_2 NB 0.43322f
+C130 R2_8 VG 0.22788f
+C131 VOUT_CDR BYP_CDR 0.48338f
+C132 VOUT_TX R2_1 0.84697f
+C133 VG RB_2 0.40561f
+C134 ATB_OUT VG 4.37735f
+C135 BYPN_TX BYP_CDR 0.0215f
+C136 RB_11 VOUT_TX 0.83921f
+C137 RB_3 ATB_G 0
+C138 ATB_OUT R2_1 0
+C139 R2_4 VG 0.22594f
+C140 ATB_OUT RB_11 0
+C141 NB RB_15 0.14105f
+C142 NB R2_7 0.43322f
+C143 X1 T 1.68134f
+C144 ATB_G R2_5 0
+C145 RB_10 VOUT_TX 0.83921f
+C146 RB_4 RB_5 1.22733f
+C147 R2_6 VOUT_TX 0.83921f
+C148 X1 VG 9.69982f
+C149 ATB_G RB_14 0
+C150 RB_3 VG 0.41098f
+C151 RB_10 ATB_OUT 0
+C152 NB RB_12 0.14105f
+C153 RB_16 RB_15 1.22733f
+C154 ATB_OUT R2_6 0
+C155 BYPN_TX VOUT_CDR 0.96705f
+C156 R2_5 VG 0.22594f
+C157 NB R2_3 0.43322f
+C158 ATB_G RB_1 0
+C159 ATB_G BYP_CDR 0.09769f
+C160 VG RB_14 0.41098f
+C161 ATB_G RB_5 0
+C162 BYP_TX NB 0.06292f
+C163 RB_9 RB_8 1.22733f
+C164 R2_2 VOUT_TX 0.83921f
+C165 ATB_G RB_9 0
+C166 VG RB_1 0.22186f
+C167 BYP_CDR VG 0.08341f
+C168 R2_2 ATB_OUT 0
+C169 R2_5 R2_6 1.25177f
+C170 RB_5 VG 0.41098f
+C171 BYP_TX INP 0.05247f
+C172 ATB_G VOUT_CDR 0.24104f
+C173 VOUT_TX RB_15 0.83921f
+C174 R2_7 VOUT_TX 0.83921f
+C175 R2_8 R2_7 1.25177f
+C176 RB_9 VG 0.41098f
+C177 ATB_OUT RB_15 0
+C178 NB RB_6 0.14105f
+C179 R2_7 ATB_OUT 0
+C180 VOUT_CDR T 2.54905f
+C181 RB_12 RB_13 1.22733f
+C182 RB_12 VOUT_TX 0.83921f
+C183 BYPN_TX T 0.16695f
+C184 RB_4 ATB_G 0
+C185 VOUT_CDR VG 0.27296p
+C186 VOUT_CDR R2_1 0.07016f
+C187 RB_12 ATB_OUT 0
+C188 BYPN_TX VG 0.81605f
+C189 R2_3 VOUT_TX 0.83921f
+C190 RB_10 RB_9 1.22733f
+C191 BYP_TX VIN 3.22861f
+C192 NB RB_16 0.16575f
+C193 R2_3 ATB_OUT 0
+C194 ATB_G RB_8 0
+C195 RB_4 VG 0.41098f
+C196 NB INP 1.81769f
+C197 BYP_TX VOUT_TX 0.63722f
+C198 R2_3 R2_4 1.25177f
+C199 RB_6 RB_7 1.22733f
+C200 VOUT_CDR R2_6 0.00929f
+C201 BYP_TX ATB_OUT 0.1426f
+C202 RB_14 RB_15 1.22733f
+C203 VG RB_8 0.41098f
+C204 NB RB_7 0.14105f
+C205 ATB_G VG 0.15724f
+C206 BYP_TX X1 0.11043f
+C207 RB_6 VOUT_TX 0.83921f
+C208 ATB_G R2_1 0
+C209 NB BYPN_CDR 0.21785f
+C210 ATB_G RB_11 0
+C211 NB VIN 0.12009f
+C212 RB_6 ATB_OUT 0
+C213 VG T 1.56161f
+C214 NB RB_13 0.14105f
+C215 R2_2 VOUT_CDR 0.07123f
+C216 NB VOUT_TX 0.78515f
+C217 NB R2_8 0.43477f
+C218 NB RB_2 1.68742f
+C219 VG R2_1 0.22788f
+C220 NB ATB_OUT 0
+C221 RB_10 ATB_G 0
+C222 BYPN_CDR INP 2.43378f
+C223 ATB_G R2_6 0
+C224 VG RB_11 0.41098f
+C225 NB R2_4 0.43322f
+C226 VIN INP 0.25431f
+C227 RB_16 VOUT_TX 0.98178f
+C228 VOUT_TX INP 1.66376f
+C229 RB_12 VSS 4.26397f $ **FLOATING
+C230 R2_7 VSS 3.94932f $ **FLOATING
+C231 RB_6 VSS 4.26244f $ **FLOATING
+C232 RB_14 VSS 4.26397f $ **FLOATING
+C233 INP VSS 38.19247f $ **FLOATING
+C234 RB_8 VSS 4.26397f $ **FLOATING
+C235 ATB_OUT VSS 22.83464f
+C236 RB_16 VSS 4.69527f $ **FLOATING
+C237 RB_10 VSS 4.26397f $ **FLOATING
+C238 BYPN_TX VSS 11.92433f $ **FLOATING
+C239 BYP_TX VSS 29.59145f
+C240 X1 VSS 7.50892f $ **FLOATING
+C241 T VSS 7.23506f $ **FLOATING
+C242 R2_2 VSS 3.88416f $ **FLOATING
+C243 BYPN_CDR VSS 12.72826f $ **FLOATING
+C244 BYP_CDR VSS 18.39702f
+C245 RB_1 VSS 4.57461f $ **FLOATING
+C246 R2_4 VSS 3.8865f $ **FLOATING
+C247 RB_3 VSS 4.26397f $ **FLOATING
+C248 VOUT_CDR VSS 0.10115p
+C249 VIN VSS 0.94632p
+C250 VOUT_TX VSS 0.16065p
+C251 VG VSS 0.63479p
+C252 RB_11 VSS 4.26397f $ **FLOATING
+C253 R2_6 VSS 3.94095f $ **FLOATING
+C254 RB_5 VSS 4.26439f $ **FLOATING
+C255 RB_13 VSS 4.26439f $ **FLOATING
+C256 R2_8 VSS 4.26888f $ **FLOATING
+C257 RB_7 VSS 4.26397f $ **FLOATING
+C258 RB_15 VSS 4.26397f $ **FLOATING
+C259 RB_9 VSS 4.26397f $ **FLOATING
+C260 NB VSS 12.10351f $ **FLOATING
+C261 R2_1 VSS 4.16739f $ **FLOATING
+C262 ATB_G VSS 45.50872f
+C263 R2_3 VSS 3.8865f $ **FLOATING
+C264 RB_2 VSS 4.20905f $ **FLOATING
+C265 R2_5 VSS 3.88635f $ **FLOATING
+C266 RB_4 VSS 4.26397f $ **FLOATING
+.ends

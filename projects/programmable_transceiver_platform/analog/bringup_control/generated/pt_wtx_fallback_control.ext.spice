@@ -1,0 +1,268 @@
+* NGSPICE file created from pt_wtx_fallback_control.ext - technology: gf180mcuD
+
+.subckt bringup_and A B Y VDD VSS YB a_278_230#
+X0 a_278_230# A YB VSS nfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X1 VSS B a_278_230# VSS nfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
+X2 YB A VDD VDD pfet_03v3 ad=1.2p pd=4.6u as=2.78p ps=9.39u w=4u l=0.28u
+X3 Y YB VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+X4 VDD B YB VDD pfet_03v3 ad=2.78p pd=9.39u as=1.2p ps=4.6u w=4u l=0.28u
+X5 Y YB VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
+C0 VDD A 0.14648f
+C1 B VDD 0.17326f
+C2 B A 0.42221f
+C3 Y YB 0.17894f
+C4 a_278_230# YB 0.05029f
+C5 Y VDD 0.38427f
+C6 YB VDD 0.74446f
+C7 Y A 0.0391f
+C8 YB A 0.54822f
+C9 Y B 0.23832f
+C10 YB B 0.15951f
+C11 Y VSS 0.93236f
+C12 B VSS 0.72287f
+C13 A VSS 0.77196f
+C14 VDD VSS 4.91249f
+C15 a_278_230# VSS 0.04483f
+C16 YB VSS 1.63735f
+.ends
+
+.subckt bringup_inv A Y VDD VSS
+X0 Y A VSS VSS nfet_03v3 ad=0.97p pd=4.97u as=1.39p ps=5.39u w=2u l=0.28u
+X1 Y A VDD VDD pfet_03v3 ad=1.94p pd=8.97u as=2.78p ps=9.39u w=4u l=0.28u
+C0 VDD A 0.15494f
+C1 Y A 0.26092f
+C2 VDD Y 0.38192f
+C3 Y VSS 0.65723f
+C4 A VSS 0.66203f
+C5 VDD VSS 2.34698f
+.ends
+
+.subckt pt_wtx_fallback_control L_BRANCH0 L_BRANCH1 L_STATE0 L_STATE1 L_IDLE L_STAGE_TMDS
++ L_EXT_ENABLE ISO_wired FORCE_LEAF TMDS_REQUEST WIRED_ON FORCE_SELECTED RAIL_wired
++ VDD VSS
+XXexternal_request Xbranch_decode/Y L_EXT_ENABLE Xdrive_request/A RAIL_wired VSS Xexternal_request/YB
++ Xexternal_request/a_278_230# bringup_and
+XXstate_inv L_STATE0 Xstate_inv/Y RAIL_wired VSS bringup_inv
+XXstage Xrun/Y L_STAGE_TMDS Xstage/Y RAIL_wired VSS Xstage/YB Xstage/a_278_230# bringup_and
+XXbranch_decode L_BRANCH1 Xbranch_inv/Y Xbranch_decode/Y RAIL_wired VSS Xbranch_decode/YB
++ Xbranch_decode/a_278_230# bringup_and
+XXbranch_inv L_BRANCH0 Xbranch_inv/Y RAIL_wired VSS bringup_inv
+XXdrive_request Xdrive_request/A Xstage/Y TMDS_REQUEST RAIL_wired VSS Xdrive_request/YB
++ Xdrive_request/a_278_230# bringup_and
+XXrun Xrun/A Xrun/B Xrun/Y RAIL_wired VSS Xrun/YB Xrun/a_278_230# bringup_and
+XXwire_on ISO_wired WIRED_ON VDD VSS bringup_inv
+XXidle_inv L_IDLE Xrun/B RAIL_wired VSS bringup_inv
+XXstate_active L_STATE1 Xstate_inv/Y Xrun/A RAIL_wired VSS Xstate_active/YB Xstate_active/a_278_230#
++ bringup_and
+XXforce_isolation FORCE_LEAF WIRED_ON FORCE_SELECTED VDD VSS Xforce_isolation/YB Xforce_isolation/a_278_230#
++ bringup_and
+C0 TMDS_REQUEST ISO_wired 0
+C1 RAIL_wired L_STATE1 3.76498f
+C2 Xstage/Y L_BRANCH1 0.02287f
+C3 FORCE_SELECTED L_IDLE 0.07988f
+C4 VDD Xdrive_request/YB 0.00839f
+C5 VDD Xstate_inv/Y 0.23602f
+C6 TMDS_REQUEST WIRED_ON 0
+C7 L_STATE0 Xstage/Y 0.07713f
+C8 VDD L_STATE1 0.20687f
+C9 Xrun/B Xrun/A 2.40721f
+C10 FORCE_LEAF ISO_wired 0
+C11 Xrun/Y Xstage/Y 0.07785f
+C12 Xdrive_request/A Xbranch_decode/Y 0.67479f
+C13 Xexternal_request/YB Xbranch_decode/Y 0.00684f
+C14 TMDS_REQUEST Xdrive_request/A 0.07785f
+C15 Xbranch_decode/a_278_230# L_BRANCH0 0
+C16 Xbranch_inv/Y Xbranch_decode/YB 0.00561f
+C17 FORCE_LEAF WIRED_ON 2.29339f
+C18 Xrun/Y L_STAGE_TMDS 1.81564f
+C19 Xbranch_decode/YB L_BRANCH1 0.00684f
+C20 RAIL_wired Xbranch_decode/Y 1.65098f
+C21 Xstage/YB RAIL_wired 0.03802f
+C22 FORCE_SELECTED L_STATE1 0.05367f
+C23 ISO_wired WIRED_ON 1.82761f
+C24 RAIL_wired TMDS_REQUEST 0.09319f
+C25 Xstage/Y L_STAGE_TMDS 5.6126f
+C26 Xdrive_request/a_278_230# L_BRANCH1 0.00524f
+C27 Xstate_inv/Y Xstate_active/YB 0.00556f
+C28 Xstate_inv/Y Xstate_active/a_278_230# 0
+C29 Xstate_inv/Y Xbranch_inv/Y 0
+C30 Xstate_active/YB L_STATE1 0.00684f
+C31 VDD Xbranch_decode/Y 0.22043f
+C32 Xstage/Y L_IDLE 0.0686f
+C33 VDD Xstage/YB 0.02323f
+C34 L_BRANCH1 Xdrive_request/YB 0.04428f
+C35 Xstate_inv/Y L_BRANCH1 0
+C36 L_EXT_ENABLE Xstage/Y 0.00256f
+C37 VDD TMDS_REQUEST 0.24247f
+C38 Xdrive_request/A ISO_wired 0
+C39 Xdrive_request/A L_BRANCH0 0.03747f
+C40 Xrun/YB Xrun/B 0.00556f
+C41 Xexternal_request/YB L_BRANCH0 0
+C42 RAIL_wired FORCE_LEAF 0.14853f
+C43 Xstate_inv/Y L_STATE0 1.68392f
+C44 RAIL_wired Xrun/B 0.26325f
+C45 Xrun/YB Xrun/A 0.00684f
+C46 Xrun/a_278_230# L_IDLE 0
+C47 RAIL_wired Xrun/A 0.8235f
+C48 RAIL_wired ISO_wired 0.09296f
+C49 L_STATE0 L_STATE1 0
+C50 RAIL_wired L_BRANCH0 3.61401f
+C51 Xdrive_request/A WIRED_ON 0
+C52 RAIL_wired Xbranch_decode/a_278_230# 0.00393f
+C53 L_STATE1 Xforce_isolation/YB 0.01088f
+C54 VDD FORCE_LEAF 0.13771f
+C55 VDD Xrun/B 0.03379f
+C56 Xstage/Y Xdrive_request/YB 0.0011f
+C57 VDD Xrun/A 0.03007f
+C58 VDD ISO_wired 0.60507f
+C59 RAIL_wired WIRED_ON 0.36357f
+C60 VDD L_BRANCH0 0.16183f
+C61 Xstage/Y L_STATE1 0.05593f
+C62 Xdrive_request/A Xexternal_request/YB 0
+C63 Xbranch_decode/Y Xbranch_inv/Y 1.25096f
+C64 Xbranch_decode/Y L_BRANCH1 4.54569f
+C65 VDD WIRED_ON 0.5903f
+C66 FORCE_SELECTED FORCE_LEAF 0.1095f
+C67 RAIL_wired Xdrive_request/A 0.54915f
+C68 TMDS_REQUEST L_BRANCH1 0.10307f
+C69 Xstate_inv/Y L_IDLE 0
+C70 RAIL_wired Xexternal_request/YB 0.01415f
+C71 L_EXT_ENABLE Xdrive_request/YB 0
+C72 L_STATE0 Xbranch_decode/Y 0
+C73 Xrun/YB RAIL_wired 0
+C74 L_STATE1 L_IDLE 0
+C75 TMDS_REQUEST L_STATE0 0.14189f
+C76 Xstate_active/YB Xrun/A 0
+C77 VDD Xdrive_request/A 0.1968f
+C78 VDD Xexternal_request/YB 0.05861f
+C79 Xstage/YB Xrun/Y 0.00744f
+C80 FORCE_SELECTED WIRED_ON 1.9362f
+C81 Xbranch_decode/Y Xstage/Y 0.02157f
+C82 Xbranch_inv/Y L_BRANCH0 1.75253f
+C83 Xstage/YB Xstage/Y 0
+C84 VDD RAIL_wired 2.82991f
+C85 TMDS_REQUEST Xstage/Y 1.57498f
+C86 Xforce_isolation/a_278_230# ISO_wired 0
+C87 L_BRANCH0 L_BRANCH1 0
+C88 Xbranch_inv/Y Xbranch_decode/a_278_230# 0
+C89 Xstate_inv/Y L_STATE1 1.67581f
+C90 Xstage/YB L_STAGE_TMDS 0.0011f
+C91 FORCE_LEAF Xforce_isolation/YB 0.00684f
+C92 L_STATE0 ISO_wired 0.16077f
+C93 Xrun/Y Xrun/B 1.69793f
+C94 ISO_wired Xforce_isolation/YB 0.00204f
+C95 Xforce_isolation/a_278_230# WIRED_ON 0
+C96 Xrun/Y Xrun/A 0.08117f
+C97 Xstage/Y FORCE_LEAF 0.05853f
+C98 L_EXT_ENABLE Xbranch_decode/Y 1.45131f
+C99 RAIL_wired FORCE_SELECTED 0.10386f
+C100 L_STATE0 WIRED_ON 0.03059f
+C101 Xstage/Y ISO_wired 0.08277f
+C102 Xbranch_decode/Y Xbranch_decode/YB 0
+C103 WIRED_ON Xforce_isolation/YB 0.00556f
+C104 Xrun/a_278_230# Xrun/B 0
+C105 Xrun/B L_STAGE_TMDS 0.00256f
+C106 RAIL_wired Xstate_active/YB 0.00374f
+C107 Xdrive_request/A L_BRANCH1 0.09354f
+C108 VDD FORCE_SELECTED 0.10232f
+C109 RAIL_wired Xbranch_inv/Y 1.10187f
+C110 L_STATE0 Xdrive_request/A 0.0086f
+C111 Xstage/Y WIRED_ON 0.62037f
+C112 FORCE_LEAF L_IDLE 0.01163f
+C113 Xrun/B L_IDLE 1.90054f
+C114 RAIL_wired Xforce_isolation/a_278_230# 0.00758f
+C115 RAIL_wired L_BRANCH1 0.30723f
+C116 Xbranch_decode/Y Xdrive_request/YB 0.00194f
+C117 Xstate_inv/Y Xbranch_decode/Y 0
+C118 Xrun/A L_IDLE 0.11589f
+C119 VDD Xstate_active/YB 0.08729f
+C120 TMDS_REQUEST Xdrive_request/YB 0
+C121 L_EXT_ENABLE L_BRANCH0 0.44878f
+C122 VDD Xstate_active/a_278_230# 0.01466f
+C123 RAIL_wired L_STATE0 0.2798f
+C124 VDD Xbranch_inv/Y 0.01841f
+C125 VDD Xexternal_request/a_278_230# 0.0049f
+C126 L_BRANCH0 Xbranch_decode/YB 0.00204f
+C127 RAIL_wired Xforce_isolation/YB 0.07092f
+C128 VDD L_BRANCH1 0.09906f
+C129 Xdrive_request/A Xstage/Y 1.46699f
+C130 Xrun/YB Xrun/Y 0
+C131 RAIL_wired Xrun/Y 0.75064f
+C132 WIRED_ON L_IDLE 0.04408f
+C133 VDD L_STATE0 0.81331f
+C134 Xstate_inv/Y FORCE_LEAF 0
+C135 Xstate_inv/Y Xrun/B 0
+C136 RAIL_wired Xstage/Y 2.29476f
+C137 VDD Xforce_isolation/YB 0.02099f
+C138 Xstate_inv/Y Xrun/A 1.47131f
+C139 Xstate_inv/Y ISO_wired 0
+C140 L_BRANCH0 Xdrive_request/YB 0.00348f
+C141 FORCE_LEAF L_STATE1 0.14034f
+C142 Xrun/B L_STATE1 0
+C143 VDD Xrun/Y 0.27129f
+C144 Xrun/A L_STATE1 0.13181f
+C145 RAIL_wired L_STAGE_TMDS 1.01287f
+C146 Xdrive_request/A L_EXT_ENABLE 1.38887f
+C147 VDD Xstage/Y 0.47455f
+C148 Xexternal_request/YB L_EXT_ENABLE 0.0011f
+C149 Xrun/YB L_IDLE 0.00204f
+C150 Xstate_inv/Y WIRED_ON 0
+C151 RAIL_wired L_IDLE 0.26914f
+C152 TMDS_REQUEST Xbranch_decode/Y 0.04022f
+C153 RAIL_wired L_EXT_ENABLE 0.08296f
+C154 VDD L_STAGE_TMDS 0.09574f
+C155 FORCE_SELECTED Xforce_isolation/YB 0
+C156 L_STATE1 WIRED_ON 0.09808f
+C157 Xbranch_inv/Y L_BRANCH1 1.39127f
+C158 L_STATE0 Xstate_active/YB 0.00204f
+C159 RAIL_wired Xbranch_decode/YB 0.02107f
+C160 L_STATE0 Xstate_active/a_278_230# 0
+C161 VDD L_IDLE 0.12838f
+C162 L_STATE0 Xbranch_inv/Y 0
+C163 Xdrive_request/A Xdrive_request/YB 0.00745f
+C164 Xstage/Y FORCE_SELECTED 0.07285f
+C165 VDD L_EXT_ENABLE 0.07348f
+C166 L_STATE0 L_BRANCH1 0
+C167 Xstage/YB Xrun/B 0
+C168 Xstage/YB Xrun/A 0
+C169 RAIL_wired Xdrive_request/YB 0
+C170 RAIL_wired Xstate_inv/Y 0.7518f
+C171 Xbranch_decode/Y L_BRANCH0 0.0815f
+C172 FORCE_SELECTED VSS 0.65174f
+C173 FORCE_LEAF VSS 0.72146f
+C174 Xforce_isolation/a_278_230# VSS 0.01307f
+C175 Xforce_isolation/YB VSS 0.10486f
+C176 Xrun/A VSS 1.36944f
+C177 L_STATE1 VSS 0.94144f
+C178 Xstate_active/a_278_230# VSS 0.00845f
+C179 Xstate_active/YB VSS 0.10131f
+C180 Xrun/B VSS 1.11469f
+C181 L_IDLE VSS 0.89359f
+C182 WIRED_ON VSS 1.48449f
+C183 ISO_wired VSS 0.78991f
+C184 VDD VSS 41.63712f
+C185 Xrun/Y VSS 2.50478f
+C186 Xrun/a_278_230# VSS 0.00845f
+C187 Xrun/YB VSS 0.06418f
+C188 TMDS_REQUEST VSS 0.52515f
+C189 Xdrive_request/a_278_230# VSS 0.00845f
+C190 Xdrive_request/YB VSS 0.05596f
+C191 Xbranch_inv/Y VSS 1.03636f
+C192 L_BRANCH0 VSS 1.08784f
+C193 RAIL_wired VSS 54.40685f
+C194 Xbranch_decode/Y VSS 1.31205f
+C195 L_BRANCH1 VSS 0.92876f
+C196 Xbranch_decode/a_278_230# VSS 0.00845f
+C197 Xbranch_decode/YB VSS 0.06527f
+C198 Xstage/Y VSS 3.2564f
+C199 L_STAGE_TMDS VSS 1.04131f
+C200 Xstage/a_278_230# VSS 0.02312f
+C201 Xstage/YB VSS 0.15209f
+C202 Xstate_inv/Y VSS 1.1689f
+C203 L_STATE0 VSS 0.98765f
+C204 Xdrive_request/A VSS 1.18117f
+C205 L_EXT_ENABLE VSS 0.35811f
+C206 Xexternal_request/a_278_230# VSS 0.01559f
+C207 Xexternal_request/YB VSS 0.12571f
+.ends
+

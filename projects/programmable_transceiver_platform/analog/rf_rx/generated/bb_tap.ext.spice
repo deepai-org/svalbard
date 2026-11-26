@@ -1,0 +1,496 @@
+* NGSPICE file created from pt_bb_tap.ext - technology: gf180mcuD
+
+.subckt pt_rfrx_inv a y VDD VSS
+X0 y a VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X1 y a VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+C0 VDD y 2.09563f
+C1 a y 0.52655f
+C2 a VDD 1.95583f
+C3 y VSS 1.90283f
+C4 a VSS 3.24535f
+C5 VDD VSS 4.8233f
+.ends
+
+.subckt pt_rfrx_nor2 a b y VDD VSS a_5682_2166#
+X0 a_5682_2166# a VDD VDD pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X1 y b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X2 y a VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X3 y b a_5682_2166# VDD pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+C0 a_5682_2166# a 0.1116f
+C1 VDD b 2.75236f
+C2 y b 0.59474f
+C3 VDD a_5682_2166# 1.88498f
+C4 a_5682_2166# y 0.53392f
+C5 a_5682_2166# b 0.38692f
+C6 VDD a 1.00302f
+C7 y a 0.17885f
+C8 a b 1.9784f
+C9 VDD y 3.10386f
+C10 b VSS 1.76198f
+C11 y VSS 3.25588f
+C12 a VSS 4.11238f
+C13 VDD VSS 8.66712f
+C14 a_5682_2166# VSS 0.60814f
+.ends
+
+.subckt pt_bb_tap in_p in_n pad_p pad_n inj_p inj_n ibias obs_en inj_en island_off
++ atb_nbias VDD VSS
+XXX1 obs_en obs_enb VDD VSS pt_rfrx_inv
+XXX2 obs_enb inj_en obs_on VDD VSS XX2/a_5682_2166# pt_rfrx_nor2
+XXX3 obs_on obs_off VDD VSS pt_rfrx_inv
+XXX4 inj_en XX5/a VDD VSS pt_rfrx_inv
+XXX5 XX5/a inj_on VDD VSS pt_rfrx_inv
+X0 dr_n in_n sf_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X1 VSS atb_nbias sf_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X2 VSS atb_nbias sf_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+D0 VSS in_n diode_nd2ps_03v3 pj=2.76u area=0.4761p
+X3 a_15010_26096# obs_off VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X4 sf_n in_n dr_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X5 a_15010_26096# in_p sf_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X6 sf_n atb_nbias VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X7 sf_p obs_gp pad_p VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+X8 ibias atb_nbias VSS ppolyf_u_1k r_width=2u r_length=2u
+X9 sf_n in_n dr_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+D1 VSS island_off diode_nd2ps_03v3 pj=13.88u area=12.0409p
+X10 sf_n obs_gn pad_n VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+X11 atb_nbias atb_nbias VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.5u
+X12 pad_n obs_gn sf_n VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+X13 inj_gn pad_n cap_mim_2f0_m4m5_noshield c_width=8u c_length=8u
+X14 sf_p in_p a_15010_26096# VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X15 pad_p inj_gp inj_p VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+X16 sf_n obs_gn pad_n VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+D2 VSS in_p diode_nd2ps_03v3 pj=2.4u area=0.36p
+X17 pad_p obs_gp sf_p VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+X18 a_15010_26096# obs_off VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X19 inj_p inj_gp pad_p VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+X20 sf_p obs_gp pad_p VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+X21 sf_n atb_nbias VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X22 sf_n atb_nbias VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X23 VDD obs_off a_15010_26096# VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X24 dr_n in_n sf_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X25 pad_n inj_gn inj_n VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+X26 inj_n inj_gn pad_n VSS nfet_06v0 ad=4.4p pd=20.88u as=2.6p ps=10.52u w=10u l=0.7u
+X27 pad_n obs_gn sf_n VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+X28 sf_p obs_gp pad_p VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+X29 sf_n in_n dr_n VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X30 pad_p obs_gp sf_p VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+X31 obs_on a_6360_2986# VSS ppolyf_u_1k r_width=1u r_length=50u
+X32 a_15010_26096# in_p sf_p VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X33 sf_n obs_gn pad_n VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+X34 dr_n in_n sf_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X35 sf_p atb_nbias VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X36 sf_n atb_nbias VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X37 sf_p atb_nbias VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X38 sf_p in_p a_15010_26096# VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X39 sf_n in_n dr_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+D3 VSS obs_en diode_nd2ps_03v3 pj=13.88u area=12.0409p
+X40 VDD obs_off a_15010_26096# VDD pfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X41 sf_n in_n dr_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X42 sf_n atb_nbias VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X43 obs_gn pad_n cap_mim_2f0_m4m5_noshield c_width=8u c_length=8u
+X44 sf_n atb_nbias VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X45 sf_p atb_nbias VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X46 sf_n atb_nbias VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X47 a_15010_26096# obs_off VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X48 sf_p atb_nbias VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X49 sf_p atb_nbias VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X50 sf_p atb_nbias VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X51 sf_p atb_nbias VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.5u
+X52 sf_p in_p a_15010_26096# VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X53 sf_n in_n dr_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X54 dr_n obs_off VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X55 VSS atb_nbias sf_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X56 a_10888_2986# obs_gn VSS ppolyf_u_1k r_width=1u r_length=50u
+X57 a_15010_26096# in_p sf_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X58 dr_n in_n sf_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X59 pad_n inj_gn inj_n VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+X60 pad_p inj_gp inj_p VSS nfet_06v0 ad=2.6p pd=10.52u as=4.4p ps=20.88u w=10u l=0.7u
+X61 a_15010_26096# in_p sf_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X62 dr_n in_n sf_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X63 sf_p atb_nbias VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X64 sf_n atb_nbias VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X65 a_6360_2986# obs_gp VSS ppolyf_u_1k r_width=1u r_length=50u
+X66 sf_n atb_nbias VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X67 inj_on a_8624_2986# VSS ppolyf_u_1k r_width=1u r_length=50u
+X68 sf_p atb_nbias VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X69 pad_p obs_gp sf_p VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+X70 dr_n obs_off VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X71 sf_p obs_gp pad_p VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+X72 VSS atb_nbias sf_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X73 inj_n inj_gn pad_n VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+X74 VSS atb_nbias sf_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X75 pad_n inj_gn inj_n VSS nfet_06v0 ad=2.6p pd=10.52u as=4.4p ps=20.88u w=10u l=0.7u
+X76 VDD obs_off dr_n VDD pfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X77 sf_p atb_nbias VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X78 sf_p in_p a_15010_26096# VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X79 pad_n obs_gn sf_n VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+X80 sf_n obs_gn pad_n VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+X81 VDD obs_off dr_n VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X82 sf_n island_off VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=10u
+X83 dr_n in_n sf_n VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X84 sf_p in_p a_15010_26096# VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X85 sf_n in_n dr_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X86 VSS atb_nbias sf_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X87 a_15010_26096# in_p sf_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X88 obs_gp pad_p cap_mim_2f0_m4m5_noshield c_width=8u c_length=8u
+X89 inj_on a_13152_2986# VSS ppolyf_u_1k r_width=1u r_length=50u
+X90 sf_p in_p a_15010_26096# VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X91 VDD obs_off a_15010_26096# VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X92 sf_n obs_gn pad_n VSS nfet_06v0 ad=2.6p pd=10.52u as=4.4p ps=20.88u w=10u l=0.7u
+X93 a_15010_26096# in_p sf_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X94 pad_n obs_gn sf_n VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+X95 pad_p inj_gp inj_p VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+X96 VSS atb_nbias sf_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X97 a_8624_2986# inj_gp VSS ppolyf_u_1k r_width=1u r_length=50u
+X98 VSS atb_nbias sf_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X99 dr_n obs_off VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X100 atb_nbias obs_off VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X101 sf_p island_off VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=10u
+X102 inj_p inj_gp pad_p VSS nfet_06v0 ad=4.4p pd=20.88u as=2.6p ps=10.52u w=10u l=0.7u
+X103 sf_n in_n dr_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X104 a_15010_26096# in_p sf_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X105 pad_p obs_gp sf_p VSS nfet_06v0 ad=4.4p pd=20.88u as=2.6p ps=10.52u w=10u l=0.7u
+X106 sf_n obs_off VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X107 obs_on a_10888_2986# VSS ppolyf_u_1k r_width=1u r_length=50u
+X108 inj_n inj_gn pad_n VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+X109 dr_n obs_off VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.28u
+X110 sf_p obs_gp pad_p VSS nfet_06v0 ad=2.6p pd=10.52u as=4.4p ps=20.88u w=10u l=0.7u
+X111 sf_p in_p a_15010_26096# VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.28u
+X112 a_15010_26096# in_p sf_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X113 VDD obs_off dr_n VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X114 VSS atb_nbias sf_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X115 pad_n obs_gn sf_n VSS nfet_06v0 ad=4.4p pd=20.88u as=2.6p ps=10.52u w=10u l=0.7u
+X116 VSS atb_nbias sf_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X117 pad_p obs_gp sf_p VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+X118 inj_p inj_gp pad_p VSS nfet_06v0 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.7u
+X119 VSS atb_nbias sf_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X120 dr_n in_n sf_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X121 VSS atb_nbias sf_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X122 sf_p in_p a_15010_26096# VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X123 VSS atb_nbias sf_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X124 VSS atb_nbias sf_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X125 VSS atb_nbias sf_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X126 VSS atb_nbias sf_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X127 sf_n atb_nbias VSS VSS nfet_03v3 ad=1.3p pd=5.52u as=2.2p ps=10.88u w=5u l=0.5u
+X128 VDD obs_off a_15010_26096# VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X129 VSS atb_nbias sf_p VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.5u
+X130 sf_p obs_off VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X131 a_13152_2986# inj_gn VSS ppolyf_u_1k r_width=1u r_length=50u
+X132 dr_n in_n sf_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X133 a_15010_26096# obs_off VDD VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X134 VSS atb_nbias sf_n VSS nfet_03v3 ad=2.2p pd=10.88u as=1.3p ps=5.52u w=5u l=0.5u
+X135 VDD obs_off dr_n VDD pfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.28u
+X136 VSS atb_nbias sf_n VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+X137 inj_gp pad_p cap_mim_2f0_m4m5_noshield c_width=8u c_length=8u
+X138 VSS atb_nbias sf_p VSS nfet_03v3 ad=1.3p pd=5.52u as=1.3p ps=5.52u w=5u l=0.5u
+C0 sf_n atb_nbias 2.46599f
+C1 inj_n a_15010_26096# 0
+C2 inj_p in_n 0
+C3 VDD pad_n 0.62972f
+C4 sf_n in_p 0.08088f
+C5 inj_p inj_gn 0.10197f
+C6 obs_on inj_p 0
+C7 sf_n obs_gn 8.86871f
+C8 obs_en inj_p 0.00495f
+C9 dr_n atb_nbias 6.61331f
+C10 pad_p obs_gp 14.9338f
+C11 inj_n pad_n 3.67113f
+C12 atb_nbias sf_p 2.46819f
+C13 pad_n inj_en 0.07841f
+C14 inj_gp pad_n 0.10228f
+C15 obs_off inj_p 0.09385f
+C16 dr_n obs_gn 0.13474f
+C17 in_p sf_p 6.00623f
+C18 obs_gn sf_p 0.14673f
+C19 pad_p a_15010_26096# 0.0108f
+C20 a_8624_2986# inj_gn 0.08926f
+C21 a_8624_2986# obs_on 0.84297f
+C22 obs_on XX5/a 0.00477f
+C23 obs_gn a_6360_2986# 0
+C24 a_8624_2986# obs_en 0.08048f
+C25 pad_p pad_n 5.01661f
+C26 island_off ibias 0.09506f
+C27 atb_nbias in_p 28.3529f
+C28 XX2/a_5682_2166# XX5/a 0.0077f
+C29 atb_nbias obs_gn 0.15707f
+C30 obs_enb a_6360_2986# 0.70202f
+C31 a_8624_2986# obs_off 0.00111f
+C32 in_n ibias 0.05264f
+C33 obs_gn in_p 0.09166f
+C34 obs_on ibias 0
+C35 inj_gn a_13152_2986# 0.335f
+C36 obs_en ibias 0
+C37 obs_on a_13152_2986# 0.0012f
+C38 inj_on sf_p 0.07189f
+C39 obs_en a_13152_2986# 0.08298f
+C40 VDD sf_n 0.13497f
+C41 obs_gn a_10888_2986# 0.41745f
+C42 obs_gp island_off 0.00123f
+C43 obs_off ibias 0.09982f
+C44 obs_gn obs_enb 12.0964f
+C45 sf_n inj_n 4.30924f
+C46 a_6360_2986# inj_on 0.63593f
+C47 obs_off a_13152_2986# 0
+C48 dr_n VDD 11.0594f
+C49 obs_enb a_10888_2986# 0.10658f
+C50 sf_n inj_en 0
+C51 inj_gp sf_n 0.09635f
+C52 obs_gp inj_gn 0.13557f
+C53 obs_on obs_gp 13.9608f
+C54 VDD sf_p 5.06598f
+C55 obs_en obs_gp 0.08126f
+C56 inj_n sf_p 0.09035f
+C57 inj_gp dr_n 0.07626f
+C58 inj_p ibias 0.00353f
+C59 obs_gn inj_on 3.1751f
+C60 obs_off obs_gp 0.12978f
+C61 VDD a_6360_2986# 0.0029f
+C62 inj_en sf_p 0.11609f
+C63 inj_gp sf_p 0.22089f
+C64 inj_gn a_15010_26096# 0
+C65 island_off pad_n 36.955f
+C66 pad_p sf_n 0.40193f
+C67 a_10888_2986# inj_on 0.79128f
+C68 VDD atb_nbias 0.26224f
+C69 obs_enb inj_on 0.11338f
+C70 pad_n in_n 0.14516f
+C71 a_6360_2986# inj_en 0.00818f
+C72 inj_gp a_6360_2986# 0
+C73 inj_gn pad_n 11.8296f
+C74 VDD in_p 1.08925f
+C75 obs_on pad_n 0
+C76 obs_off a_15010_26096# 0.57799f
+C77 inj_n atb_nbias 0.00248f
+C78 pad_p dr_n 0.4934f
+C79 obs_en pad_n 4.0131f
+C80 VDD obs_gn 0.30173f
+C81 inj_p obs_gp 0.05184f
+C82 atb_nbias inj_en 0.00108f
+C83 inj_n in_p 0.05863f
+C84 pad_p sf_p 5.52707f
+C85 inj_gp atb_nbias 0.14348f
+C86 VDD a_10888_2986# 0.09469f
+C87 inj_n obs_gn 0.09004f
+C88 in_p inj_en 0.01367f
+C89 obs_off pad_n 24.7077f
+C90 inj_gp in_p 0.08903f
+C91 VDD obs_enb 0.14605f
+C92 obs_gn inj_en 0.08598f
+C93 inj_gp obs_gn 6.23876f
+C94 inj_gp a_10888_2986# 0.0053f
+C95 obs_enb inj_en 1.56051f
+C96 pad_p atb_nbias 0.25171f
+C97 inj_gp obs_enb 12.0177f
+C98 inj_p pad_n 0.10505f
+C99 pad_p in_p 0.07754f
+C100 a_8624_2986# obs_gp 0.07486f
+C101 obs_gp XX5/a 0.09074f
+C102 VDD inj_on 3.77602f
+C103 pad_p obs_gn 1.79935f
+C104 sf_n island_off 14.1774f
+C105 pad_p obs_enb 0
+C106 inj_en inj_on 0.11401f
+C107 inj_gp inj_on 18.4545f
+C108 sf_n in_n 1.41423f
+C109 sf_n inj_gn 0.26651f
+C110 dr_n island_off 0.05786f
+C111 island_off sf_p 4.00772f
+C112 dr_n in_n 3.60276f
+C113 VDD inj_n 0.26779f
+C114 dr_n inj_gn 0.12309f
+C115 sf_p in_n 0.07909f
+C116 obs_off sf_n 0.31511f
+C117 VDD inj_en 4.6569f
+C118 inj_gp VDD 0.30176f
+C119 pad_p inj_on 3.89589f
+C120 inj_gn sf_p 4.74581f
+C121 inj_n inj_en 21.58502f
+C122 inj_gp inj_n 0.09256f
+C123 pad_n ibias 0
+C124 obs_off dr_n 0.73612f
+C125 inj_gp inj_en 0.08174f
+C126 island_off atb_nbias 0.3377f
+C127 inj_gn a_6360_2986# 0.00516f
+C128 obs_on a_6360_2986# 0.80558f
+C129 obs_off sf_p 2.87167f
+C130 obs_en a_6360_2986# 0.00331f
+C131 island_off in_p 0.02927f
+C132 atb_nbias in_n 36.4842f
+C133 inj_p sf_n 0.16473f
+C134 pad_p VDD 0.80689f
+C135 obs_gp a_15010_26096# 0.03818f
+C136 island_off obs_gn 0.00399f
+C137 inj_gn atb_nbias 0.13793f
+C138 in_p in_n 0.00953f
+C139 obs_off a_6360_2986# 0
+C140 pad_p inj_n 0.08265f
+C141 obs_en atb_nbias 0
+C142 inj_gn in_p 0.0906f
+C143 obs_gn in_n 0.10447f
+C144 pad_p inj_en 0.12766f
+C145 obs_gp pad_n 0.04597f
+C146 obs_en in_p 0
+C147 inj_gn obs_gn 15.0306f
+C148 pad_p inj_gp 8.78242f
+C149 island_off obs_enb 0
+C150 obs_on obs_gn 2.99492f
+C151 inj_p sf_p 0.15148f
+C152 obs_off atb_nbias 3.10422f
+C153 obs_en obs_gn 0.07677f
+C154 inj_gn a_10888_2986# 0.08798f
+C155 obs_on a_10888_2986# 1.1089f
+C156 obs_off in_p 0.07839f
+C157 obs_en a_10888_2986# 0.08048f
+C158 inj_gn obs_enb 0.1613f
+C159 obs_on obs_enb 0.15494f
+C160 obs_off obs_gn 0.54445f
+C161 obs_en obs_enb 5.19546f
+C162 sf_n XX5/a 0
+C163 pad_n a_15010_26096# 0.01362f
+C164 obs_off a_10888_2986# 0.00111f
+C165 island_off inj_on 0
+C166 inj_p atb_nbias 0.01707f
+C167 obs_off obs_enb 0.11624f
+C168 inj_p in_p 0.05429f
+C169 sf_p XX5/a 0.18206f
+C170 inj_gn inj_on 3.71047f
+C171 sf_n ibias 2.93269f
+C172 inj_p obs_gn 0.09926f
+C173 obs_on inj_on 0.25906f
+C174 obs_en inj_on 0.12194f
+C175 VDD island_off 0.17647f
+C176 a_8624_2986# a_6360_2986# 0.0242f
+C177 XX2/a_5682_2166# inj_on 0
+C178 dr_n ibias 3.37144f
+C179 obs_off inj_on 0.03707f
+C180 VDD in_n 0.2132f
+C181 inj_n island_off 0.15136f
+C182 sf_p ibias 0.10697f
+C183 VDD inj_gn 4.24261f
+C184 obs_on VDD 0.30841f
+C185 island_off inj_en 0.14314f
+C186 inj_n in_n 0.00164f
+C187 inj_gp island_off 0
+C188 obs_gp sf_n 0.0547f
+C189 obs_en VDD 0.11883f
+C190 inj_n inj_gn 4.42019f
+C191 obs_on inj_n 0
+C192 inj_en in_n 0.00125f
+C193 a_8624_2986# obs_gn 0.09166f
+C194 VDD XX2/a_5682_2166# 0
+C195 obs_en inj_n 0.00587f
+C196 obs_gn XX5/a 0
+C197 inj_gn inj_en 0.09888f
+C198 inj_gp inj_gn 0.18812f
+C199 obs_on inj_en 0.19994f
+C200 obs_off VDD 17.43224f
+C201 inj_p inj_on 0
+C202 dr_n obs_gp 0.07515f
+C203 inj_gp obs_on 2.40998f
+C204 a_8624_2986# a_10888_2986# 0.14246f
+C205 obs_en inj_en 0.00299f
+C206 inj_gp obs_en 0.08234f
+C207 atb_nbias ibias 5.65376f
+C208 obs_off inj_n 0.07335f
+C209 a_8624_2986# obs_enb 0.10658f
+C210 obs_gp sf_p 4.76704f
+C211 obs_enb XX5/a 0.00245f
+C212 pad_p island_off 0.00586f
+C213 in_p ibias 28.3033f
+C214 obs_off inj_en 0.13551f
+C215 inj_gp obs_off 0.18022f
+C216 sf_n pad_n 5.83201f
+C217 obs_gp a_6360_2986# 0.16977f
+C218 a_13152_2986# obs_gn 0.0053f
+C219 pad_p inj_gn 0.16943f
+C220 inj_p VDD 0.14682f
+C221 pad_p obs_on 13.669f
+C222 a_15010_26096# sf_p 7.76359f
+C223 pad_p obs_en 3.9647f
+C224 a_13152_2986# a_10888_2986# 0.14246f
+C225 inj_p inj_n 1.78661f
+C226 obs_gp atb_nbias 0.12053f
+C227 a_13152_2986# obs_enb 0.10908f
+C228 a_8624_2986# inj_on 0.96678f
+C229 dr_n pad_n 0.13519f
+C230 inj_on XX5/a 0.51067f
+C231 inj_p inj_en 21.5659f
+C232 pad_p obs_off 20.607f
+C233 inj_gp inj_p 2.40096f
+C234 obs_gp in_p 0.04035f
+C235 pad_n sf_p 0.21834f
+C236 obs_gp obs_gn 0.1381f
+C237 obs_gp obs_enb 0.04155f
+C238 a_8624_2986# VDD 0.09598f
+C239 VDD XX5/a 1.75803f
+C240 in_p a_15010_26096# 1.23481f
+C241 a_13152_2986# inj_on 1.00866f
+C242 pad_p inj_p 3.40275f
+C243 atb_nbias pad_n 0.24076f
+C244 inj_en XX5/a 0.25067f
+C245 in_p pad_n 0.12198f
+C246 a_8624_2986# inj_gp 0.88431f
+C247 obs_gn pad_n 3.93876f
+C248 VDD ibias 0.20925f
+C249 VDD a_13152_2986# 0.28368f
+C250 obs_gp inj_on 18.3814f
+C251 island_off in_n 0.03545f
+C252 inj_n ibias 27.2578f
+C253 obs_enb pad_n 0
+C254 obs_on island_off 0
+C255 inj_en ibias 0.00946f
+C256 obs_en island_off 0.01383f
+C257 inj_gn in_n 0.09882f
+C258 pad_p XX5/a 0.09114f
+C259 dr_n sf_n 7.53465f
+C260 obs_on inj_gn 0.1381f
+C261 obs_off island_off 1.87209f
+C262 obs_en inj_gn 0.08204f
+C263 obs_on obs_en 0.1426f
+C264 VDD obs_gp 0.33267f
+C265 sf_n sf_p 0.2803f
+C266 obs_off in_n 0.0481f
+C267 obs_gp inj_n 0.04051f
+C268 obs_on XX2/a_5682_2166# 0
+C269 pad_n inj_on 0
+C270 obs_off inj_gn 0.18063f
+C271 obs_on obs_off 5.17174f
+C272 pad_p ibias 0
+C273 dr_n sf_p 0.20857f
+C274 obs_gp inj_en 0.12051f
+C275 inj_gp obs_gp 8.59992f
+C276 VDD a_15010_26096# 4.53608f
+C277 inj_p island_off 26.295f
+C278 obs_off XX2/a_5682_2166# 0.02418f
+C279 in_p VSS 14.0126f
+C280 inj_n VSS 4.57163f
+C281 pad_n VSS 11.9853f
+C282 pad_p VSS 11.94626f
+C283 inj_p VSS 5.1977f
+C284 in_n VSS 44.5871f
+C285 island_off VSS 18.0877f
+C286 atb_nbias VSS 39.0973f
+C287 ibias VSS 4.27081f
+C288 a_13152_2986# VSS 5.05644f
+C289 a_10888_2986# VSS 4.35813f
+C290 a_8624_2986# VSS 4.35854f
+C291 a_6360_2986# VSS 3.77848f
+C292 obs_gp VSS 16.82161f
+C293 a_15010_26096# VSS 3.80069f
+C294 inj_gn VSS 11.153f
+C295 obs_gn VSS 10.86532f
+C296 inj_gp VSS 8.18966f
+C297 dr_n VSS 5.08843f
+C298 sf_n VSS 30.06057f
+C299 sf_p VSS 30.13998f
+C300 inj_on VSS 7.46733f
+C301 XX5/a VSS 1.41576f
+C302 obs_off VSS 7.92419f
+C303 inj_en VSS 2.55054f
+C304 obs_on VSS 13.15901f
+C305 XX2/a_5682_2166# VSS 0
+C306 obs_enb VSS 3.237f
+C307 obs_en VSS 7.20902f
+C308 VDD VSS 79.90859f
+.ends
+

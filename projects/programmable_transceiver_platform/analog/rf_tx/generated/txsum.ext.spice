@@ -1,0 +1,88 @@
+* NGSPICE file created from pt_txsum.ext - technology: gf180mcuD
+
+.subckt pt_txsum VDD VSS i_p i_n q_p q_n out_p out_n en atb_cm
+X0 hsum out_p VSS ppolyf_u r_width=4u r_length=3.6u
+X1 VDD enb hsum VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X2 out_p enb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X3 VDD enb hsum VDD pfet_03v3 ad=8.8p pd=40.88u as=5.2p ps=20.52u w=20u l=0.28u
+X4 out_n enb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+D0 VSS en diode_nd2ps_03v3 pj=13.88u area=12.0409p
+X5 hsum enb VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=8.8p ps=40.88u w=20u l=0.28u
+X6 q_n out_n VSS ppolyf_s r_width=2u r_length=2.5u
+X7 hsum enb VDD VDD pfet_03v3 ad=5.2p pd=20.52u as=5.2p ps=20.52u w=20u l=0.28u
+X8 hsum out_n VSS ppolyf_u r_width=4u r_length=3.6u
+X9 i_n out_n VSS ppolyf_s r_width=2u r_length=2.5u
+X10 out_n atb_cm VSS ppolyf_u_1k r_width=1u r_length=20u
+X11 i_p out_p VSS ppolyf_s r_width=2u r_length=2.5u
+X12 enb en VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X13 q_p out_p VSS ppolyf_s r_width=2u r_length=2.5u
+X14 out_p atb_cm VSS ppolyf_u_1k r_width=1u r_length=20u
+X15 enb en VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+C0 enb out_n 2.73241f
+C1 enb out_p 1.59804f
+C2 q_p atb_cm 0.03627f
+C3 en i_p 0.03291f
+C4 i_n q_p 1.94324f
+C5 q_n hsum 0.09866f
+C6 enb en 6.92634f
+C7 q_p VDD 0.17421f
+C8 q_n out_n 1.26241f
+C9 q_n out_p 1.16006f
+C10 out_n hsum 1.47008f
+C11 hsum out_p 8.27257f
+C12 atb_cm i_p 0.03308f
+C13 enb atb_cm 0.1457f
+C14 i_n i_p 3.13918f
+C15 out_n out_p 13.4065f
+C16 q_n en 0.03287f
+C17 i_n enb 0.0013f
+C18 VDD i_p 0.06112f
+C19 hsum en 0.74822f
+C20 enb VDD 3.43193f
+C21 out_n en 0.15589f
+C22 en out_p 0.12858f
+C23 q_n atb_cm 0.03287f
+C24 q_p i_p 0.17174f
+C25 hsum atb_cm 7.03645f
+C26 i_n q_n 0.14915f
+C27 q_p enb 0.02378f
+C28 i_n hsum 2.31286f
+C29 out_n atb_cm 0.17737f
+C30 atb_cm out_p 0.65152f
+C31 q_n VDD 2.60427f
+C32 hsum VDD 8.48413f
+C33 i_n out_n 1.62299f
+C34 i_n out_p 0.20106f
+C35 out_n VDD 0.41511f
+C36 VDD out_p 0.26996f
+C37 en atb_cm 11.7528f
+C38 enb i_p 0
+C39 q_p q_n 4.10138f
+C40 q_p hsum 0.23286f
+C41 i_n en 0.03627f
+C42 q_p out_n 0.10304f
+C43 en VDD 1.87329f
+C44 q_p out_p 0.47841f
+C45 i_n atb_cm 0.03627f
+C46 q_n i_p 0.24475f
+C47 hsum i_p 0.17289f
+C48 VDD atb_cm 0.32482f
+C49 enb q_n 0.00403f
+C50 q_p en 0.04267f
+C51 enb hsum 3.19319f
+C52 out_n i_p 0.50555f
+C53 i_p out_p 0.4519f
+C54 i_n VDD 0.06823f
+C55 atb_cm VSS 5.99718f
+C56 en VSS 12.6689f
+C57 i_n VSS 2.00735f
+C58 out_n VSS 9.61243f
+C59 q_n VSS 2.02815f
+C60 q_p VSS 1.89586f
+C61 out_p VSS 9.10211f
+C62 i_p VSS 1.51356f
+C63 VDD VSS 37.5606f
+C64 enb VSS 8.25986f
+C65 hsum VSS 6.06864f
+.ends
+

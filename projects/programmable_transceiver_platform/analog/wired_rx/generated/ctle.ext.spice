@@ -1,0 +1,1592 @@
+* NGSPICE file created from pt_ctle.ext - technology: gf180mcuD
+
+.subckt pt_ctle VDD_WIRE_SW VSS IBIAS ctle_en wire_ctle_bypass ctle_peak0 ctle_peak1
++ ctle_peak2 lf_zero0 lf_zero1 lf_zero2 RX_P RX_N CTLE_P CTLE_N atb_ctle_pbias atb_ctle_src
+D0 VSS ctle_en diode_nd2ps_03v3 pj=7.16u area=3.2041p
+X0 lg5_n ena VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X1 lg4_n ena lg4_n_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X2 sp sp_rl5_r0 VSS ppolyf_u_1k r_width=2u r_length=6.46u
+X3 lz1b lzn1 atb_ctle_src VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X4 CTLE_N RX_P sp sp pfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.28u
+X5 lz1b lzn1 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X6 on0_s1 ctle_peak1 on0_s0 VDD_WIRE_SW pfet_03v3 ad=2.64p pd=12.88u as=2.64p ps=12.88u w=6u l=0.28u
+X7 sp sp_rl3_r0 VSS ppolyf_u_1k r_width=2u r_length=3.35u
+X8 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X9 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X10 lz2a lzn2 sp VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X11 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X12 lg0_n ena VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X13 on5 ctle_peak1 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X14 rl2 lg2_n atb_ctle_src VDD_WIRE_SW pfet_03v3 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.28u
+X15 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X16 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X17 lz2b lzn2 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X18 on4 r10 on4_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X19 on2 n10 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X20 lzn0_s0 lf_zero0 VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X21 CTLE_P RX_N atb_ctle_src atb_ctle_src pfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.28u
+D1 VSS on2 diode_nd2ps_03v3 pj=2.4u area=0.36p
+X22 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X23 a10 ctle_peak1 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X24 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X25 CTLE_P_rl ena VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X26 CTLE_P clamp VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X27 on1 ctle_peak1 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X28 on1 ctle_peak1 on1_s0 VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X29 on6 ctle_peak0 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X30 atb_ctle_pbias atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=1u
+X31 clamp ena VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X32 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X33 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X34 o10 ctle_peak0 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X35 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X36 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X37 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X38 CTLE_P CTLE_P_rl VSS ppolyf_u_1k r_width=5u r_length=2.4u
+X39 lg1_n on1 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X40 lg2_n ena lg2_n_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X41 rl6 lg6_n atb_ctle_src VDD_WIRE_SW pfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X42 clamp wire_ctle_bypass clamp_s0 VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X43 a10 ctle_peak0 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X44 on1 ctle_peak2 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X45 on5_s0 ctle_peak2 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X46 lg6_n ena VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X47 CTLE_N RX_P sp sp pfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.28u
+X48 lg4_n ena VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X49 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X50 lz0b lzn0 atb_ctle_src VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X51 a10_s0 ctle_peak1 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X52 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X53 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X54 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X55 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X56 on0_s0 ctle_peak2 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=2.64p pd=12.88u as=2.64p ps=12.88u w=6u l=0.28u
+X57 n10 a10 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X58 sp_rl6_r1 rl6 VSS ppolyf_u_1k r_width=2u r_length=6u
+X59 lz1a lzn1 sp VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X60 lz2b lzn2 atb_ctle_src VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X61 lz0a lzn0 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X62 atb_ctle_pbias ena VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X63 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X64 bypb wire_ctle_bypass VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X65 on6 ctle_peak0 on6_s1 VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X66 lg3_n ena VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X67 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X68 nbias nbias VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+X69 CTLE_N CTLE_N_rl VSS ppolyf_u_1k r_width=5u r_length=2.4u
+X70 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X71 lzn1_s0 lf_zero1 VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X72 lzn2 lf_zero2 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X73 lz2a lzn2 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X74 a10 ctle_peak0 a10_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X75 VSS lz0b VSS VSS nfet_03v3 ad=35.2p pd=0.16088m as=1.03664n ps=4.77712m w=80u l=6.2u
+X76 lg5_n on5 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X77 lz2a lzn2 sp VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X78 VSS lz2a VSS VSS nfet_03v3 ad=35.2p pd=0.16088m as=0 ps=0 w=80u l=6.2u
+X79 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X80 lz1a lzn1 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X81 VSS lz2b VSS VSS nfet_03v3 ad=35.2p pd=0.16088m as=0 ps=0 w=80u l=6.2u
+X82 rl4 lg4_n atb_ctle_src VDD_WIRE_SW pfet_03v3 ad=2.64p pd=12.88u as=2.64p ps=12.88u w=6u l=0.28u
+X83 sp rl0 VSS ppolyf_u_1k r_width=2u r_length=2.5u
+X84 on6 ctle_peak1 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X85 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X86 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+D2 VSS wire_ctle_bypass diode_nd2ps_03v3 pj=4.08u area=1.0404p
+X87 n10 a10 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X88 o10 ctle_peak1 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X89 o10_s0 ctle_peak1 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X90 bypb wire_ctle_bypass VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X91 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X92 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X93 lg6_n ena lg6_n_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X94 lg3_n_s0 on3 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X95 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X96 atb_ctle_pbias nbias VSS VSS nfet_03v3 ad=2.2p pd=10.88u as=2.2p ps=10.88u w=5u l=1u
+X97 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X98 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X99 ena_b_s0 ctle_en VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X100 rl3 lg3_n atb_ctle_src VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X101 VSS lz0a VSS VSS nfet_03v3 ad=35.2p pd=0.16088m as=0 ps=0 w=80u l=6.2u
+X102 VSS lz1a VSS VSS nfet_03v3 ad=35.2p pd=0.16088m as=0 ps=0 w=80u l=6.2u
+X103 sp rl2 VSS ppolyf_u_1k r_width=2u r_length=4.86u
+X104 VSS lz2b VSS VSS nfet_03v3 ad=35.2p pd=0.16088m as=0 ps=0 w=80u l=6.2u
+X105 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X106 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X107 VSS lz2b VSS VSS nfet_03v3 ad=35.2p pd=0.16088m as=0 ps=0 w=80u l=6.2u
+X108 lg3_n on3 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X109 lz2b lzn2 atb_ctle_src VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X110 lzn2_s0 lf_zero2 VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X111 CTLE_P RX_N atb_ctle_src atb_ctle_src pfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.28u
+X112 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X113 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X114 ena_b bypb ena_b_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X115 lg1_n_s0 on1 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X116 on6_s0 ctle_peak2 VSS VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X117 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X118 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X119 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X120 lz0a lzn0 sp VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X121 lzn0 lf_zero0 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X122 CTLE_P RX_N atb_ctle_src atb_ctle_src pfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.28u
+X123 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X124 on2 ctle_peak2 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X125 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X126 on3 ctle_peak2 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X127 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X128 lg0_n_s0 on0 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X129 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X130 VSS lz1a VSS VSS nfet_03v3 ad=35.2p pd=0.16088m as=0 ps=0 w=80u l=6.2u
+X131 on4 ctle_peak2 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X132 VSS lz2a VSS VSS nfet_03v3 ad=35.2p pd=0.16088m as=0 ps=0 w=80u l=6.2u
+X133 lzn1 lf_zero1 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X134 sp_rl5_r0 rl5 VSS ppolyf_u_1k r_width=2u r_length=6.46u
+X135 on2 n10 on2_s0 VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X136 sp rl1 VSS ppolyf_u_1k r_width=2u r_length=3.48u
+X137 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X138 r10 o10 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X139 sp sp_rl4_r0 VSS ppolyf_u_1k r_width=2u r_length=4.74u
+D3 VSS lf_zero0 diode_nd2ps_03v3 pj=4.92u area=1.5129p
+X140 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X141 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X142 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X143 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X144 lzn2 ena VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X145 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X146 nbias ena IBIAS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X147 lg5_n_s0 on5 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X148 clamp wire_ctle_bypass VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+D4 VSS lf_zero1 diode_nd2ps_03v3 pj=4.6u area=1.3225p
+X149 byp_bb wire_ctle_bypass VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X150 nbias ena_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X151 lg2_n on2 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X152 sp_rl4_r0 rl4 VSS ppolyf_u_1k r_width=2u r_length=4.74u
+X153 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X154 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X155 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X156 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X157 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X158 lg4_n_s0 on4 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X159 RX_P byp_q CTLE_P VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X160 RX_N byp_q CTLE_N VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X161 lz1b lzn1 atb_ctle_src VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X162 ena ena_b VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X163 CTLE_N RX_P sp sp pfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.28u
+X164 lz0b lzn0 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X165 ena_b ctle_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X166 RX_N byp_bb CTLE_N VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X167 rl5 lg5_n atb_ctle_src VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X168 lz2a lzn2 sp VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X169 RX_P byp_bb CTLE_P VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X170 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X171 lzn1 ena lzn1_s0 VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X172 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X173 byp_bb wire_ctle_bypass VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X174 lg0_n on0 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X175 lz2b lzn2 atb_ctle_src VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X176 on4_s0 ctle_peak2 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X177 sp_rl6_r0 sp_rl6_r1 VSS ppolyf_u_1k r_width=2u r_length=6u
+X178 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X179 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X180 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X181 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X182 CTLE_P RX_N atb_ctle_src atb_ctle_src pfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.28u
+X183 ena_b bypb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X184 lg2_n_s0 on2 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X185 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X186 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X187 byp_q byp_bb VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X188 ena ena_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X189 on2_s0 ctle_peak2 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X190 rl0 lg0_n atb_ctle_src VDD_WIRE_SW pfet_03v3 ad=10.56p pd=48.88u as=10.56p ps=48.88u w=24u l=0.28u
+X191 VSS lz2a VSS VSS nfet_03v3 ad=35.2p pd=0.16088m as=0 ps=0 w=80u l=6.2u
+X192 sp_rl3_r0 rl3 VSS ppolyf_u_1k r_width=2u r_length=3.35u
+X193 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X194 VSS lz2b VSS VSS nfet_03v3 ad=35.2p pd=0.16088m as=0 ps=0 w=80u l=6.2u
+X195 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X196 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X197 on0 ctle_peak2 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X198 CTLE_N RX_P sp sp pfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.28u
+D5 VSS ena_b diode_nd2ps_03v3 pj=2.4u area=0.36p
+X199 on5 ctle_peak2 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X200 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X201 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X202 lg6_n on6 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X203 clamp_s0 ena VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X204 lg4_n on4 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X205 lzn0 ena lzn0_s0 VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X206 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X207 byp_q byp_bb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X208 on0 ctle_peak1 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X209 lg6_n_s0 on6 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X210 lz1a lzn1 sp VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X211 lz2b lzn2 atb_ctle_src VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X212 lzn2 ena lzn2_s0 VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X213 CTLE_P RX_N atb_ctle_src atb_ctle_src pfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.28u
+X214 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X215 VSS lz1b VSS VSS nfet_03v3 ad=35.2p pd=0.16088m as=0 ps=0 w=80u l=6.2u
+X216 lg1_n ena lg1_n_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X217 on6_s1 ctle_peak1 on6_s0 VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X218 rl1 lg1_n atb_ctle_src VDD_WIRE_SW pfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.28u
+X219 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X220 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X221 sp sp_rl6_r0 VSS ppolyf_u_1k r_width=2u r_length=6u
+X222 CTLE_P RX_N atb_ctle_src atb_ctle_src pfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.28u
+X223 lzn0 ena VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X224 lz2a lzn2 sp VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X225 on0 ctle_peak0 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X226 CTLE_N RX_P sp sp pfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.28u
+X227 lg1_n ena VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X228 on6 ctle_peak2 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X229 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X230 lg0_n ena lg0_n_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X231 lzn1 ena VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X232 on5 ctle_peak1 on5_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X233 on4 r10 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X234 on3 ctle_peak2 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X235 CTLE_N RX_P sp sp pfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.28u
+X236 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+D6 VSS on6 diode_nd2ps_03v3 pj=2.4u area=0.36p
+X237 CTLE_N_rl ena VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X238 CTLE_N clamp VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X239 o10 ctle_peak0 o10_s0 VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X240 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X241 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X242 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X243 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X244 VSS lz1b VSS VSS nfet_03v3 ad=35.2p pd=0.16088m as=0 ps=0 w=80u l=6.2u
+X245 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X246 VSS lz2a VSS VSS nfet_03v3 ad=35.2p pd=0.16088m as=0 ps=0 w=80u l=6.2u
+X247 lg5_n ena lg5_n_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X248 sp atb_ctle_src VSS ppolyf_u_1k r_width=1u r_length=4.1u
+X249 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X250 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X251 r10 o10 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X252 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X253 on1_s0 ctle_peak2 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+D7 VSS lf_zero2 diode_nd2ps_03v3 pj=4.6u area=1.3225p
+X254 on0 ctle_peak0 on0_s1 VDD_WIRE_SW pfet_03v3 ad=2.64p pd=12.88u as=2.64p ps=12.88u w=6u l=0.28u
+X255 lg3_n ena lg3_n_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X256 lg2_n ena VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X257 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X258 sp atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+X259 atb_ctle_src atb_ctle_pbias VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=1u
+C0 ena_b on3 0
+C1 lg2_n rl3 1.98757f
+C2 ena_b ena_b_s0 0.51819f
+C3 RX_P ctle_peak2 0.07622f
+C4 RX_P sp 5.34541f
+C5 on6_s0 lg1_n 0
+C6 VDD_WIRE_SW sp_rl6_r1 1.02879f
+C7 RX_N sp_rl4_r0 0.03975f
+C8 lg2_n sp 0.04881f
+C9 lg2_n ctle_peak2 0.07227f
+C10 a10_s0 a10 0.28462f
+C11 on0_s1 VDD_WIRE_SW 2.68316f
+C12 VDD_WIRE_SW lg4_n_s0 0.01267f
+C13 ctle_peak1 lzn2 0.06547f
+C14 clamp_s0 lg6_n 0.04997f
+C15 CTLE_N clamp 0.97834f
+C16 lf_zero2 byp_q 0.03557f
+C17 on2 lg2_n 0.5058f
+C18 clamp_s0 rl5 0
+C19 lg5_n lg6_n 86.1287f
+C20 ctle_peak0 on1_s0 0.00121f
+C21 CTLE_N ctle_peak1 0.14679f
+C22 lz0b sp_rl4_r0 0.05081f
+C23 VDD_WIRE_SW ena 22.8745f
+C24 sp_rl6_r1 ctle_peak1 0.06547f
+C25 rl1 lg0_n 0.0015f
+C26 on3 lg6_n_s0 0.89903f
+C27 lf_zero2 CTLE_P 0.09036f
+C28 ctle_en IBIAS 0.05456f
+C29 lz2b sp_rl5_r0 0.07622f
+C30 lg5_n rl5 0.55359f
+C31 on0_s1 ctle_peak1 0.32105f
+C32 clamp_s0 RX_P 0.03975f
+C33 sp_rl3_r0 lzn1 0.05531f
+C34 clamp_s0 lg2_n 0
+C35 VDD_WIRE_SW lg2_n_s0 0.93889f
+C36 on4 lg1_n 0.03439f
+C37 lzn0 nbias 0.62441f
+C38 atb_ctle_src sp_rl4_r0 0.10218f
+C39 lg5_n RX_P 0.03174f
+C40 ena clamp 2.82207f
+C41 sp_rl3_r0 lg0_n 0.08527f
+C42 lg5_n lg2_n 0.18035f
+C43 lg6_n rl5 0.20327f
+C44 lz2b sp 0.73781f
+C45 ctle_peak1 ena 0.60956f
+C46 VDD_WIRE_SW lzn1_s0 0.00912f
+C47 lz2b ctle_peak2 0.07622f
+C48 lg4_n VDD_WIRE_SW 4.85028f
+C49 lf_zero0 sp_rl4_r0 0.06819f
+C50 VDD_WIRE_SW wire_ctle_bypass 3.54418f
+C51 ctle_peak1 lg2_n_s0 0.20253f
+C52 lg6_n RX_P 0.03174f
+C53 lzn0_s0 lzn0 0.71616f
+C54 ctle_peak0 ena_b_s0 0
+C55 ctle_peak0 on3 0.06964f
+C56 lg6_n lg2_n 0.04917f
+C57 lz1b sp_rl4_r0 0.07622f
+C58 on2_s0 VDD_WIRE_SW 2.44304f
+C59 on6_s0 ena 0
+C60 VDD_WIRE_SW lg3_n 4.88547f
+C61 wire_ctle_bypass clamp 0.59769f
+C62 atb_ctle_pbias sp_rl4_r0 0.22358f
+C63 lg4_n ctle_peak1 0.0598f
+C64 ctle_peak1 wire_ctle_bypass 0.07999f
+C65 on6_s0 lg2_n_s0 0
+C66 CTLE_P_rl CTLE_P 1.89137f
+C67 ctle_peak0 lz1a 0.11096f
+C68 nbias sp_rl6_r1 0.28344f
+C69 sp_rl3_r0 lz2a 0.07622f
+C70 on1 on1_s0 0.71622f
+C71 on1_s0 ctle_peak2 0.35318f
+C72 RX_P lg2_n 0.1478f
+C73 on4 lg4_n_s0 0.42577f
+C74 lf_zero2 ctle_peak0 0
+C75 lg5_n lz2b 0
+C76 on2_s0 ctle_peak1 0
+C77 ctle_peak1 lg3_n 0.05531f
+C78 RX_N lg0_n 0.26332f
+C79 on2 on1_s0 0.35723f
+C80 ctle_peak0 lz0a 0.08196f
+C81 lzn0 lzn2 0.27002f
+C82 on4 ena 0.30454f
+C83 lf_zero2 byp_bb 0.02541f
+C84 clamp CTLE_N_rl 0.10774f
+C85 lz0b lzn1 0.07268f
+C86 lz2b lg6_n 0.01607f
+C87 lzn0_s0 sp_rl6_r1 0
+C88 nbias ena 0.60303f
+C89 on4 lg2_n_s0 0.10059f
+C90 o10_s0 on3 0
+C91 CTLE_N lg1_n 0.11889f
+C92 sp_rl4_r0 CTLE_P 0.03975f
+C93 lzn0 sp_rl6_r1 0.08825f
+C94 ena_b sp_rl4_r0 0.03785f
+C95 atb_ctle_src lzn1 0.901f
+C96 lg1_n sp_rl6_r1 0.03473f
+C97 lg4_n on4 0.41225f
+C98 lz1a sp_rl5_r0 0.08639f
+C99 ctle_peak2 ena_b_s0 0
+C100 on1 on3 0.02644f
+C101 on3 ctle_peak2 1.30659f
+C102 lzn0_s0 ena 0.64625f
+C103 lf_zero1 sp_rl3_r0 0.03557f
+C104 lg0_n atb_ctle_src 5.93051f
+C105 VDD_WIRE_SW rl4 1.93159f
+C106 on4 wire_ctle_bypass 0.09261f
+C107 lf_zero2 sp_rl5_r0 0.02541f
+C108 lf_zero0 lzn1 0.09917f
+C109 on2 on3 17.2603f
+C110 VDD_WIRE_SW on6 6.24571f
+C111 on4 lg3_n 0.15141f
+C112 lzn0 ena 1.63121f
+C113 lf_zero0 lg0_n 0.0299f
+C114 lz1a sp 2.11964f
+C115 sp_rl6_r1 lzn2 0.08412f
+C116 lz1b lzn1 1.24208f
+C117 lf_zero2 rl3 0.06683f
+C118 lz0a sp_rl5_r0 0.06899f
+C119 lg1_n ena 2.30163f
+C120 sp_rl4_r0 lg6_n_s0 0.04543f
+C121 lz1a ctle_peak2 0.08299f
+C122 lf_zero2 sp 0.28856f
+C123 lf_zero2 ctle_peak2 0.00195f
+C124 VDD_WIRE_SW rl0 4.71f
+C125 clamp_s0 ena_b_s0 0
+C126 atb_ctle_pbias lzn1 0.06968f
+C127 lz0b lz2a 1.24927f
+C128 CTLE_N sp_rl6_r1 0.03174f
+C129 lg1_n lg2_n_s0 6.83941f
+C130 ctle_peak1 on6 0.60517f
+C131 atb_ctle_pbias lg0_n 0.0299f
+C132 lzn0 lzn1_s0 0
+C133 lz0a sp 1.04078f
+C134 lg5_n on3 0.03496f
+C135 lz0a ctle_peak2 0.06331f
+C136 lzn2 ena 0.89831f
+C137 clamp_s0 rl6 0.00161f
+C138 sp_rl3_r0 ctle_en 0.08596f
+C139 lg4_n lg1_n 0.02572f
+C140 lzn0 wire_ctle_bypass 0.13893f
+C141 atb_ctle_src lz2a 0.77714f
+C142 lg1_n wire_ctle_bypass 0.08478f
+C143 on6_s0 on6 0.26268f
+C144 lg5_n rl6 0.0015f
+C145 CTLE_N ena 0.09339f
+C146 lf_zero1 RX_N 0.05081f
+C147 ctle_peak0 sp_rl4_r0 0.07448f
+C148 lf_zero2 clamp_s0 0.03217f
+C149 wire_ctle_bypass a10 0
+C150 on0_s0 on0 0.26062f
+C151 on0 lg0_n 0.60847f
+C152 lf_zero0 lz2a 0.1174f
+C153 lg5_n lz1a 0
+C154 lg1_n lg3_n 0.03227f
+C155 sp_rl6_r1 ena 0.3091f
+C156 lf_zero2 lg5_n 0.02541f
+C157 on2_s0 a10 0
+C158 ena lg4_n_s0 0.62843f
+C159 lzn2 lzn1_s0 0.35723f
+C160 lg0_n on5 0.04336f
+C161 lzn2 wire_ctle_bypass 0.10277f
+C162 lz1b lz2a 43.6765f
+C163 lg6_n rl6 0.62681f
+C164 on0_s0 byp_q 0
+C165 lf_zero1 lz0b 0.05212f
+C166 lg0_n byp_q 0
+C167 lzn2_s0 VDD_WIRE_SW 0.00912f
+C168 IBIAS VDD_WIRE_SW 38.2812f
+C169 lg6_n lz1a 3.09376f
+C170 CTLE_N lg4_n 0.03174f
+C171 lg5_n lz0a 0.00106f
+C172 rl5 rl6 0
+C173 atb_ctle_pbias lz2a 0.10059f
+C174 ctle_en n10 0.11216f
+C175 lg2_n on3 0.14212f
+C176 lg0_n CTLE_P 0.24411f
+C177 lg0_n ena_b 10.2439f
+C178 lf_zero2 lg6_n 0.02541f
+C179 CTLE_N wire_ctle_bypass 32.6792f
+C180 lg4_n sp_rl6_r1 0.07258f
+C181 on4 on6 0.1403f
+C182 lf_zero1 atb_ctle_src 0.01278f
+C183 sp_rl6_r1 wire_ctle_bypass 3.37412f
+C184 lg4_n lg4_n_s0 0.51819f
+C185 ena lg2_n_s0 1.07654f
+C186 CTLE_N lg3_n 0.03174f
+C187 RX_N ctle_en 9.28881f
+C188 lg6_n lz0a 1.76178f
+C189 sp_rl4_r0 sp_rl5_r0 88.9369f
+C190 sp_rl6_r1 lg3_n 0.07258f
+C191 IBIAS ctle_peak1 0.03557f
+C192 lf_zero1 lf_zero0 89.66779f
+C193 ena lzn1_s0 0.35242f
+C194 lg4_n ena 2.60246f
+C195 lg3_n lg4_n_s0 0
+C196 lf_zero2 RX_P 0.07622f
+C197 lg0_n lg6_n_s0 0
+C198 lf_zero2 lg2_n 0.03341f
+C199 ena wire_ctle_bypass 0.47767f
+C200 sp_rl4_r0 rl3 2.81184f
+C201 lf_zero1 lz1b 0.15857f
+C202 lz0b ctle_en 0.08811f
+C203 lg4_n lg2_n_s0 0.05806f
+C204 CTLE_N CTLE_N_rl 2.01154f
+C205 sp_rl4_r0 sp 1.02904f
+C206 sp_rl4_r0 ctle_peak2 0.05882f
+C207 lf_zero1 atb_ctle_pbias 0.11959f
+C208 wire_ctle_bypass lg2_n_s0 0.09261f
+C209 ena lg3_n 7.51906f
+C210 lg2_n lz0a 0
+C211 lzn0 on6 1.20163f
+C212 lg1_n on6 0
+C213 lg3_n lg2_n_s0 4.06538f
+C214 ctle_peak0 lzn1 0.07396f
+C215 VDD_WIRE_SW lg0_n_s0 0.0073f
+C216 lg4_n wire_ctle_bypass 0.13448f
+C217 on0_s0 ctle_peak0 0
+C218 ctle_peak0 lg0_n 0.17549f
+C219 lz2b lz1a 0.27468f
+C220 ena CTLE_N_rl 1.03446f
+C221 lg1_n rl0 0.00212f
+C222 lg4_n lg3_n 92.7179f
+C223 clamp_s0 sp_rl4_r0 0.0449f
+C224 lf_zero2 lz2b 0.17756f
+C225 lg3_n wire_ctle_bypass 0.12999f
+C226 ctle_en lz1b 0.13217f
+C227 IBIAS nbias 0.45725f
+C228 ctle_en bypb 0.14747f
+C229 lg5_n sp_rl4_r0 0.03486f
+C230 on0_s0 byp_bb 0
+C231 lf_zero1 byp_q 0.03557f
+C232 lg0_n byp_bb 0
+C233 VDD_WIRE_SW on4_s0 0.00981f
+C234 o10 VDD_WIRE_SW 3.06537f
+C235 sp_rl6_r1 rl4 0.07302f
+C236 lz2b lz0a 0.11454f
+C237 lg1_n_s0 VDD_WIRE_SW 0.0072f
+C238 lf_zero1 CTLE_P 0.08521f
+C239 sp_rl6_r1 on6 0.05552f
+C240 lg6_n sp_rl4_r0 0.19845f
+C241 lg3_n_s0 VDD_WIRE_SW 0.00755f
+C242 lg4_n_s0 on6 0.10281f
+C243 CTLE_N rl0 0.0034f
+C244 sp_rl5_r0 lzn1 0.05531f
+C245 rl1 rl2 0
+C246 ctle_peak1 on4_s0 0
+C247 o10 ctle_peak1 0.6722f
+C248 ena rl4 0
+C249 ctle_en on0 0.25441f
+C250 ctle_peak0 lz2a 0.10419f
+C251 lg0_n sp_rl5_r0 0.03557f
+C252 ena on6 0.58409f
+C253 IBIAS lzn0 0.19393f
+C254 IBIAS lg1_n 0.04107f
+C255 ctle_en on5 0.14683f
+C256 RX_P sp_rl4_r0 0.0399f
+C257 sp_rl3_r0 rl2 0.11259f
+C258 lzn1 ctle_peak2 0.05531f
+C259 lzn1 sp 0.85693f
+C260 lg2_n sp_rl4_r0 0.03341f
+C261 lg0_n rl3 0.04646f
+C262 ctle_en byp_q 0.04387f
+C263 rl1 VDD_WIRE_SW 3.3994f
+C264 on6 lg2_n_s0 0.09802f
+C265 on0_s0 ctle_peak2 0.36998f
+C266 lg0_n sp 0.08818f
+C267 lg4_n rl4 0.61775f
+C268 on1 lg0_n 0.14608f
+C269 lg0_n ctle_peak2 0.16758f
+C270 ctle_en CTLE_P 25.8337f
+C271 ctle_en ena_b 0.6705f
+C272 wire_ctle_bypass rl4 0.10002f
+C273 lzn2_s0 lzn2 0.72136f
+C274 lg4_n on6 0.19104f
+C275 on2 lg0_n 0.16899f
+C276 IBIAS lzn2 0.09679f
+C277 sp_rl3_r0 VDD_WIRE_SW 0.81928f
+C278 wire_ctle_bypass on6 0.15927f
+C279 r10 on4_s0 0.34893f
+C280 o10 r10 0.51679f
+C281 lg3_n rl4 0.0015f
+C282 lf_zero1 ctle_peak0 0.00131f
+C283 sp_rl5_r0 lz2a 0.07622f
+C284 lg3_n on6 0.18842f
+C285 IBIAS sp_rl6_r1 17.6514f
+C286 o10 on4 0.70387f
+C287 clamp_s0 lg0_n 0.00106f
+C288 ctle_en lg6_n_s0 0.09261f
+C289 on4 on4_s0 0.59452f
+C290 lz2b sp_rl4_r0 0.07622f
+C291 sp_rl3_r0 ctle_peak1 0.06098f
+C292 sp_rl6_r0 VDD_WIRE_SW 0.0032f
+C293 lg5_n lg0_n 0.03571f
+C294 lf_zero2 lz1a 0.83068f
+C295 lf_zero1 byp_bb 0.02541f
+C296 sp lz2a 4.10986f
+C297 lg3_n_s0 on4 0.07714f
+C298 lz2a ctle_peak2 0.07622f
+C299 lzn2_s0 ena 0.25457f
+C300 lg1_n lg0_n_s0 0.3462f
+C301 VDD_WIRE_SW n10 2.78901f
+C302 IBIAS ena 1.1797f
+C303 lz1a lz0a 0.12065f
+C304 lg6_n lg0_n 0.04907f
+C305 lf_zero2 lz0a 1.57802f
+C306 IBIAS lg2_n_s0 0.00417f
+C307 ctle_en ctle_peak0 2.82973f
+C308 RX_N VDD_WIRE_SW 6.20923f
+C309 lf_zero1 sp_rl5_r0 0.02541f
+C310 ctle_peak1 n10 0.38233f
+C311 lg4_n IBIAS 0.04107f
+C312 atb_ctle_src rl2 1.30087f
+C313 lf_zero1 rl3 0.06683f
+C314 lg1_n_s0 lg1_n 0.51819f
+C315 IBIAS wire_ctle_bypass 0.05422f
+C316 ctle_en byp_bb 0.03288f
+C317 RX_P lg0_n 0.12757f
+C318 lz0b VDD_WIRE_SW 2.64249f
+C319 lg2_n lg0_n 0.08412f
+C320 lg5_n lz2a 0
+C321 lf_zero1 sp 0.29577f
+C322 a10_s0 n10 0.09568f
+C323 lf_zero1 ctle_peak2 0.00321f
+C324 RX_N ctle_peak1 0.05081f
+C325 IBIAS lg3_n 0.04107f
+C326 sp_rl3_r0 nbias 0.17988f
+C327 atb_ctle_src VDD_WIRE_SW 0.22755p
+C328 lg6_n lz2a 0.01902f
+C329 lz0b ctle_peak1 0.05081f
+C330 ena lg0_n_s0 0.72859f
+C331 ctle_en sp_rl5_r0 0.08029f
+C332 lf_zero0 VDD_WIRE_SW 2.40813f
+C333 rl1 lg1_n 0.60181f
+C334 lf_zero1 clamp_s0 0.03217f
+C335 lz2b lzn1 12.7358f
+C336 atb_ctle_src clamp 0
+C337 lg0_n_s0 lg2_n_s0 0.09293f
+C338 ctle_en rl3 0.0795f
+C339 atb_ctle_src ctle_peak1 0
+C340 lz1b VDD_WIRE_SW 5.00741f
+C341 on4 n10 0.04424f
+C342 lf_zero1 lg5_n 0.02541f
+C343 VDD_WIRE_SW bypb 3.86224f
+C344 ctle_en sp 0.42365f
+C345 sp_rl3_r0 lzn0 0.05137f
+C346 on1 ctle_en 0.09261f
+C347 ctle_en ctle_peak2 0.0839f
+C348 sp_rl3_r0 lg1_n 0.0751f
+C349 atb_ctle_pbias VDD_WIRE_SW 0.1778p
+C350 lz1a sp_rl4_r0 0.08639f
+C351 lf_zero0 ctle_peak1 0.00424f
+C352 on2 ctle_en 0.19765f
+C353 on6_s1 VDD_WIRE_SW 0.00905f
+C354 lzn0_s0 sp_rl6_r0 0
+C355 lf_zero2 sp_rl4_r0 0.03341f
+C356 lg1_n_s0 ena 0.62927f
+C357 lf_zero1 lg6_n 0.02541f
+C358 lz1b ctle_peak1 0.07622f
+C359 ctle_peak1 bypb 0.16569f
+C360 lg3_n_s0 ena 0.72662f
+C361 lg1_n_s0 lg2_n_s0 0.3462f
+C362 lz0a sp_rl4_r0 0.06899f
+C363 sp_rl3_r0 lzn2 0.06547f
+C364 on0 VDD_WIRE_SW 4.16876f
+C365 sp_rl6_r0 lzn0 0.05828f
+C366 atb_ctle_pbias ctle_peak1 0.00142f
+C367 clamp_s0 ctle_en 3.04543f
+C368 on5_s0 VDD_WIRE_SW 0.00981f
+C369 IBIAS on6 0.0519f
+C370 on6_s1 ctle_peak1 0.24563f
+C371 VDD_WIRE_SW on5 4.67713f
+C372 lf_zero1 RX_P 0.07622f
+C373 lg5_n ctle_en 0.08478f
+C374 CTLE_N sp_rl3_r0 0.13983f
+C375 lz2b lz2a 50.2264f
+C376 lf_zero1 lg2_n 0.03341f
+C377 VDD_WIRE_SW byp_q 3.38992f
+C378 sp_rl3_r0 sp_rl6_r1 0.10288f
+C379 lg3_n_s0 lg4_n 0.3462f
+C380 n10 a10 1.17559f
+C381 VDD_WIRE_SW CTLE_P 5.73929f
+C382 ena_b VDD_WIRE_SW 4.35411f
+C383 on0 ctle_peak1 0.83724f
+C384 on6_s1 on6_s0 0.35826f
+C385 RX_N lg1_n 0.25883f
+C386 on5_s0 ctle_peak1 0.28544f
+C387 lg6_n ctle_en 0.08029f
+C388 ctle_peak1 on5 1.0186f
+C389 lf_zero0 nbias 0
+C390 lg3_n_s0 lg3_n 0.51819f
+C391 ctle_peak1 byp_q 0.10522f
+C392 clamp CTLE_P 1.02233f
+C393 sp_rl3_r0 ena 0.19636f
+C394 on0 on6_s0 0
+C395 sp_rl6_r0 sp_rl6_r1 0.75787f
+C396 lz0b lzn0 1.12634f
+C397 ctle_peak1 CTLE_P 0.08521f
+C398 ena_b ctle_peak1 0.06229f
+C399 lg0_n on3 0.0299f
+C400 on6_s0 on5 0
+C401 VDD_WIRE_SW lg6_n_s0 0.98926f
+C402 ctle_en RX_P 0.11771f
+C403 atb_ctle_pbias on4 0.00121f
+C404 ctle_en lg2_n 0.08381f
+C405 lf_zero1 lz2b 0.1706f
+C406 atb_ctle_pbias nbias 0.6904f
+C407 lf_zero0 lzn0_s0 0.646f
+C408 lz1a lzn1 1.32642f
+C409 atb_ctle_src lzn0 0.44086f
+C410 atb_ctle_src lg1_n 1.82416f
+C411 on6 lg0_n_s0 0
+C412 RX_N CTLE_N 5.15768f
+C413 lf_zero2 lzn1 0.06093f
+C414 sp_rl3_r0 wire_ctle_bypass 0.08596f
+C415 on5_s0 r10 0
+C416 RX_N sp_rl6_r1 0.04191f
+C417 lz0b lzn2 0.09188f
+C418 lf_zero0 lzn0 2.5013f
+C419 r10 on5 1.0588f
+C420 ctle_peak1 lg6_n_s0 0.05531f
+C421 on0 on4 0.02572f
+C422 lf_zero2 lg0_n 0.0299f
+C423 lf_zero0 lg1_n 0.02541f
+C424 lz0a lzn1 0.07675f
+C425 on5_s0 on4 0
+C426 lz1b lzn0 0.19492f
+C427 ctle_peak0 VDD_WIRE_SW 6.75037f
+C428 atb_ctle_src lzn2 1.6602f
+C429 on4 on5 21.2829f
+C430 lz0b sp_rl6_r1 0.06946f
+C431 atb_ctle_pbias lzn0 0.33785f
+C432 RX_N ena 0.03174f
+C433 atb_ctle_pbias lg1_n 0.02541f
+C434 lf_zero0 lzn2 0.12121f
+C435 CTLE_N atb_ctle_src 0.54052f
+C436 lz2b ctle_en 0.13217f
+C437 VDD_WIRE_SW lg5_n_s0 0.00135f
+C438 on6_s1 lg1_n 0
+C439 byp_bb VDD_WIRE_SW 6.30716f
+C440 ena_b nbias 0.62873f
+C441 atb_ctle_src sp_rl6_r1 0.18091f
+C442 wire_ctle_bypass n10 0.11216f
+C443 lg3_n_s0 on6 0.1034f
+C444 ctle_peak0 ctle_peak1 0.13793p
+C445 lz1b lzn2 0.2099f
+C446 lz0b ena 0.04197f
+C447 lz1a lz2a 0.26636f
+C448 lf_zero0 CTLE_N 0.14679f
+C449 RX_N lg4_n 0.03174f
+C450 lf_zero0 sp_rl6_r1 0.07601f
+C451 on2_s0 n10 0.25547f
+C452 lf_zero2 lz2a 0.43576f
+C453 on0 lg1_n 0.04878f
+C454 atb_ctle_pbias lzn2 0.08515f
+C455 ctle_peak0 a10_s0 0.95968f
+C456 RX_N wire_ctle_bypass 0.06369f
+C457 rl3 rl2 0.62425f
+C458 ctle_peak0 on6_s0 0
+C459 byp_bb ctle_peak1 0.17905f
+C460 on4 lg6_n_s0 0.62892f
+C461 atb_ctle_src ena 0.25965f
+C462 sp rl2 0.31105f
+C463 lz1b sp_rl6_r1 0.10419f
+C464 lz0a lz2a 0.11589f
+C465 lg1_n on5 0.04791f
+C466 VDD_WIRE_SW sp_rl5_r0 0.87989f
+C467 RX_N lg3_n 0.03174f
+C468 atb_ctle_pbias CTLE_N 0.33279f
+C469 lg1_n byp_q 0
+C470 lz0b lzn1_s0 0
+C471 lz0b lg4_n 0
+C472 atb_ctle_pbias sp_rl6_r1 0.31374f
+C473 lf_zero0 ena 3.15665f
+C474 ena_b lzn0 0.05691f
+C475 o10_s0 VDD_WIRE_SW 3.12652f
+C476 lz0b wire_ctle_bypass 0.08811f
+C477 a10 byp_q 0
+C478 ena_b lg1_n 0.0366f
+C479 lg1_n CTLE_P 0.23956f
+C480 VDD_WIRE_SW rl3 2.54641f
+C481 atb_ctle_pbias lg4_n_s0 0.00424f
+C482 ctle_peak0 r10 0
+C483 rl1 rl0 0
+C484 VDD_WIRE_SW sp 0.21835p
+C485 atb_ctle_src lzn1_s0 0
+C486 lg4_n atb_ctle_src 0.89227f
+C487 on1 VDD_WIRE_SW 3.05723f
+C488 VDD_WIRE_SW ctle_peak2 11.6266f
+C489 lz1b ena 0.12946f
+C490 lz0b lg3_n 0
+C491 sp_rl3_r0 on6 0.03968f
+C492 lf_zero1 lz1a 0.18209f
+C493 ctle_peak1 sp_rl5_r0 0.05531f
+C494 bypb ena 0.16569f
+C495 atb_ctle_src wire_ctle_bypass 0.29114f
+C496 lf_zero1 lf_zero2 91.8342f
+C497 sp_rl4_r0 lzn1 0.05531f
+C498 on2 VDD_WIRE_SW 3.96944f
+C499 atb_ctle_pbias ena 5.05331f
+C500 ctle_peak0 on4 0.18178f
+C501 o10_s0 ctle_peak1 0.59784f
+C502 lf_zero0 lg4_n 0.02541f
+C503 on0_s1 on0 0.79812f
+C504 ctle_peak1 rl3 0.06683f
+C505 atb_ctle_src lg3_n 0.91882f
+C506 sp_rl3_r0 rl0 0.09983f
+C507 on6_s1 ena 0
+C508 lzn0 lg6_n_s0 3.29383f
+C509 lg0_n sp_rl4_r0 0.03557f
+C510 lf_zero0 wire_ctle_bypass 0.03688f
+C511 lg1_n lg6_n_s0 0
+C512 CTLE_N byp_q 0.48753f
+C513 atb_ctle_pbias lg2_n_s0 0
+C514 lf_zero1 lz0a 0.09968f
+C515 ctle_peak1 sp 0.28677f
+C516 lz1b lzn1_s0 0
+C517 lg4_n lz1b 0
+C518 on1 ctle_peak1 1.1055f
+C519 ctle_peak1 ctle_peak2 0.1401p
+C520 ctle_en ena_b_s0 0.43257f
+C521 ctle_en on3 0.08811f
+C522 CTLE_N CTLE_P 6.8625f
+C523 on5 lg4_n_s0 0.07726f
+C524 on6_s1 lg2_n_s0 0
+C525 lf_zero0 lg3_n 0.02541f
+C526 clamp_s0 VDD_WIRE_SW 4.47818f
+C527 lz1b wire_ctle_bypass 0.13217f
+C528 sp_rl6_r1 CTLE_P 0.04191f
+C529 on0 ena 0.41322f
+C530 bypb wire_ctle_bypass 0.68531f
+C531 ena_b sp_rl6_r1 0.05483f
+C532 on2 ctle_peak1 0.54901f
+C533 atb_ctle_pbias lg4_n 0.02931f
+C534 on1 a10_s0 0
+C535 a10_s0 ctle_peak2 0.07669f
+C536 lg5_n VDD_WIRE_SW 4.80607f
+C537 atb_ctle_pbias wire_ctle_bypass 0.03557f
+C538 lz1b lg3_n 0
+C539 on1 on6_s0 0
+C540 on6_s0 ctle_peak2 0.29456f
+C541 on5 ena 0.39633f
+C542 on0 lg2_n_s0 6.63417f
+C543 ctle_en lz1a 0.13893f
+C544 on2 a10_s0 0.12144f
+C545 clamp_s0 clamp 0.78797f
+C546 ena byp_q 0.07292f
+C547 on2 on6_s0 0
+C548 ctle_peak0 lzn0 0.11096f
+C549 atb_ctle_pbias lg3_n 0.02989f
+C550 clamp_s0 ctle_peak1 0.07199f
+C551 on5 lg2_n_s0 0.11432f
+C552 ena CTLE_P 0.14537f
+C553 ctle_peak0 lg1_n 0.18752f
+C554 ena_b ena 39.63f
+C555 lg6_n VDD_WIRE_SW 4.73863f
+C556 byp_q lg2_n_s0 0
+C557 sp_rl6_r1 lg6_n_s0 0.06413f
+C558 nbias sp_rl5_r0 0.21048f
+C559 on0 wire_ctle_bypass 2.04544f
+C560 sp_rl4_r0 lz2a 0.07622f
+C561 ctle_peak0 a10 1.75349f
+C562 lg2_n rl2 0.6855f
+C563 lg5_n ctle_peak1 0.0598f
+C564 r10 ctle_peak2 0.13816f
+C565 ctle_en lz0a 0.10061f
+C566 o10_s0 on4 0.20148f
+C567 ena_b lg2_n_s0 0
+C568 rl5 VDD_WIRE_SW 1.53804f
+C569 lg4_n on5 0.15839f
+C570 sp_rl3_r0 IBIAS 0.15611f
+C571 lg6_n_s0 lg4_n_s0 0.10962f
+C572 byp_bb lg1_n 0
+C573 on5 wire_ctle_bypass 0.14683f
+C574 lg6_n clamp 0
+C575 on1 on4 0.02593f
+C576 on4 ctle_peak2 1.13835f
+C577 wire_ctle_bypass byp_q 0.042f
+C578 byp_bb a10 0
+C579 nbias sp 0.82894f
+C580 ctle_peak0 lzn2 0.08412f
+C581 lg4_n CTLE_P 0.03178f
+C582 RX_P VDD_WIRE_SW 47.5769f
+C583 lg4_n ena_b 0.03571f
+C584 lg6_n ctle_peak1 0.05531f
+C585 atb_ctle_src rl4 0.7139f
+C586 on5 lg3_n 0.13466f
+C587 lg6_n_s0 ena 1.19005f
+C588 lg2_n VDD_WIRE_SW 5.04387f
+C589 wire_ctle_bypass CTLE_P 9.40284f
+C590 ena_b wire_ctle_bypass 0.3336f
+C591 on2 on4 0.14243f
+C592 lg3_n byp_q 0.01383f
+C593 CTLE_N ctle_peak0 11.8849f
+C594 o10 on4_s0 0
+C595 lg6_n_s0 lg2_n_s0 0.05127f
+C596 ctle_peak0 sp_rl6_r1 0.08113f
+C597 lg3_n CTLE_P 0.03181f
+C598 ena_b lg3_n 0.04211f
+C599 lzn0 sp_rl5_r0 0.0511f
+C600 lg1_n sp_rl5_r0 0.02541f
+C601 on0_s1 ctle_peak0 0.32119f
+C602 lf_zero0 on6 0.04162f
+C603 atb_ctle_src rl0 2.49471f
+C604 lf_zero1 sp_rl4_r0 0.03341f
+C605 RX_P ctle_peak1 0.07622f
+C606 lg2_n ctle_peak1 0.05882f
+C607 lg4_n lg6_n_s0 0.15513f
+C608 CTLE_N byp_bb 0.57742f
+C609 lg6_n_s0 wire_ctle_bypass 0.09261f
+C610 lg1_n rl3 0.04424f
+C611 lzn0 sp 14.2632f
+C612 lg5_n on4 0.03475f
+C613 lzn0 ctle_peak2 0.08299f
+C614 lg1_n sp 0.07834f
+C615 CTLE_N_rl CTLE_P 0
+C616 ctle_peak0 ena 0.53655f
+C617 lg1_n ctle_peak2 0.1796f
+C618 RX_N IBIAS 0
+C619 on1 lg1_n 0.55686f
+C620 atb_ctle_pbias on6 0.05493f
+C621 lg2_n on6_s0 0.00383f
+C622 lzn2 sp_rl5_r0 0.06547f
+C623 lg6_n_s0 lg3_n 0.14975f
+C624 lz2b VDD_WIRE_SW 9.2371f
+C625 a10 ctle_peak2 0.45398f
+C626 on6_s1 on6 0.5032f
+C627 ctle_peak0 lg2_n_s0 0.17399f
+C628 on2 lg1_n 0.19066f
+C629 ena lg5_n_s0 0.53046f
+C630 byp_bb ena 0.00362f
+C631 CTLE_N sp_rl5_r0 0.03174f
+C632 on2 a10 0.28883f
+C633 lg6_n nbias 0
+C634 lz0b IBIAS 0.08213f
+C635 sp_rl6_r1 sp_rl5_r0 86.9091f
+C636 lzn2 sp 8.46541f
+C637 lzn1 lz2a 0.06612f
+C638 ctle_peak0 lg4_n 0.07546f
+C639 on0 on6 0.00217f
+C640 lzn2 ctle_peak2 0.06547f
+C641 ctle_en sp_rl4_r0 0.08381f
+C642 ctle_peak0 wire_ctle_bypass 18.9765f
+C643 byp_bb lg2_n_s0 0
+C644 CTLE_N rl3 0.18564f
+C645 clamp_s0 lg1_n 0
+C646 lz2b ctle_peak1 0.07622f
+C647 lzn2_s0 atb_ctle_src 0
+C648 sp_rl6_r1 rl3 0.12012f
+C649 on5 on6 16.0714f
+C650 CTLE_N sp 28.8533f
+C651 CTLE_N ctle_peak2 0.14679f
+C652 lg4_n lg5_n_s0 0
+C653 lg2_n on4 0.12998f
+C654 sp_rl6_r1 sp 0.67932f
+C655 ctle_peak0 lg3_n 0.07101f
+C656 lg5_n lg1_n 0.02561f
+C657 sp_rl6_r1 ctle_peak2 0.06547f
+C658 ena sp_rl5_r0 0.24444f
+C659 VDD_WIRE_SW on1_s0 2.62086f
+C660 byp_bb wire_ctle_bypass 0.58223f
+C661 on0_s1 ctle_peak2 0
+C662 lf_zero0 IBIAS 0.05066f
+C663 ena_b on6 0.0571f
+C664 lg6_n lzn0 1.12634f
+C665 lzn2_s0 lz1b 0
+C666 ena rl3 0.0483f
+C667 lg6_n lg1_n 0.03894f
+C668 IBIAS lz1b 0.1232f
+C669 on1 ena 0.18885f
+C670 ena sp 0.23941f
+C671 ena ctle_peak2 6.75284f
+C672 clamp_s0 CTLE_N 0.03858f
+C673 on1_s0 ctle_peak1 0.35295f
+C674 lf_zero1 lzn1 0.55735f
+C675 lg4_n sp_rl5_r0 0.07345f
+C676 atb_ctle_pbias IBIAS 0.04832f
+C677 clamp_s0 sp_rl6_r1 0.0449f
+C678 on2 ena 0.34905f
+C679 sp_rl5_r0 wire_ctle_bypass 0.1343f
+C680 rl1 sp_rl3_r0 0.09983f
+C681 lg5_n CTLE_N 0.03174f
+C682 lf_zero1 lg0_n 0.0299f
+C683 on1 lg2_n_s0 0.89877f
+C684 lg2_n_s0 ctle_peak2 0.17648f
+C685 lg6_n_s0 on6 0.57068f
+C686 lg5_n sp_rl6_r1 0.08248f
+C687 lg4_n rl3 0.04862f
+C688 RX_P lg1_n 0.12081f
+C689 sp_rl5_r0 lg3_n 0.06325f
+C690 VDD_WIRE_SW ena_b_s0 0.00187f
+C691 lg2_n lg1_n 85.2951f
+C692 VDD_WIRE_SW on3 2.57909f
+C693 on2 lg2_n_s0 0.84635f
+C694 lg5_n lg4_n_s0 0.3462f
+C695 wire_ctle_bypass rl3 0.12868f
+C696 lg4_n ctle_peak2 0.07319f
+C697 wire_ctle_bypass sp 0.41433f
+C698 CTLE_N lg6_n 0.03174f
+C699 on1 wire_ctle_bypass 0.09261f
+C700 wire_ctle_bypass ctle_peak2 0.0929f
+C701 clamp_s0 ena 0.11362p
+C702 lg3_n rl3 0.72469f
+C703 lg6_n sp_rl6_r1 0.2484f
+C704 on2 lg4_n 0.04797f
+C705 VDD_WIRE_SW rl6 1.30925f
+C706 clamp_s0 lg2_n_s0 0
+C707 lg5_n ena 2.2531f
+C708 on2 wire_ctle_bypass 0.19765f
+C709 lz1a VDD_WIRE_SW 5.63079f
+C710 on2_s0 ctle_peak2 0.25507f
+C711 lg3_n ctle_peak2 0.06874f
+C712 IBIAS byp_q 0.0553f
+C713 ctle_peak1 ena_b_s0 0
+C714 on3 ctle_peak1 0.05181f
+C715 ctle_en lzn1 0.09261f
+C716 rl5 sp_rl6_r1 0.24669f
+C717 ctle_peak0 on6 0.921f
+C718 lf_zero2 VDD_WIRE_SW 2.36799f
+C719 lg5_n lg2_n_s0 0.05746f
+C720 on2 on2_s0 0.72136f
+C721 on2 lg3_n 0.04338f
+C722 IBIAS ena_b 0.09225f
+C723 clamp rl6 0
+C724 clamp_s0 lg4_n 0.03615f
+C725 ctle_en lg0_n 0.08478f
+C726 CTLE_N RX_P 11.8049f
+C727 lf_zero1 lz2a 0.15857f
+C728 CTLE_N lg2_n 0.14589f
+C729 lg6_n ena 1.98416f
+C730 clamp_s0 wire_ctle_bypass 0.41618f
+C731 RX_P sp_rl6_r1 0.04219f
+C732 lz2b lzn0 23.1175f
+C733 lg2_n sp_rl6_r1 0.04274f
+C734 VDD_WIRE_SW lz0a 2.70429f
+C735 on6 lg5_n_s0 0.10281f
+C736 lz1a ctle_peak1 0.08299f
+C737 lg5_n lg4_n 94.1324f
+C738 lg5_n wire_ctle_bypass 0.13448f
+C739 rl5 ena 0
+C740 lf_zero2 ctle_peak1 0.00131f
+C741 clamp_s0 lg3_n 0.04923f
+C742 IBIAS lg6_n_s0 0.0452f
+C743 lg5_n lg3_n 0.21239f
+C744 RX_P ena 0.03174f
+C745 RX_N sp_rl3_r0 0.34009f
+C746 lg6_n lg4_n 0.08702f
+C747 lg2_n ena 7.07936f
+C748 lz0a ctle_peak1 0.06331f
+C749 sp_rl5_r0 rl4 0.24642f
+C750 lg6_n wire_ctle_bypass 0.15288f
+C751 on0 lg0_n_s0 0.60435f
+C752 lz2b lzn2 4.25184f
+C753 sp_rl5_r0 on6 0.04444f
+C754 rl5 lg4_n 0.0015f
+C755 lg2_n lg2_n_s0 4.65847f
+C756 rl5 wire_ctle_bypass 0.09985f
+C757 rl4 rl3 0
+C758 on4 on3 19.5325f
+C759 ctle_en lz2a 0.13217f
+C760 rl1 atb_ctle_src 1.70086f
+C761 lg6_n lg3_n 0.0805f
+C762 lz0b sp_rl3_r0 0.05081f
+C763 lz2b sp_rl6_r1 0.10419f
+C764 lg3_n_s0 atb_ctle_pbias 0
+C765 RX_P lg4_n 0.03174f
+C766 lg4_n lg2_n 0.18088f
+C767 RX_P wire_ctle_bypass 0.10846f
+C768 sp on6 2.91244f
+C769 lg2_n wire_ctle_bypass 0.08381f
+C770 on1 on6 0.00296f
+C771 on6 ctle_peak2 0.57702f
+C772 ctle_peak0 IBIAS 0.0449f
+C773 sp_rl3_r0 atb_ctle_src 0.9927f
+C774 CTLE_P_rl clamp 0.10131f
+C775 rl3 rl0 0.29811f
+C776 RX_P lg3_n 0.03174f
+C777 on2 on6 1.39671f
+C778 lg2_n lg3_n 27.9827f
+C779 on5 on4_s0 0.34664f
+C780 o10 on5 0.27125f
+C781 lz2b ena 0.24829f
+C782 sp rl0 0.40037f
+C783 lf_zero0 sp_rl3_r0 0.07037f
+C784 IBIAS byp_bb 0.0553f
+C785 clamp_s0 rl4 0
+C786 lg3_n_s0 on5 0.07726f
+C787 VDD_WIRE_SW sp_rl4_r0 0.77225f
+C788 sp_rl3_r0 lz1b 0.07622f
+C789 on3 lg1_n 0.03439f
+C790 lg5_n rl4 0
+C791 atb_ctle_pbias sp_rl3_r0 0.22578f
+C792 lz2b lzn1_s0 0
+C793 lg5_n on6 0.21177f
+C794 lf_zero0 sp_rl6_r0 0
+C795 lz2b wire_ctle_bypass 0.13217f
+C796 lz1a lzn0 0.18386f
+C797 IBIAS sp_rl5_r0 0.19453f
+C798 lg6_n rl4 0.29542f
+C799 lf_zero2 lzn0 0.05118f
+C800 sp_rl4_r0 ctle_peak1 0.05882f
+C801 lf_zero2 lg1_n 0.02541f
+C802 lg6_n on6 0.63003f
+C803 RX_N atb_ctle_src 7.40108f
+C804 rl5 rl4 0
+C805 IBIAS rl3 0.09815f
+C806 ctle_peak0 lg0_n_s0 0
+C807 lzn0 lz0a 1.00237f
+C808 IBIAS sp 0.50112f
+C809 IBIAS ctle_peak2 0.04897f
+C810 lg3_n_s0 lg6_n_s0 0.10496f
+C811 lz0a lg1_n 0
+C812 RX_N lf_zero0 0.05081f
+C813 lz1a lzn2 0.2102f
+C814 lz0b atb_ctle_src 1.20966f
+C815 on2 IBIAS 0.00266f
+C816 lf_zero2 lzn2 0.4883f
+C817 lg2_n on6 0.18189f
+C818 sp_rl3_r0 ena_b 0.0381f
+C819 sp_rl6_r1 rl6 0.30682f
+C820 sp_rl3_r0 CTLE_P 0.33568f
+C821 ctle_peak0 o10 1.32279f
+C822 lz0b lf_zero0 0.09204f
+C823 lz1a sp_rl6_r1 0.11436f
+C824 RX_N atb_ctle_pbias 0.06763f
+C825 lf_zero2 CTLE_N 0.14679f
+C826 lz0a lzn2 0.10198f
+C827 ena ena_b_s0 0.00212f
+C828 on3 ena 0.2249f
+C829 lf_zero2 sp_rl6_r1 0.02541f
+C830 clamp_s0 IBIAS 0.05123f
+C831 on0 n10 8.36588f
+C832 lg2_n rl0 0.53902f
+C833 lz0b lz1b 0.9377f
+C834 on3 lg2_n_s0 0.10054f
+C835 lf_zero0 atb_ctle_src 0.00293f
+C836 lg5_n IBIAS 0.04107f
+C837 ena rl6 0.01269f
+C838 lz0b atb_ctle_pbias 0.06573f
+C839 on5 n10 0.05567f
+C840 lz0a sp_rl6_r1 0.08764f
+C841 nbias sp_rl4_r0 0.18012f
+C842 VDD_WIRE_SW lzn1 5.78721f
+C843 sp_rl3_r0 lg6_n_s0 0.04532f
+C844 lz1a ena 0.14634f
+C845 lz1b atb_ctle_src 2.48956f
+C846 lg4_n on3 0.03464f
+C847 on0_s0 VDD_WIRE_SW 3.43299f
+C848 lf_zero2 ena 1.16415f
+C849 lg0_n VDD_WIRE_SW 5.03292f
+C850 wire_ctle_bypass ena_b_s0 0.11951f
+C851 on3 wire_ctle_bypass 0.08811f
+C852 lg6_n IBIAS 0.09231f
+C853 atb_ctle_pbias atb_ctle_src 0.13798p
+C854 on1 lg0_n_s0 0.07669f
+C855 RX_N byp_q 0.43404f
+C856 lf_zero0 lz1b 0.1174f
+C857 on3 lg3_n 0.45426f
+C858 lz0a ena 0.89777f
+C859 ctle_peak1 lzn1 0.05531f
+C860 on2 lg0_n_s0 0.09993f
+C861 lz1a lzn1_s0 0
+C862 RX_N CTLE_P 12.4348f
+C863 lg4_n lz1a 0
+C864 wire_ctle_bypass rl6 0.27314f
+C865 lf_zero0 atb_ctle_pbias 1.66436f
+C866 lz1a wire_ctle_bypass 0.13893f
+C867 on0_s0 ctle_peak1 0.37023f
+C868 lf_zero2 lzn1_s0 0
+C869 lg0_n ctle_peak1 0.20702f
+C870 lf_zero2 lg4_n 0.02541f
+C871 o10_s0 o10 0.45721f
+C872 CTLE_N CTLE_P_rl 0
+C873 lzn0 sp_rl4_r0 0.0512f
+C874 sp_rl3_r0 ctle_peak0 0.07664f
+C875 RX_P IBIAS 0.00159f
+C876 lf_zero2 wire_ctle_bypass 0.03626f
+C877 atb_ctle_pbias lz1b 0.09366f
+C878 lg1_n sp_rl4_r0 0.02541f
+C879 IBIAS lg2_n 0.06045f
+C880 ctle_peak2 on4_s0 0.38358f
+C881 o10 ctle_peak2 0.84812f
+C882 lz1a lg3_n 0
+C883 lz0a lzn1_s0 0
+C884 lg4_n lz0a 0
+C885 lg1_n_s0 on1 0.56745f
+C886 lf_zero2 lg3_n 0.02541f
+C887 lz0a wire_ctle_bypass 0.10061f
+C888 atb_ctle_src byp_q 0.06015f
+C889 VDD_WIRE_SW lz2a 9.5903f
+C890 lg1_n_s0 on2 0.09993f
+C891 atb_ctle_src CTLE_P 32.5294f
+C892 lz0a lg3_n 0
+C893 CTLE_P_rl ena 1.0841f
+C894 sp_rl4_r0 lzn2 0.06547f
+C895 on0 bypb 0.2112f
+C896 lf_zero0 byp_q 0.03557f
+C897 CTLE_N sp_rl4_r0 0.03975f
+C898 lf_zero0 ena_b 2.8113f
+C899 ctle_peak0 n10 0.2797f
+C900 lf_zero0 CTLE_P 0.08521f
+C901 rl1 rl3 0.38405f
+C902 ctle_peak1 lz2a 0.07622f
+C903 lz2b lzn2_s0 0
+C904 on0 on6_s1 0
+C905 bypb byp_q 1.92509f
+C906 sp_rl6_r1 sp_rl4_r0 0.14427f
+C907 rl1 sp 0.39011f
+C908 lz2b IBIAS 0.1232f
+C909 sp_rl3_r0 sp_rl5_r0 0.08262f
+C910 lg0_n on4 0.0299f
+C911 atb_ctle_pbias byp_q 0.03577f
+C912 RX_N ctle_peak0 0.06348f
+C913 ena_b bypb 1.14731f
+C914 CTLE_P_rl wire_ctle_bypass 0.00133f
+C915 on3 on6 0.13942f
+C916 sp_rl3_r0 rl3 0.8353f
+C917 atb_ctle_pbias CTLE_P 0.13773f
+C918 atb_ctle_pbias ena_b 0.05098f
+C919 lf_zero1 VDD_WIRE_SW 2.11624f
+C920 lg3_n_s0 lg5_n 0.10496f
+C921 sp_rl3_r0 sp 85.07729f
+C922 sp_rl3_r0 ctle_peak2 0.06098f
+C923 lf_zero0 lg6_n_s0 0.03579f
+C924 sp_rl4_r0 ena 0.22975f
+C925 on0 on5 0.0395f
+C926 RX_N byp_bb 0.52506f
+C927 sp_rl6_r0 sp_rl5_r0 0.00537f
+C928 lz0b ctle_peak0 0.06946f
+C929 on0 byp_q 0.11277f
+C930 on5_s0 on5 0.5216f
+C931 lzn0 lzn1 9.3607f
+C932 on0 ena_b 3.30319f
+C933 lf_zero1 ctle_peak1 0.00195f
+C934 atb_ctle_pbias lg6_n_s0 0.06079f
+C935 ctle_peak0 atb_ctle_src 0
+C936 lg4_n sp_rl4_r0 0.03521f
+C937 sp_rl6_r0 sp 0.31285f
+C938 lg0_n lg1_n 93.34779f
+C939 sp_rl4_r0 wire_ctle_bypass 0.13782f
+C940 byp_q CTLE_P 0.54663f
+C941 ena_b byp_q 0.00155f
+C942 RX_N sp_rl5_r0 0.03174f
+C943 lf_zero0 ctle_peak0 0.00248f
+C944 ctle_en VDD_WIRE_SW 2.21624f
+C945 on1 n10 0.91853f
+C946 n10 ctle_peak2 7.53433f
+C947 byp_bb atb_ctle_src 0.0388f
+C948 lg3_n_s0 lg2_n 0
+C949 sp_rl4_r0 lg3_n 0.08259f
+C950 lzn2 lzn1 32.2347f
+C951 RX_N rl3 0.36355f
+C952 ctle_peak0 lz1b 0.10419f
+C953 on2 n10 3.08757f
+C954 ctle_peak0 bypb 0.1717f
+C955 lz0b sp_rl5_r0 0.05081f
+C956 lf_zero0 byp_bb 0.02541f
+C957 RX_N ctle_peak2 0.05081f
+C958 RX_N sp 0.26949f
+C959 on5 lg6_n_s0 0.48691f
+C960 atb_ctle_pbias ctle_peak0 0
+C961 sp_rl3_r0 lg6_n 0.1041f
+C962 sp_rl6_r1 lzn1 0.07396f
+C963 ctle_en ctle_peak1 0.08496f
+C964 ctle_peak0 on6_s1 0.24563f
+C965 CTLE_N lg0_n 0.12614f
+C966 rl1 lg2_n 0.29542f
+C967 ena_b lg6_n_s0 0.05132f
+C968 atb_ctle_src sp_rl5_r0 0.13705f
+C969 byp_bb bypb 0.00424f
+C970 lzn0 lz2a 0.29904f
+C971 lg0_n sp_rl6_r1 0.0449f
+C972 lz0b sp 0.1695f
+C973 on0_s1 on0_s0 0.65531f
+C974 lz0b ctle_peak2 0.05081f
+C975 atb_ctle_pbias byp_bb 0.02541f
+C976 ctle_peak0 on0 1.23191f
+C977 atb_ctle_src rl3 1.82118f
+C978 IBIAS lz1a 0.13337f
+C979 sp_rl3_r0 RX_P 0.1413f
+C980 lf_zero0 sp_rl5_r0 0.06463f
+C981 lf_zero2 lzn2_s0 0.25466f
+C982 RX_N clamp_s0 0.03851f
+C983 ena lzn1 0.95201f
+C984 sp_rl3_r0 lg2_n 0.08964f
+C985 atb_ctle_src sp 10.1831f
+C986 atb_ctle_src ctle_peak2 0.0013f
+C987 ctle_peak0 on5 0.22998f
+C988 lg0_n ena 35.5106f
+C989 RX_N lg5_n 0.03174f
+C990 lz1b sp_rl5_r0 0.07622f
+C991 lf_zero0 rl3 0.06683f
+C992 ctle_peak0 byp_q 0.58693f
+C993 lzn2_s0 lz0a 0
+C994 lzn2 lz2a 1.91772f
+C995 on0 byp_bb 0.2352f
+C996 lf_zero0 sp 0.29646f
+C997 IBIAS lz0a 0.10031f
+C998 lf_zero0 ctle_peak2 95.08871f
+C999 atb_ctle_pbias sp_rl5_r0 0.24419f
+C1000 ctle_peak0 CTLE_P 0.10421f
+C1001 lg0_n lg2_n_s0 0.13982f
+C1002 ctle_peak0 ena_b 0.08302f
+C1003 on5 lg5_n_s0 0.37926f
+C1004 sp_rl4_r0 rl4 0.40933f
+C1005 lzn1 lzn1_s0 0.71622f
+C1006 lf_zero1 lzn0 0.05636f
+C1007 lz1b sp 0.40467f
+C1008 byp_bb byp_q 0.13229p
+C1009 lz0b lg5_n 0
+C1010 RX_N lg6_n 0.03174f
+C1011 ctle_en on4 0.09261f
+C1012 lz1b ctle_peak2 0.07622f
+C1013 sp_rl6_r1 lz2a 0.10419f
+C1014 sp_rl4_r0 on6 0.03882f
+C1015 wire_ctle_bypass lzn1 0.09261f
+C1016 atb_ctle_pbias rl3 0.06683f
+C1017 lf_zero1 lg1_n 0.02541f
+C1018 bypb ctle_peak2 0.16569f
+C1019 clamp_s0 atb_ctle_src 1.88494f
+C1020 lg4_n lg0_n 0.03578f
+C1021 byp_bb ena_b 0
+C1022 byp_bb CTLE_P 0.56058f
+C1023 atb_ctle_pbias sp 44.5613f
+C1024 lg0_n wire_ctle_bypass 0.08478f
+C1025 atb_ctle_pbias ctle_peak2 0.08929f
+C1026 lz2b sp_rl3_r0 0.07622f
+C1027 on1 on6_s1 0
+C1028 lg5_n atb_ctle_src 0.87154f
+C1029 clamp_s0 lf_zero0 0.03217f
+C1030 lz0b lg6_n 0.04144f
+C1031 on6_s1 ctle_peak2 0
+C1032 ctle_peak0 lg6_n_s0 0.07396f
+C1033 on2 atb_ctle_pbias 0
+C1034 lg0_n lg3_n 0.04222f
+C1035 RX_N RX_P 4.07974f
+C1036 RX_N lg2_n 0.3238f
+C1037 ena lz2a 0.2972f
+C1038 lf_zero1 lzn2 0.17695f
+C1039 on2 on6_s1 0
+C1040 lg5_n lf_zero0 0.02541f
+C1041 o10_s0 on5 0.11472f
+C1042 clamp_s0 bypb 2.0853f
+C1043 on1 on0 20.6692f
+C1044 on0 ctle_peak2 1.30449f
+C1045 lg6_n_s0 lg5_n_s0 0.35315f
+C1046 lg6_n atb_ctle_src 0.88204f
+C1047 sp_rl5_r0 CTLE_P 0.03174f
+C1048 ena_b sp_rl5_r0 0.04386f
+C1049 on5_s0 ctle_peak2 0.28562f
+C1050 lf_zero1 CTLE_N 0.14679f
+C1051 clamp_s0 atb_ctle_pbias 0.03217f
+C1052 lg5_n lz1b 0
+C1053 ctle_en lzn0 0.13893f
+C1054 on2 on0 0.28761f
+C1055 rl5 atb_ctle_src 0.51811f
+C1056 lz0b lg2_n 0
+C1057 on1 on5 0.04017f
+C1058 lf_zero1 sp_rl6_r1 0.02541f
+C1059 on5 ctle_peak2 0.9627f
+C1060 ctle_en lg1_n 0.08478f
+C1061 lf_zero0 lg6_n 1.7292f
+C1062 rl3 CTLE_P 0.34427f
+C1063 lzn1_s0 lz2a 0
+C1064 lg4_n lz2a 0
+C1065 lg5_n atb_ctle_pbias 0.02541f
+C1066 lg3_n_s0 on3 0.46995f
+C1067 byp_q ctle_peak2 0.12461f
+C1068 on2 on5 2.93172f
+C1069 wire_ctle_bypass lz2a 0.13217f
+C1070 sp CTLE_P 0.24975f
+C1071 ena_b sp 0.04427f
+C1072 ctle_peak2 CTLE_P 0.08521f
+C1073 ena_b ctle_peak2 0.0894f
+C1074 RX_P atb_ctle_src 0.2513f
+C1075 lg6_n lz1b 0.02328f
+C1076 lg2_n atb_ctle_src 1.75664f
+C1077 clamp_s0 on0 0.05262f
+C1078 lg6_n_s0 sp_rl5_r0 0.05144f
+C1079 on2 ena_b 0
+C1080 lf_zero1 ena 1.45011f
+C1081 IBIAS sp_rl4_r0 0.1574f
+C1082 atb_ctle_pbias lg6_n 0.07509f
+C1083 lf_zero0 RX_P 0.07622f
+C1084 ctle_en lzn2 0.10277f
+C1085 ctle_peak0 byp_bb 0.22347f
+C1086 lf_zero0 lg2_n 0.03341f
+C1087 clamp_s0 byp_q 0.10906p
+C1088 CTLE_N ctle_en 0.00124f
+C1089 lg6_n_s0 sp 0.04543f
+C1090 lg5_n on5 0.36459f
+C1091 VDD_WIRE_SW rl2 2.67442f
+C1092 lg6_n_s0 ctle_peak2 0.0687f
+C1093 clamp_s0 CTLE_P 0.03863f
+C1094 ctle_en sp_rl6_r1 0.10062f
+C1095 clamp_s0 ena_b 0.00304f
+C1096 lz0b lz2b 0.98274f
+C1097 lf_zero1 lzn1_s0 0.35252f
+C1098 lf_zero1 lg4_n 0.02541f
+C1099 on1_s0 n10 0
+C1100 atb_ctle_pbias RX_P 0.12191f
+C1101 lg0_n on6 0
+C1102 atb_ctle_pbias lg2_n 0.03398f
+C1103 on2 lg6_n_s0 3.33892f
+C1104 lg5_n CTLE_P 0.03174f
+C1105 lf_zero1 wire_ctle_bypass 0.03648f
+C1106 lg5_n ena_b 0.04201f
+C1107 ctle_peak0 sp_rl5_r0 0.07097f
+C1108 lg2_n on6_s1 0.00365f
+C1109 lz2b atb_ctle_src 4.45759f
+C1110 lf_zero1 lg3_n 0.02541f
+C1111 ctle_peak0 o10_s0 0.59804f
+C1112 lg0_n rl0 0.71497f
+C1113 ctle_en ena 0.48827f
+C1114 ctle_peak0 rl3 0.0795f
+C1115 lg6_n CTLE_P 0.03174f
+C1116 sp_rl3_r0 lz1a 0.08639f
+C1117 lf_zero0 lz2b 0.1174f
+C1118 lg6_n ena_b 1.71005f
+C1119 on1 ctle_peak0 0.20678f
+C1120 ctle_peak0 ctle_peak2 0.63984f
+C1121 ctle_peak0 sp 0.35539f
+C1122 VDD_WIRE_SW clamp 2.1849f
+C1123 lf_zero2 sp_rl3_r0 0.03557f
+C1124 ctle_en lg2_n_s0 0.09261f
+C1125 lg5_n lg6_n_s0 6.71196f
+C1126 lz2b lz1b 0.27073f
+C1127 VDD_WIRE_SW ctle_peak1 9.11509f
+C1128 lg2_n on5 0.13351f
+C1129 RX_P byp_q 0.52911f
+C1130 on2 ctle_peak0 0.43441f
+C1131 lg2_n byp_q 0
+C1132 on3 n10 0.03842f
+C1133 ctle_en lg4_n 0.08478f
+C1134 sp_rl3_r0 lz0a 0.06899f
+C1135 RX_P CTLE_P 4.46787f
+C1136 byp_bb ctle_peak2 0.22209f
+C1137 lz2b atb_ctle_pbias 0.13131f
+C1138 ctle_en wire_ctle_bypass 20.4961f
+C1139 lg2_n CTLE_P 0.30452f
+C1140 a10_s0 VDD_WIRE_SW 0.01123f
+C1141 lg2_n ena_b 0.04244f
+C1142 lg6_n lg6_n_s0 4.3112f
+C1143 VDD_WIRE_SW on6_s0 0.01601f
+C1144 lzn2_s0 lzn1 0
+C1145 clamp_s0 ctle_peak0 0.99838f
+C1146 IBIAS lzn1 0.08663f
+C1147 ctle_en lg3_n 0.08029f
+C1148 sp_rl5_r0 rl3 0.10147f
+C1149 lg5_n ctle_peak0 0.07546f
+C1150 IBIAS lg0_n 0.05123f
+C1151 sp_rl5_r0 sp 0.96032f
+C1152 a10_s0 ctle_peak1 0.65338f
+C1153 clamp_s0 byp_bb 0.00382f
+C1154 sp_rl5_r0 ctle_peak2 0.05531f
+C1155 VDD_WIRE_SW r10 2.02578f
+C1156 lg2_n lg6_n_s0 0.13862f
+C1157 on6_s0 ctle_peak1 0.29471f
+C1158 lf_zero2 RX_N 0.05081f
+C1159 lg5_n lg5_n_s0 0.51819f
+C1160 o10_s0 ctle_peak2 0.09732f
+C1161 sp rl3 7.98226f
+C1162 rl3 ctle_peak2 0.06683f
+C1163 lg6_n ctle_peak0 0.07097f
+C1164 on4 VDD_WIRE_SW 4.61149f
+C1165 sp ctle_peak2 0.28677f
+C1166 lz0b lz1a 15.7453f
+C1167 VDD_WIRE_SW nbias 0.0117f
+C1168 on1 ctle_peak2 0.6845f
+C1169 lz0b lf_zero2 0.26865f
+C1170 clamp_s0 sp_rl5_r0 0.03557f
+C1171 atb_ctle_src rl6 0.42025f
+C1172 on1 on2 21.0154f
+C1173 on2 ctle_peak2 0.95148f
+C1174 on0 on1_s0 0
+C1175 lzn2_s0 lz2a 0
+C1176 RX_P ctle_peak0 0.09523f
+C1177 lz1a atb_ctle_src 1.08951f
+C1178 ctle_peak0 lg2_n 0.07448f
+C1179 lg1_n rl2 0.0015f
+C1180 lg5_n sp_rl5_r0 0.02579f
+C1181 IBIAS lz2a 0.1232f
+C1182 on4 ctle_peak1 0.1634f
+C1183 lz0b lz0a 23.7357f
+C1184 clamp_s0 rl3 0.05842f
+C1185 lf_zero2 atb_ctle_src 0.01465f
+C1186 bypb ena_b_s0 0.43251f
+C1187 clamp_s0 ctle_peak2 0.08109f
+C1188 lf_zero0 lz1a 0.1242f
+C1189 sp_rl3_r0 sp_rl4_r0 76.2592f
+C1190 atb_ctle_pbias on3 0
+C1191 lg5_n rl3 0.04919f
+C1192 RX_P byp_bb 0.54814f
+C1193 lg0_n lg0_n_s0 0.51819f
+C1194 lg2_n byp_bb 0
+C1195 atb_ctle_src lz0a 11.3958f
+C1196 lf_zero2 lf_zero0 0.04823f
+C1197 lzn0 VDD_WIRE_SW 5.34676f
+C1198 lg6_n sp_rl5_r0 0.20877f
+C1199 ctle_en on6 0.15927f
+C1200 lg5_n ctle_peak2 0.07319f
+C1201 lz1b lz1a 41.2152f
+C1202 VDD_WIRE_SW lg1_n 4.97947f
+C1203 VDD_WIRE_SW a10 5.21814f
+C1204 rl5 sp_rl5_r0 0.35456f
+C1205 lf_zero2 lz1b 0.19129f
+C1206 lf_zero0 lz0a 0.13005f
+C1207 lg5_n on2 0.04828f
+C1208 lg6_n rl3 2.6823f
+C1209 atb_ctle_pbias lz1a 0.13807f
+C1210 on0 ena_b_s0 0.34701f
+C1211 on0 on3 0.02593f
+C1212 lf_zero2 atb_ctle_pbias 88.7656f
+C1213 lg6_n sp 0.12316f
+C1214 lg6_n ctle_peak2 0.05531f
+C1215 on4 r10 0.57959f
+C1216 lzn0 ctle_peak1 0.08299f
+C1217 lz1b lz0a 0.11638f
+C1218 lz2b ctle_peak0 0.10419f
+C1219 RX_P sp_rl5_r0 0.03195f
+C1220 on3 on5 0.21033f
+C1221 VDD_WIRE_SW lzn2 7.83337f
+C1222 lg2_n sp_rl5_r0 0.03341f
+C1223 lg1_n ctle_peak1 0.22507f
+C1224 lg1_n_s0 lg0_n 0
+C1225 byp_q ena_b_s0 0
+C1226 clamp_s0 lg5_n 0.03585f
+C1227 ctle_peak1 a10 0.61428f
+C1228 atb_ctle_pbias lz0a 0.07033f
+C1229 RX_P rl3 0.18755f
+C1230 CTLE_N VDD_WIRE_SW 4.18156f
+C1231 ctle_peak0 VSS 23.0627f
+C1232 ctle_peak2 VSS 22.923f
+C1233 ctle_peak1 VSS 17.3953f
+C1234 IBIAS VSS 9.57995f
+C1235 ctle_en VSS 30.3983f
+C1236 lf_zero0 VSS 6.26685f
+C1237 lf_zero1 VSS 5.04074f
+C1238 lf_zero2 VSS 5.95994f
+C1239 atb_ctle_pbias VSS 26.3654f
+C1240 wire_ctle_bypass VSS 15.1396f
+C1241 RX_N VSS 33.3839f
+C1242 CTLE_N VSS 19.998f
+C1243 RX_P VSS 20.0321f
+C1244 CTLE_P VSS 14.7156f
+C1245 atb_ctle_src VSS 98.1613f
+C1246 VDD_WIRE_SW VSS 1.33128p
+C1247 on0_s1 VSS 0.3353f
+C1248 on0_s0 VSS 0.34699f
+C1249 ena_b_s0 VSS 2.3091f
+C1250 bypb VSS 4.01678f
+C1251 on2_s0 VSS 0.31473f
+C1252 a10 VSS 5.60052f
+C1253 a10_s0 VSS 3.10781f
+C1254 on1_s0 VSS 0.27854f
+C1255 on5_s0 VSS 2.04476f
+C1256 on4_s0 VSS 2.19924f
+C1257 r10 VSS 2.58179f
+C1258 o10 VSS 5.46325f
+C1259 o10_s0 VSS 0.40209f
+C1260 n10 VSS 7.55574f
+C1261 lg1_n_s0 VSS 2.86604f
+C1262 on1 VSS 6.15085f
+C1263 lg0_n_s0 VSS 3.12946f
+C1264 on0 VSS 12.2548f
+C1265 on6_s1 VSS 1.95472f
+C1266 on6_s0 VSS 2.40881f
+C1267 lg5_n_s0 VSS 2.69461f
+C1268 on5 VSS 8.89066f
+C1269 lg4_n_s0 VSS 2.94321f
+C1270 on4 VSS 5.60061f
+C1271 lg3_n_s0 VSS 3.21646f
+C1272 on3 VSS 4.0647f
+C1273 on2 VSS 13.85f
+C1274 lg2_n_s0 VSS 6.27379f
+C1275 lzn0_s0 VSS 3.61165f
+C1276 sp_rl6_r0 VSS 2.54422f
+C1277 ena_b VSS 9.96066f
+C1278 nbias VSS 8.16793f
+C1279 on6 VSS 11.6859f
+C1280 lg6_n_s0 VSS 6.40452f
+C1281 lzn2_s0 VSS 2.67366f
+C1282 lzn1_s0 VSS 2.81959f
+C1283 lzn0 VSS 13.0434f
+C1284 lz0b VSS 20.3892f
+C1285 lz0a VSS 21.1857f
+C1286 lz2b VSS 62.2077f
+C1287 lz2a VSS 61.3746f
+C1288 lzn2 VSS 13.8441f
+C1289 lz1b VSS 32.6391f
+C1290 lz1a VSS 33.9497f
+C1291 lzn1 VSS 6.60672f
+C1292 sp_rl3_r0 VSS 8.20426f
+C1293 lg2_n VSS 8.1073f
+C1294 rl2 VSS 1.32546f
+C1295 lg1_n VSS 7.16901f
+C1296 rl1 VSS 1.37946f
+C1297 lg0_n VSS 8.87532f
+C1298 rl0 VSS 1.49924f
+C1299 CTLE_N_rl VSS 10.1542f
+C1300 CTLE_P_rl VSS 10.1232f
+C1301 ena VSS 57.6229f
+C1302 clamp VSS 11.1212f
+C1303 clamp_s0 VSS 7.64367f
+C1304 lg6_n VSS 14.4697f
+C1305 rl6 VSS 1.46504f
+C1306 sp_rl6_r1 VSS 10.6205f
+C1307 lg5_n VSS 6.9324f
+C1308 rl5 VSS 1.51148f
+C1309 sp_rl5_r0 VSS 5.84941f
+C1310 lg4_n VSS 6.53184f
+C1311 rl4 VSS 1.54979f
+C1312 sp_rl4_r0 VSS 5.82388f
+C1313 rl3 VSS 5.11892f
+C1314 lg3_n VSS 7.30039f
+C1315 byp_bb VSS 37.2528f
+C1316 byp_q VSS 11.763f
+C1317 sp VSS 96.03471f
+.ends
+

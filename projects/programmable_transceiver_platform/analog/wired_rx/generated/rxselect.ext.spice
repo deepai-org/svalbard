@@ -1,0 +1,156 @@
+* NGSPICE file created from pt_rxselect.ext - technology: gf180mcuD
+
+.subckt pt_rxselect VDD_WIRE_SW VSS rxselect_en rxselect_direct CTLE_P CTLE_N RX_P
++ RX_N SL_P SL_N
+X0 sb_b rxselect_direct sb_b_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X1 db rxselect_direct VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X2 db rxselect_direct VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X3 sa_b_s0 rxselect_en VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X4 RX_P sb SL_P VSS nfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.28u
+X5 CTLE_N sa_b SL_N VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X6 sa_b rxselect_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X7 sa_b db VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X8 sa_b db sa_b_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X9 sb sb_b VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X10 RX_N sb_b SL_N VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X11 CTLE_N sa SL_N VSS nfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.28u
+X12 sb sb_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X13 enb rxselect_en VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X14 RX_P sb_b SL_P VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X15 RX_N sb SL_N VSS nfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.28u
+X16 CTLE_P sa SL_P VSS nfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.28u
+X17 sa sa_b VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X18 CTLE_P sa_b SL_P VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X19 sa sa_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X20 enb rxselect_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X21 sb_b_s0 rxselect_en VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X22 SL_N enb VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X23 sb_b rxselect_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X24 sb_b rxselect_direct VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X25 SL_P enb VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+C0 RX_N CTLE_N 3.01195f
+C1 SL_N VDD_WIRE_SW 7.08539f
+C2 SL_N sb_b 0.58321f
+C3 RX_N sb 0.38716f
+C4 sa_b CTLE_P 0.63313f
+C5 enb SL_P 0.6449f
+C6 sa_b VDD_WIRE_SW 5.01423f
+C7 rxselect_direct sa 0.11681f
+C8 sa_b rxselect_en 3.52642f
+C9 sa_b sb_b 4.09585f
+C10 RX_P sa 0.10943f
+C11 CTLE_P VDD_WIRE_SW 12.7742f
+C12 rxselect_en CTLE_P 0.06229f
+C13 sa sb_b_s0 0
+C14 CTLE_P sb_b 3.68879f
+C15 rxselect_en VDD_WIRE_SW 3.08525f
+C16 VDD_WIRE_SW sb_b 4.6197f
+C17 sb CTLE_N 0.1382f
+C18 SL_N enb 0.43889f
+C19 rxselect_en sb_b 1.01742f
+C20 sa_b enb 0.28236f
+C21 rxselect_direct RX_N 5.22181f
+C22 sa SL_P 0.71595f
+C23 RX_P RX_N 1.73336f
+C24 rxselect_direct db 1.14137f
+C25 enb CTLE_P 0.19789f
+C26 enb VDD_WIRE_SW 2.17566f
+C27 enb rxselect_en 3.46359f
+C28 enb sb_b 3.26793f
+C29 rxselect_direct CTLE_N 0.0449f
+C30 SL_N sa 0.55092f
+C31 RX_N SL_P 0.09584f
+C32 rxselect_direct sb 0.06647f
+C33 RX_P CTLE_N 0.12083f
+C34 sa_b sa 22.5637f
+C35 sa_b_s0 db 0.23722f
+C36 RX_P sb 0.47119f
+C37 sa CTLE_P 0.54636f
+C38 sa VDD_WIRE_SW 2.30871f
+C39 sa rxselect_en 4.429f
+C40 sa sb_b 0.23351f
+C41 SL_N RX_N 4.94354f
+C42 SL_P CTLE_N 0.05035f
+C43 sa_b RX_N 0.03402f
+C44 sb SL_P 0.56914f
+C45 sa_b db 0.92372f
+C46 RX_N CTLE_P 0.00246f
+C47 RX_P rxselect_direct 0.03851f
+C48 RX_N VDD_WIRE_SW 4.41271f
+C49 SL_N CTLE_N 3.58992f
+C50 enb sa 12.0248f
+C51 RX_N rxselect_en 14.3332f
+C52 RX_N sb_b 0.47554f
+C53 rxselect_direct sb_b_s0 0.23687f
+C54 SL_N sb 0.58633f
+C55 sa_b CTLE_N 0.56424f
+C56 db VDD_WIRE_SW 2.92123f
+C57 rxselect_en db 0.80231f
+C58 rxselect_direct sa_b_s0 0
+C59 sa_b sb 14.0298f
+C60 CTLE_N CTLE_P 0
+C61 rxselect_direct SL_P 21.6884f
+C62 CTLE_N VDD_WIRE_SW 18.8879f
+C63 CTLE_N rxselect_en 0.05872f
+C64 CTLE_N sb_b 0.08396f
+C65 enb RX_N 0.11602f
+C66 sb CTLE_P 0.08227f
+C67 RX_P SL_P 3.84638f
+C68 sb VDD_WIRE_SW 1.95013f
+C69 sb rxselect_en 0.07741f
+C70 sb sb_b 13.385f
+C71 SL_P sb_b_s0 0
+C72 rxselect_direct SL_N 0
+C73 RX_P SL_N 1.16869f
+C74 sa_b rxselect_direct 0.27412f
+C75 enb CTLE_N 0.07275f
+C76 enb sb 0.12854f
+C77 RX_P sa_b 0.10943f
+C78 RX_N sa 0.03183f
+C79 rxselect_direct CTLE_P 0.06573f
+C80 sa_b sb_b_s0 0
+C81 rxselect_direct VDD_WIRE_SW 2.59712f
+C82 rxselect_direct rxselect_en 7.38347f
+C83 rxselect_direct sb_b 0.99006f
+C84 RX_P CTLE_P 0
+C85 sa db 0.0034f
+C86 SL_N SL_P 2.97693f
+C87 RX_P VDD_WIRE_SW 4.46015f
+C88 sb_b_s0 CTLE_P 0.00422f
+C89 RX_P rxselect_en 5.1204f
+C90 sa_b sa_b_s0 0.52238f
+C91 RX_P sb_b 0.52475f
+C92 sb_b_s0 VDD_WIRE_SW 0.00154f
+C93 sb_b_s0 rxselect_en 0.23717f
+C94 sb_b_s0 sb_b 0.52238f
+C95 sa_b SL_P 0.8134f
+C96 sa CTLE_N 0.48492f
+C97 sa_b_s0 VDD_WIRE_SW 0.00956f
+C98 rxselect_direct enb 0.09821f
+C99 sb sa 0.08164f
+C100 sa_b_s0 rxselect_en 0.24009f
+C101 SL_P CTLE_P 6.35272f
+C102 SL_P VDD_WIRE_SW 10.6904f
+C103 SL_P rxselect_en 0.04071f
+C104 SL_P sb_b 0.65007f
+C105 RX_P enb 0.14162f
+C106 sa_b SL_N 0.63106f
+C107 rxselect_direct VSS 7.88863f
+C108 CTLE_P VSS 6.64691f
+C109 rxselect_en VSS 9.51875f
+C110 CTLE_N VSS 10.4014f
+C111 RX_P VSS 17.8685f
+C112 SL_P VSS 9.61029f
+C113 RX_N VSS 4.68011f
+C114 SL_N VSS 10.2221f
+C115 VDD_WIRE_SW VSS 93.3765f
+C116 sa_b_s0 VSS 1.93444f
+C117 db VSS 3.93876f
+C118 sb_b_s0 VSS 1.93341f
+C119 sa_b VSS 8.04471f
+C120 sa VSS 5.527f
+C121 sb VSS 4.15301f
+C122 enb VSS 15.1348f
+C123 sb_b VSS 8.87686f
+.ends
+

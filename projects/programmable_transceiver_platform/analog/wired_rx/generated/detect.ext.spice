@@ -1,0 +1,2956 @@
+* NGSPICE file created from pt_detect.ext - technology: gf180mcuD
+
+.subckt pt_detect VDD_WIRE_SW VSS IBIAS det_en det_clk RX_P RX_N TX_P TX_N det_thr0
++ det_thr1 det_se0 det_se1 det_src_tx det_inject DIFF_POS DIFF_NEG SE_P SE_N atb_det_vref
+X0 VT2 VT1 VSS ppolyf_u_1k r_width=1u r_length=2.45u
+X1 csp_ckn det_clk VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X2 csp_ckn det_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X3 LS_N dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=1u
+X4 TXDS1_P TXDS2_P TXDS1_P TXDS2_P pfet_06v0 ad=4.4p pd=20.88u as=8.8p ps=41.76u w=10u l=0.7u
+X5 sg3 sg3_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X6 inj_N dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=10.56p pd=48.88u as=10.56p ps=48.88u w=24u l=1u
+X7 sg1_b_s0 det_se0 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X8 cdn_1pa cdn_ckn VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X9 cdn_3ob cdn_2oa VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X10 LS_P_VCMS_r7 LS_P_VCMS_r8 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X11 cdn_2oa cdn_3ob VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X12 VT3 VT3_VT2_r0 VSS ppolyf_u_1k r_width=1u r_length=4.98u
+X13 TX_P_TXS_P_r2 TX_P_TXS_P_r3 VSS ppolyf_u_1k r_width=2u r_length=5.71u
+X14 VDD_WIRE_SW VSE VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=0.29084n ps=1.40736m w=20u l=5u
+X15 LS_N_VCMS_r4 LS_N_VCMS_r5 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X16 LS_P dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=1u
+X17 cdp_x cdp_ckn VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.28u
+X18 TXDS2_N TXDS3_N TXDS2_N TXDS3_N pfet_06v0 ad=4.4p pd=20.88u as=8.8p ps=41.76u w=10u l=0.7u
+X19 TXS_P tx DP_P VSS nfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.7u
+X20 VB3 tg3_b VREFN VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X21 VB2 tg2_b VREFN VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X22 sg2_b e0b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X23 TXDF5_P VSS TXDF5_P VSS pfet_06v0 ad=8.8p pd=40.88u as=35.2p ps=0.16352m w=20u l=0.7u
+X24 TXDF0_P TXDF1_P TXDF0_P TXDF1_P pfet_06v0 ad=8.8p pd=40.88u as=35.2p ps=0.16352m w=20u l=0.7u
+D0 VSS enb diode_nd2ps_03v3 pj=2.76u area=0.4761p
+X25 cdn_3ob cdn_2oa cdn_4pb VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X26 cdn_2oa cdn_3ob cdn_1pa VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X27 cdp_q cdp_qb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X28 cdp_ckn_s0 det_clk VSS VSS nfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+D1 VSS det_src_tx diode_nd2ps_03v3 pj=2.4u area=0.36p
+X29 atb_det_vref_lad_bot_r0 lad_bot VSS ppolyf_u_1k r_width=2u r_length=5u
+X30 cdp_3ob cdp_2oa cdp_4pb VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+D2 VSS enb diode_nd2ps_03v3 pj=2.64u area=0.4356p
+X31 B1 atb_det_vref VSS ppolyf_u_1k r_width=2u r_length=1.25u
+X32 TXDF3_P TXDF4_P TXDF3_P TXDF4_P pfet_06v0 ad=8.8p pd=40.88u as=35.2p ps=0.16352m w=20u l=0.7u
+X33 cdp_3ob cdp_ckn VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X34 VSS DP_P LS_P LS_P pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.5u
+X35 oa1 oa1 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X36 tx_b det_src_tx VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X37 LS_N dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=1u
+X38 cdn_x cdn_ckn VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.28u
+X39 va_VSS_r2 va_VSS_r3 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X40 DIFF_POS enb DIFF_POS_s0 VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X41 cdp_4pb LS_N cdp_x VDD_WIRE_SW pfet_03v3 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.28u
+X42 B3_S0_r0 S0 VSS ppolyf_u_1k r_width=2u r_length=3.7u
+X43 im og va VSS nfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=1u
+X44 VB1 tg1_b VREFN VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X45 VCMM tg0 VREFN VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X46 VT3 tg3 VTHP VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X47 VT2 tg2 VTHP VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X48 VT1 tg1 VTHP VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X49 cdn_4pb VTHP cdn_x VDD_WIRE_SW pfet_03v3 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.28u
+X50 cdn_1pa VREFN cdn_x VDD_WIRE_SW pfet_03v3 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.28u
+X51 cdn_4pb LS_P cdn_x VDD_WIRE_SW pfet_03v3 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.28u
+X52 TX_N_TXS_N_r2 TX_N_TXS_N_r3 VSS ppolyf_u_1k r_width=2u r_length=5.71u
+X53 LS_N_VCMS_r1 LS_N_VCMS_r2 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X54 TXDF5_N VSS TXDF5_N VSS pfet_06v0 ad=8.8p pd=40.88u as=35.2p ps=0.16352m w=20u l=0.7u
+X55 LS_P_VCMS_r13 LS_P_VCMS_r14 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X56 va_VSS_r4 va_VSS_r5 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X57 VSS DP_N LS_N LS_N pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.5u
+X58 sg0 sg0_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X59 B3 sg1_b VSE VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X60 RX_N ln_b DP_N VDD_WIRE_SW pfet_03v3 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.28u
+X61 VB2_VB3_r1 VB2_VB3_r2 VSS ppolyf_u_1k r_width=1u r_length=4.98u
+X62 TXDF0_N TXDF1_N TXDF0_N TXDF1_N pfet_06v0 ad=8.8p pd=40.88u as=35.2p ps=0.16352m w=20u l=0.7u
+X63 LS_P dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=1u
+X64 TXS_P TXDS0_P TXS_P TXDS0_P pfet_06v0 ad=4.4p pd=20.88u as=8.8p ps=41.76u w=10u l=0.7u
+X65 sg2_b_s0 e0b VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X66 TXDF1_N TXDF2_N TXDF1_N TXDF2_N pfet_06v0 ad=8.8p pd=40.88u as=35.2p ps=0.16352m w=20u l=0.7u
+X67 bt dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=1u
+X68 lad_bot enq VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X69 og enb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X70 VT3_VT2_r2 VT2 VSS ppolyf_u_1k r_width=1u r_length=4.98u
+X71 LS_P dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=1u
+X72 cdn_ckn det_en cdn_ckn_s0 VSS nfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X73 cdn_ckn_s0 det_clk VSS VSS nfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X74 sg3_b det_se0 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X75 tg3_b det_thr0 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X76 tg2_b t0b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X77 lad_top_S2_r2 S2 VSS ppolyf_u_1k r_width=2u r_length=6.5u
+X78 TXDF4_P TXDF5_P TXDF4_P TXDF5_P pfet_06v0 ad=8.8p pd=40.88u as=35.2p ps=0.16352m w=20u l=0.7u
+X79 TXF_P TXDF0_P TXF_P TXDF0_P pfet_06v0 ad=8.8p pd=40.88u as=35.2p ps=0.16352m w=20u l=0.7u
+X80 VCMM VCMM bt VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=1u
+X81 LS_N dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=1u
+X82 cdn_ckn det_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X83 cdn_ckn det_clk VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X84 inm inm VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+X85 TXDS5_P VSS TXDS5_P VSS pfet_06v0 ad=4.4p pd=20.88u as=8.8p ps=41.76u w=10u l=0.7u
+X86 atb_det_vref atb_det_vref_lad_bot_r0 VSS ppolyf_u_1k r_width=2u r_length=5u
+X87 TXS_N VSS VSS VSS nfet_06v0 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.7u
+X88 cdp_1pa cdp_ckn VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X89 t0b det_thr0 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X90 VSS VCMM VSS VSS nfet_03v3 ad=4.4p pd=20.88u as=0.10032n ps=0.54312m w=10u l=4u
+X91 ot dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=1u
+X92 t0b det_thr0 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X93 cdp_ckn det_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X94 dpb enq VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X95 VB1 tg1 VREFN VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X96 enb det_en VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X97 TXDF2_P TXDF3_P TXDF2_P TXDF3_P pfet_06v0 ad=8.8p pd=40.88u as=35.2p ps=0.16352m w=20u l=0.7u
+X98 SE_N csn_qb VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X99 SE_N enb VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X100 ln ln_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X101 RX_P ln DP_P VSS nfet_03v3 ad=2.64p pd=12.88u as=2.64p ps=12.88u w=6u l=0.28u
+X102 TXDF4_N TXDF5_N TXDF4_N TXDF5_N pfet_06v0 ad=8.8p pd=40.88u as=35.2p ps=0.16352m w=20u l=0.7u
+X103 cdp_qb cdp_q VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X104 cdp_4pb cdp_ckn VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X105 VSS DP_N LS_N LS_N pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.5u
+X106 csn_1pa DP_N csn_x VDD_WIRE_SW pfet_03v3 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.28u
+X107 LS_N_VCMS_r14 VCMS VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X108 tg0 tg0_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X109 LS_P_VCMS_r5 LS_P_VCMS_r6 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X110 TXDF5_P VSS TXDF5_P VSS pfet_06v0 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=0.7u
+X111 SE_N enb SE_N_s0 VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X112 ln_b det_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+D3 VSS enb diode_nd2ps_03v3 pj=2.4u area=0.36p
+X113 lad_top enb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X114 VSS DP_P LS_P LS_P pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.5u
+X115 tg3 tg3_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X116 tg2 tg2_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X117 tg1_b t1b tg1_b_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X118 tg1 tg1_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X119 DP_P enb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X120 B3 B3_S0_r0 VSS ppolyf_u_1k r_width=2u r_length=3.7u
+X121 tg0_b t1b tg0_b_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X122 TX_P_TXF_P_r0 TXF_P VSS ppolyf_u_1k r_width=2u r_length=6u
+X123 LS_P_VCMS_r2 LS_P_VCMS_r3 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X124 VB2_VB3_r0 VB2_VB3_r1 VSS ppolyf_u_1k r_width=1u r_length=4.98u
+X125 TX_N TX_N_TXS_N_r0 VSS ppolyf_u_1k r_width=2u r_length=5.71u
+X126 inj inj_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+D4 VSS det_se0 diode_nd2ps_03v3 pj=5.64u area=1.9881p
+X127 LS_N_VCMS_r9 LS_N_VCMS_r10 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X128 LS_N LS_N_VCMS_r0 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X129 S1 sg2_b VSE VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X130 dnb enb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X131 sg0_b e1b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X132 sg1 sg1_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X133 LS_N_VCMS_r10 LS_N_VCMS_r11 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X134 dnb enq IBIAS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X135 TXF_N TXDF0_N TXF_N TXDF0_N pfet_06v0 ad=8.8p pd=40.88u as=35.2p ps=0.16352m w=20u l=0.7u
+X136 LS_N dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=1u
+X137 csn_qb csn_q VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X138 LS_P dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=1u
+X139 enb det_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X140 tx_b det_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X141 csn_qb csn_3ob VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X142 t1b det_thr1 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X143 VB3 inm VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+X144 TXDS2_P TXDS3_P TXDS2_P TXDS3_P pfet_06v0 ad=4.4p pd=20.88u as=8.8p ps=41.76u w=10u l=0.7u
+X145 VSS DP_P LS_P LS_P pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.5u
+X146 tg3_b_s0 det_thr0 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X147 tg2_b_s0 t0b VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X148 sg1_b e1b sg1_b_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X149 TX_P_TXS_P_r5 TXS_P VSS ppolyf_u_1k r_width=2u r_length=5.71u
+X150 inj_P dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=10.56p pd=48.88u as=10.56p ps=48.88u w=24u l=1u
+X151 LS_P_VCMS_r8 LS_P_VCMS_r9 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X152 VT3_VT2_r0 VT3_VT2_r1 VSS ppolyf_u_1k r_width=1u r_length=4.98u
+X153 csn_qb csn_q csn_qb_s0 VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X154 LS_N_VCMS_r5 LS_N_VCMS_r6 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X155 csn_qb_s0 csn_3ob VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X156 LS_P dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=1u
+X157 TX_N_TXS_N_r3 TX_N_TXS_N_r4 VSS ppolyf_u_1k r_width=2u r_length=5.71u
+X158 TXDS3_N TXDS4_N TXDS3_N TXDS4_N pfet_06v0 ad=4.4p pd=20.88u as=8.8p ps=41.76u w=10u l=0.7u
+X159 enq enb VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X160 im im VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X161 sg2_b det_se1 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X162 sg3 sg3_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X163 VCMM tg0_b VTHP VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X164 TX_N_TXS_N_r1 TX_N_TXS_N_r2 VSS ppolyf_u_1k r_width=2u r_length=5.71u
+X165 SE_N_s0 csn_qb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X166 TXDF0_P TXDF1_P TXDF0_P TXDF1_P pfet_06v0 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=0.7u
+X167 ln ln_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X168 SE_P enb VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X169 SE_P csp_qb VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X170 cdp_2oa cdp_3ob VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X171 cdp_ckn det_en cdp_ckn_s0 VSS nfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X172 sg3_b det_se1 sg3_b_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X173 TXDF1_P TXDF2_P TXDF1_P TXDF2_P pfet_06v0 ad=8.8p pd=40.88u as=35.2p ps=0.16352m w=20u l=0.7u
+X174 csp_1pa DP_P csp_x VDD_WIRE_SW pfet_03v3 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.28u
+X175 VB2_VB3_r2 VB3 VSS ppolyf_u_1k r_width=1u r_length=4.98u
+X176 inj_b det_inject inj_b_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X177 inj_b_s0 det_en VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X178 SE_P enb SE_P_s0 VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X179 cdp_qb_s0 cdp_3ob VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X180 VSS DP_N LS_N LS_N pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.5u
+X181 TXS_N TXDS0_N TXS_N TXDS0_N pfet_06v0 ad=4.4p pd=20.88u as=8.8p ps=41.76u w=10u l=0.7u
+X182 t1b det_thr1 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X183 srcb det_src_tx VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X184 TXDF3_P TXDF4_P TXDF3_P TXDF4_P pfet_06v0 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=0.7u
+X185 inj_b det_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X186 inj_b det_inject VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X187 dpb dnb VSS VSS nfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=1u
+X188 tx tx_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X189 dnb dnb VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+X190 ln_b_s0 det_en VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X191 csn_q csn_2oa VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X192 csn_q csn_qb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X193 va va_VSS_r0 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X194 og va ot VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=1u
+X195 TXDF3_N TXDF4_N TXDF3_N TXDF4_N pfet_06v0 ad=8.8p pd=40.88u as=35.2p ps=0.16352m w=20u l=0.7u
+X196 csn_3ob csn_ckn VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X197 e1b det_se1 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X198 DIFF_POS cdp_qb VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X199 tg1_b t1b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X200 LS_N_VCMS_r12 LS_N_VCMS_r13 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X201 tg0_b t1b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X202 TX_P_TXS_P_r1 TX_P_TXS_P_r2 VSS ppolyf_u_1k r_width=2u r_length=5.71u
+X203 enq enb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X204 S1 B3 VSS ppolyf_u_1k r_width=2u r_length=4.6u
+X205 B2 B1 VSS ppolyf_u_1k r_width=2u r_length=1.25u
+X206 dpb dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=1u
+X207 e0b det_se0 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X208 csn_q_s0 csn_2oa VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X209 csn_q csn_qb csn_q_s0 VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X210 TXF_N VSS VSS VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X211 TXDF5_N VSS TXDF5_N VSS pfet_06v0 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=0.7u
+X212 cdp_q_s0 cdp_2oa VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X213 csp_qb csp_q VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+D5 VSS det_se0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+X214 cdp_1pa VREFN cdp_x VDD_WIRE_SW pfet_03v3 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.28u
+X215 csp_qb csp_3ob VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X216 sg0_b_s0 e0b VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X217 LS_P_VCMS_r10 LS_P_VCMS_r11 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X218 LS_P_VCMS_r0 LS_P_VCMS_r1 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X219 LS_N_VCMS_r7 LS_N_VCMS_r8 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X220 tx_b_s0 det_en VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X221 VCMM bd VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X222 va_VSS_r5 va_VSS_r6 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X223 TXDS3_P TXDS4_P TXDS3_P TXDS4_P pfet_06v0 ad=4.4p pd=20.88u as=8.8p ps=41.76u w=10u l=0.7u
+X224 cdp_qb cdp_3ob VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X225 csp_qb csp_q csp_qb_s0 VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X226 VT3 im VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X227 csp_qb_s0 csp_3ob VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+D6 VSS enb diode_nd2ps_03v3 pj=2.4u area=0.36p
+X228 S2 sg3_b VSE VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X229 VSS DP_N LS_N LS_N pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.5u
+D7 VSS enb diode_nd2ps_03v3 pj=3.2u area=0.64p
+X230 VSS DP_P LS_P LS_P pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.5u
+X231 sg1_b e1b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X232 sg2 sg2_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X233 VCMM tg0_b VREFN VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X234 VT2 tg2_b VTHP VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X235 VT1 tg1_b VTHP VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X236 LS_P_VCMS_r4 LS_P_VCMS_r5 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X237 VCMM VB1 VSS ppolyf_u_1k r_width=1u r_length=2.45u
+X238 TXDF1_N TXDF2_N TXDF1_N TXDF2_N pfet_06v0 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=0.7u
+X239 LS_P dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=1u
+X240 SE_P_s0 csp_qb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X241 lad_top_S2_r0 lad_top_S2_r1 VSS ppolyf_u_1k r_width=2u r_length=6.5u
+X242 TXDS0_P TXDS1_P TXDS0_P TXDS1_P pfet_06v0 ad=4.4p pd=20.88u as=8.8p ps=41.76u w=10u l=0.7u
+X243 csn_4pb csn_ckn VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X244 csn_2oa csn_ckn VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X245 csn_2oa csn_3ob VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X246 csn_3ob csn_2oa VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X247 csn_1pa csn_ckn VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X248 VB3 tg3 VREFN VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X249 VB2 tg2 VREFN VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X250 TX_N_TXF_N_r0 TXF_N VSS ppolyf_u_1k r_width=2u r_length=6u
+X251 sg2_b det_se1 sg2_b_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X252 VB1 VB2 VSS ppolyf_u_1k r_width=1u r_length=2.45u
+X253 TXDF2_N TXDF3_N TXDF2_N TXDF3_N pfet_06v0 ad=8.8p pd=40.88u as=35.2p ps=0.16352m w=20u l=0.7u
+X254 bd VCMS bt VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=1u
+X255 sg0_b e1b sg0_b_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X256 LS_N_VCMS_r3 LS_N_VCMS_r4 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X257 TX_P_TXS_P_r0 TX_P_TXS_P_r1 VSS ppolyf_u_1k r_width=2u r_length=5.71u
+X258 e0b det_se0 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X259 TXS_P VSS VSS VSS nfet_06v0 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.7u
+X260 TXDS1_N TXDS2_N TXDS1_N TXDS2_N pfet_06v0 ad=4.4p pd=20.88u as=8.8p ps=41.76u w=10u l=0.7u
+X261 sg3_b det_se1 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X262 VDD_WIRE_SW VTHP VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=5u
+X263 TXDF4_P TXDF5_P TXDF4_P TXDF5_P pfet_06v0 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=0.7u
+X264 TXF_P TXDF0_P TXF_P TXDF0_P pfet_06v0 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=0.7u
+D8 VSS enq diode_nd2ps_03v3 pj=3.4u area=0.7225p
+X265 LS_N dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=1u
+X266 TXF_P VSS VSS VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X267 cdp_q cdp_2oa VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X268 TXS_N tx DP_N VSS nfet_06v0 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.7u
+X269 TXDS5_N VSS TXDS5_N VSS pfet_06v0 ad=4.4p pd=20.88u as=8.8p ps=41.76u w=10u l=0.7u
+X270 csp_q csp_qb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X271 csp_q csp_2oa VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X272 csp_3ob csp_ckn VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X273 e1b det_se1 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X274 lad_top_S2_r1 lad_top_S2_r2 VSS ppolyf_u_1k r_width=2u r_length=6.5u
+X275 oa1 atb_det_vref ot VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=1u
+X276 VDD_WIRE_SW VREFN VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=5u
+X277 cdp_2oa cdp_3ob cdp_1pa VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X278 TX_P_TXS_P_r4 TX_P_TXS_P_r5 VSS ppolyf_u_1k r_width=2u r_length=5.71u
+X279 csp_q csp_qb csp_q_s0 VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X280 csp_q_s0 csp_2oa VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X281 lad_top lad_top_S2_r0 VSS ppolyf_u_1k r_width=2u r_length=6.5u
+X282 VCMM tg0 VTHP VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X283 inm enb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X284 TXDF2_P TXDF3_P TXDF2_P TXDF3_P pfet_06v0 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=0.7u
+D9 VSS det_thr1 diode_nd2ps_03v3 pj=5.6u area=1.96p
+D10 VSS det_thr1 diode_nd2ps_03v3 pj=2.4u area=0.36p
+X285 DIFF_NEG enb VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X286 DIFF_NEG cdn_qb VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X287 TXDF4_N TXDF5_N TXDF4_N TXDF5_N pfet_06v0 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=0.7u
+X288 cdn_qb cdn_q VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X289 cdp_2oa cdp_ckn VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X290 VSS DP_N LS_N LS_N pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.5u
+X291 VSS DP_P LS_P LS_P pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.5u
+X292 og oa1 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X293 TXF_P inj inj_P VSS nfet_06v0 ad=17.6p pd=80.88u as=17.6p ps=80.88u w=40u l=0.7u
+X294 LS_P_VCMS_r6 LS_P_VCMS_r7 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X295 csn_x csn_ckn VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.28u
+X296 cdn_1pa LS_N cdn_x VDD_WIRE_SW pfet_03v3 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.28u
+X297 LS_N dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=1u
+X298 RX_P ln_b DP_P VDD_WIRE_SW pfet_03v3 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.28u
+X299 ln_b srcb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X300 DIFF_NEG enb DIFF_NEG_s0 VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X301 DIFF_NEG_s0 cdn_qb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X302 va_VSS_r1 va_VSS_r2 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X303 DIFF_POS_s0 cdp_qb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X304 TXF_N inj inj_N VSS nfet_06v0 ad=17.6p pd=80.88u as=17.6p ps=80.88u w=40u l=0.7u
+X305 csn_2oa csn_3ob csn_1pa VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X306 csn_3ob csn_2oa csn_4pb VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X307 csn_4pb VSE csn_x VDD_WIRE_SW pfet_03v3 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.28u
+X308 VSS DP_P LS_P LS_P pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.5u
+X309 S0 sg0_b VSE VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X310 B3 sg1 VSE VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X311 sg3_b_s0 det_se0 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X312 RX_N ln DP_N VSS nfet_03v3 ad=2.64p pd=12.88u as=2.64p ps=12.88u w=6u l=0.28u
+X313 sg0 sg0_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X314 csp_2oa csp_ckn VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X315 csp_4pb csp_ckn VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X316 csp_3ob csp_2oa VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X317 TX_N_TXS_N_r5 TXS_N VSS ppolyf_u_1k r_width=2u r_length=5.71u
+X318 csp_1pa csp_ckn VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X319 csp_2oa csp_3ob VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X320 LS_P_VCMS_r3 LS_P_VCMS_r4 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X321 VT1 VCMM VSS ppolyf_u_1k r_width=1u r_length=2.45u
+X322 LS_N_VCMS_r0 LS_N_VCMS_r1 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X323 LS_P_VCMS_r12 LS_P_VCMS_r13 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X324 TXDF2_N TXDF3_N TXDF2_N TXDF3_N pfet_06v0 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=0.7u
+X325 VSS DP_N LS_N LS_N pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.5u
+X326 tg3 tg3_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X327 tg2 tg2_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X328 tg1 tg1_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X329 LS_N_VCMS_r11 LS_N_VCMS_r12 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X330 tg1_b det_thr0 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X331 tg0_b t0b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X332 TXDF0_N TXDF1_N TXDF0_N TXDF1_N pfet_06v0 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=0.7u
+X333 TX_P TX_P_TXS_P_r0 VSS ppolyf_u_1k r_width=2u r_length=5.71u
+X334 LS_N dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=1u
+X335 LS_P dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=1u
+X336 TX_N TX_N_TXF_N_r0 VSS ppolyf_u_1k r_width=2u r_length=6u
+X337 cdn_q cdn_qb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X338 cdn_q cdn_2oa VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X339 S2 S2_S1_r0 VSS ppolyf_u_1k r_width=2u r_length=6u
+X340 tg3_b det_thr1 tg3_b_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X341 tg2_b det_thr1 tg2_b_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X342 sg2 sg2_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X343 S2 sg3 VSE VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+D11 VSS det_thr0 diode_nd2ps_03v3 pj=6.12u area=2.3409p
+X344 csn_ckn_s0 det_clk VSS VSS nfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X345 csn_ckn det_en csn_ckn_s0 VSS nfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X346 LS_P LS_P_VCMS_r0 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X347 LS_P_VCMS_r9 LS_P_VCMS_r10 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X348 VT3_VT2_r1 VT3_VT2_r2 VSS ppolyf_u_1k r_width=1u r_length=4.98u
+X349 LS_P dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=1u
+X350 LS_N_VCMS_r6 LS_N_VCMS_r7 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X351 VSS og VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=0 ps=0 w=4u l=4u
+X352 cdn_qb cdn_3ob VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X353 TXDS4_N TXDS5_N TXDS4_N TXDS5_N pfet_06v0 ad=4.4p pd=20.88u as=8.8p ps=41.76u w=10u l=0.7u
+X354 cdn_qb cdn_q cdn_qb_s0 VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X355 cdn_qb_s0 cdn_3ob VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X356 sg1_b det_se0 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X357 csn_ckn det_clk VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X358 csn_ckn det_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X359 TXDF1_P TXDF2_P TXDF1_P TXDF2_P pfet_06v0 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=0.7u
+D12 VSS det_se1 diode_nd2ps_03v3 pj=2.4u area=0.36p
+X360 TX_P_TXS_P_r3 TX_P_TXS_P_r4 VSS ppolyf_u_1k r_width=2u r_length=5.71u
+X361 TXDS4_P TXDS5_P TXDS4_P TXDS5_P pfet_06v0 ad=4.4p pd=20.88u as=8.8p ps=41.76u w=10u l=0.7u
+X362 TX_N_TXS_N_r0 TX_N_TXS_N_r1 VSS ppolyf_u_1k r_width=2u r_length=5.71u
+X363 cdp_1pa LS_P cdp_x VDD_WIRE_SW pfet_03v3 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.28u
+X364 cdp_3ob cdp_2oa VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X365 bd bd VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X366 im enq VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X367 csp_x csp_ckn VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=7.04p pd=32.88u as=7.04p ps=32.88u w=16u l=0.28u
+X368 va_VSS_r3 va_VSS_r4 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X369 DP_N enb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X370 inm im VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=1u
+X371 cdp_qb cdp_q cdp_qb_s0 VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X372 cdp_ckn det_clk VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X373 TXDS0_N TXDS1_N TXDS0_N TXDS1_N pfet_06v0 ad=4.4p pd=20.88u as=8.8p ps=41.76u w=10u l=0.7u
+X374 S0 sg0 VSE VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X375 tg0 tg0_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X376 VT3 tg3_b VTHP VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X377 csp_2oa csp_3ob csp_1pa VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X378 csp_3ob csp_2oa csp_4pb VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X379 csp_4pb VSE csp_x VDD_WIRE_SW pfet_03v3 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.28u
+X380 LS_N_VCMS_r2 LS_N_VCMS_r3 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X381 ln_b srcb ln_b_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X382 LS_P_VCMS_r14 VCMS VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X383 va_VSS_r0 va_VSS_r1 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X384 TXF_P VSS VSS VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X385 TXDF3_N TXDF4_N TXDF3_N TXDF4_N pfet_06v0 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=0.7u
+X386 DIFF_POS enb VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X387 VSS DP_N LS_N LS_N pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.5u
+X388 TX_N_TXS_N_r4 TX_N_TXS_N_r5 VSS ppolyf_u_1k r_width=2u r_length=5.71u
+X389 cdn_3ob cdn_ckn VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X390 cdn_2oa cdn_ckn VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X391 LS_N_VCMS_r13 LS_N_VCMS_r14 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X392 cdn_4pb cdn_ckn VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X393 srcb det_src_tx VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X394 tx tx_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+D13 VSS det_se1 diode_nd2ps_03v3 pj=5.64u area=1.9881p
+D14 VSS det_src_tx diode_nd2ps_03v3 pj=4.4u area=1.21p
+X395 TXF_N VSS VSS VSS nfet_06v0 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.7u
+X396 cdp_q cdp_qb cdp_q_s0 VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X397 cdp_4pb VTHP cdp_x VDD_WIRE_SW pfet_03v3 ad=5.28p pd=24.88u as=5.28p ps=24.88u w=12u l=0.28u
+X398 cdn_q cdn_qb cdn_q_s0 VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X399 cdn_q_s0 cdn_2oa VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X400 VSS DP_P LS_P LS_P pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.5u
+X401 sg1 sg1_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X402 S1 sg2 VSE VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X403 tg1_b_s0 det_thr0 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X404 tg0_b_s0 t0b VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X405 LS_P_VCMS_r11 LS_P_VCMS_r12 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X406 LS_P_VCMS_r1 LS_P_VCMS_r2 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X407 VB2 VB2_VB3_r0 VSS ppolyf_u_1k r_width=1u r_length=4.98u
+X408 S2_S1_r0 S1 VSS ppolyf_u_1k r_width=2u r_length=6u
+X409 LS_N dpb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=1u
+X410 LS_N_VCMS_r8 LS_N_VCMS_r9 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X411 S0 B2 VSS ppolyf_u_1k r_width=2u r_length=3.5u
+X412 tx_b det_src_tx tx_b_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X413 csp_ckn_s0 det_clk VSS VSS nfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X414 csp_ckn det_en csp_ckn_s0 VSS nfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X415 va_VSS_r6 VSS VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X416 TX_P TX_P_TXF_P_r0 VSS ppolyf_u_1k r_width=2u r_length=6u
+X417 VSS DP_N LS_N LS_N pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.5u
+X418 tg3_b det_thr1 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X419 tg2_b det_thr1 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X420 VSS DP_P LS_P LS_P pfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.5u
+X421 sg0_b e0b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X422 inj inj_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X423 TXF_N TXDF0_N TXF_N TXDF0_N pfet_06v0 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=0.7u
+C0 S2_S1_r0 S1 1.55711f
+C1 dpb enq 1.55269f
+C2 csp_3ob csp_ckn 1.06118f
+C3 t0b VT3_VT2_r2 0.09998f
+C4 S2_S1_r0 det_se0 0.09829f
+C5 cdn_x cdn_3ob 0
+C6 DIFF_POS cdp_qb 0.54177f
+C7 va_VSS_r6 VDD_WIRE_SW 0
+C8 lad_bot det_se1 0
+C9 det_src_tx VB1 0.07768f
+C10 B3 e1b 0.12921f
+C11 TXDF2_N TXDS4_P 0
+C12 tg2_b det_src_tx 0
+C13 LS_P sg2_b_s0 0.00331f
+C14 tg3 VREFN 0.38578f
+C15 VDD_WIRE_SW sg1_b 4.81911f
+C16 cdp_qb cdp_2oa 0.07294f
+C17 det_inject VDD_WIRE_SW 1.46062f
+C18 LS_N_VCMS_r1 LS_N 0
+C19 im va 0.59764f
+C20 cdp_q cdp_3ob 0.4597f
+C21 csn_qb csn_q 3.47536f
+C22 tx TXDS3_N 0.22351f
+C23 LS_P cdp_ckn 0.07065f
+C24 LS_P LS_N 38.4118f
+C25 TXF_N TX_N_TXS_N_r0 0
+C26 csn_qb csn_qb_s0 0.71641f
+C27 inm det_thr0 0.15193f
+C28 tx det_src_tx 0.27018f
+C29 VB2 VCMM 0.44103f
+C30 TXDF5_P TXDF3_N 0.00107f
+C31 VDD_WIRE_SW cdn_qb_s0 2.81418f
+C32 TXF_P RX_N 0.07365f
+C33 VB3 VB2_VB3_r0 0.23385f
+C34 t1b enq 0.18503f
+C35 srcb VB1 0.07768f
+C36 LS_P TXF_N 1.78862f
+C37 tg2_b_s0 det_thr1 0.38348f
+C38 cdn_ckn LS_N 0.0706f
+C39 tg2_b srcb 0.29105f
+C40 VB3 atb_det_vref 0.10933f
+C41 RX_P dpb 0.04051f
+C42 LS_P_VCMS_r12 DP_N 0.04917f
+C43 cdn_qb_s0 cdn_qb 0.71641f
+C44 DP_P LS_N 74.055f
+C45 TX_P_TXS_P_r2 enb 0.11124f
+C46 TXF_P ln 0.25455f
+C47 srcb tx 3.97287f
+C48 VSE SE_P 0.06398f
+C49 det_clk RX_N 0
+C50 VB1 VTHP 0.21332f
+C51 VDD_WIRE_SW csp_qb 3.18729f
+C52 TXF_N DP_P 0.19782f
+C53 tg2_b VTHP 0.55549f
+C54 det_thr1 S1 0.13575f
+C55 det_thr1 det_se0 21.3385f
+C56 og va_VSS_r0 0.00209f
+C57 TXDS2_N DP_N 0.06704f
+C58 VT1 tg1 0.65072f
+C59 VB2_VB3_r0 tg1_b 0.1229f
+C60 csn_3ob csn_q 0.4597f
+C61 srcb tg3_b_s0 0.03365f
+C62 tg0 VREFN 0.47251f
+C63 tg1_b atb_det_vref 0.13504f
+C64 csn_3ob csn_qb_s0 0.45047f
+C65 enb S0 0.02548f
+C66 inj_N dpb 0.93851f
+C67 enb VDD_WIRE_SW 12.972f
+C68 TXDS0_P enb 0.15394f
+C69 csn_ckn_s0 csn_ckn 1.03137f
+C70 LS_P_VCMS_r10 LS_P_VCMS_r9 0.45524f
+C71 csn_4pb DP_N 0
+C72 cdn_x LS_N 0.5251f
+C73 IBIAS det_thr0 0.04191f
+C74 TX_P det_src_tx 0.10111f
+C75 TX_P_TXS_P_r2 ln_b 0.08197f
+C76 enb cdn_qb 1.20754f
+C77 S1 e1b 0.11925f
+C78 csn_ckn DP_N 0.0706f
+C79 TXF_P inj_P 2.58898f
+C80 S2 LS_P_VCMS_r11 0
+C81 VT2 VB1 0.21895f
+C82 atb_det_vref sg0_b 0.25223f
+C83 LS_P atb_det_vref 0.1497f
+C84 det_se1 S0 0.20606f
+C85 det_se0 e1b 0.3163f
+C86 VT2 tg2_b 0.54064f
+C87 RX_N det_en 25.924f
+C88 det_se1 VDD_WIRE_SW 7.08293f
+C89 SE_P SE_N 0
+C90 TXDF4_N TXDF3_N 23.4595f
+C91 B1 B2 1.69136f
+C92 enq det_inject 0.14443f
+C93 t0b LS_P_VCMS_r12 0.1116f
+C94 t1b lad_top_S2_r0 0.10598f
+C95 det_thr1 TXDF3_N 0.10785f
+C96 csp_q VDD_WIRE_SW 2.37743f
+C97 S2_S1_r0 e0b 0.0816f
+C98 DIFF_NEG cdp_ckn 0.00276f
+C99 TXDF4_N DP_N 0.30286f
+C100 DIFF_NEG LS_N 1.78683f
+C101 TX_P srcb 0.04184f
+C102 bt LS_N_VCMS_r14 0
+C103 VDD_WIRE_SW ln_b 5.21725f
+C104 det_en ln 0.93463f
+C105 LS_P_VCMS_r11 LS_P_VCMS_r10 0.8956f
+C106 det_thr1 DP_N 0.21134f
+C107 DP_P atb_det_vref 0.21656f
+C108 TXDS0_P ln_b 0.15423f
+C109 VB2 det_se0 0.09612f
+C110 VB3 tg1_b 0.1643f
+C111 t0b S2_S1_r0 0.094f
+C112 TXF_N DIFF_NEG 0.03174f
+C113 csp_3ob csp_1pa 1.06367f
+C114 cdp_4pb cdp_ckn 1.81459f
+C115 cdp_1pa cdp_x 2.6173f
+C116 cdp_4pb LS_N 0.95918f
+C117 LS_N_VCMS_r10 LS_N_VCMS_r11 1.52631f
+C118 tg0_b VDD_WIRE_SW 4.43021f
+C119 LS_N_VCMS_r2 LS_N_VCMS_r1 0.94453f
+C120 VSE sg3 0.39236f
+C121 TX_P VTHP 0.08681f
+C122 VCMM VTHP 1.24785f
+C123 det_thr0 VREFN 0.47848f
+C124 det_thr1 lad_top_S2_r1 0
+C125 TXDS0_P TXDF2_N 0.00424f
+C126 TXDF2_N VDD_WIRE_SW 0.08254f
+C127 SE_P SE_P_s0 1.69748f
+C128 lad_top_S2_r2 lad_top_S2_r1 0.46365f
+C129 im VDD_WIRE_SW 9.06112f
+C130 TX_N_TXS_N_r3 TX_N_TXS_N_r2 0.51472f
+C131 tg2_b_s0 det_src_tx 0
+C132 TXF_P tx 0.15776f
+C133 csp_x VDD_WIRE_SW 8.98969f
+C134 csp_q_s0 csp_2oa 0.54841f
+C135 enb TX_N 0.35137f
+C136 sg0_b_s0 e0b 0.33437f
+C137 det_thr1 e0b 11.272f
+C138 TXDS1_P RX_N 0
+C139 enq enb 0.15056p
+C140 lad_top_S2_r1 e1b 0
+C141 lad_top_S2_r2 e0b 0
+C142 lad_top B3 0.0034f
+C143 enb cdp_q_s0 0.17635f
+C144 S1 sg2_b 0.50816f
+C145 det_se0 sg2_b 0.00527f
+C146 VT2 VCMM 0.08805f
+C147 TXDF1_P TXDF2_N 0.0022f
+C148 TXDS5_P ln 0.15407f
+C149 B3_S0_r0 atb_det_vref 0.09829f
+C150 VCMS VB1 0.00517f
+C151 TXF_N TXDS4_P 0.41217f
+C152 csn_1pa VDD_WIRE_SW 5.57871f
+C153 det_se1 TX_N 0.11251f
+C154 t0b det_thr1 0.22745f
+C155 TXDS1_P ln 0.15407f
+C156 det_thr0 DIFF_POS 51.4472f
+C157 atb_det_vref DIFF_NEG 0.05979f
+C158 tg2_b_s0 srcb 0
+C159 det_se0 det_src_tx 0.00131f
+C160 VSE csp_2oa 0
+C161 LS_P_VCMS_r7 LS_P_VCMS_r9 0
+C162 t0b lad_top_S2_r2 0.094f
+C163 enq det_se1 0.14516f
+C164 TX_P TX_P_TXF_P_r0 0.80207f
+C165 csn_qb_s0 csn_q 0.45182f
+C166 LS_P_VCMS_r14 DP_N 0
+C167 VDD_WIRE_SW cdp_qb_s0 2.81418f
+C168 LS_P sg0_b 0.00111f
+C169 RX_N ln 0.40167f
+C170 e1b e0b 31.9837f
+C171 det_en VB1 0.11478f
+C172 TX_N ln_b 0.04177f
+C173 VDD_WIRE_SW LS_P_VCMS_r11 0.00669f
+C174 RX_P enb 0.31819f
+C175 enb TX_N_TXS_N_r1 0.08197f
+C176 enq ln_b 0.04144f
+C177 srcb det_se0 0.09261f
+C178 det_thr1 atb_det_vref_lad_bot_r0 0.08581f
+C179 dpb LS_N_VCMS_r14 0.09848f
+C180 LS_P cdn_ckn 0.06501f
+C181 t0b e1b 0.03631f
+C182 TXF_P TX_P 7.72943f
+C183 DP_P sg0_b 0.00923f
+C184 LS_P DP_P 28.0628f
+C185 LS_P_VCMS_r0 VDD_WIRE_SW 0.00364f
+C186 LS_N_VCMS_r10 dpb 0.1824f
+C187 tx det_en 0.33881f
+C188 VDD_WIRE_SW cdn_3ob 5.23537f
+C189 RX_P det_se1 0.05369f
+C190 TXDF2_N TX_N 0.15461f
+C191 TXDS3_N DP_N 0.05884f
+C192 TXDF3_N det_src_tx 0.10607f
+C193 tg0 t1b 1.53148f
+C194 det_se0 VTHP 0.20607f
+C195 DP_P cdn_ckn 0.00276f
+C196 TXDF2_N enq 0.07855f
+C197 TX_P det_clk 16.8149f
+C198 det_src_tx DP_N 0.1537f
+C199 VT1 det_thr0 0.27102f
+C200 enb lad_top_S2_r0 0.0015f
+C201 cdn_qb cdn_3ob 0.5973f
+C202 LS_P_VCMS_r12 LS_P_VCMS_r1 0.26273f
+C203 im enq 25.0588f
+C204 VT3 VDD_WIRE_SW 7.63921f
+C205 atb_det_vref va 0.0078f
+C206 VSE sg0 0.77258f
+C207 VB2 t0b 0.18948f
+C208 tg2 tg2_b 2.58971f
+C209 RX_P ln_b 0.69174f
+C210 e1b atb_det_vref_lad_bot_r0 0.09784f
+C211 VT3_VT2_r1 VREFN 0
+C212 atb_det_vref LS_P_VCMS_r13 0.00551f
+C213 csp_ckn enb 0.94893f
+C214 TXDF0_P TX_P_TXF_P_r0 0.00327f
+C215 tg3_b VREFN 0.42311f
+C216 LS_N_VCMS_r10 t1b 0.1125f
+C217 det_thr1 SE_P 0
+C218 inj_b_s0 VDD_WIRE_SW 0
+C219 enb cdp_qb 1.20754f
+C220 sg3 sg3_b 1.44757f
+C221 tg1_b tg1_b_s0 0.52238f
+C222 VCMS VCMM 6.80085f
+C223 LS_P cdn_x 0.5245f
+C224 det_se0 lad_top 0
+C225 LS_N_VCMS_r13 LS_N_VCMS_r11 0
+C226 atb_det_vref S2 0.15602f
+C227 det_se1 lad_top_S2_r0 0
+C228 det_clk cdp_ckn_s0 0.53667f
+C229 csp_qb_s0 csp_3ob 0.45047f
+C230 TXS_P TX_P_TXS_P_r4 0.00838f
+C231 VT2 det_se0 0.08811f
+C232 dpb det_thr0 0.20852f
+C233 cdn_x cdn_ckn 0.78745f
+C234 TXDF2_N RX_P 0.07149f
+C235 TXDF3_N VTHP 0.09237f
+C236 TXDF0_P TXF_P 20.216f
+C237 DIFF_POS DIFF_POS_s0 1.77381f
+C238 IBIAS SE_N 0.04191f
+C239 lad_bot atb_det_vref 0
+C240 cdn_x DP_P 0.0037f
+C241 TX_P det_en 80.6431f
+C242 sg1 sg1_b 2.03176f
+C243 TXDF2_N TXDF1_N 26.5816f
+C244 tx TXDS5_P 0.22351f
+C245 det_en VCMM 0.10321f
+C246 sg2_b e0b 0.54065f
+C247 csn_x IBIAS 0.00366f
+C248 VDD_WIRE_SW VT3_VT2_r0 0.00573f
+C249 B3_S0_r0 sg0_b 0.11511f
+C250 TXF_N TX_P_TXS_P_r2 0
+C251 VTHP DP_N 0.09296f
+C252 LS_P DIFF_NEG 0.18218f
+C253 TXDS1_P tx 0.22351f
+C254 det_en B3 0.05739f
+C255 VDD_WIRE_SW sg2_b_s0 0.00129f
+C256 TXDF0_N TX_N_TXF_N_r0 0.00327f
+C257 VSE VREFN 57.6296f
+C258 t1b det_thr0 1.2754f
+C259 t0b det_src_tx 0.04612f
+C260 LS_P cdp_4pb 0
+C261 tx RX_N 0.08382f
+C262 det_en cdp_ckn_s0 0.41258f
+C263 VDD_WIRE_SW LS_N 28.1031f
+C264 VB2 VB2_VB3_r2 0.00459f
+C265 VDD_WIRE_SW cdp_ckn 9.05155f
+C266 VT3_VT2_r2 VREFN 0
+C267 inj_b IBIAS 0
+C268 TXF_P det_se0 0.16344f
+C269 DP_P DIFF_NEG 0.04868f
+C270 TXDS1_P TXDS2_P 8.3204f
+C271 csp_q_s0 csp_3ob 0.03833f
+C272 TXF_N VDD_WIRE_SW 0.51734f
+C273 TXDF0_N TXDF3_N 0.43034f
+C274 TXDS0_P TXF_N 0.31388f
+C275 VB2_VB3_r0 VB2_VB3_r1 1.43621f
+C276 VB2 LS_N_VCMS_r12 0
+C277 tx ln 0.16399f
+C278 TXDF0_N DP_N 0.08662f
+C279 csp_ckn csp_x 0.63242f
+C280 VSE sg2 0.5387f
+C281 det_thr1 B1 0.0816f
+C282 VT3 enq 1.09362f
+C283 t0b srcb 6.373f
+C284 det_clk det_se0 0.18927f
+C285 VSE DIFF_POS 0.06348f
+C286 RX_N TXDS2_P 0
+C287 TX_P_TXS_P_r0 TX_P_TXS_P_r2 0
+C288 VSE csp_3ob 0.00527f
+C289 TXDS4_N tx 0.22351f
+C290 lad_top_S2_r1 lad_top 0
+C291 LS_P_VCMS_r6 LS_P_VCMS_r8 0
+C292 inj_b_s0 enq 0.05964f
+C293 cdp_x VREFN 0.5245f
+C294 VSE csn_2oa 0
+C295 ln TXDS2_P 0.15407f
+C296 LS_N_VCMS_r13 dpb 0.09768f
+C297 t0b VTHP 0.19525f
+C298 VCMS det_se0 0.09488f
+C299 TXF_P TXDF3_N 0.5669f
+C300 B1 e1b 0.09363f
+C301 TXDF4_N TXDF5_N 23.0963f
+C302 TX_P RX_N 0.04456f
+C303 TXF_P DP_N 0.18822f
+C304 enb DIFF_NEG_s0 0.41307f
+C305 lad_top e0b 0
+C306 S2 sg0_b 0.16246f
+C307 TX_P_TXS_P_r0 VDD_WIRE_SW 0.18673f
+C308 csp_1pa enb 0.18338f
+C309 det_se1 sg1 0
+C310 atb_det_vref S0 0.14922f
+C311 det_se0 sg1_b_s0 0.53032f
+C312 VB2_VB3_r0 VDD_WIRE_SW 0.09948f
+C313 VDD_WIRE_SW sg3_b_s0 0.00129f
+C314 det_en S1 0.0476f
+C315 csn_ckn_s0 det_clk 0.53667f
+C316 VB3 VB2_VB3_r1 0.28683f
+C317 det_se0 det_en 1.7854f
+C318 enb LS_N_VCMS_r14 0.08177f
+C319 atb_det_vref VDD_WIRE_SW 2.52208f
+C320 det_src_tx SE_P 0.04556f
+C321 cdp_qb_s0 cdp_qb 0.71641f
+C322 bd bt 0.74796f
+C323 t0b lad_top 0.08932f
+C324 TX_P ln 0.11952f
+C325 VSE VT1 7.03959f
+C326 det_clk DP_N 0.04868f
+C327 LS_N_VCMS_r10 enb 0.15033f
+C328 lad_bot sg0_b 0.22992f
+C329 TX_N LS_N 0.09314f
+C330 VT2 t0b 0.18166f
+C331 DIFF_NEG cdp_4pb 0
+C332 tg0_b_s0 VTHP 0
+C333 tx_b ln_b 0.00167f
+C334 SE_N csn_2oa 0
+C335 TXDF3_P TXDF3_N 0.00171f
+C336 TXF_N TX_N 4.71104f
+C337 enq LS_N 0.1426f
+C338 csn_x csn_2oa 0
+C339 cdp_q_s0 cdp_ckn 0
+C340 cdp_2oa cdp_x 0
+C341 cdp_3ob cdp_1pa 1.06367f
+C342 VCMS DP_N 0.00135f
+C343 VB2_VB3_r1 tg1_b 0.1229f
+C344 TXF_N enq 0.1495f
+C345 IBIAS csn_ckn 0.00276f
+C346 LS_N_VCMS_r10 det_se1 0.12899f
+C347 VT3_VT2_r1 t1b 0.09998f
+C348 VB2_VB3_r2 VTHP 0.10281f
+C349 csp_ckn_s0 enb 0.10578f
+C350 tg0 tg0_b 2.46994f
+C351 csn_ckn_s0 det_en 0.41258f
+C352 VSE dpb 5.11498f
+C353 VT3 tg1 0
+C354 TXDF4_P VDD_WIRE_SW 0.00916f
+C355 tg2_b tg3_b_s0 0
+C356 TXDF3_N det_en 0.08322f
+C357 TXDF0_P RX_N 0.00466f
+C358 SE_P VTHP 0
+C359 t1b B2 0.10783f
+C360 VB3 VDD_WIRE_SW 15.146f
+C361 det_en DP_N 0.19287f
+C362 sg2_b LS_P_VCMS_r1 0
+C363 VB2 inm 0
+C364 RX_P LS_N 0.08382f
+C365 det_thr1 IBIAS 0.04191f
+C366 SE_N_s0 SE_N 1.69748f
+C367 cdp_1pa VTHP 0.39183f
+C368 enb det_thr0 2.71159f
+C369 TXF_N RX_P 0.12513f
+C370 im LS_N_VCMS_r14 0.10371f
+C371 csp_1pa csp_x 1.30907f
+C372 TX_P_TXS_P_r0 TX_N 0.14937f
+C373 VSE t1b 0.10385f
+C374 tx TXDS2_P 0.22351f
+C375 LS_P_VCMS_r12 LS_N_VCMS_r11 0
+C376 TXF_N TXDF1_N 0
+C377 TX_P_TXS_P_r1 enb 0.08211f
+C378 LS_N_VCMS_r10 im 0.05642f
+C379 tg1_b VDD_WIRE_SW 5.70631f
+C380 atb_det_vref TX_N 0.11338f
+C381 det_thr0 det_se1 10.0322f
+C382 det_se0 RX_N 0.05082f
+C383 dpb SE_N 0.03851f
+C384 enq atb_det_vref 0.32179f
+C385 tg3 VT3 0.42817f
+C386 VCMM VB1 1.47994f
+C387 t1b VT3_VT2_r2 0.09998f
+C388 t0b VCMS 0.0961f
+C389 IBIAS inj 0.05459f
+C390 det_src_tx tx_b_s0 0.2367f
+C391 det_se0 ln 0.09261f
+C392 sg0 e1b 0.74038f
+C393 RX_N TX_N_TXF_N_r0 0
+C394 S0 sg0_b 0.90497f
+C395 bd dpb 0.69506f
+C396 inj_N TXF_N 2.58898f
+C397 sg1_b_s0 e0b 0
+C398 LS_P S0 0.00296f
+C399 det_thr0 ln_b 0.09215f
+C400 LS_P VDD_WIRE_SW 38.5043f
+C401 TXDF3_N TXDS5_P 0.07789f
+C402 det_en e0b 0.29114f
+C403 VDD_WIRE_SW sg0_b 6.16933f
+C404 TXDF4_N VREFN 0.00202f
+C405 det_thr1 VREFN 0.34624f
+C406 TX_P tx 0.19124f
+C407 TXDS1_P TXDF3_N 0.22093f
+C408 VDD_WIRE_SW cdn_ckn 9.05156f
+C409 tg0_b det_thr0 0.00591f
+C410 inj_b dpb 0
+C411 csp_qb_s0 csp_qb 0.71641f
+C412 t0b det_en 0.24287f
+C413 TXDS1_P DP_N 0
+C414 DP_P S0 0.00636f
+C415 TX_P_TXS_P_r1 ln_b 0.08197f
+C416 TXDS0_P DP_P 0
+C417 DP_P VDD_WIRE_SW 4.59407f
+C418 TXDF3_N RX_N 0.20165f
+C419 RX_P atb_det_vref 0.05477f
+C420 TXF_P SE_P 0.03174f
+C421 TXDF2_N det_thr0 0.09443f
+C422 im det_thr0 0.11017f
+C423 RX_N DP_N 4.27233f
+C424 cdn_q cdn_q_s0 0.48265f
+C425 csp_qb_s0 enb 0.1977f
+C426 VB3 enq 0.07581f
+C427 LS_N_VCMS_r13 enb 0.08099f
+C428 csn_4pb csn_2oa 1.11442f
+C429 LS_N_VCMS_r4 LS_N_VCMS_r2 0
+C430 VSE sg1_b 0.71188f
+C431 LS_P_VCMS_r12 LS_P_VCMS_r5 0.09832f
+C432 det_clk SE_P 0.08382f
+C433 csn_ckn csn_2oa 0.96025f
+C434 TXDF3_N ln 0.04137f
+C435 LS_N_VCMS_r5 LS_N_VCMS_r6 0.74881f
+C436 TXS_N enb 0.20368f
+C437 TXDF4_N DIFF_POS 0.09537f
+C438 det_thr1 DIFF_POS 18.5232f
+C439 ln DP_N 0.45818f
+C440 enb DIFF_POS_s0 0.41307f
+C441 tg2_b_s0 VB1 0
+C442 TXDF1_P DP_P 0.00697f
+C443 tg2_b tg2_b_s0 0.25917f
+C444 VT3 LS_N_VCMS_r14 0.08099f
+C445 TXS_N TXDS5_N 0.60812f
+C446 csp_q_s0 csp_qb 0.49944f
+C447 csp_qb_s0 csp_q 0.45182f
+C448 inm VTHP 0.00141f
+C449 LS_P_VCMS_r12 dpb 0.11989f
+C450 cdn_x VDD_WIRE_SW 13.0524f
+C451 TX_P_TXS_P_r3 ln 0.08192f
+C452 TXDS4_N DP_N 0.05238f
+C453 VB2 VREFN 1.63608f
+C454 LS_N_VCMS_r10 VT3 0.04515f
+C455 VCMS LS_N_VCMS_r12 0.08802f
+C456 tg1_b enq 0
+C457 IBIAS det_src_tx 0.04824f
+C458 TXDF2_P TXDF2_N 0.00653f
+C459 TX_N TX_N_TXS_N_r0 0.65613f
+C460 B3_S0_r0 S0 1.99705f
+C461 VDD_WIRE_SW tg1_b_s0 0.00129f
+C462 atb_det_vref tg1 0.00573f
+C463 TXDF1_N TXDF4_P 0
+C464 enb cdn_2oa 0.42101f
+C465 csp_q_s0 enb 0.17635f
+C466 det_se0 VB1 0.10844f
+C467 im va_VSS_r0 0.07992f
+C468 LS_P TX_N 0.07281f
+C469 B3_S0_r0 VDD_WIRE_SW 0.10767f
+C470 LS_N_VCMS_r2 LS_N_VCMS_r3 0.8956f
+C471 SE_P det_en 0.10199f
+C472 SE_N det_inject 0
+C473 DIFF_NEG VDD_WIRE_SW 5.95035f
+C474 enq sg0_b 3.34379f
+C475 LS_P enq 0.13325f
+C476 LS_P_VCMS_r12 t1b 0.1125f
+C477 VB2_VB3_r1 va 0
+C478 B2 det_se1 0.0816f
+C479 tx det_se0 0.16267f
+C480 VT2 inm 0
+C481 VB2 bt 0
+C482 VDD_WIRE_SW cdp_4pb 8.64928f
+C483 DIFF_NEG cdn_qb 0.54177f
+C484 VSE enb 0.88818f
+C485 VT1 det_thr1 0.1658f
+C486 TXDS0_P TX_P_TXS_P_r5 0.00327f
+C487 DP_P TX_N 0.17678f
+C488 LS_N_VCMS_r13 im 0.10371f
+C489 VDD_WIRE_SW TX_P_TXS_P_r5 0.47985f
+C490 VB2 LS_N_VCMS_r11 0
+C491 csp_q csp_q_s0 0.48265f
+C492 t1b S2_S1_r0 0.10598f
+C493 LS_P_VCMS_r4 LS_P_VCMS_r12 0.12909f
+C494 DP_P enq 0.20212f
+C495 tx TX_N_TXS_N_r3 0.10598f
+C496 inj_b det_inject 0.63257f
+C497 TX_N_TXS_N_r1 TX_N_TXS_N_r0 0.61257f
+C498 VT3 det_thr0 0.21132f
+C499 LS_N_VCMS_r14 LS_N 0.0102f
+C500 im va_VSS_r2 0.05733f
+C501 LS_P RX_P 0.06348f
+C502 VSE det_se1 0.46799f
+C503 IBIAS dnb 0.53358f
+C504 det_src_tx VREFN 0.45513f
+C505 LS_N_VCMS_r3 LS_N_VCMS_r1 0
+C506 csn_q_s0 VDD_WIRE_SW 3.01897f
+C507 LS_N_VCMS_r10 LS_N 12.8894f
+C508 det_thr1 dpb 0.19902f
+C509 TX_N_TXS_N_r5 enb 0.08197f
+C510 TXDS4_P VDD_WIRE_SW 0.199f
+C511 tx TXDF3_N 0.44893f
+C512 DP_P RX_P 10.3703f
+C513 VDD_WIRE_SW va 0.74354f
+C514 enb SE_N 0.71551f
+C515 VDD_WIRE_SW LS_P_VCMS_r13 0.08813f
+C516 tx DP_N 0.47111f
+C517 srcb VREFN 0.39361f
+C518 csn_x enb 0.43227f
+C519 TX_P det_se0 0.10802f
+C520 tg1_b tg1 2.78405f
+C521 LS_N_VCMS_r9 LS_N_VCMS_r7 0
+C522 det_se0 VCMM 0.09688f
+C523 enb cdp_x 0.8606f
+C524 S2 S0 0.14718f
+C525 lad_top_S2_r0 sg0_b 0.25897f
+C526 det_thr0 VT3_VT2_r0 0.09998f
+C527 S1 B3 3.32928f
+C528 sg2 sg2_b 1.73913f
+C529 VB2 VT1 0.03213f
+C530 bd enb 0.14497f
+C531 tx TX_P_TXS_P_r3 0.10598f
+C532 enb TX_P_TXS_P_r4 0.08189f
+C533 det_se0 B3 0.24051f
+C534 cdn_1pa VREFN 1.165f
+C535 VDD_WIRE_SW S2 19.8594f
+C536 TX_N DIFF_NEG 0
+C537 VSE TXDF2_N 0.08063f
+C538 det_se1 SE_N 22.0594f
+C539 DIFF_POS det_src_tx 0.05573f
+C540 t1b det_thr1 0.67993f
+C541 B3_S0_r0 enq 0.11484f
+C542 TXDF3_N TXDS2_P 0.15143f
+C543 VB3 tg3 0.33433f
+C544 t1b lad_top_S2_r2 0.10598f
+C545 VREFN VTHP 2.25922f
+C546 dpb inj 0.78744f
+C547 SE_P_s0 csp_qb 0.65605f
+C548 enq DIFF_NEG 0.04191f
+C549 inj_b enb 0
+C550 TXDS2_P DP_N 0
+C551 VSE csp_x 0.46989f
+C552 det_thr0 LS_N 0.13781f
+C553 TX_N TX_P_TXS_P_r5 0.05828f
+C554 det_en tx_b_s0 0.23675f
+C555 DP_P csp_ckn 0.0706f
+C556 atb_det_vref LS_N_VCMS_r14 0.09768f
+C557 TXF_N det_thr0 0.14448f
+C558 LS_N_VCMS_r13 VT3 0.08099f
+C559 VB2 dpb 0.08681f
+C560 enb SE_P_s0 0.41307f
+C561 cdp_2oa cdp_3ob 8.0359f
+C562 TXF_P IBIAS 0.10668f
+C563 t0b VB1 0.29754f
+C564 t1b e1b 0.04284f
+C565 tg2_b t0b 0.58678f
+C566 LS_N_VCMS_r10 atb_det_vref 0.23194f
+C567 TX_P TXDF3_N 0.09174f
+C568 VSE csn_1pa 0.06817f
+C569 ln_b TX_P_TXS_P_r4 0.08197f
+C570 LS_P_VCMS_r14 dpb 0.10362f
+C571 TX_P DP_N 0.14101f
+C572 VT2 VREFN 0.1443f
+C573 TXF_N TX_P_TXS_P_r1 0
+C574 VCMM DP_N 0.00438f
+C575 DIFF_POS VTHP 0.08391f
+C576 VT3_VT2_r1 VT3 0
+C577 IBIAS det_clk 0.04191f
+C578 cdn_2oa cdn_3ob 8.0359f
+C579 VT1 det_src_tx 0.07826f
+C580 LS_P_VCMS_r12 enb 0.10922f
+C581 csp_q SE_P_s0 0
+C582 TXDS4_P TX_N 0.19863f
+C583 tg3_b VT3 0.39713f
+C584 VB2 t1b 0.14633f
+C585 VB2_VB3_r1 VDD_WIRE_SW 0.09557f
+C586 csp_ckn_s0 atb_det_vref 0.01184f
+C587 cdp_2oa VTHP 0
+C588 VSE LS_P_VCMS_r11 0
+C589 tg0 VB3 0
+C590 bd im 0.19041f
+C591 enq va 0
+C592 LS_P_VCMS_r2 LS_P_VCMS_r1 0.79774f
+C593 VB2_VB3_r0 det_thr0 0.09998f
+C594 det_se0 S1 0.22187f
+C595 det_se1 sg3_b 0.6343f
+C596 LS_P_VCMS_r12 det_se1 0.12893f
+C597 LS_N_VCMS_r2 LS_N_VCMS_r10 0.34344f
+C598 TXDS2_N enb 0.15423f
+C599 TX_P_TXS_P_r2 VDD_WIRE_SW 0.22091f
+C600 VT1 srcb 0.07788f
+C601 atb_det_vref det_thr0 0.22806f
+C602 TXF_P VREFN 4.13509f
+C603 csn_1pa SE_N 0
+C604 dpb det_src_tx 0.03851f
+C605 csn_1pa csn_x 1.30907f
+C606 enq S2 0.16219f
+C607 tg0 tg1_b 0.21756f
+C608 LS_N_VCMS_r13 LS_N 0.00509f
+C609 VSE VT3 1.96946f
+C610 IBIAS det_en 0.04234f
+C611 TXDF0_P TXDF3_N 0.00171f
+C612 VT3_VT2_r1 VT3_VT2_r0 0.89799f
+C613 S2_S1_r0 det_se1 0.0816f
+C614 TX_P_TXS_P_r1 TX_P_TXS_P_r0 0.75936f
+C615 LS_P sg1 0.0029f
+C616 sg1_b e1b 1.43156f
+C617 B3 e0b 0.23049f
+C618 enb csn_4pb 0.18634f
+C619 TXDF0_P DP_N 0.09537f
+C620 VT1 VTHP 1.25468f
+C621 csn_ckn enb 0.94893f
+C622 VDD_WIRE_SW S0 2.99647f
+C623 det_clk VREFN 0.03174f
+C624 LS_N_VCMS_r12 VB1 0.00204f
+C625 enq lad_bot 1.28085f
+C626 TXDS0_P VDD_WIRE_SW 0.199f
+C627 det_inject inj 0
+C628 t0b VCMM 0.1884f
+C629 t0b B3 0.13591f
+C630 tx_b_s0 ln 0
+C631 ln_b_s0 ln_b 0.54364f
+C632 TXDF5_P TXDF2_N 0.00144f
+C633 DP_P tx_b 0
+C634 VDD_WIRE_SW cdn_qb 3.18729f
+C635 TXS_P TXDS5_P 0.31846f
+C636 TXF_P DIFF_POS 0.03174f
+C637 csn_qb csn_2oa 0.07294f
+C638 TXDF3_N det_se0 0.10793f
+C639 LS_N_VCMS_r1 LS_N_VCMS_r10 0.45564f
+C640 TXDS1_N TXS_N 0.31795f
+C641 TXDF4_N enb 0.30846f
+C642 TXDS1_P TXS_P 0.1781f
+C643 VB3 det_thr0 0.19821f
+C644 det_thr1 enb 0.43202f
+C645 TXDS0_N TXS_N 6.2191f
+C646 va_VSS_r3 va_VSS_r4 0.35738f
+C647 dpb VTHP 56.5272f
+C648 det_se0 DP_N 0.21134f
+C649 LS_P LS_N_VCMS_r10 6.60337f
+C650 VT2 VT1 19.3501f
+C651 csp_1pa DP_P 1.10597f
+C652 dpb dnb 2.0859f
+C653 VSE sg2_b_s0 0
+C654 LS_P_VCMS_r12 LS_P_VCMS_r9 0.05034f
+C655 det_clk DIFF_POS 0.16763f
+C656 sg0_b_s0 det_se1 0
+C657 det_en VREFN 0.15793f
+C658 det_thr1 det_se1 0.54136f
+C659 bd VT3 0.00424f
+C660 TX_N_TXF_N_r0 DP_N 0
+C661 VCMS bt 1.18852f
+C662 VT3_VT2_r2 VT3_VT2_r0 0
+C663 LS_N_VCMS_r10 DP_P 0.00206f
+C664 LS_N_VCMS_r13 atb_det_vref 0.09768f
+C665 VSE LS_N 0.1517f
+C666 VREFN cdn_4pb 0.06162f
+C667 enb e1b 14.4992f
+C668 TXS_P ln 0.18989f
+C669 tg1_b det_thr0 0.53254f
+C670 va_VSS_r3 va_VSS_r1 0
+C671 TX_P_TXS_P_r2 TX_N 0.09191f
+C672 t1b VTHP 0.16395f
+C673 csn_qb SE_N_s0 0.65605f
+C674 VCMS LS_N_VCMS_r11 0.08802f
+C675 VSE TXF_N 0.10286f
+C676 VT2 dpb 0.0758f
+C677 enb inj 0.05148f
+C678 det_thr1 ln_b 0.09261f
+C679 VB2_VB3_r2 VCMM 0.08802f
+C680 IBIAS RX_N 0.04191f
+C681 TXDF2_P TXDF4_P 0
+C682 csn_3ob csn_2oa 8.0359f
+C683 tg2_b_s0 t0b 0.44303f
+C684 S1 e0b 0.12067f
+C685 sg3_b LS_P_VCMS_r11 0
+C686 LS_P_VCMS_r12 LS_P_VCMS_r11 1.28621f
+C687 inj_b inj_b_s0 0.25917f
+C688 TXDF3_N DP_N 0.59209f
+C689 LS_N_VCMS_r12 VCMM 0.2328f
+C690 LS_P det_thr0 0.11947f
+C691 det_se0 e0b 2.02099f
+C692 det_thr0 sg0_b 0.23953f
+C693 det_se1 e1b 1.73524f
+C694 tg2 VREFN 0.53093f
+C695 DIFF_POS det_en 0.16558f
+C696 TX_N VDD_WIRE_SW 1.324f
+C697 det_src_tx det_inject 11.6482f
+C698 VB2 enb 0.07747f
+C699 TXDS0_P TX_N 0.19863f
+C700 TXDF4_N TXDF2_N 0
+C701 enq S0 0.15115f
+C702 t1b lad_top 0.10298f
+C703 TXDF2_N det_thr1 0.09488f
+C704 t0b S1 0.12574f
+C705 enq VDD_WIRE_SW 5.76785f
+C706 LS_P_VCMS_r12 LS_P_VCMS_r0 0.22748f
+C707 im det_thr1 0.10277f
+C708 t0b det_se0 0.14565f
+C709 csn_1pa csn_4pb 0.22788f
+C710 VDD_WIRE_SW cdp_q_s0 3.01897f
+C711 VT2 t1b 0.13833f
+C712 B2 atb_det_vref 0.09829f
+C713 DIFF_NEG DIFF_NEG_s0 1.77381f
+C714 DP_P det_thr0 0.21005f
+C715 csn_1pa csn_ckn 0.90625f
+C716 enb TX_N_TXS_N_r2 0.08197f
+C717 VB2 det_se1 0.10119f
+C718 TXF_P dpb 0.4667f
+C719 TXF_N SE_N 0.03174f
+C720 inm VB1 0.00866f
+C721 cdp_x LS_N 0.5245f
+C722 cdp_x cdp_ckn 0.78745f
+C723 tx tx_b_s0 0.14483f
+C724 og oa1 1.69481f
+C725 VSE sg3_b_s0 0
+C726 VSE atb_det_vref 0.24554f
+C727 TXDS0_N TX_N_TXS_N_r5 0.00327f
+C728 det_se0 atb_det_vref_lad_bot_r0 0.31298f
+C729 tx TXDF5_N 0.44703f
+C730 RX_N VREFN 0.06348f
+C731 dpb det_clk 0.03851f
+C732 VB3 VT3_VT2_r1 0.00114f
+C733 RX_P VDD_WIRE_SW 85.3732f
+C734 LS_N_VCMS_r0 dpb 0.00209f
+C735 tg3_b VB3 0.36271f
+C736 enb TXDS3_N 0.15423f
+C737 VT1 det_en 0.09445f
+C738 VB2_VB3_r0 VT3_VT2_r2 0
+C739 enb det_src_tx 0.32134f
+C740 VCMS dpb 0.73657f
+C741 TXDS3_N TXDS5_N 0
+C742 t0b DP_N 0.04806f
+C743 TXDS3_P TXDS5_P 0
+C744 VB2 im 0.04548f
+C745 enb cdp_3ob 0.41986f
+C746 TXDS1_P TXDS3_P 0
+C747 lad_top_S2_r1 e0b 0
+C748 det_thr0 tg1_b_s0 0.23661f
+C749 VT3_VT2_r1 tg1_b 0.1229f
+C750 det_se1 sg2_b 1.09194f
+C751 tx TXS_P 0.50338f
+C752 VDD_WIRE_SW lad_top_S2_r0 0.00315f
+C753 inj_N VDD_WIRE_SW 6.84313f
+C754 B3_S0_r0 det_thr0 0.0816f
+C755 det_se0 SE_P 31.5477f
+C756 det_thr0 DIFF_NEG 0
+C757 atb_det_vref SE_N 0.04963f
+C758 det_se1 det_src_tx 14.8597f
+C759 csp_ckn VDD_WIRE_SW 8.9308f
+C760 srcb enb 0
+C761 dpb det_en 0.80998f
+C762 t0b lad_top_S2_r1 0.094f
+C763 TXDS3_P RX_N 0
+C764 enq TX_N 0.04191f
+C765 VSE VB3 0.12584f
+C766 LS_P_VCMS_r12 LS_N 0.0461f
+C767 t1b VCMS 0.09699f
+C768 bd atb_det_vref 1.23212f
+C769 VDD_WIRE_SW cdp_qb 3.18729f
+C770 det_src_tx ln_b 0.19663f
+C771 cdn_1pa enb 0.24069f
+C772 VT3 det_thr1 0.14931f
+C773 VDD_WIRE_SW tg1 1.72869f
+C774 csn_q csn_2oa 0.62227f
+C775 TXS_P TXDS2_P 0.17744f
+C776 enb VTHP 1.36223f
+C777 VB3 VT3_VT2_r2 0.00106f
+C778 TXDS3_P ln 0.15407f
+C779 srcb det_se1 0.09261f
+C780 inm VCMM 0.00209f
+C781 dnb enb 0.64451f
+C782 t0b e0b 0.03975f
+C783 B2 sg0_b 0.11511f
+C784 t1b det_en 0.21067f
+C785 ot oa1 0.64956f
+C786 TXDF2_N det_src_tx 0.09805f
+C787 srcb ln_b 3.21254f
+C788 TX_N TX_N_TXS_N_r1 0
+C789 TXF_P det_inject 0.00114f
+C790 cdn_2oa cdn_ckn 0.96025f
+C791 det_se1 VTHP 0.21413f
+C792 RX_P enq 0.04191f
+C793 TXDS2_N TXDS1_N 7.30988f
+C794 enb lad_top 0.73423f
+C795 SE_P DP_N 0.04868f
+C796 VT3_VT2_r2 tg1_b 0.1229f
+C797 TXS_N TX_N_TXS_N_r4 0.00838f
+C798 SE_N_s0 csn_q 0
+C799 VB1 VREFN 1.54224f
+C800 LS_P VSE 0.16287f
+C801 TXDS0_N TXDS2_N 0
+C802 tg2_b VREFN 0.56564f
+C803 VSE sg0_b 0.86095f
+C804 VT2 enb 0.07002f
+C805 e0b atb_det_vref_lad_bot_r0 0.08581f
+C806 tg3 VDD_WIRE_SW 1.40993f
+C807 ln_b VTHP 0
+C808 cdn_ckn_s0 enb 0.10578f
+C809 TXF_N csn_ckn 0
+C810 VSE cdn_ckn 0
+C811 LS_N_VCMS_r4 LS_N_VCMS_r3 0.84667f
+C812 sg3_b sg3_b_s0 0.25917f
+C813 B1 det_se0 0.09829f
+C814 LS_N_VCMS_r9 LS_N_VCMS_r10 0.6459f
+C815 VB2 VT3 0.22112f
+C816 t0b atb_det_vref_lad_bot_r0 0.094f
+C817 det_se1 lad_top 0
+C818 det_thr0 S2 0.13541f
+C819 LS_P_VCMS_r12 atb_det_vref 0.1572f
+C820 tg0_b VTHP 0.49559f
+C821 VSE DP_P 0.76573f
+C822 TXDF4_N LS_N 0.00466f
+C823 TX_P IBIAS 0.04191f
+C824 enq lad_top_S2_r0 0.14937f
+C825 VT2 det_se1 0.09318f
+C826 det_thr1 LS_N 0.13829f
+C827 dpb RX_N 0.03975f
+C828 t0b tg0_b_s0 0.33503f
+C829 TXDF2_N VTHP 0.08063f
+C830 LS_N_VCMS_r10 LS_N_VCMS_r7 0.06658f
+C831 bt VB1 0.00304f
+C832 csn_qb enb 1.20754f
+C833 TXDF4_N TXF_N 0.56042f
+C834 LS_P_VCMS_r6 LS_P_VCMS_r5 0.60203f
+C835 ot VCMM 0
+C836 cdn_x cdn_2oa 0
+C837 tg3_b_s0 VREFN 0
+C838 TXF_N det_thr1 0.1445f
+C839 S2_S1_r0 atb_det_vref 0.09829f
+C840 im VTHP 0.05041f
+C841 lad_bot det_thr0 0
+C842 VB1 LS_N_VCMS_r11 0.00204f
+C843 atb_det_vref ln_b_s0 0.00522f
+C844 sg1_b sg1_b_s0 0.25917f
+C845 LS_P_VCMS_r3 LS_P_VCMS_r12 0.18785f
+C846 TXF_P enb 0.21338f
+C847 dpb ln 0
+C848 VDD_WIRE_SW sg1 1.77223f
+C849 cdp_q cdp_2oa 0.62227f
+C850 cdp_qb cdp_q_s0 0.49944f
+C851 cdp_qb_s0 cdp_3ob 0.45047f
+C852 det_inject det_en 1.48681f
+C853 tx_b VDD_WIRE_SW 3.25018f
+C854 t0b VB2_VB3_r2 0.10015f
+C855 B2 B3_S0_r0 0.00838f
+C856 LS_P cdp_x 0.5251f
+C857 TX_P_TXF_P_r0 ln_b 0.0015f
+C858 LS_P_VCMS_r0 sg2_b 0
+C859 va_VSS_r0 va 0.54793f
+C860 tg0 VDD_WIRE_SW 1.51811f
+C861 VB2 VT3_VT2_r0 0.00996f
+C862 TXDF5_P TXDF4_P 21.644f
+C863 VDD_WIRE_SW DIFF_NEG_s0 6.85509f
+C864 det_clk enb 0.59695f
+C865 TXF_P det_se1 0.13457f
+C866 csp_1pa VDD_WIRE_SW 5.57871f
+C867 tx TXDS3_P 0.22351f
+C868 TXDF2_N TXDF0_N 0.80491f
+C869 VDD_WIRE_SW LS_N_VCMS_r14 0.09116f
+C870 TXF_N inj 1.15693f
+C871 VT2 im 0.03741f
+C872 cdn_qb_s0 cdn_q 0.45182f
+C873 DIFF_NEG_s0 cdn_qb 0.65605f
+C874 TX_P VREFN 0.06647f
+C875 VT3 det_src_tx 0.09821f
+C876 VB2_VB3_r1 det_thr0 0.09998f
+C877 csn_3ob enb 0.41986f
+C878 LS_N_VCMS_r10 VDD_WIRE_SW 0.1788f
+C879 VCMM VREFN 2.6919f
+C880 TXF_P ln_b 0.1179f
+C881 LS_P_VCMS_r4 LS_P_VCMS_r2 0
+C882 dpb inj_P 0.89061f
+C883 VCMS enb 0.16706f
+C884 det_clk det_se1 0.20159f
+C885 VSE DIFF_NEG 0.06348f
+C886 tg0_b_s0 VB2_VB3_r2 0
+C887 TX_N_TXS_N_r5 TX_N_TXS_N_r4 0.41686f
+C888 TXDS3_P TXDS2_P 8.15072f
+C889 TXDF3_N TXDF5_N 0
+C890 VT1 VB1 0.0824f
+C891 det_thr1 atb_det_vref 0.17782f
+C892 LS_P_VCMS_r14 LS_N 0.01414f
+C893 cdn_1pa cdn_3ob 1.06367f
+C894 LS_P_VCMS_r6 LS_P_VCMS_r4 0
+C895 VT3 srcb 0.11657f
+C896 DP_N TXDF5_N 0.23034f
+C897 TXF_P TXDF2_N 0.13412f
+C898 csp_ckn_s0 VDD_WIRE_SW 0
+C899 enb det_en 14.7946f
+C900 VCMS det_se1 0.09995f
+C901 cdn_3ob VTHP 0.00527f
+C902 bt VCMM 1.5979f
+C903 IBIAS det_se0 0.04191f
+C904 B1 e0b 0.0816f
+C905 enb cdn_4pb 0.24365f
+C906 enb cdn_q 0.29202f
+C907 S1 sg0 0
+C908 TX_P DIFF_POS 0
+C909 LS_P LS_P_VCMS_r12 14.8638f
+C910 VCMM LS_N_VCMS_r11 0.20476f
+C911 sg2_b sg2_b_s0 0.25917f
+C912 TX_P_TXS_P_r1 TX_P_TXS_P_r2 0.71043f
+C913 det_se1 sg1_b_s0 0
+C914 VT3 VTHP 22.5432f
+C915 atb_det_vref e1b 0.19944f
+C916 det_thr0 S0 0.12883f
+C917 det_se0 sg0 0
+C918 dpb VB1 0.10361f
+C919 det_se1 det_en 0.33216f
+C920 TXS_P TXDF3_N 0
+C921 DIFF_NEG SE_N 0
+C922 det_thr0 VDD_WIRE_SW 6.62089f
+C923 t0b B1 0.09422f
+C924 S2_S1_r0 sg0_b 0.11511f
+C925 VB3 det_thr1 0.09612f
+C926 LS_P_VCMS_r12 DP_P 0.50211f
+C927 DIFF_NEG cdp_x 0.00444f
+C928 TXDF3_P TXDF2_N 0.01618f
+C929 det_src_tx LS_N 0.09112f
+C930 tg2_b_s0 VREFN 0
+C931 VB2 VB2_VB3_r0 1.48437f
+C932 det_en ln_b 0.7491f
+C933 dpb oa1 0
+C934 TXF_N det_src_tx 0.14444f
+C935 VB2 atb_det_vref 0.10933f
+C936 TX_P_TXS_P_r1 VDD_WIRE_SW 0.20057f
+C937 im VCMS 0.09842f
+C938 t1b VB1 0.14849f
+C939 cdp_3ob cdp_ckn 1.06118f
+C940 cdp_4pb cdp_x 2.5575f
+C941 TXDS1_N TXDS3_N 0
+C942 B1 atb_det_vref_lad_bot_r0 0
+C943 VT2 VT3 22.9916f
+C944 enq LS_N_VCMS_r14 0.08099f
+C945 VSE S2 2.42149f
+C946 TX_P_TXS_P_r5 TX_P_TXS_P_r4 0.56365f
+C947 LS_N_VCMS_r10 enq 0.15666f
+C948 enb TXDS5_P 0.15394f
+C949 IBIAS DP_N 0
+C950 VT3_VT2_r0 VTHP 0.22577f
+C951 RX_P tx_b 0
+C952 TXDS1_P enb 0.15394f
+C953 csp_4pb csp_2oa 1.11442f
+C954 det_se0 VREFN 0.17323f
+C955 tg1_b det_thr1 0.12207f
+C956 VT1 VCMM 1.17932f
+C957 TXDF2_N det_en 0.07025f
+C958 LS_N_VCMS_r4 LS_N_VCMS_r10 0.12909f
+C959 t0b inm 1.30525f
+C960 im det_en 0.10911f
+C961 csn_1pa csn_3ob 1.06367f
+C962 cdn_1pa LS_N 1.10597f
+C963 csp_x det_en 0
+C964 enb RX_N 0.30371f
+C965 VTHP LS_N 0.20747f
+C966 enb csn_q 0.29202f
+C967 cdp_ckn VTHP 0.0643f
+C968 sg0_b_s0 sg0_b 0.52042f
+C969 LS_P TXDF4_N 0.0036f
+C970 det_thr1 sg0_b 0.23786f
+C971 LS_P det_thr1 0.12563f
+C972 csn_qb_s0 enb 0.1977f
+C973 VB2 VB3 20.0861f
+C974 TXF_N VTHP 0.10253f
+C975 S1 sg2 0.48111f
+C976 csp_qb_s0 VDD_WIRE_SW 2.81418f
+C977 sg3_b_s0 sg2_b 0
+C978 lad_top_S2_r2 sg0_b 0.48507f
+C979 enb ln 10.7362f
+C980 TXDS5_P ln_b 0.15423f
+C981 dpb VCMM 0.28033f
+C982 det_se0 sg2 0
+C983 VT2 VT3_VT2_r0 0.18785f
+C984 TX_P dpb 0.03851f
+C985 TXF_N dnb 0
+C986 LS_N_VCMS_r13 VDD_WIRE_SW 0.08802f
+C987 TXDF1_P TXDF2_P 22.7345f
+C988 atb_det_vref det_src_tx 28.2059f
+C989 TXDS1_P ln_b 0.15423f
+C990 det_se0 DIFF_POS 0.05872f
+C991 det_thr0 TX_N 25.1014f
+C992 det_se1 RX_N 0.05082f
+C993 TXDF3_N VREFN 0.09668f
+C994 DP_P det_thr1 0.20118f
+C995 enq det_thr0 0.15144f
+C996 LS_N_VCMS_r3 LS_N_VCMS_r10 0.18785f
+C997 TXDS4_N enb 0.15423f
+C998 VREFN DP_N 0.09613f
+C999 VDD_WIRE_SW DIFF_POS_s0 6.85509f
+C1000 det_se1 ln 0.09268f
+C1001 sg0 e0b 0.00318f
+C1002 RX_N ln_b 0.46129f
+C1003 VB2 tg1_b 0.16713f
+C1004 e1b sg0_b 4.27626f
+C1005 csp_1pa csp_ckn 0.90625f
+C1006 LS_P e1b 0.00139f
+C1007 TXDF2_N TXDS5_P 0
+C1008 TXDS4_N TXDS5_N 6.80013f
+C1009 VT3_VT2_r1 VDD_WIRE_SW 0.001f
+C1010 TX_P_TXS_P_r1 TX_N 0.11379f
+C1011 srcb atb_det_vref 0.09476f
+C1012 TXDS1_P TXDF2_N 0.00199f
+C1013 TXF_N TXDF0_N 21.5727f
+C1014 t1b VCMM 0.40146f
+C1015 VCMS VT3 0.61954f
+C1016 tg3_b VDD_WIRE_SW 4.16575f
+C1017 t1b B3 0.15497f
+C1018 ln_b ln 31.9011f
+C1019 B2 S0 1.49828f
+C1020 B2 VDD_WIRE_SW 0.17669f
+C1021 DP_P e1b 0.00295f
+C1022 VDD_WIRE_SW cdn_2oa 5.18265f
+C1023 csp_q_s0 VDD_WIRE_SW 3.01897f
+C1024 TXDF2_N RX_N 4.12557f
+C1025 VB2_VB3_r0 VTHP 0.10281f
+C1026 TXDF3_N DIFF_POS 0.0544f
+C1027 RX_P det_thr0 0.05686f
+C1028 csp_2oa SE_P 0
+C1029 atb_det_vref VTHP 0.21993f
+C1030 VB3 det_src_tx 0.09478f
+C1031 cdn_3ob cdn_4pb 3.12453f
+C1032 DIFF_POS DP_N 0.04868f
+C1033 cdn_qb cdn_2oa 0.07294f
+C1034 cdn_q cdn_3ob 0.4597f
+C1035 TXDF3_N TXDS3_P 0.11517f
+C1036 VT1 det_se0 0.08811f
+C1037 TX_N_TXS_N_r2 TX_N_TXS_N_r0 0
+C1038 LS_P_VCMS_r12 LS_P_VCMS_r13 0.4988f
+C1039 TXF_P LS_N 0.09613f
+C1040 VT3 det_en 0.15768f
+C1041 TXDF2_N ln 0.03975f
+C1042 VSE S0 1.15303f
+C1043 va_VSS_r0 enq 0
+C1044 csp_ckn csp_ckn_s0 1.03137f
+C1045 VSE VDD_WIRE_SW 39.797f
+C1046 det_thr1 B3_S0_r0 0.0816f
+C1047 TXF_N TXF_P 72.32899f
+C1048 enb cdp_q 0.29202f
+C1049 det_thr1 DIFF_NEG 41.5897f
+C1050 inj_b_s0 det_en 0.23661f
+C1051 S2 sg3_b 0.36293f
+C1052 VB3 srcb 0.11688f
+C1053 det_thr0 lad_top_S2_r0 0
+C1054 det_clk LS_N 0.04191f
+C1055 VT2 VB2_VB3_r0 0.00536f
+C1056 enb VB1 0.09015f
+C1057 det_clk cdp_ckn 0.49433f
+C1058 t0b VREFN 0.19811f
+C1059 tg1_b det_src_tx 0.05622f
+C1060 VT3_VT2_r2 VDD_WIRE_SW 0.00562f
+C1061 LS_N_VCMS_r0 LS_N 1.08647f
+C1062 LS_N_VCMS_r13 enq 0.08099f
+C1063 cdn_ckn_s0 atb_det_vref 0.01184f
+C1064 VT2 atb_det_vref 0.10132f
+C1065 dpb det_se0 0.19902f
+C1066 TXF_N det_clk 0.03174f
+C1067 S2_S1_r0 S2 1.34566f
+C1068 csn_q_s0 csn_ckn 0
+C1069 tg2 VT3 0
+C1070 IBIAS SE_P 0.04191f
+C1071 VB3 VTHP 0.22795f
+C1072 VCMS LS_N 0.03467f
+C1073 LS_P sg2_b 0.00402f
+C1074 B3 sg1_b 0.65351f
+C1075 tx enb 12.6587f
+C1076 LS_P_VCMS_r12 LS_P_VCMS_r10 0.31571f
+C1077 det_thr0 tg1 0.00113f
+C1078 TX_P_TXS_P_r2 TX_P_TXS_P_r4 0
+C1079 B3_S0_r0 e1b 0.09363f
+C1080 det_se1 VB1 0.11352f
+C1081 enb oa1 0.00752f
+C1082 LS_P det_src_tx 0.08213f
+C1083 va_VSS_r2 enq 0
+C1084 tg1_b srcb 0.13552f
+C1085 csp_3ob csp_4pb 3.12453f
+C1086 tx TXDS5_N 0.22351f
+C1087 SE_N VDD_WIRE_SW 9.08327f
+C1088 csn_x VDD_WIRE_SW 8.98969f
+C1089 t1b S1 0.14433f
+C1090 TX_N_TXS_N_r4 TX_N_TXS_N_r2 0
+C1091 TXF_P TX_P_TXS_P_r0 0
+C1092 t1b det_se0 0.10718f
+C1093 tx det_se1 0.16267f
+C1094 bd VDD_WIRE_SW 3.04932f
+C1095 det_en cdp_ckn 0.81828f
+C1096 enb TXDS2_P 0.15394f
+C1097 det_en LS_N 0.13781f
+C1098 VDD_WIRE_SW cdp_x 13.0524f
+C1099 DP_P det_src_tx 0.14353f
+C1100 TXF_P atb_det_vref 0.17576f
+C1101 VDD_WIRE_SW TX_P_TXS_P_r4 0.31586f
+C1102 LS_P_VCMS_r2 LS_P_VCMS_r0 0
+C1103 B2 enq 0.11484f
+C1104 tg1_b VTHP 0.82781f
+C1105 TXDF0_N TXDF4_P 0.04456f
+C1106 TXF_N det_en 0.12564f
+C1107 dpb TXDF3_N 0.0892f
+C1108 VT2 VB3 0.07031f
+C1109 cdn_4pb LS_N 0
+C1110 inj_b VDD_WIRE_SW 3.29629f
+C1111 tx ln_b 12.4703f
+C1112 VB2_VB3_r2 VREFN 0.09263f
+C1113 dpb DP_N 0.63058f
+C1114 LS_P cdn_1pa 0.06754f
+C1115 VSE TX_N 0.06348f
+C1116 det_thr1 S2 0.13215f
+C1117 det_clk atb_det_vref 0.24818f
+C1118 im VB1 0.05386f
+C1119 LS_P VTHP 0.19612f
+C1120 DP_P srcb 0.07073f
+C1121 SE_P VREFN 0
+C1122 cdn_1pa cdn_ckn 0.96099f
+C1123 VSE enq 0.21536f
+C1124 lad_top_S2_r2 S2 0.45859f
+C1125 VDD_WIRE_SW SE_P_s0 6.87641f
+C1126 enb VCMM 0.22785f
+C1127 TX_P enb 0.31149f
+C1128 VTHP cdn_ckn 0.0643f
+C1129 TXDF2_N tx 0.21668f
+C1130 VT2 tg1_b 0.16816f
+C1131 ln_b TXDS2_P 0.15423f
+C1132 enb B3 0.03833f
+C1133 cdp_1pa VREFN 1.165f
+C1134 cdn_1pa DP_P 0
+C1135 VCMS atb_det_vref 0.20712f
+C1136 det_thr1 lad_bot 0
+C1137 DP_P VTHP 0.1007f
+C1138 im oa1 1.23212f
+C1139 t0b VT1 0.26706f
+C1140 t1b DP_N 0.04851f
+C1141 TX_P det_se1 0.14017f
+C1142 lad_top sg0_b 0.18936f
+C1143 det_se1 VCMM 0.10195f
+C1144 S2 e1b 0.1303f
+C1145 enb cdp_ckn_s0 0.10578f
+C1146 det_se1 B3 0.21664f
+C1147 det_se0 sg1_b 0.63593f
+C1148 VDD_WIRE_SW sg3_b 3.72946f
+C1149 LS_P_VCMS_r12 VDD_WIRE_SW 1.38249f
+C1150 det_src_tx DIFF_NEG 0.05573f
+C1151 VSE RX_P 0.08382f
+C1152 DIFF_POS SE_P 0
+C1153 TXDF2_N TXDS2_P 0.00113f
+C1154 det_se0 det_inject 0
+C1155 cdp_qb_s0 cdp_q 0.45182f
+C1156 TXF_N TXDS5_P 0.70281f
+C1157 DIFF_POS_s0 cdp_qb 0.65605f
+C1158 atb_det_vref det_en 0.84935f
+C1159 LS_N_VCMS_r12 LS_N_VCMS_r11 1.48274f
+C1160 TXDS1_P TXF_N 0.30963f
+C1161 t1b lad_top_S2_r1 0.10598f
+C1162 LS_P_VCMS_r8 LS_P_VCMS_r9 0.45524f
+C1163 S2_S1_r0 S0 0
+C1164 LS_N_VCMS_r2 LS_N_VCMS_r0 0
+C1165 enq SE_N 0.04191f
+C1166 TX_P ln_b 0.1204f
+C1167 cdn_ckn_s0 cdn_ckn 1.03137f
+C1168 cdn_1pa cdn_x 2.6173f
+C1169 tg0 det_thr0 0
+C1170 lad_bot e1b 0.03302f
+C1171 t0b dpb 0.1533f
+C1172 RX_N LS_N 0.08382f
+C1173 S2_S1_r0 VDD_WIRE_SW 0.47984f
+C1174 ot og 0.47703f
+C1175 TXDF3_P TXDF4_P 22.0079f
+C1176 LS_P_VCMS_r7 LS_P_VCMS_r12 0.06658f
+C1177 LS_P_VCMS_r14 LS_P_VCMS_r13 0.45524f
+C1178 cdn_x VTHP 0.46989f
+C1179 VDD_WIRE_SW ln_b_s0 0
+C1180 csp_q_s0 csp_ckn 0
+C1181 TX_N TX_P_TXS_P_r4 0.06638f
+C1182 tg0_b VCMM 0.92915f
+C1183 bd enq 0.14497f
+C1184 TXF_N RX_N 0.2602f
+C1185 cdp_3ob cdp_4pb 3.12453f
+C1186 cdp_2oa cdp_1pa 2.53303f
+C1187 t1b e0b 0.04664f
+C1188 TXDF2_N TX_P 0.07877f
+C1189 LS_N_VCMS_r10 det_thr0 0.13025f
+C1190 inj_b enq 0.34908f
+C1191 DP_P TX_P_TXF_P_r0 0
+C1192 LS_P TXF_P 0.76539f
+C1193 VDD_WIRE_SW csn_4pb 5.18296f
+C1194 im VCMM 0.23218f
+C1195 TXF_N ln 0.04137f
+C1196 VSE csp_ckn 0.06577f
+C1197 csn_ckn VDD_WIRE_SW 8.9308f
+C1198 va_VSS_r6 va_VSS_r4 0
+C1199 t0b t1b 63.0489f
+C1200 VB3 det_en 0.10245f
+C1201 VT3 VB1 0.26472f
+C1202 DIFF_NEG VTHP 0.0425f
+C1203 LS_N_VCMS_r1 LS_N_VCMS_r0 1.04238f
+C1204 enb S1 0.02547f
+C1205 enb det_se0 0.44192f
+C1206 DP_P TXF_P 0.56065f
+C1207 LS_P det_clk 0.03174f
+C1208 cdp_4pb VTHP 1.01818f
+C1209 sg0_b_s0 VDD_WIRE_SW 0.00122f
+C1210 det_thr1 S0 0.12566f
+C1211 VREFN TXDF5_N 0.00175f
+C1212 TXDF4_N VDD_WIRE_SW 0.00927f
+C1213 tg3_b tg3 2.29851f
+C1214 det_clk cdn_ckn 0.49433f
+C1215 det_thr1 VDD_WIRE_SW 5.96873f
+C1216 enb TX_N_TXS_N_r3 0.08197f
+C1217 VT3 oa1 0
+C1218 t1b atb_det_vref_lad_bot_r0 0.10598f
+C1219 VB2 VB2_VB3_r1 0.00469f
+C1220 det_se1 S1 0.2289f
+C1221 DP_P det_clk 0.04868f
+C1222 tg1_b det_en 0.12728f
+C1223 atb_det_vref RX_N 0.0519f
+C1224 det_se0 det_se1 45.6694f
+C1225 LS_P_VCMS_r12 enq 0.1116f
+C1226 tg0_b_s0 t1b 0.43143f
+C1227 csp_ckn SE_N 0
+C1228 dpb SE_P 0.03851f
+C1229 LS_N_VCMS_r12 dpb 0.09768f
+C1230 VT3_VT2_r0 VB1 0
+C1231 TXDF0_P TXDF2_N 0.00229f
+C1232 TX_P_TXS_P_r0 ln 0.08192f
+C1233 sg1_b_s0 sg0_b 0
+C1234 det_se0 ln_b 0.09261f
+C1235 LS_P sg1_b_s0 0.00112f
+C1236 S0 e1b 0.21414f
+C1237 atb_det_vref ln 0.09027f
+C1238 sg1_b e0b 0.20394f
+C1239 csn_ckn_s0 enb 0.10578f
+C1240 enq S2_S1_r0 0.11484f
+C1241 LS_N_VCMS_r13 LS_N_VCMS_r14 1.38489f
+C1242 det_en sg0_b 0.2318f
+C1243 LS_P det_en 0.11947f
+C1244 VDD_WIRE_SW e1b 5.65036f
+C1245 TXDF3_N enb 0.32012f
+C1246 DIFF_POS TXDF5_N 0.09537f
+C1247 t1b VB2_VB3_r2 0.09998f
+C1248 VDD_WIRE_SW inj 2.09731f
+C1249 enb DP_N 0.56869f
+C1250 det_en cdn_ckn 0.81828f
+C1251 LS_P_VCMS_r3 LS_P_VCMS_r2 0.74881f
+C1252 LS_P cdn_4pb 0.95918f
+C1253 TX_N_TXF_N_r0 ln_b 0.0015f
+C1254 DP_P sg1_b_s0 0.00422f
+C1255 TX_P_TXS_P_r3 enb 0.08271f
+C1256 cdn_4pb cdn_ckn 1.81459f
+C1257 TXDF2_N det_se0 0.09488f
+C1258 va_VSS_r3 im 0.05034f
+C1259 TXF_P DIFF_NEG 0.03174f
+C1260 TXDF3_N det_se1 0.10785f
+C1261 DP_P det_en 0.19819f
+C1262 VB2 VDD_WIRE_SW 2.81006f
+C1263 VT3 VCMM 0.3012f
+C1264 LS_N_VCMS_r9 LS_N_VCMS_r8 0.60203f
+C1265 im det_se0 0.10277f
+C1266 csp_3ob csp_2oa 8.0359f
+C1267 TXDF5_P TXDF1_N 0.01416f
+C1268 det_se1 DP_N 0.2232f
+C1269 VSE sg1 0.68405f
+C1270 TXF_N tx 0.22816f
+C1271 TXDF3_N ln_b 0.04753f
+C1272 LS_N_VCMS_r8 LS_N_VCMS_r7 0.65095f
+C1273 det_clk DIFF_NEG 0.12583f
+C1274 LS_P_VCMS_r14 VDD_WIRE_SW 0.08813f
+C1275 TXDF4_N TX_N 0.44216f
+C1276 TXS_P TXDS3_P 0.17744f
+C1277 det_thr1 TX_N 0.11312f
+C1278 ln_b DP_N 0.53731f
+C1279 TXDS1_N tx 0.22351f
+C1280 csn_qb csn_q_s0 0.49944f
+C1281 TXDS0_N tx 0.22351f
+C1282 VSE csp_1pa 0.06817f
+C1283 det_thr1 enq 0.14093f
+C1284 cdn_x det_en 0
+C1285 TX_P_TXS_P_r3 ln_b 0.08197f
+C1286 csp_4pb enb 0.18634f
+C1287 enb e0b 0.04158f
+C1288 enq lad_top_S2_r2 0.09191f
+C1289 TXF_N TXDS2_P 0.32831f
+C1290 inm VT1 0
+C1291 VT3_VT2_r0 VCMM 0
+C1292 TXDF2_N TXDF3_N 54.9881f
+C1293 cdn_x cdn_4pb 2.5575f
+C1294 IBIAS DIFF_POS 0.04191f
+C1295 VSE LS_N_VCMS_r10 0.13091f
+C1296 TXDF2_N DP_N 4.90683f
+C1297 t0b enb 0.35396f
+C1298 enb cdn_q_s0 0.17635f
+C1299 sg2_b_s0 B3 0
+C1300 atb_det_vref VB1 0.12165f
+C1301 VDD_WIRE_SW sg2_b 4.26995f
+C1302 LS_P RX_N 0.06348f
+C1303 det_se1 e0b 8.04918f
+C1304 VT3_VT2_r1 det_thr0 0.09998f
+C1305 im va_VSS_r4 0.04484f
+C1306 VB2_VB3_r1 VTHP 0.10281f
+C1307 det_src_tx VDD_WIRE_SW 4.55849f
+C1308 DIFF_NEG det_en 0.13373f
+C1309 TXDS1_P DP_P 0
+C1310 SE_P det_inject 0
+C1311 t1b B1 0.10783f
+C1312 TX_P LS_N 0.08681f
+C1313 tg3_b det_thr0 0.34383f
+C1314 csp_x DP_N 0.0037f
+C1315 enq e1b 3.71453f
+C1316 VCMM LS_N 0.05109f
+C1317 RX_P det_thr1 0.05369f
+C1318 TX_P_TXS_P_r0 tx 0.10598f
+C1319 LS_N_VCMS_r7 LS_N_VCMS_r6 0.69988f
+C1320 enq inj 2.80652f
+C1321 t0b det_se1 0.15072f
+C1322 TXF_N TX_P 0.13377f
+C1323 tx atb_det_vref 0.1659f
+C1324 VDD_WIRE_SW cdp_3ob 5.23537f
+C1325 B2 det_thr0 0.0816f
+C1326 csn_q_s0 csn_3ob 0.03833f
+C1327 DP_P RX_N 9.77694f
+C1328 atb_det_vref oa1 0.9014f
+C1329 im va_VSS_r1 0.06658f
+C1330 srcb VDD_WIRE_SW 4.20953f
+C1331 csn_1pa DP_N 1.10597f
+C1332 VB2 enq 0.07131f
+C1333 cdp_ckn cdp_ckn_s0 1.03137f
+C1334 VT3 det_se0 0.14818f
+C1335 DP_P ln 0.74188f
+C1336 VCMS LS_P_VCMS_r13 0.28588f
+C1337 cdn_1pa VDD_WIRE_SW 9.26572f
+C1338 VSE det_thr0 0.15793f
+C1339 det_se1 atb_det_vref_lad_bot_r0 0.08581f
+C1340 t0b tg0_b 0.43134f
+C1341 DIFF_POS VREFN 0.06366f
+C1342 SE_P csp_qb 0.54177f
+C1343 VB3 VB1 0.2675f
+C1344 det_thr1 lad_top_S2_r0 0
+C1345 lad_top_S2_r2 lad_top_S2_r0 0
+C1346 va_VSS_r2 va_VSS_r0 0
+C1347 t1b inm 0.22723f
+C1348 VDD_WIRE_SW VTHP 15.3578f
+C1349 csp_4pb csp_x 1.24927f
+C1350 VT3_VT2_r2 det_thr0 0.09998f
+C1351 dnb VDD_WIRE_SW 0.00747f
+C1352 t0b im 2.86603f
+C1353 enb SE_P 0.75742f
+C1354 LS_N_VCMS_r12 enb 0.08099f
+C1355 TX_P TX_P_TXS_P_r0 0.80292f
+C1356 det_thr1 tg1 0.00199f
+C1357 VB2_VB3_r0 VCMM 0.08802f
+C1358 dpb IBIAS 0.11016f
+C1359 TX_P atb_det_vref 0.10889f
+C1360 enb cdp_1pa 0.24069f
+C1361 lad_top_S2_r0 e1b 0
+C1362 tg1_b VB1 0.77858f
+C1363 atb_det_vref VCMM 0.2816f
+C1364 det_en S2 0.04774f
+C1365 VDD_WIRE_SW lad_top 6.74016f
+C1366 atb_det_vref B3 0.15927f
+C1367 TX_N det_src_tx 0.10524f
+C1368 det_se1 SE_P 11.3696f
+C1369 ot dpb 0.80384f
+C1370 tg0_b_s0 tg0_b 0.25917f
+C1371 inj_N inj 1.36861f
+C1372 TX_N_TXS_N_r2 TX_N_TXS_N_r1 0.56365f
+C1373 VT2 VDD_WIRE_SW 2.92452f
+C1374 cdn_ckn_s0 VDD_WIRE_SW 0
+C1375 enq det_src_tx 0.04191f
+C1376 atb_det_vref cdp_ckn_s0 0.01184f
+C1377 det_se0 LS_N 0.14493f
+C1378 VT1 VREFN 1.97895f
+C1379 VDD_WIRE_SW TX_P_TXF_P_r0 0.00298f
+C1380 TXF_N det_se0 0.1459f
+C1381 cdp_q_s0 cdp_3ob 0.03833f
+C1382 tg3 det_thr1 0
+C1383 tx TX_N_TXS_N_r0 0.10598f
+C1384 LS_N_VCMS_r10 LS_P_VCMS_r12 0.70476f
+C1385 csn_qb VDD_WIRE_SW 3.18729f
+C1386 srcb enq 1.24371f
+C1387 TXDS4_P TXDS5_P 7.80531f
+C1388 ln TX_P_TXS_P_r5 0.08192f
+C1389 VB3 VCMM 10.5417f
+C1390 TXF_N TX_N_TXF_N_r0 1.014f
+C1391 RX_P det_src_tx 0.0507f
+C1392 TXF_P VDD_WIRE_SW 8.21317f
+C1393 dpb VREFN 0.18121f
+C1394 TX_N VTHP 0.09314f
+C1395 csn_q_s0 csn_q 0.48265f
+C1396 cdn_q_s0 cdn_3ob 0.03833f
+C1397 im LS_N_VCMS_r12 0.10371f
+C1398 enq VTHP 0.19289f
+C1399 TXDS4_P RX_N 0
+C1400 DP_P tx 0.40927f
+C1401 TXDF3_N LS_N 0.00248f
+C1402 dnb enq 0.69375f
+C1403 det_clk VDD_WIRE_SW 3.39161f
+C1404 t0b VT3 0.19507f
+C1405 RX_P srcb 0.03623f
+C1406 LS_N DP_N 27.2984f
+C1407 TXF_N TXDF3_N 12.3679f
+C1408 LS_N_VCMS_r0 VDD_WIRE_SW 0.00364f
+C1409 tg1_b VCMM 0.34288f
+C1410 LS_N_VCMS_r4 LS_N_VCMS_r6 0
+C1411 TXDS4_P ln 0.15407f
+C1412 B1 det_se1 0.0816f
+C1413 sg3_b_s0 S1 0
+C1414 dpb bt 1.86097f
+C1415 og enb 0.7212f
+C1416 det_se1 sg3 0
+C1417 det_se0 sg3_b_s0 0.23661f
+C1418 TXDF1_P TXF_P 0
+C1419 t1b VREFN 0.1662f
+C1420 csn_3ob VDD_WIRE_SW 5.23465f
+C1421 TXF_N DP_N 0.24138f
+C1422 LS_P_VCMS_r12 det_thr0 0.1302f
+C1423 atb_det_vref S1 0.14933f
+C1424 VT3_VT2_r1 VT3_VT2_r2 0.84906f
+C1425 atb_det_vref det_se0 2.82891f
+C1426 DP_P TXDS2_P 0
+C1427 dpb DIFF_POS 0.03851f
+C1428 enq lad_top 0.15667f
+C1429 enb TXDF5_N 0.30846f
+C1430 dpb LS_N_VCMS_r11 0.09768f
+C1431 VCMS VDD_WIRE_SW 8.98056f
+C1432 TXF_N TX_P_TXS_P_r3 0
+C1433 TXS_N TX_N_TXS_N_r5 0.41155f
+C1434 csp_2oa csp_qb 0.07294f
+C1435 tx TX_N_TXS_N_r4 0.10598f
+C1436 VT2 enq 0.0633f
+C1437 RX_P VTHP 0.0928f
+C1438 TXDS1_N DP_N 0.07789f
+C1439 LS_P TX_P 0.06647f
+C1440 IBIAS det_inject 0
+C1441 S2_S1_r0 det_thr0 0.0816f
+C1442 TXDS0_N DP_N 0.11927f
+C1443 inm enb 1.02794f
+C1444 LS_P B3 0.00458f
+C1445 det_src_tx tg1 0
+C1446 sg2_b_s0 e0b 0.41704f
+C1447 B3 sg0_b 0.16792f
+C1448 sg1 e1b 0
+C1449 sg1_b_s0 S0 0
+C1450 det_en S0 0.04751f
+C1451 VDD_WIRE_SW sg1_b_s0 0.00129f
+C1452 LS_N_VCMS_r10 det_thr1 0.12392f
+C1453 csp_2oa enb 0.42101f
+C1454 det_en VDD_WIRE_SW 9.77953f
+C1455 t0b VT3_VT2_r0 0.09998f
+C1456 cdp_qb cdp_3ob 0.5973f
+C1457 TXDF3_P TXDF1_P 0
+C1458 DP_P TX_P 0.19499f
+C1459 tx_b_s0 ln_b 0
+C1460 VDD_WIRE_SW cdn_4pb 8.64928f
+C1461 VDD_WIRE_SW cdn_q 2.37743f
+C1462 TXS_P enb 0.19012f
+C1463 csn_ckn_s0 atb_det_vref 0.01184f
+C1464 TXF_P TX_N 1.3066f
+C1465 srcb tg1 0.00424f
+C1466 TXDF3_N atb_det_vref 0.19479f
+C1467 VB3 det_se0 0.09612f
+C1468 TXF_P enq 0.14745f
+C1469 t0b LS_N 0.04467f
+C1470 csp_q csp_2oa 0.62227f
+C1471 tg2_b_s0 tg1_b 0
+C1472 cdn_q cdn_qb 3.47536f
+C1473 atb_det_vref DP_N 0.22673f
+C1474 tx TX_P_TXS_P_r5 0.10598f
+C1475 VT1 dpb 0.08478f
+C1476 LS_N_VCMS_r12 VT3 0.08099f
+C1477 TXDF0_N TXDF1_N 25.9636f
+C1478 RX_P TX_P_TXF_P_r0 0
+C1479 VSE SE_N 0.03241f
+C1480 tg1 VTHP 0.67206f
+C1481 det_clk TX_N 46.9977f
+C1482 im og 1.63755f
+C1483 tg2 VDD_WIRE_SW 1.61719f
+C1484 det_thr1 det_thr0 38.0605f
+C1485 VB2 LS_N_VCMS_r14 0
+C1486 VSE csn_x 0.46989f
+C1487 IBIAS enb 0.09155f
+C1488 lad_top_S2_r0 lad_top 0.55655f
+C1489 det_clk enq 0.04191f
+C1490 VB2 LS_N_VCMS_r10 0
+C1491 tg1_b det_se0 0.12095f
+C1492 ot enb 0
+C1493 TXS_P ln_b 0.20327f
+C1494 im inm 0.66575f
+C1495 va_VSS_r3 va_VSS_r5 0
+C1496 TXDS5_P VDD_WIRE_SW 0.21727f
+C1497 TXF_P RX_P 1.50463f
+C1498 tg3 srcb 0.25753f
+C1499 VCMS enq 0.17179f
+C1500 TXDS1_P VDD_WIRE_SW 0.199f
+C1501 t1b VT1 0.14173f
+C1502 TXDF0_P DP_P 0.00819f
+C1503 tg1_b_s0 VCMM 0
+C1504 TXDF4_P TXDF3_N 0.00135f
+C1505 TXDS1_P TXDS0_P 8.4896f
+C1506 IBIAS det_se1 0.04191f
+C1507 tx TXDS4_P 0.22351f
+C1508 TX_P_TXS_P_r2 ln 0.08192f
+C1509 B3_S0_r0 B3 1.55155f
+C1510 S1 sg0_b 0.15776f
+C1511 LS_P_VCMS_r0 LS_P_VCMS_r1 0.99346f
+C1512 csp_x csp_2oa 0
+C1513 oa1 va 0.2012f
+C1514 VT2 tg1 0
+C1515 LS_P det_se0 0.13835f
+C1516 det_thr0 e1b 0.20357f
+C1517 det_se1 sg0 0.00149f
+C1518 det_se0 sg0_b 0.24398f
+C1519 atb_det_vref e0b 0.19248f
+C1520 tx_b det_src_tx 0.62318f
+C1521 TX_N det_en 0.1661f
+C1522 TXDS0_P RX_N 0
+C1523 RX_N VDD_WIRE_SW 3.10164f
+C1524 RX_P det_clk 0
+C1525 TXDS2_N TXS_N 0.33012f
+C1526 VDD_WIRE_SW csn_q 2.37743f
+C1527 tg3 VTHP 0.44913f
+C1528 t0b VB2_VB3_r0 0.09998f
+C1529 csn_qb_s0 VDD_WIRE_SW 2.81418f
+C1530 enq det_en 0.34574f
+C1531 t0b atb_det_vref 0.25394f
+C1532 LS_P_VCMS_r4 LS_P_VCMS_r5 0.65095f
+C1533 TXDS4_P TXDS2_P 0
+C1534 inj_N TXF_P 0
+C1535 t1b dpb 0.15464f
+C1536 VDD_WIRE_SW ln 2.23696f
+C1537 enb VREFN 0.29096f
+C1538 DP_P det_se0 0.21345f
+C1539 TXDS0_P ln 0.15407f
+C1540 VB2 det_thr0 0.28079f
+C1541 TXF_N SE_P 0.03174f
+C1542 cdp_1pa LS_N 0.06751f
+C1543 cdp_1pa cdp_ckn 0.96099f
+C1544 TXDF1_P RX_N 0.00862f
+C1545 VSE sg3_b 0.42306f
+C1546 VSE LS_P_VCMS_r12 0.13854f
+C1547 va_VSS_r5 va_VSS_r4 0.30845f
+C1548 LS_N_VCMS_r8 LS_N_VCMS_r10 0.06664f
+C1549 atb_det_vref atb_det_vref_lad_bot_r0 1.15327f
+C1550 LS_P TXDF3_N 0.02067f
+C1551 det_se1 VREFN 0.1813f
+C1552 csp_ckn det_clk 0.49433f
+C1553 og VT3 0
+C1554 RX_P det_en 0.05807f
+C1555 LS_P_VCMS_r10 LS_P_VCMS_r8 0.00931f
+C1556 ot im 0.15093f
+C1557 LS_P_VCMS_r6 LS_P_VCMS_r7 0.5531f
+C1558 csp_3ob csp_qb 0.5973f
+C1559 LS_P DP_N 0.16463f
+C1560 enb bt 0.11893f
+C1561 inj_P VDD_WIRE_SW 6.75478f
+C1562 enb LS_N_VCMS_r11 0.08099f
+C1563 tg0 VTHP 0.52505f
+C1564 TXDS5_P TX_N 0.21689f
+C1565 t0b VB3 0.18663f
+C1566 TX_N_TXS_N_r4 TX_N_TXS_N_r3 0.46579f
+C1567 DP_P TXDF3_N 0.1247f
+C1568 enb DIFF_POS 0.84123f
+C1569 inm VT3 0
+C1570 VB2_VB3_r0 VB2_VB3_r2 0
+C1571 csn_1pa IBIAS 0
+C1572 TXDS1_P TX_N 0.19863f
+C1573 TXDS3_P enb 0.15394f
+C1574 csp_3ob enb 0.41986f
+C1575 B3_S0_r0 S1 0
+C1576 DP_P DP_N 97.0299f
+C1577 tg0_b VREFN 0.50159f
+C1578 S2 B3 0.1535f
+C1579 enb cdp_2oa 0.42101f
+C1580 lad_top_S2_r1 sg0_b 0.32107f
+C1581 tg3_b det_thr1 0.63416f
+C1582 enb csn_2oa 0.42101f
+C1583 VSE csn_4pb 0.95918f
+C1584 det_se1 sg2 0.10906f
+C1585 B3_S0_r0 det_se0 0.09847f
+C1586 RX_N TX_N 0.29087f
+C1587 TXDF2_N VREFN 0.0838f
+C1588 VSE csn_ckn 0.06572f
+C1589 det_thr1 B2 0.0816f
+C1590 det_se1 DIFF_POS 0.05872f
+C1591 det_thr0 det_src_tx 7.78995f
+C1592 atb_det_vref SE_P 0.04963f
+C1593 det_se0 DIFF_NEG 14.9846f
+C1594 LS_N_VCMS_r12 atb_det_vref 0.09768f
+C1595 csp_ckn det_en 0.81828f
+C1596 dpb det_inject 1.09734f
+C1597 enq RX_N 0.04191f
+C1598 im VREFN 0.04636f
+C1599 t0b tg1_b 3.93416f
+C1600 LS_N_VCMS_r10 LS_N_VCMS_r6 0.07939f
+C1601 tx TX_P_TXS_P_r2 0.10598f
+C1602 VDD_WIRE_SW cdp_q 2.37743f
+C1603 VB2 LS_N_VCMS_r13 0
+C1604 csp_q csp_3ob 0.4597f
+C1605 VB3 tg0_b_s0 0
+C1606 LS_P e0b 0.00202f
+C1607 TX_N ln 0.04107f
+C1608 sg0_b e0b 0.96279f
+C1609 tg2_b VDD_WIRE_SW 4.69258f
+C1610 VDD_WIRE_SW VB1 2.85836f
+C1611 enq ln 4.33729f
+C1612 srcb det_thr0 0.32389f
+C1613 TXDS3_P ln_b 0.15423f
+C1614 VSE det_thr1 0.1516f
+C1615 VT1 enb 0.07888f
+C1616 t0b sg0_b 9.59279f
+C1617 SE_N_s0 enb 0.41307f
+C1618 LS_P t0b 0.04666f
+C1619 B2 e1b 0.09363f
+C1620 tx VDD_WIRE_SW 4.65641f
+C1621 im bt 0.15283f
+C1622 TXDS0_P tx 0.22351f
+C1623 csp_4pb DP_P 0
+C1624 DP_P e0b 0.00147f
+C1625 VB3 VB2_VB3_r2 1.75622f
+C1626 LS_N TXDF5_N 0.00466f
+C1627 RX_P RX_N 0
+C1628 VB2 VT3_VT2_r1 0.00459f
+C1629 csn_x csn_4pb 1.24927f
+C1630 VDD_WIRE_SW oa1 2.63498f
+C1631 TXDF2_N DIFF_POS 0.00671f
+C1632 cdn_q_s0 cdn_ckn 0
+C1633 det_thr0 VTHP 11.424f
+C1634 im LS_N_VCMS_r11 0.10371f
+C1635 VB2_VB3_r1 VCMM 0.08802f
+C1636 tg0_b_s0 tg1_b 0.35573f
+C1637 TXF_N TXDF5_N 0.79793f
+C1638 csn_x csn_ckn 0.63242f
+C1639 TXDF2_N TXDS3_P 0
+C1640 t0b DP_P 0.04806f
+C1641 DIFF_NEG DP_N 0.04868f
+C1642 tg3_b_s0 VDD_WIRE_SW 0.00129f
+C1643 VT1 det_se1 0.09318f
+C1644 VSE e1b 0.15285f
+C1645 sg0_b atb_det_vref_lad_bot_r0 0.11511f
+C1646 csp_3ob csp_x 0
+C1647 RX_P ln 0.63714f
+C1648 VDD_WIRE_SW TXDS2_P 0.199f
+C1649 inj_P enq 0
+C1650 TXDS0_P TXDS2_P 0
+C1651 dpb enb 38.8946f
+C1652 tg1_b VB2_VB3_r2 0.1229f
+C1653 LS_P_VCMS_r7 LS_P_VCMS_r8 0.50417f
+C1654 det_thr1 SE_N 0
+C1655 S2 S1 32.0771f
+C1656 B1 atb_det_vref 1.34104f
+C1657 det_se0 S2 0.15016f
+C1658 det_thr0 lad_top 0
+C1659 TX_P_TXS_P_r3 TX_P_TXS_P_r5 0
+C1660 VT2 det_thr0 0.27211f
+C1661 TXS_N TXDS3_N 0.3488f
+C1662 LS_P_VCMS_r3 LS_P_VCMS_r1 0
+C1663 TXF_N TXS_P 2.0321f
+C1664 VSE VB2 0.07747f
+C1665 dpb det_se1 0.20662f
+C1666 lad_bot S1 0.00168f
+C1667 VT3 VREFN 0.28946f
+C1668 TX_P VDD_WIRE_SW 5.16134f
+C1669 og atb_det_vref 0
+C1670 lad_bot det_se0 0
+C1671 t1b enb 0.37265f
+C1672 B3 S0 13.4459f
+C1673 csn_1pa csn_2oa 2.53303f
+C1674 VDD_WIRE_SW VCMM 23.1261f
+C1675 B3_S0_r0 e0b 0.0816f
+C1676 TXDF3_N TXDS4_P 0.09293f
+C1677 LS_N_VCMS_r0 LS_N_VCMS_r10 0.3085f
+C1678 im VT1 0.0418f
+C1679 dpb ln_b 0
+C1680 VDD_WIRE_SW B3 2.64445f
+C1681 LS_P SE_P 0
+C1682 VB2 VT3_VT2_r2 0.01106f
+C1683 cdp_q cdp_q_s0 0.48265f
+C1684 enq VB1 0.08364f
+C1685 tx_b det_en 0.33279f
+C1686 VCMS LS_N_VCMS_r14 1.36615f
+C1687 t0b B3_S0_r0 0.094f
+C1688 SE_P cdn_ckn 0
+C1689 TXF_N IBIAS 4.85336f
+C1690 LS_P cdp_1pa 1.10597f
+C1691 t1b det_se1 0.11136f
+C1692 inm atb_det_vref 0.00764f
+C1693 LS_N_VCMS_r10 VCMS 0.10913f
+C1694 tx TX_N 0.15648f
+C1695 VDD_WIRE_SW cdp_ckn_s0 0
+C1696 det_clk csp_ckn_s0 0.53667f
+C1697 DP_P SE_P 3.03122f
+C1698 TXF_P det_thr0 0.14097f
+C1699 TXDF2_N dpb 0.07747f
+C1700 VT3 bt 0.00149f
+C1701 enq oa1 0.00424f
+C1702 im dpb 0.10312f
+C1703 DIFF_NEG_s0 cdn_q 0
+C1704 inj_N inj_P 0
+C1705 tg3_b srcb 0.23474f
+C1706 VT3 LS_N_VCMS_r11 0.08099f
+C1707 LS_N_VCMS_r10 det_en 0.13025f
+C1708 inj_b inj 0.74344f
+C1709 VT3_VT2_r0 VREFN 0
+C1710 VSE sg2_b 0.56651f
+C1711 VSE det_src_tx 0.07914f
+C1712 TX_N TXDS2_P 0.19863f
+C1713 det_clk det_thr0 0.16763f
+C1714 va_VSS_r1 va 0
+C1715 t1b tg0_b 1.69365f
+C1716 LS_P_VCMS_r12 det_thr1 0.12386f
+C1717 VT3_VT2_r1 VTHP 0.27875f
+C1718 lad_top_S2_r1 S2 0
+C1719 tg3_b VTHP 0.41708f
+C1720 cdn_1pa cdn_2oa 2.53303f
+C1721 VREFN LS_N 0.1966f
+C1722 cdp_ckn VREFN 0.06363f
+C1723 RX_P tx 0.12627f
+C1724 LS_P LS_P_VCMS_r1 0
+C1725 tx TX_N_TXS_N_r1 0.10598f
+C1726 det_thr1 S2_S1_r0 0.08228f
+C1727 csn_ckn csn_4pb 1.53177f
+C1728 tg2_b_s0 VDD_WIRE_SW 0.00129f
+C1729 VB3 inm 0.61321f
+C1730 im t1b 0.13877f
+C1731 VCMS det_thr0 0.10121f
+C1732 cdn_2oa VTHP 0
+C1733 enb det_inject 0.11466f
+C1734 csp_ckn_s0 det_en 0.41258f
+C1735 S2_S1_r0 lad_top_S2_r2 0
+C1736 TXF_N VREFN 0.10591f
+C1737 IBIAS atb_det_vref 0.0553f
+C1738 B1 sg0_b 0.11511f
+C1739 S1 S0 26.7873f
+C1740 S2 e0b 0.13176f
+C1741 enb cdn_qb_s0 0.1977f
+C1742 ot VB2_VB3_r0 0
+C1743 TX_P TX_N 6.30265f
+C1744 ot atb_det_vref 0.85935f
+C1745 VDD_WIRE_SW S1 2.80966f
+C1746 TX_P enq 0.04191f
+C1747 det_se0 S0 0.22096f
+C1748 det_se1 sg1_b 0
+C1749 TXDF0_P TXDF1_P 23.0975f
+C1750 enq VCMM 0.22231f
+C1751 VT2 VT3_VT2_r1 0.12918f
+C1752 det_thr0 det_en 6.34913f
+C1753 VT3 VT1 0.32062f
+C1754 det_se1 det_inject 0
+C1755 DIFF_NEG SE_P 0
+C1756 det_src_tx SE_N 7.96055f
+C1757 cdp_q cdp_qb 3.47536f
+C1758 det_se0 VDD_WIRE_SW 6.91084f
+C1759 enq B3 0.16132f
+C1760 VSE VTHP 7.87173f
+C1761 t0b S2 0.13024f
+C1762 inm tg1_b 0.29735f
+C1763 S2_S1_r0 e1b 0.09363f
+C1764 VB1 tg1 0.57897f
+C1765 lad_bot e0b 0
+C1766 DIFF_POS LS_N 2.161f
+C1767 LS_P_VCMS_r0 dpb 0.00209f
+C1768 DIFF_NEG cdp_1pa 0
+C1769 tx_b ln 0.00617f
+C1770 VDD_WIRE_SW TX_N_TXF_N_r0 0.00298f
+C1771 TXDF3_P TXDF2_P 22.3713f
+C1772 enb csp_qb 1.20754f
+C1773 VT3_VT2_r2 VTHP 0.41868f
+C1774 LS_P TXDF5_N 0.0036f
+C1775 TXF_N DIFF_POS 0.03846f
+C1776 t0b lad_bot 0.08488f
+C1777 cdp_4pb cdp_1pa 0.57973f
+C1778 cdp_3ob cdp_x 0
+C1779 cdp_2oa cdp_ckn 0.96025f
+C1780 TXF_N TXDS3_P 0.35793f
+C1781 RX_P TX_P 0.14274f
+C1782 VT3 dpb 4.59807f
+C1783 LS_P_VCMS_r12 LS_P_VCMS_r14 0
+C1784 VB2_VB3_r0 VREFN 0.08867f
+C1785 TX_P_TXS_P_r2 TX_P_TXS_P_r3 0.6615f
+C1786 im va_VSS_r6 0
+C1787 tg2 det_thr0 0
+C1788 det_thr1 lad_top_S2_r2 0
+C1789 atb_det_vref VREFN 0.19159f
+C1790 VSE VT2 0.06833f
+C1791 TXDS0_P TXDF3_N 0.51804f
+C1792 csn_ckn_s0 VDD_WIRE_SW 0
+C1793 TXDF3_N VDD_WIRE_SW 0.09569f
+C1794 csp_q csp_qb 3.47536f
+C1795 enb TXDS5_N 0.15423f
+C1796 inj_b_s0 dpb 0
+C1797 VDD_WIRE_SW DP_N 3.96721f
+C1798 LS_N_VCMS_r13 VCMS 0.08802f
+C1799 lad_bot atb_det_vref_lad_bot_r0 0.65835f
+C1800 TXDS0_P DP_N 0
+C1801 enb det_se1 0.46236f
+C1802 VT2 VT3_VT2_r2 0.94091f
+C1803 sg0_b_s0 e1b 0.33459f
+C1804 cdp_x VTHP 0.46989f
+C1805 t1b VT3 0.15211f
+C1806 TX_P_TXS_P_r3 VDD_WIRE_SW 0.25375f
+C1807 det_thr1 e1b 0.19923f
+C1808 t0b VB2_VB3_r1 0.09998f
+C1809 csp_q enb 0.29202f
+C1810 atb_det_vref bt 0.21987f
+C1811 lad_top_S2_r2 e1b 0
+C1812 enb ln_b 0.09991f
+C1813 TXDF1_P TXDF3_N 0.00163f
+C1814 det_se0 TX_N 0.14934f
+C1815 atb_det_vref DIFF_POS 0.05979f
+C1816 VSE TXF_P 1.73877f
+C1817 DP_P TXS_P 1.06462f
+C1818 det_thr0 RX_N 0.0537f
+C1819 atb_det_vref LS_N_VCMS_r11 0.11295f
+C1820 inj_b dnb 0
+C1821 enq S1 0.15271f
+C1822 TXDF1_P DP_N 0.08865f
+C1823 va_VSS_r3 enq 0
+C1824 enq det_se0 0.13989f
+C1825 VB3 VREFN 4.19191f
+C1826 VB2 det_thr1 0.1738f
+C1827 TXDS2_N TXDS3_N 7.14067f
+C1828 S0 e0b 0.19816f
+C1829 det_se1 ln_b 0.09261f
+C1830 sg0 sg0_b 2.22747f
+C1831 LS_P sg0 0.00126f
+C1832 TX_N TX_N_TXF_N_r0 0.89992f
+C1833 det_thr0 ln 0.09215f
+C1834 dpb LS_N 5.12299f
+C1835 det_src_tx ln_b_s0 0
+C1836 TXDF2_N enb 0.15716f
+C1837 VSE det_clk 0.06348f
+C1838 csp_4pb VDD_WIRE_SW 5.18296f
+C1839 VDD_WIRE_SW e0b 6.19495f
+C1840 im enb 3.35235f
+C1841 TXF_N dpb 0.15837f
+C1842 t1b VT3_VT2_r0 0.09998f
+C1843 csn_qb SE_N 0.54177f
+C1844 t0b S0 0.12574f
+C1845 VSE csn_3ob 0.00527f
+C1846 csp_x enb 0.43227f
+C1847 tx_b tx 2.14321f
+C1848 t0b VDD_WIRE_SW 4.19608f
+C1849 VB1 LS_N_VCMS_r14 0.00204f
+C1850 tg1_b VREFN 0.83471f
+C1851 VDD_WIRE_SW cdn_q_s0 3.01897f
+C1852 DP_P sg0 0.00462f
+C1853 TX_P_TXS_P_r1 ln 0.08192f
+C1854 TXDF2_N det_se1 0.09488f
+C1855 TXF_P SE_N 0.03174f
+C1856 srcb ln_b_s0 0.71119f
+C1857 VSE VCMS 2.05073f
+C1858 RX_P det_se0 0.05369f
+C1859 TXDF3_N TX_N 0.38279f
+C1860 VB2_VB3_r1 VB2_VB3_r2 1.38728f
+C1861 im det_se1 0.10784f
+C1862 TXDF2_P RX_N 0.01504f
+C1863 LS_N_VCMS_r10 VB1 0.00204f
+C1864 t1b LS_N 0.04511f
+C1865 cdn_2oa cdn_4pb 1.11442f
+C1866 cdn_q cdn_2oa 0.62227f
+C1867 VT1 atb_det_vref 0.10132f
+C1868 TX_N DP_N 0.23424f
+C1869 TXDF3_N enq 0.09028f
+C1870 cdn_qb cdn_q_s0 0.49944f
+C1871 cdn_qb_s0 cdn_3ob 0.45047f
+C1872 TX_N_TXS_N_r3 TX_N_TXS_N_r1 0
+C1873 csn_1pa enb 0.18338f
+C1874 LS_P VREFN 2.04288f
+C1875 VSE sg1_b_s0 0
+C1876 TXDF2_N ln_b 0.04591f
+C1877 enq DP_N 0.19591f
+C1878 det_clk SE_N 0.04191f
+C1879 VSE det_en 0.15793f
+C1880 TX_P_TXS_P_r3 TX_N 0.07708f
+C1881 VDD_WIRE_SW atb_det_vref_lad_bot_r0 0
+C1882 S2 sg3 0.33433f
+C1883 VREFN cdn_ckn 0.06359f
+C1884 det_thr1 det_src_tx 0.26399f
+C1885 inj_b_s0 det_inject 0.2366f
+C1886 enb cdp_qb_s0 0.1977f
+C1887 og va 3.01059f
+C1888 tg0_b_s0 VDD_WIRE_SW 0
+C1889 DP_P VREFN 0.10477f
+C1890 csn_3ob csn_x 0
+C1891 TXDF5_P TXDF0_N 0.04037f
+C1892 TXS_P TX_P_TXS_P_r5 0.55833f
+C1893 enq lad_top_S2_r1 0.11379f
+C1894 dpb atb_det_vref 1.58018f
+C1895 LS_P_VCMS_r3 LS_P_VCMS_r5 0
+C1896 RX_P TXDF3_N 0.08322f
+C1897 IBIAS DIFF_NEG 0.04191f
+C1898 va_VSS_r1 enq 0
+C1899 det_thr1 srcb 9.06743f
+C1900 enb cdn_3ob 0.41986f
+C1901 RX_P DP_N 0.13249f
+C1902 B3 sg1 0.6279f
+C1903 VDD_WIRE_SW VB2_VB3_r2 0.09006f
+C1904 det_thr0 VB1 0.29244f
+C1905 sg2_b_s0 sg1_b 0
+C1906 tg2_b det_thr0 0.00591f
+C1907 TXDF1_N TXDF3_N 0.39832f
+C1908 VB3 VT1 0.07112f
+C1909 bd VCMS 1.19497f
+C1910 LS_P DIFF_POS 0.06398f
+C1911 SE_P VDD_WIRE_SW 9.24808f
+C1912 TXDF1_N DP_N 0.0224f
+C1913 SE_N det_en 0.07025f
+C1914 LS_N_VCMS_r12 VDD_WIRE_SW 0.08802f
+C1915 enq e0b 0.04731f
+C1916 VB2_VB3_r0 t1b 0.09998f
+C1917 tg0 VCMM 0.93599f
+C1918 csn_x det_en 0
+C1919 VT3 enb 0.52714f
+C1920 det_thr1 VTHP 0.38079f
+C1921 t1b atb_det_vref 0.22548f
+C1922 TXS_P TXDS4_P 0.17744f
+C1923 cdn_x VREFN 0.5245f
+C1924 tx det_thr0 0.15922f
+C1925 VCMM LS_N_VCMS_r14 0.43292f
+C1926 det_en cdp_x 0
+C1927 TXDS4_N TXS_N 0.37842f
+C1928 VDD_WIRE_SW cdp_1pa 9.26572f
+C1929 DP_P DIFF_POS 0.04868f
+C1930 t0b enq 3.1443f
+C1931 VB2 det_src_tx 0.07997f
+C1932 LS_N_VCMS_r10 VCMM 1.01068f
+C1933 inj_b_s0 enb 0
+C1934 TXF_N det_inject 0
+C1935 DP_P TXDS3_P 0
+C1936 VT1 tg1_b 0.80938f
+C1937 VB3 dpb 0.0883f
+C1938 tg3_b_s0 det_thr0 0.23661f
+C1939 inj_b det_en 0.34223f
+C1940 VT3 det_se1 0.15579f
+C1941 tg1_b_s0 VREFN 0
+C1942 csp_ckn DP_N 0.00276f
+C1943 TX_P_TXS_P_r1 tx 0.10598f
+C1944 TXF_P ln_b_s0 0
+C1945 LS_N_VCMS_r7 LS_N_VCMS_r5 0
+C1946 det_thr1 lad_top 0
+C1947 VSE RX_N 0.06348f
+C1948 DIFF_NEG VREFN 0.03243f
+C1949 VB2 srcb 0.09921f
+C1950 TXDF5_P TXDF3_P 0
+C1951 enq atb_det_vref_lad_bot_r0 0.11935f
+C1952 VT2 det_thr1 0.16616f
+C1953 lad_top_S2_r1 lad_top_S2_r0 0.51258f
+C1954 LS_P_VCMS_r4 LS_P_VCMS_r3 0.69988f
+C1955 ot va 0.75471f
+C1956 cdp_4pb VREFN 0.06162f
+C1957 LS_P_VCMS_r12 VCMS 1.57564f
+C1958 dnb inj 0.24044f
+C1959 VB3 t1b 0.13793f
+C1960 VDD_WIRE_SW LS_P_VCMS_r1 0.00589f
+C1961 TXF_P csn_ckn 0
+C1962 LS_P_VCMS_r11 LS_P_VCMS_r9 0
+C1963 VB2 VTHP 0.20476f
+C1964 LS_N_VCMS_r13 VB1 0.00204f
+C1965 TX_P det_thr0 1.4732f
+C1966 B1 S0 0
+C1967 enb cdp_ckn 0.94893f
+C1968 S2 sg0 0
+C1969 enb LS_N 0.24738f
+C1970 lad_top e1b 0
+C1971 det_thr0 VCMM 0.4333f
+C1972 B1 VDD_WIRE_SW 0.17631f
+C1973 lad_top_S2_r0 e0b 0
+C1974 det_se0 sg1 0
+C1975 im VT3 0.96902f
+C1976 VDD_WIRE_SW sg3 1.35232f
+C1977 LS_P_VCMS_r12 det_en 0.1302f
+C1978 det_se1 sg2_b_s0 0.3833f
+C1979 det_thr0 B3 0.13899f
+C1980 DIFF_POS_s0 cdp_q 0
+C1981 TXF_N enb 0.21471f
+C1982 csp_4pb csp_ckn 1.53177f
+C1983 DIFF_POS DIFF_NEG 0
+C1984 LS_P dpb 5.05913f
+C1985 atb_det_vref det_inject 11.6893f
+C1986 det_clk csn_ckn 0.49433f
+C1987 t0b lad_top_S2_r0 0.094f
+C1988 TXF_P det_thr1 0.13453f
+C1989 csn_3ob csn_4pb 3.12453f
+C1990 enq SE_P 0.04191f
+C1991 t1b tg1_b 3.94179f
+C1992 LS_N_VCMS_r12 enq 0.08099f
+C1993 TX_P TX_P_TXS_P_r1 0
+C1994 TXDS1_N enb 0.15423f
+C1995 det_se1 LS_N 0.15046f
+C1996 csn_3ob csn_ckn 1.06118f
+C1997 og VDD_WIRE_SW 2.51179f
+C1998 det_en ln_b_s0 0.43289f
+C1999 TXDS0_N enb 0.15423f
+C2000 VDD_WIRE_SW tx_b_s0 0.00135f
+C2001 DP_P dpb 0.58156f
+C2002 tx TXS_N 0.50338f
+C2003 VB2 VT2 0.07236f
+C2004 TXF_N det_se1 0.14453f
+C2005 det_thr1 det_clk 0.17696f
+C2006 VDD_WIRE_SW TXDF5_N 0.0157f
+C2007 cdp_2oa cdp_4pb 1.11442f
+C2008 srcb det_src_tx 3.24615f
+C2009 t0b tg1 1.53112f
+C2010 LS_N_VCMS_r10 det_se0 0.12392f
+C2011 t1b sg0_b 0.35494f
+C2012 LS_P t1b 0.04711f
+C2013 ln TX_P_TXS_P_r4 0.08192f
+C2014 inm VDD_WIRE_SW 1.92888f
+C2015 TXF_N ln_b 0.04753f
+C2016 csp_2oa VDD_WIRE_SW 5.18148f
+C2017 TXF_P inj 1.2092f
+C2018 csn_ckn det_en 0.81828f
+C2019 VCMS det_thr1 0.09488f
+C2020 det_src_tx VTHP 11.4789f
+C2021 TX_P_TXS_P_r0 enb 0.08187f
+C2022 t1b DP_P 0.04851f
+C2023 VSE VB1 0.0898f
+C2024 TXDF2_N LS_N 0
+C2025 tg2_b_s0 det_thr0 0
+C2026 tg3_b tg3_b_s0 0.25917f
+C2027 enb atb_det_vref 0.68005f
+C2028 csn_q_s0 csn_2oa 0.54841f
+C2029 LS_P_VCMS_r13 LS_N_VCMS_r11 0.00385f
+C2030 cdp_3ob VTHP 0.00527f
+C2031 TXDS0_P TXS_P 6.93125f
+C2032 TXDS4_P TXDS3_P 7.97986f
+C2033 TXS_P VDD_WIRE_SW 0.27806f
+C2034 TXF_N TXDF2_N 0.14128f
+C2035 LS_N_VCMS_r8 LS_N_VCMS_r6 0
+C2036 LS_N_VCMS_r13 VCMM 0.28578f
+C2037 csp_1pa DP_N 0
+C2038 det_thr1 det_en 0.30628f
+C2039 srcb VTHP 0.82099f
+C2040 va_VSS_r6 va_VSS_r5 0.25952f
+C2041 det_thr0 S1 0.12883f
+C2042 det_se1 sg3_b_s0 0.23652f
+C2043 LS_N_VCMS_r14 DP_N 0.00203f
+C2044 B1 enq 0.11484f
+C2045 atb_det_vref det_se1 6.21117f
+C2046 det_se0 det_thr0 0.28434f
+C2047 LS_P_VCMS_r2 LS_P_VCMS_r12 0.34344f
+C2048 cdn_1pa VTHP 0.39183f
+C2049 LS_N_VCMS_r10 DP_N 0.48871f
+C2050 dpb DIFF_NEG 0.03851f
+C2051 VT2 det_src_tx 0.0788f
+C2052 TX_P_TXS_P_r0 ln_b 0.08197f
+C2053 IBIAS VDD_WIRE_SW 5.21479f
+C2054 VT3_VT2_r1 VCMM 0
+C2055 TXDF0_P TXDF2_P 0
+C2056 VB2_VB3_r1 VREFN 0.09263f
+C2057 sg1_b_s0 e1b 0.58972f
+C2058 LS_P sg1_b 0.00713f
+C2059 S0 sg0 0.72576f
+C2060 LS_N_VCMS_r4 LS_N_VCMS_r5 0.79774f
+C2061 sg1 e0b 0.21264f
+C2062 atb_det_vref ln_b 0.09476f
+C2063 LS_P_VCMS_r6 LS_P_VCMS_r12 0.07939f
+C2064 det_en e1b 0.18129f
+C2065 og enq 0.00249f
+C2066 VDD_WIRE_SW sg0 1.89474f
+C2067 ot VDD_WIRE_SW 6.12259f
+C2068 TX_N TXDF5_N 0.47843f
+C2069 VB2 VCMS 0
+C2070 VB3 enb 0.08214f
+C2071 tg2 det_thr1 0
+C2072 VT2 srcb 0.09693f
+C2073 t1b tg1_b_s0 0.23687f
+C2074 bd VB1 0.00152f
+C2075 t1b B3_S0_r0 0.10646f
+C2076 tx TX_N_TXS_N_r5 0.10598f
+C2077 ln_b_s0 ln 0.00212f
+C2078 csp_1pa csp_4pb 0.22788f
+C2079 DP_P sg1_b 0.00401f
+C2080 LS_P_VCMS_r14 VCMS 0.82322f
+C2081 TXF_P det_src_tx 0.13458f
+C2082 TXDF2_N atb_det_vref 0.17865f
+C2083 TXDF3_N det_thr0 0.1074f
+C2084 VT3 VT3_VT2_r0 0.94156f
+C2085 im atb_det_vref 0.18479f
+C2086 VB2 det_en 0.10245f
+C2087 VT2 VTHP 1.41686f
+C2088 VB3 det_se1 0.10119f
+C2089 TXDS2_N TXDS4_N 0
+C2090 VSE VCMM 1.98803f
+C2091 VSE TX_P 0.06348f
+C2092 det_thr0 DP_N 0.21406f
+C2093 tg1_b enb 0.05912f
+C2094 tx TX_P_TXS_P_r4 0.10598f
+C2095 VSE B3 1.25475f
+C2096 TXS_P TX_N 3.97033f
+C2097 dpb LS_P_VCMS_r13 0.10362f
+C2098 det_clk det_src_tx 0.20194f
+C2099 TXF_P srcb 0.07019f
+C2100 LS_N_VCMS_r3 LS_N_VCMS_r5 0
+C2101 VDD_WIRE_SW VREFN 52.0188f
+C2102 det_thr1 RX_N 0.05082f
+C2103 t0b LS_N_VCMS_r10 0.1116f
+C2104 enb TX_N_TXS_N_r0 0.0827f
+C2105 det_thr0 lad_top_S2_r1 0
+C2106 VT3_VT2_r2 VCMM 0
+C2107 VB3 tg0_b 0.00174f
+C2108 enb sg0_b 0.26688f
+C2109 tg1_b det_se1 0.12348f
+C2110 LS_P enb 0.24198f
+C2111 TX_P_TXS_P_r1 TX_P_TXS_P_r3 0
+C2112 VB2 tg2 0.48111f
+C2113 TXF_P VTHP 0.10286f
+C2114 TXDF2_N TXDF4_P 0.00415f
+C2115 det_thr1 ln 0.09279f
+C2116 enb cdn_ckn 0.94893f
+C2117 IBIAS TX_N 0.04191f
+C2118 va_VSS_r3 va_VSS_r2 0.40631f
+C2119 TXDF2_P TXDF3_N 0.00156f
+C2120 VB3 im 0.04545f
+C2121 TXF_P dnb 0
+C2122 IBIAS enq 0.59389f
+C2123 VDD_WIRE_SW bt 6.96843f
+C2124 LS_P det_se1 0.14544f
+C2125 det_thr0 e0b 0.3042f
+C2126 TXDF2_P DP_N 0.04097f
+C2127 DP_P enb 0.67736f
+C2128 VDD_WIRE_SW sg2 1.56371f
+C2129 det_se1 sg0_b 0.24429f
+C2130 VDD_WIRE_SW LS_N_VCMS_r11 0.08802f
+C2131 det_src_tx det_en 4.23469f
+C2132 DIFF_POS VDD_WIRE_SW 5.9129f
+C2133 ot enq 0
+C2134 tg0_b tg1_b 2.08545f
+C2135 det_clk VTHP 0.04191f
+C2136 t1b S2 0.14882f
+C2137 bd VCMM 1.18393f
+C2138 TXDS3_P VDD_WIRE_SW 0.199f
+C2139 csp_3ob VDD_WIRE_SW 5.23465f
+C2140 t0b det_thr0 2.51187f
+C2141 B2 det_se0 0.09829f
+C2142 VDD_WIRE_SW cdp_2oa 5.18265f
+C2143 csp_1pa SE_P 0
+C2144 DP_P det_se1 0.20926f
+C2145 LS_P_VCMS_r12 LS_P_VCMS_r8 0.05733f
+C2146 VDD_WIRE_SW csn_2oa 5.18148f
+C2147 im tg1_b 0.06411f
+C2148 csp_ckn csp_2oa 0.96025f
+C2149 t1b lad_bot 0.09983f
+C2150 TX_N_TXS_N_r4 enb 0.08197f
+C2151 cdp_ckn LS_N 0.06507f
+C2152 srcb det_en 0.203f
+C2153 LS_N_VCMS_r12 LS_N_VCMS_r14 0
+C2154 RX_P IBIAS 0.04191f
+C2155 VT3 atb_det_vref 5.72813f
+C2156 tx ln_b_s0 0.10218f
+C2157 TXDS2_N tx 0.22351f
+C2158 va_VSS_r1 va_VSS_r0 0.50417f
+C2159 cdn_x enb 0.8606f
+C2160 VSE S1 1.41027f
+C2161 TXF_P TX_P_TXF_P_r0 1.01961f
+C2162 DP_P ln_b 0.82078f
+C2163 TXS_N DP_N 0.86258f
+C2164 LS_P TXDF2_N 1.30215f
+C2165 TXF_N LS_N 0.09702f
+C2166 VSE det_se0 0.43361f
+C2167 LS_N_VCMS_r10 LS_N_VCMS_r12 0
+C2168 TX_N VREFN 0.07281f
+C2169 tg2 det_src_tx 0
+C2170 det_thr0 atb_det_vref_lad_bot_r0 0.08581f
+C2171 cdn_ckn_s0 det_clk 0.53667f
+C2172 inj_b_s0 atb_det_vref 0.00398f
+C2173 va_VSS_r2 va_VSS_r4 0
+C2174 enq VREFN 0.17685f
+C2175 det_en VTHP 0.19877f
+C2176 cdn_1pa cdn_4pb 0.57973f
+C2177 tg0_b_s0 det_thr0 0
+C2178 VT1 VDD_WIRE_SW 2.60599f
+C2179 TXDF3_P TXDF0_N 0.00388f
+C2180 SE_N_s0 VDD_WIRE_SW 6.87641f
+C2181 enb DIFF_NEG 0.79933f
+C2182 VTHP cdn_4pb 1.01818f
+C2183 DP_P TXDF2_N 0.87356f
+C2184 inj_P inj 1.20197f
+C2185 det_thr1 VB1 0.18613f
+C2186 tg2_b det_thr1 0.92731f
+C2187 tg2 srcb 0.44102f
+C2188 t1b VB2_VB3_r1 0.09998f
+C2189 DP_P csp_x 0.5251f
+C2190 det_thr0 VB2_VB3_r2 0.09998f
+C2191 enb cdp_4pb 0.24365f
+C2192 TXDS0_N TXDS1_N 7.47885f
+C2193 va_VSS_r2 va_VSS_r1 0.45524f
+C2194 enb TX_P_TXS_P_r5 0.08187f
+C2195 VB3 VT3 0.1291f
+C2196 B3_S0_r0 det_se1 0.09189f
+C2197 TXF_P det_clk 0.03174f
+C2198 TXDF4_N tx 0.44703f
+C2199 enq bt 0.11875f
+C2200 csn_qb csn_3ob 0.5973f
+C2201 RX_P VREFN 0.07247f
+C2202 det_thr0 SE_P 0
+C2203 det_se0 SE_N 0
+C2204 VSE TXDF3_N 0.09237f
+C2205 det_thr1 tx 0.16267f
+C2206 TX_N DIFF_POS 0
+C2207 det_se1 DIFF_NEG 0.05872f
+C2208 RX_N det_src_tx 0.04783f
+C2209 LS_P_VCMS_r7 LS_P_VCMS_r5 0
+C2210 cdn_ckn_s0 det_en 0.41258f
+C2211 VT2 det_en 0.09445f
+C2212 dpb VDD_WIRE_SW 35.2282f
+C2213 tg2 VTHP 0.59297f
+C2214 TX_P ln_b_s0 0
+C2215 enq LS_N_VCMS_r11 0.08099f
+C2216 TXDS3_P TX_N 0.19863f
+C2217 enq DIFF_POS 0.04191f
+C2218 TX_N_TXS_N_r5 TX_N_TXS_N_r3 0
+C2219 VSE DP_N 0.78964f
+C2220 S2_S1_r0 B3 0
+C2221 TXF_N TX_P_TXS_P_r0 0
+C2222 atb_det_vref LS_N 0.15668f
+C2223 det_thr1 tg3_b_s0 0.23652f
+C2224 det_src_tx ln 4.36911f
+C2225 tx_b tx_b_s0 0.25917f
+C2226 tg0_b tg1_b_s0 0
+C2227 csn_q_s0 enb 0.17635f
+C2228 TXF_N atb_det_vref 0.15964f
+C2229 TXDS4_N TXDS3_N 6.97099f
+C2230 cdp_q_s0 cdp_2oa 0.54841f
+C2231 VT3 tg1_b 0.10851f
+C2232 t1b S0 0.14528f
+C2233 TXDS4_P enb 0.15394f
+C2234 t0b VT3_VT2_r1 0.09998f
+C2235 B2 e0b 0.0816f
+C2236 LS_P LS_P_VCMS_r0 1.03754f
+C2237 ln_b TX_P_TXS_P_r5 0.08197f
+C2238 t1b VDD_WIRE_SW 7.90314f
+C2239 VB2 VB1 22.7229f
+C2240 LS_N_VCMS_r10 LS_N_VCMS_r5 0.09832f
+C2241 VB3 VT3_VT2_r0 0.00119f
+C2242 enb va 0.05535f
+C2243 VB2 tg2_b 0.50701f
+C2244 VT2 tg2 0.57172f
+C2245 srcb ln 0.09975f
+C2246 cdn_3ob cdn_ckn 1.06118f
+C2247 TXF_P det_en 0.13899f
+C2248 RX_N VTHP 0.08382f
+C2249 t0b B2 0.09422f
+C2250 cdn_q_s0 cdn_2oa 0.54841f
+C2251 SE_N DP_N 2.82016f
+C2252 enb S2 0.02995f
+C2253 csn_x DP_N 0.5251f
+C2254 tg1 VREFN 0.61929f
+C2255 csp_1pa csp_2oa 2.53303f
+C2256 VT1 enq 0.07229f
+C2257 VSE csp_4pb 0.95918f
+C2258 VSE e0b 0.74697f
+C2259 det_thr1 TX_P 0.13415f
+C2260 det_thr1 VCMM 0.09688f
+C2261 ln VTHP 0
+C2262 det_clk det_en 10.5282f
+C2263 det_thr1 B3 0.136f
+C2264 tg1_b VT3_VT2_r0 0.1229f
+C2265 TXDS4_P ln_b 0.15423f
+C2266 B1 det_thr0 0.0816f
+C2267 VB2 tg3_b_s0 0
+C2268 det_se1 S2 0.13555f
+C2269 VSE t0b 0.0968f
+C2270 VB2_VB3_r0 atb_det_vref 0.00166f
+C2271 det_se0 sg3_b 0.34406f
+C2272 tx TX_N_TXS_N_r2 0.10598f
+C2273 LS_P_VCMS_r12 det_se0 0.12386f
+C2274 LS_N_VCMS_r13 LS_N_VCMS_r12 1.43382f
+C2275 TX_P_TXS_P_r3 TX_P_TXS_P_r4 0.61257f
+C2276 VCMS det_en 0.10121f
+C2277 dpb TX_N 0.03851f
+C2278 atb_det_vref VSS 40.1433f
+C2279 RX_P VSS 37.1461f
+C2280 det_se0 VSS 30.7041f
+C2281 det_thr0 VSS 22.2551f
+C2282 det_se1 VSS 19.7744f
+C2283 det_thr1 VSS 15.9665f
+C2284 RX_N VSS 79.5759f
+C2285 TX_P VSS 8.25673f
+C2286 TX_N VSS 10.7716f
+C2287 DIFF_POS VSS 16.4043f
+C2288 det_src_tx VSS 11.5387f
+C2289 DIFF_NEG VSS 16.0798f
+C2290 SE_P VSS 13.2603f
+C2291 SE_N VSS 12.8876f
+C2292 det_clk VSS 10.4158f
+C2293 IBIAS VSS 5.66398f
+C2294 det_inject VSS 2.16026f
+C2295 det_en VSS 44.9034f
+C2296 VDD_WIRE_SW VSS 0.96032p
+C2297 sg0_b_s0 VSS 2.1663f
+C2298 lad_bot VSS 7.821f
+C2299 atb_det_vref_lad_bot_r0 VSS 4.4475f
+C2300 B1 VSS 4.62465f
+C2301 B2 VSS 4.38983f
+C2302 B3_S0_r0 VSS 4.40409f
+C2303 S2_S1_r0 VSS 4.29639f
+C2304 lad_top_S2_r2 VSS 2.80341f
+C2305 lad_top_S2_r1 VSS 2.92328f
+C2306 lad_top_S2_r0 VSS 3.01663f
+C2307 lad_top VSS 1.48987f
+C2308 S2 VSS 13.8574f
+C2309 sg3 VSS 2.06415f
+C2310 sg3_b VSS 3.80972f
+C2311 sg3_b_s0 VSS 2.03519f
+C2312 S1 VSS 10.5738f
+C2313 sg2 VSS 2.20998f
+C2314 sg2_b VSS 4.05469f
+C2315 sg2_b_s0 VSS 2.33854f
+C2316 B3 VSS 20.185f
+C2317 sg1 VSS 2.43963f
+C2318 sg1_b VSS 4.46973f
+C2319 sg1_b_s0 VSS 2.67128f
+C2320 S0 VSS 9.99439f
+C2321 sg0 VSS 2.56168f
+C2322 e1b VSS 9.68569f
+C2323 sg0_b VSS 12.0622f
+C2324 e0b VSS 13.3361f
+C2325 LS_P_VCMS_r11 VSS 2.73763f
+C2326 LS_P_VCMS_r10 VSS 3.01459f
+C2327 LS_P_VCMS_r9 VSS 2.46053f
+C2328 LS_P_VCMS_r8 VSS 2.4846f
+C2329 LS_P_VCMS_r7 VSS 2.51534f
+C2330 LS_P_VCMS_r6 VSS 2.5382f
+C2331 LS_P_VCMS_r5 VSS 2.56257f
+C2332 LS_P_VCMS_r4 VSS 2.58726f
+C2333 LS_P_VCMS_r3 VSS 2.61182f
+C2334 LS_P_VCMS_r2 VSS 2.6523f
+C2335 LS_P_VCMS_r1 VSS 2.89431f
+C2336 LS_P_VCMS_r0 VSS 2.87387f
+C2337 LS_N_VCMS_r9 VSS 2.5423f
+C2338 LS_N_VCMS_r8 VSS 2.57496f
+C2339 LS_N_VCMS_r7 VSS 2.61424f
+C2340 LS_N_VCMS_r6 VSS 2.64173f
+C2341 LS_N_VCMS_r5 VSS 2.68473f
+C2342 LS_N_VCMS_r4 VSS 2.71086f
+C2343 LS_N_VCMS_r3 VSS 2.7361f
+C2344 LS_N_VCMS_r2 VSS 2.76073f
+C2345 LS_N_VCMS_r1 VSS 2.86885f
+C2346 LS_N_VCMS_r0 VSS 2.89226f
+C2347 LS_P_VCMS_r14 VSS 2.35672f
+C2348 LS_P_VCMS_r13 VSS 2.41407f
+C2349 LS_P_VCMS_r12 VSS 14.1725f
+C2350 va_VSS_r6 VSS 2.48626f
+C2351 va_VSS_r5 VSS 2.34851f
+C2352 va_VSS_r4 VSS 2.38065f
+C2353 va_VSS_r3 VSS 2.46828f
+C2354 va_VSS_r2 VSS 2.5551f
+C2355 va_VSS_r1 VSS 2.64196f
+C2356 va_VSS_r0 VSS 2.73159f
+C2357 og VSS 9.02661f
+C2358 va VSS 5.01144f
+C2359 oa1 VSS 6.30828f
+C2360 ot VSS 0.82611f
+C2361 bd VSS 7.49213f
+C2362 bt VSS 0.8402f
+C2363 VCMS VSS 5.94059f
+C2364 LS_N_VCMS_r14 VSS 4.08517f
+C2365 LS_N_VCMS_r13 VSS 4.10928f
+C2366 LS_N_VCMS_r12 VSS 4.15933f
+C2367 LS_N_VCMS_r11 VSS 4.20556f
+C2368 LS_N_VCMS_r10 VSS 14.8818f
+C2369 tg1_b_s0 VSS 1.93316f
+C2370 tg0 VSS 2.59891f
+C2371 tg0_b VSS 3.22841f
+C2372 t1b VSS 16.5069f
+C2373 tg0_b_s0 VSS 2.09903f
+C2374 VB2_VB3_r2 VSS 3.93607f
+C2375 VB2_VB3_r1 VSS 3.96823f
+C2376 VB2_VB3_r0 VSS 4.01378f
+C2377 VT3_VT2_r2 VSS 3.01613f
+C2378 VT3_VT2_r1 VSS 3.14768f
+C2379 VT3_VT2_r0 VSS 3.23431f
+C2380 VCMM VSS 25.5432f
+C2381 inm VSS 6.41002f
+C2382 im VSS 11.6496f
+C2383 VB3 VSS 12.7558f
+C2384 VT3 VSS 27.5942f
+C2385 tg3 VSS 2.61736f
+C2386 tg3_b VSS 3.9587f
+C2387 tg3_b_s0 VSS 1.98966f
+C2388 VB2 VSS 12.0276f
+C2389 VT2 VSS 11.8861f
+C2390 tg2 VSS 2.84167f
+C2391 tg2_b VSS 4.44777f
+C2392 tg2_b_s0 VSS 2.31982f
+C2393 t0b VSS 12.9407f
+C2394 VB1 VSS 14.7182f
+C2395 VT1 VSS 15.5444f
+C2396 tg1 VSS 2.91328f
+C2397 tg1_b VSS 13.9521f
+C2398 TX_P_TXF_P_r0 VSS 3.55653f
+C2399 tx_b VSS 2.77042f
+C2400 tx_b_s0 VSS 1.94693f
+C2401 srcb VSS 9.56794f
+C2402 ln_b_s0 VSS 2.31446f
+C2403 TX_N_TXF_N_r0 VSS 3.30381f
+C2404 ln_b VSS 8.29878f
+C2405 ln VSS 6.90383f
+C2406 TXS_P VSS 8.5319f
+C2407 TX_P_TXS_P_r5 VSS 2.875f
+C2408 TX_P_TXS_P_r4 VSS 2.92879f
+C2409 TX_P_TXS_P_r3 VSS 2.98272f
+C2410 TX_P_TXS_P_r2 VSS 3.01004f
+C2411 TX_P_TXS_P_r1 VSS 3.05818f
+C2412 TX_P_TXS_P_r0 VSS 3.10034f
+C2413 tx VSS 19.8401f
+C2414 TXS_N VSS 9.24528f
+C2415 TX_N_TXS_N_r5 VSS 3.12339f
+C2416 TX_N_TXS_N_r4 VSS 3.01937f
+C2417 TX_N_TXS_N_r3 VSS 3.0175f
+C2418 TX_N_TXS_N_r2 VSS 3.03333f
+C2419 TX_N_TXS_N_r1 VSS 3.06089f
+C2420 TX_N_TXS_N_r0 VSS 3.10254f
+C2421 DIFF_POS_s0 VSS 1.17024f
+C2422 cdp_qb_s0 VSS 0.33551f
+C2423 cdp_q VSS 5.54394f
+C2424 cdp_qb VSS 6.57287f
+C2425 cdp_q_s0 VSS 0.43144f
+C2426 cdp_2oa VSS 10.985f
+C2427 cdp_3ob VSS 11.2657f
+C2428 cdp_4pb VSS 3.51809f
+C2429 cdp_1pa VSS 4.51413f
+C2430 cdp_x VSS 1.09353f
+C2431 cdp_ckn VSS 10.8526f
+C2432 cdp_ckn_s0 VSS 5.36041f
+C2433 DIFF_NEG_s0 VSS 1.17024f
+C2434 cdn_qb_s0 VSS 0.33551f
+C2435 cdn_q VSS 5.54394f
+C2436 cdn_qb VSS 6.57287f
+C2437 cdn_q_s0 VSS 0.43144f
+C2438 cdn_2oa VSS 10.985f
+C2439 cdn_3ob VSS 11.2657f
+C2440 VTHP VSS 34.0593f
+C2441 VREFN VSS 53.4679f
+C2442 cdn_4pb VSS 3.51809f
+C2443 cdn_1pa VSS 4.51413f
+C2444 cdn_x VSS 1.09353f
+C2445 cdn_ckn VSS 10.8526f
+C2446 cdn_ckn_s0 VSS 5.36041f
+C2447 SE_P_s0 VSS 1.01154f
+C2448 csp_qb_s0 VSS 0.33551f
+C2449 csp_q VSS 5.54394f
+C2450 csp_qb VSS 6.57287f
+C2451 csp_q_s0 VSS 0.43144f
+C2452 csp_2oa VSS 11.0211f
+C2453 csp_3ob VSS 11.279f
+C2454 csp_4pb VSS 3.20527f
+C2455 csp_1pa VSS 4.32994f
+C2456 DP_P VSS 33.9121f
+C2457 csp_x VSS 0.59035f
+C2458 csp_ckn VSS 10.6519f
+C2459 csp_ckn_s0 VSS 5.36041f
+C2460 SE_N_s0 VSS 1.01154f
+C2461 csn_qb_s0 VSS 0.33551f
+C2462 csn_q VSS 5.54394f
+C2463 csn_qb VSS 6.57287f
+C2464 csn_q_s0 VSS 0.43144f
+C2465 csn_2oa VSS 11.0211f
+C2466 csn_3ob VSS 11.279f
+C2467 csn_4pb VSS 3.20527f
+C2468 VSE VSS 48.4173f
+C2469 csn_1pa VSS 4.32994f
+C2470 DP_N VSS 55.564f
+C2471 csn_x VSS 0.59035f
+C2472 csn_ckn VSS 10.6519f
+C2473 csn_ckn_s0 VSS 5.36041f
+C2474 TXF_N VSS 39.6687f
+C2475 inj_N VSS 4.75616f
+C2476 TXF_P VSS 36.8551f
+C2477 inj_P VSS 4.72834f
+C2478 dpb VSS 46.0012f
+C2479 enb VSS 85.8076f
+C2480 dnb VSS 9.11648f
+C2481 enq VSS 27.259f
+C2482 inj VSS 4.9708f
+C2483 inj_b VSS 2.90609f
+C2484 inj_b_s0 VSS 1.97189f
+C2485 LS_P VSS 95.2623f
+C2486 LS_N VSS 91.3121f
+C2487 TXDF5_P VSS 43.4067f
+C2488 TXDF4_P VSS 23.921f
+C2489 TXDF3_P VSS 24.0079f
+C2490 TXDF2_P VSS 24.087f
+C2491 TXDF1_P VSS 24.1683f
+C2492 TXDF0_P VSS 25.2376f
+C2493 TXDF2_N VSS 28.5401f
+C2494 TXDF1_N VSS 24.1181f
+C2495 TXDF0_N VSS 25.3955f
+C2496 TXDS5_P VSS 12.967f
+C2497 TXDS4_P VSS 7.42673f
+C2498 TXDS3_P VSS 7.46617f
+C2499 TXDS2_P VSS 7.50436f
+C2500 TXDS1_P VSS 7.5412f
+C2501 TXDS0_P VSS 8.17402f
+C2502 TXDS5_N VSS 12.4364f
+C2503 TXDS4_N VSS 7.2622f
+C2504 TXDS3_N VSS 7.3052f
+C2505 TXDS2_N VSS 7.34711f
+C2506 TXDS1_N VSS 7.38765f
+C2507 TXDS0_N VSS 8.00732f
+C2508 TXDF5_N VSS 41.0662f
+C2509 TXDF4_N VSS 23.7946f
+C2510 TXDF3_N VSS 31.7217f
+.ends
+

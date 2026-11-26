@@ -2,7 +2,7 @@
 # master <name> inline <pins...>                                    pin list stated here (no single netlist file)
 # master <name> demand <owner> <pins...>                            block does not exist yet: build demand
 # master <name> staged <path>:<subckt> <pins...>                    owner's staged pin contract; the published file still differs (counted until it matches)
-# A = projects/programmable_transceiver_platform/analog   IS = scratch/island-support-20261108-075605   IF = scratch/iso-family
+# A = projects/programmable_transceiver_platform/analog (every master file is tracked in git: clean-HEAD check, coordinator 2026-11-26)
 master pt_lna            A/rf_rx/generated/lna.ext.spice:pt_lna
 master pt_rxmix_i        A/rf_rx/generated/rxmix_i.ext.spice:pt_rxmix_i
 master pt_rxmix_q        A/rf_rx/generated/rxmix_q.ext.spice:pt_rxmix_q
@@ -76,16 +76,16 @@ master pad_refpad        A/pads/generated/stress-safe-families/reference/physica
 master pad_wirepad       A/pads/generated/stress-safe-families/wired-receive-usb/physical.spice:tx_protected_pad
 master pad_txpad         A/pads/generated/stress-safe-families/wired-transmit/physical.spice:tx_protected_pad
 master pad_hspad         A/pads/generated/stress-safe-families/wired-receive-hs/physical.spice:hs_protected_pad
-master isw_wired         IS/pex/isw_wired/isw_wired.pex.spice:isw_wired_pex
-master isw_rf            IS/pex/isw_rf/isw_rf.pex.spice:isw_rf_pex
-master isw_pll           IS/pex/isw_pll/isw_pll.pex.spice:isw_pll_pex
-master isw_conv          IS/pex/isw_conv/isw_conv.pex.spice:isw_conv_pex
-master isw_debug         IS/pex/isw_debug/isw_debug.pex.spice:isw_debug_pex
-master atb_leaf_s        IS/pexd/atb_leaf_s/atb_leaf_s.pex.spice:atb_leaf_s_flat
-master atb_leaf_f        IS/pexd/atb_leaf_f/atb_leaf_f.pex.spice:atb_leaf_f_flat
-master atb_grp           IS/pexd/atb_grp/atb_grp.pex.spice:atb_grp_flat
-master atb_pad           IS/pexd/atb_pad/atb_pad.pex.spice:atb_pad_flat
-master iso_clamp         IS/pex/iso_clamp/iso_clamp.pex.spice:iso_clamp_pex
+master isw_wired         A/island_support/generated/isw/isw_wired.pex.spice:isw_wired_pex
+master isw_rf            A/island_support/generated/isw/isw_rf.pex.spice:isw_rf_pex
+master isw_pll           A/island_support/generated/isw/isw_pll.pex.spice:isw_pll_pex
+master isw_conv          A/island_support/generated/isw/isw_conv.pex.spice:isw_conv_pex
+master isw_debug         A/island_support/generated/isw/isw_debug.pex.spice:isw_debug_pex
+master atb_leaf_s        A/island_support/generated/atb/atb_leaf_s.pex.spice:atb_leaf_s_flat
+master atb_leaf_f        A/island_support/generated/atb/atb_leaf_f.pex.spice:atb_leaf_f_flat
+master atb_grp           A/island_support/generated/atb/atb_grp.pex.spice:atb_grp_flat
+master atb_pad           A/island_support/generated/atb/atb_pad.pex.spice:atb_pad_flat
+master iso_clamp         A/island_support/generated/iso-family/iso_clamp.pex.spice:iso_clamp_pex
 # unpublished (pads owner, scratch/iso-family, iso-placement.json): same ports as iso_clamp; iso_pd = Y ISO VSS
 master iso_clamp_x4      inline A ISO Y VDD VSS
 master iso_pd            inline Y ISO VSS

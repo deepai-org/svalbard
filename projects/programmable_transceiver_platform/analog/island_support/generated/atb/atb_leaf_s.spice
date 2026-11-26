@@ -1,0 +1,10 @@
+.subckt atb_leaf_s NODE BUS SEL VDD VSS
+XMSWP SWB SEL VDD VDD pfet_03v3 w=1u l=0.28u
+XMSWN SWB SEL VSS VSS nfet_03v3 w=0.5u l=0.28u
+XMT1N NODE SEL MID VSS nfet_03v3 w=0.42u l=0.28u
+XMT1P NODE SWB MID VDD pfet_03v3 w=0.84u l=0.28u
+XMT2N MID SEL BUS VSS nfet_03v3 w=1u l=0.28u
+XMT2P MID SWB BUS VDD pfet_03v3 w=2u l=0.28u
+XMSH MID SWB VSS VSS nfet_03v3 w=1u l=0.28u
+DANT0 VSS SEL diode_nd2ps_03v3 area=12.25p pj=14u
+.ends atb_leaf_s

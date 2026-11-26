@@ -1,0 +1,650 @@
+* NGSPICE file created from pt_termination.ext - technology: gf180mcuD
+
+.subckt pt_termination VDD_WIRE_SW VSS term_en term_mode0 term_mode1 hs_en hs_term_en
++ hs_trim0 hs_trim1 hs_trim2 hs_trim3 TERM_ENABLE DIFF_ENABLE TERM_VCM HS_TERM_ENABLE
++ HS_TERM_TRIM0 HS_TERM_TRIM1 HS_TERM_TRIM2 HS_TERM_TRIM3 HS_TERM_VCM HS_VBIAS
+X0 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X1 htt3_b hs_trim3 htt3_b_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X2 hvbot hsq VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X3 hte_b hsq VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X4 HS_TERM_TRIM1 htt1_b VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X5 de_b_s1 term_mode1 de_b_s0 VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X6 TERM_ENABLE te_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X7 VSS TERM_VCM VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=0.59224n ps=2.77032m w=20u l=5u
+X8 te_b term_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X9 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X10 hbtop hbtop_HS_VBIAS_r0 VSS ppolyf_u_1k r_width=1u r_length=5.75u
+X11 de_b m0b de_b_s1 VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X12 hsb_s0 hs_en VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X13 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X14 vbl1_VSS_r2 VSS VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X15 te_b term_mode0 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X16 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X17 hvtop hvtop_HS_TERM_VCM_r0 VSS ppolyf_u_1k r_width=1u r_length=4.83u
+X18 hsq hsb VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X19 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X20 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X21 TERM_VCM_vbl1_r2 vbl1 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X22 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X23 TERM_ENABLE te_b VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X24 htt0_b HS_TERM_ENABLE VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X25 hte_b_s0 hsq VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X26 HS_TERM_TRIM0 htt0_b VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X27 htt1_b_s0 HS_TERM_ENABLE VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X28 HS_TERM_TRIM2 htt2_b VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X29 hsb hs_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X30 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X31 TERM_VCM TERM_VCM_vbl1_r0 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X32 hbbot hsq VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X33 hbtop_HS_VBIAS_r1 hbtop_HS_VBIAS_r2 VSS ppolyf_u_1k r_width=1u r_length=5.75u
+X34 VSS HS_TERM_VCM VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=5u
+X35 htt1_b HS_TERM_ENABLE VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X36 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X37 hvtop hsb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X38 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X39 VSS TERM_VCM VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=5u
+X40 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X41 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X42 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X43 TERM_VCM_vbl1_r1 TERM_VCM_vbl1_r2 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X44 VSS TERM_VCM VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=5u
+X45 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X46 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X47 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X48 htt0_b_s0 HS_TERM_ENABLE VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X49 vtop TERM_VCM VSS ppolyf_u_1k r_width=2u r_length=3.5u
+X50 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X51 vbl1_VSS_r1 vbl1_VSS_r2 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+D0 VSS term_mode1 diode_nd2ps_03v3 pj=3.16u area=0.6241p
+X52 de_b m0b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X53 VSS TERM_VCM VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=5u
+X54 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X55 htt3_b_s0 HS_TERM_ENABLE VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X56 HS_TERM_VCM hsb VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X57 htt2_b HS_TERM_ENABLE VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X58 DIFF_ENABLE de_b VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X59 hte_b hs_term_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X60 htt3_b HS_TERM_ENABLE VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X61 HS_TERM_TRIM3 htt3_b VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X62 HS_TERM_TRIM1 htt1_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X63 HS_VBIAS HS_VBIAS_hbbot_r0 VSS ppolyf_u_1k r_width=1u r_length=5u
+D1 VSS hs_trim1 diode_nd2ps_03v3 pj=2.4u area=0.36p
+X64 htt0_b hs_trim0 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X65 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X66 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X67 de_b term_mode1 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X68 HS_TERM_TRIM2 htt2_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X69 DIFF_ENABLE de_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X70 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X71 de_b term_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X72 hvtop_HS_TERM_VCM_r0 hvtop_HS_TERM_VCM_r1 VSS ppolyf_u_1k r_width=1u r_length=4.83u
+X73 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X74 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X75 HS_TERM_ENABLE hte_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+D2 VSS hs_trim0 diode_nd2ps_03v3 pj=2.4u area=0.36p
+X76 htt2_b hs_trim2 htt2_b_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X77 VSS HS_VBIAS VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=5u
+X78 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X79 vbl1 vbl1_VSS_r0 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X80 hte_b hs_term_en hte_b_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X81 hsq hsb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X82 VSS HS_VBIAS VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=5u
+X83 htt1_b hs_trim1 htt1_b_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X84 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X85 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X86 TERM_VCM_vbl1_r0 TERM_VCM_vbl1_r1 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X87 VSS HS_VBIAS VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=5u
+X88 HS_VBIAS hsb VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X89 hbtop_HS_VBIAS_r2 HS_VBIAS VSS ppolyf_u_1k r_width=1u r_length=5.75u
+X90 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X91 VSS HS_TERM_VCM VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=5u
+X92 dv_b_s0 term_en VSS VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X93 htt1_b hs_trim1 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X94 m0b term_mode0 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X95 m1b term_mode1 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X96 dv dv_b VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X97 dv_b_s1 term_mode0 dv_b_s0 VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X98 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X99 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X100 m0b term_mode0 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X101 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X102 dv_b m1b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X103 htt0_b hs_trim0 htt0_b_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X104 HS_TERM_VCM hvbot VSS ppolyf_u_1k r_width=1u r_length=2u
+X105 dv dv_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X106 dv_b m1b dv_b_s1 VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X107 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X108 hsb hs_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X109 m1b term_mode1 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X110 HS_TERM_ENABLE hte_b VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X111 hbtop hsb VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+D3 VSS hs_term_en diode_nd2ps_03v3 pj=2.4u area=0.36p
+X112 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X113 HS_TERM_TRIM0 htt0_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X114 htt2_b hs_trim2 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X115 hbtop_HS_VBIAS_r0 hbtop_HS_VBIAS_r1 VSS ppolyf_u_1k r_width=1u r_length=5.75u
+X116 htt2_b_s0 HS_TERM_ENABLE VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X117 VSS HS_VBIAS VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=5u
+X118 hsb hs_en hsb_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X119 htt3_b hs_trim3 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X120 vtop dv_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X121 HS_VBIAS_hbbot_r0 hbbot VSS ppolyf_u_1k r_width=1u r_length=5u
+X122 HS_TERM_TRIM3 htt3_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X123 VSS HS_TERM_VCM VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=5u
+X124 dv_b term_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X125 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X126 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X127 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X128 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X129 te_b_s0 term_en VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X130 vbot dv VSS VSS nfet_03v3 ad=4.4p pd=20.88u as=4.4p ps=20.88u w=10u l=0.28u
+X131 VSS HS_TERM_VCM VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=5u
+X132 hvtop_HS_TERM_VCM_r1 HS_TERM_VCM VSS ppolyf_u_1k r_width=1u r_length=4.83u
+X133 dv_b term_mode0 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X134 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X135 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X136 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X137 de_b_s0 term_en VSS VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X138 TERM_VCM vbot VSS ppolyf_u_1k r_width=2u r_length=2u
+X139 TERM_VCM dv_b VSS VSS nfet_03v3 ad=8.8p pd=40.88u as=8.8p ps=40.88u w=20u l=0.28u
+X140 vbl1_VSS_r0 vbl1_VSS_r1 VSS ppolyf_u_1k r_width=1u r_length=6.25u
+X141 te_b term_mode0 te_b_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+C0 htt1_b_s0 HS_TERM_TRIM0 0
+C1 de_b_s0 te_b 0
+C2 htt0_b VDD_WIRE_SW 4.35946f
+C3 hte_b hs_trim0 0.4508f
+C4 hsb term_en 0.17273f
+C5 term_en TERM_VCM 23.7057f
+C6 hsb HS_TERM_TRIM3 0.16721f
+C7 hsq HS_TERM_TRIM0 0.08382f
+C8 hsb TERM_VCM_vbl1_r2 0.10794f
+C9 htt1_b HS_TERM_TRIM1 0.83596f
+C10 TERM_VCM_vbl1_r2 TERM_VCM 0.00102f
+C11 hsb term_mode1 0.18803f
+C12 term_mode1 TERM_VCM 0.29131f
+C13 htt3_b VDD_WIRE_SW 4.00344f
+C14 hsq hs_trim0 0.79301f
+C15 dv DIFF_ENABLE 0.14894f
+C16 te_b_s0 te_b 0.31006f
+C17 htt0_b_s0 VDD_WIRE_SW 0.00135f
+C18 dv_b dv_b_s0 0.25909f
+C19 hsb HS_VBIAS 0.45235f
+C20 HS_TERM_TRIM2 hte_b 0
+C21 dv_b_s1 dv_b_s0 0.46003f
+C22 HS_TERM_TRIM2 htt2_b_s0 0
+C23 hsb hs_trim1 0.09417f
+C24 TERM_VCM_vbl1_r2 vbl1 0.40631f
+C25 HS_TERM_TRIM2 htt1_b_s0 0
+C26 de_b_s1 TERM_VCM 0.00458f
+C27 hbtop HS_VBIAS 0
+C28 HS_TERM_TRIM2 htt2_b 0.64539f
+C29 hs_trim2 htt2_b_s0 0.29615f
+C30 dv VDD_WIRE_SW 2.96692f
+C31 dv_b m0b 1.39411f
+C32 hte_b HS_TERM_ENABLE 0.85235f
+C33 HS_TERM_TRIM3 hs_term_en 21.6898f
+C34 HS_TERM_TRIM2 hsq 0.08386f
+C35 HS_TERM_ENABLE htt2_b_s0 0.23661f
+C36 hsb_s0 vbl1_VSS_r2 0
+C37 htt1_b_s0 hs_trim2 0.09706f
+C38 hbtop_HS_VBIAS_r0 VDD_WIRE_SW 0.00344f
+C39 hsb term_mode0 0.18504f
+C40 term_mode0 TERM_VCM 0.27122f
+C41 hs_trim3 hsq 0.1973f
+C42 hsb TERM_VCM_vbl1_r1 0.10373f
+C43 TERM_VCM_vbl1_r0 hsb 0.10373f
+C44 htt1_b_s0 HS_TERM_ENABLE 0.33481f
+C45 TERM_VCM_vbl1_r1 TERM_VCM 0.00177f
+C46 TERM_VCM_vbl1_r0 TERM_VCM 0.74883f
+C47 hs_trim2 htt2_b 0.84648f
+C48 HS_TERM_TRIM0 hs_trim0 0.04812f
+C49 term_mode1 hs_term_en 0
+C50 hsq hbtop_HS_VBIAS_r1 0.10362f
+C51 hs_trim2 hsq 0.08681f
+C52 HS_TERM_ENABLE htt2_b 0.34219f
+C53 HS_VBIAS hs_term_en 0
+C54 hte_b_s0 hsb 0
+C55 HS_TERM_ENABLE hsq 0.23081f
+C56 htt1_b VDD_WIRE_SW 3.65995f
+C57 hsb TERM_ENABLE 0.90381f
+C58 TERM_ENABLE TERM_VCM 0.00529f
+C59 de_b TERM_VCM 0.03753f
+C60 hs_trim1 hs_term_en 0.00117f
+C61 hsb HS_TERM_VCM 0.93658f
+C62 TERM_VCM_vbl1_r1 vbl1 0
+C63 htt0_b hsb 0.23037f
+C64 htt0_b TERM_VCM 0.09735f
+C65 htt3_b_s0 VDD_WIRE_SW 0
+C66 DIFF_ENABLE dv_b_s0 0
+C67 HS_TERM_TRIM2 HS_TERM_TRIM0 0.10432f
+C68 hs_trim3 HS_TERM_TRIM0 0
+C69 htt3_b hsb 0.01226f
+C70 HS_TERM_TRIM2 hs_trim0 0.04934f
+C71 hs_trim2 HS_TERM_TRIM0 0.09003f
+C72 DIFF_ENABLE m0b 0.04189f
+C73 VDD_WIRE_SW dv_b_s0 0.00217f
+C74 hs_trim3 hs_trim0 0
+C75 HS_TERM_ENABLE HS_TERM_TRIM0 2.36018f
+C76 vbl1_VSS_r1 hs_en 0
+C77 hte_b_s0 hs_term_en 0.33473f
+C78 vbl1_VSS_r0 vbl1_VSS_r2 0
+C79 HS_TERM_VCM hs_term_en 0.00149f
+C80 hs_trim2 hs_trim0 0
+C81 hsb HS_VBIAS_hbbot_r0 0.10233f
+C82 htt0_b hs_term_en 0.23252f
+C83 hvtop_HS_TERM_VCM_r0 VDD_WIRE_SW 0.00341f
+C84 HS_TERM_ENABLE hs_trim0 0.36693f
+C85 hbtop_HS_VBIAS_r2 hsb 0.41882f
+C86 dv TERM_VCM 0.11503f
+C87 VDD_WIRE_SW m0b 3.31263f
+C88 htt2_b_s0 HS_TERM_TRIM1 0
+C89 hbtop_HS_VBIAS_r0 hsb 0.22732f
+C90 htt1_b_s0 HS_TERM_TRIM1 0
+C91 HS_TERM_TRIM2 hs_trim2 0.00123f
+C92 HS_TERM_TRIM3 hs_en 0
+C93 hs_trim3 hs_trim2 20.9478f
+C94 HS_TERM_TRIM2 HS_TERM_ENABLE 0.68985f
+C95 hbtop_HS_VBIAS_r0 hbtop 0.45118f
+C96 hsq HS_TERM_TRIM1 0.08405f
+C97 TERM_VCM_vbl1_r2 hs_en 0.0852f
+C98 hs_trim3 HS_TERM_ENABLE 0.1108f
+C99 hsb htt3_b_s0 0
+C100 term_mode1 hs_en 2.54302f
+C101 hs_trim2 HS_TERM_ENABLE 0.29592f
+C102 term_en m1b 6.25852f
+C103 term_mode1 m1b 0.60324f
+C104 hte_b VDD_WIRE_SW 3.62019f
+C105 hsq DIFF_ENABLE 0.12233f
+C106 dv_b_s0 TERM_VCM 0
+C107 VDD_WIRE_SW htt2_b_s0 0.00149f
+C108 HS_TERM_TRIM0 HS_TERM_TRIM1 2.14715f
+C109 hs_en term_mode0 0
+C110 dv vtop 0
+C111 htt1_b_s0 VDD_WIRE_SW 0.0016f
+C112 VDD_WIRE_SW te_b 3.94295f
+C113 TERM_VCM_vbl1_r0 hs_en 0.08099f
+C114 TERM_VCM_vbl1_r1 hs_en 0.08099f
+C115 hsb hvtop_HS_TERM_VCM_r0 0.00179f
+C116 htt2_b VDD_WIRE_SW 3.35951f
+C117 hs_trim0 HS_TERM_TRIM1 0.04846f
+C118 hsq VDD_WIRE_SW 3.69471f
+C119 m0b TERM_VCM 0.04039f
+C120 term_mode0 m1b 0.40631f
+C121 hs_en HS_TERM_VCM 0
+C122 hvtop VDD_WIRE_SW 2.1236f
+C123 htt0_b hs_en 0.22553f
+C124 HS_TERM_TRIM2 HS_TERM_TRIM1 4.29984f
+C125 TERM_ENABLE m1b 1.25573f
+C126 de_b m1b 0.2238f
+C127 term_en term_mode1 1.09047f
+C128 HS_TERM_TRIM3 term_mode1 0
+C129 hsb hvbot 0.02547f
+C130 hsb vbl1_VSS_r2 0.07942f
+C131 HS_TERM_TRIM0 VDD_WIRE_SW 2.57083f
+C132 hs_trim2 HS_TERM_TRIM1 0.10747f
+C133 HS_VBIAS HS_TERM_TRIM3 0
+C134 de_b_s0 VDD_WIRE_SW 0.0067f
+C135 HS_TERM_ENABLE HS_TERM_TRIM1 1.49757f
+C136 hs_trim1 HS_TERM_TRIM3 0.04676f
+C137 term_en de_b_s1 0.12566f
+C138 dv_b vbot 0.54143f
+C139 VDD_WIRE_SW hs_trim0 2.1858f
+C140 VDD_WIRE_SW te_b_s0 0.00149f
+C141 term_en term_mode0 17.6047f
+C142 hs_trim1 HS_VBIAS 13.5985f
+C143 term_mode1 de_b_s1 0.24617f
+C144 te_b TERM_VCM 0.00712f
+C145 TERM_VCM_vbl1_r2 TERM_VCM_vbl1_r1 0.65095f
+C146 TERM_VCM_vbl1_r0 TERM_VCM_vbl1_r2 0
+C147 dv m1b 0.03533f
+C148 term_mode1 term_mode0 15.3889f
+C149 HS_TERM_ENABLE DIFF_ENABLE 0
+C150 hvtop_HS_TERM_VCM_r1 hsb 0
+C151 HS_TERM_TRIM2 VDD_WIRE_SW 9.19027f
+C152 hsb hsq 38.4954f
+C153 hsq TERM_VCM 0.12233f
+C154 dv_b dv_b_s1 0.5505f
+C155 TERM_ENABLE term_en 0.09795f
+C156 de_b term_en 0.65635f
+C157 hs_trim3 VDD_WIRE_SW 1.27698f
+C158 HS_TERM_TRIM3 HS_TERM_VCM 3.09136f
+C159 hvtop hsb 0.3529f
+C160 htt0_b term_en 0.09735f
+C161 htt0_b HS_TERM_TRIM3 0
+C162 hs_trim2 VDD_WIRE_SW 1.66473f
+C163 hbtop hsq 0.1024f
+C164 TERM_ENABLE term_mode1 0.10872f
+C165 de_b term_mode1 0.33397f
+C166 hte_b hs_term_en 0.82352f
+C167 HS_TERM_ENABLE VDD_WIRE_SW 15.4922f
+C168 hbbot hsb 0.22931f
+C169 htt0_b term_mode1 0.10966f
+C170 HS_VBIAS HS_TERM_VCM 2.50804f
+C171 hs_trim1 HS_TERM_VCM 7.81963f
+C172 htt3_b HS_TERM_TRIM3 1.02453f
+C173 htt0_b hs_trim1 0.17698f
+C174 hsb HS_TERM_TRIM0 0.08485f
+C175 HS_TERM_TRIM0 TERM_VCM 0
+C176 de_b_s0 TERM_VCM 0.00458f
+C177 de_b de_b_s1 0.52505f
+C178 TERM_VCM_vbl1_r0 TERM_VCM_vbl1_r1 0.69988f
+C179 hsq hs_term_en 0.21841f
+C180 TERM_ENABLE term_mode0 0
+C181 hsb hs_trim0 2.31792f
+C182 de_b term_mode0 0.24255f
+C183 hs_trim0 TERM_VCM 0.00234f
+C184 dv term_en 0.08238f
+C185 dv_b DIFF_ENABLE 0.27283f
+C186 htt0_b term_mode0 0.10668f
+C187 dv_b_s0 m1b 0.19786f
+C188 te_b_s0 TERM_VCM 0.00284f
+C189 dv term_mode1 0.09632f
+C190 TERM_ENABLE de_b 0.25768f
+C191 HS_VBIAS_hbbot_r0 HS_VBIAS 1.04567f
+C192 hte_b_s0 htt0_b 0.35573f
+C193 hbtop_HS_VBIAS_r2 HS_VBIAS 0.35216f
+C194 htt0_b TERM_ENABLE 0.6358f
+C195 dv_b VDD_WIRE_SW 8.71474f
+C196 HS_TERM_TRIM2 hsb 0.0773f
+C197 htt0_b HS_TERM_VCM 0
+C198 m0b m1b 12.5895f
+C199 HS_TERM_TRIM0 hs_term_en 0.04439f
+C200 VDD_WIRE_SW dv_b_s1 0
+C201 htt1_b HS_TERM_TRIM3 0.01126f
+C202 hs_trim3 hsb 1.86345f
+C203 hbtop_HS_VBIAS_r0 HS_VBIAS 0
+C204 hsb hbtop_HS_VBIAS_r1 0.27889f
+C205 hsb hs_trim2 0.08024f
+C206 htt3_b_s0 HS_TERM_TRIM3 0
+C207 hs_trim0 hs_term_en 5.69029f
+C208 hsb HS_TERM_ENABLE 0.21304f
+C209 hs_en vbl1_VSS_r2 0
+C210 HS_TERM_ENABLE TERM_VCM 0.18324f
+C211 htt3_b HS_TERM_VCM 0
+C212 VDD_WIRE_SW HS_TERM_TRIM1 2.65214f
+C213 dv term_mode0 0.08829f
+C214 hs_trim1 htt1_b 0.82726f
+C215 htt0_b htt0_b_s0 0.52238f
+C216 hbtop hbtop_HS_VBIAS_r1 0
+C217 term_en dv_b_s0 0.47098f
+C218 HS_TERM_TRIM2 hs_term_en 9.35593f
+C219 TERM_ENABLE dv 0.09625f
+C220 de_b dv 4.58981f
+C221 hsb_s0 hsb 0.51812f
+C222 vbot TERM_VCM 0.29125f
+C223 DIFF_ENABLE VDD_WIRE_SW 68.5093f
+C224 term_en m0b 0.73498f
+C225 vbl1_VSS_r1 vbl1_VSS_r2 0.25952f
+C226 HS_TERM_ENABLE hs_term_en 0.1164f
+C227 hsq hs_en 0.22703f
+C228 htt1_b HS_TERM_VCM 0.00215f
+C229 term_mode1 m0b 0.16508f
+C230 dv_b TERM_VCM 18.3874f
+C231 dv_b_s1 TERM_VCM 0
+C232 htt3_b_s0 HS_TERM_VCM 0
+C233 dv_b_s0 term_mode0 0.44365f
+C234 hbtop_HS_VBIAS_r2 HS_VBIAS_hbbot_r0 0
+C235 de_b_s1 m0b 0.88993f
+C236 hsb HS_TERM_TRIM1 0.07731f
+C237 HS_TERM_TRIM0 hs_en 0.04416f
+C238 hbtop_HS_VBIAS_r2 hbtop_HS_VBIAS_r0 0
+C239 de_b dv_b_s0 0
+C240 m0b term_mode0 0.7282f
+C241 vbl1_VSS_r0 hsb 0.12911f
+C242 htt3_b htt3_b_s0 0.25917f
+C243 hs_trim0 hs_en 0.08489f
+C244 hvtop_HS_TERM_VCM_r0 HS_TERM_VCM 0
+C245 TERM_ENABLE m0b 0.23642f
+C246 vbl1_VSS_r0 vbl1 0.35738f
+C247 de_b m0b 4.26393f
+C248 htt1_b_s0 HS_TERM_TRIM3 0.00272f
+C249 term_en te_b 1.41089f
+C250 hsb DIFF_ENABLE 0.17247f
+C251 DIFF_ENABLE TERM_VCM 3.57134f
+C252 hsq term_en 0.12233f
+C253 hsq HS_TERM_TRIM3 0.17286f
+C254 HS_TERM_TRIM2 hs_en 25.9442f
+C255 term_mode1 te_b 0.26007f
+C256 HS_TERM_TRIM1 hs_term_en 0.04488f
+C257 te_b_s0 m1b 0
+C258 dv_b vtop 0.39177f
+C259 hvtop HS_TERM_TRIM3 0
+C260 hsq term_mode1 0.13464f
+C261 htt1_b_s0 hs_trim1 0.33494f
+C262 dv dv_b_s0 0.00212f
+C263 hsb VDD_WIRE_SW 6.58451f
+C264 VDD_WIRE_SW TERM_VCM 7.62987f
+C265 hsq HS_VBIAS 0.14562f
+C266 hvbot HS_TERM_VCM 0.41864f
+C267 HS_TERM_ENABLE hs_en 0.16521f
+C268 hs_trim1 hsq 0.09363f
+C269 hbtop VDD_WIRE_SW 2.4998f
+C270 de_b_s0 term_en 0.45336f
+C271 term_en HS_TERM_TRIM0 0
+C272 term_mode0 te_b 0.64567f
+C273 HS_TERM_TRIM0 HS_TERM_TRIM3 0
+C274 dv m0b 0.06042f
+C275 hte_b_s0 hte_b 0.25917f
+C276 hbbot HS_VBIAS 0
+C277 hsq term_mode0 0.13165f
+C278 hsb_s0 hs_en 0.86658f
+C279 htt2_b_s0 HS_TERM_VCM 0
+C280 de_b_s0 term_mode1 0.35945f
+C281 htt0_b hte_b 1.10773f
+C282 HS_TERM_TRIM0 term_mode1 9.49286f
+C283 HS_TERM_TRIM3 hs_trim0 7.83182f
+C284 TERM_ENABLE te_b 0.92723f
+C285 de_b te_b 0
+C286 VDD_WIRE_SW hs_term_en 1.64893f
+C287 htt0_b htt1_b_s0 0
+C288 term_en te_b_s0 0.66655f
+C289 hte_b_s0 hsq 0.47618f
+C290 hs_trim1 HS_TERM_TRIM0 0.07806f
+C291 htt2_b HS_TERM_VCM 0.00329f
+C292 TERM_ENABLE hsq 1.55258f
+C293 hvtop_HS_TERM_VCM_r1 HS_TERM_VCM 0.2561f
+C294 hsq HS_TERM_VCM 0.44144f
+C295 de_b_s0 de_b_s1 0.53636f
+C296 HS_VBIAS hs_trim0 0
+C297 htt0_b hsq 6.19388f
+C298 hte_b htt0_b_s0 0
+C299 term_mode1 te_b_s0 0.10281f
+C300 hs_trim1 hs_trim0 0.8539f
+C301 hvtop HS_TERM_VCM 0
+C302 HS_TERM_TRIM2 HS_TERM_TRIM3 0
+C303 dv_b hs_en 0
+C304 hs_trim3 HS_TERM_TRIM3 0.00123f
+C305 HS_TERM_TRIM0 term_mode0 26.3134f
+C306 VDD_WIRE_SW vtop 6.02346f
+C307 HS_TERM_TRIM2 term_mode1 0
+C308 hs_trim2 HS_TERM_TRIM3 0.04812f
+C309 htt3_b hsq 1.53399f
+C310 hsb TERM_VCM 0.4238f
+C311 HS_TERM_ENABLE term_en 30.945f
+C312 dv_b m1b 1.86696f
+C313 HS_TERM_ENABLE HS_TERM_TRIM3 2.03723f
+C314 dv_b_s1 m1b 0.67114f
+C315 hs_en HS_TERM_TRIM1 9.42441f
+C316 TERM_ENABLE de_b_s0 0
+C317 de_b_s0 de_b 0.25909f
+C318 hs_trim3 HS_VBIAS 0.14621f
+C319 HS_TERM_TRIM2 hs_trim1 0.00238f
+C320 htt3_b hvtop 0
+C321 HS_TERM_TRIM0 HS_TERM_VCM 0
+C322 dv te_b 0
+C323 vbl1_VSS_r0 hs_en 0
+C324 hs_trim3 hs_trim1 0.00118f
+C325 term_mode0 te_b_s0 0.36027f
+C326 htt0_b HS_TERM_TRIM0 0.97537f
+C327 hbtop_HS_VBIAS_r1 HS_VBIAS 0
+C328 HS_TERM_ENABLE term_mode1 0.15712f
+C329 hs_trim2 HS_VBIAS 4.95685f
+C330 hte_b_s0 hs_trim0 0
+C331 HS_VBIAS_hbbot_r0 hsq 0.10379f
+C332 hbtop hsb 0.47039f
+C333 hbtop_HS_VBIAS_r2 hsq 0.10362f
+C334 hsb vbl1 0.18788f
+C335 hs_trim2 hs_trim1 5.19828f
+C336 hs_trim0 HS_TERM_VCM 21.5074f
+C337 htt1_b htt2_b_s0 0
+C338 HS_TERM_ENABLE hs_trim1 0.15755f
+C339 htt0_b hs_trim0 1.18617f
+C340 HS_TERM_TRIM2 term_mode0 0
+C341 hbtop_HS_VBIAS_r0 hsq 0.10362f
+C342 TERM_ENABLE te_b_s0 0
+C343 de_b te_b_s0 0
+C344 htt1_b_s0 htt1_b 0.25917f
+C345 hbbot HS_VBIAS_hbbot_r0 0.54912f
+C346 hsb hs_term_en 0.24618f
+C347 hs_term_en TERM_VCM 0.00337f
+C348 vbl1_VSS_r0 vbl1_VSS_r1 0.30845f
+C349 HS_TERM_ENABLE term_mode0 11.2652f
+C350 HS_TERM_TRIM2 HS_TERM_VCM 0.0028f
+C351 htt0_b_s0 hs_trim0 0.23676f
+C352 htt0_b HS_TERM_TRIM2 0.04904f
+C353 hs_trim3 HS_TERM_VCM 0.10502f
+C354 htt3_b_s0 hsq 0.14142f
+C355 dv_b term_en 0.62032f
+C356 DIFF_ENABLE m1b 0.14136f
+C357 htt0_b hs_trim3 0
+C358 term_en dv_b_s1 0.08105f
+C359 VDD_WIRE_SW hs_en 2.48864f
+C360 hte_b_s0 HS_TERM_ENABLE 0.00448f
+C361 hs_trim2 HS_TERM_VCM 0.09487f
+C362 dv_b TERM_VCM_vbl1_r2 0.00108f
+C363 htt0_b hs_trim2 1.03996f
+C364 HS_TERM_ENABLE HS_TERM_VCM 0.10758f
+C365 TERM_VCM vtop 0.27318f
+C366 dv_b term_mode1 0.22985f
+C367 htt0_b HS_TERM_ENABLE 0.62976f
+C368 VDD_WIRE_SW m1b 3.19691f
+C369 term_en HS_TERM_TRIM1 0
+C370 htt3_b hs_trim3 1.01667f
+C371 HS_TERM_TRIM3 HS_TERM_TRIM1 0
+C372 m0b te_b 0.8411f
+C373 vbl1_VSS_r0 TERM_VCM_vbl1_r2 0
+C374 term_mode1 HS_TERM_TRIM1 26.1288f
+C375 htt3_b HS_TERM_ENABLE 0.5281f
+C376 hvtop_HS_TERM_VCM_r1 hvtop_HS_TERM_VCM_r0 0.26228f
+C377 hvtop_HS_TERM_VCM_r0 hsq 0.07939f
+C378 HS_TERM_ENABLE htt0_b_s0 0.23724f
+C379 dv_b term_mode0 0.64936f
+C380 hvtop hvtop_HS_TERM_VCM_r0 0.30633f
+C381 hs_trim1 HS_TERM_TRIM1 0.00123f
+C382 hbtop_HS_VBIAS_r2 hbtop_HS_VBIAS_r1 0.3582f
+C383 dv_b_s1 term_mode0 0.44365f
+C384 dv_b TERM_VCM_vbl1_r1 0.00156f
+C385 TERM_VCM_vbl1_r0 dv_b 0.00212f
+C386 term_en DIFF_ENABLE 0.12447f
+C387 hbtop_HS_VBIAS_r0 hbtop_HS_VBIAS_r1 0.40713f
+C388 HS_TERM_TRIM2 htt1_b 0
+C389 TERM_ENABLE dv_b 1.66308f
+C390 dv_b de_b 0.19204f
+C391 term_mode0 HS_TERM_TRIM1 0
+C392 DIFF_ENABLE term_mode1 0.06073f
+C393 term_en VDD_WIRE_SW 3.27566f
+C394 hvtop_HS_TERM_VCM_r1 hvbot 0
+C395 hvbot hsq 0.6182f
+C396 hs_trim2 htt1_b 0.84136f
+C397 HS_TERM_TRIM3 VDD_WIRE_SW 2.78308f
+C398 de_b_s0 m0b 0.25542f
+C399 hs_trim3 htt3_b_s0 0.43837f
+C400 hsb hs_en 9.53301f
+C401 hs_en TERM_VCM 0.19825f
+C402 HS_TERM_ENABLE htt1_b 0.44196f
+C403 HS_TERM_VCM HS_TERM_TRIM1 0.00252f
+C404 vbot dv 0.3561f
+C405 VDD_WIRE_SW term_mode1 2.17622f
+C406 htt0_b HS_TERM_TRIM1 0.04892f
+C407 HS_TERM_ENABLE htt3_b_s0 0.43241f
+C408 htt2_b htt2_b_s0 0.25917f
+C409 HS_VBIAS VDD_WIRE_SW 1.61326f
+C410 TERM_VCM m1b 0.04219f
+C411 hte_b hsq 0.7654f
+C412 hs_en vbl1 0
+C413 DIFF_ENABLE term_mode0 0.15175f
+C414 hs_trim1 VDD_WIRE_SW 1.30175f
+C415 m0b te_b_s0 0.09706f
+C416 VDD_WIRE_SW de_b_s1 0.00499f
+C417 dv_b dv 20.3365f
+C418 hsb vbl1_VSS_r1 0.09834f
+C419 dv dv_b_s1 0
+C420 hvtop_HS_TERM_VCM_r1 hsq 0.06658f
+C421 hs_en hs_term_en 2.62384f
+C422 TERM_ENABLE DIFF_ENABLE 0
+C423 de_b DIFF_ENABLE 1.53936f
+C424 VDD_WIRE_SW term_mode0 3.05208f
+C425 htt0_b DIFF_ENABLE 0.09859f
+C426 hvtop_HS_TERM_VCM_r1 hvtop 0
+C427 hvtop hsq 0.07388f
+C428 vbl1_VSS_r1 vbl1 0
+C429 hte_b_s0 VDD_WIRE_SW 0.00149f
+C430 hbbot hsq 0.305f
+C431 TERM_ENABLE VDD_WIRE_SW 33.9155f
+C432 de_b VDD_WIRE_SW 8.26055f
+C433 VDD_WIRE_SW HS_TERM_VCM 3.87096f
+C434 TERM_ENABLE VSS 13.1558f
+C435 term_mode0 VSS 8.56411f
+C436 term_en VSS 9.84224f
+C437 DIFF_ENABLE VSS 30.0373f
+C438 TERM_VCM VSS 0.37237p
+C439 term_mode1 VSS 12.9616f
+C440 hs_en VSS 16.135f
+C441 HS_TERM_TRIM2 VSS 4.3686f
+C442 hs_trim2 VSS 5.44253f
+C443 HS_TERM_TRIM1 VSS 3.77577f
+C444 HS_TERM_TRIM0 VSS 3.57093f
+C445 HS_TERM_TRIM3 VSS 4.05279f
+C446 hs_trim3 VSS 6.37845f
+C447 HS_TERM_ENABLE VSS 18.9733f
+C448 hs_term_en VSS 4.5932f
+C449 hs_trim0 VSS 5.28179f
+C450 hs_trim1 VSS 5.64068f
+C451 HS_TERM_VCM VSS 36.7228f
+C452 HS_VBIAS VSS 36.2537f
+C453 VDD_WIRE_SW VSS 0.17768p
+C454 de_b_s1 VSS 2.71533f
+C455 de_b_s0 VSS 3.38564f
+C456 te_b VSS 2.93875f
+C457 te_b_s0 VSS 2.25349f
+C458 vtop VSS 1.30591f
+C459 m1b VSS 5.0468f
+C460 dv_b_s1 VSS 2.60632f
+C461 dv_b_s0 VSS 3.20907f
+C462 m0b VSS 5.29552f
+C463 de_b VSS 18.8085f
+C464 dv VSS 10.8202f
+C465 vbot VSS 4.33403f
+C466 dv_b VSS 78.3447f
+C467 hsb_s0 VSS 2.40256f
+C468 vbl1_VSS_r2 VSS 2.4007f
+C469 vbl1_VSS_r1 VSS 2.25379f
+C470 vbl1_VSS_r0 VSS 2.33645f
+C471 vbl1 VSS 2.41701f
+C472 TERM_VCM_vbl1_r2 VSS 3.30957f
+C473 TERM_VCM_vbl1_r1 VSS 3.09223f
+C474 TERM_VCM_vbl1_r0 VSS 3.08888f
+C475 htt0_b_s0 VSS 1.93324f
+C476 hte_b VSS 2.73485f
+C477 hte_b_s0 VSS 2.08842f
+C478 htt2_b VSS 3.06423f
+C479 htt2_b_s0 VSS 1.97112f
+C480 htt1_b VSS 3.15532f
+C481 htt1_b_s0 VSS 2.18929f
+C482 htt0_b VSS 9.41253f
+C483 hvbot VSS 3.08573f
+C484 hvtop_HS_TERM_VCM_r1 VSS 2.04346f
+C485 hvtop_HS_TERM_VCM_r0 VSS 2.15289f
+C486 hvtop VSS 1.15754f
+C487 htt3_b VSS 3.43586f
+C488 htt3_b_s0 VSS 2.41435f
+C489 hsq VSS 13.8671f
+C490 hbbot VSS 4.03739f
+C491 HS_VBIAS_hbbot_r0 VSS 2.9538f
+C492 hbtop_HS_VBIAS_r2 VSS 2.25033f
+C493 hbtop_HS_VBIAS_r1 VSS 2.3905f
+C494 hbtop_HS_VBIAS_r0 VSS 2.51697f
+C495 hbtop VSS 1.37857f
+C496 hsb VSS 25.3043f
+.ends
+

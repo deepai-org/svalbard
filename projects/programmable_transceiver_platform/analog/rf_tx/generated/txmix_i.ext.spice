@@ -1,0 +1,413 @@
+* NGSPICE file created from pt_txmix_i.ext - technology: gf180mcuD
+
+.subckt pt_txmix_i VDD VSS bb_p bb_n dac_p dac_n lo_p lo_n out_p out_n ibias en sel_dac
++ sat atb_bias atb_tail
+X0 src_p g_p d_p VSS nfet_03v3 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.28u
+X1 g_p s_dac dac_p VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X2 src_n vbt VSS VSS nfet_03v3 ad=4.94p pd=19.52u as=4.94p ps=19.52u w=19u l=1u
+X3 src_p vbt VSS VSS nfet_03v3 ad=4.94p pd=19.52u as=4.94p ps=19.52u w=19u l=1u
+X4 vbt atb_bias VSS ppolyf_u_1k r_width=1u r_length=20u
+X5 nsat en GSAT_x VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X6 out_n lo_p d_n VSS nfet_03v3 ad=2.6p pd=10.52u as=4.4p ps=20.88u w=10u l=0.28u
+X7 VSS vbt src_p VSS nfet_03v3 ad=4.94p pd=19.52u as=4.94p ps=19.52u w=19u l=1u
+X8 d_p lo_n out_n VSS nfet_03v3 ad=4.4p pd=20.88u as=2.6p ps=10.52u w=10u l=0.28u
+X9 src_p vbt VSS VSS nfet_03v3 ad=4.94p pd=19.52u as=8.36p ps=38.88u w=19u l=1u
+X10 nd_dac sel_dac VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+D0 VSS en diode_nd2ps_03v3 pj=13.88u area=12.0409p
+X11 nd_dac en GD_x VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X12 s_sat nsat VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X13 d_p g_p src_p VSS nfet_03v3 ad=2.6p pd=10.52u as=4.4p ps=20.88u w=10u l=0.28u
+X14 vbt en ibias VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X15 src_p atb_tail VSS ppolyf_u_1k r_width=1u r_length=20u
+X16 out_p lo_p d_p VSS nfet_03v3 ad=2.6p pd=10.52u as=4.4p ps=20.88u w=10u l=0.28u
+X17 src_p g_p d_p VSS nfet_03v3 ad=4.4p pd=20.88u as=2.6p ps=10.52u w=10u l=0.28u
+X18 GSAT_x sat VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X19 src_n vbt VSS VSS nfet_03v3 ad=8.36p pd=38.88u as=4.94p ps=19.52u w=19u l=1u
+X20 g_p enb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X21 selb sel_dac VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X22 out_n lo_n d_p VSS nfet_03v3 ad=2.6p pd=10.52u as=4.4p ps=20.88u w=10u l=0.28u
+X23 enb en VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X24 nd_bb selb VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X25 src_n g_n d_n VSS nfet_03v3 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.28u
+X26 GD_x sel_dac VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X27 GB_x selb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X28 src_n s_sat src_p VSS nfet_03v3 ad=4.4p pd=20.88u as=2.6p ps=10.52u w=10u l=0.28u
+X29 d_n lo_n out_p VSS nfet_03v3 ad=4.4p pd=20.88u as=2.6p ps=10.52u w=10u l=0.28u
+D1 VSS sel_dac diode_nd2ps_03v3 pj=13.88u area=12.0409p
+X30 g_n enb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X31 selb sel_dac VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X32 nsat en VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X33 nd_bb en GB_x VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X34 vbt enb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X35 src_n vbt VSS VSS nfet_03v3 ad=4.94p pd=19.52u as=8.36p ps=38.88u w=19u l=1u
+X36 d_n g_n src_n VSS nfet_03v3 ad=2.6p pd=10.52u as=4.4p ps=20.88u w=10u l=0.28u
+X37 g_n s_bb bb_n VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X38 src_n g_n d_n VSS nfet_03v3 ad=4.4p pd=20.88u as=2.6p ps=10.52u w=10u l=0.28u
+X39 out_p lo_n d_n VSS nfet_03v3 ad=2.6p pd=10.52u as=4.4p ps=20.88u w=10u l=0.28u
+X40 g_p s_bb bb_p VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X41 d_p lo_p out_p VSS nfet_03v3 ad=4.4p pd=20.88u as=2.6p ps=10.52u w=10u l=0.28u
+X42 s_bb nd_bb VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X43 nsat sat VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X44 src_p vbt VSS VSS nfet_03v3 ad=8.36p pd=38.88u as=4.94p ps=19.52u w=19u l=1u
+X45 src_p s_sat src_n VSS nfet_03v3 ad=2.6p pd=10.52u as=4.4p ps=20.88u w=10u l=0.28u
+X46 VSS vbt src_p VSS nfet_03v3 ad=4.94p pd=19.52u as=4.94p ps=19.52u w=19u l=1u
+X47 VSS vbt src_n VSS nfet_03v3 ad=4.94p pd=19.52u as=4.94p ps=19.52u w=19u l=1u
+X48 s_bb nd_bb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X49 src_p src_n VSS ppolyf_u_1k r_width=4u r_length=2.4u
+X50 s_dac nd_dac VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X51 s_sat nsat VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X52 d_p g_p src_p VSS nfet_03v3 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.28u
+X53 d_n g_n src_n VSS nfet_03v3 ad=2.6p pd=10.52u as=2.6p ps=10.52u w=10u l=0.28u
+X54 ibias ibias VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=1u
+X55 d_n lo_p out_n VSS nfet_03v3 ad=4.4p pd=20.88u as=2.6p ps=10.52u w=10u l=0.28u
+X56 s_dac nd_dac VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X57 nd_bb en VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X58 g_n s_dac dac_n VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X59 enb en VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X60 VSS vbt src_n VSS nfet_03v3 ad=4.94p pd=19.52u as=4.94p ps=19.52u w=19u l=1u
+X61 nd_dac en VDD VDD pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+D2 VSS sat diode_nd2ps_03v3 pj=13.88u area=12.0409p
+C0 dac_n sel_dac 0.02611f
+C1 d_p bb_p 0
+C2 dac_n lo_n 0.0271f
+C3 out_n d_p 2.03392f
+C4 d_n lo_n 0.40062f
+C5 dac_n lo_p 0.03544f
+C6 src_p vbt 4.90038f
+C7 s_dac g_n 1.96404f
+C8 d_n lo_p 0.27527f
+C9 s_sat src_p 1.81673f
+C10 s_dac dac_p 0.05203f
+C11 VDD selb 2.34649f
+C12 sat VDD 1.42785f
+C13 s_dac nd_dac 2.17658f
+C14 atb_tail dac_n 0.0388f
+C15 g_p bb_p 0.72739f
+C16 VDD en 18.9746f
+C17 s_bb s_dac 25.965f
+C18 src_n dac_n 0.03934f
+C19 d_n src_n 3.66766f
+C20 g_p out_n 0
+C21 GD_x sel_dac 0.62598f
+C22 bb_n src_p 0.14141f
+C23 ibias atb_bias 0.15173f
+C24 GD_x enb 0
+C25 VDD nsat 3.67371f
+C26 VDD g_n 0.00664f
+C27 ibias sel_dac 0.05602f
+C28 VDD dac_p 0
+C29 g_p selb 0
+C30 VDD nd_dac 3.18414f
+C31 g_p sat 0
+C32 bb_p dac_n 7.35985f
+C33 ibias lo_n 0.02611f
+C34 g_p en 0.03477f
+C35 d_n bb_p 0
+C36 s_bb VDD 1.10857f
+C37 d_p g_n 0
+C38 s_dac vbt 0.02177f
+C39 s_sat s_dac 23.7903f
+C40 d_p dac_p 0
+C41 d_n out_n 2.01649f
+C42 ibias lo_p 0.03487f
+C43 ibias enb 0.22547f
+C44 ibias atb_tail 0.13369f
+C45 src_n ibias 0
+C46 atb_bias sel_dac 0.00705f
+C47 g_p g_n 20.2955f
+C48 g_p dac_p 0.80546f
+C49 bb_n s_dac 0.21162f
+C50 g_p nd_dac 0
+C51 sat dac_n 0.02611f
+C52 atb_bias lo_n 0.02611f
+C53 dac_n en 0.02611f
+C54 sel_dac lo_n 0.02611f
+C55 s_bb g_p 16.3493f
+C56 VDD vbt 0.1422f
+C57 VDD GSAT_x 1.17089f
+C58 s_sat VDD 1.14058f
+C59 atb_bias lo_p 0.03487f
+C60 atb_bias enb 0.19209f
+C61 lo_p sel_dac 0.03487f
+C62 sel_dac enb 0.00559f
+C63 atb_bias atb_tail 18.6231f
+C64 ibias bb_p 0.02611f
+C65 s_dac src_p 0.04838f
+C66 lo_p lo_n 8.38386f
+C67 atb_tail sel_dac 0.00306f
+C68 src_n atb_bias 2.43202f
+C69 atb_tail lo_n 0.0388f
+C70 g_n dac_n 1.50287f
+C71 d_n g_n 1.97029f
+C72 dac_p dac_n 13.174f
+C73 GD_x selb 0.00421f
+C74 bb_n VDD 0
+C75 d_n dac_p 0
+C76 GB_x nd_bb 0.26465f
+C77 src_n lo_n 0.14333f
+C78 GD_x en 0.07995f
+C79 atb_tail lo_p 0.04756f
+C80 s_bb dac_n 0.29076f
+C81 atb_tail enb 1.25892f
+C82 g_p vbt 1.1318f
+C83 s_sat g_p 0.12537f
+C84 bb_n d_p 0
+C85 src_n lo_p 3.13203f
+C86 src_p out_p 0
+C87 src_n enb 0
+C88 src_n atb_tail 0.10888f
+C89 ibias selb 0
+C90 atb_bias bb_p 0.02611f
+C91 sat ibias 0.0535f
+C92 ibias en 13.3181f
+C93 bb_p sel_dac 0.02611f
+C94 GD_x g_n 0
+C95 bb_p lo_n 0.07302f
+C96 d_p src_p 4.42471f
+C97 GD_x nd_dac 0.28311f
+C98 g_p bb_n 0.18117f
+C99 out_n lo_n 1.56679f
+C100 s_bb GD_x 0
+C101 bb_p lo_p 0.03587f
+C102 s_sat dac_n 0.05249f
+C103 bb_p atb_tail 0.0388f
+C104 out_n lo_p 1.53622f
+C105 ibias g_n 0.17557f
+C106 ibias dac_p 0.10562f
+C107 sat atb_bias 11.9246f
+C108 src_n bb_p 0.03998f
+C109 ibias nd_dac 0
+C110 atb_bias en 0.09238f
+C111 selb sel_dac 6.37646f
+C112 g_p src_p 0.56004f
+C113 sat sel_dac 23.47f
+C114 en sel_dac 16.0732f
+C115 src_n out_n 0
+C116 s_bb ibias 0.04549f
+C117 sat lo_n 0.02611f
+C118 en lo_n 0.02611f
+C119 VDD s_dac 1.08291f
+C120 selb nd_bb 1.07526f
+C121 bb_n dac_n 0.72211f
+C122 sat nd_bb 0
+C123 d_n bb_n 0
+C124 en nd_bb 3.80621f
+C125 selb enb 0
+C126 sat lo_p 0.03487f
+C127 GD_x vbt 0.00891f
+C128 sat enb 0.82283f
+C129 lo_p en 0.03487f
+C130 en enb 7.99154f
+C131 selb GB_x 0.53389f
+C132 sat atb_tail 0.064f
+C133 en GB_x 0.07605f
+C134 atb_tail en 4.40207f
+C135 atb_bias g_n 0.08822f
+C136 atb_bias dac_p 0.03627f
+C137 g_n sel_dac 0.00706f
+C138 src_n en 0.00147f
+C139 dac_p sel_dac 0.03627f
+C140 nd_dac sel_dac 1.17353f
+C141 src_p dac_n 0.03952f
+C142 d_n src_p 2.76005f
+C143 s_bb atb_bias 0.03306f
+C144 g_n lo_n 0
+C145 dac_p lo_n 0.02667f
+C146 ibias vbt 2.87391f
+C147 s_sat ibias 0.04932f
+C148 s_bb sel_dac 0.22265f
+C149 nsat nd_bb 0.02342f
+C150 g_p s_dac 1.73073f
+C151 d_p out_p 2.03874f
+C152 nd_dac nd_bb 0.02342f
+C153 s_bb lo_n 0
+C154 g_n lo_p 0
+C155 g_n enb 8.08065f
+C156 dac_p lo_p 0.03523f
+C157 nd_dac enb 0
+C158 s_bb nd_bb 3.33158f
+C159 g_n atb_tail 2.52741f
+C160 dac_p atb_tail 0.04896f
+C161 nd_dac GB_x 0.02517f
+C162 atb_tail nd_dac 0
+C163 s_bb lo_p 0
+C164 sat bb_p 0.02611f
+C165 s_bb enb 1.24688f
+C166 src_n g_n 0.67355f
+C167 bb_p en 0.02611f
+C168 src_n dac_p 0.03917f
+C169 s_bb atb_tail 0.02639f
+C170 bb_n ibias 0.02611f
+C171 s_bb src_n 0.07531f
+C172 atb_bias vbt 0.30709f
+C173 s_sat atb_bias 0.04601f
+C174 vbt sel_dac 0.05289f
+C175 s_sat sel_dac 0.19102f
+C176 g_p VDD 0.01221f
+C177 s_dac dac_n 0.10604f
+C178 s_sat lo_n 0
+C179 ibias src_p 0.15139f
+C180 GSAT_x nd_bb 0.02517f
+C181 s_sat nd_bb 0.0149f
+C182 bb_p g_n 0.05373f
+C183 g_p d_p 1.90324f
+C184 sat selb 2.42235f
+C185 bb_p dac_p 0.1413f
+C186 selb en 0.21996f
+C187 sat en 0.20843f
+C188 vbt enb 1.80034f
+C189 s_sat enb 0.08655f
+C190 bb_n atb_bias 0.02611f
+C191 vbt atb_tail 0.46247f
+C192 s_bb bb_p 0.05173f
+C193 s_sat atb_tail 0.03928f
+C194 bb_n sel_dac 0.02611f
+C195 src_n vbt 4.76768f
+C196 d_n out_p 1.93646f
+C197 s_sat src_n 5.90371f
+C198 bb_n lo_n 3.41593f
+C199 VDD dac_n 0
+C200 bb_n lo_p 0.42316f
+C201 atb_bias src_p 2.10469f
+C202 selb g_n 0
+C203 sat nsat 1.21744f
+C204 sat g_n 0.04257f
+C205 sat dac_p 0.03627f
+C206 nsat en 2.17927f
+C207 d_p dac_n 0
+C208 g_n en 0.04431f
+C209 selb nd_dac 0
+C210 bb_n atb_tail 0.0388f
+C211 dac_p en 0.03627f
+C212 sat nd_dac 0.00146f
+C213 d_n d_p 2.00675f
+C214 nd_dac en 3.22652f
+C215 src_p lo_n 0.14985f
+C216 s_bb selb 0.23824f
+C217 s_bb sat 0.10263f
+C218 src_n bb_n 1.06555f
+C219 ibias s_dac 0.03627f
+C220 s_bb en 0.74332f
+C221 s_sat bb_p 0.27284f
+C222 src_p lo_p 0.22179f
+C223 src_p enb 0.14427f
+C224 VDD GD_x 0.69166f
+C225 src_p atb_tail 0.38026f
+C226 g_p dac_n 0.15473f
+C227 d_n g_p 0.0679f
+C228 dac_p g_n 7.43653f
+C229 src_n src_p 17.8082f
+C230 g_n nd_dac 0
+C231 bb_n bb_p 12.3489f
+C232 s_bb g_n 2.15259f
+C233 s_bb dac_p 0.24299f
+C234 atb_bias s_dac 0.033f
+C235 selb vbt 0.00864f
+C236 s_bb nd_dac 1.90712f
+C237 s_sat selb 0.20122f
+C238 VDD ibias 0.0212f
+C239 bb_n out_n 0
+C240 sat GSAT_x 0.66773f
+C241 s_sat sat 13.7703f
+C242 vbt en 1.66956f
+C243 s_sat en 0.17106f
+C244 GSAT_x en 0.07681f
+C245 s_dac sel_dac 0.19025f
+C246 s_dac lo_n 0
+C247 g_p GD_x 0
+C248 bb_p src_p 0.0402f
+C249 d_n dac_n 0
+C250 s_dac lo_p 0
+C251 s_dac enb 0.06058f
+C252 out_n src_p 0.002f
+C253 s_dac GB_x 0.00421f
+C254 s_dac atb_tail 0.02629f
+C255 sat bb_n 0.02611f
+C256 bb_n en 0.02611f
+C257 GSAT_x nsat 0.29423f
+C258 vbt g_n 0.47022f
+C259 s_sat nsat 3.6077f
+C260 s_sat g_n 0.09253f
+C261 dac_p vbt 0.00327f
+C262 src_n s_dac 0.09747f
+C263 VDD atb_bias 0
+C264 s_sat dac_p 0.05261f
+C265 out_p lo_n 1.44583f
+C266 vbt nd_dac 0.02506f
+C267 s_sat nd_dac 0.00141f
+C268 g_p ibias 3.91716f
+C269 VDD sel_dac 2.69322f
+C270 s_bb vbt 0.00982f
+C271 s_bb GSAT_x 0.00421f
+C272 s_sat s_bb 2.30713f
+C273 VDD lo_n 4.70006f
+C274 lo_p out_p 1.42735f
+C275 VDD nd_bb 3.19855f
+C276 src_p en 0.0492f
+C277 d_p lo_n 0.3209f
+C278 VDD lo_p 0.06737f
+C279 VDD enb 1.09894f
+C280 bb_n g_n 0.72087f
+C281 src_n out_p 0
+C282 bb_n dac_p 4.89779f
+C283 VDD GB_x 0.49505f
+C284 VDD atb_tail 0.00565f
+C285 bb_p s_dac 0
+C286 d_p lo_p 0.38552f
+C287 s_bb bb_n 0.1095f
+C288 g_p atb_bias 0.0815f
+C289 ibias dac_n 5.17566f
+C290 g_p sel_dac 0.00665f
+C291 s_sat vbt 0.10542f
+C292 src_n d_p 0.002f
+C293 g_p lo_n 0
+C294 src_p g_n 0.15035f
+C295 src_p dac_p 0.04011f
+C296 g_p lo_p 0.01574f
+C297 s_bb src_p 0.04232f
+C298 g_p enb 1.71202f
+C299 out_n out_p 5.32513f
+C300 s_dac selb 0.08521f
+C301 sat s_dac 0.07281f
+C302 g_p atb_tail 0.07494f
+C303 VDD bb_p 0.00128f
+C304 s_dac en 0.15407f
+C305 atb_bias dac_n 0.02611f
+C306 g_p src_n 0.21441f
+C307 GD_x ibias 0.00659f
+C308 s_sat bb_n 0.06202f
+C309 sat VSS 6.47868f
+C310 atb_tail VSS 3.23954f
+C311 atb_bias VSS 2.45217f
+C312 ibias VSS 8.22519f
+C313 sel_dac VSS 7.76032f
+C314 en VSS 12.8436f
+C315 dac_n VSS 2.7515f
+C316 bb_n VSS 3.15972f
+C317 dac_p VSS 2.76857f
+C318 bb_p VSS 7.31147f
+C319 out_n VSS 5.56256f
+C320 lo_n VSS 4.85334f
+C321 out_p VSS 3.16365f
+C322 lo_p VSS 5.94292f
+C323 VDD VSS 61.1427f
+C324 nsat VSS 4.72232f
+C325 GSAT_x VSS 2.03947f
+C326 nd_bb VSS 4.0667f
+C327 GB_x VSS 2.55091f
+C328 nd_dac VSS 4.26273f
+C329 GD_x VSS 2.15288f
+C330 selb VSS 8.45386f
+C331 enb VSS 9.00913f
+C332 vbt VSS 21.9491f
+C333 s_dac VSS 8.71739f
+C334 s_bb VSS 8.62393f
+C335 s_sat VSS 10.0996f
+C336 src_n VSS 16.513f
+C337 g_n VSS 8.30977f
+C338 src_p VSS 26.7397f
+C339 g_p VSS 8.03808f
+C340 d_n VSS 7.44414f
+C341 d_p VSS 10.3229f
+.ends
+

@@ -1,0 +1,285 @@
+* NGSPICE file created from pt_wmon_sel.ext - technology: gf180mcuD
+
+.subckt pt_wmon_sel VDD_WIRE_SW VSS wmon_en wmon_sel0 wmon_sel1 RX_P RX_N CTLE_P CTLE_N
++ WMON_IN
+X0 g1_b wmon_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X1 g3_b_s0 wmon_en VSS VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X2 g1 g1_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X3 enb wmon_en VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X4 CTLE_N g3 WMON_IN VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X5 RX_N g1 WMON_IN VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X6 CTLE_P g2_b WMON_IN VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X7 g3_b wmon_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X8 g0 g0_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X9 enb wmon_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X10 g3 g3_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X11 g1_b_s1 wmon_sel0 g1_b_s0 VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X12 g2_b wmon_sel1 g2_b_s1 VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X13 g0 g0_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X14 s0b wmon_sel0 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X15 g2_b_s1 s0b g2_b_s0 VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X16 g0_b s1b g0_b_s1 VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X17 g2 g2_b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X18 s0b wmon_sel0 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X19 g3_b wmon_sel1 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X20 g2_b wmon_sel1 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X21 g1_b s1b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X22 s1b wmon_sel1 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X23 g0_b wmon_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X24 g3_b_s1 wmon_sel0 g3_b_s0 VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X25 g0_b s0b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X26 s1b wmon_sel1 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X27 CTLE_N g3_b WMON_IN VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X28 RX_N g1_b WMON_IN VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X29 g0_b s1b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X30 g0_b_s0 wmon_en VSS VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X31 g1_b s1b g1_b_s1 VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X32 g1 g1_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X33 RX_P g0 WMON_IN VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X34 g0_b_s1 s0b g0_b_s0 VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X35 g2_b wmon_en VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X36 CTLE_P g2 WMON_IN VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X37 RX_P g0_b WMON_IN VDD_WIRE_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X38 g3 g3_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X39 g3_b wmon_sel1 g3_b_s1 VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X40 WMON_IN enb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X41 g1_b_s0 wmon_en VSS VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X42 g2 g2_b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X43 g2_b_s0 wmon_en VSS VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X44 g3_b wmon_sel0 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X45 g2_b s0b VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X46 g1_b wmon_sel0 VDD_WIRE_SW VDD_WIRE_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+C0 VDD_WIRE_SW g0 1.54411f
+C1 wmon_sel1 g3_b_s1 0.35945f
+C2 g3_b RX_P 0.76945f
+C3 wmon_sel1 wmon_en 3.50241f
+C4 s1b wmon_sel0 0.36336f
+C5 VDD_WIRE_SW g0_b_s1 0.46697f
+C6 wmon_sel1 g2 0.14926f
+C7 g3_b g3_b_s1 0.57594f
+C8 wmon_en g3_b 1.69668f
+C9 RX_N wmon_sel0 0.04781f
+C10 g3_b g2 0.13216f
+C11 CTLE_P WMON_IN 1.47912f
+C12 WMON_IN s0b 0.21525f
+C13 WMON_IN g1 1.35416f
+C14 wmon_sel0 g2_b 0.19654f
+C15 g0_b_s0 enb 0
+C16 VDD_WIRE_SW g2_b_s1 0
+C17 WMON_IN g0_b 1.63983f
+C18 g0 RX_P 0.50041f
+C19 g0_b_s1 RX_P 0.08742f
+C20 WMON_IN g3_b_s0 0
+C21 s0b g2_b_s0 0.57368f
+C22 wmon_sel0 enb 0.0419f
+C23 wmon_en g0 0
+C24 wmon_en g0_b_s1 0.1139f
+C25 wmon_sel1 g3 0
+C26 g0_b_s0 VDD_WIRE_SW 0.0025f
+C27 CTLE_P CTLE_N 0.00461f
+C28 g3 g3_b 1.54358f
+C29 g1_b wmon_sel0 0.41611f
+C30 wmon_sel1 WMON_IN 8.85284f
+C31 VDD_WIRE_SW wmon_sel0 2.53552f
+C32 RX_N g2_b 0.17372f
+C33 s1b enb 0.00174f
+C34 wmon_en g2_b_s1 0.08145f
+C35 WMON_IN g3_b 0.67963f
+C36 wmon_sel1 g2_b_s0 0.10422f
+C37 g0_b_s0 RX_P 0.01373f
+C38 RX_N enb 0.043f
+C39 enb g2_b 0.81372f
+C40 wmon_sel0 g1_b_s0 0.34742f
+C41 s1b g1_b 2.08095f
+C42 g0_b_s0 wmon_en 0.34396f
+C43 VDD_WIRE_SW s1b 3.98456f
+C44 wmon_sel0 RX_P 0.05773f
+C45 wmon_sel1 CTLE_N 0.05557f
+C46 wmon_sel0 g1_b_s1 0.34742f
+C47 WMON_IN g0 1.28069f
+C48 g1_b RX_N 0.65581f
+C49 wmon_sel0 g3_b_s1 0.29479f
+C50 WMON_IN g0_b_s1 0.25472f
+C51 wmon_en wmon_sel0 10.7436f
+C52 VDD_WIRE_SW RX_N 19.8835f
+C53 CTLE_P s0b 0
+C54 CTLE_N g3_b 0.48849f
+C55 g1_b g2_b 2.35828f
+C56 wmon_sel0 g2 0.10774f
+C57 CTLE_P g1 0
+C58 VDD_WIRE_SW g2_b 6.72349f
+C59 s0b g1 0.17752f
+C60 s1b g1_b_s0 0.23682f
+C61 s0b g0_b 0.82855f
+C62 g1 g0_b 0
+C63 s1b RX_P 1.44685f
+C64 CTLE_P g3_b_s0 0
+C65 g1_b enb 0.04144f
+C66 s1b g1_b_s1 0.67562f
+C67 VDD_WIRE_SW enb 2.63082f
+C68 RX_N g1_b_s0 0.01373f
+C69 wmon_en s1b 5.9326f
+C70 RX_N RX_P 0
+C71 RX_N g1_b_s1 0.00931f
+C72 g2_b RX_P 0.55954f
+C73 g2_b_s0 g2_b_s1 0.3837f
+C74 wmon_en RX_N 0.12727f
+C75 VDD_WIRE_SW g1_b 6.27954f
+C76 WMON_IN g0_b_s0 0.00372f
+C77 CTLE_P wmon_sel1 0.15362f
+C78 wmon_sel1 s0b 0.53915f
+C79 wmon_en g2_b 0.56818f
+C80 wmon_sel1 g1 0.14661f
+C81 enb RX_P 0.06265f
+C82 g2_b g2 1.89798f
+C83 wmon_sel1 g0_b 0.00614f
+C84 CTLE_P g3_b 0.18377f
+C85 WMON_IN wmon_sel0 23.6508f
+C86 wmon_sel1 g3_b_s0 0.10422f
+C87 wmon_en enb 0.80279f
+C88 g1_b g1_b_s0 0.25909f
+C89 g3_b g3_b_s0 0.25909f
+C90 VDD_WIRE_SW g1_b_s0 0.00125f
+C91 g1_b RX_P 0.09062f
+C92 VDD_WIRE_SW RX_P 15.4359f
+C93 g1_b g1_b_s1 0.52505f
+C94 VDD_WIRE_SW g1_b_s1 0.00447f
+C95 wmon_en g1_b 0.45946f
+C96 VDD_WIRE_SW g3_b_s1 0
+C97 wmon_en VDD_WIRE_SW 4.32913f
+C98 WMON_IN s1b 0.07062f
+C99 s0b g0_b_s1 7.27965f
+C100 g0_b g0 1.73744f
+C101 g1_b g2 0
+C102 g3 g2_b 0
+C103 VDD_WIRE_SW g2 1.6851f
+C104 CTLE_N wmon_sel0 1.79551f
+C105 g0_b_s1 g0_b 0.40908f
+C106 wmon_sel1 g3_b 0.86577f
+C107 WMON_IN RX_N 1.47459f
+C108 g1_b_s0 g1_b_s1 0.43459f
+C109 WMON_IN g2_b 1.40911f
+C110 g3 enb 0.74059f
+C111 s0b g2_b_s1 0.67562f
+C112 wmon_en g1_b_s0 0.37352f
+C113 RX_N g2_b_s0 0
+C114 wmon_en RX_P 0.06084f
+C115 g2_b_s0 g2_b 0.25909f
+C116 wmon_en g1_b_s1 0.08145f
+C117 WMON_IN enb 3.5718f
+C118 wmon_en g3_b_s1 0.35085f
+C119 wmon_sel1 g0_b_s1 0.06399f
+C120 g3 VDD_WIRE_SW 1.40186f
+C121 g0_b_s0 s0b 0.54302f
+C122 wmon_en g2 0.13264f
+C123 CTLE_N RX_N 0
+C124 g0_b_s0 g0_b 0
+C125 CTLE_N g2_b 0.00276f
+C126 WMON_IN g1_b 0.91412f
+C127 CTLE_P wmon_sel0 0.11479f
+C128 WMON_IN VDD_WIRE_SW 6.54287f
+C129 s0b wmon_sel0 0.67267f
+C130 g1 wmon_sel0 0.0742f
+C131 wmon_sel1 g2_b_s1 0.34742f
+C132 CTLE_N enb 0.1364f
+C133 g1_b g2_b_s0 0
+C134 VDD_WIRE_SW g2_b_s0 0.002f
+C135 wmon_sel0 g3_b_s0 0.36932f
+C136 WMON_IN g1_b_s0 0.00372f
+C137 s0b s1b 14.5015f
+C138 WMON_IN RX_P 1.43365f
+C139 g1 s1b 0.04576f
+C140 CTLE_N VDD_WIRE_SW 5.38599f
+C141 s1b g0_b 0.87518f
+C142 WMON_IN wmon_en 0.34413f
+C143 CTLE_P RX_N 0.00461f
+C144 wmon_sel1 wmon_sel0 4.86264f
+C145 s0b RX_N 0.13492f
+C146 g1 RX_N 0.63581f
+C147 WMON_IN g2 1.37855f
+C148 CTLE_P g2_b 0.66304f
+C149 s0b g2_b 2.09518f
+C150 g1 g2_b 0.04803f
+C151 wmon_sel0 g3_b 1.08472f
+C152 wmon_en g2_b_s0 0.36932f
+C153 g3_b_s0 g2_b 0
+C154 CTLE_P enb 0.04073f
+C155 s0b enb 0.51114f
+C156 g0_b_s0 g0 0
+C157 g1 enb 1.48935f
+C158 g0_b_s0 g0_b_s1 0.72119f
+C159 wmon_sel1 s1b 0.61817f
+C160 CTLE_N wmon_en 4.88389f
+C161 CTLE_N g2 0
+C162 wmon_sel1 RX_N 0.16235f
+C163 wmon_sel0 g0_b_s1 0.04415f
+C164 CTLE_P g1_b 0.00276f
+C165 WMON_IN g3 0.44586f
+C166 s0b g1_b 1.04305f
+C167 CTLE_P VDD_WIRE_SW 5.05143f
+C168 s0b VDD_WIRE_SW 3.65714f
+C169 g1 g1_b 11.7927f
+C170 wmon_sel1 g2_b 0.98724f
+C171 g1 VDD_WIRE_SW 2.34047f
+C172 g1_b g0_b 0.00121f
+C173 VDD_WIRE_SW g0_b 5.96105f
+C174 RX_N g3_b 0.08831f
+C175 VDD_WIRE_SW g3_b_s0 0.002f
+C176 g3_b g2_b 3.16796f
+C177 wmon_sel1 enb 0.05054f
+C178 s1b g0 0
+C179 s1b g0_b_s1 0.38619f
+C180 WMON_IN g2_b_s0 0
+C181 g1 g1_b_s0 0.00219f
+C182 CTLE_P RX_P 0
+C183 g3_b enb 2.38199f
+C184 s0b RX_P 0.77478f
+C185 CTLE_N g3 0.40225f
+C186 g1 RX_P 0.10405f
+C187 g0_b RX_P 0.53905f
+C188 g1 g1_b_s1 0
+C189 wmon_sel1 g1_b 0.14673f
+C190 CTLE_P wmon_en 3.78058f
+C191 s0b wmon_en 3.76029f
+C192 wmon_sel1 VDD_WIRE_SW 3.09743f
+C193 g1 wmon_en 0.13153f
+C194 CTLE_P g2 0.59827f
+C195 WMON_IN CTLE_N 1.56233f
+C196 wmon_en g0_b 0.28603f
+C197 VDD_WIRE_SW g3_b 5.82174f
+C198 g3_b_s0 g3_b_s1 0.40915f
+C199 wmon_en g3_b_s0 0.57368f
+C200 g0_b_s1 enb 6.72248f
+C201 wmon_sel1 g1_b_s0 0.00591f
+C202 g2_b_s1 g2_b 0.57594f
+C203 wmon_sel1 RX_P 0.0618f
+C204 RX_P VSS 6.10271f
+C205 RX_N VSS 9.27389f
+C206 wmon_en VSS 13.739f
+C207 CTLE_P VSS 13.949f
+C208 CTLE_N VSS 3.59543f
+C209 WMON_IN VSS 18.7216f
+C210 wmon_sel1 VSS 10.839f
+C211 wmon_sel0 VSS 5.50313f
+C212 VDD_WIRE_SW VSS 0.11513p
+C213 g0_b_s0 VSS 3.20557f
+C214 g0 VSS 2.09196f
+C215 g0_b VSS 4.03386f
+C216 g0_b_s1 VSS 4.833f
+C217 s1b VSS 5.85461f
+C218 g1_b_s1 VSS 2.22935f
+C219 g1_b_s0 VSS 2.80851f
+C220 g2_b_s1 VSS 2.23555f
+C221 s0b VSS 6.11772f
+C222 g2_b_s0 VSS 2.80931f
+C223 g1_b VSS 5.11299f
+C224 g1 VSS 7.80221f
+C225 g3_b_s1 VSS 2.23939f
+C226 g3_b_s0 VSS 2.78387f
+C227 g2 VSS 2.28241f
+C228 g2_b VSS 6.4812f
+C229 enb VSS 13.2829f
+C230 g3 VSS 1.89877f
+C231 g3_b VSS 6.95366f
+.ends
+

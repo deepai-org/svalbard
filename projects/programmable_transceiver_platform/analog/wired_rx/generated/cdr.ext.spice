@@ -1,0 +1,4027 @@
+* NGSPICE file created from pt_cdr.ext - technology: gf180mcuD
+
+.subckt pt_cdr VDD_PLL_SW VSS IBIAS cdr_en pfd_mode ref_sel g0 g1 g2 UP0 UP1 UP2 UP3
++ DN0 DN1 DN2 DN3 FUP FDN IB_PLL HOLD_PLL VCTRL REF_IN WCK_IN REF_PLL atb_cdr_pbias
++ otr0 otr1 otr2 otr3 otr4 otrs
+X0 ifuh enb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X1 r1b cdr_en r1b_s1 VSS nfet_03v3 ad=2.64p pd=12.88u as=2.64p ps=12.88u w=6u l=0.28u
+X2 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X3 AVN fdnb ifds VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X4 VDD_PLL_SW AVP VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=8.8p pd=40.88u as=0.29304n ps=1.4684m w=20u l=20u
+X5 tra4 otrs tra4_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X6 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X7 AVN UP1 iu1s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X8 fdnb enb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X9 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X10 VDD_PLL_SW AVN VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=20u
+X11 t1_s0 g0b VSS VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X12 inah enb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X13 VDD_PLL_SW AVP VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=20u
+X14 ge5 t5 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X15 ot7 ge7 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X16 AVP up0b iu0s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X17 itr4s atb_cdr_pbias itr4h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X18 itr4s atb_cdr_pbias itr4h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X19 ifdh enb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X20 ota2 ota2 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X21 AVP up2b iu2s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X22 REF_PLL refmb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X23 refm_s0 r0b VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X24 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+D0 VSS DN0 diode_nd2ps_03v3 pj=3.92u area=0.9604p
+X25 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X26 r1b_s1 ref_sel r1b_s0 VSS nfet_03v3 ad=2.64p pd=12.88u as=2.64p ps=12.88u w=6u l=0.28u
+X27 tra2_s0 otr2 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X28 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X29 otrsb otrs VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X30 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X31 REF_PLL refmb VSS VSS nfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=0.28u
+X32 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X33 opd oe VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X34 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X35 t3a t3an VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X36 AVP DN3 id3s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X37 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X38 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X39 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X40 ge7 oe ge7_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X41 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X42 VSS otr2 itr2s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X43 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X44 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X45 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X46 ot ipu ot5 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X47 nbd cdr_en IBIAS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X48 trb4 otrsb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X49 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X50 AVN UP3 iu3s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X51 opd opd VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X52 AVN UP0 iu0s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X53 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X54 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X55 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X56 AVN trb3 itr3s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X57 t2n_s0 g1 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X58 ge3 t3 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X59 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X60 fdnl fdnb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X61 fupb enb fupb_s0 VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X62 t3an g0 t3an_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X63 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X64 AVN UP2 iu2s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X65 ipu ipu VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X66 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X67 itr3s atb_cdr_pbias itr3h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X68 itr3s atb_cdr_pbias itr3h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X69 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X70 AVP tra1 itr1s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X71 ot ipu ot4 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X72 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X73 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X74 tra1_s0 otr1 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X75 ot ipu ot3 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X76 r1b cdr_en VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X77 t3 t3n VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X78 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X79 t1 g0b VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X80 ge2 oe ge2_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X81 ota2 AVN ot VDD_PLL_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=2u
+X82 VSS otr0 itr0s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X83 ipu cdr_en VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X84 t6n g1 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X85 AVP up3b iu3s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X86 tra0 otrs tra0_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X87 t5n_s0 t5a VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X88 HOLD_PLL cdr_en VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X89 ot ipu ot4 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X90 tra3 otrs VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X91 refmb refm VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X92 trb1_s0 otr1 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X93 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X94 nbd enb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X95 trb3 otr3 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X96 AVN trb4 itr4s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X97 ge1_s0 t1 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X98 ot ipu ot5 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X99 t5 t5n VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X100 ot ipu ot5 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X101 HOLD_PLL pfd_mode HOLD_PLL_s0 VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X102 itr4s atb_cdr_pbias itr4h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X103 itr4s atb_cdr_pbias itr4h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X104 refmb refm VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+D1 VSS UP0 diode_nd2ps_03v3 pj=3.84u area=0.9216p
+X105 r1b ref_sel VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X106 ifus atb_cdr_pbias ifuh VDD_PLL_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=2u
+X107 ot ipu ot5 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X108 ot ipu ot5 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X109 VSS otr4 itr4s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X110 t3n g2 t3n_s0 VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X111 t7n t3a VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+D2 VSS t3 diode_nd2ps_03v3 pj=2.4u area=0.36p
+X112 AVP tra0 itr0s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X113 AVP fupb ifus VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X114 t5an g0 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X115 itr4h enb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X116 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X117 t4 g2b VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X118 ot ipu ot2 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X119 HOLD_PLL_s0 cdr_en VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X120 ot7 ge7 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X121 ge6_s0 t6 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X122 id1s atb_cdr_pbias id1h VDD_PLL_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=2u
+X123 AVP tra4 itr4s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X124 itr4h enb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X125 ota1 oeb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X126 VCTRL opd VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X127 ot6 ge6 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X128 trb2 otr2 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X129 itr1s atb_cdr_pbias itr1h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X130 id1h enb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X131 ot ipu ot4 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X132 refm r1b VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X133 tra4 otrs VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X134 r0b rsb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X135 AVN fdnb ifds VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X136 ge4 oe ge4_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X137 t1 g2b VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X138 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X139 rsb ref_sel VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X140 t2n g2 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X141 g0b g0 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X142 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X143 ge5 oe ge5_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X144 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X145 tra2 otrs VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X146 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X147 itr2s atb_cdr_pbias itr2h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X148 tra1 otr1 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X149 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+D3 VSS FUP diode_nd2ps_03v3 pj=3.32u area=0.6889p
+X150 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X151 AVP tra3 itr3s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X152 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X153 fupl fupb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X154 t3n g2 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X155 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X156 refm r0b VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X157 itr4s atb_cdr_pbias itr4h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X158 t1_s1 g1b t1_s0 VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X159 g2b g2 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X160 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X161 fdnb_s0 FDN VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X162 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X163 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X164 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X165 r0b REF_IN VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X166 id3s atb_cdr_pbias id3h VDD_PLL_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=2u
+X167 id0s atb_cdr_pbias id0h VDD_PLL_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=2u
+X168 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X169 enb cdr_en VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X170 itr3h enb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X171 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X172 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X173 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X174 id2s atb_cdr_pbias id2h VDD_PLL_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=2u
+X175 t2 t2n VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X176 ot ipu ot1 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X177 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X178 ot ipu ot0 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X179 AVN fupl ifus VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X180 t5a t5an VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X181 AVN trb2 itr2s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X182 itr2h enb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X183 r0b cdr_en r0b_s1 VSS nfet_03v3 ad=2.64p pd=12.88u as=2.64p ps=12.88u w=6u l=0.28u
+X184 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X185 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X186 id3h enb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X187 ina ina VSS VSS nfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=1u
+X188 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X189 id2h enb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X190 ge3 oe ge3_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X191 ot1 ge1 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X192 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X193 r1b_s0 WCK_IN VSS VSS nfet_03v3 ad=2.64p pd=12.88u as=2.64p ps=12.88u w=6u l=0.28u
+X194 t7n_s0 t3a VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X195 AVN trb0 itr0s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X196 fupb_s0 FUP VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X197 ot ipu ot5 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X198 ot7 ge7 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X199 oeb cdr_en VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X200 trb4 otrsb trb4_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X201 VCTRL ota1 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X202 AVP DN0 id0s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X203 VDD_PLL_SW AVP VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=20u
+X204 VSS otr4 itr4s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X205 ot ipu ot5 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X206 itr3s atb_cdr_pbias itr3h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X207 ot ipu ot5 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X208 trb0 otr0 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X209 r0b_s1 rsb r0b_s0 VSS nfet_03v3 ad=2.64p pd=12.88u as=2.64p ps=12.88u w=6u l=0.28u
+X210 ifuh enb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X211 trb2 otrsb trb2_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X212 AVP fdnl ifds VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X213 VDD_PLL_SW AVP VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=20u
+X214 ot ipu ot5 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X215 up1b UP1 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+D4 VSS DN2 diode_nd2ps_03v3 pj=3.88u area=0.9409p
+X216 AVN dn2b id2s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X217 atb_cdr_pbias atb_cdr_pbias VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=2u
+X218 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X219 HOLD_PLL pfd_mode VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+D5 VSS DN1 diode_nd2ps_03v3 pj=3.88u area=0.9409p
+X220 ot7 ge7 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X221 oeb pfdb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+D6 VSS DN3 diode_nd2ps_03v3 pj=3.08u area=0.5929p
+X222 ot ipu ot5 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X223 itr0s atb_cdr_pbias itr0h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X224 VSS otr3 itr3s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X225 AVN trb4 itr4s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X226 r0b cdr_en VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X227 itr4s atb_cdr_pbias itr4h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X228 itr4s atb_cdr_pbias itr4h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X229 trb3_s0 otr3 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X230 AVN trb4 itr4s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X231 ot6 ge6 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X232 r0b_s0 REF_IN VSS VSS nfet_03v3 ad=2.64p pd=12.88u as=2.64p ps=12.88u w=6u l=0.28u
+X233 tra0 otr0 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X234 oeb cdr_en oeb_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X235 tra2 otrs tra2_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X236 itr2s atb_cdr_pbias itr2h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X237 ot5 ge5 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X238 ot ipu ot4 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X239 AVP tra4 itr4s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X240 itr4s atb_cdr_pbias itr4h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X241 AVP DN2 id2s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X242 ot ipu ot3 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X243 ifus atb_cdr_pbias ifuh VDD_PLL_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=2u
+X244 fupb FUP VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X245 AVP DN1 id1s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X246 ge6 t6 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X247 ot ipu ot4 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X248 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X249 up0b UP0 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X250 ot3 ge3 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X251 otrsb otrs VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X252 AVP tra4 itr4s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X253 itr4h enb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X254 id0h enb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X255 AVN trb3 itr3s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X256 t3a t3an VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X257 t2n g2 t2n_s0 VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X258 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X259 g1b g1 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X260 t5n t5a VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X261 up3b UP3 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X262 g0b g0 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X263 ot4 ge4 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X264 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X265 oeb_s0 pfdb VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X266 ge7 t7 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X267 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X268 up1b UP1 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X269 ge4 oe VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X270 up2b UP2 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X271 AVN trb1 itr1s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X272 itr3s atb_cdr_pbias itr3h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X273 tra1 otrs tra1_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X274 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X275 dn0b DN0 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X276 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X277 t3an g1 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X278 t1 g1b VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X279 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X280 atb_cdr_pbias nbd VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=2u
+X281 ifds atb_cdr_pbias ifdh VDD_PLL_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=2u
+X282 t6n g2 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X283 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X284 t5an_s0 g0 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X285 t5n g2 t5n_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X286 ota1 AVP ot VDD_PLL_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=2u
+X287 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X288 dn2b DN2 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X289 trb2 otrsb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X290 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X291 rsb ref_sel VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X292 trb1 otrsb trb1_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X293 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X294 dn1b DN1 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X295 oe oeb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X296 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X297 ot ipu ot2 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X298 ge1 oe ge1_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X299 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X300 AVN dn0b id0s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X301 trb0_s0 otr0 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X302 itr4s atb_cdr_pbias itr4h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X303 tra3 otr3 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X304 itr4s atb_cdr_pbias itr4h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X305 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X306 ot2 ge2 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X307 itr2s atb_cdr_pbias itr2h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X308 VSS otr4 itr4s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X309 pfdb pfd_mode VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X310 t7n g2 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X311 t5 t5n VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+D7 VSS UP3 diode_nd2ps_03v3 pj=3.84u area=0.9216p
+X312 itr4s atb_cdr_pbias itr4h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+D8 VSS FDN diode_nd2ps_03v3 pj=3.36u area=0.7056p
+X313 ot7 ge7 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X314 up3b UP3 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X315 atb_cdr_pbias cdr_en VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X316 tra4_s0 otr4 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X317 opd ota2 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X318 pfdb pfd_mode VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X319 iu2s atb_cdr_pbias iu2h VDD_PLL_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=2u
+X320 itr3h enb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X321 VDD_PLL_SW AVN VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=20u
+X322 up2b UP2 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X323 fdnb FDN VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X324 ge2 oe VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+D9 VSS REF_IN diode_nd2ps_03v3 pj=2.4u area=0.36p
+X325 ot ipu ot5 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X326 iu1s atb_cdr_pbias iu1h VDD_PLL_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=2u
+X327 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X328 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X329 AVP tra4 itr4s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X330 VDD_PLL_SW AVN VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=20u
+X331 enb cdr_en VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+D10 VSS oeb diode_nd2ps_03v3 pj=2.56u area=0.4096p
+X332 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X333 dn2b DN2 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+D11 VSS UP1 diode_nd2ps_03v3 pj=3.84u area=0.9216p
+X334 dn3b DN3 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X335 ota2 oeb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X336 g1b g1 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X337 dn1b DN1 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X338 trb2_s0 otr2 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X339 itr1s atb_cdr_pbias itr1h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X340 AVN VSS VSS ppolyf_u_1k r_width=2u r_length=2.5u
+X341 AVN dn1b id1s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X342 IB_PLL enb VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X343 AVN dn3b id3s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X344 ge7_s0 t7 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X345 itr3s atb_cdr_pbias itr3h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X346 ot ipu ot4 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X347 trb4 otr4 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X348 AVP fdnl ifds VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X349 tra1 otrs VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X350 AVP tra3 itr3s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X351 t3an g0 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X352 t3 t3n VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X353 t3an_s0 g1 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X354 t1 g2b t1_s1 VSS nfet_03v3 ad=1.32p pd=6.88u as=1.32p ps=6.88u w=3u l=0.28u
+X355 t6n g2 t6n_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X356 fdnb enb fdnb_s0 VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X357 ot ipu ot5 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X358 iu3s atb_cdr_pbias iu3h VDD_PLL_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=2u
+X359 ot ipu ot5 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X360 trb1 otrsb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X361 nbd nbd VSS VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=2u
+X362 ge1 oe VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X363 fupl fupb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X364 ge2_s0 t2 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X365 t7 t7n VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X366 iu3h enb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X367 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X368 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X369 dn3b DN3 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X370 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X371 tra0_s0 otr0 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X372 itr4s atb_cdr_pbias itr4h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X373 itr4s atb_cdr_pbias itr4h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X374 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X375 IB_PLL enb ibs VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X376 ot ipu ot3 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X377 itr1h enb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X378 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X379 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X380 AVN trb4 itr4s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X381 up0b UP0 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X382 t7n g2 t7n_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X383 t6 t6n VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X384 ge5 oe VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X385 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X386 t5a t5an VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X387 ot7 ge7 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X388 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X389 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X390 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X391 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X392 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X393 t3n_s0 t3a VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X394 ot0 oeb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X395 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X396 trb0 otrsb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X397 AVP fupb ifus VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X398 itr4h enb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X399 ota1 ota1 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=4u
+X400 tra3 otrs tra3_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X401 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X402 itr3s atb_cdr_pbias itr3h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X403 itr3s atb_cdr_pbias itr3h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X404 ge6 oe ge6_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X405 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X406 ot7 ge7 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X407 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X408 VSS otr3 itr3s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X409 ge3 oe VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X410 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X411 trb3 otrsb trb3_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X412 ot6 ge6 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X413 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X414 tra0 otrs VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X415 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X416 ot5 ge5 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X417 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X418 AVP VSS VSS ppolyf_u_1k r_width=2u r_length=2.5u
+X419 tra4 otr4 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X420 ot ipu ot5 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X421 ifdh enb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X422 itr2s atb_cdr_pbias itr2h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X423 ge4_s0 t4 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X424 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X425 oe oeb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X426 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X427 iu1h enb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X428 fdnl fdnb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X429 itr4s atb_cdr_pbias itr4h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X430 itr4s atb_cdr_pbias itr4h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X431 itr4s atb_cdr_pbias itr4h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X432 t2n g1 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X433 ge2 t2 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X434 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X435 g2b g2 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X436 fupb enb VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X437 ge5_s0 t5 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X438 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X439 ge6 oe VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X440 tra2 otr2 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X441 ge4 t4 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X442 ot ipu ot3 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X443 trb3 otrsb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X444 t3n t3a VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X445 t2 t2n VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X446 t5n g2 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X447 t6 t6n VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X448 ge7 oe VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X449 ina atb_cdr_pbias inah VDD_PLL_SW pfet_03v3 ad=0.22p pd=1.88u as=0.22p ps=1.88u w=0.5u l=8u
+X450 ot ipu ot4 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X451 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X452 ot ipu ot4 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X453 VSS otr1 itr1s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X454 t4 g2b VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X455 t5an g1 VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X456 ot ipu ot5 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X457 iu0s atb_cdr_pbias iu0h VDD_PLL_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=2u
+X458 itr0h enb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X459 AVN fupl ifus VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X460 t5an g1 t5an_s0 VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X461 AVP up1b iu1s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X462 ifds atb_cdr_pbias ifdh VDD_PLL_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=2u
+X463 AVP tra2 itr2s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X464 ge3_s0 t3 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+D12 VSS WCK_IN diode_nd2ps_03v3 pj=2.4u area=0.36p
+X465 ot ipu ot5 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X466 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X467 iu0h enb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X468 t7 t7n VSS VSS nfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X469 dn0b DN0 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X470 t6n_s0 g1 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X471 trb0 otrsb trb0_s0 VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X472 ot7 ge7 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X473 ot6 ge6 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.44p pd=2.88u as=0.44p ps=2.88u w=1u l=0.28u
+X474 iu2h enb VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+D13 VSS UP2 diode_nd2ps_03v3 pj=3.84u area=0.9216p
+X475 r1b WCK_IN VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X476 trb4_s0 otr4 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X477 ibs atb_cdr_pbias VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=3.52p pd=16.88u as=3.52p ps=16.88u w=8u l=2u
+X478 trb1 otr1 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X479 ot ipu ot7 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X480 ot ipu ot6 VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=4u
+X481 tra3_s0 otr3 VSS VSS nfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X482 itr3s atb_cdr_pbias itr3h VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=2u
+X483 VSS otr4 itr4s VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X484 ge1 t1 VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=0.88p pd=4.88u as=0.88p ps=4.88u w=2u l=0.28u
+X485 refm r1b refm_s0 VSS nfet_03v3 ad=1.76p pd=8.88u as=1.76p ps=8.88u w=4u l=0.28u
+X486 VDD_PLL_SW AVN VDD_PLL_SW VDD_PLL_SW pfet_03v3 ad=8.8p pd=40.88u as=0 ps=0 w=20u l=20u
+X487 ipu ina VSS VSS nfet_03v3 ad=0.22p pd=1.88u as=0.22p ps=1.88u w=0.5u l=40u
+C0 VCTRL ref_sel 0.05074f
+C1 ref_sel t3a 0.07674f
+C2 ifus otr0 0.00298f
+C3 IBIAS REF_PLL 0.00576f
+C4 UP1 ot3 0
+C5 ota1 REF_IN 0.03174f
+C6 AVP trb2 0.26878f
+C7 otr2 ge4 0.04073f
+C8 ge3 FDN 0.04551f
+C9 t3 oe 0.43977f
+C10 ot7 ot 47.2363f
+C11 ota1 g1 0.03174f
+C12 ge3 ot5 0
+C13 t6 ge7 0
+C14 ipu UP2 0.37613f
+C15 DN1 fdnb 0.07794f
+C16 t5n_s0 t5an 0.00931f
+C17 t6n t3 0.23849f
+C18 tra3 trb1 1.10228f
+C19 UP2 ota2 0.04057f
+C20 ot7 otr0 0.10655f
+C21 UP3 iu3h 0.10687f
+C22 UP1 dn1b 0.0907f
+C23 ipu oe 40.9754f
+C24 AVP refmb 0
+C25 ot2 ge3 0.18531f
+C26 HOLD_PLL t4 0.04934f
+C27 DN3 up2b 0.15251f
+C28 AVP iu1s 0.22843f
+C29 IBIAS otrsb 0.15782f
+C30 iu0s UP2 0.00977f
+C31 ota2 oe 0.0866f
+C32 ipu t6n 0.26889f
+C33 HOLD_PLL otr4 0.0466f
+C34 REF_IN DN2 0.04722f
+C35 UP1 AVN 0.39975f
+C36 trb0_s0 itr3s 0
+C37 g2 t6n_s0 0.21616f
+C38 trb4 tra4 0.97973f
+C39 DN3 t7 0.08875f
+C40 g1 DN2 28.0024f
+C41 DN3 REF_PLL 0.05578f
+C42 cdr_en otrs 0.12411f
+C43 IBIAS oe 0.23008f
+C44 tra3_s0 itr3h 0
+C45 atb_cdr_pbias g2b 0.34744f
+C46 t3a t4 8.01479f
+C47 AVN ina 0
+C48 otr2 t3 0.07025f
+C49 UP3 up3b 0.85318f
+C50 t7 t7n 5.26343f
+C51 DN1 iu1h 0.01573f
+C52 oeb up0b 0.0657f
+C53 ipu inah 0.42216f
+C54 VCTRL otr4 1.83225f
+C55 IB_PLL ref_sel 0.13962f
+C56 otr4 t3a 0.08813f
+C57 WCK_IN otrs 47.0172f
+C58 UP1 ge5 0.05566f
+C59 cdr_en itr1s 0.04652f
+C60 ge2_s0 ot 0
+C61 UP3 AVP 0.46024f
+C62 up2b dn3b 0.16633f
+C63 HOLD_PLL r1b 0.15064f
+C64 cdr_en ge4_s0 0.04174f
+C65 otr1 cdr_en 0.07997f
+C66 otr2 ipu 0.49398f
+C67 atb_cdr_pbias trb4 0.05033f
+C68 UP1 itr4s 0.03713f
+C69 DN3 iu3s 0
+C70 VDD_PLL_SW ot 85.2572f
+C71 oeb itr0s 0.05944f
+C72 UP3 id2s 0.165f
+C73 atb_cdr_pbias up1b 0.17276f
+C74 itr1h itr1s 1.30549f
+C75 itr3s trb1_s0 0.10556f
+C76 atb_cdr_pbias g2 0.07767f
+C77 atb_cdr_pbias FUP 50.939f
+C78 WCK_IN itr1s 0.05862f
+C79 AVP pfd_mode 0.23509f
+C80 fupb_s0 VDD_PLL_SW 2.14083f
+C81 DN3 otrsb 0.14983f
+C82 iu0h id3s 0.7218f
+C83 DN3 iu2s 0.12104f
+C84 otr2 ota2 0.04057f
+C85 otr1 itr1h 0
+C86 DN1 id0h 0.09589f
+C87 WCK_IN otr1 0.08026f
+C88 DN3 UP2 2.06547f
+C89 nbd IB_PLL 0.27286f
+C90 dn3b REF_PLL 0.05578f
+C91 ge2_s0 t2 0.34423f
+C92 oeb t5n_s0 0.09049f
+C93 UP3 t6 0.09479f
+C94 VDD_PLL_SW otr0 2.78416f
+C95 g1 t5n 0.26386f
+C96 g0 t5an 0.12406f
+C97 trb1 enb 0.18702f
+C98 DN1 cdr_en 0.0487f
+C99 REF_PLL r0b 0.1612f
+C100 VDD_PLL_SW t2 1.62353f
+C101 ref_sel ge7 0.06798f
+C102 fupb AVN 0.01536f
+C103 tra3 FDN 0.04424f
+C104 DN3 oe 0.17142f
+C105 ge6_s0 ot5 0
+C106 ot6 FDN 0.0833f
+C107 t5 ot 0.27003f
+C108 t7 ge3 0.17421f
+C109 dn0b ref_sel 0.03851f
+C110 t6 pfd_mode 0.14344f
+C111 REF_PLL ge3 0.06506f
+C112 DN1 WCK_IN 0.05958f
+C113 ot6 ot5 1.7162f
+C114 t7n oe 0.23137f
+C115 t6n_s0 otrs 0.13337f
+C116 otr3 ot 0.31279f
+C117 iu3s dn3b 0
+C118 IB_PLL t4 0.04934f
+C119 tra4 otrs 1.05032f
+C120 t5 otr0 0.17833f
+C121 dn3b iu2s 0.14234f
+C122 t2 t5 0.08907f
+C123 t1 t5an 0.21291f
+C124 t7n_s0 t3a 1.091f
+C125 IB_PLL otr4 0.04648f
+C126 otr3 otr0 0.03642f
+C127 fdnb fupl 0.26307f
+C128 dn3b UP2 0.03872f
+C129 ota1 ot 0.70642f
+C130 DN1 id1h 0.01489f
+C131 VDD_PLL_SW ot4 3.92465f
+C132 ifus itr0s 1.49802f
+C133 otr3 t2 0.09567f
+C134 otr1 t6n_s0 0
+C135 iu1h id3s 0.35203f
+C136 AVP g2b 1.11047f
+C137 ge7_s0 t7 0.10024f
+C138 dn1b REF_IN 0.00142f
+C139 dn3b oe 0.04668f
+C140 ota1 otr0 0.03174f
+C141 UP2 ge3 0.04587f
+C142 AVN trb3_s0 0.04992f
+C143 atb_cdr_pbias otrs 0.43981f
+C144 oe r0b 0.33317f
+C145 AVN REF_IN 0.28306f
+C146 up2b id3h 0.18013f
+C147 up2b dn2b 0.09739f
+C148 fupb ifuh 0.22391f
+C149 oe ge3 2.01711f
+C150 AVN trb0 0.16577f
+C151 IB_PLL r1b 0.23274f
+C152 t5 ot4 0.09379f
+C153 AVP trb4 0.13513f
+C154 otr4 ge7 0.07097f
+C155 AVP up1b 0.17938f
+C156 id0h id3s 0
+C157 AVP g2 0.0481f
+C158 g1 AVN 0.05625f
+C159 AVP FUP 0.34004f
+C160 atb_cdr_pbias itr1s 0.55032f
+C161 oeb g0 0.07655f
+C162 DN2 ot 0.21926f
+C163 t6n ge3 0.32257f
+C164 otr3 ot4 0.06758f
+C165 atb_cdr_pbias otr1 0.30162f
+C166 cdr_en id3s 0.04191f
+C167 REF_PLL id3h 0.06092f
+C168 enb FDN 0.30348f
+C169 UP3 ref_sel 20.7211f
+C170 ge5 REF_IN 0.04073f
+C171 id1s id1h 1.18364f
+C172 AVP fdnb_s0 0.00349f
+C173 itr4s trb3_s0 0.05385f
+C174 DN2 otr0 0.04441f
+C175 itr4h enb 6.21906f
+C176 t6 g2 0.19774f
+C177 WCK_IN id3s 0.05739f
+C178 ref_sel pfd_mode 0.90076f
+C179 t6 FUP 0.04527f
+C180 ge5 g1 0.04073f
+C181 REF_IN itr4s 0.08383f
+C182 DN2 t2 0.07742f
+C183 ge7_s0 oe 0.1036f
+C184 DN1 atb_cdr_pbias 0.37229f
+C185 oeb t1 0.04502f
+C186 UP1 DN0 0.24245f
+C187 iu3s id3h 0.32132f
+C188 tra3 REF_PLL 0.07022f
+C189 t3an g0 0.4105f
+C190 t7 ot6 0.16199f
+C191 AVN tra1_s0 0.00327f
+C192 ot6 REF_PLL 0.17995f
+C193 otr2 ge3 0.04551f
+C194 UP0 t3 0.07025f
+C195 id1h id3s 0
+C196 iu2s id3h 0.17591f
+C197 dn2b iu2s 0.16759f
+C198 t5n ot 0.27883f
+C199 ifuh REF_IN 0.00236f
+C200 VDD_PLL_SW up0b 1.8296f
+C201 DN0 ina 0.01565f
+C202 UP2 id3h 0.04137f
+C203 dn2b UP2 0.09509f
+C204 nbd pfd_mode 0.02916f
+C205 ge1 oe 0.45809f
+C206 WCK_IN fupl 0.06162f
+C207 DN2 ot4 0
+C208 otrs up3b 0
+C209 id3h oe 0.06626f
+C210 t5n otr0 0.1197f
+C211 tra2_s0 otrs 0.82701f
+C212 tra0 VDD_PLL_SW 2.18141f
+C213 t3n_s0 t3a 1.08472f
+C214 VDD_PLL_SW itr0s 2.02299f
+C215 ipu UP0 0.27978f
+C216 itr2s trb2 0.77602f
+C217 UP3 t4 0.08557f
+C218 r1b refmb 0
+C219 t2 t5n 0.23137f
+C220 tra3 otrsb 2.64156f
+C221 AVP otrs 0.50923f
+C222 ge6_s0 UP2 0
+C223 ipu ge4 0.76845f
+C224 ota2 UP0 0.04057f
+C225 VDD_PLL_SW t5n_s0 0.00631f
+C226 UP3 otr4 0.04655f
+C227 tra3 UP2 0.04992f
+C228 pfd_mode t4 0.08444f
+C229 ot3 ot 3.08339f
+C230 atb_cdr_pbias id1s 0.72178f
+C231 trb1 tra1 0.46439f
+C232 ot6 UP2 0.08623f
+C233 ref_sel g2b 0.04814f
+C234 t2n_s0 t3 0.25902f
+C235 ot7 g0 0.16765f
+C236 ge6_s0 oe 0.1036f
+C237 iu0s UP0 0.45864f
+C238 AVP itr1s 0.22195f
+C239 otr4 pfd_mode 0.0466f
+C240 ge6 cdr_en 0.07247f
+C241 IBIAS UP0 0.06257f
+C242 tra3 oe 0.03387f
+C243 up2b enb 0.20577f
+C244 fupb DN0 0.05167f
+C245 t6 otrs 0.04841f
+C246 ot6 oe 0.71033f
+C247 cdr_en itr3s 0.07984f
+C248 otr1 AVP 0.33145f
+C249 refm IBIAS 0.11674f
+C250 WCK_IN ge6 0.03849f
+C251 t5n_s0 t5 0.10252f
+C252 trb4 ref_sel 0.05033f
+C253 itr1h itr3s 0
+C254 g2 ref_sel 0.0414f
+C255 WCK_IN itr3s 0.05121f
+C256 atb_cdr_pbias id3s 0.62819f
+C257 ref_sel FUP 0.03174f
+C258 cdr_en g0b 0
+C259 REF_PLL enb 0.29715f
+C260 r1b_s1 HOLD_PLL 0.00224f
+C261 otr1 t6 0.043f
+C262 oeb FDN 0.03174f
+C263 DN1 AVP 3.44788f
+C264 AVN ot 0.38934f
+C265 pfd_mode r1b 0.44487f
+C266 fdnb_s0 ref_sel 0
+C267 ipu t3 0.03078f
+C268 fupb_s0 AVN 0.00212f
+C269 WCK_IN g0b 0.00684f
+C270 oeb ot5 0.04482f
+C271 t1_s0 t3a 0
+C272 AVN otr0 0.14717f
+C273 UP1 HOLD_PLL 0.07218f
+C274 iu3s enb 0.1465f
+C275 g2b t4 0.64513f
+C276 otr2 tra3 0.04497f
+C277 DN3 UP0 0.03623f
+C278 AVN t2 0.00196f
+C279 DN1 t6 0.08656f
+C280 otr2 ot6 0.11485f
+C281 ge5 ot 0.74967f
+C282 atb_cdr_pbias fupl 0.23263f
+C283 otrsb enb 0.55283f
+C284 t7 t5an 0
+C285 VDD_PLL_SW t2n 1.61264f
+C286 iu2s enb 0.25185f
+C287 cdr_en t5a 0.04016f
+C288 otr4 g2b 0.0415f
+C289 IBIAS t3 0.09692f
+C290 DN3 ge4 0.04213f
+C291 HOLD_PLL ina 0
+C292 UP2 enb 0.34374f
+C293 iu3h id3s 0.22636f
+C294 ipu ota2 0.03587f
+C295 VDD_PLL_SW g0 4.17704f
+C296 DN2 itr0s 0.06099f
+C297 g1 DN0 0.0322f
+C298 tra1 FDN 0.04027f
+C299 ge5 otr0 0.04073f
+C300 UP1 VCTRL 0.05074f
+C301 t7n ge4 0
+C302 UP1 t3a 0.07674f
+C303 enb oe 4.8399f
+C304 g2 t4 0.05281f
+C305 t4 FUP 0.04968f
+C306 AVP id1s 0.22587f
+C307 ipu IBIAS 0.44129f
+C308 trb4 otr4 1.28247f
+C309 itr4s otr0 0.06824f
+C310 g2 otr4 0.085f
+C311 otr4 FUP 0.0464f
+C312 IBIAS ota2 0.05397f
+C313 ref_sel otrs 0.07474f
+C314 dn3b UP0 0.03851f
+C315 g0 t5 0.08911f
+C316 t3n oe 0
+C317 VDD_PLL_SW t1 3.33744f
+C318 id3s up3b 0.18126f
+C319 atb_cdr_pbias ge6 0.07496f
+C320 VDD_PLL_SW trb1 2.25787f
+C321 iu0s IBIAS 0.16069f
+C322 otr3 g0 0.05005f
+C323 ifuh otr0 0.00113f
+C324 atb_cdr_pbias itr3s 1.43687f
+C325 fupb HOLD_PLL 0.06073f
+C326 AVP id3s 0.29172f
+C327 ref_sel itr1s 0.04652f
+C328 UP0 ge3 0.04677f
+C329 enb inah 0.2047f
+C330 t5an oe 0.39921f
+C331 DN3 t3 0.07025f
+C332 ot7 FDN 0.10766f
+C333 ge5 ot4 0.5615f
+C334 refm r0b 1.02839f
+C335 ref_sel ge4_s0 0
+C336 otr1 ref_sel 0.06445f
+C337 atb_cdr_pbias tra2 0.16628f
+C338 IB_PLL r1b_s1 0.10235f
+C339 id2s id3s 0.00318f
+C340 ota1 g0 0.03174f
+C341 t1 t5 0.10786f
+C342 t7n t3 0.27829f
+C343 t5n t5n_s0 0.816f
+C344 AVP t1_s1 0.00363f
+C345 otr2 enb 0.32614f
+C346 tra3 trb2_s0 0.18933f
+C347 atb_cdr_pbias itr0h 0.33251f
+C348 t7 oeb 0.08814f
+C349 DN3 ipu 0.2842f
+C350 oeb REF_PLL 0.10774f
+C351 otr3 t1 0.09691f
+C352 REF_PLL HOLD_PLL_s0 0
+C353 UP1 IB_PLL 0.06501f
+C354 cdr_en pfdb 0.32791f
+C355 DN1 ref_sel 0.00131f
+C356 otr3 trb1 0.13102f
+C357 DN3 ota2 0.04057f
+C358 AVP fupl 0.08183f
+C359 ipu t7n 0.27214f
+C360 up2b iu2h 0.03487f
+C361 t4 otrs 0.04934f
+C362 g2 t7n_s0 0.21604f
+C363 IB_PLL ina 0
+C364 r1b_s0 oe 0.10992f
+C365 otr4 otrs 9.37668f
+C366 DN3 IBIAS 0.04963f
+C367 DN2 g0 0.05479f
+C368 REF_IN rsb 0.22668f
+C369 atb_cdr_pbias id2h 0.67565f
+C370 REF_IN HOLD_PLL 2.34592f
+C371 oeb otrsb 0.78881f
+C372 AVN up0b 0.37517f
+C373 t3 ge3 0.61622f
+C374 t4 ge4_s0 0.09947f
+C375 otr1 t4 0.04934f
+C376 oeb UP2 0.03174f
+C377 cdr_en trb1_s0 0.00317f
+C378 g1 HOLD_PLL 0.07744f
+C379 UP1 ge7 0.06798f
+C380 r0b_s1 REF_IN 0.0296f
+C381 UP0 id3h 0.04137f
+C382 otr1 otr4 0.0464f
+C383 UP1 dn0b 0.08803f
+C384 VDD_PLL_SW FDN 1.34168f
+C385 AVN tra0 0.00743f
+C386 opd cdr_en 0.03174f
+C387 AVN itr0s 0.27908f
+C388 oeb oe 89.8679f
+C389 itr3s tra2_s0 0.11529f
+C390 DN2 t1 0.07937f
+C391 REF_IN VCTRL 0.03227f
+C392 REF_IN t3a 0.08215f
+C393 ge6 AVP 0.27173f
+C394 VDD_PLL_SW ot5 9.65518f
+C395 ipu ge3 9.64253f
+C396 DN0 ot 0.21187f
+C397 ifus REF_PLL 0.09744f
+C398 VDD_PLL_SW itr4h 12.0552f
+C399 ifds enb 0.33134f
+C400 tra2 tra2_s0 0.30626f
+C401 AVP itr3s 0.48409f
+C402 iu0s dn3b 0.16738f
+C403 DN2 trb1 0.13201f
+C404 DN1 t4 0.06673f
+C405 WCK_IN opd 0.0379f
+C406 dn3b IBIAS 0.0519f
+C407 oeb t6n 0.26285f
+C408 fupb IB_PLL 0.13202f
+C409 g1 VCTRL 0.05074f
+C410 g1 t3a 0.11221f
+C411 iu2h iu2s 1.73606f
+C412 ifdh enb 0.85629f
+C413 trb2_s0 enb 0.10105f
+C414 g0 t5n 0.16786f
+C415 AVP tra2 0.17132f
+C416 ibs cdr_en 0.11281f
+C417 IBIAS r0b 0.21555f
+C418 DN1 otr4 0.05872f
+C419 VDD_PLL_SW ot2 1.4106f
+C420 DN0 otr0 0.03473f
+C421 iu2h UP2 0.09905f
+C422 otrsb tra1 2.92097f
+C423 tra3 UP0 0.05503f
+C424 t5 FDN 0.11482f
+C425 ot6 UP0 0.06507f
+C426 itr2s otrs 0.11485f
+C427 DN0 t2 0.07702f
+C428 t6 ge6 0.22376f
+C429 AVP g0b 0.01731f
+C430 t7 ot7 6.48973f
+C431 UP2 tra1 0.05854f
+C432 IBIAS ge3 0.10841f
+C433 UP1 iu1s 0.39023f
+C434 ot7 REF_PLL 0.22716f
+C435 t5 ot5 3.87856f
+C436 ref_sel id3s 0.04191f
+C437 AVP itr0h 0.01197f
+C438 otr3 FDN 0.03665f
+C439 oeb inah 0.0793f
+C440 ifus otrsb 0.00108f
+C441 t3an_s0 t4 0.09706f
+C442 oeb_s0 pfd_mode 0
+C443 ge7_s0 ipu 0.26975f
+C444 t3n_s0 g2b 0.11384f
+C445 otr3 ot5 0.04556f
+C446 otr3 itr4h 0.07715f
+C447 r0b_s0 cdr_en 0.10591f
+C448 t1 t5n 0.27883f
+C449 otr2 oeb 0.03174f
+C450 otr1 itr2s 0.00874f
+C451 ota1 FDN 0.03174f
+C452 atb_cdr_pbias trb0_s0 0.00316f
+C453 ifuh itr0s 0.06603f
+C454 r1b_s1 pfd_mode 0.11455f
+C455 DN3 dn3b 0.42789f
+C456 AVP id2h 0.00652f
+C457 g2 t3n_s0 0.43042f
+C458 UP1 UP3 0.00653f
+C459 ipu ge1 0.09267f
+C460 IB_PLL REF_IN 0.7181f
+C461 ot7 UP2 0.126f
+C462 id2h id2s 1.29557f
+C463 g1 IB_PLL 0.07698f
+C464 up2b VDD_PLL_SW 1.71107f
+C465 DN3 ge3 0.04551f
+C466 AVN t2n 0.01521f
+C467 UP1 pfd_mode 0.05345f
+C468 ot7 oe 0.10786f
+C469 ot1 t4 0
+C470 UP3 ina 0.0147f
+C471 t6 t5a 0.13903f
+C472 tra0_s0 otr0 1.16251f
+C473 atb_cdr_pbias trb1_s0 0.09082f
+C474 DN2 FDN 0.04476f
+C475 fdnb cdr_en 0
+C476 otr2 tra1 0.08244f
+C477 AVN g0 0.05087f
+C478 t7n ge3 0.31849f
+C479 iu0s id3h 0.17591f
+C480 pfd_mode ina 0.0093f
+C481 UP0 enb 0.31403f
+C482 DN2 ot5 0.043f
+C483 ge6_s0 ipu 0.26975f
+C484 t7 VDD_PLL_SW 4.51938f
+C485 IBIAS id3h 0.05477f
+C486 atb_cdr_pbias opd 0.03174f
+C487 DN2 itr4h 0
+C488 VDD_PLL_SW REF_PLL 7.12056f
+C489 up2b fdnl 0
+C490 WCK_IN fdnb 0.08591f
+C491 ot6 ipu 10.4639f
+C492 REF_IN ge7 0.06798f
+C493 refm enb 0.26232f
+C494 t1_s0 g2b 0.16159f
+C495 HOLD_PLL ot 0.29597f
+C496 ge6 ref_sel 0.06798f
+C497 ge5 g0 0.04073f
+C498 g1 ge7 0.06798f
+C499 itr3s ref_sel 0.08017f
+C500 atb_cdr_pbias ibs 0.46606f
+C501 fdnl REF_PLL 0.06049f
+C502 HOLD_PLL otr0 0.05182f
+C503 t7 t5 0.05102f
+C504 AVN trb1 0.15957f
+C505 VDD_PLL_SW iu3s 2.48292f
+C506 REF_PLL t5 0.06462f
+C507 tra3 IBIAS 0.80603f
+C508 UP3 fupb 0.04868f
+C509 ot6 IBIAS 0.12653f
+C510 trb0_s0 up3b 0
+C511 HOLD_PLL t2 0.07702f
+C512 otr2 ot7 0.12505f
+C513 t5n FDN 0.06948f
+C514 VDD_PLL_SW otrsb 4.91913f
+C515 UP0 t5an 0.00159f
+C516 g2 t1_s0 0.09794f
+C517 VCTRL ot 0.11255f
+C518 t3a ot 0.14042f
+C519 VDD_PLL_SW iu2s 2.48412f
+C520 otr3 t7 0.1074f
+C521 otr3 REF_PLL 0.05129f
+C522 VDD_PLL_SW UP2 3.27745f
+C523 AVP trb0_s0 0.01876f
+C524 UP1 g2b 0.04164f
+C525 fupb pfd_mode 0.04992f
+C526 DN0 up0b 0.05626f
+C527 ge2_s0 oe 0.3447f
+C528 itr4h tra4_s0 0
+C529 itr3h otrs 0.00124f
+C530 DN3 id3h 0.05032f
+C531 VCTRL otr0 0.05074f
+C532 t3a otr0 0.07674f
+C533 otrsb trb3 1.58608f
+C534 DN3 dn2b 0.16319f
+C535 VDD_PLL_SW oe 9.08952f
+C536 ota1 REF_PLL 0.05129f
+C537 fdnl otrsb 0
+C538 ina g2b 3.01983f
+C539 t2 t3a 0.11559f
+C540 itr0s DN0 0.05167f
+C541 UP2 trb3 0.09279f
+C542 id0h cdr_en 0.01211f
+C543 UP1 trb4 0.04555f
+C544 VDD_PLL_SW t6n 2.42257f
+C545 UP1 up1b 0.64578f
+C546 UP1 g2 0
+C547 UP1 FUP 0.03174f
+C548 UP2 t5 0.07681f
+C549 HOLD_PLL ot4 0.07858f
+C550 ge6 t4 0
+C551 otr3 otrsb 0.38923f
+C552 trb3 oe 0.09258f
+C553 VDD_PLL_SW trb4_s0 0.01539f
+C554 DN0 t5n_s0 0
+C555 ref_sel t5a 0.06115f
+C556 up2b DN2 0.15993f
+C557 ot3 ot5 0.75753f
+C558 t3n t3 2.65824f
+C559 ipu enb 0
+C560 AVP trb1_s0 0.04282f
+C561 otr3 UP2 0.03623f
+C562 DN3 tra3 0.05357f
+C563 atb_cdr_pbias iu0h 0.61672f
+C564 ge6 otr4 0.03473f
+C565 t5 oe 0.30782f
+C566 g2 ina 0.00223f
+C567 DN3 ot6 0.09553f
+C568 ina FUP 0.01345f
+C569 ifus ifdh 0.03124f
+C570 UP1 fdnb_s0 0.07123f
+C571 UP3 REF_IN 0.04722f
+C572 WCK_IN cdr_en 0.32949f
+C573 AVP opd 0.02538f
+C574 VDD_PLL_SW inah 0.79215f
+C575 otr3 oe 0.15446f
+C576 dn3b id3h 0.09883f
+C577 atb_cdr_pbias fdnb 0.34915f
+C578 t7 DN2 0.08875f
+C579 t5an_s0 g2b 0.00432f
+C580 dn2b dn3b 3.23078f
+C581 t5an t3 0.18911f
+C582 DN2 REF_PLL 0.05129f
+C583 ota1 UP2 0.03174f
+C584 UP3 g1 0.03192f
+C585 ipu t3n 0
+C586 REF_IN pfd_mode 0.05621f
+C587 iu0s enb 0.25185f
+C588 IB_PLL ot 0.21666f
+C589 otr3 t6n 0
+C590 otr4 g0b 0
+C591 ge1 ge3 0.50223f
+C592 IBIAS enb 0.30694f
+C593 otr2 VDD_PLL_SW 2.74134f
+C594 oeb UP0 0.08665f
+C595 AVN FDN 0.13274f
+C596 ota1 oe 0.07822f
+C597 g1 pfd_mode 0.03174f
+C598 ipu t5an 0.27321f
+C599 refm_s0 cdr_en 0.08691f
+C600 AVN ot5 0.00607f
+C601 IB_PLL otr0 0.04886f
+C602 oeb refm 0.25011f
+C603 IB_PLL t2 0.07702f
+C604 tra0_s0 tra0 0.25537f
+C605 DN2 otrsb 0.15976f
+C606 tra0_s0 itr0s 0.10901f
+C607 fupb FUP 0.34447f
+C608 DN2 iu2s 0.11724f
+C609 t5a t4 0.03255f
+C610 otr2 t5 0.13579f
+C611 ge5 FDN 0.04073f
+C612 DN2 UP2 0.21203f
+C613 atb_cdr_pbias iu1h 0.6699f
+C614 t7 t5n 0
+C615 ge7 ot 1.23017f
+C616 IBIAS t5an 0.12984f
+C617 UP1 otrs 0.13568f
+C618 ge5 ot5 0.10609f
+C619 otr3 otr2 7.20292f
+C620 itr2s itr3s 3.30342f
+C621 rsb up0b 0
+C622 itr4s FDN 0.03545f
+C623 fupb fdnb_s0 0.19924f
+C624 DN2 oe 0.14832f
+C625 UP2 id0s 0.1376f
+C626 UP0 tra1 0.0989f
+C627 tra2 itr2s 0.69066f
+C628 WCK_IN t6n_s0 0.03366f
+C629 DN0 g0 10.1887f
+C630 itr4s itr4h 11.9413f
+C631 DN3 enb 0.61199f
+C632 otr0 ge7 0.06798f
+C633 UP1 itr1s 0.04652f
+C634 otr2 ota1 0.03174f
+C635 IB_PLL ot4 0.04225f
+C636 REF_IN g2b 0.03851f
+C637 UP1 ge4_s0 0.03117f
+C638 atb_cdr_pbias id0h 0.66021f
+C639 HOLD_PLL itr0s 0.05712f
+C640 UP1 otr1 0.03903f
+C641 oeb t3 0.02614f
+C642 AVP iu0h 0.00242f
+C643 ot3 t7 0.04398f
+C644 g1 g2b 0.31798f
+C645 VDD_PLL_SW ifds 5.05035f
+C646 atb_cdr_pbias cdr_en 11.6463f
+C647 ge7_s0 ot6 0
+C648 otrsb tra4_s0 0.21075f
+C649 UP2 t5n 0
+C650 otr1 ina 0
+C651 dn2b id3h 0
+C652 VDD_PLL_SW ifdh 5.12253f
+C653 fdnb AVP 0.09103f
+C654 REF_IN trb4 0.05751f
+C655 VDD_PLL_SW trb2_s0 0.0147f
+C656 DN0 t1 0.07854f
+C657 r1b_s0 IBIAS 0.00802f
+C658 up1b REF_IN 0.20935f
+C659 g2 REF_IN 0.07974f
+C660 atb_cdr_pbias itr1h 0.35565f
+C661 DN1 UP1 0.27688f
+C662 ref_sel trb1_s0 0.15691f
+C663 oeb ipu 0.33594f
+C664 DN0 trb1 0
+C665 atb_cdr_pbias WCK_IN 1.64007f
+C666 t5n oe 0.23137f
+C667 ot7 UP0 0.10661f
+C668 AVN up2b 0.46439f
+C669 g1 g2 6.87048f
+C670 dn3b enb 23.1479f
+C671 ifds fdnl 1.6934f
+C672 g1 FUP 0.07732f
+C673 opd ref_sel 0.03174f
+C674 dn1b REF_PLL 0.10182f
+C675 oeb ota2 0.15412f
+C676 t3an t3 0.2953f
+C677 t3a t5n_s0 0.10252f
+C678 DN1 ina 0.01871f
+C679 enb r0b 0.33385f
+C680 ifdh fdnl 0.55321f
+C681 atb_cdr_pbias id1h 0.67135f
+C682 AVN REF_PLL 0.30478f
+C683 ot3 UP2 0
+C684 oeb IBIAS 0.10032f
+C685 atb_cdr_pbias refm_s0 0.09969f
+C686 UP3 ot 0.23687f
+C687 otr3 trb2_s0 0.09292f
+C688 IBIAS HOLD_PLL_s0 0.34413f
+C689 ot3 oe 0.20763f
+C690 AVP iu1h 0.00406f
+C691 pfd_mode ot 0.30024f
+C692 UP3 otr0 0.03174f
+C693 ge6_s0 ot6 0.00115f
+C694 t7 ge5 0.09096f
+C695 ge5 REF_PLL 0.06028f
+C696 UP1 id1s 0
+C697 dn1b UP2 0.1278f
+C698 ot0 t4 0
+C699 AVN iu3s 0.25347f
+C700 UP3 t2 0.07702f
+C701 otr2 t5n 0.00696f
+C702 r0b_s0 ref_sel 0.05979f
+C703 AVN otrsb 1.51415f
+C704 pfd_mode otr0 0.03174f
+C705 AVN iu2s 0.20713f
+C706 itr4s REF_PLL 0.06975f
+C707 DN1 fupb 0.06099f
+C708 otrs trb3_s0 0.11734f
+C709 t5an ge3 0.32679f
+C710 pfd_mode t2 0.07702f
+C711 t1_s0 t1_s1 0.46497f
+C712 AVP id0h 0.00227f
+C713 AVN UP2 0.37113f
+C714 REF_PLL itr2h 0.09294f
+C715 IB_PLL itr0s 0.05396f
+C716 IBIAS tra1 0.08666f
+C717 REF_IN otrs 16.9134f
+C718 HOLD_PLL g0 0.04073f
+C719 trb0 otrs 0
+C720 VDD_PLL_SW UP0 61.3261f
+C721 AVP cdr_en 0.22187f
+C722 opd otr4 0.03174f
+C723 DN3 oeb 0.07773f
+C724 itr3s itr3h 6.33965f
+C725 AVN oe 0.29312f
+C726 g1 otrs 0.07712f
+C727 UP1 id3s 0.04191f
+C728 DN0 FDN 0.0399f
+C729 VDD_PLL_SW ge4 2.80415f
+C730 ifuh REF_PLL 0.12444f
+C731 ipu ot7 16.9685f
+C732 refm VDD_PLL_SW 3.30818f
+C733 t2n t3a 0.00249f
+C734 AVP itr1h 0.00524f
+C735 REF_IN itr1s 0.06974f
+C736 oeb t7n 0.23137f
+C737 ge5 UP2 0.03702f
+C738 WCK_IN AVP 0.61597f
+C739 ge3_s0 ot2 0
+C740 DN0 ot5 0.03851f
+C741 trb3 UP0 0.05738f
+C742 otr1 REF_IN 0.05311f
+C743 itr4s otrsb 0.43312f
+C744 dn0b up0b 0.07507f
+C745 VCTRL g0 0.05074f
+C746 ot7 ota2 0.05957f
+C747 id3h enb 3.31899f
+C748 dn2b enb 0.13351f
+C749 AVN trb4_s0 0.06223f
+C750 g0 t3a 0.10228f
+C751 r1b_s0 r0b 0.32005f
+C752 t6 cdr_en 0.08412f
+C753 otrsb itr2h 0
+C754 HOLD_PLL t1 0.07826f
+C755 UP0 t5 0.07681f
+C756 itr4s UP2 0.03642f
+C757 ge5 oe 0.62575f
+C758 fdnb ref_sel 0.04379f
+C759 otr1 g1 0.07696f
+C760 HOLD_PLL trb1 0.06926f
+C761 ot7 IBIAS 0.20953f
+C762 t5 ge4 0.0054f
+C763 DN3 iu2h 0.07404f
+C764 AVP id1h 0.00391f
+C765 otr3 UP0 0.03623f
+C766 AVN inah 0.00578f
+C767 WCK_IN t6 0.05426f
+C768 itr4s oe 3.86725f
+C769 VDD_PLL_SW t2n_s0 2.03707f
+C770 ifuh otrsb 0
+C771 AVP refm_s0 0
+C772 DN1 REF_IN 0.05296f
+C773 oeb dn3b 0.04566f
+C774 tra1_s0 otrs 0.73617f
+C775 g2b otr0 0.03851f
+C776 DN3 tra1 0.04907f
+C777 otr3 ge4 0.05005f
+C778 tra3 enb 0.27479f
+C779 t1 t3a 0.1415f
+C780 t2 g2b 0.51124f
+C781 oeb r0b 0.53782f
+C782 otr2 AVN 0.09882f
+C783 DN1 g1 10.0607f
+C784 ota1 UP0 0.03174f
+C785 g2 ot 0.2121f
+C786 ot FUP 0.24329f
+C787 itr4s trb4_s0 0.12228f
+C788 atb_cdr_pbias iu3h 0.69152f
+C789 VDD_PLL_SW t3 1.6254f
+C790 oeb ge3 0.1586f
+C791 fupb_s0 FUP 0.09841f
+C792 tra1_s0 itr1s 0.12279f
+C793 trb4 otr0 0.05033f
+C794 otr1 tra1_s0 0.692f
+C795 g2 otr0 0.07727f
+C796 otr0 FUP 16.9374f
+C797 ipu ge2_s0 0.00137f
+C798 AVP tra4 0.68084f
+C799 g2 t2 0.17826f
+C800 t1_s0 g0b 0.26223f
+C801 iu2h dn3b 0.09241f
+C802 otr2 ge5 0.04073f
+C803 t2 FUP 0.09285f
+C804 VDD_PLL_SW ipu 0.30665p
+C805 g1 t3an_s0 0.35957f
+C806 ge2 t4 0.00134f
+C807 IB_PLL g0 0.04073f
+C808 DN3 ot7 0.12789f
+C809 UP1 ge6 0.07247f
+C810 t3 t5 0.08947f
+C811 otr2 itr4s 0.05055f
+C812 t6 t6n_s0 0.2713f
+C813 VDD_PLL_SW ota2 1.86086f
+C814 UP1 itr3s 0.07598f
+C815 atb_cdr_pbias up3b 0.18327f
+C816 atb_cdr_pbias tra2_s0 0.09082f
+C817 otr2 itr2h 0.01469f
+C818 otr3 t3 0.0889f
+C819 id0h ref_sel 0.03202f
+C820 fupb fupl 3.31254f
+C821 DN2 ge4 0.0427f
+C822 atb_cdr_pbias AVP 1.15967f
+C823 VDD_PLL_SW iu0s 2.62017f
+C824 VDD_PLL_SW IBIAS 24.7771f
+C825 UP0 id0s 0
+C826 ipu t5 0.31014f
+C827 UP3 itr0s 0.04868f
+C828 t7 DN0 0.08875f
+C829 atb_cdr_pbias id2s 0.72644f
+C830 cdr_en ref_sel 0.39886f
+C831 g2 ot4 0.00221f
+C832 HOLD_PLL FDN 0
+C833 ot4 FUP 0.0514f
+C834 IB_PLL t1 0.07826f
+C835 otr3 ipu 0.43633f
+C836 HOLD_PLL ot5 0.03623f
+C837 AVN ifds 0.44716f
+C838 IB_PLL trb1 0.08288f
+C839 HOLD_PLL itr4h 0.03696f
+C840 REF_IN id3s 0.05739f
+C841 IBIAS trb3 0.06205f
+C842 itr0s pfd_mode 0.04868f
+C843 UP3 t5n_s0 0.00187f
+C844 WCK_IN ref_sel 0.25144f
+C845 g0 ge7 0.06798f
+C846 atb_cdr_pbias t6 0.04615f
+C847 otrs ot 0.24502f
+C848 otr3 ota2 0.04057f
+C849 AVN ifdh 0.00487f
+C850 oeb id3h 0.04854f
+C851 AVN trb2_s0 0.00327f
+C852 IBIAS t5 0.19616f
+C853 ota1 ipu 0.0425f
+C854 trb0_s0 itr3h 0
+C855 iu3h up3b 0.04133f
+C856 VCTRL FDN 0.05074f
+C857 pfd_mode t5n_s0 0.09134f
+C858 t3a FDN 0.07896f
+C859 nbd cdr_en 0.6341f
+C860 otr0 otrs 10.2583f
+C861 otr3 IBIAS 0.04714f
+C862 otrsb DN0 0.13179f
+C863 ota1 ota2 17.7968f
+C864 UP1 t5a 0.05875f
+C865 AVP iu3h 0.01584f
+C866 t2 otrs 0.07702f
+C867 ge3_s0 oe 0.58342f
+C868 g1 t1_s1 0.07913f
+C869 ge4_s0 ot 0.00115f
+C870 otr1 ot 0.23131f
+C871 UP2 DN0 0.03584f
+C872 DN2 t3 0.07033f
+C873 DN3 VDD_PLL_SW 3.61457f
+C874 fupl REF_IN 0.06225f
+C875 ota1 IBIAS 0.04513f
+C876 oeb tra3 0.04557f
+C877 ge1_s0 ot0 0
+C878 itr1s otr0 0.10419f
+C879 ot6 oeb 0.0446f
+C880 DN0 oe 0.18327f
+C881 iu2h id3h 0.12099f
+C882 dn2b iu2h 0.19626f
+C883 otr1 otr0 2.98793f
+C884 itr4s trb2_s0 0.0017f
+C885 cdr_en t4 0.08738f
+C886 VDD_PLL_SW t7n 2.70138f
+C887 ot3 UP0 0.00666f
+C888 otr1 t2 0.07702f
+C889 ipu DN2 0.28453f
+C890 DN1 ot 0.2356f
+C891 otr4 cdr_en 0.09139f
+C892 WCK_IN t4 0.0555f
+C893 ge7_s0 ot7 0.00115f
+C894 AVP up3b 0.19538f
+C895 AVP tra2_s0 0.00554f
+C896 oeb_s0 pfdb 0.83809f
+C897 DN2 ota2 0.04057f
+C898 ot4 otrs 0.06166f
+C899 DN3 t5 0.08931f
+C900 id2s up3b 0.0943f
+C901 DN1 otr0 0.04406f
+C902 WCK_IN otr4 0.0427f
+C903 DN3 otr3 0.06239f
+C904 DN1 t2 0.07724f
+C905 t5n t3 0.23137f
+C906 VDD_PLL_SW dn3b 2.13706f
+C907 AVP id2s 0.22188f
+C908 itr3s trb3_s0 0.06274f
+C909 tra3 tra1 0.78315f
+C910 IB_PLL FDN 1.86379f
+C911 ge6 REF_IN 0.03174f
+C912 UP3 g0 0.03194f
+C913 r1b_s0 enb 0.11027f
+C914 VDD_PLL_SW r0b 4.77774f
+C915 ge2_s0 ge3 0.26254f
+C916 REF_IN itr3s 0.05673f
+C917 otr1 ot4 0.04113f
+C918 itr0s FUP 0.05167f
+C919 IB_PLL ot5 0.03623f
+C920 DN3 ota1 0.03174f
+C921 AVN UP0 0.37057f
+C922 VDD_PLL_SW g1b 1.54334f
+C923 cdr_en r1b 0.98397f
+C924 atb_cdr_pbias ref_sel 0.32573f
+C925 tra0_s0 otrsb 0.24903f
+C926 IB_PLL itr4h 0.06568f
+C927 ge6 g1 0.07497f
+C928 VDD_PLL_SW ge3 4.25037f
+C929 t7 HOLD_PLL 0.08875f
+C930 pfd_mode g0 0.03188f
+C931 HOLD_PLL REF_PLL 0.00159f
+C932 ipu t5n 0.26177f
+C933 g2 t5n_s0 0.10145f
+C934 AVN refm 0.17375f
+C935 WCK_IN r1b 0.48704f
+C936 t3an_s0 t2 0.11173f
+C937 REF_IN g0b 0
+C938 t6n_s0 t4 0
+C939 UP3 t1 0.07854f
+C940 oeb enb 0.21154f
+C941 ge5 UP0 0.08208f
+C942 g1 g0b 3.59309f
+C943 UP3 trb1 0
+C944 HOLD_PLL_s0 enb 0
+C945 ge7 FDN 0.06798f
+C946 VCTRL REF_PLL 0.05129f
+C947 REF_PLL t3a 0.12125f
+C948 atb_cdr_pbias nbd 0.69992f
+C949 otr4 t6n_s0 0.17865f
+C950 t5 ge3 0.15898f
+C951 ge5 ge4 3.27849f
+C952 ot6 ot7 6.03541f
+C953 pfd_mode t1 0.07826f
+C954 WCK_IN itr2s 0
+C955 itr4s UP0 0.06898f
+C956 otr4 tra4 0.66576f
+C957 ot1 ot 0.69382f
+C958 DN3 DN2 16.9154f
+C959 HOLD_PLL otrsb 0.14337f
+C960 ot3 ipu 1.75457f
+C961 ge7_s0 VDD_PLL_SW 0.00572f
+C962 otr3 ge3 0.05483f
+C963 pfd_mode trb1 0
+C964 refm_s0 r1b 1.1745f
+C965 HOLD_PLL UP2 0.04722f
+C966 itr3s tra1_s0 0.10556f
+C967 fupb_s0 id3s 0.06438f
+C968 UP1 trb1_s0 0.00183f
+C969 itr4h trb2 0
+C970 DN3 id0s 0.15418f
+C971 rsb oe 0.32606f
+C972 t2n g2b 0.29358f
+C973 iu2h enb 0.82008f
+C974 atb_cdr_pbias t4 0.04934f
+C975 HOLD_PLL oe 0.14926f
+C976 UP1 opd 0.03174f
+C977 AVN t3 0.00603f
+C978 t2 ot1 0.43797f
+C979 ge2_s0 ge1 0
+C980 oeb t5an 0.32934f
+C981 g1 t5a 0.18245f
+C982 ot3 IBIAS 0.08063f
+C983 g0 g2b 0.30905f
+C984 tra1 enb 0.18697f
+C985 VDD_PLL_SW ge1 2.52572f
+C986 atb_cdr_pbias otr4 0.05838f
+C987 itr0s otrs 0.21926f
+C988 tra0 otrs 2.61905f
+C989 VCTRL UP2 0.05074f
+C990 UP2 t3a 0.07674f
+C991 r0b_s1 oe 0.10748f
+C992 VDD_PLL_SW id3h 2.7514f
+C993 VDD_PLL_SW dn2b 1.85901f
+C994 DN2 dn3b 0.05082f
+C995 AVN ipu 0.57561f
+C996 g2 t2n 0.99466f
+C997 ifus enb 0.31465f
+C998 t1_s1 t2 0.25902f
+C999 VCTRL oe 0.06264f
+C1000 t3a oe 0.11342f
+C1001 DN3 t5n 0.09334f
+C1002 itr0s itr1s 0.04862f
+C1003 AVP ref_sel 0.22208f
+C1004 AVN ota2 0.29752f
+C1005 g2 g0 0.42858f
+C1006 g0 FUP 0.04073f
+C1007 t7 IB_PLL 0.08875f
+C1008 fupl otr0 0
+C1009 dn3b id0s 0.17603f
+C1010 t3a t6n 0.30104f
+C1011 t1 g2b 2.42621f
+C1012 IB_PLL REF_PLL 1.76626f
+C1013 DN2 ge3 0.04551f
+C1014 ge6_s0 VDD_PLL_SW 0.00572f
+C1015 atb_cdr_pbias r1b 0.28218f
+C1016 VDD_PLL_SW tra3 2.99053f
+C1017 AVN iu0s 0.20713f
+C1018 oeb r1b_s0 0.10495f
+C1019 ot6 VDD_PLL_SW 19.1197f
+C1020 AVN IBIAS 0.32205f
+C1021 ge5 ipu 7.39948f
+C1022 UP3 FDN 0.03257f
+C1023 otr2 HOLD_PLL 42.3068f
+C1024 t6 ref_sel 0.08706f
+C1025 UP3 ot5 0.03878f
+C1026 DN1 itr0s 0.06099f
+C1027 g2 t1 0.28242f
+C1028 tra3 trb3 0.94298f
+C1029 pfd_mode FDN 0.03233f
+C1030 t1 FUP 0.0788f
+C1031 atb_cdr_pbias itr2s 0.86166f
+C1032 ge6 ot 0.29692f
+C1033 ge6_s0 t5 0
+C1034 trb1 FUP 0.07225f
+C1035 IB_PLL otrsb 0.13212f
+C1036 ge5 IBIAS 0.11934f
+C1037 pfd_mode ot5 0.03884f
+C1038 t7 ge7 0.23526f
+C1039 otr2 VCTRL 0.05105f
+C1040 otr2 t3a 0.08215f
+C1041 ot6 t5 0.00545f
+C1042 trb0_s0 trb0 0.28082f
+C1043 REF_PLL ge7 0.10708f
+C1044 IB_PLL UP2 0.04767f
+C1045 otr3 tra3 1.23279f
+C1046 ge6 otr0 0.09053f
+C1047 itr4s IBIAS 0.09174f
+C1048 t5n ge3 0.31543f
+C1049 DN3 dn1b 0.15738f
+C1050 otr3 ot6 0.10318f
+C1051 itr3s otr0 3.85221f
+C1052 AVP t4 0.05367f
+C1053 IB_PLL oe 0.15012f
+C1054 UP1 fdnb 0
+C1055 AVP otr4 0.79586f
+C1056 DN3 AVN 0.24004f
+C1057 DN0 UP0 0.67308f
+C1058 g0 otrs 0.0446f
+C1059 DN2 id3h 0.05282f
+C1060 dn2b DN2 0.38342f
+C1061 itr0h otr0 0.20053f
+C1062 DN0 ge4 0.04092f
+C1063 t6 t4 0.02741f
+C1064 REF_PLL refmb 0.6717f
+C1065 UP2 ge7 0.06798f
+C1066 iu1s REF_PLL 0.00917f
+C1067 ot3 ge3 0.06485f
+C1068 opd REF_IN 0.03174f
+C1069 VDD_PLL_SW enb 25.4625f
+C1070 otrsb trb2 1.85019f
+C1071 dn0b UP2 0.07969f
+C1072 t6 otr4 0.04912f
+C1073 id0s id3h 0.25164f
+C1074 up0b id3s 0.31044f
+C1075 DN3 ge5 0.04073f
+C1076 g2b FDN 0.03859f
+C1077 t5a ot 0.214f
+C1078 dn1b dn3b 1.77537f
+C1079 g0 ge4_s0 0
+C1080 ge7 oe 0.34407f
+C1081 g1 opd 0.03174f
+C1082 otr1 g0 0.04073f
+C1083 ge6_s0 DN2 0
+C1084 oeb_s0 cdr_en 0.51364f
+C1085 dn0b oe 0.08618f
+C1086 UP3 up2b 0.1193f
+C1087 t1 otrs 0.08408f
+C1088 DN3 itr4s 0.04813f
+C1089 DN2 tra3 0.05656f
+C1090 trb3 enb 0.2353f
+C1091 VDD_PLL_SW t3n 1.60644f
+C1092 UP1 iu1h 0.09943f
+C1093 itr0s id3s 0.01702f
+C1094 AVN dn3b 0.19619f
+C1095 trb1 otrs 0.22973f
+C1096 otr2 IB_PLL 15.1729f
+C1097 ot6 DN2 0.07055f
+C1098 fdnl enb 0.51838f
+C1099 itr2s tra2_s0 0.1191f
+C1100 trb4 FDN 0.05033f
+C1101 ge3_s0 t3 0.44209f
+C1102 t2 t5a 0.17603f
+C1103 g2 FDN 0.07727f
+C1104 FUP FDN 2.43598f
+C1105 UP3 t7 0.08875f
+C1106 AVP itr2s 0.21954f
+C1107 r1b_s1 cdr_en 0.41585f
+C1108 DN1 g0 28.3496f
+C1109 fdnb fupb 1.03042f
+C1110 UP3 REF_PLL 0.05129f
+C1111 VDD_PLL_SW t5an 1.65967f
+C1112 iu1s UP2 0.13661f
+C1113 otr3 enb 0.37948f
+C1114 AVN ge3 0
+C1115 g2 ot5 0.043f
+C1116 ot5 FUP 0.043f
+C1117 otr1 t1 0.07826f
+C1118 trb1 itr1s 0.61841f
+C1119 oeb ot7 0.08181f
+C1120 itr4h FUP 0.0532f
+C1121 DN0 t3 0.07025f
+C1122 refmb oe 0.22375f
+C1123 fdnb_s0 FDN 0.06185f
+C1124 r0b_s0 REF_IN 0.09774f
+C1125 otr1 trb1 1.07879f
+C1126 UP1 id0h 0.11231f
+C1127 t7 pfd_mode 0.08875f
+C1128 WCK_IN r1b_s1 0.08729f
+C1129 REF_PLL pfd_mode 0.06028f
+C1130 t3an_s0 t2n 0.00931f
+C1131 fupl itr0s 0.22669f
+C1132 UP1 cdr_en 20.8793f
+C1133 otr2 ge7 0.06798f
+C1134 t3an_s0 g0 0.26051f
+C1135 UP3 iu3s 0.50969f
+C1136 ge5 ge3 0.83617f
+C1137 t5an t5 0.24118f
+C1138 ipu DN0 0.27548f
+C1139 DN1 t1 0.07873f
+C1140 t6 t7n_s0 0.08941f
+C1141 UP3 otrsb 0.12139f
+C1142 DN1 trb1 0.07496f
+C1143 atb_cdr_pbias itr3h 1.49908f
+C1144 UP3 iu2s 0.13614f
+C1145 WCK_IN UP1 0.0527f
+C1146 otr2 trb2 1.0439f
+C1147 cdr_en ina 0.24822f
+C1148 ota2 DN0 0.04057f
+C1149 UP3 UP2 9.32322f
+C1150 ref_sel t4 0.08986f
+C1151 VDD_PLL_SW r1b_s0 0.10547f
+C1152 otrsb pfd_mode 0.12133f
+C1153 UP0 rsb 0
+C1154 iu0s DN0 0.03939f
+C1155 UP2 pfd_mode 20.801f
+C1156 UP3 oe 0.13741f
+C1157 otr4 ref_sel 0.0464f
+C1158 IBIAS DN0 0.05314f
+C1159 UP1 id1h 0.00239f
+C1160 fdnb REF_IN 0.08541f
+C1161 DN2 enb 0.45078f
+C1162 HOLD_PLL ge4 0.04073f
+C1163 trb0_s0 otr0 1.17454f
+C1164 refm HOLD_PLL 0.01236f
+C1165 pfd_mode oe 0.40887f
+C1166 otrs FDN 0.07474f
+C1167 id0s enb 0.58022f
+C1168 AVN id3h 0.08533f
+C1169 REF_PLL g2b 0.0593f
+C1170 AVN dn2b 0.15838f
+C1171 otrs ot5 0.03623f
+C1172 oeb VDD_PLL_SW 4.14193f
+C1173 itr4h otrs 0.04853f
+C1174 VCTRL UP0 0.04507f
+C1175 UP0 t3a 0.07674f
+C1176 ot0 ot 0.91733f
+C1177 VDD_PLL_SW HOLD_PLL_s0 0.03742f
+C1178 fupb cdr_en 0.04705f
+C1179 itr1s FDN 0.04951f
+C1180 ref_sel r1b 1.48807f
+C1181 otr1 FDN 15.2835f
+C1182 oeb trb3 0.09697f
+C1183 itr0s itr0h 1.25343f
+C1184 t1_s1 g0 0.10547f
+C1185 opd ot 15.2347f
+C1186 trb4 REF_PLL 0.06988f
+C1187 WCK_IN fupb 0.05172f
+C1188 t7 g2 0.08888f
+C1189 ge4_s0 ot5 0
+C1190 t7 FUP 0.08875f
+C1191 up1b REF_PLL 0.07112f
+C1192 g2 REF_PLL 0.12654f
+C1193 otr1 ot5 0.03623f
+C1194 AVN tra3 0.06835f
+C1195 atb_cdr_pbias r1b_s1 0.11766f
+C1196 otr1 itr4h 0.04131f
+C1197 t2 ot0 0
+C1198 trb1_s0 otr0 0.08628f
+C1199 oeb t5 0.0885f
+C1200 ot6 AVN 0.00607f
+C1201 DN3 DN0 0.04126f
+C1202 tra4_s0 enb 0
+C1203 VDD_PLL_SW iu2h 2.49289f
+C1204 otr4 t4 0.05233f
+C1205 VDD_PLL_SW t3an 2.40413f
+C1206 opd otr0 0.03174f
+C1207 otr3 oeb 0.09407f
+C1208 UP2 g2b 0.04245f
+C1209 HOLD_PLL t3 0.07025f
+C1210 trb2 trb2_s0 0.43347f
+C1211 DN1 FDN 0.04862f
+C1212 VDD_PLL_SW tra1 2.36584f
+C1213 t2n_s0 t3a 0.00212f
+C1214 ge6_s0 ge5 0
+C1215 DN1 ot5 0.043f
+C1216 atb_cdr_pbias UP1 0.32091f
+C1217 t1_s1 t1 0.65277f
+C1218 g2b oe 0.04807f
+C1219 trb4 otrsb 3.20739f
+C1220 ge5 ot6 0
+C1221 ota1 oeb 0.1903f
+C1222 ifus VDD_PLL_SW 5.05253f
+C1223 otrsb FUP 0.13754f
+C1224 ipu HOLD_PLL 0.4885f
+C1225 UP2 trb4 0.04555f
+C1226 up1b UP2 0.11945f
+C1227 tra3 itr4s 0.21717f
+C1228 t5n_s0 t5a 1.30737f
+C1229 t3a t3 26.992f
+C1230 REF_IN cdr_en 0.31686f
+C1231 g2 UP2 0.01011f
+C1232 atb_cdr_pbias ina 0.58464f
+C1233 UP2 FUP 0.03174f
+C1234 HOLD_PLL ota2 0.04057f
+C1235 dn3b DN0 0.0415f
+C1236 ge3_s0 ge3 0.56842f
+C1237 trb4 oe 0.06452f
+C1238 g1 cdr_en 0.04254f
+C1239 iu0s rsb 0
+C1240 g2 oe 0.15442f
+C1241 IB_PLL ge4 0.04073f
+C1242 WCK_IN REF_IN 3.96078f
+C1243 oe FUP 0.14293f
+C1244 IBIAS rsb 0.13839f
+C1245 otr3 tra1 0.00433f
+C1246 UP2 fdnb_s0 0.06833f
+C1247 refm IB_PLL 0.15318f
+C1248 ifus fdnl 0.30681f
+C1249 ipu VCTRL 0.89956f
+C1250 ge6 g0 0.08692f
+C1251 VDD_PLL_SW ot7 35.3297f
+C1252 HOLD_PLL IBIAS 3.33102f
+C1253 ipu t3a 0.13037f
+C1254 g2b inah 0.24048f
+C1255 dn1b enb 0.13919f
+C1256 DN0 ge3 0.04551f
+C1257 WCK_IN g1 0.09129f
+C1258 g2 t6n 0.49769f
+C1259 trb4 trb4_s0 0.72622f
+C1260 t7 otrs 0.08875f
+C1261 oeb DN2 0.03174f
+C1262 VCTRL ota2 1.07724f
+C1263 REF_PLL otrs 0.15387f
+C1264 r0b_s1 IBIAS 0.07663f
+C1265 t7n_s0 t4 0
+C1266 otr2 g2b 0.03851f
+C1267 AVN enb 0.42324f
+C1268 AVP t1_s0 0.00128f
+C1269 g0 g0b 4.01015f
+C1270 UP0 ge7 0.07247f
+C1271 VCTRL IBIAS 0.05397f
+C1272 IBIAS t3a 0.10341f
+C1273 atb_cdr_pbias fupb 0.26421f
+C1274 dn0b UP0 0.16067f
+C1275 REF_PLL itr1s 0.00114f
+C1276 ge2 ot 0.15001f
+C1277 otr1 t7 0.08875f
+C1278 otr1 REF_PLL 0.01274f
+C1279 AVN t3n 0.02141f
+C1280 otr3 ot7 0.12594f
+C1281 DN1 up2b 0
+C1282 otr2 trb4 0.05033f
+C1283 itr3s trb1 0.23349f
+C1284 itr1h tra1_s0 0
+C1285 DN2 iu2h 0.03266f
+C1286 otr2 g2 0.07725f
+C1287 tra3_s0 tra3 0.72843f
+C1288 otr2 FUP 0
+C1289 REF_IN t6n_s0 0.18001f
+C1290 trb0_s0 itr0s 0.10901f
+C1291 IB_PLL t3 0.07025f
+C1292 otrsb otrs 35.5234f
+C1293 tra0 trb0_s0 0.24337f
+C1294 DN2 tra1 0.05206f
+C1295 DN3 HOLD_PLL 0.05172f
+C1296 UP2 otrs 0.07577f
+C1297 g0b t1 0.23494f
+C1298 ge2 t2 0.38425f
+C1299 UP1 AVP 0.25973f
+C1300 itr4s enb 0.94709f
+C1301 oeb t5n 0.23137f
+C1302 ota1 ot7 12.9984f
+C1303 g1 t6n_s0 0.09162f
+C1304 DN1 t7 0.08875f
+C1305 g0 t5a 0.19845f
+C1306 itr2h enb 0.97608f
+C1307 DN1 REF_PLL 0.06733f
+C1308 VDD_PLL_SW ge2_s0 0.00346f
+C1309 otrsb itr1s 0.18635f
+C1310 otrs oe 0.12513f
+C1311 ipu IB_PLL 0.33308f
+C1312 ge5_s0 ot 0.00179f
+C1313 AVP ina 0.00501f
+C1314 otr1 otrsb 0.36789f
+C1315 refm refmb 2.8937f
+C1316 fupl FDN 0.14765f
+C1317 UP2 itr1s 0.04652f
+C1318 DN0 id3h 0.0435f
+C1319 UP2 ge4_s0 0.04138f
+C1320 otr1 UP2 0.04604f
+C1321 ifuh enb 0.85553f
+C1322 UP1 t6 0.08433f
+C1323 IB_PLL ota2 0.04057f
+C1324 DN3 VCTRL 0.05074f
+C1325 DN3 t3a 0.07674f
+C1326 t6n otrs 0.04226f
+C1327 atb_cdr_pbias REF_IN 0.25889f
+C1328 itr1s oe 0.05217f
+C1329 trb4_s0 otrs 0
+C1330 ot3 oeb 0.04606f
+C1331 VDD_PLL_SW trb3 2.86883f
+C1332 ge4_s0 oe 0.10094f
+C1333 t1 t5a 0.214f
+C1334 id1s up2b 0.07859f
+C1335 otr1 oe 0.09589f
+C1336 t7n t3a 1.26824f
+C1337 IB_PLL IBIAS 6.3102f
+C1338 atb_cdr_pbias g1 0.07734f
+C1339 DN1 otrsb 0.25412f
+C1340 dn3b HOLD_PLL 0.05523f
+C1341 DN2 ot7 0.10729f
+C1342 VDD_PLL_SW fdnl 2.21065f
+C1343 rsb r0b 1.02375f
+C1344 VDD_PLL_SW t5 3.64578f
+C1345 ge6_s0 DN0 0.03057f
+C1346 DN1 UP2 0.05077f
+C1347 HOLD_PLL r0b 0.06766f
+C1348 tra3 DN0 0.04951f
+C1349 AVP t5an_s0 0
+C1350 ipu ge7 18.2302f
+C1351 ot6 DN0 0.07604f
+C1352 otr3 VDD_PLL_SW 3.71574f
+C1353 HOLD_PLL ge3 0.04551f
+C1354 UP3 ge4 0.04322f
+C1355 cdr_en ot 0.21259f
+C1356 DN1 oe 0.13424f
+C1357 r0b_s1 r0b 0.763f
+C1358 ota2 ge7 0.00166f
+C1359 fupb AVP 0.41664f
+C1360 otr2 otrs 0.38367f
+C1361 pfd_mode UP0 0.00154f
+C1362 ge6 FDN 0.03414f
+C1363 tra3_s0 enb 0
+C1364 up2b id3s 0.18073f
+C1365 t3n_s0 t4 0.25902f
+C1366 itr3s FDN 0.04723f
+C1367 pfd_mode ge4 0.00622f
+C1368 ge1_s0 t4 0
+C1369 ge6 ot5 0.34523f
+C1370 ge5_s0 ot4 0
+C1371 ota1 VDD_PLL_SW 1.8115f
+C1372 otr3 trb3 0.69181f
+C1373 WCK_IN ot 0.38086f
+C1374 refm pfd_mode 0.40466f
+C1375 cdr_en otr0 0.07247f
+C1376 AVN oeb 0.29413f
+C1377 IBIAS ge7 0.09772f
+C1378 atb_cdr_pbias tra1_s0 0.09082f
+C1379 dn0b iu0s 0.1676f
+C1380 itr3s itr4h 0
+C1381 otr2 itr1s 0
+C1382 cdr_en t2 0.07702f
+C1383 dn0b IBIAS 0.0519f
+C1384 otr3 t5 0.06587f
+C1385 t3a ge3 0.16078f
+C1386 otr1 otr2 0.80948f
+C1387 itr1h otr0 0.04881f
+C1388 r1b_s1 ref_sel 1.28417f
+C1389 REF_PLL id3s 0.06146f
+C1390 WCK_IN otr0 0.04722f
+C1391 DN3 IB_PLL 0.05216f
+C1392 WCK_IN t2 0.08933f
+C1393 id1s UP2 0.16059f
+C1394 ge5 oeb 0.07924f
+C1395 iu0h up0b 0.02669f
+C1396 AVN iu2h 0.00133f
+C1397 UP3 t3 0.07025f
+C1398 otr3 ota1 0.03174f
+C1399 AVP trb3_s0 0.00561f
+C1400 AVN t3an 0.01828f
+C1401 VDD_PLL_SW DN2 2.5785f
+C1402 UP1 ref_sel 0.04377f
+C1403 oeb itr4s 0.09509f
+C1404 trb0 up3b 0.00103f
+C1405 IBIAS refmb 0.11518f
+C1406 iu3s id3s 0.26839f
+C1407 AVN tra1 0.00743f
+C1408 AVP REF_IN 0.44932f
+C1409 AVP trb0 0.05351f
+C1410 pfd_mode t3 0.07025f
+C1411 iu2s id3s 0.29616f
+C1412 fupl REF_PLL 0.06455f
+C1413 UP0 g2b 0.04164f
+C1414 VDD_PLL_SW id0s 2.54197f
+C1415 t6n_s0 ot 0.11612f
+C1416 DN0 enb 0.28133f
+C1417 ref_sel ina 0.01077f
+C1418 UP2 id3s 0.04191f
+C1419 HOLD_PLL id3h 0.05686f
+C1420 g1 AVP 0.03981f
+C1421 DN3 ge7 0.06798f
+C1422 UP3 ipu 0.29773f
+C1423 ifds otrs 0.0655f
+C1424 WCK_IN ot4 0.09571f
+C1425 IB_PLL dn3b 0.05568f
+C1426 opd g0 0.03174f
+C1427 AVN ifus 0.43062f
+C1428 DN3 dn0b 0.06836f
+C1429 ot1 oe 0.18663f
+C1430 DN2 t5 0.08931f
+C1431 IB_PLL r0b 0.17572f
+C1432 ifdh otrs 0
+C1433 id3s oe 0.88719f
+C1434 UP3 ota2 0.04057f
+C1435 trb2_s0 otrs 0.09292f
+C1436 t6 REF_IN 0.04614f
+C1437 ipu pfd_mode 0.37601f
+C1438 itr2s itr3h 0
+C1439 trb4 UP0 0.04569f
+C1440 t2 t6n_s0 0.09713f
+C1441 t1 ot0 0.42384f
+C1442 g2 UP0 0
+C1443 otr3 DN2 0.07952f
+C1444 IB_PLL ge3 0.04551f
+C1445 UP0 FUP 0.03623f
+C1446 UP3 iu0s 0.00249f
+C1447 t6 g1 0.09009f
+C1448 ota2 pfd_mode 0.04057f
+C1449 VDD_PLL_SW t5n 2.39388f
+C1450 tra3 HOLD_PLL 0.045f
+C1451 g2 ge4 0.05277f
+C1452 ge4 FUP 0.04073f
+C1453 trb1 trb1_s0 0.38259f
+C1454 AVN ot7 3.38457f
+C1455 ot6 HOLD_PLL 0.08441f
+C1456 atb_cdr_pbias ot 0.21701f
+C1457 VDD_PLL_SW tra4_s0 0.0121f
+C1458 fdnb_s0 UP0 0.00541f
+C1459 t2n_s0 g2b 0.11971f
+C1460 iu0s pfd_mode 0.00311f
+C1461 ge6 t7 0.10323f
+C1462 ota1 DN2 0.03174f
+C1463 UP1 t4 0.12825f
+C1464 AVP tra1_s0 0.00554f
+C1465 ge6 REF_PLL 0.0672f
+C1466 DN3 iu1s 0.11392f
+C1467 IBIAS pfd_mode 0.08581f
+C1468 fupb ref_sel 0.04868f
+C1469 REF_PLL itr3s 0.06483f
+C1470 dn0b dn3b 1.22369f
+C1471 UP1 otr4 0.05141f
+C1472 atb_cdr_pbias otr0 0.12537f
+C1473 g2b t3 0.19468f
+C1474 t5n t5 3.07953f
+C1475 atb_cdr_pbias t2 0.07702f
+C1476 r1b_s1 r1b 0.83933f
+C1477 ot3 VDD_PLL_SW 2.40114f
+C1478 g2 t2n_s0 0.42024f
+C1479 REF_PLL g0b 0.06204f
+C1480 ifuh ifus 2.87119f
+C1481 otr3 t5n 0.00266f
+C1482 tra0_s0 enb 0
+C1483 cdr_en up0b 0.0019f
+C1484 ipu g2b 1.52225f
+C1485 otrsb itr3s 0.44388f
+C1486 DN3 UP3 1.13988f
+C1487 g2 t3 0.07034f
+C1488 ge6 UP2 0.07247f
+C1489 t3 FUP 0.10165f
+C1490 iu1s dn3b 0.16039f
+C1491 itr0s cdr_en 0.04868f
+C1492 UP2 itr3s 0.09081f
+C1493 dn1b VDD_PLL_SW 1.90295f
+C1494 ot3 t5 0.03404f
+C1495 tra2 otrsb 1.06448f
+C1496 DN2 id0s 0.21984f
+C1497 t5an_s0 t4 0.40439f
+C1498 IB_PLL id3h 0.0573f
+C1499 atb_cdr_pbias ot4 0.01011f
+C1500 DN3 pfd_mode 0.03174f
+C1501 UP0 otrs 0.08244f
+C1502 ge6 oe 0.34673f
+C1503 ge7_s0 ge7 0.51457f
+C1504 itr0s itr1h 0.39954f
+C1505 t7 t5a 0
+C1506 itr3s oe 1.90491f
+C1507 rsb enb 0.20457f
+C1508 WCK_IN itr0s 0.05712f
+C1509 cdr_en t5n_s0 0.12714f
+C1510 REF_IN ref_sel 0.21051f
+C1511 IBIAS g2b 0.05503f
+C1512 otrs ge4 0.04073f
+C1513 g2 ipu 0.41482f
+C1514 AVN VDD_PLL_SW 72.8185f
+C1515 ipu FUP 0.37979f
+C1516 otrsb itr0h 0.30915f
+C1517 HOLD_PLL enb 0.25365f
+C1518 oeb DN0 0.08271f
+C1519 UP0 itr1s 0.04652f
+C1520 g1 ref_sel 0.03188f
+C1521 g2 ota2 0.04057f
+C1522 ota2 FUP 0.04057f
+C1523 r0b_s1 enb 0.10783f
+C1524 UP0 ge4_s0 0
+C1525 otr1 UP0 0.04008f
+C1526 IB_PLL tra3 0.04424f
+C1527 AVN trb3 0.5229f
+C1528 UP3 dn3b 0.1388f
+C1529 opd FDN 0.03174f
+C1530 DN2 t5n 0.08851f
+C1531 AVP ot 0.43912f
+C1532 ot6 IB_PLL 0.14613f
+C1533 trb4 IBIAS 0.5642f
+C1534 ge4_s0 ge4 0.20598f
+C1535 AVN fdnl 0.03483f
+C1536 otr1 ge4 0.04073f
+C1537 ge5 VDD_PLL_SW 6.42107f
+C1538 fupb_s0 AVP 0.00379f
+C1539 otr0 up3b 0
+C1540 IBIAS FUP 0.05089f
+C1541 dn3b pfd_mode 0.03851f
+C1542 id2h iu2s 0.12438f
+C1543 VDD_PLL_SW itr4s 16.4272f
+C1544 AVP otr0 0.41189f
+C1545 UP3 ge3 0.04551f
+C1546 otr3 AVN 0.11315f
+C1547 UP2 t5a 0.04009f
+C1548 id2h UP2 0.00221f
+C1549 pfd_mode r0b 2.46955f
+C1550 IBIAS fdnb_s0 0
+C1551 VDD_PLL_SW itr2h 3.04347f
+C1552 otr2 ge6 0.03188f
+C1553 t6 ot 0.36846f
+C1554 t3n t3a 1.31284f
+C1555 otr2 itr3s 2.80201f
+C1556 DN1 ge4 0.05221f
+C1557 pfd_mode ge3 0.04551f
+C1558 DN0 tra1 0.04274f
+C1559 t5a oe 0.17603f
+C1560 t3 otrs 0.07025f
+C1561 DN3 g2b 0.04032f
+C1562 ge5 t5 0.30702f
+C1563 itr4s trb3 0.27392f
+C1564 ota1 AVN 0.03699f
+C1565 REF_IN t4 0.04934f
+C1566 otr2 tra2 1.11061f
+C1567 ifuh VDD_PLL_SW 5.11559f
+C1568 ot6 ge7 0.7054f
+C1569 t6 otr0 0.04412f
+C1570 otr3 ge5 0.05005f
+C1571 t3a t5an 0.15979f
+C1572 REF_IN otr4 37.1173f
+C1573 fupl ifds 0
+C1574 t6 t2 0.08802f
+C1575 g1 t4 0.10429f
+C1576 iu1s id3h 0.17591f
+C1577 tra3 trb2 0.7103f
+C1578 atb_cdr_pbias up0b 0.04401f
+C1579 ipu otrs 0.45055f
+C1580 DN3 trb4 0.05966f
+C1581 ifdh fupl 0.11522f
+C1582 otr3 itr4s 4.59009f
+C1583 otr1 t3 0.07025f
+C1584 g1 otr4 0.08746f
+C1585 DN3 up1b 0.14552f
+C1586 DN3 g2 27.6496f
+C1587 DN3 FUP 1.03344f
+C1588 cdr_en g0 1.04536f
+C1589 dn1b DN2 0.14922f
+C1590 otr3 itr2h 0
+C1591 ifuh fdnl 0.32267f
+C1592 ota2 otrs 0.04191f
+C1593 atb_cdr_pbias itr0s 0.39668f
+C1594 g2 t7n 0.31523f
+C1595 ot7 DN0 0.11573f
+C1596 WCK_IN g0 0.05837f
+C1597 AVN DN2 0.33318f
+C1598 IB_PLL enb 0.75636f
+C1599 DN3 fdnb_s0 0.0072f
+C1600 ipu ge4_s0 0.00251f
+C1601 IBIAS otrs 0.11062f
+C1602 otr1 ipu 0.27652f
+C1603 REF_IN r1b 0.16003f
+C1604 DN1 t3 0.07025f
+C1605 VDD_PLL_SW tra3_s0 0.0121f
+C1606 otr1 ota2 0.04057f
+C1607 UP3 id3h 0.04323f
+C1608 g1b g2b 0.146f
+C1609 t7 ot0 0.14163f
+C1610 UP3 dn2b 0.12879f
+C1611 oeb rsb 0.28651f
+C1612 AVN id0s 0.22379f
+C1613 cdr_en t1 0.07826f
+C1614 trb0_s0 otrsb 1.27903f
+C1615 fdnb FDN 0.22086f
+C1616 oeb HOLD_PLL 0.08346f
+C1617 IBIAS itr1s 0.05991f
+C1618 up1b dn3b 0.17235f
+C1619 ge5 DN2 0.04073f
+C1620 HOLD_PLL HOLD_PLL_s0 0.64343f
+C1621 pfd_mode id3h 0.04101f
+C1622 UP0 id3s 0.03623f
+C1623 IBIAS ge4_s0 0
+C1624 otr1 IBIAS 0.0951f
+C1625 DN1 ipu 0.38347f
+C1626 WCK_IN t1 0.09858f
+C1627 opd REF_PLL 0.05129f
+C1628 oeb r0b_s1 0.16144f
+C1629 itr3s trb2_s0 0.11529f
+C1630 t3an_s0 t3 0.12042f
+C1631 WCK_IN trb1 0.00888f
+C1632 UP3 ge6_s0 0.038f
+C1633 DN1 ota2 0.04057f
+C1634 DN2 itr4s 0.05072f
+C1635 ref_sel ot 0.21238f
+C1636 g2 g1b 3.22702f
+C1637 pfdb oe 0.214f
+C1638 g2 ge3 1.13955f
+C1639 tra2 trb2_s0 0.19281f
+C1640 UP3 tra3 0.04992f
+C1641 ge3 FUP 0.04551f
+C1642 dn0b enb 0.13117f
+C1643 oeb t3a 0.11368f
+C1644 ot2 ge2 0.47088f
+C1645 oeb VCTRL 0.04143f
+C1646 UP3 ot6 0.06988f
+C1647 otr3 tra3_s0 0.7936f
+C1648 trb2 enb 0.19454f
+C1649 ge6_s0 pfd_mode 0.0055f
+C1650 AVN tra4_s0 0.00117f
+C1651 VDD_PLL_SW ge3_s0 0.00346f
+C1652 ref_sel otr0 0.03174f
+C1653 otrsb trb1_s0 0.87537f
+C1654 tra3 pfd_mode 0.04992f
+C1655 DN3 otrs 0.09339f
+C1656 ot6 pfd_mode 0.06946f
+C1657 ref_sel t2 0.07702f
+C1658 UP2 trb1_s0 0.00643f
+C1659 HOLD_PLL tra1 0.05418f
+C1660 ge5_s0 ot5 0
+C1661 AVP up0b 0.20939f
+C1662 ot0 oe 0.09836f
+C1663 VDD_PLL_SW DN0 1.89421f
+C1664 opd UP2 0.03174f
+C1665 tra0 up3b 0
+C1666 DN3 itr1s 0.05584f
+C1667 refmb enb 0.21799f
+C1668 ot3 AVN 0.00811f
+C1669 iu1s enb 0.25185f
+C1670 t3an t3a 3.86807f
+C1671 t1 t6n_s0 0.11612f
+C1672 r1b_s0 IB_PLL 0.00712f
+C1673 ot1 t3 0
+C1674 DN3 otr1 0.09918f
+C1675 AVP itr0s 0.34769f
+C1676 AVP tra0 0.20063f
+C1677 opd oe 0.38785f
+C1678 DN0 trb3 0.0058f
+C1679 atb_cdr_pbias g0 0.0417f
+C1680 itr4s tra4_s0 0.12228f
+C1681 t4 ot 0.349f
+C1682 DN0 t5 0.07681f
+C1683 ipu ot1 0.70059f
+C1684 cdr_en FDN 0.07395f
+C1685 t1_s1 t3 0
+C1686 fdnb up2b 0
+C1687 ot3 ge5 0.32731f
+C1688 ot7 HOLD_PLL 0.10921f
+C1689 ibs oe 0.15897f
+C1690 DN3 DN1 0.06242f
+C1691 otr4 ot 0.24397f
+C1692 AVN dn1b 0.15838f
+C1693 otr3 DN0 0.06084f
+C1694 ge6 UP0 0.07247f
+C1695 oeb IB_PLL 0.08391f
+C1696 t4 otr0 0.04934f
+C1697 cdr_en ot5 0.05698f
+C1698 up1b id3h 0.18013f
+C1699 itr3s UP0 0.08939f
+C1700 otrs ge3 0.04551f
+C1701 IB_PLL HOLD_PLL_s0 0.1178f
+C1702 atb_cdr_pbias t1 0.07826f
+C1703 t2 t4 0.06776f
+C1704 UP3 enb 0.39599f
+C1705 t6 t5n_s0 0.25902f
+C1706 otr4 otr0 0.0464f
+C1707 atb_cdr_pbias trb1 0.29449f
+C1708 ota1 DN0 0.03174f
+C1709 fdnb REF_PLL 0.05581f
+C1710 WCK_IN ot5 0.04239f
+C1711 otr4 t2 0.083f
+C1712 WCK_IN itr4h 0.05616f
+C1713 VCTRL ot7 0.58477f
+C1714 iu0s id3s 0.49572f
+C1715 pfd_mode enb 0.35584f
+C1716 r0b_s0 oe 0.10992f
+C1717 IBIAS id3s 0.04963f
+C1718 otr2 opd 0.03174f
+C1719 ge6_s0 g2 0
+C1720 ge4_s0 ge3 0
+C1721 tra0_s0 VDD_PLL_SW 0.14941f
+C1722 tra3 trb4 0
+C1723 otr1 ge3 0.04551f
+C1724 UP1 ina 0.05994f
+C1725 tra3 FUP 0.04424f
+C1726 ge5 AVN 0
+C1727 ot6 g2 0.08166f
+C1728 ot6 FUP 0.08181f
+C1729 DN1 dn3b 0.05082f
+C1730 oeb ge7 0.07247f
+C1731 IB_PLL tra1 0.08504f
+C1732 dn0b oeb 0.08181f
+C1733 DN3 id1s 0.12771f
+C1734 AVN itr4s 1.01035f
+C1735 AVN itr2h 0.00458f
+C1736 DN2 DN0 0.00675f
+C1737 otr4 ot4 0.04459f
+C1738 DN1 ge3 0.04551f
+C1739 fdnb UP2 0
+C1740 UP0 t5a 0.08363f
+C1741 iu1h REF_PLL 0.02224f
+C1742 VDD_PLL_SW rsb 1.58333f
+C1743 t7n_s0 ot 0.1098f
+C1744 VDD_PLL_SW HOLD_PLL 3.21767f
+C1745 AVP g0 0.0557f
+C1746 DN0 id0s 0.09348f
+C1747 ifuh AVN 0.00265f
+C1748 ge2 oe 0.68005f
+C1749 DN3 id3s 0.07743f
+C1750 UP1 fupb 0.05037f
+C1751 oeb refmb 0.21442f
+C1752 r0b_s1 VDD_PLL_SW 0.10636f
+C1753 ge6 ipu 3.75888f
+C1754 t2 t7n_s0 0.09049f
+C1755 enb g2b 0.16229f
+C1756 itr0s ref_sel 0.04868f
+C1757 IB_PLL ot7 0.14898f
+C1758 id1s dn3b 0.17137f
+C1759 fdnl HOLD_PLL 0.01459f
+C1760 VDD_PLL_SW VCTRL 13.2131f
+C1761 VDD_PLL_SW t3a 2.52859f
+C1762 t6 g0 0.08625f
+C1763 HOLD_PLL t5 0.06828f
+C1764 atb_cdr_pbias FDN 0.19325f
+C1765 t7 cdr_en 0.08875f
+C1766 DN0 t5n 0.06401f
+C1767 ref_sel t5n_s0 0
+C1768 REF_PLL cdr_en 0.07848f
+C1769 AVP t1 0.01004f
+C1770 iu1h UP2 0.08175f
+C1771 t3n g2b 0.32847f
+C1772 AVP trb1 0.22513f
+C1773 r1b_s0 pfd_mode 0.11698f
+C1774 atb_cdr_pbias ot5 0.043f
+C1775 otr3 HOLD_PLL 15.1428f
+C1776 ipu g0b 0.0113f
+C1777 trb4 enb 0.08713f
+C1778 ge6 IBIAS 0.09619f
+C1779 tra3 otrs 3.02577f
+C1780 ge5_s0 oe 0.20056f
+C1781 atb_cdr_pbias itr4h 3.03066f
+C1782 up1b enb 0.20567f
+C1783 ot6 otrs 0.10053f
+C1784 enb FUP 0.38854f
+C1785 IBIAS itr3s 0.10821f
+C1786 REF_IN r1b_s1 0.02945f
+C1787 WCK_IN t7 0.10096f
+C1788 g1 t1_s0 0.08577f
+C1789 DN3 fupl 0.00147f
+C1790 WCK_IN REF_PLL 6.45764f
+C1791 dn3b id3s 0.40115f
+C1792 t5a t3 0.17603f
+C1793 t3a t5 1.71226f
+C1794 UP3 oeb 0.03174f
+C1795 t6 t1 0.107f
+C1796 ota1 HOLD_PLL 0.03174f
+C1797 fdnb_s0 enb 0.57874f
+C1798 ot7 ge7 2.66112f
+C1799 DN1 id3h 0.05282f
+C1800 g2 t3n 0.85394f
+C1801 id0h UP2 0.11108f
+C1802 otr3 VCTRL 5.06577f
+C1803 otr3 t3a 0.1008f
+C1804 ot1 ge3 0.12943f
+C1805 otr1 tra3 0.0445f
+C1806 otrsb cdr_en 0.12013f
+C1807 oeb pfd_mode 6.89136f
+C1808 otr1 ot6 0.09342f
+C1809 UP1 REF_IN 0.06567f
+C1810 pfd_mode HOLD_PLL_s0 0.23512f
+C1811 UP2 cdr_en 57.8593f
+C1812 ipu t5a 0.20022f
+C1813 refm_s0 REF_PLL 0.12297f
+C1814 itr1h otrsb 0.02203f
+C1815 UP1 g1 0.04137f
+C1816 WCK_IN otrsb 0.14186f
+C1817 ota1 VCTRL 0.43913f
+C1818 t1_s1 g1b 0.36649f
+C1819 DN1 ge6_s0 0
+C1820 cdr_en oe 0.87518f
+C1821 WCK_IN UP2 0.04722f
+C1822 UP3 iu2h 0.08017f
+C1823 DN1 tra3 0.06223f
+C1824 t5n_s0 t4 0
+C1825 DN1 ot6 0.0747f
+C1826 VDD_PLL_SW IB_PLL 4.33754f
+C1827 DN3 ge6 0.07614f
+C1828 g1 ina 0.00389f
+C1829 DN2 HOLD_PLL 0.04722f
+C1830 UP3 tra1 0.04694f
+C1831 t7 t6n_s0 0.25902f
+C1832 DN3 itr3s 0.05126f
+C1833 itr1h oe 0.0584f
+C1834 REF_PLL t6n_s0 0
+C1835 IBIAS t5a 0.17016f
+C1836 WCK_IN oe 0.16806f
+C1837 ge1_s0 ot 0
+C1838 AVN DN0 0.30277f
+C1839 HOLD_PLL id0s 0
+C1840 UP2 id1h 0.09905f
+C1841 id1s id3h 0.40845f
+C1842 pfd_mode tra1 0.05025f
+C1843 WCK_IN t6n 0.15456f
+C1844 ref_sel g0 0.03227f
+C1845 atb_cdr_pbias up2b 0.17424f
+C1846 enb otrs 0.63118f
+C1847 IB_PLL fdnl 0
+C1848 opd UP0 0.032f
+C1849 DN2 VCTRL 0.05074f
+C1850 AVP FDN 0.56805f
+C1851 IB_PLL t5 0.14012f
+C1852 DN2 t3a 0.07674f
+C1853 fdnb ifds 1.12862f
+C1854 AVP ot5 0.02965f
+C1855 ot1 ge1 0.28588f
+C1856 oeb g2b 0.0487f
+C1857 refm_s0 oe 0.10298f
+C1858 fupb REF_IN 0.05172f
+C1859 VDD_PLL_SW ge7 10.5645f
+C1860 otr3 IB_PLL 0.03644f
+C1861 AVP itr4h 0.03401f
+C1862 fdnb ifdh 0.22735f
+C1863 g1 t5an_s0 0.04633f
+C1864 ge5 DN0 0.04073f
+C1865 atb_cdr_pbias t7 0.08875f
+C1866 itr1s enb 1.82581f
+C1867 dn0b VDD_PLL_SW 1.98886f
+C1868 atb_cdr_pbias REF_PLL 0.45237f
+C1869 otr2 cdr_en 0.04078f
+C1870 otrsb tra4 1.45891f
+C1871 HOLD_PLL t5n 0.00512f
+C1872 UP3 ot7 0.10655f
+C1873 id3s id3h 24.3722f
+C1874 otr1 enb 0.31892f
+C1875 t6 FDN 0.04388f
+C1876 VDD_PLL_SW trb2 2.26677f
+C1877 ref_sel t1 0.07826f
+C1878 itr4s DN0 0.03922f
+C1879 ota1 IB_PLL 0.03174f
+C1880 ref_sel trb1 0
+C1881 t6 ot5 0.12895f
+C1882 WCK_IN otr2 0.0379f
+C1883 oeb trb4 0.05974f
+C1884 DN3 t5a 0
+C1885 t6n_s0 oe 0.09713f
+C1886 DN3 id2h 0.07643f
+C1887 ot7 pfd_mode 0.10632f
+C1888 g2 oeb 0.03196f
+C1889 oeb FUP 0.0419f
+C1890 t2n t4 0
+C1891 atb_cdr_pbias iu3s 0.75098f
+C1892 t3an g2b 0.29583f
+C1893 t6n t6n_s0 0.89233f
+C1894 ot0 t3 0
+C1895 DN1 enb 0.42979f
+C1896 t3a t5n 0.26144f
+C1897 VDD_PLL_SW refmb 2.25915f
+C1898 atb_cdr_pbias otrsb 0.45591f
+C1899 otr3 ge7 0.0773f
+C1900 g1b g0b 0.1401f
+C1901 g0 t4 0.15372f
+C1902 atb_cdr_pbias iu2s 0.725f
+C1903 VDD_PLL_SW iu1s 2.50339f
+C1904 atb_cdr_pbias UP2 0.40474f
+C1905 trb4_s0 tra4 0.17278f
+C1906 tra0_s0 AVN 0.00327f
+C1907 otr3 trb2 0.19084f
+C1908 otr4 g0 0.04372f
+C1909 ota1 ge7 0.00352f
+C1910 ipu ot0 0.69327f
+C1911 IB_PLL DN2 0.04767f
+C1912 ge6 ge7_s0 0
+C1913 g2 t3an 0.2894f
+C1914 atb_cdr_pbias oe 0.31295f
+C1915 t1_s0 t2 0.14142f
+C1916 id2h dn3b 0.09197f
+C1917 tra1 FUP 0.03975f
+C1918 g1 REF_IN 0.07739f
+C1919 IB_PLL id0s 0.01709f
+C1920 t1 t4 0.06867f
+C1921 opd ipu 9.97785f
+C1922 iu0h UP0 0.09804f
+C1923 UP1 ot 0.20761f
+C1924 otr2 t6n_s0 0.01262f
+C1925 AVP up2b 0.19065f
+C1926 iu3h iu3s 1.84693f
+C1927 AVN rsb 0.52996f
+C1928 UP3 VDD_PLL_SW 18.0608f
+C1929 otr4 t1 0.08424f
+C1930 opd ota2 1.00277f
+C1931 t5a ge3 0.24469f
+C1932 AVN HOLD_PLL 0.25636f
+C1933 id1s enb 0.43345f
+C1934 UP1 otr0 0.03174f
+C1935 VDD_PLL_SW pfd_mode 2.17417f
+C1936 UP1 t2 0.07702f
+C1937 AVP REF_PLL 0.94952f
+C1938 DN2 ge7 0.06798f
+C1939 atb_cdr_pbias inah 0.17441f
+C1940 opd IBIAS 0.05061f
+C1941 oeb otrs 0.07491f
+C1942 UP3 trb3 0.019f
+C1943 dn0b DN2 0.11436f
+C1944 ref_sel FDN 0.03322f
+C1945 IB_PLL t5n 0.18249f
+C1946 ina otr0 0.0078f
+C1947 UP3 t5 0.07681f
+C1948 ina t2 0
+C1949 ref_sel ot5 0.03866f
+C1950 ge5 HOLD_PLL 0.04073f
+C1951 AVN VCTRL 0.28784f
+C1952 atb_cdr_pbias otr2 0.28383f
+C1953 AVN t3a 0.01458f
+C1954 g2 ot7 0.1094f
+C1955 ot7 FUP 0.10958f
+C1956 trb3 pfd_mode 0.07616f
+C1957 iu3s up3b 2.1568f
+C1958 id3s enb 0.28089f
+C1959 dn0b id0s 0.71799f
+C1960 oeb itr1s 0.06556f
+C1961 ge6 ge6_s0 0.51457f
+C1962 t6 t7 8.10811f
+C1963 otr3 UP3 0.03802f
+C1964 otrsb tra2_s0 0.19f
+C1965 t6 REF_PLL 0.06119f
+C1966 otrsb up3b 0
+C1967 pfd_mode t5 0.07681f
+C1968 otr1 oeb 0.03174f
+C1969 itr4s HOLD_PLL 0.05056f
+C1970 AVP iu3s 0.2373f
+C1971 t5an_s0 ot 0
+C1972 ge6 ot6 0.20697f
+C1973 tra3 itr3s 0.55901f
+C1974 AVP otrsb 0.25466f
+C1975 ge5_s0 ge4 0
+C1976 AVP iu2s 0.23778f
+C1977 otr3 pfd_mode 0.03749f
+C1978 DN2 iu1s 0.10909f
+C1979 tra2 tra3 1.49009f
+C1980 UP3 ota1 0.03174f
+C1981 AVP UP2 0.28615f
+C1982 fupb fupb_s0 0.47102f
+C1983 tra1 otrs 1.84745f
+C1984 DN3 trb1_s0 0
+C1985 r0b_s0 IBIAS 0.00903f
+C1986 ot0 t7n 0
+C1987 t1 t7n_s0 0.10948f
+C1988 ge2 t3 0.00547f
+C1989 id2s UP2 0
+C1990 DN1 oeb 0.03174f
+C1991 DN3 opd 0.03174f
+C1992 ota1 pfd_mode 0.03174f
+C1993 AVP oe 0.23575f
+C1994 fupl enb 0.20107f
+C1995 id2h id3h 0.09499f
+C1996 id2h dn2b 0.1099f
+C1997 VDD_PLL_SW g2b 2.52221f
+C1998 id0h UP0 0.0024f
+C1999 ifus otrs 0.00169f
+C2000 tra1 itr1s 0.5716f
+C2001 t6 UP2 0.08601f
+C2002 t4 FDN 0.04968f
+C2003 otr1 tra1 1.07926f
+C2004 t4 ot5 1.92407f
+C2005 cdr_en UP0 0.01697f
+C2006 AVP trb4_s0 0.00554f
+C2007 ipu ge2 0.16206f
+C2008 otr4 FDN 0.0464f
+C2009 t6 oe 0.27532f
+C2010 UP3 DN2 0.05098f
+C2011 cdr_en ge4 0
+C2012 iu0h iu0s 1.50565f
+C2013 otr4 ot5 0.03922f
+C2014 VDD_PLL_SW trb4 4.58579f
+C2015 AVN IB_PLL 0.25174f
+C2016 iu0h IBIAS 0.02676f
+C2017 up1b VDD_PLL_SW 1.73255f
+C2018 atb_cdr_pbias ifds 0.9761f
+C2019 otr4 itr4h 0.01338f
+C2020 refm cdr_en 0.22077f
+C2021 g2 VDD_PLL_SW 5.00713f
+C2022 ot2 t4 0.00119f
+C2023 VDD_PLL_SW FUP 4.53084f
+C2024 ot7 otrs 0.12005f
+C2025 t6 t6n 4.92632f
+C2026 AVP inah 0.01653f
+C2027 atb_cdr_pbias ifdh 0.87935f
+C2028 UP3 id0s 0.17249f
+C2029 atb_cdr_pbias trb2_s0 0.09183f
+C2030 DN1 tra1 0.05206f
+C2031 otr2 tra2_s0 0.73864f
+C2032 WCK_IN ge4 0.04688f
+C2033 REF_IN ot 0.21754f
+C2034 ot0 ge3 0.12521f
+C2035 otr3 g2b 0.04783f
+C2036 trb4 trb3 0.54599f
+C2037 VDD_PLL_SW fdnb_s0 2.10922f
+C2038 otr2 AVP 0.31989f
+C2039 ge5 IB_PLL 0.04073f
+C2040 g1 ot 0.26324f
+C2041 itr3s enb 4.07139f
+C2042 pfd_mode id0s 0.01706f
+C2043 ipu ge5_s0 0.26054f
+C2044 t7 ref_sel 0.08875f
+C2045 otr1 ot7 0.11018f
+C2046 REF_PLL ref_sel 0.0023f
+C2047 REF_IN otr0 0.05172f
+C2048 g2 t5 0.18893f
+C2049 t5 FUP 0.13235f
+C2050 trb0 otr0 1.38903f
+C2051 UP1 up0b 0.00333f
+C2052 t3an_s0 t3an 0.63702f
+C2053 REF_IN t2 0.07702f
+C2054 tra2 enb 0.19424f
+C2055 IB_PLL itr4s 0.03311f
+C2056 otr3 trb4 0.05983f
+C2057 AVN ge7 0.07705f
+C2058 g1 otr0 0.07696f
+C2059 otr3 g2 0.0959f
+C2060 otr3 FUP 0.03721f
+C2061 UP3 t5n 0.16169f
+C2062 dn0b AVN 0.15838f
+C2063 refm_s0 refm 0.47102f
+C2064 otr2 t6 0.04841f
+C2065 g1 t2 0.2457f
+C2066 AVN trb2 0.16162f
+C2067 itr0h enb 0.38201f
+C2068 oeb id3s 0.06097f
+C2069 cdr_en t3 0.07025f
+C2070 UP1 itr0s 0.04868f
+C2071 DN1 ot7 0.11284f
+C2072 pfd_mode t5n 0.08199f
+C2073 ota1 g2 0.03174f
+C2074 dn1b refmb 0
+C2075 ota1 FUP 0.03174f
+C2076 otrsb ref_sel 0.12245f
+C2077 dn1b iu1s 0.17864f
+C2078 WCK_IN t3 0.08256f
+C2079 DN0 rsb 0
+C2080 UP1 t5n_s0 0.16022f
+C2081 DN3 fdnb 0.09875f
+C2082 r0b_s0 r0b 0
+C2083 HOLD_PLL DN0 0
+C2084 UP2 ref_sel 0.03535f
+C2085 REF_IN ot4 0.04308f
+C2086 ipu cdr_en 0.64316f
+C2087 DN2 g2b 0.07735f
+C2088 AVN refmb 0.21783f
+C2089 VDD_PLL_SW otrs 5.01021f
+C2090 AVN iu1s 0.20713f
+C2091 tra1_s0 otr0 0.08628f
+C2092 ge1_s0 t1 0.24638f
+C2093 id2h enb 0.96405f
+C2094 ota2 cdr_en 0.04057f
+C2095 g1 ot4 0
+C2096 iu0s id0h 0.08301f
+C2097 ref_sel oe 0.37979f
+C2098 iu2h id3s 0.26522f
+C2099 t7 t4 0.03892f
+C2100 WCK_IN ipu 0.37642f
+C2101 REF_PLL t4 0.06889f
+C2102 AVP ifds 0.46897f
+C2103 atb_cdr_pbias UP0 0.24253f
+C2104 trb3 otrs 0.27246f
+C2105 iu0s cdr_en 0.01583f
+C2106 VDD_PLL_SW itr1s 2.70071f
+C2107 DN2 trb4 0.06265f
+C2108 VCTRL DN0 0.05074f
+C2109 DN0 t3a 0.07674f
+C2110 iu0h dn3b 0.1091f
+C2111 t7 otr4 0.08796f
+C2112 WCK_IN ota2 0.04806f
+C2113 otr4 REF_PLL 0.05578f
+C2114 up1b DN2 0.1394f
+C2115 IBIAS cdr_en 0.57385f
+C2116 g2 DN2 9.94441f
+C2117 DN2 FUP 0.04499f
+C2118 VDD_PLL_SW ge4_s0 0.00595f
+C2119 otr1 VDD_PLL_SW 2.8588f
+C2120 fdnl otrs 0.07243f
+C2121 AVP ifdh 0.02032f
+C2122 atb_cdr_pbias ge4 0.04094f
+C2123 AVP trb2_s0 0.05466f
+C2124 UP3 dn1b 0.1193f
+C2125 atb_cdr_pbias refm 0.25111f
+C2126 t5 otrs 0.04507f
+C2127 up1b id0s 0.06289f
+C2128 DN3 iu1h 0.06925f
+C2129 WCK_IN IBIAS 0.11221f
+C2130 t1_s0 g0 0.10547f
+C2131 nbd oe 1.23574f
+C2132 otr3 otrs 15.2808f
+C2133 t6n_s0 t3 0.09713f
+C2134 t5a t5an 2.94345f
+C2135 UP3 AVN 0.41637f
+C2136 tra3 trb1_s0 0.22945f
+C2137 DN1 VDD_PLL_SW 1.97898f
+C2138 ge2 ge3 1.2833f
+C2139 UP2 t4 0.08658f
+C2140 otr1 t5 0.10275f
+C2141 otr4 otrsb 0.79592f
+C2142 AVN pfd_mode 0.28358f
+C2143 ge6 oeb 0.07247f
+C2144 ota1 otrs 0.03174f
+C2145 REF_PLL r1b 0.29397f
+C2146 otr3 itr1s 0
+C2147 oeb itr3s 0.08986f
+C2148 ipu t6n_s0 0.10945f
+C2149 UP2 otr4 0.04701f
+C2150 DN3 id0h 0
+C2151 otr3 otr1 0.03927f
+C2152 refm_s0 IBIAS 0.0072f
+C2153 t4 oe 0.33315f
+C2154 UP3 ge5 0.04262f
+C2155 g2 t5n 0.65692f
+C2156 DN1 trb3 0.0018f
+C2157 t1_s0 t1 0.36996f
+C2158 t5n FUP 0.17027f
+C2159 ifus fupl 2.08381f
+C2160 trb4 tra4_s0 0.09706f
+C2161 UP1 g0 0.03174f
+C2162 DN3 cdr_en 0.07749f
+C2163 otr4 oe 0.10419f
+C2164 iu1h dn3b 0.10444f
+C2165 t6n t4 0.00165f
+C2166 atb_cdr_pbias t3 0.07025f
+C2167 itr2s REF_PLL 0.02321f
+C2168 DN1 t5 0.08931f
+C2169 UP3 itr4s 0.03627f
+C2170 VDD_PLL_SW t3an_s0 0.00859f
+C2171 otr1 ota1 0.03174f
+C2172 ge5 pfd_mode 0.04442f
+C2173 t7 t7n_s0 0.27175f
+C2174 g0 ina 0.02019f
+C2175 pfdb enb 0
+C2176 otr4 t6n 0
+C2177 otr0 ot 0.26131f
+C2178 IB_PLL DN0 0.00449f
+C2179 DN1 otr3 0.07038f
+C2180 DN3 WCK_IN 0.05172f
+C2181 itr4s pfd_mode 0.03633f
+C2182 t2 ot 0.62217f
+C2183 otr4 trb4_s0 0.50182f
+C2184 REF_IN itr0s 0.05712f
+C2185 DN2 otrs 0.09937f
+C2186 tra0 trb0 0.90701f
+C2187 trb0 itr0s 1.64257f
+C2188 atb_cdr_pbias ipu 0.44337f
+C2189 UP1 t1 0.07826f
+C2190 id1s VDD_PLL_SW 2.54204f
+C2191 itr3s tra1 0.22699f
+C2192 id0h dn3b 0.10866f
+C2193 DN1 ota1 0.03174f
+C2194 AVP UP0 0.44369f
+C2195 iu0h id3h 0.12099f
+C2196 r0b_s1 rsb 0.8785f
+C2197 atb_cdr_pbias ota2 0.04057f
+C2198 DN3 id1h 0.07404f
+C2199 t2 otr0 0.07702f
+C2200 r1b oe 0.32653f
+C2201 t3n_s0 ot2 0
+C2202 itr2s otrsb 0.11456f
+C2203 DN2 itr1s 0.05883f
+C2204 ina t1 0.00147f
+C2205 ge2_s0 ot1 0
+C2206 dn3b cdr_en 0.03851f
+C2207 otr2 t4 0.04934f
+C2208 oeb t5a 0.17603f
+C2209 AVN g2b 0.00325f
+C2210 g1 t5n_s0 0.07869f
+C2211 AVP refm 0
+C2212 otr1 DN2 0.07877f
+C2213 atb_cdr_pbias iu0s 0.69996f
+C2214 trb1_s0 enb 0.09741f
+C2215 g0 t5an_s0 0.06695f
+C2216 VDD_PLL_SW ot1 1.00424f
+C2217 cdr_en r0b 1.16287f
+C2218 atb_cdr_pbias IBIAS 0.1465f
+C2219 otr2 otr4 0.04654f
+C2220 DN0 ge7 0.06798f
+C2221 VCTRL HOLD_PLL 0.05127f
+C2222 up1b dn1b 0.08991f
+C2223 HOLD_PLL t3a 0.08215f
+C2224 WCK_IN dn3b 0.05523f
+C2225 VDD_PLL_SW id3s 2.56437f
+C2226 ot4 ot 4.13958f
+C2227 t6 UP0 0.08813f
+C2228 dn0b DN0 0.16922f
+C2229 cdr_en ge3 0.04591f
+C2230 WCK_IN r0b 0.0772f
+C2231 AVN trb4 3.34364f
+C2232 t7n_s0 oe 0.09049f
+C2233 up1b AVN 0.40166f
+C2234 ge6 ot7 0.00135f
+C2235 g2 AVN 0.06116f
+C2236 AVN FUP 0.12936f
+C2237 DN1 DN2 12.1873f
+C2238 ot4 otr0 0.06148f
+C2239 tra4_s0 otrs 0.5338f
+C2240 WCK_IN ge3 0.05166f
+C2241 VDD_PLL_SW t1_s1 0.00524f
+C2242 dn3b id1h 0.104f
+C2243 ibs enb 0.78585f
+C2244 t7n_s0 t6n 0.00931f
+C2245 AVN fdnb_s0 0.00212f
+C2246 DN1 id0s 0.11652f
+C2247 otr1 t5n 0.08453f
+C2248 iu1h id3h 0.12099f
+C2249 VDD_PLL_SW fupl 1.87491f
+C2250 ge5 g2 0.04073f
+C2251 refm_s0 r0b 0.92002f
+C2252 ge5 FUP 0.04073f
+C2253 itr4s trb4 1.81192f
+C2254 DN3 atb_cdr_pbias 21.4812f
+C2255 r0b_s0 enb 0.11027f
+C2256 itr4s FUP 0.03602f
+C2257 otr2 itr2s 0.63606f
+C2258 UP1 FDN 0.03416f
+C2259 REF_IN g0 0.04073f
+C2260 AVP ipu 0.85952f
+C2261 g1 t2n 0.5391f
+C2262 DN1 t5n 0.15013f
+C2263 fupl fdnl 0.43953f
+C2264 t6 t3 0.08811f
+C2265 id0h id3h 0.03342f
+C2266 IB_PLL HOLD_PLL 5.20682f
+C2267 id1s DN2 0.11605f
+C2268 UP1 ot5 0.09229f
+C2269 ot3 ge4_s0 0
+C2270 oeb pfdb 1.30877f
+C2271 t6n_s0 ge3 0.13113f
+C2272 AVP ota2 0.01534f
+C2273 g1 g0 6.89086f
+C2274 ina FDN 0
+C2275 cdr_en id3h 0.04137f
+C2276 UP3 DN0 0.07065f
+C2277 AVP iu0s 0.22601f
+C2278 t6 ipu 0.3377f
+C2279 ge6 VDD_PLL_SW 6.8185f
+C2280 iu0h enb 0.82013f
+C2281 AVP IBIAS 0.29681f
+C2282 AVN otrs 0.15867f
+C2283 VDD_PLL_SW itr3s 7.7426f
+C2284 WCK_IN id3h 0.05686f
+C2285 IB_PLL VCTRL 0.05088f
+C2286 DN0 pfd_mode 0.05282f
+C2287 IB_PLL t3a 0.07674f
+C2288 ref_sel UP0 0
+C2289 atb_cdr_pbias dn3b 1.76333f
+C2290 REF_IN t1 0.07826f
+C2291 DN3 iu3h 0.0012f
+C2292 fdnb enb 9.1946f
+C2293 REF_IN trb1 0.08462f
+C2294 DN2 id3s 0.05422f
+C2295 atb_cdr_pbias r0b 0.16429f
+C2296 VDD_PLL_SW tra2 2.25138f
+C2297 oeb ot0 0.65145f
+C2298 ref_sel ge4 0.04134f
+C2299 ge6_s0 cdr_en 0
+C2300 g1 t1 0.36897f
+C2301 HOLD_PLL ge7 0.06798f
+C2302 dn0b rsb 0.00811f
+C2303 tra3 cdr_en 0.04992f
+C2304 fupb_s0 itr0s 0.03365f
+C2305 AVN itr1s 0.21692f
+C2306 itr3s trb3 0.6354f
+C2307 VDD_PLL_SW g0b 1.70288f
+C2308 atb_cdr_pbias ge3 0.04551f
+C2309 ot6 cdr_en 0.09602f
+C2310 t6 IBIAS 0.16798f
+C2311 otr1 AVN 0.10135f
+C2312 id0s id3s 0
+C2313 ge5 otrs 0.04073f
+C2314 id1h id3h 0.04944f
+C2315 ge6 t5 0.00119f
+C2316 VDD_PLL_SW itr0h 1.73419f
+C2317 t5n_s0 ot 0.10948f
+C2318 opd oeb 3.27477f
+C2319 tra0 otr0 1.73092f
+C2320 itr0s otr0 12.5919f
+C2321 t3n ge2 0
+C2322 WCK_IN tra3 0.05683f
+C2323 fupb FDN 0.1393f
+C2324 DN1 dn1b 0.24367f
+C2325 WCK_IN ot6 0.09967f
+C2326 otr3 ge6 0.04107f
+C2327 itr4s otrs 0.27657f
+C2328 ge1_s0 oe 0.24653f
+C2329 otr3 itr3s 1.60812f
+C2330 DN3 up3b 0.12182f
+C2331 itr2h otrs 0
+C2332 VCTRL ge7 0.45626f
+C2333 itr2s trb2_s0 0.1191f
+C2334 fupl DN2 0
+C2335 iu3h dn3b 0.10596f
+C2336 oeb ibs 0.0011f
+C2337 t2 t5n_s0 0.09049f
+C2338 ge5 ge4_s0 0.27325f
+C2339 DN1 AVN 0.40402f
+C2340 otr1 ge5 0.04073f
+C2341 otr3 tra2 0.19027f
+C2342 DN3 AVP 4.46407f
+C2343 HOLD_PLL refmb 0.01187f
+C2344 iu1h enb 0.82008f
+C2345 VDD_PLL_SW t5a 1.64197f
+C2346 id2h VDD_PLL_SW 2.4928f
+C2347 ifuh otrs 0
+C2348 DN3 id2s 0.13124f
+C2349 UP0 t4 0.09045f
+C2350 itr2h itr1s 0
+C2351 otr1 itr4s 0.03375f
+C2352 trb1_s0 tra1 0.17191f
+C2353 ref_sel t3 0.07025f
+C2354 DN0 g2b 0.05786f
+C2355 otr1 itr2h 0.04086f
+C2356 t4 ge4 0.12803f
+C2357 otr4 UP0 0.04534f
+C2358 DN1 ge5 0.04073f
+C2359 DN3 t6 0.0518f
+C2360 r0b_s0 oeb 0.17253f
+C2361 UP1 t7 0.08875f
+C2362 UP1 REF_PLL 0.05578f
+C2363 AVN t3an_s0 0.00962f
+C2364 otr4 ge4 0.04372f
+C2365 id0h enb 1.42332f
+C2366 dn3b up3b 0.17781f
+C2367 t5a t5 1.72864f
+C2368 ipu ref_sel 0.26376f
+C2369 id1s dn1b 0.78838f
+C2370 DN1 itr4s 0.04855f
+C2371 trb4 DN0 0.05332f
+C2372 oeb_s0 oe 0.10948f
+C2373 up1b DN0 0
+C2374 g2 DN0 0.04115f
+C2375 DN0 FUP 0.03473f
+C2376 atb_cdr_pbias id3h 0.6865f
+C2377 atb_cdr_pbias dn2b 1.43457f
+C2378 ge6 DN2 0.07672f
+C2379 AVP dn3b 6.46755f
+C2380 otr2 itr3h 0.06656f
+C2381 cdr_en enb 15.8143f
+C2382 ota2 ref_sel 0.04057f
+C2383 DN2 itr3s 0.09456f
+C2384 UP3 HOLD_PLL 0.04722f
+C2385 REF_IN ot5 0.03623f
+C2386 id1s AVN 0.22368f
+C2387 tra3_s0 otrs 0.84822f
+C2388 REF_IN itr4h 0.05433f
+C2389 id2s dn3b 0.15934f
+C2390 g1 FDN 0.07696f
+C2391 t2n_s0 t4 0
+C2392 pfd_mode rsb 0.0922f
+C2393 fdnb_s0 DN0 0
+C2394 itr1h enb 0.69337f
+C2395 AVP g1b 0.00938f
+C2396 WCK_IN enb 0.25223f
+C2397 g0 ot 0.21213f
+C2398 IB_PLL ge7 0.06798f
+C2399 r1b_s1 oe 0.10748f
+C2400 oeb iu0h 0
+C2401 IBIAS ref_sel 0.17526f
+C2402 AVP ge3 0.94725f
+C2403 HOLD_PLL pfd_mode 0.57362f
+C2404 g1 ot5 0.043f
+C2405 UP1 otrsb 0.12013f
+C2406 opd ot7 1.4338f
+C2407 refm r1b 2.47166f
+C2408 t2n t2 3.46902f
+C2409 UP1 UP2 4.68103f
+C2410 atb_cdr_pbias tra3 0.04424f
+C2411 UP3 VCTRL 0.05074f
+C2412 t3 t4 0.21012f
+C2413 UP3 t3a 0.07674f
+C2414 atb_cdr_pbias ot6 0.09901f
+C2415 g0 otr0 0.04073f
+C2416 AVN id3s 0.288f
+C2417 id1h enb 1.05118f
+C2418 g0 t2 0.21353f
+C2419 otr4 t3 0.07623f
+C2420 UP1 oe 0.12793f
+C2421 t6 ge3 0.15854f
+C2422 UP2 ina 0.10723f
+C2423 pfd_mode t3a 0.07674f
+C2424 VCTRL pfd_mode 0.05074f
+C2425 iu3h id3h 0.12145f
+C2426 refm_s0 enb 0.10345f
+C2427 VDD_PLL_SW trb0_s0 0.16296f
+C2428 t1 ot 2.97381f
+C2429 VDD_PLL_SW pfdb 1.49294f
+C2430 fupb REF_PLL 0.05578f
+C2431 nbd IBIAS 0.36929f
+C2432 ipu t4 0.32034f
+C2433 t7n_s0 ge4 0
+C2434 IB_PLL refmb 0.16564f
+C2435 ina oe 0.04613f
+C2436 DN2 t5a 0
+C2437 ipu otr4 0.30762f
+C2438 id2h DN2 0.03182f
+C2439 t1 otr0 0.07826f
+C2440 trb1 otr0 0.15533f
+C2441 t2 t1 19.3438f
+C2442 otr4 ota2 0.04191f
+C2443 DN0 otrs 0.08072f
+C2444 DN3 ref_sel 0.03174f
+C2445 AVN fupl 0.33842f
+C2446 tra0 itr0s 1.6321f
+C2447 VDD_PLL_SW ot0 1.00424f
+C2448 IBIAS t4 0.50549f
+C2449 HOLD_PLL g2b 0.03851f
+C2450 id3h up3b 0.18058f
+C2451 VDD_PLL_SW trb1_s0 0.01346f
+C2452 r1b_s0 cdr_en 0.09186f
+C2453 IBIAS otr4 0.06351f
+C2454 fupb UP2 0.04643f
+C2455 fdnb ifus 0.29502f
+C2456 DN0 itr1s 0.04951f
+C2457 AVP id3h 0.05996f
+C2458 AVP dn2b 0.03685f
+C2459 ina inah 1.02599f
+C2460 opd VDD_PLL_SW 6.46569f
+C2461 t5an_s0 oe 0.07513f
+C2462 DN0 ge4_s0 0
+C2463 otr1 DN0 0.04311f
+C2464 WCK_IN r1b_s0 0.33208f
+C2465 UP3 IB_PLL 0.04767f
+C2466 id2s id3h 1.0815f
+C2467 id2s dn2b 0.84405f
+C2468 HOLD_PLL trb4 0.05033f
+C2469 t7 REF_IN 0.08198f
+C2470 up1b HOLD_PLL 0.25849f
+C2471 t3a g2b 0.22181f
+C2472 t5n t5a 1.58301f
+C2473 atb_cdr_pbias enb 30.143f
+C2474 t7n_s0 t3 0.09049f
+C2475 g2 HOLD_PLL 0.07725f
+C2476 otr2 ina 0
+C2477 tra3 tra2_s0 0.25902f
+C2478 IB_PLL pfd_mode 0.15597f
+C2479 dn3b ref_sel 0.03851f
+C2480 VDD_PLL_SW ibs 2.57911f
+C2481 oeb cdr_en 1.07432f
+C2482 t7 g1 0.08875f
+C2483 g1 REF_PLL 0.0779f
+C2484 cdr_en HOLD_PLL_s0 0.23623f
+C2485 AVP tra3 0.39667f
+C2486 IBIAS r1b 0.11937f
+C2487 ge6 AVN 0
+C2488 DN1 DN0 7.49025f
+C2489 otr3 trb1_s0 0
+C2490 ref_sel r0b 0.47843f
+C2491 ot6 AVP 0.0301f
+C2492 AVN itr3s 0.48416f
+C2493 ipu t7n_s0 0.10405f
+C2494 oeb itr1h 0.0506f
+C2495 WCK_IN oeb 0.09027f
+C2496 DN3 t4 0.05058f
+C2497 g2 t3a 0.46392f
+C2498 otr3 opd 0.03174f
+C2499 ref_sel ge3 0.04551f
+C2500 g2 VCTRL 0.05074f
+C2501 otrsb trb3_s0 0.49153f
+C2502 VCTRL FUP 0.05074f
+C2503 t3a FUP 0.07896f
+C2504 ifuh fupl 0.60805f
+C2505 ot FDN 0.24037f
+C2506 AVN tra2 0.00743f
+C2507 UP3 ge7 0.06798f
+C2508 t6 ge6_s0 0.10024f
+C2509 REF_IN otrsb 0.15128f
+C2510 DN3 otr4 0.05573f
+C2511 r0b_s0 VDD_PLL_SW 0.1091f
+C2512 UP3 dn0b 0.07969f
+C2513 tra0_s0 otrs 1.21865f
+C2514 t7n t4 0.00165f
+C2515 ot5 ot 12.4483f
+C2516 trb0 otrsb 2.74484f
+C2517 t6 ot6 2.16877f
+C2518 ge6 ge5 2.53497f
+C2519 REF_IN UP2 0.04722f
+C2520 ota1 opd 1.37782f
+C2521 pfd_mode ge7 0.06798f
+C2522 AVN itr0h 0.00194f
+C2523 otr0 FDN 47.1298f
+C2524 iu3h enb 0.77863f
+C2525 oe trb3_s0 0.01154f
+C2526 dn0b pfd_mode 0.03851f
+C2527 t2 FDN 0.09289f
+C2528 cdr_en tra1 0.13381f
+C2529 refm_s0 oeb 0.09831f
+C2530 g1 UP2 0.04137f
+C2531 otr0 ot5 0.03623f
+C2532 ot2 ot 0.80528f
+C2533 REF_IN oe 0.14934f
+C2534 itr4h otr0 0.03705f
+C2535 itr4s itr3s 1.71547f
+C2536 itr3s itr2h 0.06708f
+C2537 g1 oe 0.17903f
+C2538 IB_PLL g2b 0.03851f
+C2539 REF_IN t6n 0
+C2540 iu0h VDD_PLL_SW 2.51296f
+C2541 UP3 iu1s 0.13614f
+C2542 DN2 trb1_s0 0
+C2543 HOLD_PLL otrs 0.07255f
+C2544 oeb t6n_s0 0.0978f
+C2545 ge2 ge2_s0 0.20449f
+C2546 id2h AVN 0.00354f
+C2547 g1 t6n 0.06556f
+C2548 tra2_s0 enb 0.10113f
+C2549 pfd_mode refmb 0.25982f
+C2550 enb up3b 0.1505f
+C2551 g0 t5n_s0 0.01165f
+C2552 fdnb VDD_PLL_SW 3.04001f
+C2553 WCK_IN ifus 0
+C2554 opd DN2 0.03174f
+C2555 atb_cdr_pbias r1b_s0 0.17544f
+C2556 VDD_PLL_SW ge2 2.42022f
+C2557 t4 ge3 0.24486f
+C2558 otrsb tra1_s0 0.29676f
+C2559 ot4 FDN 0.04161f
+C2560 IB_PLL trb4 0.05033f
+C2561 AVP enb 9.39797f
+C2562 up1b IB_PLL 0.02419f
+C2563 g2 IB_PLL 0.07725f
+C2564 HOLD_PLL itr1s 0.08071f
+C2565 otr4 ge3 0.0485f
+C2566 IB_PLL FUP 0
+C2567 ot7 cdr_en 0.1458f
+C2568 ot4 ot5 4.90742f
+C2569 DN0 id3s 0.0449f
+C2570 ref_sel id3h 0.04051f
+C2571 VCTRL otrs 0.03194f
+C2572 t3a otrs 0.08215f
+C2573 id2s enb 0.37973f
+C2574 otr1 HOLD_PLL 0.05172f
+C2575 otr2 REF_IN 0.04467f
+C2576 t3n_s0 t3 0.11321f
+C2577 fdnb fdnl 4.3286f
+C2578 WCK_IN ot7 0.12798f
+C2579 t7n t7n_s0 0.96866f
+C2580 t1 t5n_s0 0.10948f
+C2581 atb_cdr_pbias oeb 0.20058f
+C2582 otr2 g1 0.077f
+C2583 atb_cdr_pbias HOLD_PLL_s0 0.00155f
+C2584 r1b r0b 1.45378f
+C2585 VDD_PLL_SW ge5_s0 0.00462f
+C2586 ge6_s0 ref_sel 0.03384f
+C2587 DN1 HOLD_PLL 0.05172f
+C2588 otr1 VCTRL 0.05084f
+C2589 otr1 t3a 0.07674f
+C2590 UP3 pfd_mode 57.6333f
+C2591 tra3 ref_sel 0.04652f
+C2592 VDD_PLL_SW iu1h 2.49289f
+C2593 ipu t3n_s0 0
+C2594 ot6 ref_sel 0.07175f
+C2595 g2 ge7 0.06798f
+C2596 t7 ot 0.39723f
+C2597 ipu ge1_s0 0
+C2598 ge7 FUP 0.06798f
+C2599 REF_PLL ot 0.37248f
+C2600 UP1 UP0 0.04029f
+C2601 atb_cdr_pbias iu2h 0.67457f
+C2602 ge1 t4 0.00134f
+C2603 DN1 VCTRL 0.05074f
+C2604 ge5_s0 t5 0.19759f
+C2605 DN1 t3a 0.07674f
+C2606 t7 otr0 0.08875f
+C2607 t6 t5an 0.12187f
+C2608 REF_PLL otr0 0.05129f
+C2609 t2n g0 0.2895f
+C2610 atb_cdr_pbias tra1 0.20602f
+C2611 VDD_PLL_SW id0h 2.49964f
+C2612 t7 t2 0.08907f
+C2613 UP1 ge4 0
+C2614 AVN trb0_s0 0.00327f
+C2615 REF_PLL t2 0.11612f
+C2616 t7n_s0 ge3 0.12447f
+C2617 UP0 ina 0.05676f
+C2618 VDD_PLL_SW cdr_en 6.35585f
+C2619 IB_PLL otrs 0.07474f
+C2620 up1b iu1s 1.83267f
+C2621 atb_cdr_pbias ifus 0.97589f
+C2622 t1_s0 t3 0
+C2623 UP2 ot 0.21822f
+C2624 fdnb DN2 0.06747f
+C2625 t3an_s0 t3a 0.24903f
+C2626 VDD_PLL_SW itr1h 2.10099f
+C2627 ge6 DN0 0.06798f
+C2628 WCK_IN VDD_PLL_SW 1.85496f
+C2629 otrsb otr0 1.82644f
+C2630 cdr_en trb3 0.06351f
+C2631 itr3s DN0 0.11447f
+C2632 itr0s FDN 0.05396f
+C2633 IB_PLL itr1s 0.08022f
+C2634 UP3 g2b 0.05777f
+C2635 oe ot 25.8574f
+C2636 otr1 IB_PLL 42.495f
+C2637 UP2 otr0 0.03174f
+C2638 g0 t1 0.32789f
+C2639 AVN trb1_s0 0.00327f
+C2640 cdr_en t5 0.07681f
+C2641 REF_PLL ot4 0.07848f
+C2642 fupb_s0 oe 0.00341f
+C2643 ot6 otr4 0.11532f
+C2644 atb_cdr_pbias ot7 0.13133f
+C2645 UP2 t2 0.07702f
+C2646 pfd_mode g2b 0.04814f
+C2647 t6n ot 0.28595f
+C2648 VDD_PLL_SW id1h 2.49345f
+C2649 opd AVN 0.03615f
+C2650 AVP oeb 0.23664f
+C2651 ref_sel enb 0.41561f
+C2652 WCK_IN fdnl 0.09866f
+C2653 HOLD_PLL id3s 0.05739f
+C2654 otr0 oe 0.16127f
+C2655 ge7 otrs 0.06798f
+C2656 otr3 cdr_en 0.08663f
+C2657 UP1 t3 0.07025f
+C2658 WCK_IN t5 0.05122f
+C2659 fupb UP0 0.05994f
+C2660 UP3 trb4 0.05033f
+C2661 refm_s0 VDD_PLL_SW 0.0991f
+C2662 t2 oe 0.31632f
+C2663 UP3 up1b 0.1193f
+C2664 UP3 g2 0.04322f
+C2665 UP3 FUP 0.03174f
+C2666 DN1 IB_PLL 0.05216f
+C2667 trb2 otrs 0.21094f
+C2668 otr3 WCK_IN 0.038f
+C2669 trb4 pfd_mode 0.05011f
+C2670 ota1 cdr_en 0.03174f
+C2671 iu1h DN2 0.02885f
+C2672 ina t3 0
+C2673 t2 t6n 0.23849f
+C2674 g2 pfd_mode 0.04367f
+C2675 t6 oeb 0.08802f
+C2676 pfd_mode FUP 0.03174f
+C2677 UP3 fdnb_s0 0.00187f
+C2678 otr1 ge7 0.06798f
+C2679 UP1 ipu 0.25154f
+C2680 r1b_s1 IBIAS 0.00802f
+C2681 VDD_PLL_SW t6n_s0 0.04084f
+C2682 nbd enb 1.46985f
+C2683 WCK_IN ota1 0.0379f
+C2684 AVP iu2h 0.00667f
+C2685 VDD_PLL_SW tra4 3.98294f
+C2686 DN0 t5a 0.11813f
+C2687 UP1 ota2 0.04057f
+C2688 otr2 ot 0.226f
+C2689 fupl HOLD_PLL 0.10075f
+C2690 fdnb_s0 pfd_mode 0.024f
+C2691 AVP tra1 0.17132f
+C2692 ipu ina 2.22526f
+C2693 t1_s1 t3a 0
+C2694 ot4 oe 0.47031f
+C2695 DN2 id0h 0.04759f
+C2696 UP1 iu0s 0.03754f
+C2697 DN1 ge7 0.06798f
+C2698 UP1 IBIAS 0
+C2699 otr2 otr0 0
+C2700 DN1 dn0b 0.09373f
+C2701 t6n_s0 t5 0.20274f
+C2702 AVP ifus 0.48532f
+C2703 DN2 cdr_en 0.04862f
+C2704 otr2 t2 0.07702f
+C2705 id0h id0s 1.06517f
+C2706 atb_cdr_pbias VDD_PLL_SW 69.1944f
+C2707 otr4 enb 0.01287f
+C2708 IBIAS ina 0.0827f
+C2709 ge1_s0 ge3 0.10058f
+C2710 otr3 t6n_s0 0.10408f
+C2711 WCK_IN DN2 0.04722f
+C2712 cdr_en id0s 0
+C2713 REF_IN ge4 0.04073f
+C2714 g1 UP0 0.04137f
+C2715 tra0_s0 itr0h 0
+C2716 t3n t4 0.8781f
+C2717 g0 FDN 0.04073f
+C2718 ipu t5an_s0 0.31444f
+C2719 r1b_s0 ref_sel 1.11764f
+C2720 AVN iu0h 0.00133f
+C2721 UP3 otrs 0.0752f
+C2722 g2 g2b 13.4226f
+C2723 g1 ge4 0.04096f
+C2724 ge6 HOLD_PLL 0.03185f
+C2725 AVP ot7 0.21555f
+C2726 g2b FUP 0.03859f
+C2727 g0 ot5 0.0428f
+C2728 DN1 refmb 0
+C2729 HOLD_PLL itr3s 0.05972f
+C2730 itr0s REF_PLL 0.05806f
+C2731 atb_cdr_pbias fdnl 0.28813f
+C2732 DN1 iu1s 0.06591f
+C2733 IB_PLL id3s 0.05784f
+C2734 DN2 id1h 0.02885f
+C2735 fdnb AVN 0.34583f
+C2736 atb_cdr_pbias t5 0.08931f
+C2737 t5an t4 0.75254f
+C2738 pfd_mode otrs 0.07536f
+C2739 otr2 ot4 0.04948f
+C2740 t7 t5n_s0 0
+C2741 UP3 itr1s 0.04652f
+C2742 r1b enb 0.32721f
+C2743 cdr_en t5n 0
+C2744 DN3 UP1 2.20672f
+C2745 atb_cdr_pbias otr3 0.10849f
+C2746 UP3 ge4_s0 0
+C2747 trb4 FUP 0.05033f
+C2748 UP3 otr1 0.08958f
+C2749 t1 FDN 0.0788f
+C2750 g2 FUP 0.07839f
+C2751 VDD_PLL_SW iu3h 2.50496f
+C2752 oeb ref_sel 0.26019f
+C2753 fupb IBIAS 0.12845f
+C2754 trb1 FDN 0.15156f
+C2755 pfd_mode itr1s 0.04652f
+C2756 g1 t2n_s0 0.32438f
+C2757 pfd_mode ge4_s0 0.01324f
+C2758 DN3 ina 0.01652f
+C2759 otr1 pfd_mode 0.05441f
+C2760 atb_cdr_pbias ota1 0.03174f
+C2761 tra0 otrsb 2.49713f
+C2762 itr0s otrsb 1.50715f
+C2763 ifds otr0 0.00108f
+C2764 itr2s enb 1.33316f
+C2765 REF_IN t3 0.07025f
+C2766 dn1b iu1h 0.18667f
+C2767 up0b oe 0.08329f
+C2768 t1_s0 g1b 0.37313f
+C2769 fdnb_s0 FUP 0.04418f
+C2770 fupl IB_PLL 0.09516f
+C2771 UP2 itr0s 0.04868f
+C2772 ifdh otr0 0
+C2773 r1b_s1 r0b 0.18212f
+C2774 DN1 UP3 0.0456f
+C2775 ge1 ge1_s0 0.20449f
+C2776 g1 t3 0.10615f
+C2777 ot3 cdr_en 0
+C2778 AVN iu1h 0.00133f
+C2779 oeb nbd 0.00595f
+C2780 itr0s oe 0.80667f
+C2781 UP2 t5n_s0 0.16419f
+C2782 DN1 pfd_mode 0
+C2783 ipu REF_IN 0.38931f
+C2784 VDD_PLL_SW up3b 1.68808f
+C2785 UP1 dn3b 0.03863f
+C2786 VDD_PLL_SW tra2_s0 0.0121f
+C2787 ref_sel tra1 0.03975f
+C2788 DN0 trb1_s0 0.15275f
+C2789 fdnb ifuh 0.22643f
+C2790 REF_IN ota2 0.04191f
+C2791 t5n_s0 oe 0.09049f
+C2792 g2b otrs 0.03941f
+C2793 g1 ipu 0.4964f
+C2794 AVP VDD_PLL_SW 0.11679p
+C2795 ge5 ge5_s0 0.55926f
+C2796 atb_cdr_pbias DN2 0.51791f
+C2797 UP1 ge3 0.04603f
+C2798 opd DN0 0.03174f
+C2799 id2s VDD_PLL_SW 2.53974f
+C2800 DN3 fupb 0.10939f
+C2801 g1 ota2 0.04057f
+C2802 AVN id0h 0.00354f
+C2803 t6n_s0 t5n 0.03697f
+C2804 t3a t5a 0.20009f
+C2805 oeb t4 0.10626f
+C2806 REF_IN IBIAS 1.40184f
+C2807 iu1s id3s 0.34973f
+C2808 AVP trb3 0.037f
+C2809 atb_cdr_pbias id0s 0.81433f
+C2810 ge6 IB_PLL 0.03205f
+C2811 WCK_IN dn1b 0.03056f
+C2812 AVN cdr_en 0.28095f
+C2813 t6 VDD_PLL_SW 2.30136f
+C2814 trb4 otrs 0.05071f
+C2815 oeb otr4 0.03473f
+C2816 AVP fdnl 0.39149f
+C2817 otr1 g2b 0.03851f
+C2818 tra4 tra4_s0 0.28082f
+C2819 IB_PLL itr3s 0.05656f
+C2820 g1 IBIAS 0.05465f
+C2821 g2 otrs 0.10155f
+C2822 t7 g0 0.08875f
+C2823 UP3 id1s 0.13614f
+C2824 REF_PLL g0 0.07437f
+C2825 otrs FUP 0.07474f
+C2826 r1b_s0 r1b 0
+C2827 otr3 tra2_s0 0.09349f
+C2828 AVN itr1h 0.00291f
+C2829 WCK_IN AVN 0.27651f
+C2830 otr3 AVP 0.19333f
+C2831 ot7 ref_sel 0.10871f
+C2832 UP0 ot 0.26164f
+C2833 dn1b id1h 0.11727f
+C2834 itr1s FUP 0.04652f
+C2835 ge5 cdr_en 0.03739f
+C2836 ot5 FDN 0.03623f
+C2837 otr1 trb4 0.05033f
+C2838 t3an t4 0.4413f
+C2839 atb_cdr_pbias t5n 0.09622f
+C2840 ge4 ot 0.27948f
+C2841 DN1 g2b 0.06537f
+C2842 otr1 g2 0.07725f
+C2843 itr4h FDN 0.03779f
+C2844 t6 t5 4.59524f
+C2845 otr1 FUP 0.03927f
+C2846 UP3 id3s 0.04205f
+C2847 ota1 AVP 0.29357f
+C2848 t7 t1 0.10805f
+C2849 UP0 otr0 0.03174f
+C2850 REF_PLL t1 0.12537f
+C2851 ge6 ge7 6.85285f
+C2852 oeb r1b 0.31242f
+C2853 AVN id1h 0.00354f
+C2854 t5an_s0 ge3 0.17121f
+C2855 itr4s cdr_en 0.03652f
+C2856 WCK_IN ge5 0.04688f
+C2857 otr3 t6 0.05773f
+C2858 UP0 t2 0.07702f
+C2859 refm_s0 AVN 0.04239f
+C2860 IBIAS tra1_s0 0.01289f
+C2861 otr0 ge4 0.04073f
+C2862 DN3 REF_IN 0.05172f
+C2863 UP2 g0 0.03182f
+C2864 pfd_mode id3s 0.04191f
+C2865 DN1 trb4 0.06265f
+C2866 WCK_IN itr4s 0.04957f
+C2867 DN1 up1b 0.12976f
+C2868 itr3s trb2 0.24093f
+C2869 DN1 g2 0.04166f
+C2870 DN1 FUP 0.04406f
+C2871 WCK_IN itr2h 0.00152f
+C2872 DN3 g1 0.1205f
+C2873 UP1 id3h 0.04137f
+C2874 t3an_s0 g2b 0.12031f
+C2875 g0 oe 0.18933f
+C2876 DN2 up3b 0
+C2877 tra2 trb2 0.48014f
+C2878 ge3_s0 ge2 0
+C2879 oeb t7n_s0 0.09049f
+C2880 iu0h DN0 0.01679f
+C2881 itr3h enb 1.57014f
+C2882 AVP DN2 2.66959f
+C2883 WCK_IN ifuh 0.02315f
+C2884 otrsb trb1 1.93699f
+C2885 UP2 t1 0.07826f
+C2886 t3n t3n_s0 0.7509f
+C2887 fdnb DN0 0.05835f
+C2888 t3 ot 0.18703f
+C2889 UP1 ge6_s0 0
+C2890 id2s DN2 0.21453f
+C2891 g2 t3an_s0 0.10977f
+C2892 t2n_s0 t2 0.27085f
+C2893 ifds itr0s 0.78677f
+C2894 UP1 tra3 0.05003f
+C2895 ot4 ge4 0.40547f
+C2896 ot7 otr4 0.12238f
+C2897 AVP id0s 0.23046f
+C2898 REF_IN dn3b 0.05523f
+C2899 atb_cdr_pbias dn1b 1.97882f
+C2900 UP1 ot6 0.07014f
+C2901 t1 oe 0.39652f
+C2902 VDD_PLL_SW ref_sel 2.11461f
+C2903 opd HOLD_PLL 0.03174f
+C2904 ifdh itr0s 0.04024f
+C2905 REF_IN r0b 0.21795f
+C2906 t6 DN2 0.10829f
+C2907 itr1s otrs 0.17675f
+C2908 t3 otr0 0.07025f
+C2909 otr1 otrs 1.33168f
+C2910 ipu ot 74.814f
+C2911 t2 t3 21.8357f
+C2912 t1 t6n 0.28595f
+C2913 atb_cdr_pbias AVN 0.51962f
+C2914 REF_IN ge3 0.04551f
+C2915 ref_sel trb3 0.00818f
+C2916 itr4s tra4 1.93974f
+C2917 otr2 g0 0.04073f
+C2918 ota2 ot 0.24528f
+C2919 g1 g1b 3.80893f
+C2920 g1 ge3 0.45053f
+C2921 UP3 ge6 0.07022f
+C2922 ipu otr0 0.34283f
+C2923 opd VCTRL 0.26925f
+C2924 ref_sel t5 0.07681f
+C2925 VDD_PLL_SW nbd 0.31652f
+C2926 otr1 itr1s 0.54266f
+C2927 UP3 itr3s 0.07609f
+C2928 t7 FDN 0.08875f
+C2929 ipu t2 0.14555f
+C2930 AVP tra4_s0 0.00554f
+C2931 t1_s1 g2b 0.48708f
+C2932 DN1 otrs 0.09937f
+C2933 IBIAS ot 0.28275f
+C2934 ota2 otr0 0.04057f
+C2935 otr3 ref_sel 0.0409f
+C2936 atb_cdr_pbias ge5 0.04073f
+C2937 ge6 pfd_mode 0.07247f
+C2938 t7 ot5 0.08061f
+C2939 REF_PLL ot5 0.05578f
+C2940 up1b id3s 0.17962f
+C2941 REF_PLL itr4h 0.07201f
+C2942 itr3s pfd_mode 0.08414f
+C2943 r0b_s0 rsb 0.97747f
+C2944 id3s FUP 0.00754f
+C2945 ge2_s0 t4 0
+C2946 r1b_s1 enb 0.10783f
+C2947 IB_PLL pfdb 0
+C2948 atb_cdr_pbias itr4s 2.87152f
+C2949 otr2 t1 0.07826f
+C2950 t6 t5n 0.8411f
+C2951 IBIAS otr0 0.04513f
+C2952 DN1 itr1s 0.05883f
+C2953 atb_cdr_pbias itr2h 0.77268f
+C2954 ota1 ref_sel 0.03174f
+C2955 otr2 trb1 0.10455f
+C2956 VDD_PLL_SW t4 5.52565f
+C2957 AVN iu3h 0.00133f
+C2958 IBIAS t2 0.10368f
+C2959 DN1 ge4_s0 0
+C2960 g2 t1_s1 0.09121f
+C2961 DN1 otr1 0.05088f
+C2962 id0h DN0 0.04595f
+C2963 ot3 AVP 0.03655f
+C2964 r0b_s0 r0b_s1 0.53402f
+C2965 VDD_PLL_SW otr4 5.18971f
+C2966 otrsb FDN 0.16506f
+C2967 UP0 up0b 0.61651f
+C2968 ipu ot4 3.25912f
+C2969 UP1 enb 0.25969f
+C2970 atb_cdr_pbias ifuh 0.87842f
+C2971 cdr_en DN0 0.10672f
+C2972 UP2 FDN 0.03287f
+C2973 otrsb itr4h 0.00579f
+C2974 fupl FUP 0.03371f
+C2975 UP2 ot5 0.04214f
+C2976 t6 ot3 0.03139f
+C2977 REF_IN id3h 0.05686f
+C2978 t5 t4 7.1868f
+C2979 itr0s UP0 0.04868f
+C2980 UP3 t5a 0.04389f
+C2981 enb ina 0.07678f
+C2982 UP3 id2h 0.10095f
+C2983 oeb ge1_s0 0
+C2984 oe FDN 0.09655f
+C2985 AVP dn1b 0.02679f
+C2986 DN3 ot 0.2117f
+C2987 AVN up3b 0.55009f
+C2988 AVN tra2_s0 0.00327f
+C2989 opd IB_PLL 0.03174f
+C2990 otr4 t5 0.04817f
+C2991 DN2 ref_sel 0
+C2992 DN3 fupb_s0 0.01008f
+C2993 otr3 t4 0.05867f
+C2994 oe ot5 0.32119f
+C2995 fdnb HOLD_PLL 0.07221f
+C2996 pfd_mode t5a 0.04078f
+C2997 UP0 t5n_s0 0.00434f
+C2998 VDD_PLL_SW r1b 4.60224f
+C2999 t7n ot 0.27883f
+C3000 AVP AVN 0.12945p
+C3001 DN3 otr0 0.04189f
+C3002 otr3 otr4 7.06989f
+C3003 tra3 trb3_s0 0.2461f
+C3004 UP1 t5an 0
+C3005 ref_sel id0s 0.07864f
+C3006 DN3 t2 0.07709f
+C3007 ot2 oe 0.34868f
+C3008 AVN id2s 0.22368f
+C3009 REF_IN tra3 0.06158f
+C3010 IB_PLL ibs 0.39587f
+C3011 ot6 REF_IN 0.15289f
+C3012 t3n_s0 t3an 0.00944f
+C3013 ge6_s0 g1 0
+C3014 ota1 otr4 0.03174f
+C3015 VDD_PLL_SW itr2s 3.66383f
+C3016 g0b g2b 0.1333f
+C3017 t2 t7n 0.23137f
+C3018 ge6 g2 0.08704f
+C3019 ge5 AVP 0.37672f
+C3020 ge6 FUP 0.07729f
+C3021 ot6 g1 0.06956f
+C3022 r1b_s0 r1b_s1 0.53402f
+C3023 itr3s FUP 0.03987f
+C3024 VDD_PLL_SW t7n_s0 0.06416f
+C3025 opd ge7 1.80236f
+C3026 fupb enb 1.53897f
+C3027 tra2_s0 itr2h 0
+C3028 DN1 id1s 0.10224f
+C3029 otr2 FDN 0
+C3030 t7 REF_PLL 0.12557f
+C3031 ref_sel t5n 0.06834f
+C3032 AVP itr4s 1.05416f
+C3033 oeb_s0 oeb 0.67458f
+C3034 AVP itr2h 0.0085f
+C3035 otr2 ot5 0.03623f
+C3036 ge3 ot 0.35467f
+C3037 DN3 ot4 0.00317f
+C3038 otr2 itr4h 0.04283f
+C3039 g2 g0b 0.09587f
+C3040 t6 ge5 0.08598f
+C3041 DN2 t4 0.05311f
+C3042 up2b iu2s 1.98829f
+C3043 up2b UP2 0.7504f
+C3044 oeb r1b_s1 0.10252f
+C3045 t5an t5an_s0 0.94409f
+C3046 t7n ot4 0
+C3047 t5n_s0 t3 0.09049f
+C3048 DN2 otr4 0.05872f
+C3049 otr3 itr2s 0
+C3050 AVP ifuh 0.02047f
+C3051 otr0 ge3 0.04551f
+C3052 id0h rsb 0
+C3053 g1b t2 0
+C3054 DN1 id3s 0.05422f
+C3055 t2 ge3 0.17065f
+C3056 otrsb REF_PLL 0.18204f
+C3057 iu0s up0b 1.68255f
+C3058 cdr_en rsb 0.40607f
+C3059 IBIAS up0b 0.21578f
+C3060 atb_cdr_pbias DN0 0.35496f
+C3061 t7 UP2 0.08875f
+C3062 UP0 g0 0.03174f
+C3063 pfd_mode pfdb 2.04939f
+C3064 HOLD_PLL cdr_en 0.39042f
+C3065 UP2 REF_PLL 0.05129f
+C3066 ipu t5n_s0 0.10281f
+C3067 enb trb3_s0 0.12227f
+C3068 UP1 oeb 0.03174f
+C3069 ge7_s0 ot 0.00251f
+C3070 g2 t5a 0.07491f
+C3071 fdnb IB_PLL 0.05086f
+C3072 g0 ge4 0.05542f
+C3073 REF_IN enb 0.26107f
+C3074 t7 oe 0.33682f
+C3075 itr0s IBIAS 0.06207f
+C3076 REF_PLL oe 0.2124f
+C3077 r0b_s1 cdr_en 0.43674f
+C3078 WCK_IN HOLD_PLL 0.06387f
+C3079 trb0 enb 0
+C3080 t5n t4 0.00165f
+C3081 oeb ina 0.06543f
+C3082 ge6 otrs 0.03185f
+C3083 UP3 trb1_s0 0.0683f
+C3084 t7 t6n 0.8411f
+C3085 itr3s otrs 0.26054f
+C3086 VCTRL cdr_en 0.05074f
+C3087 cdr_en t3a 0.07674f
+C3088 REF_PLL t6n 0.25665f
+C3089 otr4 t5n 0
+C3090 IBIAS t5n_s0 0.00165f
+C3091 UP0 t1 0.07826f
+C3092 ge1 ot 0.06247f
+C3093 t2n t2n_s0 0.59824f
+C3094 UP3 opd 0.03174f
+C3095 otr4 tra4_s0 0.48979f
+C3096 tra2 otrs 1.93799f
+C3097 UP2 otrsb 0.12013f
+C3098 AVN ref_sel 0.54821f
+C3099 UP2 iu2s 0.44788f
+C3100 pfd_mode trb1_s0 0.01281f
+C3101 id1s id3s 0
+C3102 WCK_IN VCTRL 0.03804f
+C3103 WCK_IN t3a 0.09446f
+C3104 dn0b iu0h 0.16848f
+C3105 t2n_s0 g0 0.11339f
+C3106 g0b otrs 0
+C3107 itr3s itr1s 1.41193f
+C3108 otr1 ge6 0.03255f
+C3109 refm_s0 HOLD_PLL 0.00212f
+C3110 UP1 tra1 0.05188f
+C3111 opd pfd_mode 0.03174f
+C3112 otrsb oe 0.04807f
+C3113 itr0h otrs 0.00206f
+C3114 otr1 itr3s 0.94338f
+C3115 ot3 t4 0.15001f
+C3116 t2n t3 0.8411f
+C3117 UP2 oe 0.13386f
+C3118 t2 ge1 0.00547f
+C3119 oeb t5an_s0 0.00197f
+C3120 VDD_PLL_SW t3n_s0 2.04922f
+C3121 g1 t5an 0.34758f
+C3122 ge5 ref_sel 0.04073f
+C3123 tra1_s0 enb 0.09749f
+C3124 g0 t3 0.09566f
+C3125 otr2 t7 0.08875f
+C3126 VDD_PLL_SW ge1_s0 0.00346f
+C3127 ge6_s0 ot 0.00251f
+C3128 otr2 REF_PLL 0.05806f
+C3129 otrsb trb4_s0 0.60615f
+C3130 DN3 itr0s 0.058f
+C3131 atb_cdr_pbias tra0_s0 0
+C3132 HOLD_PLL t6n_s0 0.01907f
+C3133 ibs pfd_mode 0
+C3134 DN1 ge6 0.08367f
+C3135 VDD_PLL_SW itr3h 6.10326f
+C3136 itr4s ref_sel 0.03623f
+C3137 ot6 ot 21.3471f
+C3138 t2n_s0 t1 0.07855f
+C3139 DN1 itr3s 0.10696f
+C3140 t6n oe 0.23849f
+C3141 ipu g0 0.5689f
+C3142 tra3 otr0 0.04424f
+C3143 AVP DN0 4.11421f
+C3144 ot6 otr0 0.08056f
+C3145 UP1 ot7 0.11349f
+C3146 dn3b up0b 0.20016f
+C3147 t1 t3 0.03933f
+C3148 t3a t6n_s0 0.1194f
+C3149 AVN t4 0.01356f
+C3150 ota2 g0 0.04057f
+C3151 IB_PLL cdr_en 0.44765f
+C3152 r1b_s0 REF_IN 0.02945f
+C3153 atb_cdr_pbias rsb 0
+C3154 otr2 otrsb 0.22519f
+C3155 AVN otr4 0.1048f
+C3156 inah oe 0.05109f
+C3157 atb_cdr_pbias HOLD_PLL 0.23807f
+C3158 WCK_IN IB_PLL 0.09964f
+C3159 otr3 itr3h 0.23596f
+C3160 IBIAS g0 0.04501f
+C3161 t6 DN0 0.08666f
+C3162 ipu t1 4.12019f
+C3163 oeb trb3_s0 0.00144f
+C3164 oeb_s0 VDD_PLL_SW 0.10288f
+C3165 ge5 t4 0.18186f
+C3166 otr2 oe 0.09532f
+C3167 UP0 FDN 0.00362f
+C3168 oeb REF_IN 0.08357f
+C3169 fupb ifus 1.52081f
+C3170 dn0b id0h 0.11003f
+C3171 UP0 ot5 0.07556f
+C3172 ge5 otr4 0.04372f
+C3173 UP3 fdnb 0.06857f
+C3174 VDD_PLL_SW t1_s0 0.02044f
+C3175 ge4 FDN 0.04073f
+C3176 atb_cdr_pbias VCTRL 0.05074f
+C3177 atb_cdr_pbias t3a 0.07674f
+C3178 DN1 t5a 0.00263f
+C3179 cdr_en ge7 0.06798f
+C3180 opd g2 0.03174f
+C3181 iu1h iu1s 1.62412f
+C3182 g1 oeb 0.08036f
+C3183 opd FUP 0.03174f
+C3184 refm_s0 IB_PLL 0.02868f
+C3185 ge4 ot5 0
+C3186 dn0b cdr_en 0.03851f
+C3187 VDD_PLL_SW r1b_s1 0.10445f
+C3188 t5n_s0 ge3 0.1266f
+C3189 IBIAS t1 0.10492f
+C3190 itr4s otr4 7.60464f
+C3191 fdnb pfd_mode 0.03502f
+C3192 WCK_IN ge7 0.08029f
+C3193 fupb_s0 enb 0.5119f
+C3194 AVP tra0_s0 0.01876f
+C3195 AVN itr2s 0.21679f
+C3196 IB_PLL t6n_s0 0.00132f
+C3197 trb0_s0 otrs 0
+C3198 enb otr0 0.2589f
+C3199 DN3 g0 0.05188f
+C3200 UP1 VDD_PLL_SW 2.63039f
+C3201 REF_IN tra1 0
+C3202 ifds otrsb 0
+C3203 cdr_en refmb 0.22009f
+C3204 g1 t3an 0.3234f
+C3205 UP3 iu1h 0.08017f
+C3206 VDD_PLL_SW ina 0.6083f
+C3207 ifdh otrsb 0
+C3208 otrsb trb2_s0 0.89206f
+C3209 UP1 trb3 0.06845f
+C3210 up0b id3h 0.24109f
+C3211 t3 FDN 0.1017f
+C3212 t5an ot 0.33367f
+C3213 UP1 t5 0.07681f
+C3214 AVP rsb 0
+C3215 DN3 t1 0.07866f
+C3216 t1_s1 g0b 0.08074f
+C3217 AVP HOLD_PLL 0.38824f
+C3218 atb_cdr_pbias IB_PLL 1.59209f
+C3219 trb1_s0 otrs 0.10962f
+C3220 DN3 trb1 0.15871f
+C3221 otr3 UP1 0.03623f
+C3222 ref_sel DN0 58.9668f
+C3223 ipu FDN 0.30149f
+C3224 itr2s itr2h 2.96322f
+C3225 UP3 id0h 0.08757f
+C3226 t1 t7n 0.27883f
+C3227 ot2 t3 0.67943f
+C3228 t2 t5an 0.2284f
+C3229 opd otrs 0.03174f
+C3230 iu1s id1h 0.10369f
+C3231 REF_IN ot7 0.14526f
+C3232 ipu ot5 6.47883f
+C3233 ota2 FDN 0.04057f
+C3234 id2h id3s 0
+C3235 VDD_PLL_SW t5an_s0 2.10014f
+C3236 UP3 cdr_en 0.05167f
+C3237 id0h pfd_mode 0.09511f
+C3238 g0 g1b 0.20782f
+C3239 trb1_s0 itr1s 0.12279f
+C3240 UP1 ota1 0.03174f
+C3241 tra1 tra1_s0 0.25537f
+C3242 t6 HOLD_PLL 0.04841f
+C3243 AVP VCTRL 9.45626f
+C3244 g1 ot7 0.10661f
+C3245 g0 ge3 0.10776f
+C3246 fupb VDD_PLL_SW 2.90531f
+C3247 otr1 trb1_s0 0.68971f
+C3248 t7 UP0 0.08875f
+C3249 cdr_en pfd_mode 1.43964f
+C3250 ipu ot2 1.28706f
+C3251 WCK_IN UP3 0.04722f
+C3252 IBIAS FDN 0
+C3253 fdnb up1b 0
+C3254 fdnb FUP 0.15983f
+C3255 otr1 opd 0.03174f
+C3256 t7 ge4 0.00372f
+C3257 REF_PLL ge4 0.06028f
+C3258 atb_cdr_pbias ge7 0.06798f
+C3259 IBIAS ot5 0.1151f
+C3260 refm REF_PLL 0.24998f
+C3261 WCK_IN pfd_mode 0.05634f
+C3262 ge3_s0 t4 0
+C3263 atb_cdr_pbias dn0b 2.58961f
+C3264 t6 t3a 0.69025f
+C3265 fdnb fdnb_s0 0.3947f
+C3266 fupb fdnl 2.9341f
+C3267 g1b t1 0.42219f
+C3268 atb_cdr_pbias trb2 0.17209f
+C3269 DN1 trb1_s0 0.07969f
+C3270 UP3 id1h 0.08017f
+C3271 otr2 trb2_s0 0.73864f
+C3272 t1 ge3 0.18752f
+C3273 tra2 itr3s 0.24045f
+C3274 UP1 DN2 0.25425f
+C3275 DN0 t4 0.11536f
+C3276 DN1 opd 0.03174f
+C3277 oeb ot 15.6816f
+C3278 otrsb UP0 0.12013f
+C3279 fupb_s0 oeb 0.02145f
+C3280 otr4 DN0 0.04939f
+C3281 UP2 UP0 0.01417f
+C3282 refm_s0 pfd_mode 0.11034f
+C3283 UP1 id0s 0.15839f
+C3284 DN2 ina 0.01798f
+C3285 atb_cdr_pbias refmb 0.20732f
+C3286 VDD_PLL_SW trb3_s0 0.01219f
+C3287 up1b iu1h 0.03021f
+C3288 oeb otr0 0.08059f
+C3289 AVN t3n_s0 0.00192f
+C3290 UP2 ge4 0
+C3291 atb_cdr_pbias iu1s 0.718f
+C3292 VDD_PLL_SW REF_IN 3.71982f
+C3293 UP0 oe 0.18441f
+C3294 DN3 FDN 1.51252f
+C3295 oeb t2 0.02595f
+C3296 VDD_PLL_SW trb0 2.43001f
+C3297 t7 t3 0.13882f
+C3298 up0b enb 0.37724f
+C3299 REF_PLL t3 0.10935f
+C3300 AVP IB_PLL 0.43873f
+C3301 cdr_en g2b 0.13927f
+C3302 oe ge4 0.21075f
+C3303 DN3 ot5 0.043f
+C3304 trb3 trb3_s0 0.30626f
+C3305 DN3 itr4h 0.00357f
+C3306 g1 VDD_PLL_SW 4.62832f
+C3307 refm oe 0.26177f
+C3308 UP1 t5n 0
+C3309 WCK_IN g2b 0.04591f
+C3310 ref_sel rsb 3.47404f
+C3311 itr0s enb 0.90167f
+C3312 REF_IN fdnl 0.07758f
+C3313 t7 ipu 0.40495f
+C3314 HOLD_PLL ref_sel 0.06934f
+C3315 ipu REF_PLL 0.50096f
+C3316 REF_IN t5 0.04515f
+C3317 trb4 cdr_en 0.04555f
+C3318 t6 IB_PLL 0.04322f
+C3319 otr3 trb3_s0 0.45942f
+C3320 g2 cdr_en 0.00291f
+C3321 cdr_en FUP 0.07247f
+C3322 atb_cdr_pbias UP3 0.53994f
+C3323 ge1 t1 0.2605f
+C3324 ge6_s0 g0 0.00748f
+C3325 tra1 otr0 0.1719f
+C3326 fupb DN2 0.06191f
+C3327 ifdh ifds 2.68077f
+C3328 otr3 REF_IN 0.8312f
+C3329 ota2 REF_PLL 0.06146f
+C3330 g1 t5 0.15717f
+C3331 r0b_s1 ref_sel 0.07388f
+C3332 otr3 trb0 0
+C3333 WCK_IN trb4 0.06367f
+C3334 ot6 g0 0.10644f
+C3335 WCK_IN up1b 0.08638f
+C3336 AVP ge7 0.50185f
+C3337 WCK_IN g2 0.0973f
+C3338 UP2 t3 0.07025f
+C3339 otr3 g1 0.10501f
+C3340 fdnb_s0 cdr_en 0.06044f
+C3341 atb_cdr_pbias pfd_mode 0.34043f
+C3342 t7 IBIAS 1.28727f
+C3343 VDD_PLL_SW tra1_s0 0.01246f
+C3344 AVP dn0b 0.01728f
+C3345 IB_PLL VSS 6.33353f
+C3346 IBIAS VSS 10.6502f
+C3347 HOLD_PLL VSS 6.88323f
+C3348 pfd_mode VSS 9.74348f
+C3349 REF_PLL VSS 13.6311f
+C3350 ref_sel VSS 7.76573f
+C3351 otr2 VSS 5.06687f
+C3352 otr1 VSS 4.71296f
+C3353 otr0 VSS 7.2264f
+C3354 otr3 VSS 7.36615f
+C3355 otrs VSS 12.9857f
+C3356 WCK_IN VSS 6.95021f
+C3357 REF_IN VSS 4.70605f
+C3358 otr4 VSS 8.06484f
+C3359 UP1 VSS 61.8426f
+C3360 UP2 VSS 4.33913f
+C3361 UP0 VSS 24.8029f
+C3362 cdr_en VSS 15.6021f
+C3363 DN0 VSS 3.37881f
+C3364 UP3 VSS 5.12791f
+C3365 DN3 VSS 5.44167f
+C3366 DN1 VSS 3.89412f
+C3367 DN2 VSS 4.39286f
+C3368 atb_cdr_pbias VSS 73.5016f
+C3369 FDN VSS 2.87168f
+C3370 FUP VSS 2.96643f
+C3371 g2 VSS 9.99908f
+C3372 g1 VSS 8.89506f
+C3373 g0 VSS 10.7012f
+C3374 VCTRL VSS 4.34147f
+C3375 VDD_PLL_SW VSS 1.97436p
+C3376 oeb_s0 VSS 1.74115f
+C3377 pfdb VSS 3.76699f
+C3378 ibs VSS 0.37853f
+C3379 nbd VSS 6.5479f
+C3380 HOLD_PLL_s0 VSS 1.73012f
+C3381 refmb VSS 4.89886f
+C3382 refm VSS 4.50129f
+C3383 refm_s0 VSS 2.82421f
+C3384 r1b VSS 5.03801f
+C3385 r1b_s1 VSS 2.7891f
+C3386 r1b_s0 VSS 3.41982f
+C3387 r0b VSS 5.22704f
+C3388 r0b_s1 VSS 2.73553f
+C3389 r0b_s0 VSS 3.36832f
+C3390 rsb VSS 5.01831f
+C3391 iu3s VSS 2.39758f
+C3392 iu3h VSS 1.51929f
+C3393 up3b VSS 5.47334f
+C3394 id2s VSS 1.76248f
+C3395 id2h VSS 0.87994f
+C3396 iu2s VSS 2.44821f
+C3397 iu2h VSS 1.47614f
+C3398 dn2b VSS 2.43297f
+C3399 up2b VSS 5.58793f
+C3400 id1s VSS 1.65953f
+C3401 id1h VSS 0.75611f
+C3402 iu1s VSS 2.30466f
+C3403 iu1h VSS 1.33761f
+C3404 dn1b VSS 2.39212f
+C3405 up1b VSS 5.66007f
+C3406 id0s VSS 1.52684f
+C3407 id0h VSS 0.62699f
+C3408 iu0s VSS 2.30067f
+C3409 iu0h VSS 1.19924f
+C3410 dn0b VSS 2.80558f
+C3411 up0b VSS 5.62641f
+C3412 trb0 VSS 3.58013f
+C3413 trb0_s0 VSS 2.23647f
+C3414 tra0 VSS 3.41266f
+C3415 tra0_s0 VSS 2.17073f
+C3416 itr0h VSS 1.24307f
+C3417 ifds VSS 3.03593f
+C3418 ifdh VSS 1.50735f
+C3419 ifus VSS 3.0501f
+C3420 ifuh VSS 1.77351f
+C3421 fdnl VSS 2.81129f
+C3422 fupl VSS 3.03516f
+C3423 fdnb VSS 4.22047f
+C3424 fdnb_s0 VSS 0.50806f
+C3425 fupb VSS 5.85491f
+C3426 fupb_s0 VSS 0.58612f
+C3427 id3s VSS 8.52394f
+C3428 dn3b VSS 4.43424f
+C3429 id3h VSS 5.31467f
+C3430 tra3_s0 VSS 2.39176f
+C3431 itr3h VSS 2.81671f
+C3432 trb2 VSS 3.91059f
+C3433 trb2_s0 VSS 2.50417f
+C3434 tra2 VSS 2.8784f
+C3435 tra2_s0 VSS 2.1968f
+C3436 itr2s VSS 2.49662f
+C3437 itr2h VSS 1.02166f
+C3438 trb1 VSS 3.68529f
+C3439 trb1_s0 VSS 2.42602f
+C3440 tra1 VSS 2.72276f
+C3441 tra1_s0 VSS 2.18815f
+C3442 itr1s VSS 1.99112f
+C3443 itr1h VSS 0.42107f
+C3444 itr0s VSS 8.32456f
+C3445 trb4_s0 VSS 2.14011f
+C3446 tra4 VSS 4.27573f
+C3447 tra4_s0 VSS 1.96287f
+C3448 itr4h VSS 2.74743f
+C3449 itr3s VSS 6.84928f
+C3450 trb3 VSS 3.47254f
+C3451 otrsb VSS 17.9463f
+C3452 trb3_s0 VSS 2.06702f
+C3453 tra3 VSS 11.9089f
+C3454 itr4s VSS 8.76318f
+C3455 trb4 VSS 8.6772f
+C3456 t3n VSS 4.59939f
+C3457 t3n_s0 VSS 0.86771f
+C3458 t3an VSS 3.88826f
+C3459 t3an_s0 VSS 2.31046f
+C3460 t2n VSS 3.85311f
+C3461 t2n_s0 VSS 0.77663f
+C3462 t1_s1 VSS 1.89505f
+C3463 t1_s0 VSS 2.21303f
+C3464 g1b VSS 1.91517f
+C3465 g0b VSS 2.06446f
+C3466 enb VSS 32.9444f
+C3467 ina VSS 23.0268f
+C3468 inah VSS 1.23314f
+C3469 ge3_s0 VSS 1.60867f
+C3470 ot2 VSS 1.78891f
+C3471 ge2 VSS 1.95374f
+C3472 ge2_s0 VSS 1.6127f
+C3473 t2 VSS 7.21024f
+C3474 ot1 VSS 1.06458f
+C3475 ge1 VSS 1.73397f
+C3476 ge1_s0 VSS 1.57597f
+C3477 t1 VSS 8.36454f
+C3478 ot0 VSS 0.77804f
+C3479 t7n VSS 5.26984f
+C3480 t7n_s0 VSS 2.70158f
+C3481 t3a VSS 8.55873f
+C3482 t6n VSS 4.97264f
+C3483 t6n_s0 VSS 2.74664f
+C3484 t5n VSS 4.50492f
+C3485 t5n_s0 VSS 2.36919f
+C3486 t5a VSS 3.42877f
+C3487 t5an VSS 5.46268f
+C3488 t5an_s0 VSS 1.2449f
+C3489 g2b VSS 8.39089f
+C3490 t3 VSS 12.5717f
+C3491 ge5_s0 VSS 1.45972f
+C3492 t5 VSS 5.79515f
+C3493 ot4 VSS 3.16578f
+C3494 ge4 VSS 4.24406f
+C3495 ge4_s0 VSS 1.32898f
+C3496 t4 VSS 11.5977f
+C3497 ge3 VSS 6.67892f
+C3498 ot3 VSS 1.81011f
+C3499 ge6_s0 VSS 1.19683f
+C3500 t6 VSS 5.27324f
+C3501 ge5 VSS 2.83566f
+C3502 ot5 VSS 9.91537f
+C3503 ge7_s0 VSS 1.19673f
+C3504 t7 VSS 8.21865f
+C3505 ge6 VSS 6.75647f
+C3506 ot6 VSS 12.9681f
+C3507 AVN VSS 42.0492f
+C3508 AVP VSS 21.4908f
+C3509 ge7 VSS 15.1708f
+C3510 ot VSS 25.5678f
+C3511 ot7 VSS 18.4368f
+C3512 ipu VSS 40.1936f
+C3513 oe VSS 20.2606f
+C3514 ota2 VSS 13.7248f
+C3515 ota1 VSS 8.16235f
+C3516 oeb VSS 14.5021f
+C3517 opd VSS 5.25227f
+.ends
+

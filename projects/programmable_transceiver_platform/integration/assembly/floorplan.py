@@ -26,16 +26,28 @@ for n, v in C.STAGED.get(chip, {}).items():
     led = {x['item']: x['master'] for x in json.load(open(f"{C.ROOT}/scratch/reviews/die-fit/{chip}/ledger.json"))['rows']}
     if MJ.get(v['master'], {}).get('w') and n in inst0:      # the ledger may still book the old master for the instance
         for m_ in {inst0[n]['master'], led.get(n, inst0[n]['master'])}: sizes[m_] = [round(MJ[v['master']]['w']+70, 2), round(MJ[v['master']]['h'], 2)]
+# routing room round congested blocks (KH-2 reroute, off by default): SPREAD_MASTERS (regex on the master) are booked
+# SPREAD_UM larger on every side and placed centred in their booking
+import re as _re
+SPM = _re.compile(os.environ['SPREAD_MASTERS']) if os.environ.get('SPREAD_MASTERS') else None; SPU = float(os.environ.get('SPREAD_UM', '15'))
+real_size = {}
+if SPM:
+    for m_ in [m_ for m_ in sizes if SPM.fullmatch(m_)]: real_size[m_] = list(sizes[m_]); sizes[m_] = [round(sizes[m_][0]+2*SPU, 2), round(sizes[m_][1]+2*SPU, 2)]
 json.dump(pj, open(RUN+'/fp_pads.json', 'w')); json.dump(sizes, open(RUN+'/fp_sizes.json', 'w'))
 SPREAD = float(os.environ.get('SPREAD', '40'))     # routing margin the packer keeps round fixed placements (coordinator 2026-11-21)
 # ledger item -> master as the die-fit ledger books it; where the conn now uses another master (e.g. isw_rf_tx -> isw_wired,
 # CB8-16), the packer books the conn master's outline
 LEDGER_MASTER = {x['item']: x['master'] for x in json.load(open(f"{C.ROOT}/scratch/reviews/die-fit/{chip}/ledger.json"))['rows']}
+# routing channel round the digital macro (KH-2 reroute, off by default): MACRO_FIX="x,y" keeps the macro at that lower-left
+# corner and MACRO_CHAN um round it stay free of blocks (its ~970 edge pins, the c_* control nets among them)
+FIXED = dict(C.FIXED_PLACE.get(chip, {})); MARGIN = {}
+if os.environ.get('MACRO_FIX'):
+    FIXED['digital'] = tuple(float(v) for v in os.environ['MACRO_FIX'].split(',')); MARGIN['digital'] = float(os.environ.get('MACRO_CHAN', SPREAD))
 def fixed_rects():
     out = {}
-    for m, (x, y) in C.FIXED_PLACE.get(chip, {}).items():
-        w, h = msize(m); w -= 70 if m in C.STAGED.get(chip, {}) else 0
-        out['fix_'+m] = [x-SPREAD, y-SPREAD, round(x+w+SPREAD, 2), round(y+h+SPREAD, 2)]
+    for m, (x, y) in FIXED.items():
+        w, h = msize(m); w -= 70 if m in C.STAGED.get(chip, {}) else 0; g_ = MARGIN.get(m, SPREAD)
+        out['fix_'+m] = [x-g_, y-g_, round(x+w+g_, 2), round(y+h+g_, 2)]
     if C.FIXED_DECAP.get(chip): out['decapslot'] = list(C.FIXED_DECAP[chip]['slot'])
     for k, r in C.ROUTE_CHANNELS.get(chip, {}).items(): out[k] = list(r)
     for k, bd in enumerate(C.ISLAND_BARS.get(chip, [])):          # island bars: no block under them
@@ -63,11 +75,11 @@ try:
                 if net.startswith('RAIL_'): _sw.setdefault(net[5:], n)
     for isl_, loads_ in _iw.items():
         for n, v in loads_.items():
-            if v.get('ma', 0) > 1.0 and isl_ in _sw and n in inst0 and n not in C.FIXED_PLACE.get(chip, {}): ISL_ADJ.append([n, _sw[isl_], 400, 2])
+            if v.get('ma', 0) > 1.0 and isl_ in _sw and n in inst0 and n not in FIXED: ISL_ADJ.append([n, _sw[isl_], 400, 2])
 except (OSError, KeyError): pass
 env = dict(os.environ, ADJ=json.dumps([[a, b, d, w] for a, b, d, w in C.FLOW_ADJ.get(chip, [])]+[[b, a, d, w] for a, b, d, w in C.FLOW_ADJ.get(chip, [])]+ISL_ADJ),
            KEEPAWAY=json.dumps(C.FLOW_KEEPAWAY.get(chip, [])), HALO_ITEMS=json.dumps(C.HALO_ITEMS.get(chip, {})), HALO=os.environ.get('HALO', {'rf': '4', 'wired': '10'}[chip]), CHIP=chip, SCEN='S', TAG='s', TRIES=os.environ.get('TRIES', '6'), PADS_JSON=RUN+'/fp_pads.json',
-           SIZES_JSON=RUN+'/fp_sizes.json', RUNDIR=RUN+'/fit', CHANNEL=os.environ.get('CHANNEL', '40'), ISLAND_W=os.environ.get('ISLAND_W', '0.3'), NOROT=','.join(C.NOROT.get(chip, [])+list(C.STAGED.get(chip, {}))+list(C.GROUP_BOOK.get(chip, {}))+[n for n, i in inst0.items() if i['master'] in C.GRID_SNAP]), POCKET='1' if chip == 'wired' else '0', DROP=','.join(C.STALE_BOOK.get(chip, [])+C.PASS2.get(chip, [])+list(C.FIXED_PLACE.get(chip, {}))+['isw_wired_tx']+[m for b, ms in C.GROUP_BOOK.get(chip, {}).items() for m in ms if m != b]), EXTRA_RSV=json.dumps(fixed_rects()), ITEM_SIZES=json.dumps({**{n: list(sizes[inst0[n]['master']]) for n, m_ in LEDGER_MASTER.items() if n in inst0 and inst0[n]['master'] != m_ and inst0[n]['master'] in sizes},
+           SIZES_JSON=RUN+'/fp_sizes.json', RUNDIR=RUN+'/fit', CHANNEL=os.environ.get('CHANNEL', '40'), ISLAND_W=os.environ.get('ISLAND_W', '0.3'), NOROT=','.join(C.NOROT.get(chip, [])+list(C.STAGED.get(chip, {}))+list(C.GROUP_BOOK.get(chip, {}))+[n for n, i in inst0.items() if i['master'] in C.GRID_SNAP]), POCKET='1' if chip == 'wired' else '0', DROP=','.join(C.STALE_BOOK.get(chip, [])+C.PASS2.get(chip, [])+list(FIXED)+['isw_wired_tx']+[m for b, ms in C.GROUP_BOOK.get(chip, {}).items() for m in ms if m != b]), EXTRA_RSV=json.dumps(fixed_rects()), ITEM_SIZES=json.dumps({**{n: list(sizes[inst0[n]['master']]) for n, m_ in LEDGER_MASTER.items() if n in inst0 and inst0[n]['master'] != m_ and inst0[n]['master'] in sizes},
                                    **{b: [sum(msize(m)[0] for m in ms)+4*(len(ms)-1), max(msize(m)[1] for m in ms)] for b, ms in C.GROUP_BOOK.get(chip, {}).items()}}),
            MACRO_MM2=str(round(MJ['pt_digital_macro']['w']*MJ['pt_digital_macro']['h']/1e6, 6)) if mw_ else ('2.669801' if chip == 'wired' else ''), OMP_NUM_THREADS='1', MACRO=os.environ.get('MACRO', macro))
 fit = C.ROOT+'/scratch/reviews/die-fit'
@@ -79,13 +91,14 @@ L = {x['item']: x for x in json.load(open(f'{fit}/{chip}/ledger.json'))['rows']}
 
 blocks = {}
 for n, v in F['placed_rects'].items():
+    if SPM and n in inst0 and inst0[n]['master'] in real_size: r_ = v['rect']; v = dict(v, rect=[r_[0]+SPU, r_[1]+SPU, r_[2]-SPU, r_[3]-SPU])
     m = 'decap' if n.startswith(('decap_bank', 'decap_tile')) else (inst[n]['master'] if n in inst else L.get(n, {}).get('master', n))
     if m == '(booked)': m = n
     blocks[n] = dict(master=m, rect=v['rect'], rot=v['rot'], in_conn=n in inst, gds=bool(MJ.get(m, {}).get('w')))
 # fixed placements (common.FIXED_PLACE): the packer kept their slots free (EXTRA_RSV)
 for k_, r_ in fixed_rects().items():
     if not k_.startswith('fix_'): continue
-    m = k_[4:]; r_ = [r_[0]+SPREAD, r_[1]+SPREAD, r_[2]-SPREAD, r_[3]-SPREAD]
+    m = k_[4:]; g_ = MARGIN.get(m, SPREAD); r_ = [r_[0]+g_, r_[1]+g_, r_[2]-g_, r_[3]-g_]
     blocks[m] = dict(master=(C.STAGED[chip][m]['master'] if m in C.STAGED.get(chip, {}) else inst0[m]['master']), rect=r_, rot=False, in_conn=True, gds=True, fixed=True)
 # fixed decap tiles (common.FIXED_DECAP): rows of 125 x 120 um tiles in the reserved slot, abutted
 fd = C.FIXED_DECAP.get(chip)
@@ -107,6 +120,10 @@ for bk, ms in C.GROUP_BOOK.get(chip, {}).items():
         x += w+4
 blocks['digital'] = dict(master='pt_digital_macro', rect=F['fixed']['digital'], rot=False, in_conn=True, gds=False)
 reserves = {n: r for n, r in F['fixed'].items() if n != 'digital' and not n.startswith(('fix_', 'bar_', 'decapslot'))}
+if 'digital' in MARGIN:      # the macro channel stays free in the second pass too (MACRO_CHAN)
+    _r = fixed_rects()['fix_digital']; _b = blocks['digital']['rect']
+    for _k, _q in (('w', [_r[0], _r[1], _b[0], _r[3]]), ('e', [_b[2], _r[1], _r[2], _r[3]]), ('s', [_b[0], _r[1], _b[2], _b[1]]), ('n', [_b[0], _b[3], _b[2], _r[3]])):
+        if _q[2]-_q[0] > 1 and _q[3]-_q[1] > 1: reserves['chan_digital_'+_k] = _q
 core_blocks = {n for n, i in inst.items() if not i['master'].startswith(C.PROVIDER) and n not in pads['pads']}
 missing = sorted(core_blocks-set(blocks))
 # conn blocks the ledger does not book (new or retiring instances): second pass of the same packer into what is left,
@@ -256,7 +273,7 @@ for i, a in enumerate(names):
         if ov(ra, blocks[b]['rect']): bad.append((a, b))
     for p, rp in padr:
         if ov(ra, rp): bad.append((a, p))
-out = dict(chip=chip, die=C.DIE, core=C.CORE, macro=F['macro'], blocks=blocks, reserves=reserves, unplaced=F['unplaced'],
+out = dict(chip=chip, die=C.DIE, core=C.CORE, macro=F['macro'], blocks=blocks, reserves={k: v for k, v in reserves.items() if not k.startswith('chan_digital_')}, unplaced=F['unplaced'],
            relaxed=F['relaxed'], rule_audit=F['rule_audit'], rule_fails=F['rule_fails'], conn_not_placed=missing, second_pass=second, staged=staged, grid_snapped=snapped, groups=C.GROUP_BOOK.get(chip, {}), decap_tiles_given_up=dropped, decap_tiles_unplaced=[u[0] for u in F['unplaced'] if u[0].startswith('decap')], decap_fixed=sum(1 for n in blocks if n.startswith('decap_fix')),
            overlaps=bad, switches=F['switches'], pad_clear_um=g)
 json.dump(out, open(RUN+'/floorplan.json', 'w'), indent=0)

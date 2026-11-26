@@ -8,6 +8,6 @@ CPUS=1; [ "$1" = -c ] && { CPUS=$2; shift 2; }
 [ "$CPUS" -le 4 ] || { echo "cpus > 4 not allowed" >&2; exit 2; }
 IMG=${ASM_IMAGE:-svalbard/librelane-gf180-guarded:2026.11}
 exec docker run --rm -e HALO="${HALO:-0.2}" --name "asm-$CHIP-$$" --label svalbard.assembly=1 --network none --cpus "$CPUS" --memory "${ASM_MEM:-24g}" --user "$(id -u):$(id -g)" \
-  -e HOME=/tmp -e OMP_NUM_THREADS=1 -e CHIP="$CHIP" -e THREADS="$CPUS" \
+  -e HOME=/tmp -e OMP_NUM_THREADS=1 -e KH_CONN="${KH_CONN:-0}" -e GR_ADJ="${GR_ADJ:-0.15}" -e CHIP="$CHIP" -e THREADS="$CPUS" \
   -v "$ROOT":/repo:ro -v "$RUN":/run -v "$A":/asm:ro --entrypoint /bin/bash "$IMG" -c \
   'export PATH=/foss/tools/bin:/foss/tools/klayout:$PATH; cd /run; exec "$@"' tool "$@"

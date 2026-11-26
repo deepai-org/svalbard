@@ -1,6 +1,6 @@
 #!/bin/bash
 # Chip assembly of one chip, stage by stage, one heavy job at a time:   run.sh <rf|wired> [stage ...]
-#   stages: abstract floorplan place route stream report drc lvs fill precheck      (default: abstract .. report)
+#   stages: abstract floorplan place route stream report drc lvs check fill precheck      (default: abstract .. report)
 # Run directory scratch/integration/assembly-<chip> (ASM_RUN overrides); only the latest run is kept (each stage
 # overwrites its outputs). The sign-off flows (integration/signoff, SIGNOFF_CHIP=<chip>) read chip/pt_chip_top.gds from it.
 set -e
@@ -17,14 +17,14 @@ for S in $STAGES; do
     place)     "$A/tool.sh" "$CHIP" -c 2 python3 /asm/kl_place.py > "$RUN/place.log" 2>&1; head -2 "$RUN/place.log" | cut -c1-600 ;;
     route)     rm -f "$RUN"/route/{routed.def,groute.def,drt.rpt,congestion.rpt,unreachable.txt}; touch "$RUN/route/unreachable.txt"
                for k in 1 2 3 4 5 6; do      # pin-access passes: every pin without an access point is taken off its net (reported)
-                 "$A/tool.sh" "$CHIP" -c 4 bash -c "PA_ONLY=1 openroad -exit /asm/route.tcl" > "$RUN/route/pa$k.log" 2>&1 || true
+                 "$A/tool.sh" "$CHIP" -c 4 bash -c "SIG_M1=${SIG_M1:-0} PA_ONLY=1 openroad -exit /asm/route.tcl" > "$RUN/route/pa$k.log" 2>&1 || true
                  grep -q "PA CLEAN" "$RUN/route/pa$k.log" && break
                  N0=$(wc -l < "$RUN/route/unreachable.txt")
                  sed -n 's/.*No access point for \([^ ]*\) .*/\1/p' "$RUN/route/pa$k.log" >> "$RUN/route/unreachable.txt"
                  [ "$(wc -l < "$RUN/route/unreachable.txt")" -gt "$N0" ] || { echo "pin access fails without a named pin"; break; }
                done
                echo "   unreachable pins: $(wc -l < "$RUN/route/unreachable.txt")"
-               "$A/tool.sh" "$CHIP" -c 4 bash -c "NDR=${NDR:-1} HOOK_W=${HOOK_W:-0.56} DRT_ITERS=${DRT_ITERS:-64} openroad -exit /asm/route.tcl" > "$RUN/route/route.log" 2>&1 || true
+               "$A/tool.sh" "$CHIP" -c 4 bash -c "SIG_M1=${SIG_M1:-0} NDR=${NDR:-1} HOOK_W=${HOOK_W:-0.56} DRT_ITERS=${DRT_ITERS:-64} openroad -exit /asm/route.tcl" > "$RUN/route/route.log" 2>&1 || true
                grep -E "GRT-0228|ERROR|ROUTE DONE|Number of violations|ANTENNA PASS" "$RUN/route/route.log" | tail -3
                [ -s "$RUN/route/routed.def" ] || { echo "route wrote no routed.def: stop"; exit 1; } ;;
     stream)    "$A/tool.sh" "$CHIP" -c 2 python3 /asm/kl_stream.py > "$RUN/stream.log" 2>&1; tail -1 "$RUN/stream.log" | cut -c1-400 ;;
@@ -35,7 +35,9 @@ for S in $STAGES; do
                  -rd out=lvs/chip -rd manifest=chip/manifest.json -rd flatten=retained_provider_ring,pt_pdn,pt_direct_land,pt_antdiode,pt_top_wiring,pt_island_bar,VIA_* > "$RUN/lvs/lvs.log" 2>&1 || true
                tail -5 "$RUN/lvs/lvs.log"
                # the macro's VDD/VSS stripes are not conn pins, so LVS by name cannot see them (PDS-25): place's check
-               grep -o "macro supply [A-Z ]*OPEN\|macro supply OK" "$RUN/place.log" || echo "macro supply: NOT CHECKED (rerun place)" ;;
+               grep -o "macro supply [A-Z ]*OPEN\|macro supply OK" "$RUN/place.log" || echo "macro supply: NOT CHECKED (rerun place)"
+               python3 "$A/check_conn.py" "$CHIP" ;;      # the connectivity gate fails the lvs stage (KH-1..3)
+    check)     python3 "$A/check_conn.py" "$CHIP" ;;      # connectivity gate (KH-1..3): unwired macro / pad core pins, non-port single-pin nets, unbound LVS instances
     fill)      "$A/../signoff/fill/run_fill.sh" rf 2 chip/pt_chip_top.gds      # "rf" = the fill keep-out set (common.NO_OVER blocks), not the chip: used for both chips
                "$A/../signoff/drc/run_drc.sh" fill/rf_filled.gds pt_chip_top density chip_filled_density live 2 ;;
     precheck)  rm -rf "$RUN/precheck"      # the shuttle's own precheck on the filled chip (about 3 h, 4 threads)

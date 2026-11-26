@@ -1,6 +1,7 @@
 """Shared inputs of the assembly flow (host python and the tool image alike; no tool imports here).
 
-load(chip)        -> instances, ports, masters of integration/chips/<chip>/chip.conn (check_top.py parser)
+load(chip)        -> instances, ports, masters of integration/chips/<chip>/chip.conn (check_top.py parser), the macro's c_*
+                     control outputs added to `digital` (chips/provider_io.macro_ctl: the conn does not list them)
 gds_candidates(m) -> GDS files that hold master m, best first (published, then staged; scratch only where named)
 Geometry constants of the 1x1 slot, the provider-site map and the no-route-over set live here as well.
 """
@@ -10,6 +11,10 @@ ROOT = '/repo' if A == '/asm' else os.path.dirname(os.path.dirname(os.path.dirna
 P = ROOT+'/projects/programmable_transceiver_platform'
 sys.path.insert(0, P+'/integration/chips')
 import check_top as ct
+import provider_io as PIO
+# KH_CONN=1 (off by default until both chips route clean): macro c_* ports, provider cells with their ties, the tied macro
+# inputs hooked, provider cells bound in LVS, connectivity gate (KH-1..3, chips/provider_io.py, check_conn.py)
+KH_CONN = os.environ.get('KH_CONN', '0') == '1'
 
 DIE = (0.0, 0.0, 3932.0, 5122.0)
 CORE = (452.0, 452.0, 3480.0, 4670.0)        # die-fit core; the provider cells end 376 um from the die edge
@@ -161,7 +166,7 @@ HARD_NEXT_TO = {'rf': {'lna_deg_p': ('lna', 8.0), 'isw_rf_tx_b': ('isw_rf_tx', 5
 BOOK_NEAR = {}     # pt_lo_txbuf is published (LO-ASM-4) and placed as a conn block next to the TX mixers
 TWIN = {'pt_adc_q': 'pt_adc_i', 'pt_dac_q': 'pt_dac_i'}
 # provider-ring instances of the conn (not core blocks): their pins are on the template's IO cells
-PROVIDER = ('pt_host_physical', 'pt_debug_physical', 'atb_provider_pad', 'pad_strap', 'prov_supply', 'prov_supply_sig')
+PROVIDER = PIO.PROVIDER
 
 # no top-level routing over these masters on any layer (RF, LO, rings, spirals: fill keep-out set `rf`,
 # integration/signoff/fill/keepouts.json); other blocks may be crossed on Metal4 / Metal5 where they draw no metal
@@ -177,6 +182,7 @@ METALS = [('Metal1', (34, 0), (34, 10), None), ('Metal2', (36, 0), (36, 10), (35
 def load(chip):
     inst, ports, _w, err = ct.parse(ct.read_conn(f'{P}/integration/chips/{chip}/chip.conn'))
     assert not err, err
+    if KH_CONN: PIO.macro_ctl(inst)
     masters = ct.load_masters(open(P+'/integration/chips/masters.txt').read())
     return inst, ports, masters
 
@@ -237,3 +243,9 @@ def provider_pins(inst, bondrows):
     for i, n in (('atb0_io', 'ATB0'), ('atb1_io', 'ATB1')):
         add(i, 'ASIG5V', n, 'ASIG5V')
     return out
+
+
+# provider-ring cells (KH_CONN): one record per provider bond site, every core pin bound to a net or tied to VDD / VSS
+# (chips/provider_io.sites, transcribed from integration/pt_provider_io.sv)
+def provider_sites(inst, bondrows):
+    return PIO.sites(inst, bondrows)

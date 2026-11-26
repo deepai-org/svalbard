@@ -2,8 +2,10 @@
 # The router's wiring (/run/route/routed.def: wires and vias only, read with the PDK layer map) is merged into
 # /run/placed.gds -> /run/chip/pt_chip_top.gds (top cell pt_chip_top), the assembled routed chip that the checks read from
 # disk. Block and pad macros of the DEF are dropped (the placed GDS holds the real cells).
-import glob, json, os
+import glob, json, os, sys
 import klayout.db as db
+sys.path.insert(0, '/asm')
+import common as C
 TLEF = '/pdk/gf180mcuD/libs.ref/gf180mcu_fd_sc_mcu7t5v0/techlef/gf180mcu_fd_sc_mcu7t5v0__nom.tlef'
 MAP = '/pdk/gf180mcuD/libs.tech/klayout/tech/gf180mcu.map'
 DEF = os.environ.get('DEF', '/run/route/routed.def')
@@ -36,6 +38,19 @@ for n, b in PL['blocks'].items():
     man['instances'].append(dict(name=n, master=b['master'], cell=b['master'], trans=b['trans'], kind=b['kind'], bbox=b['bbox'], in_conn=b['in_conn']))
 for n, v in PADS['pads'].items():
     man['instances'].append(dict(name=n, master=v['master'], cell=v['master'], trans=v['trans'], kind='published', bbox=v['bbox'], in_conn=True))
+# provider ring cells of the conn's provider instances (host, debug_pads, pad_por_bypass, atb*_io, supply pads), one per bond
+# site, named io_<site> as in the DEF: LVS binds them like blocks (chips/provider_io gives the reference pins and ties)
+_ri = next(i for i in top.each_inst() if i.cell.name == 'retained_provider_ring')
+_rc = [(c.cell.name, _ri.trans*c.trans, c.bbox().transformed(_ri.trans)) for c in _ri.cell.each_inst()]
+inst, _p, _m = C.load(os.environ['CHIP'])
+man['provider_mismatch'] = []
+for r in (C.provider_sites(inst, C.bond(os.environ['CHIP'])) if C.KH_CONN else []):
+    bb = PADS['io'].get(r['site'], {}).get('bbox')
+    hit = [(cn, t, b) for cn, t, b in _rc if bb and abs(b.left/1000-bb[0]) < 0.01 and abs(b.bottom/1000-bb[1]) < 0.01 and abs(b.right/1000-bb[2]) < 0.01]
+    if len(hit) != 1 or hit[0][0].split('$')[0] != r['cell']:
+        man['provider_mismatch'].append(dict(site=r['site'], want=r['cell'], have=[h[0] for h in hit])); continue
+    cn, t, b = hit[0]
+    man['instances'].append(dict(name=r['name'], master=r['cell'], cell=cn, trans=str(t), kind='provider', bbox=[b.left/1000, b.bottom/1000, b.right/1000, b.top/1000], in_conn=True, conn_inst=r['inst']))
 json.dump(man, open('/run/chip/manifest.json', 'w'), indent=0)
 owner = {}
 for i in top.each_inst():

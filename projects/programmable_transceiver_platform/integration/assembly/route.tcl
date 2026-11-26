@@ -10,7 +10,9 @@ read_lef $tlef
 foreach f [lsort [glob /run/lef/*.lef]] { read_lef $f }
 read_def /run/design.def
 make_tracks
-set_routing_layers -signal Metal2-Metal5
+# SIG_M1=1 (off by default): top-level signal routing also on Metal1 (KH-2 reroute: about 280 more macro nets)
+set LAYERS [expr {[info exists ::env(SIG_M1)] && $::env(SIG_M1) ? "Metal1-Metal5" : "Metal2-Metal5"}]
+set_routing_layers -signal $LAYERS
 # pins the router cannot reach (found by earlier pin-access passes, run.sh): taken off their nets and reported
 set nun 0
 if {[file exists /run/route/unreachable.txt]} {
@@ -51,7 +53,7 @@ create_ndr -name LOSH -width {Metal2 0.56 Metal3 0.56 Metal4 0.56 Metal5 0.9} -s
 create_ndr -name SPC2 -spacing {Metal2 0.56 Metal3 0.56 Metal4 0.56 Metal5 0.92} -width {Metal2 0.28 Metal3 0.28 Metal4 0.28 Metal5 0.44}
 set PA {-via_in_pin_bottom_layer Metal2 -via_in_pin_top_layer Metal5}
 if {[info exists ::env(PA_ONLY)]} { assign_classes; pin_access {*}$PA -verbose 0; puts "PA CLEAN"; exit }
-set_global_routing_layer_adjustment Metal2-Metal5 0.15
+set_global_routing_layer_adjustment $LAYERS [expr {[info exists ::env(GR_ADJ)] ? $::env(GR_ADJ) : 0.15}]   ;# GR_ADJ: capacity held back from the global route (default 0.15)
 global_route -congestion_iterations 30 -congestion_report_file /run/route/congestion.rpt -allow_congestion -verbose
 write_guides /run/route/route.guide
 write_def /run/route/groute.def

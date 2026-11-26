@@ -119,6 +119,17 @@ for site, side, net, n in BOND:
         i = site_inst[site]; was = i.cell.name; t = i.trans
         i.delete(); new = ring.insert(db.CellInstArray((dvdd if net == 'VDD' else dvss).cell_index(), t))
         site_inst[site] = new; man['supply_swaps'].append(dict(site=site, net=net, was=was, now=new.cell.name))
+# provider signal cells: the cell the model (pt_provider_io.sv, via chips/provider_io) wants at each provider bond site
+# replaces the template's where they differ: POR_BYPASS is an input-only in_c with its pull-down on, not a bi_24t (KH-3)
+man['io_swaps'] = []
+for r in (C.provider_sites(inst, BOND) if C.KH_CONN else []):
+    i = site_inst.get(r['site'])
+    if i is None or i.cell.name.split('$')[0] == r['cell']: continue
+    if r['cell'] not in byname or r['cell'] in (C.PIO.DVDD_C, C.PIO.DVSS_C):
+        man['notes'].append(f"{r['site']}: model wants {r['cell']}, ring has {i.cell.name} (not swapped)"); continue
+    t = i.trans; was = i.cell.name; i.delete()
+    site_inst[r['site']] = ring.insert(db.CellInstArray(byname[r['cell']].cell_index(), t))
+    man['io_swaps'].append(dict(site=r['site'], was=was, now=r['cell']))
 # provider IO cells: site -> cell, transformation (pins come from their abstracts)
 for s, i in site_inst.items():
     man['io'][s] = dict(cell=i.cell.name.split('$')[0], trans=str(i.trans), bbox=[i.bbox().left/1000, i.bbox().bottom/1000, i.bbox().right/1000, i.bbox().top/1000])
@@ -265,10 +276,10 @@ def abstract(key, path, cellname, full_all, kind, want_pins):
                 full_obs=full_all, obs_rects=nobs, missing_pins=missing, extra_labels=extra_)
 
 MJ = {}
-used = sorted({i['master'] for i in inst.values() if not i['master'].startswith(C.PROVIDER)} | {'gf180mcu_fd_io__'+x for x in ('bi_24t', 'in_c', 'asig_5p0')})
+used = sorted({i['master'] for i in inst.values() if not i['master'].startswith(C.PROVIDER)} | {'gf180mcu_fd_io__'+x for x in ('bi_24t', 'in_c', 'asig_5p0')} | ({C.PIO.BIT} if C.KH_CONN else set()))
 for v in C.STAGED.get(CHIP, {}).values(): used.append(v['master'])
 for m in used:
-    if m.startswith('gf180mcu_fd_io__'):
+    if m.startswith('gf180mcu_fd_io__') or m == C.PIO.BIT:      # provider cells (bi_t is the template's selected_host_output)
         cand = [dict(gds=C.BASE_RING, cell=None, kind='provider', sha256='')]
         tmp = db.Layout(); tmp.read(R+C.BASE_RING)
         nm = next(tmp.cell(i).name for i in tmp.each_cell_top_down() if tmp.cell(i).name.split('$')[0] == m)
@@ -282,7 +293,7 @@ for m in used:
         MJ[m] = dict(kind='none'); continue
     src = cand[0]
     try:
-        info = abstract(m, R+src['gds'], src['cell'], m in C.NO_OVER or m.startswith(('pad_', 'gf180mcu_fd_io')), src['kind'], C.master_pins(masters, m))
+        info = abstract(m, R+src['gds'], src['cell'], m in C.NO_OVER or m.startswith(('pad_', 'gf180mcu_fd_io')) or m == C.PIO.BIT, src['kind'], C.master_pins(masters, m))
     except Exception as e:
         MJ[m] = dict(kind='error', error=str(e)[:300]); continue
     info.update(gds=src['gds'], sha=src['sha256'])

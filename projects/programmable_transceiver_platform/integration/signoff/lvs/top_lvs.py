@@ -27,6 +27,14 @@ for pat in filter(None, G.get('flatten', '').split(',')):
         if fnmatch.fnmatch(inst.cell.name, pat): inst.flatten(1)
 for c in ly.each_cell():       # optional: strip a uniquifying prefix from cell names (routed sub-assemblies)
     if G.get('strip') and c.name.startswith(G['strip']): c.name = c.name[len(G['strip']):]
+# template cells carry a '$N' suffix (provider pad cells: gf180mcu_fd_io__bi_24t$1); SPICE reads '$' as a comment, so they
+# take their base name where it is free (the reference names provider cells so: chips/provider_io.py, gen_netlist.py)
+REN = {}
+_kh = G.get('manifest') and any(i.get('kind') == 'provider' for i in json.load(open(RUN+G['manifest']))['instances'])
+for c in (list(ly.each_cell()) if _kh else []):      # only when the manifest binds provider cells (KH_CONN runs)
+    base = c.name.split('$')[0]
+    if base != c.name and ly.cell(base) is None and base not in REN.values(): REN[c.name] = base
+for o_, n_ in REN.items(): ly.cell(o_).name = n_
 children = sorted({inst.cell.name for inst in topc.each_inst()})
 pats = list(filter(None, G.get('boxes', '').split(','))) or ['*']
 boxes = [c for c in children if any(fnmatch.fnmatch(c, p) for p in pats)]
@@ -110,7 +118,7 @@ if G.get('manifest'):
     man = json.load(open(RUN+G['manifest']))
     at = {}
     for i in man['instances']:
-        if i.get('cell'): at[(i['cell'], db.Trans.from_s(i['trans']).disp.x, db.Trans.from_s(i['trans']).disp.y)] = i
+        if i.get('cell'): i['cell'] = REN.get(i['cell'], i['cell']); at[(i['cell'], db.Trans.from_s(i['trans']).disp.x, db.Trans.from_s(i['trans']).disp.y)] = i
     lay_net = {}      # top net id -> set of (inst, pin label)
     inst_of = {}
     unbound_sc = collections.Counter()

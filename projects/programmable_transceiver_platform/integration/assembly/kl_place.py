@@ -29,7 +29,9 @@ centre = {}
 for n, b in FP['blocks'].items(): r = b['rect']; centre[n] = ((r[0]+r[2])/2, (r[1]+r[3])/2)
 for n, v in PADS['pads'].items(): r = v['footprint'][0]; centre[n] = ((r[0]+r[2])/2, (r[1]+r[3])/2)
 site_xy = {s: ((v['bbox'][0]+v['bbox'][2])/2, (v['bbox'][1]+v['bbox'][3])/2) for s, v in PADS['io'].items()}
-prov = C.provider_pins(inst, C.bond(CHIP))
+PSITES = C.provider_sites(inst, C.bond(CHIP)) if C.KH_CONN else []      # provider cell per bond site, every core pin on a net or a VDD / VSS tie
+for r_ in PSITES: centre.setdefault(r_['inst'], site_xy[r_['site']])
+prov = [] if C.KH_CONN else C.provider_pins(inst, C.bond(CHIP))
 for i, p, s, iop in prov: centre.setdefault(i, site_xy[s])
 nets = collections.defaultdict(list)
 for n, i in inst.items():
@@ -585,7 +587,8 @@ for net in GRID_NETS:
     for n, p in nets.get(net, []):
         if net != 'VDD' and net != 'VSS' and man['blocks'].get(n, {}).get('master') == 'decap': continue
         if n in man['blocks'] and man['blocks'][n]['master'] == 'decap': continue
-        if n == 'digital': man['digital_ties_not_hooked'] += 1; continue      # tie-offs belong inside the macro (tie cells)
+        if n == 'digital' and not C.KH_CONN: man['digital_ties_not_hooked'] += 1; continue      # pre-KH: tie-offs left to the macro
+        if n == 'digital': man['digital_ties_not_hooked'] += 1      # KH_CONN: macro inputs the conn ties to VDD / VSS: hooked at the top level (coordinator ruling 2026-11-26; the macro pins stay as hardened)
         if n in PADS['pads']: continue      # pad-family supply pins land on the provider ring rails (DVDD / VSS bands), not on the grid
         sh = pin_shapes_die(n, p)
         if not sh:
@@ -624,6 +627,35 @@ for net in GRID_NETS:
         d, sl = best; sl[2] = True; ln, cb = sl[0], sl[1]
         hn = f'HK{k}'; k += 1; hook_pins[hn] = (ln, cb, net)
         man['hooks'].append(dict(net=f'{net}__{hn}', inst=n, pin=p, layer=ln, piece=[fu(cb.left), fu(cb.bottom), fu(cb.right), fu(cb.top)], dist_um=round(fu(d), 1)))
+# provider pad ties (KH-1, pt_provider_io.sv via chips/provider_io): the core pins a pad cell ties to VDD (IE / PU / PD / CS /
+# PDRV of the model) or VSS (A / OE / SL / ...) join one hook net per cell and polarity, to the nearest free grid slot
+def io_pin_shapes(site, p):
+    v = PADS['io'][site]; info = MJ.get(macro_of_io.get(site, ''), {}); o = info.get('origin', [0, 0]); t = RING_T*db.Trans.from_s(v['trans'])
+    return [(ln, t*db.Box(um(r[0]+o[0]), um(r[1]+o[1]), um(r[2]+o[0]), um(r[3]+o[1]))) for ln, r in info.get('pins', {}).get(p, [])]
+RING_T = next((i.trans for i in top.each_inst() if i.cell.name == 'retained_provider_ring'), db.Trans())
+_cm = {c_[0]: c_[1] for c_ in comps}; macro_of_io = {s_: _cm[nm_] for s_, nm_ in iomap.items()}
+man['io_ties'] = []
+for r_ in PSITES:
+    if r_['site'] not in iomap: continue
+    for net in ('VDD', 'VSS'):
+        tp_ = [p_ for p_, n_ in r_['pins'].items() if n_ == net and p_ in C.PIO.CORE[r_['cell']]]
+        if not tp_: continue
+        sh_ = [(p_, io_pin_shapes(r_['site'], p_)) for p_ in tp_]
+        miss_ = [p_ for p_, x_ in sh_ if not x_]
+        for p_ in miss_: man['unconnectable'].append(dict(inst=iomap[r_['site']], pin=p_, net=net, why='provider tie pin not in the abstract'))
+        sh_ = [(p_, x_) for p_, x_ in sh_ if x_]
+        if not sh_: continue
+        c = db.Region([x_[0][1] for p_, x_ in sh_]).bbox().center(); best = None
+        for sl in slots[net]:
+            if sl[2]: continue
+            b = sl[1]; d = max(b.left-c.x, c.x-b.right, 0)+max(b.bottom-c.y, c.y-b.top, 0)
+            if best is None or d < best[0]: best = (d, sl)
+        if best is None: man['unconnectable'] += [dict(inst=iomap[r_['site']], pin=p_, net=net, why='no free strap slot') for p_, x_ in sh_]; continue
+        d, sl = best; sl[2] = True; ln, cb = sl[0], sl[1]
+        hn = f'HK{k}'; k += 1; hook_pins[hn] = (ln, cb, net); io_ = iomap[r_['site']]
+        man['hooks'].append(dict(net=f'{net}__{hn}', inst=io_, pin=sh_[0][0], more=[[io_, p_] for p_, x_ in sh_[1:]], layer=ln,
+                                 piece=[fu(cb.left), fu(cb.bottom), fu(cb.right), fu(cb.top)], dist_um=round(fu(d), 1)))
+        man['io_ties'].append(dict(site=r_['site'], cell=r_['cell'], net=net, pins=[p_ for p_, x_ in sh_]))
 barcell = ly.create_cell('pt_island_bar') if bars else None
 man['island_bars'] = []
 for bd in bars:
@@ -691,6 +723,9 @@ def cls(net):
     if u.startswith(('HSRX', 'URX', 'SL_', 'WTX', 'WIRE_TX', 'USB', 'HS_', 'D2H', 'H2D', 'WMON')) or u in ('AUX_CLK_P', 'AUX_CLK_N', 'REF_IN', 'REF_IN_N'): return 'hs'
     if 'CK' in u or 'CLK' in u or u.startswith(('TXPH', 'CDRPH', 'PH', 'FC_SRC')): return 'clock'
     return 'signal'
+io_ends = collections.defaultdict(list)      # net -> provider cell pins on it (chips/provider_io)
+for r_ in PSITES:
+    for iop, pn_ in r_['pins'].items(): io_ends[pn_].append((r_['site'], iop))
 NETS = {}
 for net, users in nets.items():
     if net in SUP or net in GRID_NETS: continue      # grid and island-strap nets reach their pins through hooks
@@ -699,6 +734,8 @@ for net, users in nets.items():
         if inst[n]['master'].startswith(C.PROVIDER): continue
         if has_pin(n, p): ends.append((n, p))
         else: man['unconnectable'].append(dict(inst=n, pin=p, net=net, why='pin not in the abstract (no label on the block edge or in the cell)' if n in macro_of else 'instance not placed'))
+    for s_, iop in io_ends.get(net, []):
+        if s_ in iomap and has_pin(iomap[s_], iop): ends.append((iomap[s_], iop))
     for i, p, s, iop in prov:
         if inst[i]['pins'].get(p, ('', ''))[1] == net and s in iomap and has_pin(iomap[s], iop): ends.append((iomap[s], iop))
     for pn_, bd in bar_pins.items():
@@ -707,7 +744,7 @@ for net, users in nets.items():
     if len(ends) >= 2: NETS[net] = dict(ends=ends, cls=cls(net))
     elif users: man['single_pin_nets'].append(net)
 for h in man['hooks']:
-    NETS[h['net']] = dict(ends=[(h['inst'], h['pin']), ('pdn', h['net'].split('__')[1])], cls='hook')
+    NETS[h['net']] = dict(ends=[(h['inst'], h['pin'])]+[tuple(e) for e in h.get('more', [])]+[('pdn', h['net'].split('__')[1])], cls='hook')
 
 # ------------------------------------------------------------------------------------------- top-level antenna diodes
 # common.ANT_DIODE nets: a 2 x 2 um n+ / p-substrate diode (COMP 22/0 + Nplus 32/0, 3 x 3 contacts, Metal1, Via1, Metal2 pin) next to

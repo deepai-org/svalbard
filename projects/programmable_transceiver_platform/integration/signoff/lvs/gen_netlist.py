@@ -7,6 +7,10 @@ Flat: every `inst` of the conn is one X line of the top subckt; every master is 
 list is the published subckt's (masters.txt), so pin order errors cannot hide. Subckt names are the conn's master names,
 which is what the assembler names the layout cells. `-` (no-connect) becomes NC_<inst>_<pin>; a pin the conn does not
 bind becomes UNBOUND_<inst>_<pin> and is counted.
+Physical binding (chips/provider_io.py, the same source the assembly uses): the digital macro carries every c_* control
+output of ctl_ports.txt (the conn does not list them), and each provider-ring instance (host, debug_pads, pad_por_bypass,
+atb*_io, supply pads) is expanded into its provider cell per bond site, X io_<site> <cell>, with the pad model's ties
+(pt_provider_io.sv) on VDD / VSS, so LVS binds the pad cells and sees every tie.
 --only   sub-assembly: the other instances are dropped (their nets stay as dangling names).
 --swap   negative control: the nets on two pins of one instance are exchanged.
 """
@@ -14,6 +18,7 @@ import argparse, json, os, sys
 HERE = os.path.dirname(os.path.abspath(__file__)); P = os.path.dirname(os.path.dirname(os.path.dirname(HERE)))
 sys.path.insert(0, P+'/integration/chips')
 import check_top as ct
+import provider_io as PIO
 
 ap = argparse.ArgumentParser()
 ap.add_argument('out'); ap.add_argument('--top', default='pt_chip_top'); ap.add_argument('--only'); ap.add_argument('--swap')
@@ -22,6 +27,10 @@ a = ap.parse_args()
 a.conn = a.conn or f'{P}/integration/chips/{a.chip}/chip.conn'
 inst, ports, _w, err = ct.parse(ct.read_conn(a.conn))
 assert not err, err
+KH = os.environ.get('KH_CONN', '0') == '1'      # physical binding below only with KH_CONN=1 (assembly flow switch)
+if KH: PIO.macro_ctl(inst)
+psites = PIO.sites(inst, ct.load_bond(open(f'{P}/integration/chips/{a.chip}/bond_map.txt').read())) if KH else []
+expanded = {r['inst'] for r in psites}
 masters = ct.load_masters(open(P+'/integration/chips/masters.txt').read())
 only = set(a.only.split(',')) if a.only else None
 swap = a.swap.split(':') if a.swap else None
@@ -30,6 +39,7 @@ used, unbound, nopins, swapped = {}, 0, [], False
 rows = []
 for name, i in inst.items():
     if only and name not in only: continue
+    if name in expanded: continue       # provider-ring instance: its cells follow, one per bond site
     md = masters.get(i['master'])
     pins = None
     if md: pins = md['pins'] if md['kind'] != 'file' else ct.subckt_pins(md['path'], md['sub'])
@@ -47,10 +57,14 @@ for name, i in inst.items():
         x, y = pins.index(swap[1]), pins.index(swap[2]); assert nets[x] != nets[y], 'the two pins are on the same net'
         nets[x], nets[y] = nets[y], nets[x]; swapped = True
     rows.append(f'X{name} '+' '.join(nets)+' '+i['master'])
+for r in psites:
+    if only and r['inst'] not in only: continue
+    pins = PIO.CELL_PINS[r['cell']]; used.setdefault(r['cell'], pins)
+    rows.append(f"X{r['name']} "+' '.join(f"NC_{r['name']}_{p}" if r['pins'][p] == 'NC' else r['pins'][p] for p in pins)+' '+r['cell'])
 assert not swap or swapped, f'--swap instance {swap[0]} not in the netlist'
 for m, pins in used.items():
     L += [f'.subckt {m} '+' '.join(pins), '.ends', '']
 L += [f'.subckt {a.top} '+' '.join(sorted(ports)), *rows, '.ends']
 open(a.out, 'w').write('\n'.join(L)+'\n')
-print(f'{a.out}: {len(rows)} instances, {len(used)} masters, {unbound} unbound pins, pin list from the conn only for {len(nopins)} instance(s) {nopins[:6]}'
+print(f'{a.out}: {len(rows)} instances ({len(psites)} provider cells for {len(expanded)} provider instances), {len(used)} masters, {unbound} unbound pins, pin list from the conn only for {len(nopins)} instance(s) {nopins[:6]}'
       + (f', swapped {a.swap}' if swap else ''))

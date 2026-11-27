@@ -4,6 +4,7 @@ macro pins assigned facing their nets, gcell global route (M2 V, M3 H), utilisat
 import json, sys, importlib.util, collections, math, os
 import numpy as np
 import plan_lib as P
+import os
 spec = importlib.util.spec_from_file_location('cfg', sys.argv[1]); cfg = importlib.util.module_from_spec(spec); spec.loader.exec_module(cfg)
 pl = json.load(open(sys.argv[2])); pl = pl.get('hand', pl); tag = sys.argv[3]; P.G = float(sys.argv[4]) if len(sys.argv) > 4 else 20.0
 place = {i: tuple(v) for i, v in pl.items()}
@@ -25,7 +26,7 @@ for s, (e, c) in cfg.G4.items():
 for a, v, d in cfg.RULES:
     if a in cfg.VIRTUAL and v in p.rect:
         g = P.egap(cfg.VIRTUAL[a], p.rect[v]); ka.append((a, v, d, round(g), g >= d))
-mp = p.assign_macro(cfg.MACRO, pitch=getattr(cfg, 'MPITCH', 2.24), forbid=getattr(cfg, 'MFORBID', None))
+mp = {} if os.environ.get('REAL_MPINS') == '1' else p.assign_macro(cfg.MACRO, pitch=getattr(cfg, 'MPITCH', 2.24), forbid=getattr(cfg, 'MFORBID', None))
 import os
 SIGM1 = os.environ.get('SIG_M1') == '1'
 p.grid(sig_m1=SIGM1)
@@ -40,7 +41,7 @@ res['route'] = dict(G=P.G, H_cells_over70=int(((rH > 0.7) & okH).sum()), H_cells
                     V_cells_over70=int(((rV > 0.7) & okV).sum()), V_cells_over100=int(((rV > 1.0) & okV).sum()),
                     forced_through_blocks=round(float(uH[~okH].sum() + uV[~okV].sum())), total=round(float(uH.sum() + uV.sum())),
                     wl_mm=round(float(uH.sum() + uV.sum()) * P.G / 1000, 1))
-json.dump(dict(res=res, channels=cfg.CHANNELS, keepouts=[('k', k) for k in cfg.KEEPOUTS], rect=p.rect, orient=p.orient, mpins=p.mpins), open(f'eval_{tag}.json', 'w'), indent=0, default=list)
+json.dump(dict(res=res, channels=cfg.CHANNELS, keepouts=[('k', k) for k in cfg.KEEPOUTS], rect=p.rect, orient=p.orient, mpins=getattr(p, 'mpins', {})), open(f'eval_{tag}.json', 'w'), indent=0, default=list)
 np.save(f'use_{tag}.npy', np.stack([uH, uV, p.capH, p.capV]))
 print(json.dumps(res['route']))
 print('unplaced', un, 'decap', res['decap_placed'], '/', res['decap_total'])

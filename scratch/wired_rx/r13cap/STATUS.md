@@ -84,3 +84,16 @@ bound r8. Extracted ss/32/3.15 unless noted:
 Probe: residual pess failure = doubled enables in slot1 lanes 1-3 (cross hop SL0 -> SL1), so the CKC skew was one of two causes.
 Verdict: not strictly better (pess still fails, nominal identical) and it breaks the bound outline -> r8 stays.
 Next: r10b two-period cross hops (see above) inside the r8 outline; wc_ctl delay must come from resizing, not added width.
+
+## Post-tapeout notes: capture r10 (FROZEN 2026-11-27, coordinator; r8 stays bound, capture.py = r8)
+- r10c (CKC +4 inverters in wc_ctl): extracted q625 nominal ss 0/200, ff 0/200, full 500 MHz 4x ss 0/100 pass; tt not run.
+  Pessimistic ss q625 FAIL 65/180, 22 strobe errors (r8 72/200, 35). Outline +9.6 um wide (wc_ctl row limits the top), so not
+  drop-in. See TIM-37.
+- Localised pessimistic failure: doubled enables in slot1 lanes 1-3 = the slot0 -> slot1 cross hops (E10..E13: ELQ6..9 bufx ->
+  ~480 um route -> AOI -> flop, 1.41 of 1.6 ns at pess ss). CKC skew was the other cause (fixed by r10c).
+- r10b try (2026-11-25, not kept): E19C AOI moved into wc_slot1 (frees wc_ctl width), slot1 clocks +1 inverter pair, CKC +3
+  pairs. DRC 0, LVS unique, 1233.7 x 259.1 um, but 12 top pins moved (layout_engine re-sorts trunks; no fixed-pin option) and
+  nominal ss q625 broke (0 words decoded); pess 61/180; f500 ss 0/100. Skew-only retiming is not enough.
+- Next idea: two-period-wide slot enables (or the mode AOI done in slot0 from local ELQq with a strong driver landing straight
+  on slot1's flop D), plus a fixed-pin option in layout_engine so pins/outline can be held at r8; gate on q625 ss/tt/ff nominal,
+  pess ss 3.15/3.50, ff hold, f500 ss, bench B 2.5 Gb/s RCS=1.

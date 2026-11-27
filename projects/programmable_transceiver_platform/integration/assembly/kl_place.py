@@ -462,11 +462,10 @@ for n, v in C.STAGED.get(CHIP, {}).items():
             # VSS Metal5 strap above or below the block; the VDD rows it crosses give way 2 um round it
             bx_ = man['blocks'][n]['bbox']
             run_ = db.Region(db.Box(um(x0+t[0]), um(bx_[1]-PITCH), um(x0+t[1]), um(bx_[3]+PITCH))) - (blkmetal['Metal5'] - tab).sized(um(0))
-            run_ = run_.interacting(tab)
+            run_ = (run_ - straps[('VDD', 'Metal5')].sized(um(2))).interacting(tab)      # never across a VDD row (plan-wired1 touch)
             hit = run_ if not (run_ & straps[('VSS', 'Metal5')]).is_empty() else db.Region()
             if not hit.is_empty():
                 straps[('VSS', 'Metal5')] = (straps[('VSS', 'Metal5')] + hit).merged()
-                straps[('VDD', 'Metal5')] = (straps[('VDD', 'Metal5')] - hit.sized(um(2))).merged()
         else: hit = raw_straps[('VSS', 'Metal5')] & tab
         if not hit.is_empty() and not GRID_SWAP:
             straps[('VSS', 'Metal5')] = (straps[('VSS', 'Metal5')] + hit).merged()
@@ -518,11 +517,10 @@ for n, v in C.STAGED.get(CHIP, {}).items():
             # VSS Metal5 strap above or below the block; the VDD rows it crosses give way 2 um round it
             bx_ = man['blocks'][n]['bbox']
             run_ = db.Region(db.Box(um(x0+t[0]), um(bx_[1]-PITCH), um(x0+t[1]), um(bx_[3]+PITCH))) - (blkmetal['Metal5'] - tab).sized(um(0))
-            run_ = run_.interacting(tab)
+            run_ = (run_ - straps[('VDD', 'Metal5')].sized(um(2))).interacting(tab)      # never across a VDD row (plan-wired1 touch)
             hit = run_ if not (run_ & straps[('VSS', 'Metal5')]).is_empty() else db.Region()
             if not hit.is_empty():
                 straps[('VSS', 'Metal5')] = (straps[('VSS', 'Metal5')] + hit).merged()
-                straps[('VDD', 'Metal5')] = (straps[('VDD', 'Metal5')] - hit.sized(um(2))).merged()
         else: hit = raw_straps[('VSS', 'Metal5')] & tab
         if not hit.is_empty() and not GRID_SWAP:
             straps[('VSS', 'Metal5')] = (straps[('VSS', 'Metal5')] + hit).merged()

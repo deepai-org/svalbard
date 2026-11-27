@@ -2,7 +2,7 @@
 
 The single risk register for the GF180 programmable transceiver, two chips (`pt_rf`, `pt_wired`; `spec/chips.json`). Other documents cite these IDs and keep no risk lists of their own.
 
-**222 risks:** open 124, demanded-mitigation 63, risk-accepted 15, mitigated 14, closed 6. By chip: rf 81, wired 43, both 99. Open or demanded with no active owner: 106.
+**222 risks:** open 124, demanded-mitigation 63, risk-accepted 15, mitigated 14, closed 6. By chip: rf 80, wired 44, both 98. Open or demanded with no active owner: 106.
 
 **Status:** *open* = unresolved or analysis pending; *demanded-mitigation* = a fix is demanded and not yet proven; *risk-accepted* = the residual is accepted; *mitigated* / *closed* = kept only because the row records a rule that must keep being obeyed. **Score** = likelihood × impact (each 1–5). **Chip** = `rf` (`pt_rf` only), `wired` (`pt_wired` only), `both` (shared block, RTL, pad ring, package or board). **Active** = whether the first-named owner has an agent working today (active today: digital, chip assembly (two agents), chip top connectivity, bias / power delivery, sign-off LVS (verification), wired RX capture, coordinator; not active: pads, RF RX, RF TX, LO synthesis, timing rings, wired TX, converters, observation / debug, board / FPGA / bring-up). Rows are sorted open and demanded first by score, then accepted, mitigated, closed.
 

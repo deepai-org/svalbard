@@ -876,19 +876,31 @@ if AD_NETS:
     occ += db.Region(db.Box(0, 0, um(C.DIE[2]), um(C.DIE[3]))) - db.Region(db.Box(*[um(v) for v in C.CORE]))
     # ANT_AVOID_GRID (default on for pt_wired, fp-wired 2026-11-27): no diode under grid Metal4 / Metal5; the router then
     # climbed from the diode's Metal2 pin through the strap (fpw-2: RAIL_wired_tx diode antd_113 under a VDD strap, VDD short)
-    if os.environ.get('ANT_AVOID_GRID', '1' if CHIP == 'wired' else '0') == '1':
+    if os.environ.get('ANT_AVOID_GRID', '1') == '1':
         for k_ in [k_ for k_ in metal if k_[1] in ('Metal4', 'Metal5')]: occ += metal[k_].sized(um(1.0))
     for net_ in sorted(AD_NETS & set(NETS)):
-        for i_, p_ in list(NETS[net_]['ends']):
-            if i_ in ('digital', 'pdn') or i_ not in man['blocks']: continue
+        ends_ = [e for e in NETS[net_]['ends'] if e[0] not in ('digital', 'pdn') and e[0] in man['blocks']]
+        # fallback: where no receiver has room, the diode goes by the macro pin (plan-rf6: adc_q / bbfilter_q corners full)
+        ends_ += [e for e in NETS[net_]['ends'] if e[0] == 'digital']
+        for i_, p_ in ends_:
+            if i_ == 'digital' and any(x_['placed'] for x_ in man['antenna_diodes'] if x_['net'] == net_): continue
             sh_ = pin_shapes_die0(i_, p_)
             if not sh_: continue
             c_ = sh_[0][1].center(); spot = None
-            for r_ in range(4, 80, 4):
-                for dx_, dy_ in ((0, -r_), (0, r_), (-r_, 0), (r_, 0), (-r_, -r_), (r_, r_), (-r_, r_), (r_, -r_)):
-                    b_ = db.Box(c_.x+um(dx_)-um(4.1), c_.y+um(dy_)-um(3.25), c_.x+um(dx_)+um(4.1), c_.y+um(dy_)+um(3.25))
+            # nearest free spot within 150 um: the free area round the pin eroded by the diode half-size + 2 um margin; its
+            # vertices are legal diode centres (8-direction probing found too few spots between the grid straps)
+            for rw_ in (40, 150, 400):
+                win_ = db.Region(db.Box(c_.x-um(rw_), c_.y-um(rw_), c_.x+um(rw_), c_.y+um(rw_)))
+                cand_ = (win_ - (occ & win_.sized(um(10)))).merged().sized(-um(4.1+2.0), -um(3.25+2.0))
+                best_ = None
+                for poly_ in cand_.each():
+                    for pt_ in poly_.each_point_hull():
+                        d_ = abs(pt_.x-c_.x)+abs(pt_.y-c_.y)
+                        if best_ is None or d_ < best_[0]: best_ = (d_, pt_)
+                if best_:
+                    q_ = best_[1]; q_ = db.Point(q_.x//10*10, q_.y//10*10)
+                    b_ = db.Box(q_.x-um(4.1), q_.y-um(3.25), q_.x+um(4.1), q_.y+um(3.25))
                     if (occ & db.Region(b_.enlarged(um(2), um(2)))).is_empty(): spot = b_; break
-                if spot: break
             if spot is None: man['antenna_diodes'].append(dict(net=net_, pin=f'{i_}.{p_}', placed=False)); continue
             nm_ = f'antd_{len(man["antenna_diodes"])}'
             top.insert(db.CellInstArray(dc.cell_index(), db.Trans(db.Vector(spot.left, spot.bottom))))

@@ -19,12 +19,16 @@ TOPC = {'pt_pdn', 'pt_top_wiring', 'pt_direct_land', 'pt_island_bar', 'pt_antdio
 kids = collections.Counter(i.cell.name for i in top.each_inst())
 print('top children (non-block):', {k: v for k, v in kids.items() if not any(k == b['cell'] for b in man['instances'])})
 blkcells = {b['cell'] for b in man['instances']}
+PADCELLS = {b['cell'] for b in man['instances'] if b['name'] in pads.get('pads', {})}
 nl = db.Layout(); nl.dbu = dbu; c = nl.create_cell('T'); L = {k: nl.layer(*v) for k, v in LAY.items()}
 grid = {'M4': db.Region(), 'M5': db.Region()}
 for i in top.each_inst():
     nm = i.cell.name
     if nm == 'pt_top_wiring' and os.environ.get('NOWIRE'): continue
     toplev = nm in TOPC or (nm not in blkcells and not nm.startswith(('gf180mcu', 'sealring', 'retained')))
+    # the provider ring (its supply rails) and the custom pad families carry the pad supply pins' path to the supply pads
+    # (2026-11-27): all their metal is in the audit, else their DVDD / VSS pins were listed as unfed
+    toplev = toplev or nm == 'retained_provider_ring' or nm in PADCELLS
     if not toplev and (nm not in blkcells or os.environ.get('NOBLK')): continue
     for k in (LAY if toplev else ('M4', 'V4', 'M5')):
         li = ly.find_layer(*LAY[k])

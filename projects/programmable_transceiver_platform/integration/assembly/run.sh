@@ -36,7 +36,9 @@ for S in $STAGES; do
                tail -5 "$RUN/lvs/lvs.log"
                # the macro's VDD/VSS stripes are not conn pins, so LVS by name cannot see them (PDS-25): place's check
                grep -o "macro supply [A-Z ]*OPEN\|macro supply OK" "$RUN/place.log" || echo "macro supply: NOT CHECKED (rerun place)"
-               python3 "$A/check_conn.py" "$CHIP" ;;      # the connectivity gate fails the lvs stage (KH-1..3)
+               PS=0; "$A/tool.sh" "$CHIP" -c 1 python3 /asm/check_padsup.py > "$RUN/lvs/padsup.log" 2>&1 || PS=$?; tail -1 "$RUN/lvs/padsup.log"
+               CC=0; python3 "$A/check_conn.py" "$CHIP" || CC=$?      # the connectivity gate fails the lvs stage (KH-1..3)
+               [ $PS -eq 0 ] && [ $CC -eq 0 ] || exit 1 ;;      # pad supply gate (check_padsup.py) fails it too
     check)     python3 "$A/check_conn.py" "$CHIP" ;;      # connectivity gate (KH-1..3): unwired macro / pad core pins, non-port single-pin nets, unbound LVS instances
     fill)      "$A/../signoff/fill/run_fill.sh" rf 2 chip/pt_chip_top.gds      # "rf" = the fill keep-out set (common.NO_OVER blocks), not the chip: used for both chips
                "$A/../signoff/drc/run_drc.sh" fill/rf_filled.gds pt_chip_top density chip_filled_density live 2 ;;

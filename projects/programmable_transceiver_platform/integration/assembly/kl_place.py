@@ -874,6 +874,10 @@ if AD_NETS:
         '  END', 'END pt_antdiode', '']))
     occ = db.Region([db.Box(*[um(v) for v in b_['bbox']]) for b_ in man['blocks'].values()]).merged().sized(um(3))
     occ += db.Region(db.Box(0, 0, um(C.DIE[2]), um(C.DIE[3]))) - db.Region(db.Box(*[um(v) for v in C.CORE]))
+    # ANT_AVOID_GRID (default on for pt_wired, fp-wired 2026-11-27): no diode under grid Metal4 / Metal5; the router then
+    # climbed from the diode's Metal2 pin through the strap (fpw-2: RAIL_wired_tx diode antd_113 under a VDD strap, VDD short)
+    if os.environ.get('ANT_AVOID_GRID', '1' if CHIP == 'wired' else '0') == '1':
+        for k_ in [k_ for k_ in metal if k_[1] in ('Metal4', 'Metal5')]: occ += metal[k_].sized(um(1.0))
     for net_ in sorted(AD_NETS & set(NETS)):
         for i_, p_ in list(NETS[net_]['ends']):
             if i_ in ('digital', 'pdn') or i_ not in man['blocks']: continue

@@ -73,8 +73,10 @@ SPECIAL.update({
 })
 # per-chip sources: (chip, master) -> [(gds, cell)]; the digital macro baseline of each chip (DG9-12)
 # the owner's own LEF replaces the label-based abstract (the macro GDS carries labels of internal nets too)
-CHIP_LEF = {(ch, 'pt_digital_macro'): f'scratch/digital-macro-baseline/{ch}/pt_digital_macro.lef' for ch in ('rf', 'wired')}
-CHIP_SPECIAL = {(ch, 'pt_digital_macro'): [(f'scratch/digital-macro-baseline/{ch}/pt_digital_macro.gds', 'pt_digital_macro')] for ch in ('rf', 'wired')}
+# MACRO_DIR=<dir under the repo root>/{chip} (default scratch/digital-macro-baseline): a candidate macro for a variant run
+_MD = os.environ.get('MACRO_DIR', 'scratch/digital-macro-baseline/{chip}')
+CHIP_LEF = {(ch, 'pt_digital_macro'): _MD.format(chip=ch)+'/pt_digital_macro.lef' for ch in ('rf', 'wired')}
+CHIP_SPECIAL = {(ch, 'pt_digital_macro'): [(_MD.format(chip=ch)+'/pt_digital_macro.gds', 'pt_digital_macro')] for ch in ('rf', 'wired')}
 # staged blocks that replace a conn instance's master in the layout before the conn changes (coordinator, 2026-11-20):
 # instance -> master, GDS, cell, placement rule (R0; x origin = x_mod[0] modulo x_mod[1] um), owner report with the grid ties
 STAGED = {'wired': {'ptrim': dict(master='pt_ptrim', gds='scratch/timing/handoff/ptrim.gds', cell='pt_ptrim',

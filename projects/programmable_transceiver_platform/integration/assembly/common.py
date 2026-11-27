@@ -143,7 +143,10 @@ PIN_WINDOWS = {'rf': True, 'wired': True}
 PIN_GATE_UM2 = 0.4      # gate area per analog block signal pin for the router antenna model: the SMALLEST gate seen in the deck (0.4-4.5 um2) is the pessimistic value (a 4.0 model left 2334 ANT.5)
 # nets the deck still flags for antenna after the input diodes (2026-11-25, pt_rf tail 243): receiver pins modelled with a
 # 0.02 um2 gate so the router jumps to Metal5 at the receiver
-ANT_TIGHT = {'rf': ('HOST_CLK', 'BIAS_rfdriver', 'c_bbfilter_i_en', 'AUX_CK', 'ADCI_CODEB', 'CONV_CLK', 'CLK_OBS_DBG', 'c_lo_mmd_en', 'ATB1_LOCAL0', 'TXPH', 'ATBN_conv_ibias', 'ATB0', 'ADCI_OVL', 'ADCI_DONE', 'RING_OSC_CK', 'PLL_TX_FBCK')}
+ANT_TIGHT = {'rf': ('HOST_CLK', 'BIAS_rfdriver', 'c_bbfilter_i_en', 'AUX_CK', 'ADCI_CODEB', 'CONV_CLK', 'CLK_OBS_DBG', 'c_lo_mmd_en', 'ATB1_LOCAL0', 'TXPH', 'ATBN_conv_ibias', 'ATB0', 'ADCI_OVL', 'ADCI_DONE', 'RING_OSC_CK', 'PLL_TX_FBCK',
+                  # analog-sensitive nets kept free of diodes (ANT_LEN_EXCLUDE) that the plan-rf4 deck flagged: the router jumps them
+                  'rf_rx_clk', 'RF_TX_N', 'RF_TX_P', 'TXLO_QP', 'TXLO_QN', 'TXLO_IP', 'TXLO_IN', 'LO_FB', 'OBS4_wsmp', 'ATB1_LOCAL2',
+                  'ATB1_LOCAL3', 'ATB0_LOCAL1', 'CHAR_MIM_A', 'CHAR_RP_SMP', 'atb1_grp')}
 # grid slots no hook may take (die um, any slot containing the point): the second antenna pass (route.tcl) re-derives pin
 # access after its jumpers and stops with DRT-1231 on a hook slot squeezed between two crossing signal nets
 # (pt_rf VSS slot 978-998 x 4209.5-4217.5 under ATB1_LOCAL4 / CHAR_RP_DRV, 2026-11-25)
@@ -160,10 +163,12 @@ PAD_DIRECT_TIE = {'rf': {('io_bidir_16', 'PD'), ('io_bidir_16', 'PU')}, 'wired':
 ANT_DIODE = {'rf': ('c_bbfilter_i_en', 'BIAS_rfdriver', 'ADCI_CODEB[0]', 'ADCI_CODEB[1]', 'ADCI_CODEB[2]', 'ADCI_CODEB[3]', 'ADCI_CODEB[4]', 'ADCI_CODEB[5]', 'ADCI_CODEB[6]', 'ADCI_CODEB[7]', 'ADCI_CODEB[8]', 'ADCI_CODEB[9]', 'ADCI_CODEB[10]', 'ADCI_CODEB[11]', 'ADCI_OVL', 'CLK_OBS_DBG', 'AUX_CK', 'HOST_CLK', 'CONV_CLK', 'PLL_TX_FBCK', 'c_lo_mmd_en',
               # coordinator 2026-11-27: every net that has violated in some run (fnmatch patterns)
               'ADCI_CODE[[]*', 'ADCI_CODEB[[]*', 'CHAR_RP_SMP', 'atb0_sw[[]*', 'atb1_sw[[]*', 'atb1_en', 'CONV_CLK_C', 'RAIL_pll', 'spi_mosi',
-              'host_word_clk', 'island_en[[]*', 'c_rfdriver_en')}
+              'host_word_clk', 'island_en[[]*', 'c_rfdriver_en',
+              # plan-rf4 deck (2026-11-27): core-bias controls (short but gate-tiny), island rails
+              'c_bgap_*', 'c_biasgen_*', 'c_refchain_*', 'c_refbuf_*', 'c_pll_cdr_*', 'RAIL_*', 'AUX_PRESENT', 'PLL_CDR_LOCK', 's_pg_*')}
 ANT_DIODE['wired'] = ANT_DIODE['rf']        # same names where they exist on pt_wired
 # plus every signal net whose pin bounding box (half perimeter) exceeds ANT_DIODE_LEN um: diodes do not depend on luck
-ANT_DIODE_LEN = float(os.environ.get('ANT_DIODE_LEN', '1500'))
+ANT_DIODE_LEN = float(os.environ.get('ANT_DIODE_LEN', '600'))
 # never by the length rule (coordinator 2026-11-27: a diode is a few fF and leaks at hot corners): RF / LO / baseband signal
 # pairs, bias and reference nodes, ATB measurement nets, VCO / loop-filter nodes, CDR phases and forwarded clocks.
 # The explicit ANT_DIODE list above still applies to them.

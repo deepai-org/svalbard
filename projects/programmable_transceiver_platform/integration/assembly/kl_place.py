@@ -892,20 +892,22 @@ man['antenna_diodes'] = []
 if AD_NETS:
     dc = ly.create_cell('pt_antdiode')
     L_ = lambda a: ly.layer(a, 0)
-    dc.shapes(L_(22)).insert(db.Box(um(0.25), um(0.25), um(2.25), um(2.25)))           # COMP 2 x 2
-    dc.shapes(L_(32)).insert(db.Box(0, 0, um(2.5), um(2.5)))                          # Nplus, 0.25 enclosure
-    dc.shapes(L_(22)).insert(db.Box(um(3.3), um(0.25), um(3.9), um(2.25)))            # substrate tap (DF.14_LV: p+ within 20 um of n+)
-    dc.shapes(L_(31)).insert(db.Box(um(3.05), 0, um(4.15), um(2.5)))                   # Pplus
-    for i_ in range(3):
-        for j_ in range(3):
+    # 6 x 6 um n+ (36 um2, 2026-11-27): with the swapped grid long nets carry more Metal4; the deck counts 2 x diode area
+    # (ANT.16 MF 2), so a 2 x 2 diode covered only about 1.7 mm of Metal4 at the 400 ratio
+    dc.shapes(L_(22)).insert(db.Box(um(0.25), um(0.25), um(6.25), um(6.25)))           # COMP 6 x 6
+    dc.shapes(L_(32)).insert(db.Box(0, 0, um(6.5), um(6.5)))                          # Nplus, 0.25 enclosure
+    dc.shapes(L_(22)).insert(db.Box(um(7.3), um(0.25), um(7.9), um(6.25)))            # substrate tap (DF.14_LV: p+ within 20 um of n+)
+    dc.shapes(L_(31)).insert(db.Box(um(7.05), 0, um(8.15), um(6.5)))                   # Pplus
+    for i_ in range(11):
+        for j_ in range(11):
             x_ = um(0.25+0.36+0.5*i_); y_ = um(0.25+0.36+0.5*j_)
             dc.shapes(L_(33)).insert(db.Box(x_, y_, x_+um(0.22), y_+um(0.22)))       # contacts 0.22, 0.28 space, 0.36 COMP enclosure
-    dc.shapes(LI['Metal1']).insert(db.Box(um(0.45), um(0.45), um(2.05), um(2.05)))
-    dc.shapes(L_(35)).insert(db.Box(um(1.12), um(1.12), um(1.38), um(1.38)))         # Via1
-    dc.shapes(LI['Metal2']).insert(db.Box(um(0.85), um(0.85), um(1.65), um(1.65)))
+    dc.shapes(LI['Metal1']).insert(db.Box(um(0.45), um(0.45), um(6.05), um(6.05)))
+    dc.shapes(L_(35)).insert(db.Box(um(3.12), um(3.12), um(3.38), um(3.38)))         # Via1
+    dc.shapes(LI['Metal2']).insert(db.Box(um(2.85), um(2.85), um(3.65), um(3.65)))
     open('/run/lef/pt_antdiode.lef', 'w').write('\n'.join(['MACRO pt_antdiode', '  CLASS BLOCK ;', '  ORIGIN 0 0 ;', '  FOREIGN pt_antdiode 0 0 ;',
-        '  SIZE 4.200 BY 2.500 ;', '  SYMMETRY X Y ;', '  PIN A', '    DIRECTION INOUT ;', '    USE SIGNAL ;', '    ANTENNADIFFAREA 4.0 ;', '    PORT',
-        '      LAYER Metal2 ; RECT 0.850 0.850 1.650 1.650 ;', '    END', '  END A', '  OBS', '    LAYER Metal1 ;', '      RECT 0.000 0.000 4.200 2.500 ;',
+        '  SIZE 8.200 BY 6.500 ;', '  SYMMETRY X Y ;', '  PIN A', '    DIRECTION INOUT ;', '    USE SIGNAL ;', '    ANTENNADIFFAREA 36.0 ;', '    PORT',
+        '      LAYER Metal2 ; RECT 2.850 2.850 3.650 3.650 ;', '    END', '  END A', '  OBS', '    LAYER Metal1 ;', '      RECT 0.000 0.000 8.200 6.500 ;',
         '  END', 'END pt_antdiode', '']))
     occ = db.Region([db.Box(*[um(v) for v in b_['bbox']]) for b_ in man['blocks'].values()]).merged().sized(um(3))
     occ += db.Region(db.Box(0, 0, um(C.DIE[2]), um(C.DIE[3]))) - db.Region(db.Box(*[um(v) for v in C.CORE]))
@@ -917,7 +919,7 @@ if AD_NETS:
             c_ = sh_[0][1].center(); spot = None
             for r_ in range(4, 80, 4):
                 for dx_, dy_ in ((0, -r_), (0, r_), (-r_, 0), (r_, 0), (-r_, -r_), (r_, r_), (-r_, r_), (r_, -r_)):
-                    b_ = db.Box(c_.x+um(dx_)-um(2.1), c_.y+um(dy_)-um(1.25), c_.x+um(dx_)+um(2.1), c_.y+um(dy_)+um(1.25))
+                    b_ = db.Box(c_.x+um(dx_)-um(4.1), c_.y+um(dy_)-um(3.25), c_.x+um(dx_)+um(4.1), c_.y+um(dy_)+um(3.25))
                     if (occ & db.Region(b_.enlarged(um(2), um(2)))).is_empty(): spot = b_; break
                 if spot: break
             if spot is None: man['antenna_diodes'].append(dict(net=net_, pin=f'{i_}.{p_}', placed=False)); continue

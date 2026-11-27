@@ -831,7 +831,10 @@ for ln in ('Metal2', 'Metal3', 'Metal4', 'Metal5'):
     # bar shapes are obstructions 0.5 um larger, so router wiring keeps the wide-metal spacing (165 of the 180 pt_rf precheck
     # DRC errors were router wiring at the straps, 2026-11-24)
     if ln in ('Metal4', 'Metal5'):
-        wide_ = reg.merged().sized(-um(5.0)).sized(um(5.0))
+        # the wide test runs on the full metal (hook slots included), so a slot pin keeps a 0.5 um halo too: hook wires along
+        # their own strap stayed 0.28 um off it (plan-rf4: 22 x M4.2b with the vertical Metal4 straps, 2026-11-27)
+        full_ = (db.Region(pdn.begin_shapes_rec(LI[ln])) + (db.Region(barcell.begin_shapes_rec(LI[ln])) if barcell else db.Region())).merged()
+        wide_ = full_.sized(-um(5.0)).sized(um(5.0))
         reg = (reg + wide_.sized(um(0.5))).merged() - db.Region([cb for hn, (l2, cb, net) in hook_pins.items() if l2 == ln])
         if ln == 'Metal5':
             for bd in bar_pins.values(): reg -= bd['region']

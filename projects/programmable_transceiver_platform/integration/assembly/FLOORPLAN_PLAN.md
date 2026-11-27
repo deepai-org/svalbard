@@ -419,6 +419,16 @@ a few fF and leaks at hot corners, and that matters on these nets:
 7. **pll_tx** (the only `GRID_SNAP` block, built with Metal5 channels on the old vertical grid phase) is plan-placed
    rotated, with no snap. With the swap, the grid crossing it is vertical Metal4. The timing owner should confirm its
    ties.
+8. **pt_wired TXPH** (pll_tx to wiredtx, 8 TX clock phases): routed path lengths on fpw-2 are PH0 1053, PH1 1313,
+   PH2 1181, PH3 1224, PH4 1304, PH5 1184, PH6 1177, PH7 1195 um. The spread is 260 um (about 2 ps); about 210 um of
+   it comes from the pin geometry (Manhattan 582-791 um). Coordinator, 2026-11-27: accepted without fixed matched
+   wiring. Phase calibration and eye margin absorb the static skew, against a ring phase-error range of 100 ps
+   (`scratch/wired_tx/s13/LIMITS.md`) and the block's own 15 ps systematic skew. Revisit only if the phase-error budget
+   falls under 3 ps.
+9. **pt_wired macro** is at x 1111, 140 um east of the old plan (fp-wired). The DG9-30 macro keeps its old pins
+   (W 324 / E 209), so the plan model routes with `REAL_MPINS=1`. The side channels chan_macro_w (946-1111) and
+   chan_macro_e (2787-2986) carry no decap. Host-link per-bit routed lengths before / after are within the coordinator's
+   100 um limit.
 
 ## 9. Code (branch fp-plan-code)
 

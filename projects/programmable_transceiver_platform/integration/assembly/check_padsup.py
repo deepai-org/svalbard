@@ -2,6 +2,7 @@
 """Pad supply gate (run.sh lvs stage, tool image): every supply pin of the custom pad families (DVDD / VDD on VDD, VSS / DVSS
 on VSS) must be on the same extracted net as the core grid of that net (full Metal1-5 connectivity of chip/pt_chip_top.gds,
 provider ring included). LVS by name does not bind the pad families and grid_conn once listed these pins as unfed.
+Also every drawn provider tie (place.json io_ties direct) must extract onto its grid net.
 Prints one line per pin and 'PAD SUPPLY OK' or 'PAD SUPPLY FAIL'; exit 1 on a fail (coordinator 2026-11-27)."""
 import json, sys, klayout.db as db
 ly = db.Layout(); ly.read('/run/chip/pt_chip_top.gds'); top = ly.cell('pt_chip_top')
@@ -35,4 +36,18 @@ for pn, v in P['pads'].items():
             c = b.center(); res.add(nid(lm.get(lnm, 'M1'), c.x/1000, c.y/1000))
         if rs:
             ok_ = ref.get(net) in res; print(pn, pin, net, 'ok' if ok_ else 'NOT ON GRID'); bad += 0 if ok_ else 1
+# drawn provider ties (common.PAD_DIRECT_TIE, kl_place io_direct_ties): the tied pin must extract onto its grid net
+# (coordinator 2026-11-27: the fpw-8 POR_BYPASS PD tie floated)
+ntie = 0
+for t in [t for t in man.get('io_ties', []) if t.get('direct')]:
+    v = P['io'].get(t['site']); m = v['cell'] if v else None
+    tr = db.Trans.from_s(v['trans']) if v else None; o = MJ.get(m, {}).get('origin', [0, 0])
+    for pin in t['pins']:
+        res = set()
+        for lnm, r in MJ.get(m, {}).get('pins', {}).get(pin, [])[:4]:
+            b = tr * db.Box(round((r[0]+o[0])*1000), round((r[1]+o[1])*1000), round((r[2]+o[0])*1000), round((r[3]+o[1])*1000))
+            c = b.center(); res.add(nid(lm.get(lnm, 'M1'), c.x/1000, c.y/1000))
+        ok_ = ref.get(t['net']) in res; ntie += 1
+        print('direct tie', t['site'], pin, t['net'], 'ok' if ok_ else 'NOT ON GRID'); bad += 0 if ok_ else 1
+print(f'direct ties checked {ntie}')
 print('PAD SUPPLY OK' if bad == 0 else f'PAD SUPPLY FAIL ({bad})'); sys.exit(1 if bad else 0)

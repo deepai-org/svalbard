@@ -9,6 +9,7 @@ were lost to diode placement):
   diode_in_reserve  antenna diode in a blocking floorplan reserve (the Metal1-3 DEF blockages); open plan channels are legal
                     (coordinator 2026-11-27: a diode costs channel routing almost nothing)
   grid_touch        place.json grid_touch (VDD / VSS grid metal touching) not empty
+  dead_piece_pins   a block VDD / VSS pin on final grid metal joined to no ring (place.json, kl_place final liveness)
   fp_overlaps       floorplan.json overlaps not empty
   rail_diodes       an island rail (RAIL_*) with more than one diode
   macro_supply      place.log lacks 'macro supply OK'
@@ -61,6 +62,7 @@ def lint(D, cover_min):
     res['macro_supply'] = [] if 'macro supply OK' in D['log'] else ['place.log: no "macro supply OK"']
     res['unconnectable'] = [f"{u.get('inst')}.{u.get('pin')} ({u.get('why')})" for u in man.get('unconnectable', [])]
     res['grid_touch'] = [str(t) for t in man.get('grid_touch', [])]
+    res['dead_piece_pins'] = [str(t) for t in man.get('dead_piece_pins', [])]
     res['fp_overlaps'] = [str(t) for t in D['fp'].get('overlaps', [])]
     nets = collections.defaultdict(bool)
     for d in man.get('antenna_diodes', []): nets[d['net']] |= bool(d.get('placed'))
@@ -97,6 +99,7 @@ def selftest(run):
         'unconnectable': lambda D: D['man'].setdefault('unconnectable', []).append(dict(inst='t', pin='p', why='test')),
         'coverage': lambda D: D['man']['antenna_diodes'].extend(dict(net=f'X{i}', pin='t.A', placed=False) for i in range(len(D['man']['antenna_diodes']) + 10)),
         'grid_touch': lambda D: D['man'].setdefault('grid_touch', []).append(['Metal5', 'VDD', 'VSS', 0, 0, 1, 1]),
+        'dead_piece_pins': lambda D: D['man'].setdefault('dead_piece_pins', []).append(['blk', 'VSS', 'VSS', 'Metal5', 0, 0]),
         'fp_overlaps': lambda D: D['fp'].setdefault('overlaps', []).append(['a', 'b']),
     }
     if res_: cases['diode_in_reserve'] = lambda D: put(D, (res_[0] + 0.5, res_[1] + 0.5))

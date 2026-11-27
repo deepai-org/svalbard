@@ -471,6 +471,25 @@ for n, v in C.STAGED.get(CHIP, {}).items():
             straps[('VSS', 'Metal5')] = (straps[('VSS', 'Metal5')] + hit).merged()
         man['tab_ties'].append(dict(inst=n, tab=tn, tied=not hit.is_empty(), at=[round(x0+t[0], 2), round(y0+t[2], 2)]))
 # the VSS ring gives way where a VDD strap crosses it on the same layer (the other layer stays continuous)
+# supply pads: Metal2 strips at the inner edge of every dvdd / dvss cell, extended into their ring; Metal3 + Via2/Via3 there
+stubs = {'VDD': db.Region(), 'VSS': db.Region()}
+rcache = {}
+for s, v in PADS['io'].items():
+    cn = v['cell']
+    if not cn.startswith(('gf180mcu_fd_io__dvdd', 'gf180mcu_fd_io__dvss')): continue
+    net = 'VDD' if 'dvdd' in cn else 'VSS'
+    c = next(ly.cell(i) for i in ly.cell('retained_provider_ring').each_child_cell() if ly.cell(i).name.split('$')[0] == cn.split('$')[0])
+    t = db.Trans.from_s(v['trans'])
+    edge = db.Region(c.begin_shapes_rec_touching(LI['Metal2'], db.Box(0, 349000, 75000, 350000))).merged() & db.Region(db.Box(-1000, 340000, 76000, 350000))
+    for poly in edge.transformed(t).each():
+        b = poly.bbox()
+        bx, by, BX, BY = b.left, b.bottom, b.right, b.top
+        d = um(C.IO_INNER+2*W_+G_+2)
+        if bx < um(500): BX = d
+        elif BX > um(C.DIE[2]-500): bx = um(C.DIE[2])-d
+        elif by < um(500): BY = d
+        else: by = um(C.DIE[3])-d
+        stubs[net].insert(db.Box(bx, by, BX, BY))
 metal = {}
 for net in GRID_NETS:
     for ln in ('Metal4', 'Metal5'):
@@ -484,8 +503,9 @@ for net in GRID_NETS:
 man['grid_dead_mm2'] = {}
 for net in ('VDD', 'VSS'):
     m4_, m5_ = metal[(net, 'Metal4')].merged(), metal[(net, 'Metal5')].merged()
-    seed_ = ring.get(net, db.Region())
-    l4_, l5_ = m4_.overlapping(seed_), m5_.overlapping(seed_)
+    # seed = ring metal under a supply-pad stub (pad-fed), not the geometric ring band: ring Metal4 fragments between
+    # crossing other-net straps touch the band but join nothing (fpw-8: 5 dead VSS hook slots on such fragments)
+    l4_ = m4_.interacting(stubs[net]); l5_ = m5_.overlapping(l4_)
     while True:
         n4_ = m4_.overlapping(l5_) + l4_; n5_ = m5_.overlapping(l4_) + l5_
         n4_ = m4_.overlapping(n4_); n5_ = m5_.overlapping(n5_)
@@ -538,25 +558,6 @@ for net in GRID_NETS:
 for net_, land_ in macro_vias:       # Via4 from the horizontal Metal5 straps onto the macro's own Metal4 stripes
     man['macro_supply'][net_]['via4'] = via_fill(pdn, VIA['Via4'], land_ & metal[(net_, 'Metal5')], inset=0.2)
     nvia += man['macro_supply'][net_]['via4']
-# supply pads: Metal2 strips at the inner edge of every dvdd / dvss cell, extended into their ring; Metal3 + Via2/Via3 there
-stubs = {'VDD': db.Region(), 'VSS': db.Region()}
-rcache = {}
-for s, v in PADS['io'].items():
-    cn = v['cell']
-    if not cn.startswith(('gf180mcu_fd_io__dvdd', 'gf180mcu_fd_io__dvss')): continue
-    net = 'VDD' if 'dvdd' in cn else 'VSS'
-    c = next(ly.cell(i) for i in ly.cell('retained_provider_ring').each_child_cell() if ly.cell(i).name.split('$')[0] == cn.split('$')[0])
-    t = db.Trans.from_s(v['trans'])
-    edge = db.Region(c.begin_shapes_rec_touching(LI['Metal2'], db.Box(0, 349000, 75000, 350000))).merged() & db.Region(db.Box(-1000, 340000, 76000, 350000))
-    for poly in edge.transformed(t).each():
-        b = poly.bbox()
-        bx, by, BX, BY = b.left, b.bottom, b.right, b.top
-        d = um(C.IO_INNER+2*W_+G_+2)
-        if bx < um(500): BX = d
-        elif BX > um(C.DIE[2]-500): bx = um(C.DIE[2])-d
-        elif by < um(500): BY = d
-        else: by = um(C.DIE[3])-d
-        stubs[net].insert(db.Box(bx, by, BX, BY))
 for net in ('VDD', 'VSS'):
     land = (stubs[net] & metal[(net, 'Metal4')]).merged()
     land = land.sized(-um(0.5)).sized(um(0.5)).merged()      # no Metal3 sliver where a strap cut ends on the stub (M3.1, swapped grid)
@@ -603,7 +604,7 @@ for net in GRID_NETS:
 live = {}
 for net in [n_ for n_ in GRID_NETS if n_ in ring]:
     m4_ = metal.get((net, 'Metal4'), db.Region()).merged(); m5_ = metal.get((net, 'Metal5'), db.Region()).merged()
-    seed = ring.get(net, db.Region())
+    seed = m4_.interacting(stubs[net])      # pad-fed ring metal (see the dead-metal pruning)
     # Metal4 and Metal5 count as joined only where their overlap is large enough for the Via4 lattice to place a cut
     # (a thin overlap gets none: two pt_rf VSS hooks landed on such an island, 2026-11-24)
     cx_ = (m4_ & m5_).merged().sized(-um(0.75)).sized(um(0.75))
@@ -634,6 +635,33 @@ for net in GRID_NETS:
             lst.append([ln, cb, False])
     slots[net] = lst
 PLATED = TRK.build(globals(), 'plates') if os.environ.get('PLATES', '1') == '1' else set()     # heavy supply pins: drawn plates to the grid (island_trunks.py, PDS-25 / ASM-17)
+# slot liveness on the final pdn geometry (2026-11-27, fpw-8: 5 VSS slots and the PD tie slot on row pieces cut off after
+# slot selection): Metal4 / Metal5 pieces of pt_pdn joined through its Via4 cuts to the ring of the same net; a slot on no
+# live piece of its net is never used for a hook or a direct tie
+_m4f = db.Region(pdn.begin_shapes_rec(LI['Metal4'])).merged(); _m5f = db.Region(pdn.begin_shapes_rec(LI['Metal5'])).merged()
+_v4f = db.Region(pdn.begin_shapes_rec(VIA['Via4'])).merged()
+man['dead_slots'] = []; _live_all = {}
+for net in [n_ for n_ in ('VDD', 'VSS') if n_ in slots and n_ in ring]:
+    k4_ = _m4f.interacting(stubs[net]); k5_ = _m5f.interacting(_v4f.interacting(k4_))
+    while True:
+        n5_ = (_m5f.interacting(_v4f.interacting(k4_)) + k5_).merged(); n4_ = (_m4f.interacting(_v4f.interacting(n5_)) + k4_).merged()
+        if n4_.count() == k4_.count() and n5_.count() == k5_.count(): break
+        k4_, k5_ = n4_, n5_
+    lv_ = {'Metal4': k4_, 'Metal5': k5_}; _live_all.setdefault('Metal4', db.Region()).insert(k4_); _live_all.setdefault('Metal5', db.Region()).insert(k5_)
+    for sl in slots[net]:
+        if not sl[2] and (lv_[sl[0]] & db.Region(sl[1])).area() < sl[1].area() * 0.9:
+            sl[2] = True; man['dead_slots'].append([net, sl[0], fu(sl[1].left), fu(sl[1].bottom), fu(sl[1].right), fu(sl[1].top)])
+if man['dead_slots']: print('dead hook slots skipped', len(man['dead_slots']))
+# loud check (place_lint dead_piece_pins): a block VDD / VSS pin on grid metal joined to no ring
+_dead = {ln_: (_m4f if ln_ == 'Metal4' else _m5f) - _live_all.get(ln_, db.Region()) for ln_ in ('Metal4', 'Metal5')}
+man['dead_piece_pins'] = []
+for net_ in ('VDD', 'VSS'):
+    for n_, p_ in nets.get(net_, []):
+        if n_ not in man['blocks']: continue
+        for ln_, b_ in pin_shapes_die0(n_, p_):
+            if ln_ in _dead and not (_dead[ln_] & db.Region(b_)).is_empty():
+                man['dead_piece_pins'].append([n_, p_, net_, ln_, fu(b_.left), fu(b_.bottom)]); break
+if man['dead_piece_pins']: print('BLOCK SUPPLY PINS ON DEAD GRID METAL', len(man['dead_piece_pins']), man['dead_piece_pins'][:6])
 hook_pins = {}; man['digital_ties_not_hooked'] = 0
 dland = ly.create_cell('pt_direct_land'); top.insert(db.CellInstArray(dland.cell_index(), db.Trans()))   # direct pin landings (own cell: checks can drop it)
 k = 0

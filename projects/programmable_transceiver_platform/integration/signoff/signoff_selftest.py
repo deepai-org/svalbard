@@ -9,7 +9,7 @@ import json, os, shutil, subprocess, sys, tempfile
 SO = os.path.dirname(os.path.abspath(__file__)); SRC = os.path.abspath(sys.argv[1])
 CHIP = os.environ.get('SIGNOFF_CHIP') or json.load(open(SRC + '/check_conn.json'))['chip']
 FILES = ['place.log', 'route/route.log', 'route/routed.def', 'check_conn.json', 'lvs/chip/lvs.json', 'lvs/padsup.log',
-         'shortcheck.json', 'grid_conn.txt'] + [f'drc/chip_{d}/{f}' for d in ('main', 'antenna', 'density') for f in ('counts.json', 'meta.txt')]
+         'shortcheck.json', 'grid_conn.txt', 'lvs/pt_chip_top.ref.spice', 'signoff/chip_smoke/summary.json'] + [f'drc/chip_{d}/{f}' for d in ('main', 'antenna', 'density') for f in ('counts.json', 'meta.txt')]
 TMP = tempfile.mkdtemp(prefix='signoff_selftest_')
 def make(name):
     r = f'{TMP}/{name}'; os.makedirs(r + '/chip')
@@ -56,6 +56,7 @@ expect('padsup fail', lambda r: edit(r, 'lvs/padsup.log', lambda t: t.replace('P
 expect('check_conn fail', lambda r: edit(r, 'check_conn.json', lambda t: t.replace('"pass_": true', '"pass_": false')), {'check_conn': 'fail'})
 expect('shortcheck join', lambda r: edit(r, 'shortcheck.json', lambda t: t.replace('"vdd_vss_one_net": false', '"vdd_vss_one_net": true')), {'shortcheck': 'fail'})
 expect('grid VDD/VSS join', gc_join, {'grid_conn': 'fail'})
+expect('chip_smoke fail', lambda r: edit(r, 'signoff/chip_smoke/summary.json', lambda t: t.replace('"pass": true', '"pass": false')), {'chip_smoke': 'fail'})
 expect('antenna up', lambda r: drc_up(r, 'antenna', sorted(base['counts']['antenna'])[0], 1), {'antenna': 'regressed'})
 expect('drc new class', lambda r: drc_up(r, 'main', 'V1.1', 1), {'drc_main': 'fail'})
 expect('drc other gds', lambda r: edit(r, 'drc/chip_main/meta.txt', lambda t: t.replace('sha256=', 'sha256=0')), {'drc_main': 'fail'})

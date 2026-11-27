@@ -35,7 +35,7 @@ precheck/run_precheck.sh <abs filled gds> pt_chip_top <new workdir> 4 && python3
 and stops at the first fail unless `--all`: `check_top` (chips/check_top.py + `--selftest` on a `git archive` of HEAD),
 `drt` (route.log), `macro_supply` (place.log), `check_conn` (check_conn.py, KH_CONN=1), `lvs_name` (top_lvs.py by name:
 no short except a block's own unlabelled stripe of the same net, every reference instance bound), `padsup`
-(check_padsup.py), `shortcheck` (kl_shortcheck.py, no drop cells), `grid_conn` (scratch/integration/m1-pdn/grid_conn.py
+(check_padsup.py), `shortcheck` (kl_shortcheck.py, no drop cells), `chip_smoke` (gate: verification/chip_smoke/signoff_hook.sh, rerun when the run's netlist sha differs), `grid_conn` (scratch/integration/m1-pdn/grid_conn.py
 with MACRONET=1: no VDD/VSS piece, every block fed, no floating piece with a supply pin, macro stripes on their net),
 `density` (before fill, reported only), `antenna`, `drc_main` (deck counts by rule), `lvs_bb` (hook:
 `lvs/run_top_lvs_bb.sh` when present, else `absent`). A result in the run is collected if newer than the GDS (DRC: same
@@ -46,7 +46,7 @@ regressed / info / absent / not run. Gates fail outright; counts (drt, lvs_name 
 lvs_bb kinds) are compared with `baseline/<chip>.json`: above baseline = regressed, a nonzero class missing from the
 baseline = fail (a baseline class may be a base rule such as `ANT.6`; the deck's `ANT.16_i_ANT.6` variants fold onto it). Exit 0 only if nothing fails or regresses. Baselines move only by `--update-baseline --reason`
 (refused if a gate fails), committed by pathspec with that reason. `signoff_selftest.py <checked run>` is the harness's
-known-answer and negative-control test (twelve injected faults on a copy of a run, no tool runs).
+known-answer and negative-control test (twelve injected faults incl. chip_smoke on a copy of a run, no tool runs).
 
 ## Fill and keep-outs
 

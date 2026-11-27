@@ -1,6 +1,6 @@
 #!/bin/bash
 # Chip assembly of one chip, stage by stage, one heavy job at a time:   run.sh <rf|wired> [stage ...]
-#   stages: abstract floorplan place route stream report drc lvs fill precheck      (default: abstract .. report)
+#   stages: abstract floorplan place route stream report drc lvs signoff fill precheck      (default: abstract .. report)
 # Run directory scratch/integration/assembly-<chip> (ASM_RUN overrides); only the latest run is kept (each stage
 # overwrites its outputs). The sign-off flows (integration/signoff, SIGNOFF_CHIP=<chip>) read chip/pt_chip_top.gds from it.
 set -e
@@ -37,6 +37,7 @@ for S in $STAGES; do
                tail -5 "$RUN/lvs/lvs.log"
                # the macro's VDD/VSS stripes are not conn pins, so LVS by name cannot see them (PDS-25): place's check
                grep -o "macro supply [A-Z ]*OPEN\|macro supply OK" "$RUN/place.log" || echo "macro supply: NOT CHECKED (rerun place)" ;;
+    signoff)   "$A/../signoff/signoff.sh" "$CHIP" "$RUN" ${SIGNOFF_ARGS:-} ;;      # every check vs signoff/baseline/<chip>.json; fails the stage on a fail or regression
     fill)      "$A/../signoff/fill/run_fill.sh" rf 2 chip/pt_chip_top.gds      # "rf" = the fill keep-out set (common.NO_OVER blocks), not the chip: used for both chips
                "$A/../signoff/drc/run_drc.sh" fill/rf_filled.gds pt_chip_top density chip_filled_density live 2 ;;
     precheck)  rm -rf "$RUN/precheck"      # the shuttle's own precheck on the filled chip (about 3 h, 4 threads)

@@ -28,6 +28,26 @@ precheck/run_precheck.sh <abs filled gds> pt_chip_top <new workdir> 4 && python3
 | `lvs/` | `gen_netlist.py` (reference from the chip conn, black boxes), `top_lvs.py` (metal extraction, compare by topology and by name), `fixture.py` + `run_controls.sh` (routed-fixture proof with three broken variants) |
 | `precheck/` | `run_precheck.sh` (live shuttle precheck), `summarise.py`, block-level matrix scripts (`block_drc.py`, `block_lvs.py`, `deck_negctl.py`, `gds_cell_xor.py`, `lib_compare.py`, `model_compare.py`, `magic_drc.tcl`) |
 
+## Signoff harness (merge gate, MANDATE 8)
+
+`signoff.sh <rf|wired> <ASM_RUN dir> [--all] [--collect-only] [--update-baseline [--provisional] --reason "..."]`
+(also `ASM_RUN=<dir> ../assembly/run.sh <chip> signoff`, extra flags in `SIGNOFF_ARGS`). Runs or collects, cheap first,
+and stops at the first fail unless `--all`: `check_top` (chips/check_top.py + `--selftest` on a `git archive` of HEAD),
+`drt` (route.log), `macro_supply` (place.log), `check_conn` (check_conn.py, KH_CONN=1), `lvs_name` (top_lvs.py by name:
+no short except a block's own unlabelled stripe of the same net, every reference instance bound), `padsup`
+(check_padsup.py), `shortcheck` (kl_shortcheck.py, no drop cells), `grid_conn` (scratch/integration/m1-pdn/grid_conn.py
+with MACRONET=1: no VDD/VSS piece, every block fed, no floating piece with a supply pin, macro stripes on their net),
+`density` (before fill, reported only), `antenna`, `drc_main` (deck counts by rule), `lvs_bb` (hook:
+`lvs/run_top_lvs_bb.sh` when present, else `absent`). A result in the run is collected if newer than the GDS (DRC: same
+sha256 in meta.txt), else the script reruns (one heavy job at a time); `--collect-only` makes a stale result a fail.
+
+Output `<run>/signoff/signoff.json` and a table `check | status | value | source / why`; status pass / fail /
+regressed / info / absent / not run. Gates fail outright; counts (drt, lvs_name kinds, antenna and drc_main by rule,
+lvs_bb kinds) are compared with `baseline/<chip>.json`: above baseline = regressed, a nonzero class missing from the
+baseline = fail. Exit 0 only if nothing fails or regresses. Baselines move only by `--update-baseline --reason`
+(refused if a gate fails), committed by pathspec with that reason. `signoff_selftest.py <checked run>` is the harness's
+known-answer and negative-control test (twelve injected faults on a copy of a run, no tool runs).
+
 ## Fill and keep-outs
 
 Fill = the shuttle PDK's `fill_all.rb` (792ef67) on the whole die. Keep-outs are top-level marker boxes over instances,

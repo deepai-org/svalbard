@@ -756,7 +756,7 @@ Lp = ['MACRO pt_pdn', '  CLASS BLOCK ;', '  ORIGIN 0 0 ;', '  FOREIGN pt_pdn 0 0
 # HOOK_DUAL (default on for pt_wired, fp-wired 2026-11-27): a Metal5 hook slot over same-net Metal4 (ring, crossings) is a
 # pin on Metal4 too (1 um inside the slot, opened in the Metal4 obstruction); the Metal4 under it is drawn and joined by
 # the grid's Via4 array, so the router lands on Metal4 instead of putting a Via4 off the slot (fpw-2: 20 Metal5 shorts)
-HOOK_DUAL = os.environ.get('HOOK_DUAL', '1' if CHIP == 'wired' else '0') == '1'
+HOOK_DUAL = os.environ.get('HOOK_DUAL', '1') == '1'      # on for both chips (plan-rf6: 40+ ring hook shorts without it)
 dual4 = {}
 for hn, (ln, cb, net) in hook_pins.items():
     if HOOK_DUAL and ln == 'Metal5' and (net, 'Metal4') in metal:

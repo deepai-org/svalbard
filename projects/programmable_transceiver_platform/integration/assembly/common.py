@@ -154,7 +154,13 @@ HOOK_SLOT_AVOID = {'rf': [(988.0, 4213.5)]}
 # west of lo_lf (PDS-25 finding 3, 2026-11-25)
 GRID_STITCH = {'rf': [('VDD', 'Metal4', (2690.0, 1213.6, 3275.0, 1217.6)), ('VSS', 'Metal4', (2690.0, 1219.0, 3275.0, 1223.0))]}
 # nets that get top-level antenna diodes at their receivers (kl_place, pt_antdiode)
-ANT_DIODE = {'rf': ('c_bbfilter_i_en', 'BIAS_rfdriver', 'ADCI_CODEB[0]', 'ADCI_CODEB[1]', 'ADCI_CODEB[2]', 'ADCI_CODEB[3]', 'ADCI_CODEB[4]', 'ADCI_CODEB[5]', 'ADCI_CODEB[6]', 'ADCI_CODEB[7]', 'ADCI_CODEB[8]', 'ADCI_CODEB[9]', 'ADCI_CODEB[10]', 'ADCI_CODEB[11]', 'ADCI_OVL', 'CLK_OBS_DBG', 'AUX_CK', 'HOST_CLK', 'CONV_CLK', 'PLL_TX_FBCK', 'c_lo_mmd_en')}
+ANT_DIODE = {'rf': ('c_bbfilter_i_en', 'BIAS_rfdriver', 'ADCI_CODEB[0]', 'ADCI_CODEB[1]', 'ADCI_CODEB[2]', 'ADCI_CODEB[3]', 'ADCI_CODEB[4]', 'ADCI_CODEB[5]', 'ADCI_CODEB[6]', 'ADCI_CODEB[7]', 'ADCI_CODEB[8]', 'ADCI_CODEB[9]', 'ADCI_CODEB[10]', 'ADCI_CODEB[11]', 'ADCI_OVL', 'CLK_OBS_DBG', 'AUX_CK', 'HOST_CLK', 'CONV_CLK', 'PLL_TX_FBCK', 'c_lo_mmd_en',
+              # coordinator 2026-11-27: every net that has violated in some run (fnmatch patterns)
+              'ADCI_CODE[[]*', 'ADCI_CODEB[[]*', 'CHAR_RP_SMP', 'atb0_sw[[]*', 'atb1_sw[[]*', 'atb1_en', 'CONV_CLK_C', 'RAIL_pll', 'spi_mosi',
+              'host_word_clk', 'island_en[[]*', 'c_rfdriver_en')}
+ANT_DIODE['wired'] = ANT_DIODE['rf']        # same names where they exist on pt_wired
+# plus every signal net whose pin bounding box (half perimeter) exceeds ANT_DIODE_LEN um: diodes do not depend on luck
+ANT_DIODE_LEN = float(os.environ.get('ANT_DIODE_LEN', '1500'))
 # masters whose supply pins are labelled only on Metal1 inside the cell: pins also on their own Metal4/5 of that net (kl_abstract)
 PIN_UP = {'por': ('vdd3v3', 'vss')}
 # conn blocks placed by the second pass, where decap tiles give way (2026-11-24: with the taller RF / ATB cells the packer

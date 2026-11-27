@@ -832,7 +832,14 @@ for h in man['hooks']:
 # ------------------------------------------------------------------------------------------- top-level antenna diodes
 # common.ANT_DIODE nets: a 2 x 2 um n+ / p-substrate diode (COMP 22/0 + Nplus 32/0, 3 x 3 contacts, Metal1, Via1, Metal2 pin) next to
 # every block receiver of the net, wired by the router (deck ANT.16 tail that router jumpers do not close, 2026-11-25)
-AD_NETS = set(C.ANT_DIODE.get(CHIP, ()))
+import fnmatch as _fn
+_adp = C.ANT_DIODE.get(CHIP, ())
+AD_NETS = {n_ for n_ in NETS if any(_fn.fnmatchcase(n_, p_) for p_ in _adp)}
+for n_, v_ in NETS.items():     # long nets (common.ANT_DIODE_LEN): pin bounding box half perimeter over the threshold
+    if v_.get('cls') in ('hook', 'supply') or n_ in ('VDD', 'VSS'): continue
+    pts_ = [sh_[0][1].center() for i_, p_ in v_['ends'] if i_ in man['blocks'] for sh_ in [pin_shapes_die0(i_, p_)] if sh_]
+    if len(pts_) > 1 and fu(max(p.x for p in pts_)-min(p.x for p in pts_)+max(p.y for p in pts_)-min(p.y for p in pts_)) > C.ANT_DIODE_LEN: AD_NETS.add(n_)
+man['antenna_diode_nets'] = sorted(AD_NETS)
 man['antenna_diodes'] = []
 if AD_NETS:
     dc = ly.create_cell('pt_antdiode')

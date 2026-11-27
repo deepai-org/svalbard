@@ -381,6 +381,26 @@ chan_macro_w and chan_bbq_top on pt_rf, and in chan_macro_e on pt_wired. They st
 pin gaps. Their positions are in `<chip>_place.json` (`decap`): pt_rf 36 of 36 (PDS-10 shortfall closed in the plan),
 pt_wired 69 of 69 plus the 14 PAD-13 tiles. The channel peaks above already include them.
 
+### 7.5 Antenna diodes
+
+Top-level antenna diodes (`common.ANT_DIODE`, `kl_place`) are a 2 x 2 um n+/p-substrate diode next to every block
+receiver of a net. Two rules add them:
+- **Explicit list:** every net that has violated antenna in some run (coordinator list, patterns such as
+  `ADCI_CODE[*]`, `atb0_sw[*]`, `island_en[*]`). It applies even to nets on the exclusion list below.
+- **Length rule:** every non-supply net whose pin bounding box (half perimeter) is longer than `ANT_DIODE_LEN`
+  (1500 um). On pt_rf this gives 378 nets and 464 diodes.
+
+The length rule never applies to analog-sensitive nets (`common.ANT_LEN_EXCLUDE`; coordinator 2026-11-27). A diode is
+a few fF and leaks at hot corners, and that matters on these nets:
+- **RF / LO / baseband signal pairs:** `RF_*`, `BB_[IQ]_*`, `LNA_*`, `LO_*`, `LOI_*`, `TXLO_*`, `TXI_* TXQ_* TXS_*`,
+  `BBI_* BBQ_*`, `DACI_* DACQ_*`, `ADCI_[NP] ADCQ_[NP]`, `HSRX_*`, `WIRE_TX_*`, `WTX_EXT_*`, `REF_IN*`, `AUX_CLK_[NP]`,
+  `WMON*`, `TX_CASCODE*`, `USB_*`, LO class nets.
+- **Bias and references:** `BIAS_*`, `VCM*`, `VREF*`, `REF_VCM`, `*IBIAS*`.
+- **ATB measurement:** `ATB*`, `ATBN_*`, `ATBP_*`, `atb*_local*`, `CHAR_*`.
+- **VCO / loop filter:** `*VTUNE*`, `LO_CP`, `VREG_*`, `LO_VTDET`.
+- **CDR phases and forwarded clocks:** `CDRPH[*]`, `CKP[*]`, `CKN[*]`, `TXPH[*]`, `PREF`, `WIRE_CK`, `WSMP_CK`,
+  `*FWD*`, `fwd_*`, `rf_tx_clk_out`, `rf_rx_clk`.
+
 ## 8. Deviations and open items (owners)
 
 1. **LO branch to lo_txbuf** is 2.8 mm (FLOW_ADJ 1.2, LO-ASM-6 about 2.1). The RF_RX and RF_TX pads are 2.5 mm apart,
@@ -414,6 +434,9 @@ pt_wired 69 of 69 plus the 14 PAD-13 tiles. The channel peaks above already incl
    - Any DEF orientation for a real cell (`orient` in floorplan.json).
    - `GRID_SWAP=1` (default): the swapped grid and the macro-strap join of 7.1.
    - The VSS tab ties of staged blocks run on Metal5 up their channel to the nearest horizontal VSS row.
+   - Drawn ties for provider tie pins deep inside a pad cell (`common.PAD_DIRECT_TIE`: the POR_BYPASS in_c cell's
+     PU / PD), counted as wired by `check_conn.py`.
+   - Antenna diodes per 7.5.
    - GRID_STITCH (packer floorplan only) follows the horizontal layer.
 3. **Worktree runs:** `ASM_DATA=<main checkout>` makes the tool image mount that checkout as `/repo`, with this tree's
    `integration/` mounted over it (`tool.sh`, `signoff/kl.sh`, `signoff/env.sh`, `common.py`).

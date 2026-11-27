@@ -2,7 +2,12 @@
 
 Why: top-level LVS by name missed macro `c_*` outputs that were never wired (KH-2), untied pad IE / OE / pulls (KH-1)
 and a VDD / VSS short (KH-3). This test drives the chip only through its pads, on a bench that is wired **from the
-top-level netlist**, so a missing or misbound top-level wire makes it fail.
+top-level reference netlist** (the LVS reference that `gen_netlist.py` writes from the chip conn), so a missing or
+misbound wire *in the conn / reference* makes it fail.
+
+**It validates the conn, not the layout.** A tie or wire that is right in the conn but floats or is cut in the GDS
+(e.g. the POR_BYPASS pull-down on `pt_wired` fpw-8) still passes here. Layout evidence comes from LVS by name,
+`check_conn.py` and `check_padsup.py` (extracted provider ties) in `integration/signoff`.
 
     run.sh <rf|wired> [--tree DIR] [--netlist F]     test + negative control, exit 0 only if both hold
     smoke.py --chip <rf|wired> [...]                 the test alone; summary scratch/chip_smoke/<chip>/summary.json

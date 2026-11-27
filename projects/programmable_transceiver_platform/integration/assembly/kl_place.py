@@ -346,7 +346,8 @@ if digi and GRID_SWAP:
                 rch_ = REACH_[side_] - (0 if net == 'VDD' else um(6))      # VSS stops 6 um short of the full-width VDD row
                 e_ = db.Box(mb_.left-rch_, b.bottom, b.left, b.top) if side_ < 0 else db.Box(b.right, b.bottom, mb_.right+rch_, b.top)
                 inside_ = db.Box(mb_.left, b.bottom, b.left, b.top) if side_ < 0 else db.Box(b.right, b.bottom, mb_.right, b.top)
-                out_ = (db.Region(e_) - db.Region(mb_)) - (avoid['Metal5'] - db.Region(mb_.enlarged(um(3), um(0))))
+                oth_ = 'VSS' if net == 'VDD' else 'VDD'
+                out_ = (db.Region(e_) - db.Region(mb_)) - (avoid['Metal5'] - db.Region(mb_.enlarged(um(3), um(0)))) - ring.get(oth_, db.Region()).sized(um(2))
                 # keep the part joined to the outline edge
                 out_ = out_.interacting(db.Region(db.Box(mb_.left-um(1), b.bottom, mb_.left, b.top) if side_ < 0 else db.Box(mb_.right, b.bottom, mb_.right+um(1), b.top)))
                 hit_ = out_ & straps[(net, 'Metal4')]
@@ -535,6 +536,14 @@ for net in GRID_NETS:
         rg = rg - (blkmetal[ln] if ln == 'Metal5' else blk4)
         m_ = (rg + straps[(net, ln)]).merged()
         metal[(net, ln)] = m_.sized(-um(0.6)).sized(um(0.6)).merged()     # no piece narrower than 1.2 um (M4.1 / MT.1)
+# self-check: grid metal of different nets must not touch on a layer (a VDD / VSS join in the drawn grid)
+man['grid_touch'] = []
+for ln in ('Metal4', 'Metal5'):
+    for a_, b_ in [(x, y) for i_, x in enumerate(GRID_NETS) for y in GRID_NETS[i_+1:]]:
+        t_ = metal[(a_, ln)].interacting(metal[(b_, ln)])
+        for p_ in (metal[(a_, ln)] & metal[(b_, ln)].sized(um(0.01))).each():
+            b0 = p_.bbox(); man['grid_touch'].append([ln, a_, b_, fu(b0.left), fu(b0.bottom), fu(b0.right), fu(b0.top)])
+if man['grid_touch']: print('GRID VDD/VSS TOUCH', len(man['grid_touch']), man['grid_touch'][:8])
 GCELL = 8400        # FastRoute gcell (dbu) of the route stage
 def via_fill(cell, lay, region, inset=0.5, single=False):
     vc = ly.cell('via_'+str(lay)) or ly.create_cell('via_'+str(lay))

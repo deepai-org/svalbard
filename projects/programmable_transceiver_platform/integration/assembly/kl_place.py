@@ -470,61 +470,6 @@ for n, v in C.STAGED.get(CHIP, {}).items():
         if not hit.is_empty() and not GRID_SWAP:
             straps[('VSS', 'Metal5')] = (straps[('VSS', 'Metal5')] + hit).merged()
         man['tab_ties'].append(dict(inst=n, tab=tn, tied=not hit.is_empty(), at=[round(x0+t[0], 2), round(y0+t[2], 2)]))
-# island strap regions (coordinator 2026-11-24: island rails sized for their current, not 1 um routes): inside the box round
-# an island's switch and its loads (+40 um), the grid VDD straps become that island's rail (RAIL_<island>, same width,
-# Via4 at its own crossings); the loads' rail pins and the switch VISL hook to them like VDD pins hook to the grid. Smaller
-# islands claim first; a 3 um gap separates a rail strap from the VDD straps round it. RAIL_wired_tx keeps its bar.
-ISL = sorted({n for n in nets if n.startswith('RAIL_')} - {bd['net'] for bd in bars}) if os.environ.get('ISLAND_STRAPS') == '1' else []   # experimental, off: rails fragment (see README)
-isl_box = {}
-for net in ISL:
-    mem = [man['blocks'][n]['bbox'] for n, p in nets[net] if n in man['blocks'] and man['blocks'][n]['master'] != 'decap']
-    if len(mem) < 2: continue
-    # region = each member's outline + 25 um, joined by 70 um-wide L corridors along a Manhattan minimum spanning tree of the
-    # member centres (a 70 um corridor always holds one VDD axis of the 70 um grid pitch per layer, so the rail is continuous)
-    cen = [((b[0]+b[2])/2, (b[1]+b[3])/2) for b in mem]
-    rg = db.Region([db.Box(um(b[0]-25), um(b[1]-25), um(b[2]+25), um(b[3]+25)) for b in mem])
-    done = {0}; rest = set(range(1, len(cen)))
-    while rest:
-        i_, j_ = min(((i, j) for i in done for j in rest), key=lambda e: abs(cen[e[0]][0]-cen[e[1]][0])+abs(cen[e[0]][1]-cen[e[1]][1]))
-        (x1, y1), (x2, y2) = cen[i_], cen[j_]
-        rg.insert(db.Box(um(min(x1, x2)-35), um(y1-35), um(max(x1, x2)+35), um(y1+35)))
-        rg.insert(db.Box(um(x2-35), um(min(y1, y2)-35), um(x2+35), um(max(y1, y2)+35)))
-        done.add(j_); rest.discard(j_)
-    isl_box[net] = rg.merged()
-claimed = db.Region(); man['island_straps'] = {}
-for net in sorted(isl_box, key=lambda n: isl_box[n].area()):
-    reg_ = (isl_box[net] - claimed.sized(um(3))) - (ring['VDD'] + ring['VSS']).sized(um(3))
-    claimed += reg_
-    for ln in ('Metal4', 'Metal5'):
-        piece = (straps[('VDD', ln)] & reg_).merged()
-        straps[('VDD', ln)] = (straps[('VDD', ln)] - reg_.sized(um(3))).merged()
-        straps[(net, ln)] = db.Region([p_ for p_ in piece.each() if p_.area() >= um(10.5)*um(20)])
-    bb_ = isl_box[net].bbox(); pieces_ = (straps[(net, 'Metal4')] + straps[(net, 'Metal5')]).merged().count()
-    man['island_straps'][net] = dict(box=[fu(bb_.left), fu(bb_.bottom), fu(bb_.right), fu(bb_.top)], area_mm2=round(reg_.area()/1e12, 3), pieces=pieces_,
-                                     m4_mm2=round(straps[(net, 'Metal4')].area()/1e12, 4), m5_mm2=round(straps[(net, 'Metal5')].area()/1e12, 4))
-GRID_NETS = ['VDD', 'VSS']+[n for n in man['island_straps'] if not (straps[(n, 'Metal4')].is_empty() and straps[(n, 'Metal5')].is_empty())]
-# staged blocks with declared grid ties (owner report: ties.VSS chan*): the VSS Metal5 strap in each Metal5-free channel is
-# carried onto its tab (the 2.5 um cut is closed there); grid VDD never ties to a block (its VDD is an island rail)
-man['tab_ties'] = []
-for n, v in C.STAGED.get(CHIP, {}).items():
-    if n not in man['blocks'] or not os.path.exists(R+v['report']): continue
-    rep = json.load(open(R+v['report'])); x0, y0 = man['blocks'][n]['bbox'][:2]
-    for tn, t in rep.get('ties', {}).get('VSS', {}).items():
-        if not tn.startswith(('chan', 'grid_tie')): continue      # channel tabs and top-edge landings (WT47)
-        tab = db.Region(db.Box(um(x0+t[0]), um(y0+t[2]-3.0), um(x0+t[1]), um(y0+t[3]+3.0)))
-        if GRID_SWAP:
-            # swapped grid: the tie is a Metal5 run up the block's Metal5-free channel from the tab to the first horizontal
-            # VSS Metal5 strap above or below the block; the VDD rows it crosses give way 2 um round it
-            bx_ = man['blocks'][n]['bbox']
-            run_ = db.Region(db.Box(um(x0+t[0]), um(bx_[1]-PITCH), um(x0+t[1]), um(bx_[3]+PITCH))) - (blkmetal['Metal5'] - tab).sized(um(0))
-            run_ = (run_ - straps[('VDD', 'Metal5')].sized(um(2))).interacting(tab)      # never across a VDD row (plan-wired1 touch)
-            hit = run_ if not (run_ & straps[('VSS', 'Metal5')]).is_empty() else db.Region()
-            if not hit.is_empty():
-                straps[('VSS', 'Metal5')] = (straps[('VSS', 'Metal5')] + hit).merged()
-        else: hit = raw_straps[('VSS', 'Metal5')] & tab
-        if not hit.is_empty() and not GRID_SWAP:
-            straps[('VSS', 'Metal5')] = (straps[('VSS', 'Metal5')] + hit).merged()
-        man['tab_ties'].append(dict(inst=n, tab=tn, tied=not hit.is_empty(), at=[round(x0+t[0], 2), round(y0+t[2], 2)]))
 # the VSS ring gives way where a VDD strap crosses it on the same layer (the other layer stays continuous)
 metal = {}
 for net in GRID_NETS:

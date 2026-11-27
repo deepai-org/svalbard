@@ -874,6 +874,9 @@ if AD_NETS:
         '  END', 'END pt_antdiode', '']))
     occ = db.Region([db.Box(*[um(v) for v in b_['bbox']]) for b_ in man['blocks'].values()]).merged().sized(um(3))
     occ += db.Region(db.Box(0, 0, um(C.DIE[2]), um(C.DIE[3]))) - db.Region(db.Box(*[um(v) for v in C.CORE]))
+    # booked ledger items and floorplan reserves become Metal1-3 blockages in the DEF: no diode there (fpw-3 antd in a booking, Metal2 short)
+    occ += db.Region([db.Box(*[um(v) for v in r_]) for n_, r_ in list(booked.items())+list(FP['reserves'].items())
+                      if n_ != 'd2h_strip' and not n_.startswith(('chan_', 'corridor', 'pocket'))]).sized(um(2))
     # ANT_AVOID_GRID (default on for pt_wired, fp-wired 2026-11-27): no diode under grid Metal4 / Metal5; the router then
     # climbed from the diode's Metal2 pin through the strap (fpw-2: RAIL_wired_tx diode antd_113 under a VDD strap, VDD short)
     if os.environ.get('ANT_AVOID_GRID', '1') == '1':

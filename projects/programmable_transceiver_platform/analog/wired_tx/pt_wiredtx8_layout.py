@@ -710,20 +710,34 @@ def build(work=None, bare=False):
             g.label(n, layer, x, y, i + 1)
     # ------------------------------------------------------------------ trim bits: the mux's Metal4 pins on its right side, continued
     #                                                                    under the right-hand Metal5 bars to the block edge at the free corner
+    # ASM (coordinator ruling 2026-11-27, fp-wired): the trim pins used to end on the L's inner edge (inside the bounding box,
+    # reachable only from above at the top level: c_wiredtx_tr congestion). Each trim now continues on Metal3 into the free
+    # corner to its own column, Metal2 up to the top edge, Metal3 pin stub on the top edge. Columns: highest trim y nearest
+    # the L edge, so no Metal2 riser meets another net's Metal3 run (different layers cross without contact anyway).
     trims = {}
+    tr_l = []
     for port, net in cn['wtx_mux8'].items():
         if not port.startswith('TR'):
             continue
         (layer, x, y), = MR['pins'][port]
         if layer != 'metal4':
             raise RuntimeError(f'mux trim pin {port} is not on Metal4')
-        xa_, ya_ = s(XM + x), s(Ym + y)
+        tr_l.append((s(Ym + y), net, s(XM + x)))
+    TRX0, TRP = s(xk + 3.0), 1.12
+    for k, (ya_, net, xa_) in enumerate(sorted(tr_l, reverse=True)):
         xv = s(xr0 + 2.0)                     # Metal4 from the mux pin, Metal3 under the bars to the block edge
+        xc = s(TRX0 + k * TRP)                # this trim's column in the free corner
+        if xc > Wb - 2.0:
+            raise RuntimeError('trim columns run past the block edge')
         g.rect('metal4', xa_ - 0.2, ya_ - 0.2, xv + 0.2, ya_ + 0.2)
         g.via(xv, ya_, 3, 4)
-        g.rect('metal3', xv - 0.2, ya_ - 0.2, xk, ya_ + 0.2)
-        pins[net] = ('metal3', s(xk - 0.6), ya_)
-        trims[net] = dict(y=ya_, metal4_um=round(xk - xa_, 1))
+        g.rect('metal3', xv - 0.2, ya_ - 0.2, xc + 0.2, ya_ + 0.2)
+        g.via(xc, ya_, 2, 3)
+        g.rect('metal2', xc - 0.2, ya_ - 0.2, xc + 0.2, s(Yt - 0.6) + 0.2)
+        g.via(xc, s(Yt - 0.6), 2, 3)
+        g.rect('metal3', xc - 0.2, s(Yt - 1.0), xc + 0.2, Yt)
+        pins[net] = ('metal3', xc, s(Yt - 0.5))
+        trims[net] = dict(y=ya_, x_top=xc, metal4_um=round(xv - xa_, 1), metal3_um=round(xc - xv, 1), metal2_um=round(Yt - ya_, 1))
     for i, n in enumerate(T.PORTS):
         if n.startswith('TR'):
             layer, x, y = pins[n]

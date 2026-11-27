@@ -753,8 +753,22 @@ for bd in bars:
 if barcell: top.insert(db.CellInstArray(barcell.cell_index(), db.Trans()))
 # grid LEF: hook pieces are pins, everything else of the grid is an obstruction
 Lp = ['MACRO pt_pdn', '  CLASS BLOCK ;', '  ORIGIN 0 0 ;', '  FOREIGN pt_pdn 0 0 ;', f'  SIZE {C.DIE[2]:.3f} BY {C.DIE[3]:.3f} ;', '  SYMMETRY X Y ;']
+# HOOK_DUAL (default on for pt_wired, fp-wired 2026-11-27): a Metal5 hook slot over same-net Metal4 (ring, crossings) is a
+# pin on Metal4 too (1 um inside the slot, opened in the Metal4 obstruction); the Metal4 under it is drawn and joined by
+# the grid's Via4 array, so the router lands on Metal4 instead of putting a Via4 off the slot (fpw-2: 20 Metal5 shorts)
+HOOK_DUAL = os.environ.get('HOOK_DUAL', '1' if CHIP == 'wired' else '0') == '1'
+dual4 = {}
 for hn, (ln, cb, net) in hook_pins.items():
-    Lp += [f'  PIN {hn}', '    DIRECTION INOUT ;', '    USE SIGNAL ;', '    PORT', f'      LAYER {ln} ; RECT {fu(cb.left):.3f} {fu(cb.bottom):.3f} {fu(cb.right):.3f} {fu(cb.top):.3f} ;', '    END', f'  END {hn}']
+    if HOOK_DUAL and ln == 'Metal5' and (net, 'Metal4') in metal:
+        r4_ = (db.Region(cb).sized(-um(1.0)) & metal[(net, 'Metal4')]).merged()
+        r4_ = db.Region([p_ for p_ in r4_.each() if min(p_.bbox().width(), p_.bbox().height()) >= um(2.0)])
+        if not r4_.is_empty(): dual4[hn] = r4_
+for hn, (ln, cb, net) in hook_pins.items():
+    Lp += [f'  PIN {hn}', '    DIRECTION INOUT ;', '    USE SIGNAL ;', '    PORT', f'      LAYER {ln} ; RECT {fu(cb.left):.3f} {fu(cb.bottom):.3f} {fu(cb.right):.3f} {fu(cb.top):.3f} ;']
+    for p_ in dual4.get(hn, db.Region()).each():
+        for tz in p_.decompose_trapezoids(1):
+            b = tz.bbox(); Lp.append(f'      LAYER Metal4 ; RECT {fu(b.left):.3f} {fu(b.bottom):.3f} {fu(b.right):.3f} {fu(b.top):.3f} ;')
+    Lp += ['    END', f'  END {hn}']
 # exposed bars (ISLAND_BARS expose=True): the bar's Metal5 is a pin of its rail net; the switch VISL pins under it leave the
 # routed net (the bar joins them by Via4), so the router never digs into the switch for VISL (RAIL_rf_tx-VDD, 2026-11-24)
 bar_pins = {}
@@ -780,6 +794,8 @@ for ln in ('Metal2', 'Metal3', 'Metal4', 'Metal5'):
         full_ = (db.Region(pdn.begin_shapes_rec(LI[ln])) + (db.Region(barcell.begin_shapes_rec(LI[ln])) if barcell else db.Region())).merged()
         wide_ = full_.sized(-um(5.0)).sized(um(5.0))
         reg = (reg + wide_.sized(um(0.5))).merged() - db.Region([cb for hn, (l2, cb, net) in hook_pins.items() if l2 == ln])
+        if ln == 'Metal4':
+            for r4_ in dual4.values(): reg -= r4_
         if ln == 'Metal5':
             for bd in bar_pins.values(): reg -= bd['region']
     Lp.append(f'    LAYER {ln} ;')

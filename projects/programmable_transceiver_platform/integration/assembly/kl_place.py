@@ -887,6 +887,9 @@ if AD_NETS:
         ends_ += [e for e in NETS[net_]['ends'] if e[0] == 'digital']
         for i_, p_ in ends_:
             if i_ == 'digital' and any(x_['placed'] for x_ in man['antenna_diodes'] if x_['net'] == net_): continue
+            # island rails: one diode per rail protects every gate on it; a diode at each load added rail branches into the
+            # switch / iso cells (plan-rf5: 8 rail DRT at isw_rf_tx VDD and iso_conv_clk)
+            if net_.startswith('RAIL_') and any(x_['placed'] for x_ in man['antenna_diodes'] if x_['net'] == net_): break
             sh_ = pin_shapes_die0(i_, p_)
             if not sh_: continue
             c_ = sh_[0][1].center(); spot = None

@@ -13,6 +13,7 @@ import json, os, sys, collections, math
 import klayout.db as db
 sys.path.insert(0, '/asm')
 import common as C
+import island_trunks as TRK
 
 CHIP = os.environ['CHIP']; R = '/repo/'
 um = lambda v: int(round(v*1000)); fu = lambda v: v/1000.0
@@ -125,10 +126,11 @@ for n, b in FP['blocks'].items():
         bb = c.bbox(); rot = not (abs(w0-W) < 0.05 and abs(h0-H) < 0.05); kind = 'placeholder'
     X, Y = um(r[0])//10*10, um(r[1])//10*10          # placement on the 10 nm grid
     tr = db.Trans(db.Trans.R90, db.Vector(X+bb.top, Y-bb.left)) if rot else db.Trans(db.Trans.R0, db.Vector(X-bb.left, Y-bb.bottom))
+    if os.environ.get('FACE_IN', '1') == '1': tr = TRK.face_inward(n, m, tr, MJ, C, db, um, tr*bb)      # island switch VISL away from the ring (island_trunks.py)
     top.insert(db.CellInstArray(c.cell_index(), tr))
     got = tr*bb
     man['blocks'][n] = dict(master=m, kind=kind, trans=str(tr), bbox=[fu(got.left), fu(got.bottom), fu(got.right), fu(got.top)], in_conn=b['in_conn'])
-    comps.append((n, m, fu(got.left), fu(got.bottom), 'W' if rot else 'N'))
+    comps.append((n, m, fu(got.left), fu(got.bottom), ORIENT[str(tr).split()[0]]))
 for n, v in PADS['pads'].items():
     t = db.Trans.from_s(v['trans']); m = v['master']; o = MJ[m]['origin']
     # DEF location = lower-left of the placed outline; orientation from the transformation
@@ -232,6 +234,7 @@ for bd in ([] if getattr(C, 'ISLAND_BARS_OFF', False) else C.ISLAND_BARS.get(CHI
     bars.append(dict(bd, region=reg, m4=m4, merged=not same.is_empty()))
     avoid['Metal4'] = (avoid['Metal4'] + m4.sized(um(2.5))).merged()
     avoid['Metal5'] = (avoid['Metal5'] + reg.sized(um(2.5))).merged()
+if os.environ.get('TRUNKS', '0') == '1': TRK.build(globals())      # island supply trunks (island_trunks.py): off until the new floorplan
 PITCH, SW = 70.0, float(os.environ.get('STRAP_W', '10.5'))   # G1 15 % nominal; wider per region from strap_widths.json
 core = C.CORE
 straps = {('VDD', 'Metal4'): db.Region(), ('VSS', 'Metal4'): db.Region(), ('VDD', 'Metal5'): db.Region(), ('VSS', 'Metal5'): db.Region()}
@@ -578,6 +581,7 @@ for net in GRID_NETS:
             if any(cb.contains(db.Point(um(ax), um(ay))) for ax, ay in C.HOOK_SLOT_AVOID.get(CHIP, [])): continue   # common.HOOK_SLOT_AVOID
             lst.append([ln, cb, False])
     slots[net] = lst
+PLATED = TRK.build(globals(), 'plates') if os.environ.get('PLATES', '1') == '1' else set()     # heavy supply pins: drawn plates to the grid (island_trunks.py, PDS-25)
 hook_pins = {}; man['digital_ties_not_hooked'] = 0
 dland = ly.create_cell('pt_direct_land'); top.insert(db.CellInstArray(dland.cell_index(), db.Trans()))   # direct pin landings (own cell: checks can drop it)
 k = 0
@@ -586,6 +590,7 @@ for net in GRID_NETS:
         if net != 'VDD' and net != 'VSS' and man['blocks'].get(n, {}).get('master') == 'decap': continue
         if n in man['blocks'] and man['blocks'][n]['master'] == 'decap': continue
         if n == 'digital': man['digital_ties_not_hooked'] += 1; continue      # tie-offs belong inside the macro (tie cells)
+        if (n, p, net) in PLATED: continue      # plated (island_trunks._plates)
         if n in PADS['pads']: continue      # pad-family supply pins land on the provider ring rails (DVDD / VSS bands), not on the grid
         sh = pin_shapes_die(n, p)
         if not sh:
@@ -800,6 +805,7 @@ if _pr is not None and _prt is not None:
     for _poly in _rg.merged().each():
         for _t in _poly.decompose_trapezoids(1):
             _b = _t.bbox(); blk.append(('ring_fill', (fu(_b.left), fu(_b.bottom), fu(_b.right), fu(_b.top)), ML))
+blk += TRK.blockages()      # 0.6 um Metal5 ring round each trunk (MT.2b wide-metal spacing for router wiring)
 D.append(f'BLOCKAGES {sum(len(l) for n, r, l in blk)} ;')
 for n, r, lays in blk:
     for ln in lays: D.append(f'- LAYER {ln} RECT ( {um(r[0])} {um(r[1])} ) ( {um(r[2])} {um(r[3])} ) ;')

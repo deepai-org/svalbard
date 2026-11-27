@@ -6,7 +6,8 @@
 set -e
 A=$(cd "$(dirname "$0")" && pwd); ROOT=$(cd "$A/../../../.." && pwd)
 CHIP=${1:?rf|wired}; shift
-RUN=${ASM_RUN:-$ROOT/scratch/integration/assembly-$CHIP}; mkdir -p "$RUN/route"
+[ -n "$ASM_RUN" ] || { echo "set ASM_RUN to your own run directory (default would be $ROOT/scratch/integration/assembly-$CHIP)"; exit 2; }
+RUN=$ASM_RUN; mkdir -p "$RUN/route"
 STAGES=${*:-abstract floorplan place route stream report}
 export OMP_NUM_THREADS=1 SIGNOFF_CHIP=$CHIP SIGNOFF_RUN=$RUN
 for S in $STAGES; do
@@ -24,7 +25,7 @@ for S in $STAGES; do
                  [ "$(wc -l < "$RUN/route/unreachable.txt")" -gt "$N0" ] || { echo "pin access fails without a named pin"; break; }
                done
                echo "   unreachable pins: $(wc -l < "$RUN/route/unreachable.txt")"
-               "$A/tool.sh" "$CHIP" -c 4 bash -c "NDR=${NDR:-1} HOOK_W=${HOOK_W:-0.56} DRT_ITERS=${DRT_ITERS:-64} openroad -exit /asm/route.tcl" > "$RUN/route/route.log" 2>&1 || true
+               "$A/tool.sh" "$CHIP" -c 4 bash -c "NDR=${NDR:-1} HOOK_W=${HOOK_W:-1.0} DRT_ITERS=${DRT_ITERS:-64} openroad -exit /asm/route.tcl" > "$RUN/route/route.log" 2>&1 || true
                grep -E "GRT-0228|ERROR|ROUTE DONE|Number of violations|ANTENNA PASS" "$RUN/route/route.log" | tail -3
                [ -s "$RUN/route/routed.def" ] || { echo "route wrote no routed.def: stop"; exit 1; } ;;
     stream)    "$A/tool.sh" "$CHIP" -c 2 python3 /asm/kl_stream.py > "$RUN/stream.log" 2>&1; tail -1 "$RUN/stream.log" | cut -c1-400 ;;

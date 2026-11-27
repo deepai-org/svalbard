@@ -12,3 +12,5 @@ chanO_1 and chanE_4 are joined inside wiredtx. A KLayout netlist probe of pt_wir
 
 ## Runs
 - fpw-1: first run on the shifted plan (abstract floorplan place route); macro supply OK VDD 23/23, VSS 22/22.
+- fpw-1 groute: overflow 34152 -> 21799 (M2 4043 -> 84), wirelength 6.52 -> 4.97 m, congestion cells 8652 -> 555. 478 of the 555 are c_wiredtx_tr[*]: wiredtx TR* pins sit inside the cell (Metal3 at x 572.8-598.4, y 285-310 block coordinates, in the M5-free channel under the RAIL landing). Asked the coordinator for a ruling to move them to the top edge (block pin change). DRT still running.
+- Next: read fpw-1 DRT; rebase onto fp-plan-code 4ea54716; host-link per-bit lengths (hostlink_len.py on routed.def, before = plan-wired2).

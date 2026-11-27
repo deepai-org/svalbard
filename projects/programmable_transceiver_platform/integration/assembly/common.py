@@ -160,6 +160,9 @@ HOOK_SLOT_AVOID = {'rf': [(988.0, 4213.5)]}
 GRID_STITCH = {'rf': [('VDD', 'Metal4', (2690.0, 1213.6, 3275.0, 1217.6)), ('VSS', 'Metal4', (2690.0, 1219.0, 3275.0, 1223.0))]}
 # provider tie pins drawn straight to their strap slot instead of a router hook (kl_place): the POR_BYPASS in_c cell's PU / PD
 # strips run 20 um into the cell and the router left 4 shorts on every KH run (VDD__HK331 / HK334 / HK336)
+# pad families whose VDD / VSS pins do not reach the provider ring rails: hooked to the grid like a block pin (fpw-2: pad_tlp
+# VDD / VSS on no net, PAD SUPPLY FAIL; its Metal2 pins sit 90-110 um into a 72 um-deep flat cell)
+PAD_HOOK = {'wired': {'pad_tlp'}}
 PAD_DIRECT_TIE = {'rf': {('io_bidir_16', 'PD'), ('io_bidir_16', 'PU')}, 'wired': {('io_bidir_16', 'PD'), ('io_bidir_16', 'PU')}}
 # nets that get top-level antenna diodes at their receivers (kl_place, pt_antdiode)
 ANT_DIODE = {'rf': ('c_bbfilter_i_en', 'BIAS_rfdriver', 'ADCI_CODEB[0]', 'ADCI_CODEB[1]', 'ADCI_CODEB[2]', 'ADCI_CODEB[3]', 'ADCI_CODEB[4]', 'ADCI_CODEB[5]', 'ADCI_CODEB[6]', 'ADCI_CODEB[7]', 'ADCI_CODEB[8]', 'ADCI_CODEB[9]', 'ADCI_CODEB[10]', 'ADCI_CODEB[11]', 'ADCI_OVL', 'CLK_OBS_DBG', 'AUX_CK', 'HOST_CLK', 'CONV_CLK', 'PLL_TX_FBCK', 'c_lo_mmd_en',

@@ -136,6 +136,7 @@ for bk, ms in C.GROUP_BOOK.get(chip, {}).items():
         x += w+4
 blocks['digital'] = dict(master='pt_digital_macro', rect=F['fixed']['digital'], rot=False, in_conn=True, gds=False)
 reserves = {n: r for n, r in F['fixed'].items() if n != 'digital' and not n.startswith(('fix_', 'bar_', 'decapslot', 'decapplan_'))}
+if PLAN: reserves.pop('lo_legs_rsv', None)      # die-fit's external-LO leg reserve became a Metal1-3 blockage under the plan macro's SE corner pins
 if 'digital' in MARGIN:      # the macro channel stays free in the second pass too (MACRO_CHAN)
     _r = fixed_rects()['fix_digital']; _b = blocks['digital']['rect']
     for _k, _q in (('w', [_r[0], _r[1], _b[0], _r[3]]), ('e', [_b[2], _r[1], _r[2], _r[3]]), ('s', [_b[0], _r[1], _b[2], _b[1]]), ('n', [_b[0], _b[3], _b[2], _r[3]])):

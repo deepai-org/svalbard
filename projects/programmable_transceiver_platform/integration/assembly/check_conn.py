@@ -29,6 +29,7 @@ for blk in nets.split(';'):
     if '+ ROUTED' not in blk and '+ FIXED' not in blk: continue
     for c, p in re.findall(r'\(\s*(\S+)\s+(\S+)\s*\)', blk.split('+')[0]): wired.add((c, p.replace('\\', '')))
 unreach = {l.split()[0] for l in open(RUN+'/route/unreachable.txt') if l.strip()} if os.path.exists(RUN+'/route/unreachable.txt') else set()
+for t_ in json.load(open(RUN+'/place.json')).get('io_direct_ties', []): wired.add((t_['inst'], t_['pin']))     # drawn ties (common.PAD_DIRECT_TIE)
 info['routed_pins'] = len(wired); info['unreachable_pins'] = len(unreach)
 
 # macro

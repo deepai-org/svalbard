@@ -153,6 +153,9 @@ HOOK_SLOT_AVOID = {'rf': [(988.0, 4213.5)]}
 # y 1058-1223) were cut off below qvco and fed no pin; two Metal4 bars in the lo_lf / qvco channel join them to the grid
 # west of lo_lf (PDS-25 finding 3, 2026-11-25)
 GRID_STITCH = {'rf': [('VDD', 'Metal4', (2690.0, 1213.6, 3275.0, 1217.6)), ('VSS', 'Metal4', (2690.0, 1219.0, 3275.0, 1223.0))]}
+# provider tie pins drawn straight to their strap slot instead of a router hook (kl_place): the POR_BYPASS in_c cell's PU / PD
+# strips run 20 um into the cell and the router left 4 shorts on every KH run (VDD__HK331 / HK334 / HK336)
+PAD_DIRECT_TIE = {'rf': {('io_bidir_16', 'PD'), ('io_bidir_16', 'PU')}, 'wired': {('io_bidir_16', 'PD'), ('io_bidir_16', 'PU')}}
 # nets that get top-level antenna diodes at their receivers (kl_place, pt_antdiode)
 ANT_DIODE = {'rf': ('c_bbfilter_i_en', 'BIAS_rfdriver', 'ADCI_CODEB[0]', 'ADCI_CODEB[1]', 'ADCI_CODEB[2]', 'ADCI_CODEB[3]', 'ADCI_CODEB[4]', 'ADCI_CODEB[5]', 'ADCI_CODEB[6]', 'ADCI_CODEB[7]', 'ADCI_CODEB[8]', 'ADCI_CODEB[9]', 'ADCI_CODEB[10]', 'ADCI_CODEB[11]', 'ADCI_OVL', 'CLK_OBS_DBG', 'AUX_CK', 'HOST_CLK', 'CONV_CLK', 'PLL_TX_FBCK', 'c_lo_mmd_en',
               # coordinator 2026-11-27: every net that has violated in some run (fnmatch patterns)
@@ -161,6 +164,13 @@ ANT_DIODE = {'rf': ('c_bbfilter_i_en', 'BIAS_rfdriver', 'ADCI_CODEB[0]', 'ADCI_C
 ANT_DIODE['wired'] = ANT_DIODE['rf']        # same names where they exist on pt_wired
 # plus every signal net whose pin bounding box (half perimeter) exceeds ANT_DIODE_LEN um: diodes do not depend on luck
 ANT_DIODE_LEN = float(os.environ.get('ANT_DIODE_LEN', '1500'))
+# never by the length rule (coordinator 2026-11-27: a diode is a few fF and leaks at hot corners): RF / LO / baseband signal
+# pairs, bias and reference nodes, ATB measurement nets, VCO / loop-filter nodes, CDR phases and forwarded clocks.
+# The explicit ANT_DIODE list above still applies to them.
+ANT_LEN_EXCLUDE = ('RF_*', 'BB_[IQ]_*', 'LNA_*', 'LO_*', 'LOI_*', 'TXLO_*', 'TXI_*', 'TXQ_*', 'TXS_*', 'BBI_*', 'BBQ_*', 'DACI_*', 'DACQ_*',
+                   'ADCI_[NP]', 'ADCQ_[NP]', 'HSRX_*', 'WIRE_TX_*', 'WTX_EXT_*', 'REF_IN*', 'AUX_CLK_[NP]', 'WMON*', 'TX_CASCODE*', 'USB_*',
+                   'BIAS_*', 'VCM*', 'VREF*', 'REF_VCM', '*IBIAS*', '*ibias*', 'ATB*', 'ATBN_*', 'ATBP_*', 'atb*_local*', 'ATB*_LOCAL*', 'CHAR_*',
+                   '*VTUNE*', 'LO_CP', 'VREG_*', 'LO_VTDET', 'CDRPH[[]*', 'CKP[[]*', 'CKN[[]*', 'TXPH[[]*', 'PREF', 'WIRE_CK', 'WSMP_CK', '*FWD*', 'fwd_*', 'rf_tx_clk_out', 'rf_rx_clk', 'LNA_*')
 # masters whose supply pins are labelled only on Metal1 inside the cell: pins also on their own Metal4/5 of that net (kl_abstract)
 PIN_UP = {'por': ('vdd3v3', 'vss')}
 # conn blocks placed by the second pass, where decap tiles give way (2026-11-24: with the taller RF / ATB cells the packer

@@ -738,7 +738,27 @@ for r_ in PSITES:
             if best is None or d < best[0]: best = (d, sl)
         if best is None: man['unconnectable'] += [dict(inst=iomap[r_['site']], pin=p_, net=net, why='no free strap slot') for p_, x_ in sh_]; continue
         d, sl = best; sl[2] = True; ln, cb = sl[0], sl[1]
-        hn = f'HK{k}'; k += 1; hook_pins[hn] = (ln, cb, net); io_ = iomap[r_['site']]
+        io_ = iomap[r_['site']]
+        if (io_, sh_[0][0]) in C.PAD_DIRECT_TIE.get(CHIP, ()) and len(sh_) == 1:
+            # drawn tie (common.PAD_DIRECT_TIE): the pin strip carried out of the cell on Metal2 to the strap slot, Via2 /
+            # Via3 (/ Via4) stack onto it; the router never has to reach a pin 20 um inside the pad cell (DRT, 2026-11-27)
+            pb_ = max((b_ for l_, b_ in sh_[0][1] if l_ == 'Metal2'), key=lambda b_: max(b_.width(), b_.height()))
+            horiz_ = pb_.width() >= pb_.height(); tc_ = cb.center(); hw_ = um(0.3)
+            if horiz_:
+                end_ = pb_.left if abs(pb_.left - tc_.x) < abs(pb_.right - tc_.x) else pb_.right; y_ = pb_.center().y
+                m2_ = db.Box(min(end_, tc_.x) - um(1.5), y_ - hw_, max(end_, tc_.x) + um(1.5), y_ + hw_)
+                land_ = db.Box(tc_.x - um(1.5), y_ - um(1.5), tc_.x + um(1.5), y_ + um(1.5))
+            else:
+                end_ = pb_.bottom if abs(pb_.bottom - tc_.y) < abs(pb_.top - tc_.y) else pb_.top; x_ = pb_.center().x
+                m2_ = db.Box(x_ - hw_, min(end_, tc_.y) - um(1.5), x_ + hw_, max(end_, tc_.y) + um(1.5))
+                land_ = db.Box(x_ - um(1.5), tc_.y - um(1.5), x_ + um(1.5), tc_.y + um(1.5))
+            land_ = land_ & cb if (land_ & cb).area() > 0 else land_
+            dland.shapes(LI['Metal2']).insert(m2_); dland.shapes(LI['Metal2']).insert(land_); dland.shapes(LI['Metal3']).insert(land_)
+            nv_ = via_fill(dland, VIA['Via2'], db.Region(land_), inset=0.3) + via_fill(dland, VIA['Via3'], db.Region(land_), inset=0.3)
+            if ln == 'Metal5': dland.shapes(LI['Metal4']).insert(land_); nv_ += via_fill(dland, VIA['Via4'], db.Region(land_), inset=0.3)
+            man.setdefault('io_direct_ties', []).append(dict(inst=io_, pin=sh_[0][0], net=net, slot=[fu(cb.left), fu(cb.bottom), fu(cb.right), fu(cb.top)], vias=nv_))
+            man['io_ties'].append(dict(site=r_['site'], cell=r_['cell'], net=net, pins=[sh_[0][0]], direct=True)); continue
+        hn = f'HK{k}'; k += 1; hook_pins[hn] = (ln, cb, net)
         man['hooks'].append(dict(net=f'{net}__{hn}', inst=io_, pin=sh_[0][0], more=[[io_, p_] for p_, x_ in sh_[1:]], layer=ln,
                                  piece=[fu(cb.left), fu(cb.bottom), fu(cb.right), fu(cb.top)], dist_um=round(fu(d), 1)))
         man['io_ties'].append(dict(site=r_['site'], cell=r_['cell'], net=net, pins=[p_ for p_, x_ in sh_]))
@@ -839,7 +859,7 @@ import fnmatch as _fn
 _adp = C.ANT_DIODE.get(CHIP, ())
 AD_NETS = {n_ for n_ in NETS if any(_fn.fnmatchcase(n_, p_) for p_ in _adp)}
 for n_, v_ in NETS.items():     # long nets (common.ANT_DIODE_LEN): pin bounding box half perimeter over the threshold
-    if v_.get('cls') in ('hook', 'supply') or n_ in ('VDD', 'VSS'): continue
+    if v_.get('cls') in ('hook', 'supply', 'lo') or n_ in ('VDD', 'VSS') or any(_fn.fnmatchcase(n_, p_) for p_ in C.ANT_LEN_EXCLUDE): continue
     pts_ = [sh_[0][1].center() for i_, p_ in v_['ends'] if i_ in man['blocks'] for sh_ in [pin_shapes_die0(i_, p_)] if sh_]
     if len(pts_) > 1 and fu(max(p.x for p in pts_)-min(p.x for p in pts_)+max(p.y for p in pts_)-min(p.y for p in pts_)) > C.ANT_DIODE_LEN: AD_NETS.add(n_)
 man['antenna_diode_nets'] = sorted(AD_NETS)

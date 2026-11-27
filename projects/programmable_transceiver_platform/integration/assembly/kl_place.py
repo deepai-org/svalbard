@@ -874,6 +874,9 @@ if AD_NETS:
         '  END', 'END pt_antdiode', '']))
     occ = db.Region([db.Box(*[um(v) for v in b_['bbox']]) for b_ in man['blocks'].values()]).merged().sized(um(3))
     occ += db.Region(db.Box(0, 0, um(C.DIE[2]), um(C.DIE[3]))) - db.Region(db.Box(*[um(v) for v in C.CORE]))
+    # custom pad families reach into the core (pt_rf west pads to x 975): no diode in their footprint (plan-rf7: 25 diodes
+    # inside pad_bb_q / pad_rf_tx, Metal2 shorts of the diode routes with the pad cells)
+    occ += db.Region([db.Box(*[um(v) for v in r_]) for v_ in PADS['pads'].values() for r_ in v_['footprint']]).sized(um(3))
     # booked ledger items and floorplan reserves become Metal1-3 blockages in the DEF: no diode there (fpw-3 antd in a booking, Metal2 short)
     occ += db.Region([db.Box(*[um(v) for v in r_]) for n_, r_ in list(booked.items())+list(FP['reserves'].items())
                       if n_ != 'd2h_strip' and not n_.startswith(('chan_', 'corridor', 'pocket'))]).sized(um(2))

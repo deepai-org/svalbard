@@ -226,7 +226,11 @@ def verdict(name, r):
         if b is None:
             if not UPDATE: why.append(f'{metric}: no baseline')
             continue
+        fold = {}      # a baseline class may name the base rule ("ANT.6"): deck classes "ANT.16_i_ANT.6" etc. fold onto it
         for k, v in cl.items():
+            kk = k if k in b else k.rsplit('_', 1)[-1] if k.rsplit('_', 1)[-1] in b else k
+            fold[kk] = fold.get(kk, 0) + v
+        for k, v in fold.items():
             if k not in b:
                 if v > 0: why.append(f'{metric} {k}={v}: class not in baseline')
             elif v > b[k]: reg.append(f'{metric} {k}: {v} > baseline {b[k]}')

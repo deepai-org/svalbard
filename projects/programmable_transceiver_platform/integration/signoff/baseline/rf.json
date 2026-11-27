@@ -1,29 +1,13 @@
 {
  "chip": "pt_rf",
- "provisional": true,
- "source": {
-  "run": "/home/ubuntu/svalbard/scratch/integration/plan-rf4",
-  "gds_sha256": "0e8af97d45cd7a0a90ca3173f3095a92184d92d8e9dfe3227351151696b0c5a9"
- },
- "reason": "PROVISIONAL from plan-rf4 (fp-plan-code 7ea03e7f); replace with the first coordinator-accepted plan-rf5 result",
- "date": "2026-11-27T04:37:42",
+ "provisional": false,
+ "source": {"commit": "b1c40f20", "where": "integration/assembly/README.md 'Last verified (committed)' pt_rf"},
+ "reason": "coordinator 2026-11-27: main's last verified pt_rf (b1c40f20): DRT 2, main DRC 3 (V1.2a 2, M4.2b 1), antenna 22 (ANT.6 13, ANT.5 7, ANT.12 2; base-rule classes, deck i/ii variants fold onto them); LVS by name and every gate zero-tolerance. Replaces the provisional plan-rf4 baseline, which hid regressions.",
+ "date": "2026-11-27",
  "counts": {
-  "drt": {
-   "violations": 6
-  },
-  "lvs_name": {
-   "stray layout nets": 0
-  },
-  "antenna": {
-   "ANT.16_i_ANT.5": 153,
-   "ANT.16_i_ANT.6": 34,
-   "ANT.16_ii_ANT.12": 1,
-   "ANT.16_ii_ANT.3": 6,
-   "ANT.16_ii_ANT.5": 23
-  },
-  "drc_main": {
-   "M3.1": 2,
-   "M4.2b": 22
-  }
+  "drt": {"violations": 2},
+  "lvs_name": {"stray layout nets": 0},
+  "antenna": {"ANT.6": 13, "ANT.5": 7, "ANT.12": 2},
+  "drc_main": {"V1.2a": 2, "M4.2b": 1}
  }
 }

@@ -44,7 +44,7 @@ sha256 in meta.txt), else the script reruns (one heavy job at a time); `--collec
 Output `<run>/signoff/signoff.json` and a table `check | status | value | source / why`; status pass / fail /
 regressed / info / absent / not run. Gates fail outright; counts (drt, lvs_name kinds, antenna and drc_main by rule,
 lvs_bb kinds) are compared with `baseline/<chip>.json`: above baseline = regressed, a nonzero class missing from the
-baseline = fail. Exit 0 only if nothing fails or regresses. Baselines move only by `--update-baseline --reason`
+baseline = fail (a baseline class may be a base rule such as `ANT.6`; the deck's `ANT.16_i_ANT.6` variants fold onto it). Exit 0 only if nothing fails or regresses. Baselines move only by `--update-baseline --reason`
 (refused if a gate fails), committed by pathspec with that reason. `signoff_selftest.py <checked run>` is the harness's
 known-answer and negative-control test (twelve injected faults on a copy of a run, no tool runs).
 

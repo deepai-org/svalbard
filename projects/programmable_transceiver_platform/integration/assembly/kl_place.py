@@ -13,6 +13,7 @@ import json, os, sys, collections, math
 import klayout.db as db
 sys.path.insert(0, '/asm')
 import common as C
+import island_trunks as TRK
 
 CHIP = os.environ['CHIP']; R = '/repo/'
 um = lambda v: int(round(v*1000)); fu = lambda v: v/1000.0
@@ -663,6 +664,7 @@ for net in GRID_NETS:
             if any(cb.contains(db.Point(um(ax), um(ay))) for ax, ay in C.HOOK_SLOT_AVOID.get(CHIP, [])): continue   # common.HOOK_SLOT_AVOID
             lst.append([ln, cb, False])
     slots[net] = lst
+PLATED = TRK.build(globals(), 'plates') if os.environ.get('PLATES', '1') == '1' else set()     # heavy supply pins: drawn plates to the grid (island_trunks.py, PDS-25 / ASM-17)
 hook_pins = {}; man['digital_ties_not_hooked'] = 0
 dland = ly.create_cell('pt_direct_land'); top.insert(db.CellInstArray(dland.cell_index(), db.Trans()))   # direct pin landings (own cell: checks can drop it)
 k = 0
@@ -672,6 +674,7 @@ for net in GRID_NETS:
         if n in man['blocks'] and man['blocks'][n]['master'] == 'decap': continue
         if n == 'digital' and not C.KH_CONN: man['digital_ties_not_hooked'] += 1; continue      # pre-KH: tie-offs left to the macro
         if n == 'digital': man['digital_ties_not_hooked'] += 1      # KH_CONN: macro inputs the conn ties to VDD / VSS: hooked at the top level (coordinator ruling 2026-11-26; the macro pins stay as hardened)
+        if (n, p, net) in PLATED: continue      # plated (island_trunks._plates)
         if n in PADS['pads']: continue      # pad-family supply pins land on the provider ring rails (DVDD / VSS bands), not on the grid
         sh = pin_shapes_die(n, p)
         if not sh:
@@ -927,6 +930,7 @@ if _pr is not None and _prt is not None:
     for _poly in _rg.merged().each():
         for _t in _poly.decompose_trapezoids(1):
             _b = _t.bbox(); blk.append(('ring_fill', (fu(_b.left), fu(_b.bottom), fu(_b.right), fu(_b.top)), ML))
+blk += TRK.blockages()      # 0.6 um Metal5 ring round each island trunk (TRUNKS=1 only; empty otherwise)
 D.append(f'BLOCKAGES {sum(len(l) for n, r, l in blk)} ;')
 for n, r, lays in blk:
     for ln in lays: D.append(f'- LAYER {ln} RECT ( {um(r[0])} {um(r[1])} ) ( {um(r[2])} {um(r[3])} ) ;')

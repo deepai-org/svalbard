@@ -185,8 +185,19 @@ Current work status is in `SESSION-STATE.md`, not here.
 
 ## 8. Rules for agents on the shared machine (coordinator)
 
-- At most 3 simulations or heavy jobs at once per owner including its sub-agents; `OMP_NUM_THREADS=1`; tool
-  threads ≤ 4. No speculative sweeps. No `pgrep -f` wait loops that match themselves.
+- At most 6 simulations or heavy jobs at once machine-wide (32 cores), at most 3 per owner including its
+  sub-agents; `OMP_NUM_THREADS=1`; tool threads ≤ 4. Check `docker ps` / load before starting. No speculative
+  sweeps. No `pgrep -f` / `pkill -f`; kill only PIDs you started.
+- **Branch per agent (coordinator, 2026-11-27).** Code work happens in your own `git worktree` on your own
+  branch, never in the shared tree's working files. Merge to main only when `integration/signoff/signoff.sh`
+  passes both chips against the stored baseline (no regression on any line); then rebase, merge, push.
+- **Standing rulings agents make themselves (no need to ask the coordinator):** accept a DRC/antenna class
+  that main's baseline already carries; move or rotate a block within the floorplan plan's channels; add
+  antenna diodes per the plan's rules; fix flow/path bugs; delete your own scratch runs. Ask the coordinator
+  for: any spec/performance trade-off or waiver, anything touching the host-link cluster or pad map, macro
+  pin/outline changes, ESD or isolation-rule exceptions.
+- **Freeze (2026-11-27):** only fixes for known chip-killers and signoff-script failures. Block-level
+  improvements go to the post-tapeout list in the risk register.
 - The disk is nearly full: keep outputs small and delete intermediates.
 - Commit small reviewed steps with explicit paths (`git add -f` under `scratch/`), never `git add -A`; do not
   push; the coordinator pushes. No GDS uploads until a block is really finished.

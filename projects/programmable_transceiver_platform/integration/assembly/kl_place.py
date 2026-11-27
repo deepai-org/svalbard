@@ -616,6 +616,7 @@ for s, v in PADS['io'].items():
         stubs[net].insert(db.Box(bx, by, BX, BY))
 for net in ('VDD', 'VSS'):
     land = (stubs[net] & metal[(net, 'Metal4')]).merged()
+    land = land.sized(-um(0.5)).sized(um(0.5)).merged()      # no Metal3 sliver where a strap cut ends on the stub (M3.1, swapped grid)
     pdn.shapes(LI['Metal2']).insert(stubs[net]); pdn.shapes(LI['Metal3']).insert(land)
     nvia += via_fill(pdn, VIA['Via2'], land) + via_fill(pdn, VIA['Via3'], land)
     man[f'pad_stubs_{net}'] = stubs[net].count()

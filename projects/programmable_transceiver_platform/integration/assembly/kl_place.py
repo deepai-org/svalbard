@@ -536,6 +536,22 @@ for net in GRID_NETS:
         rg = rg - (blkmetal[ln] if ln == 'Metal5' else blk4)
         m_ = (rg + straps[(net, ln)]).merged()
         metal[(net, ln)] = m_.sized(-um(0.6)).sized(um(0.6)).merged()     # no piece narrower than 1.2 um (M4.1 / MT.1)
+# dead grid metal (coordinator 2026-11-27): strap pieces of VDD / VSS that reach the core ring through no chain of same-net
+# Metal4 / Metal5 overlaps (Via4 sits on every such overlap) are removed, so floating metal cannot hide real opens later
+man['grid_dead_mm2'] = {}
+for net in ('VDD', 'VSS'):
+    m4_, m5_ = metal[(net, 'Metal4')].merged(), metal[(net, 'Metal5')].merged()
+    seed_ = ring.get(net, db.Region())
+    l4_, l5_ = m4_.overlapping(seed_), m5_.overlapping(seed_)
+    while True:
+        n4_ = m4_.overlapping(l5_) + l4_; n5_ = m5_.overlapping(l4_) + l5_
+        n4_ = m4_.overlapping(n4_); n5_ = m5_.overlapping(n5_)
+        if n4_.count() == l4_.count() and n5_.count() == l5_.count(): break
+        l4_, l5_ = n4_, n5_
+    man['grid_dead_mm2'][net] = dict(Metal4=round((m4_ - l4_).area()/1e12, 4), Metal5=round((m5_ - l5_).area()/1e12, 4),
+                                     pieces=(m4_.count() - l4_.count()) + (m5_.count() - l5_.count()))
+    metal[(net, 'Metal4')], metal[(net, 'Metal5')] = l4_, l5_
+print('grid dead metal removed', man['grid_dead_mm2'])
 # self-check: grid metal of different nets must not touch on a layer (a VDD / VSS join in the drawn grid)
 man['grid_touch'] = []
 for ln in ('Metal4', 'Metal5'):

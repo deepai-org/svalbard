@@ -883,7 +883,7 @@ if AD_NETS:
     # ANT_AVOID_GRID (default on for pt_wired, fp-wired 2026-11-27): no diode under grid Metal4 / Metal5; the router then
     # climbed from the diode's Metal2 pin through the strap (fpw-2: RAIL_wired_tx diode antd_113 under a VDD strap, VDD short)
     if os.environ.get('ANT_AVOID_GRID', '1') == '1':
-        for k_ in [k_ for k_ in metal if k_[1] in ('Metal4', 'Metal5')]: occ += metal[k_].sized(um(1.0))
+        for k_ in [k_ for k_ in metal if k_[1] in ('Metal4', 'Metal5')]: occ += metal[k_].sized(um(0.5))      # 0.5 um: 22 um straps leave 13 um gaps (pt_wired MC/ME/SE)
     for net_ in sorted(AD_NETS & set(NETS)):
         ends_ = [e for e in NETS[net_]['ends'] if e[0] not in ('digital', 'pdn') and e[0] in man['blocks']]
         # fallback: where no receiver has room, the diode goes by the macro pin (plan-rf6: adc_q / bbfilter_q corners full)
@@ -900,7 +900,7 @@ if AD_NETS:
             # vertices are legal diode centres (8-direction probing found too few spots between the grid straps)
             for rw_ in (40, 150, 400):
                 win_ = db.Region(db.Box(c_.x-um(rw_), c_.y-um(rw_), c_.x+um(rw_), c_.y+um(rw_)))
-                cand_ = (win_ - (occ & win_.sized(um(10)))).merged().sized(-um(4.1+2.0), -um(3.25+2.0))
+                cand_ = (win_ - (occ & win_.sized(um(10)))).merged().sized(-um(4.1+1.0), -um(3.25+1.0))
                 best_ = None
                 for poly_ in cand_.each():
                     for pt_ in poly_.each_point_hull():
@@ -909,12 +909,12 @@ if AD_NETS:
                 if best_:
                     q_ = best_[1]; q_ = db.Point(q_.x//10*10, q_.y//10*10)
                     b_ = db.Box(q_.x-um(4.1), q_.y-um(3.25), q_.x+um(4.1), q_.y+um(3.25))
-                    if (occ & db.Region(b_.enlarged(um(2), um(2)))).is_empty(): spot = b_; break
+                    if (occ & db.Region(b_.enlarged(um(1), um(1)))).is_empty(): spot = b_; break
             if spot is None: man['antenna_diodes'].append(dict(net=net_, pin=f'{i_}.{p_}', placed=False)); continue
             nm_ = f'antd_{len(man["antenna_diodes"])}'
             top.insert(db.CellInstArray(dc.cell_index(), db.Trans(db.Vector(spot.left, spot.bottom))))
             comps.append((nm_, 'pt_antdiode', fu(spot.left), fu(spot.bottom), 'N'))
-            NETS[net_]['ends'].append((nm_, 'A')); occ += db.Region(spot.enlarged(um(4), um(4)))
+            NETS[net_]['ends'].append((nm_, 'A')); occ += db.Region(spot.enlarged(um(1.5), um(1.5)))
             man['antenna_diodes'].append(dict(net=net_, pin=f'{i_}.{p_}', placed=True, at=[fu(spot.left), fu(spot.bottom)]))
 
 # ------------------------------------------------------------------------------------------- DEF

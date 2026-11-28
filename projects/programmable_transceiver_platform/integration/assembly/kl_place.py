@@ -648,7 +648,7 @@ PLATED = TRK.build(globals(), 'plates') if os.environ.get('PLATES', '1') == '1' 
 # slot selection): Metal4 / Metal5 pieces of pt_pdn joined through its Via4 cuts to the ring of the same net; a slot on no
 # live piece of its net is never used for a hook or a direct tie
 _m4f = db.Region(pdn.begin_shapes_rec(LI['Metal4'])).merged(); _m5f = db.Region(pdn.begin_shapes_rec(LI['Metal5'])).merged()
-_v4f = db.Region(pdn.begin_shapes_rec(VIA['Via4'])).merged()
+_v4f = (_m4f & _m5f).merged().sized(-um(0.75)).sized(um(0.75))      # Via4-sized overlaps (the via lattice fills every one; walking ~2M via cells took 10+ min)
 man['dead_slots'] = []; _live_all = {}
 for net in [n_ for n_ in ('VDD', 'VSS') if n_ in slots and n_ in ring]:
     k4_ = _m4f.interacting(stubs[net]); k5_ = _m5f.interacting(_v4f.interacting(k4_))

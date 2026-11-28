@@ -469,7 +469,7 @@ def heavy(chip, PADS=None):
     out = {}
     for r in json.load(open(f))['rows']:
         if r['kind'] != 'supply' or r['net'] not in ('VDD', 'VSS') or r['inst'] in ('digital', 'host') or (PADS and r['inst'] in PADS['pads']): continue
-        ma = max(r['avg_ma'], r.get('peak_ma') or 0) if r['master'].startswith('isw') and r['net'] == 'VSS' else r['avg_ma']
+        ma = r['avg_ma']      # EM is set by average current: the isw VSS 5.5 mA is a <= 5 us turn-off pulse (power owner 2026-11-28)
         k = (r['inst'], r['net'])
         if ma > out.get(k, 0): out[k] = ma; PIN_SEL[k] = r['pin']
     return out

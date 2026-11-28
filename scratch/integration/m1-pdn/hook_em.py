@@ -28,7 +28,7 @@ def heavy(ch, thr=0.5):
         out = {}
         for r in json.load(open(t))['rows']:
             if r['kind'] != 'supply' or r['net'] not in ('VDD', 'VSS') or r['inst'] in ('digital', 'host') or r['inst'].startswith('pad_'): continue
-            ma = max(r['avg_ma'], r.get('peak_ma') or 0) if r['master'].startswith('isw') and r['net'] == 'VSS' else r['avg_ma']
+            ma = r['avg_ma']      # average current sets EM (isw VSS peak is a <= 5 us pulse)
             if ma > thr: out[(r['inst'], r['net'])] = max(ma, out.get((r['inst'], r['net']), 0))
         return out
     p = os.path.join(HERE, '../../../projects/programmable_transceiver_platform/integration/assembly/island_trunks.py')

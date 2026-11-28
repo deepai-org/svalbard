@@ -178,9 +178,9 @@ if {[llength $word_mux] == 1} {
 }
 # HOST_RATE_FSM (DIG-08a, macro batch 2026-11-28): the rate-switch FSM of pt_host_rate_clock updates only on its 1-in-4
 # clock enable (ce, a registered decode of the div counter), so every path between its flops has 4 hword cycles.
-# div, ce and the rate synchronizer stay single-cycle. hold_n keeps its own cut to the other clocks (1c below).
+# div, ce and the rate synchronizer stay single-cycle. Synthesis names the FSM flops after the kept select inputs they drive (host_rate.ce_sel.a[*]). hold_n keeps its own cut to the other clocks (1c below).
 set hr_fsm {}
-foreach pat {*host_rate.rate_q* *host_rate.want* *host_rate.ne* *host_rate.gap* *host_rate.cur* *host_rate.hold_n*} {
+foreach pat {*host_rate.rate_q* *host_rate.want* *host_rate.ne* *host_rate.gap* *host_rate.cur* *host_rate.hold_n* *host_rate.ce_sel.a*} {
     set hr_fsm [concat $hr_fsm [pt_cells_early $pat]]
 }
 if {[llength $hr_fsm] < 9} {

@@ -848,6 +848,15 @@ for ln in ('Metal2', 'Metal3', 'Metal4', 'Metal5'):
     for poly in reg.merged().each():
         for tz in poly.decompose_trapezoids(1):
             b = tz.bbox(); Lp.append(f'      RECT {fu(b.left):.3f} {fu(b.bottom):.3f} {fu(b.right):.3f} {fu(b.top):.3f} ;')
+# the grid's own Via4 cuts (array outlines + plain cuts, grid and island bars) are a Via4 obstruction: the router keeps the
+# tech-LEF cut spacing from them. A HOOK_DUAL Metal4 pin lies inside a strap crossing, and router Via4 cuts dropped onto
+# the grid's array (pt_rf plan-rf8 / rf8b: V4.1 x4 + V4.2a x2 at 973.4, 2452.8, router cut 0.01 um over a grid cut)
+_v4o = (_v4f + (PL.via4_region(ly, barcell, VIA['Via4'], _v4c) if barcell else db.Region())).merged()
+Lp.append('    LAYER Via4 ;')
+for poly in _v4o.each():
+    for tz in poly.decompose_trapezoids(1):
+        b = tz.bbox(); Lp.append(f'      RECT {fu(b.left):.3f} {fu(b.bottom):.3f} {fu(b.right):.3f} {fu(b.top):.3f} ;')
+man['grid_via4_obs'] = _v4o.count()
 Lp += ['  END', 'END pt_pdn', '']
 open('/run/lef/pt_pdn.lef', 'w').write('\n'.join(Lp))
 comps.append(('pdn', 'pt_pdn', 0.0, 0.0, 'N'))

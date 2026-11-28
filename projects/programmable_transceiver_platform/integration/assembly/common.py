@@ -118,7 +118,13 @@ ISLAND_BARS = {'wired': [dict(net='RAIL_wired_tx', rects=[(2658.5, 2265.0, 3400.
                 # is a pin of RAIL_rf_tx (expose), so the router reaches the loads and isw_rf_tx_b from it, never VISL itself
                 'rf': [dict(net='RAIL_rf_tx', rects=[], expose=True,
                             rel=('isw_rf_tx', [('Metal5', 'bbox'), ('Metal5', (0.0, -465.0, 243.1, 0.0))]),
-                            vias=[('isw_rf_tx', 'VISL')])]}
+                            vias=[('isw_rf_tx', 'VISL')]),
+                       # rf_rx (plan-rf8 / rf9: 2 x Metal4 spacing of RAIL_rf_rx at isw_rf_rx's VISL): VISL-strip bar as on pt_wired
+                       dict(net='RAIL_rf_rx', rects=[], expose=True, rel=('isw_rf_rx', [('Metal5', 'pin:VISL')]),
+                            vias=[('isw_rf_rx', 'VISL')])]}
+# routing blockages on all metal layers (die um): pt_rf: the 20 um between the core edge and isw_rf_tx's west side, where
+# RAIL_rf_tx kept shorting into the switch (plan-rf5..rf9)
+ROUTE_BLOCKS = {'rf': [(452.0, 3390.0, 471.0, 3680.0)]}
 # decap tiles the assembly places itself before the other blocks (power delivery 4.1d / PDS-16: the 14 tiles that did not
 # place go inboard of pad_hs_rx, within 500 um of bidir[14], restoring 5.4 nF and the CDM reach): slot, count
 FIXED_DECAP = {'wired': dict(slot=(2453.0, 960.0, 2953.0, 1440.0), count=14)}

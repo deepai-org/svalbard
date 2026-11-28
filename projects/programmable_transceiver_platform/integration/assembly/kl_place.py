@@ -1009,6 +1009,7 @@ if _pr is not None and _prt is not None:
     for _poly in _rg.merged().each():
         for _t in _poly.decompose_trapezoids(1):
             _b = _t.bbox(); blk.append(('ring_fill', (fu(_b.left), fu(_b.bottom), fu(_b.right), fu(_b.top)), ML))
+blk += [(f'route_block_{i_}', list(r_), ML) for i_, r_ in enumerate(C.ROUTE_BLOCKS.get(CHIP, []))]      # common.ROUTE_BLOCKS
 blk += TRK.blockages()      # 0.6 um Metal5 ring round each island trunk (TRUNKS=1 only; empty otherwise)
 D.append(f'BLOCKAGES {sum(len(l) for n, r, l in blk)} ;')
 for n, r, lays in blk:

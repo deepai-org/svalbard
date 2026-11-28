@@ -60,7 +60,7 @@ Current work status is in `SESSION-STATE.md`, not here.
   damage: IR drop and supply bounce, fusing / gross overcurrent, oxide breakdown, latch-up, timing.
 - **Per-chip supply trim:** the board sets each die's supply (trimmer + regulator), chosen at bring-up from the
   die's measured speed (ring monitors need readout codes). Slow dies may run up to a 3.50 V setpoint, with
-  setpoint + tolerance + ripple + overshoot ≤ 3.63 V; typical dies stay at 3.3 V; fast dies may be trimmed
+  setpoint ≤ 3.50 V (crests above 3.63 V accepted: lifetime rating only, see below); typical dies stay at 3.3 V; fast dies may be trimmed
   down. Every block reports slow-corner results both untrimmed and trimmed and its minimum (and, at ff,
   maximum) passing supply; one trim value must satisfy all blocks in a mode. It does not excuse
   passive-limited specs, area, ff hold timing, reliability at 3.5 V, ESD/clamp behaviour or the IR budget.

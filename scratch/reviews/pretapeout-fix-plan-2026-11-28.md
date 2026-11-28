@@ -344,3 +344,12 @@ Capacity = pin narrow dimension × layer EM limit at 85 °C (Metal1-4 2.09 mA/um
 | wired | ptrim VSS | 21.0 | M4 5.0 | 2.0x | M4 >= 10 or M5 >= 5 |
 | wired | detect VSS | 2.4 | M5 0.44 | 1.2x | M5 >= 0.6 |
 | wired | slicer VSS | 9.8 | M5 2.0 | 1.1x | M5 >= 2.2 |
+
+## Addendum 2: veteran-review audit (scratch/reviews/veteran-audit-2026-11-28.md)
+
+- MACRO + BLOCK + TOP: host/core clock bypass (CM-1): pt_clockmux host-clock mux spare inputs (tied VSS today) to H2D / REF, regfile decode allows ref_in / aux_clk / wclk_in, so a dead ring PLL does not strand the host link. Both chips.
+- MACRO: PRBS checker bits-checked counter (BER needs locked time); internal pattern-generator -> checker loopback.
+- TOP: plate slotting (island_trunks._plates draws no holes; pt_rf lo_txbuf.VSS M5 plate 37.6 x 240 um fails MSLOT5.1).
+- MODEL: circuit-under-pad with aluminium wedge bonding (run 1): CUP deck on every custom pad family (protection macro alone 174 CUP.3 hits; precheck skips CUP).
+- MODEL: supply clamp turn-off with a current-limited source (0.5/1/2 A, board caps, 50-100 us).
+- RTL rule: reject the CDR state where the loop filter floats (CDR off, ring on, line-PLL off).

@@ -40,8 +40,8 @@ inst digital pt_digital_macro chip
   s_pg_{rf_rx,rf_tx,rf_tx_b,lod,lo,pll,conv,debug}=s_pg_\1      # per-switch power-good; the macro ANDs each enable group
   s_pg_{wired_rx,wired_cap,wired_tx,wired_tx_b}=VSS wired_on_ext=VSS      # no wired island on this chip
   atb0_sw[{0,13,28,34,35,42,43,44,45,46,47,48,49,50,51,52,53,54,55,57}]>atb0_sw[\1] atb0_sw[{1,2,3,4,5,6,7,8,9,10,11,12,14,15,16,17,18,19,20,21,22,23,24,25,26,27,29,30,31,32,33,36,37,38,39,40,41,56,58,59}]>-
-  atb1_sw[{0,1,2,3,4,5,7,8,10,11,12,13,14,15,16,17,18,19,20,24,28,29,30,31,32,33,34,35,36,37,38,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57}]>atb1_sw[\1]
-  atb1_sw[{6,9,21,22,23,25,26,27,39,58,59}]>-      # leaves of wired nodes: not on this chip
+  atb1_sw[{0,1,2,3,4,5,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,24,28,29,30,31,32,33,34,35,36,37,38,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57}]>atb1_sw[\1]
+  atb1_sw[{6,22,23,25,26,27,39,58,59}]>-      # leaves of wired nodes: not on this chip
   atb0_grp[{0:1}]>atb0_grp[\1] atb1_grp[{0:4}]>atb1_grp[\1]
   atb0_en>atb0_en atb1_en>atb1_en
   rx_en_aux>rx_en_aux rx_en_wclk>- rx_en_wtx_ext>-
@@ -87,7 +87,7 @@ inst core_bias pt_core_bias_rf core
   EN_bb_tap_{i,q}=c_bb_tap_\1_bias_en BIAS_bb_tap_{i,q}~BIAS_bb_tap_\1
   ROOT_REF~ATBN_master_ibias VREF0~VREF0_MASTER VCM~VCM_MASTER VBG~ATBN_vbg IDAC1~ATBN_idac1
   TRK_RF_RX~ATBN_rf_ibias TRK_CONV~ATBN_conv_ibias TRK_PLL~ATBN_pll_ibias TRK_DEBUG~ATBN_debug_ibias
-  TRK_LO~-      # lo trunk: no ATB leaf on pt_rf yet (interface row CB8-2)
+  TRK_LO~ATBN_trk_lo      # INT-04 F7 (macro batch 2026-11-28): lo trunk sensed on atb1 code 22 (atb1_leaf22)
   VGEN_SOURCE~- VGEN_SINK1~- VGEN_SINK2~-
 
 # Islands and switches (spec/power-delivery.md section 2, PD2-2): ten islands on the five verified switch masters.
@@ -299,3 +299,9 @@ inst pad_xvss_{0:8} prov_supply_sig chip
   PAD~VSS
 inst pad_xvdd_{0:1} prov_supply_sig chip
   PAD~VDD
+# INT-04 F7 (macro batch 2026-11-28): leaves for the two codes the re-hardened macro now accepts on pt_rf. Placement is the
+# floorplan owner's (leaf beside core_bias for TRK_LO, beside pll_cdr for CDR_VCTRL, short stubs).
+inst atb1_leaf22 atb_leaf_s core
+  NODE~ATBN_trk_lo BUS~ATB1_LOCAL2 SEL=atb1_sw[21] VDD~VDD VSS~VSS   # TRK_LO (core_bias lo trunk), code 22
+inst atb1_leaf10 atb_leaf_s core
+  NODE~CDR_VCTRL BUS~ATB1_LOCAL2 SEL=atb1_sw[9] VDD~VDD VSS~VSS   # CDR ring VCTRL on pt_rf (host_follow / line-PLL loop node), code 10

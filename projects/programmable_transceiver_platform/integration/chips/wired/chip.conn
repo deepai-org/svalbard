@@ -40,8 +40,8 @@ inst digital pt_digital_macro chip
   s_pg_{rf_rx,rf_tx,rf_tx_b,lod,lo,conv}=VSS      # no rf / conv island on this chip
   wired_on_ext=wired_on_ext
   atb0_sw[{0,21,28,42,43,44,45,46,47,48,49,50,51,52,53,54,55,57}]>atb0_sw[\1] atb0_sw[{1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,22,23,24,25,26,27,29,30,31,32,33,34,35,36,37,38,39,40,41,56,58,59}]>-
-  atb1_sw[{0,1,2,3,4,5,6,8,9,11,12,21,22,23,24,25,26,27,28,29,30,31,33,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59}]>atb1_sw[\1]
-  atb1_sw[{7,10,13,14,15,16,17,18,19,20,32,34,35,37,38}]>-      # leaves of rf / conv nodes: not on this chip
+  atb1_sw[{0,1,2,3,4,5,6,8,9,10,11,12,21,22,23,24,25,26,27,28,29,30,31,33,36,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59}]>atb1_sw[\1]
+  atb1_sw[{7,13,14,15,16,17,18,19,20,32,34,35,37,38}]>-      # leaves of rf / conv nodes: not on this chip
   atb0_grp[{0:1}]>atb0_grp[\1] atb1_grp[{0:4}]>atb1_grp[\1]
   atb0_en>atb0_en atb1_en>atb1_en
   rx_en_aux>rx_en_aux rx_en_wclk>- rx_en_wtx_ext>rx_en_wtx_ext
@@ -295,3 +295,7 @@ inst pad_xvss_{0:5} prov_supply_sig chip
   PAD~VSS
 inst pad_xvdd_{0:2} prov_supply_sig chip      # pad_xvdd_2 at bidir[22] (was pad_xvss_6): bond margin, PDS-9 / PC-53
   PAD~VDD
+# INT-04 F7 (macro batch 2026-11-28): slicer threshold reference VTAP (pt_vthdac output into pt_slicer; the slicer has no
+# bias tap of its own, so this is the slicer-side observation that needs no block change), code 11. Placement: floorplan owner.
+inst atb1_leaf11 atb_leaf_s core
+  NODE~VTAP BUS~ATB1_LOCAL0 SEL=atb1_sw[10] VDD~VDD VSS~VSS   # slicer threshold A+ (VTAP), code 11

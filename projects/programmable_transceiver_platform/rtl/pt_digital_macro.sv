@@ -504,6 +504,11 @@ module pt_digital_macro(
  pt_vreg_seq vreg_seq(.rst_n(rst_n), .ref_clk(ref_clk), .pll_on(ion[2]),
   .tx_bypass(f_pllvreg_config__tx_bypass), .rx_bypass(f_pllvreg_config__rx_bypass), .tx_ok(vreg_tx_ok), .rx_ok(vreg_rx_ok));
  pt_bgap_interlock bgap(.rst_n(rst_n), .sclk(spi_sclk), .bgap_ena(f_core_refchain__bgap_ena & reset_seen), .ok(bg_ok));
+ // CM-1 host-clock bypass outputs (HS_REF, HS_H2D): spare pins per chip, gated with the pll island like the clockmux rail.
+ // pt_wired: c_clockmux_cs[1:0] (the converter-clock select is pt_rf only); pt_rf: c_cdr_fup / c_cdr_fdn (the frequency
+ // loop is pt_wired only, the cdr's FUP / FDN are tied low on pt_rf). PT_CHIP 3 (benches only) keeps the original pins.
+ wire[3:0] cs_dec; wire[1:0] hs_ext;
+ assign c_clockmux_cs = (PT_CHIP == 2) ? {2'b00, hs_ext & {2{ion[2]}}} : cs_dec;
  pt_ctl_decode decode(.analog_cfg(analog_cfg), .debug_cfg(debug_cfg), .island_on(ion), .vreg_rx_ok(vreg_rx_ok), .bg_ok(bg_ok),
   .reset_seen(reset_seen), .rx_gain(rx_gain), .rx_gain_active(rx_gain_active), .rf_mute(rf_mute),
   .rx_en_aux_reg(rx_en_aux_reg), .rx_en_wclk_reg(rx_en_wclk_reg), .vth_fast(vth_fast), .vth_fast_a(vth_a), .vth_fast_b(vth_b),
@@ -605,7 +610,7 @@ module pt_digital_macro(
   .c_clockmux_ps(c_clockmux_ps),
   .c_clockmux_ws(c_clockmux_ws),
   .c_clockmux_ss(c_clockmux_ss),
-  .c_clockmux_cs(c_clockmux_cs),
+  .c_clockmux_cs(cs_dec), .hs_ext(hs_ext),
   .c_clockmux_hs(c_clockmux_hs),
   .c_prescale_en(c_prescale_en),
   .c_prescale_d(c_prescale_d),
@@ -753,7 +758,8 @@ module pt_digital_macro(
  // kept library flops (stable names fup_out.cell / fdn_out.cell) fixed next to their pins by hio_shift.py
  pt_clock_dff fup_out(.clk(ref_clk), .rst_n(rst_n), .d(wrx_fup), .q(fup_q));
  pt_clock_dff fdn_out(.clk(ref_clk), .rst_n(rst_n), .d(wrx_fdn), .q(fdn_q));
- assign c_cdr_fup = fup_q & ion[2], c_cdr_fdn = fdn_q & ion[2];
+ assign c_cdr_fup = (PT_CHIP == 1) ? hs_ext[0] & ion[2] : fup_q & ion[2];
+ assign c_cdr_fdn = (PT_CHIP == 1) ? hs_ext[1] & ion[2] : fdn_q & ion[2];
  assign c_wrx_cap_psel = wrx_psel & {3{ion[0]}}, c_wrx_cap_slipp = wrx_slipp & ion[0], c_wrx_cap_slipm = wrx_slipm & ion[0];
  pt_wrx_ctl wrx(.ref_clk(ref_clk), .wire_rx_clk(wire_rx_clk_c), .rst_n(rst_n), .cfg_en(wrx_en), .cfg_restart(f_wrx_loop__restart),
   .cfg_freq_src(f_wrx_loop__freq_source), .cfg_fll_auto(f_wrx_loop__fll_auto), .cfg_fll_inv(f_wrx_loop__fll_invert),

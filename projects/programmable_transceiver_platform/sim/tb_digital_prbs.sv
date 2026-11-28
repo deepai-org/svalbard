@@ -10,6 +10,10 @@
 //  3 tx_invert with check_invert locks; without check_invert never locks
 //  4 user mode sends user_word; the checker (following a non-PRBS mode) stays unlocked
 //  5 PRBS15 sent, check_mode PRBS15 explicitly; check_enable 0 and wire_trim 0: checker off
+//  6 checked-word counter (macro batch 2026-11-28): equals (words taken while locked) / 4096 exactly; stays 0 while
+//    unlocked (negative); check_clear zeroes it; saturates at 2^28 - 1 without wrapping (Gray halves stay all-ones)
+//  7 internal loopback (debug.pattern.loopback) with the line cut: locks, 0 errors, one inject counted; with the
+//    line cut and loopback off the checker never locks (negative)
 module tb_digital_prbs;
  reg rst_n=0,ref_clk=0,host_sclk=0,host_cs_n=1,host_mosi=0,host_tx_clk=0,host_rx_clk=0,wire_rx_clk=0,wire_tx_clk=0,rf_rx_clk=0,rf_tx_clk=0;
  wire core_rst_n=rst_n,core_rel_n=rst_n;
@@ -39,10 +43,19 @@ module tb_digital_prbs;
  // Serializer model (as tb_digital_wire40): the word taken at a rising edge is D0..D19 sampled at that
  // edge (falling-edge launch half a period before) and D20..D39 sampled half a period later (rising-edge
  // launch at that edge). The pattern word shares the core's wire lane registers (timing closure 2026-11-11).
- reg [19:0] ser_lo; reg ser_v, ser_err;
+ reg [19:0] ser_lo; reg ser_v, ser_err; reg line_cut=0;
  always @(negedge wire_tx_clk) begin
-  wire_rx_valid <= ser_v; wire_rx_data <= {wire_tx_data[39:20], ser_lo} ^ (ser_err ? 40'h10 : 40'h0);
+  wire_rx_valid <= ser_v && !line_cut; wire_rx_data <= line_cut ? {$random,$random} : {wire_tx_data[39:20], ser_lo} ^ (ser_err ? 40'h10 : 40'h0);
  end
+ // reference for the checked-word counter: words the checker takes while locked
+ integer wref=0;
+ always @(posedge wire_rx_clk) if (dut.chk_clear) wref <= 0; else if (dut.chk_v && dut.pattern_locked) wref <= wref + 1;
+ function [13:0] g2b(input [13:0] g); integer q; begin g2b[13]=g[13]; for (q=12;q>=0;q=q-1) g2b[q]=g2b[q+1]^g[q]; end endfunction
+ task chk_words(input [8*48-1:0] what, input integer exp_n); integer got; begin
+  got = g2b(dut.pattern_words_hi_gray)*16384 + g2b(dut.pattern_words_lo_gray);
+  if (got !== exp_n) begin errors=errors+1; $display("FAIL %0s: words counter %0d, exp_ned %0d (ref words %0d)", what, got, exp_n, wref); end
+  else $display("ok   %0s: words counter %0d (ref words %0d)", what, got, wref);
+ end endtask
  always @(posedge wire_tx_clk) begin
   ser_lo <= wire_tx_data[19:0]; ser_v <= wire_tx_valid && wire_tx_request; ser_err <= line_err;
   if (wire_tx_valid && wire_tx_request) taken <= taken + 1;
@@ -99,6 +112,26 @@ module tb_digital_prbs;
   chk_status("tx PRBS15, check_mode PRBS7", 0, 0, 16'h0000);
   stop; field(`PT_D_DEBUG_PATTERN__CHECK_ENABLE_LSB,1,0); field(`PT_D_DEBUG_PATTERN__CHECK_MODE_LSB,3,0); start; run(1000);
   chk_status("check_enable 0, wire_trim 0", 0, 0, 16'h0000);
+  // 6 checked-word counter
+  stop; dbg=0; field(`PT_D_DEBUG_PATTERN__TX_MODE_LSB,3,1); field(`PT_D_DEBUG_PATTERN__CHECK_ENABLE_LSB,1,1); start;
+  run(30000); chk_status("counter run PRBS7", 1, 0, 16'h0000);
+  chk_words("counter = locked words / 4096", wref/4096);
+  if (wref < 3*4096) begin errors=errors+1; $display("FAIL counter run too short (%0d words)", wref); end
+  pulse_field(`PT_D_DEBUG_PATTERN__CHECK_CLEAR_LSB); chk_words("counter after check_clear", 0);
+  stop; field(`PT_D_DEBUG_PATTERN__TX_INVERT_LSB,1,1); start; run(12000);
+  chk_status("counter, unlocked (inverted)", 0, 0, 16'h0000); chk_words("counter while never locked (negative)", 0);
+  stop; field(`PT_D_DEBUG_PATTERN__TX_INVERT_LSB,1,0); start; run(500);
+  dut.wc_hi = 14'h3FFF; dut.wc_lo = 14'h3FFF; dut.wc_pre = 12'hF00; run(2000);
+  chk_words("counter saturates at 2^28 - 1", 28'hFFFFFFF);
+  run(2000); chk_words("counter stays saturated", 28'hFFFFFFF);
+  // 7 internal loopback, line cut
+  stop; dbg=0; line_cut=1; field(`PT_D_DEBUG_PATTERN__TX_MODE_LSB,3,3); field(`PT_D_DEBUG_PATTERN__CHECK_ENABLE_LSB,1,1); start;
+  run(3000); chk_status("line cut, loopback off (negative)", 0, 0, 16'h0000);
+  stop; field(`PT_D_DEBUG_PATTERN__LOOPBACK_LSB,1,1); start; run(3000);
+  chk_status("line cut, loopback on: PRBS31 locks", 1, 0, 16'h0000);
+  pulse_field(`PT_D_DEBUG_PATTERN__INJECT_LSB); run(500);
+  chk_status("loopback, one inject counted", 1, 0, 16'h0001);
+  stop; dbg=0; line_cut=0;
   if (errors==0) $display("DIGITAL_PRBS_PASS"); else $display("DIGITAL_PRBS_FAIL %0d", errors);
   $finish;
  end

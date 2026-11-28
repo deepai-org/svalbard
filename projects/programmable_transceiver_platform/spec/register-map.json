@@ -195,14 +195,15 @@
    "island": null,
    "kind": "supply_monitor",
    "name": "usb_vdd_sw_sense",
-   "note": "Physical leaf at the USB branch supply root. There is no separate USB rail (USB merged into wired, P2-8; analog/island_support README A3): the leaf taps WIRE_VDD at the usbhs driver branch root, a separate physical tap from code 7 (wire_vdd_sw_sense) on the same switched rail, so it sees that branch's local IR drop."
+   "note": "Physical leaf at the USB branch supply root. There is no separate USB rail (USB merged into wired, P2-8; analog/island_support README A3): the leaf taps WIRE_VDD at the usbhs driver branch root, a separate physical tap from code 7 (wire_vdd_sw_sense) on the same switched rail, so it sees that branch's local IR drop. INT-04 F7 (macro batch 2026-11-28): pt_rf CDR ring VCTRL (atb1 only; the code is accepted on pt_rf since this batch)"
   },
   {
    "code": 11,
    "force": "sense_only",
    "island": null,
    "kind": "supply_monitor",
-   "name": "conv_vdd_sw_sense"
+   "name": "conv_vdd_sw_sense",
+   "note": "INT-04 F7 (macro batch 2026-11-28): pt_wired slicer threshold reference VTAP (atb1 only); pt_rf converter rail as before"
   },
   {
    "code": 12,
@@ -284,7 +285,7 @@
    "island": null,
    "kind": "bias",
    "name": "wire_ibias",
-   "note": "core_support TRK_WIRE; current out of node. Force precondition (commit rule): dist_en_wire=0, or the island switched off. OBS-17: the ATB0 switch itself closes only while the island it feeds is on with real power-good (or debug.wtx_ext.enable is set: WTX_EXT fallback force; the fallback cell ANDs it with WIRED_ON); a force written with the island off is accepted but leaves the switch open (the idac2 trim measures on ATB1 code 57)."
+   "note": "core_support TRK_WIRE; current out of node. Force precondition (commit rule): dist_en_wire=0, or the island switched off. OBS-17: the ATB0 switch itself closes only while the island it feeds is on with real power-good (or debug.wtx_ext.enable is set: WTX_EXT fallback force; the fallback cell ANDs it with WIRED_ON); a force written with the island off is accepted but leaves the switch open (the idac2 trim measures on ATB1 code 57). INT-04 F7 (macro batch 2026-11-28): pt_rf atb1 senses TRK_LO (the lo trunk) on this code"
   },
   {
    "code": 23,
@@ -598,7 +599,7 @@
  "break_before_make_rule": "A commit may not change one of these fields directly from one non-zero code to a different non-zero code; it must commit the zero (stopped/off/open) code first. Two SPI transactions separate the commits, far exceeding the 4 ns switch dead time in control_semantics.switch_dead_time_s.",
  "bus_widths": {
   "analog": 622,
-  "debug": 256
+  "debug": 257
  },
  "cdc_semantics": "The register file is clocked only by SPI SCLK and asynchronously reset by RESET_N AND POR. Active fields are quasi-static: they change only on a successful commit, which also toggles commit_toggle. A consuming clock domain that must see a coherent multi-bit value synchronizes commit_toggle through two flops and reloads its local copy on a toggle edge; the next commit cannot occur for at least one more 32-clock SPI transaction. Purely analog consumers see each field change once per commit; stopped-only fields are changed only while their outputs are isolated.",
  "chip_atb_no_leaf": {
@@ -608,8 +609,6 @@
    ],
    "atb1": [
     7,
-    10,
-    22,
     23,
     24,
     26,
@@ -628,7 +627,6 @@
    ],
    "atb1": [
     8,
-    11,
     14,
     15,
     16,
@@ -1445,7 +1443,9 @@
    "allowed": [
     0,
     1,
-    5
+    2,
+    5,
+    6
    ],
    "atb_bus": null,
    "bits": 3,
@@ -1479,7 +1479,7 @@
    "live": false,
    "mantissa_bits": null,
    "maximum": null,
-   "meaning": "host-transport clock domain: internal_pll = carrier/wire divided (clocktree), host_follow = pll_ring locked to the FPGA-forwarded H2D_CLK then prescale (P3-3)",
+   "meaning": "host-transport clock domain: internal_pll = carrier/wire divided (clocktree), host_follow = pll_ring locked to the FPGA-forwarded H2D_CLK then prescale (P3-3); CM-1 PLL-free bypasses (macro batch 2026-11-28): ref_in = REF_IN receiver straight to HOST_CLK, h2d_direct = the FPGA-forwarded H2D_CLK straight to HOST_CLK (pt_clockmux XMH spare inputs HS_REF / HS_H2D: pt_wired drives them on the unbound c_clockmux_cs[0] / [1] pins, pt_rf on the unbound c_cdr_fup / c_cdr_fdn pins), so a dead ring PLL does not strand the host link",
    "minimum": null,
    "name": "debug.clk_select.host_clk",
    "range_text": null,
@@ -1499,7 +1499,8 @@
     "ref_in",
     "aux_clk",
     "wclk_in",
-    "host_follow"
+    "host_follow",
+    "h2d_direct"
    ]
   },
   {
@@ -3613,10 +3614,58 @@
    "address_slots": 1,
    "allowed": null,
    "atb_bus": null,
+   "bits": 1,
+   "bus": "debug",
+   "bus_bits": 1,
+   "bus_lsb": 95,
+   "chips": [
+    "wired"
+   ],
+   "chunks": [
+    {
+     "addr": 85,
+     "field_lsb": 0,
+     "reg_lsb": 5,
+     "width": 1
+    }
+   ],
+   "clear_when_running": null,
+   "decode": null,
+   "decoded_bits": null,
+   "default": 0,
+   "direct": false,
+   "field": "loopback",
+   "gate_and": null,
+   "group": "debug.pattern",
+   "islands": [],
+   "kind": "debug",
+   "live": false,
+   "mantissa_bits": null,
+   "maximum": 1,
+   "meaning": "veteran audit 3 (macro batch 2026-11-28): 1 = the checker takes the generator's words through an internal 8-deep wire_tx_clk -> wire_rx_clk FIFO instead of the received words (digital self-test of generator, checker and counters without the analog path). The generator then steps only when the FIFO has room, so the line carries a gapped pattern. Both word clocks must run.",
+   "minimum": 0,
+   "name": "debug.pattern.loopback",
+   "range_text": null,
+   "split": false,
+   "store": [
+    0,
+    0
+   ],
+   "store_mask": 1,
+   "sv": "debug_pattern__loopback",
+   "trim": null,
+   "unit": "code",
+   "update": "stopped",
+   "values": null
+  },
+  {
+   "address_slots": 1,
+   "allowed": null,
+   "atb_bus": null,
    "bits": 6,
    "bus": "debug",
    "bus_bits": 6,
-   "bus_lsb": 95,
+   "bus_lsb": 96,
    "chips": [
     "rf"
    ],
@@ -3666,7 +3715,7 @@
    "bits": 6,
    "bus": "debug",
    "bus_bits": 6,
-   "bus_lsb": 101,
+   "bus_lsb": 102,
    "chips": [
     "rf"
    ],
@@ -3716,7 +3765,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 107,
+   "bus_lsb": 108,
    "chips": [
     "rf",
     "wired"
@@ -3765,7 +3814,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 108,
+   "bus_lsb": 109,
    "chips": [
     "rf",
     "wired"
@@ -3814,7 +3863,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 109,
+   "bus_lsb": 110,
    "chips": [
     "rf",
     "wired"
@@ -3863,7 +3912,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 110,
+   "bus_lsb": 111,
    "chips": [
     "rf",
     "wired"
@@ -3912,7 +3961,7 @@
    "bits": 5,
    "bus": "debug",
    "bus_bits": 5,
-   "bus_lsb": 111,
+   "bus_lsb": 112,
    "chips": [
     "rf",
     "wired"
@@ -3961,7 +4010,7 @@
    "bits": 5,
    "bus": "debug",
    "bus_bits": 5,
-   "bus_lsb": 116,
+   "bus_lsb": 117,
    "chips": [
     "rf",
     "wired"
@@ -4010,7 +4059,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 121,
+   "bus_lsb": 122,
    "chips": [
     "rf",
     "wired"
@@ -4059,7 +4108,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 124,
+   "bus_lsb": 125,
    "chips": [
     "rf",
     "wired"
@@ -4108,7 +4157,7 @@
    "bits": 5,
    "bus": "debug",
    "bus_bits": 5,
-   "bus_lsb": 126,
+   "bus_lsb": 127,
    "chips": [
     "rf",
     "wired"
@@ -4157,7 +4206,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 131,
+   "bus_lsb": 132,
    "chips": [
     "rf",
     "wired"
@@ -4206,7 +4255,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 134,
+   "bus_lsb": 135,
    "chips": [
     "rf",
     "wired"
@@ -4255,7 +4304,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 137,
+   "bus_lsb": 138,
    "chips": [
     "rf",
     "wired"
@@ -4304,7 +4353,7 @@
    "bits": 5,
    "bus": "debug",
    "bus_bits": 16,
-   "bus_lsb": 138,
+   "bus_lsb": 139,
    "chips": [
     "rf",
     "wired"
@@ -4353,7 +4402,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 154,
+   "bus_lsb": 155,
    "chips": [
     "rf"
    ],
@@ -4401,7 +4450,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 155,
+   "bus_lsb": 156,
    "chips": [
     "rf"
    ],
@@ -4449,7 +4498,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 156,
+   "bus_lsb": 157,
    "chips": [
     "rf",
     "wired"
@@ -4498,7 +4547,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 157,
+   "bus_lsb": 158,
    "chips": [
     "wired"
    ],
@@ -4546,7 +4595,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 158,
+   "bus_lsb": 159,
    "chips": [
     "rf",
     "wired"
@@ -4604,7 +4653,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 159,
+   "bus_lsb": 160,
    "chips": [
     "rf",
     "wired"
@@ -4667,7 +4716,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 162,
+   "bus_lsb": 163,
    "chips": [
     "rf",
     "wired"
@@ -4730,7 +4779,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 164,
+   "bus_lsb": 165,
    "chips": [
     "rf",
     "wired"
@@ -4793,7 +4842,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 167,
+   "bus_lsb": 168,
    "chips": [
     "rf",
     "wired"
@@ -4847,7 +4896,7 @@
    "bits": 16,
    "bus": "debug",
    "bus_bits": 16,
-   "bus_lsb": 169,
+   "bus_lsb": 170,
    "chips": [
     "rf",
     "wired"
@@ -4905,7 +4954,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 185,
+   "bus_lsb": 186,
    "chips": [
     "rf",
     "wired"
@@ -4968,7 +5017,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 188,
+   "bus_lsb": 189,
    "chips": [
     "rf",
     "wired"
@@ -5031,7 +5080,7 @@
    "bits": 3,
    "bus": "debug",
    "bus_bits": 3,
-   "bus_lsb": 190,
+   "bus_lsb": 191,
    "chips": [
     "rf",
     "wired"
@@ -5094,7 +5143,7 @@
    "bits": 2,
    "bus": "debug",
    "bus_bits": 2,
-   "bus_lsb": 193,
+   "bus_lsb": 194,
    "chips": [
     "rf",
     "wired"
@@ -5148,7 +5197,7 @@
    "bits": 16,
    "bus": "debug",
    "bus_bits": 16,
-   "bus_lsb": 195,
+   "bus_lsb": 196,
    "chips": [
     "rf",
     "wired"
@@ -5197,7 +5246,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 211,
+   "bus_lsb": 212,
    "chips": [
     "rf",
     "wired"
@@ -5249,7 +5298,7 @@
    "bits": 8,
    "bus": "debug",
    "bus_bits": 8,
-   "bus_lsb": 212,
+   "bus_lsb": 213,
    "chips": [
     "rf",
     "wired"
@@ -5298,7 +5347,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 220,
+   "bus_lsb": 221,
    "chips": [
     "rf",
     "wired"
@@ -5347,7 +5396,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 221,
+   "bus_lsb": 222,
    "chips": [
     "rf"
    ],
@@ -5397,7 +5446,7 @@
    "bits": 32,
    "bus": "debug",
    "bus_bits": 32,
-   "bus_lsb": 222,
+   "bus_lsb": 223,
    "chips": [
     "wired"
    ],
@@ -5453,7 +5502,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 254,
+   "bus_lsb": 255,
    "chips": [
     "wired"
    ],
@@ -5503,7 +5552,7 @@
    "bits": 1,
    "bus": "debug",
    "bus_bits": 1,
-   "bus_lsb": 255,
+   "bus_lsb": 256,
    "chips": [
     "wired"
    ],
@@ -15866,7 +15915,7 @@
    "update": "stopped"
   },
   {
-   "description": "PRBS/pattern generator and RX checker in pt_digital (pass-2 P2-6). tx_mode payload (0) keeps the legacy behaviour (wire_trim[15] selects PRBS31). inject and check_clear are live levels: one error is injected / the checker is cleared on each 0->1 transition, synchronized into the word-clock domain. Status is read-only at status.pattern.",
+   "description": "PRBS/pattern generator and RX checker in pt_digital (pass-2 P2-6). tx_mode payload (0) keeps the legacy behaviour (wire_trim[15] selects PRBS31). inject and check_clear are live levels: one error is injected / the checker is cleared on each 0->1 transition, synchronized into the word-clock domain. Status is read-only at status.pattern. loopback (macro batch 2026-11-28) feeds the checker from the generator through an internal CDC FIFO; status.pattern.words_lo / status.chip.pattern_words_hi count checked words.",
    "fallback_routes": [],
    "fields": [
     "debug.pattern.tx_mode",
@@ -15876,7 +15925,8 @@
     "debug.pattern.check_enable",
     "debug.pattern.check_mode",
     "debug.pattern.check_invert",
-    "debug.pattern.check_clear"
+    "debug.pattern.check_clear",
+    "debug.pattern.loopback"
    ],
    "kind": "debug",
    "name": "debug.pattern",
@@ -17050,7 +17100,7 @@
  },
  "last_analog": 183,
  "last_debug": 93,
- "map_hash16": 42540,
+ "map_hash16": 19137,
  "obs_status": [
   "island_pgood_wired",
   "island_pgood_rf",
@@ -17605,12 +17655,18 @@
      0,
      1,
      4
+    ],
+    [
+     "debug.pattern.loopback",
+     0,
+     1,
+     5
     ]
    ],
    "group": "debug.pattern",
    "kind": "debug",
    "reset": 0,
-   "writable_mask": 31
+   "writable_mask": 63
   },
   {
    "addr": 86,
@@ -21681,6 +21737,20 @@
    "w1c": false
   },
   {
+   "addr": 240,
+   "bits": 14,
+   "encoding": "gray",
+   "field": "words_lo",
+   "group": "status.pattern",
+   "meaning": "veteran audit 4 (macro batch 2026-11-28): checked-word counter, low 14 bits; one count = 4096 words (40 bits each, 163840 bits) received while the checker was locked; cleared with the error count (check_clear / check disabled); saturates with words_hi at 2^28 - 1. Read hi, lo, hi and repeat if hi changed (each half is its own Gray code)",
+   "name": "status.pattern.words_lo",
+   "port": "pattern_words_lo_gray",
+   "reg_lsb": 2,
+   "reserved": false,
+   "sync": true,
+   "w1c": false
+  },
+  {
    "addr": 241,
    "bits": 16,
    "encoding": "gray",
@@ -22143,6 +22213,20 @@
    "w1c": false
   },
   {
+   "addr": 254,
+   "bits": 14,
+   "encoding": "gray",
+   "field": "pattern_words_hi",
+   "group": "status.chip",
+   "meaning": "veteran audit 4 (macro batch 2026-11-28): checked-word counter of the pattern checker, high 14 bits (see status.pattern.words_lo); placed in the free bits of 0xFE so no status address moves",
+   "name": "status.chip.pattern_words_hi",
+   "port": "pattern_words_hi_gray",
+   "reg_lsb": 2,
+   "reserved": false,
+   "sync": true,
+   "w1c": false
+  },
+  {
    "addr": 255,
    "bits": 10,
    "encoding": "binary",
@@ -22214,6 +22298,12 @@
      0,
      1,
      1
+    ],
+    [
+     "status.pattern.words_lo",
+     0,
+     14,
+     2
     ]
    ],
    "group": "status.pattern",
@@ -22524,6 +22614,12 @@
      0,
      2,
      0
+    ],
+    [
+     "status.chip.pattern_words_hi",
+     0,
+     14,
+     2
     ]
    ],
    "group": "status.chip",

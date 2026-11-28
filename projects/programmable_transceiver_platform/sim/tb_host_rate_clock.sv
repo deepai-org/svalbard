@@ -37,14 +37,23 @@ module tb_host_rate_clock;
  end
  task settle(input[1:0]r);integer n;begin
   stable=0;rate=r;expect_div=divof(r);
-  n=0;while(hold_n&&n<20)begin @(posedge clk);n=n+1;end   // hold must assert if the rate changed
-  n=0;while(!hold_n&&n<40)begin @(posedge clk);n=n+1;end
+  n=0;while(hold_n&&n<80)begin @(posedge clk);n=n+1;end   // hold must assert if the rate changed
+  n=0;while(!hold_n&&n<160)begin @(posedge clk);n=n+1;end
   if(!hold_n)begin errors=errors+1;$display("ERROR hold never released");end
   repeat(4)@(posedge clk);last_rise=-1;rises=0;stable=1;repeat(40)@(posedge clk);
   if(rises<40/expect_div-1)begin errors=errors+1;$display("ERROR %0d output edges for /%0d",rises,expect_div);end
   if(dut.cur!=(r==3?2:r))begin errors=errors+1;$display("ERROR cur %0d for rate %0d",dut.cur,r);end
  end endtask
- integer a,b;
+ // DIG-08a multicycle premise (SDC HOST_RATE_FSM -setup 4): the FSM flops change only on an edge where ce was 1,
+ // and ce is high at most one cycle in four. Negative control at the end: a deposit on gap between ce ticks must be seen.
+ integer mc_viol=0,ce_gap=99;reg[9:0]fsm_q;reg ce_q=0;
+ wire[9:0]fsm={dut.rate_q,dut.want,dut.ne,dut.gap,dut.cur,dut.hold_n};
+ always @(posedge clk)begin
+  #0.1;if(rst_n&&!ce_q&&fsm!==fsm_q)begin mc_viol=mc_viol+1;if(mc_viol<4)$display("mc %0t %b %b",$time,fsm_q,fsm);end
+  if(dut.ce)begin if(ce_gap<3)begin mc_viol=mc_viol+1;$display("ce gap %0d at %0t",ce_gap,$time);end ce_gap=0;end else ce_gap=ce_gap+1;
+  fsm_q=fsm;ce_q=dut.ce;
+ end
+ integer a,b,v0;
  initial begin
   expect_div=1;repeat(3)@(posedge clk);rst_n=1;
   settle(0);
@@ -52,6 +61,12 @@ module tb_host_rate_clock;
   // Reset while in a reduced mode returns to hold, then re-applies the field.
   settle(2);rst_n=0;#5;if(hold_n)begin errors=errors+1;$display("ERROR hold_n during reset");end
   rst_n=1;settle(2);
+  if(mc_viol!=0)begin errors=errors+1;$display("ERROR FSM changed outside ce (%0d)",mc_viol);end
+  // negative control: change gap between ce ticks; the monitor must count it
+  v0=mc_viol;@(posedge clk);while(dut.ce)@(posedge clk);#0.5;force dut.gap=dut.gap+2'd1;@(posedge clk);#0.5;release dut.gap;
+  repeat(2)@(posedge clk);#0.5;
+  if(mc_viol==v0)begin errors=errors+1;$display("ERROR negative control: deposit outside ce not detected");end
+  else $display("negative control detected (%0d)",mc_viol-v0);
   if(errors==0)$display("HOST_RATE_CLOCK_PASS");else $display("HOST_RATE_CLOCK_FAIL %0d",errors);
   $finish;
  end

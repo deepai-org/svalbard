@@ -52,7 +52,7 @@ module pt_ctl_decode(
  output wire c_lo_vreg_en, c_lo_obs_en, c_refvcm_en,
  // ---- clocks
  output wire c_rx_ref_en, output wire[2:0] c_clockmux_ps, output wire[3:0] c_clockmux_ws, output wire[2:0] c_clockmux_ss,
- output wire[3:0] c_clockmux_cs, output wire[1:0] c_clockmux_hs,
+ output wire[3:0] c_clockmux_cs, output wire[1:0] c_clockmux_hs, output wire[1:0] hs_ext,
  output wire c_prescale_en, output wire[3:0] c_prescale_d, output wire c_prescale_conv_en, output wire[3:0] c_prescale_conv_d,
  output wire c_prescale_hf_en, output wire[3:0] c_prescale_hf_d,
  output wire c_wordclk_en, c_wordclk_d10, c_wordclk_d20, c_pllvreg_byp_tx, c_pllvreg_byp_cdr,
@@ -240,6 +240,9 @@ module pt_ctl_decode(
  assign c_clockmux_ss = {ss == 3'd4, ss == 3'd2, ss == 3'd1};               // {wck, ref, int}
  assign c_clockmux_cs = {cs == 3'd5, cs == 3'd3, cs == 3'd2, cs == 3'd1};   // {hf, aux, ref, int}
  assign c_clockmux_hs = {hs == 3'd5, hs == 3'd1};                           // {hf, int}
+ // CM-1 (macro batch 2026-11-28): PLL-free host clock. {HS_H2D, HS_REF} for the pt_clockmux XMH spare inputs; the macro
+ // drives them on pins that are unbound on each chip (pt_digital_macro: pt_wired c_clockmux_cs[1:0], pt_rf c_cdr_fdn/fup).
+ assign hs_ext = {hs == 3'd6, hs == 3'd2};                                  // {h2d_direct, ref_in}
  function automatic [3:0] presc(input [2:0] c);   // 0 stopped, 1 /2, 2 /4, 3 /8, 4 /16 -> {D16, D8, D4, D2}
   presc = {c == 3'd4, c == 3'd3, c == 3'd2, c == 3'd1};
  endfunction

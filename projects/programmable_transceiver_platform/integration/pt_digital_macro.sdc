@@ -154,6 +154,7 @@ create_clock -name rfrx  -period $RFRX_PERIOD  [get_ports rf_rx_clk]
 create_clock -name ctw   -period $CTW_PERIOD   [get_ports ct_wclk]
 # r6 (mode-walk rework): pt_clocktree_slow left the macro; ct_ref_clk / ct_det_clk_in no longer exist. The detector
 # divider (pt_det_clk) runs on ct_wclk (clock ctw).
+proc pt_cells_early {pattern} { return [get_cells -quiet $pattern] }
 # Reduced-rate fallback (debug.host_link.rate, rtl/pt_host_link.sv pt_host_rate_clock). The host
 # link and the whole transport core run from hddr = hword / HOST_RATE_DIV, selected by two kept
 # mux2 cells. Each setting is a separate STA mode: HOST_RATE_DIV 1 (reset, full rate), 2 or 4.
@@ -168,6 +169,21 @@ set word_mux [get_pins -quiet -hierarchical *host_rate.word_clock_mux/Z]
 if {[llength $word_mux] == 1} {
     set_case_analysis [expr {$HOST_RATE_DIV == 4 ? 1 : 0}] [get_pins -hierarchical *host_rate.word_clock_mux/S]
     create_generated_clock -name hsdr -source [get_ports host_word_clk] -divide_by [expr {$HOST_RATE_DIV == 4 ? 2 : 1}] $word_mux
+}
+# HOST_RATE_FSM (DIG-08a, macro batch 2026-11-28): the rate-switch FSM of pt_host_rate_clock updates only on its 1-in-4
+# clock enable (ce, a registered decode of the div counter), so every path between its flops has 4 hword cycles.
+# div, ce and the rate synchronizer stay single-cycle. hold_n keeps its own cut to the other clocks (1c below).
+set hr_fsm {}
+foreach pat {*host_rate.rate_q* *host_rate.want* *host_rate.ne* *host_rate.gap* *host_rate.cur* *host_rate.hold_n*} {
+    set hr_fsm [concat $hr_fsm [pt_cells_early $pat]]
+}
+if {[llength $hr_fsm] < 9} {
+    puts "pt_digital_macro.sdc: ERROR: host_rate FSM flops found: [llength $hr_fsm] (expected >= 9)"
+    if {![info exists ::env(PT_SDC_LENIENT)]} { error "host_rate FSM flops not found" }
+}
+if {[llength $hr_fsm]} {
+    set_multicycle_path -setup 4 -from $hr_fsm -to $hr_fsm
+    set_multicycle_path -hold 3 -from $hr_fsm -to $hr_fsm
 }
 # AC-1 core clock (rtl/pt_host_link.sv pt_host_divider): one hddr toggle flop behind a kept root
 # buffer; every hcore edge coincides with a rising hddr edge, as the generated-clock waveform states.
@@ -657,6 +673,24 @@ foreach pat {*.wr_reset* *.rd_reset* *.wr_active* *.rd_active* *.release_state* 
     }
 }
 if {[llength $rst_sync_pins]} { set_false_path -to $rst_sync_pins }
+# DIG-08b (macro batch 2026-11-28): pt_wtx_ctl ring / serializer reset synchronizers. Their asynchronous clears
+# (ring_arst_n, ser_arst_n: rst_n, c_pll_tx_en with vreg_seq.rdy_tx, island, fault, wtx_ext) release flops whose D
+# is 0 at the release (the second stages ron_s / ok_s, and ser_q / de_q, whose D is state_n = S_OFF while ok_s = 0),
+# so only the two first stages (s_ron.meta, s_ok.meta, already cut above) can resolve late. The RN recovery of the
+# second stages and of ser_q / de_q is cut; their D paths stay timed in ref.
+set wtx_rst_pins {}
+foreach pat {*wtx.ron_s* *wtx.ok_s* *wtx.s_ron.q* *wtx.s_ok.q* *wtx.ser_q* *wtx.de_q*} {
+    foreach c [pt_cells $pat] {
+        foreach pin [get_pins -quiet -of_objects $c -filter "direction == input"] {
+            if {[get_property $pin lib_pin_name] eq "RN"} { lappend wtx_rst_pins $pin }
+        }
+    }
+}
+if {$PT_CHIP_NAME ne "rf" && [llength $wtx_rst_pins] < 4} {
+    puts "pt_digital_macro.sdc: ERROR: wtx reset synchronizer RN pins found: [llength $wtx_rst_pins] (expected >= 4)"
+    if {![info exists ::env(PT_SDC_LENIENT)]} { error "wtx reset synchronizer pins not found" }
+}
+if {[llength $wtx_rst_pins]} { set_false_path -to $wtx_rst_pins }
 # W7-GEAR: the gear release synchronizer wgear.grs is cleared asynchronously by run (SCLK-domain decode AND rst_n); the
 # assertion through its RN -> Q arc is asynchronous by design (WSTB is stopped then); its release is timed in wstb.
 set grs_rn {}

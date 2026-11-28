@@ -308,14 +308,15 @@
       "island": null,
       "kind": "supply_monitor",
       "force": "sense_only",
-      "note": "Physical leaf at the USB branch supply root. There is no separate USB rail (USB merged into wired, P2-8; analog/island_support README A3): the leaf taps WIRE_VDD at the usbhs driver branch root, a separate physical tap from code 7 (wire_vdd_sw_sense) on the same switched rail, so it sees that branch's local IR drop."
+      "note": "Physical leaf at the USB branch supply root. There is no separate USB rail (USB merged into wired, P2-8; analog/island_support README A3): the leaf taps WIRE_VDD at the usbhs driver branch root, a separate physical tap from code 7 (wire_vdd_sw_sense) on the same switched rail, so it sees that branch's local IR drop. INT-04 F7 (macro batch 2026-11-28): pt_rf CDR ring VCTRL (atb1 only; the code is accepted on pt_rf since this batch)"
     },
     {
       "code": 11,
       "name": "conv_vdd_sw_sense",
       "island": null,
       "kind": "supply_monitor",
-      "force": "sense_only"
+      "force": "sense_only",
+      "note": "INT-04 F7 (macro batch 2026-11-28): pt_wired slicer threshold reference VTAP (atb1 only); pt_rf converter rail as before"
     },
     {
       "code": 12,
@@ -395,7 +396,7 @@
       "island": null,
       "kind": "bias",
       "force": "allowed",
-      "note": "core_support TRK_WIRE; current out of node. Force precondition (commit rule): dist_en_wire=0, or the island switched off. OBS-17: the ATB0 switch itself closes only while the island it feeds is on with real power-good (or debug.wtx_ext.enable is set: WTX_EXT fallback force; the fallback cell ANDs it with WIRED_ON); a force written with the island off is accepted but leaves the switch open (the idac2 trim measures on ATB1 code 57).",
+      "note": "core_support TRK_WIRE; current out of node. Force precondition (commit rule): dist_en_wire=0, or the island switched off. OBS-17: the ATB0 switch itself closes only while the island it feeds is on with real power-good (or debug.wtx_ext.enable is set: WTX_EXT fallback force; the fallback cell ANDs it with WIRED_ON); a force written with the island off is accepted but leaves the switch open (the idac2 trim measures on ATB1 code 57). INT-04 F7 (macro batch 2026-11-28): pt_rf atb1 senses TRK_LO (the lo trunk) on this code",
       "force_island": "wired",
       "force_or": "debug.wtx_ext.enable"
     },
@@ -919,14 +920,14 @@
             "ref_in",
             "aux_clk",
             "wclk_in",
-            "host_follow"
+            "host_follow",
+            "h2d_direct"
           ],
           "forbidden": [
-            "ref_in",
             "aux_clk",
             "wclk_in"
           ],
-          "meaning": "host-transport clock domain: internal_pll = carrier/wire divided (clocktree), host_follow = pll_ring locked to the FPGA-forwarded H2D_CLK then prescale (P3-3)"
+          "meaning": "host-transport clock domain: internal_pll = carrier/wire divided (clocktree), host_follow = pll_ring locked to the FPGA-forwarded H2D_CLK then prescale (P3-3); CM-1 PLL-free bypasses (macro batch 2026-11-28): ref_in = REF_IN receiver straight to HOST_CLK, h2d_direct = the FPGA-forwarded H2D_CLK straight to HOST_CLK (pt_clockmux XMH spare inputs HS_REF / HS_H2D: pt_wired drives them on the unbound c_clockmux_cs[0] / [1] pins, pt_rf on the unbound c_cdr_fup / c_cdr_fdn pins), so a dead ring PLL does not strand the host link"
         }
       }
     },
@@ -1382,7 +1383,7 @@
       }
     },
     "debug.pattern": {
-      "description": "PRBS/pattern generator and RX checker in pt_digital (pass-2 P2-6). tx_mode payload (0) keeps the legacy behaviour (wire_trim[15] selects PRBS31). inject and check_clear are live levels: one error is injected / the checker is cleared on each 0->1 transition, synchronized into the word-clock domain. Status is read-only at status.pattern.",
+      "description": "PRBS/pattern generator and RX checker in pt_digital (pass-2 P2-6). tx_mode payload (0) keeps the legacy behaviour (wire_trim[15] selects PRBS31). inject and check_clear are live levels: one error is injected / the checker is cleared on each 0->1 transition, synchronized into the word-clock domain. Status is read-only at status.pattern. loopback (macro batch 2026-11-28) feeds the checker from the generator through an internal CDC FIFO; status.pattern.words_lo / status.chip.pattern_words_hi count checked words.",
       "update": "stopped",
       "islands": [],
       "live": false,
@@ -1459,6 +1460,14 @@
           "maximum": 1,
           "unit": "code",
           "live": true
+        },
+        "loopback": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "meaning": "veteran audit 3 (macro batch 2026-11-28): 1 = the checker takes the generator's words through an internal 8-deep wire_tx_clk -> wire_rx_clk FIFO instead of the received words (digital self-test of generator, checker and counters without the analog path). The generator then steps only when the FIFO has room, so the line carries a gapped pattern. Both word clocks must run."
         }
       }
     },
@@ -3250,6 +3259,12 @@
             "port": "pattern_lost_lock",
             "meaning": "sticky: lock was lost since the checker was cleared"
           },
+          "words_lo": {
+            "bits": 14,
+            "port": "pattern_words_lo_gray",
+            "encoding": "gray",
+            "meaning": "veteran audit 4 (macro batch 2026-11-28): checked-word counter, low 14 bits; one count = 4096 words (40 bits each, 163840 bits) received while the checker was locked; cleared with the error count (check_clear / check disabled); saturates with words_hi at 2^28 - 1. Read hi, lo, hi and repeat if hi changed (each half is its own Gray code)"
+          },
           "errors": {
             "bits": 16,
             "port": "pattern_errors_gray",
@@ -3460,6 +3475,12 @@
             "port": "chip_id",
             "sync": false,
             "meaning": "1 = pt_rf, 2 = pt_wired (3 = the both-halves build used by module-level benches only; no chip is built with it)"
+          },
+          "pattern_words_hi": {
+            "bits": 14,
+            "port": "pattern_words_hi_gray",
+            "encoding": "gray",
+            "meaning": "veteran audit 4 (macro batch 2026-11-28): checked-word counter of the pattern checker, high 14 bits (see status.pattern.words_lo); placed in the free bits of 0xFE so no status address moves"
           }
         }
       },

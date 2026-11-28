@@ -64,7 +64,7 @@ module pt_digital #(parameter integer PT_CHIP = 3)(input wire rst_n,ref_clk,
   analog_status[3:0],island_pgood};
  wire[15:0]wire_status={wire_analog_status[12],wire_idle,wire_tx_request,wire_rx_valid,wire_analog_status[11:0]};
  // Pattern checker status (wire_rx_clk domain; pt_mgmt synchronizes each bit to SCLK).
- wire pattern_locked,pattern_lost_lock;wire[15:0]pattern_errors_gray;
+ wire pattern_locked,pattern_lost_lock;wire[15:0]pattern_errors_gray;wire[13:0]pattern_words_lo_gray,pattern_words_hi_gray;
  wire fca_locked,fca_lost,fcb_locked,fcb_lost;wire[13:0]fca_diff,fcb_diff;wire[15:0]fca_count,fcb_count;
  pt_toggle_div hd(host_rx_clk,core_rst_n,host_rx_div);
  localparam[1:0] CHIP_ID = PT_CHIP;
@@ -80,6 +80,7 @@ module pt_digital #(parameter integer PT_CHIP = 3)(input wire rst_n,ref_clk,
   .dbg_obs1(dbg_obs1),.dbg_obs1_oe(dbg_obs1_oe),
   .commit_toggle(commit_toggle),.config_error(config_error),
   .pattern_locked(pattern_locked),.pattern_lost_lock(pattern_lost_lock),.pattern_errors_gray(pattern_errors_gray),
+  .pattern_words_lo_gray(pattern_words_lo_gray),.pattern_words_hi_gray(pattern_words_hi_gray),
   .fca_locked(fca_locked),.fca_lost(fca_lost),.fca_diff(fca_diff),.fca_count(fca_count),
   .fcb_locked(fcb_locked),.fcb_lost(fcb_lost),.fcb_diff(fcb_diff),.fcb_count(fcb_count),
   .mon_cause(mon_cause),.mon_cause_clk(mon_cause_clk),.mon_ready(mon_ready),.mon_dead(mon_dead),.mon_ref_alive(mon_ref_alive),
@@ -172,7 +173,19 @@ module pt_digital #(parameter integer PT_CHIP = 3)(input wire rst_n,ref_clk,
  // and advances on every clock where the consumer takes it (wire_tx_request with prbs_select).
  wire prbs_rst_n=rst_n&&tx_enabled;
  always @(posedge wire_tx_clk or negedge prbs_rst_n)if(!prbs_rst_n)prbs_ready<=0;else prbs_ready<=1;
- pt_pattern_gen #(.W(40)) prbs(.clk(wire_tx_clk),.rst_n(prbs_rst_n),.ce(1'b1),.step(wire_req_int&&prbs_select&&prbs_ready),
+ // Internal loopback (veteran audit 5, macro batch 2026-11-28; debug.pattern.loopback, stopped-only): the generator's
+ // word goes through a 4-deep CDC FIFO (wire_tx_clk -> wire_rx_clk) to the checker instead of the received word. The
+ // generator then steps only when the FIFO takes its word, so the line carries a gapped pattern while loopback is on.
+ wire lb_cfg=debug_cfg[`PT_D_DEBUG_PATTERN__LOOPBACK_LSB];
+ wire lb_tx,lb_rx,lb_full,lb_empty;wire[39:0]lb_dout;
+ pt_sync_bit lbt(wire_tx_clk,rst_n,lb_cfg,lb_tx);
+ pt_sync_bit lbr(wire_rx_clk,rst_n,lb_cfg,lb_rx);
+ wire lb_push=lb_tx&&prbs_ready&&!lb_full;
+ wire lb_pop=lb_rx&&!lb_empty;
+ pt_async_fifo #(.W(40),.A(2),.REG_OUT(1)) lb_fifo(.wr_clk(wire_tx_clk),.rd_clk(wire_rx_clk),.rst_n(rst_n&&lb_cfg&&tx_enabled),
+  .din(prbs_word),.push(lb_push),.pop(lb_pop),.dout(lb_dout),.full(lb_full),.empty(lb_empty),.wr_count(),.rd_count(),
+  .overflow(),.underflow(),.wr_active(),.rd_active());
+ pt_pattern_gen #(.W(40)) prbs(.clk(wire_tx_clk),.rst_n(prbs_rst_n),.ce(1'b1),.step(lb_tx?lb_push:(wire_req_int&&prbs_select&&prbs_ready)),
   .cfg_mode(pat_tx_cfg[13:11]),.cfg_invert(pat_tx_cfg[10]),.cfg_user({4{pat_tx_cfg[9:0]}}),.data_in(40'd0),
   .inject(pat_inj_s&&!pat_inj_d),.word(prbs_word));
  wire rx_check_en,pat_clr_s;reg pat_clr_d;wire[3:0]pat_rx_cfg;wire[15:0]prbs_errors;
@@ -180,9 +193,34 @@ module pt_digital #(parameter integer PT_CHIP = 3)(input wire rst_n,ref_clk,
  pt_sync_vec #(4) prxc(wire_rx_clk,rst_n,{pat_check_eff,debug_cfg[`PT_D_DEBUG_PATTERN__CHECK_INVERT_LSB]},pat_rx_cfg);
  pt_sync_bit prxl(wire_rx_clk,rst_n,debug_cfg[`PT_D_DEBUG_PATTERN__CHECK_CLEAR_LSB],pat_clr_s);
  always @(posedge wire_rx_clk or negedge rst_n)if(!rst_n)pat_clr_d<=0;else pat_clr_d<=pat_clr_s;
- pt_pattern_check #(.W(40),.CW(16)) prbs_check(.clk(wire_rx_clk),.rst_n(rst_n),.ce(1'b1),.enable(rx_check_en),.valid(wire_rx_valid),
-  .data(wire_rx_data),.cfg_mode(pat_rx_cfg[3:1]),.cfg_invert(pat_rx_cfg[0]),.clear(!rx_check_en||(pat_clr_s&&!pat_clr_d)),
+ // Checker input register (macro batch 2026-11-28): received word or loopback word, one wrx register stage (the checker
+ // is free-running, so the extra word of latency changes nothing; its data now comes from low-fanout flops).
+ reg[39:0]chk_d;reg chk_v;
+ always @(posedge wire_rx_clk or negedge rst_n)
+  if(!rst_n)begin chk_d<=40'd0;chk_v<=1'b0;end
+  else begin chk_d<=lb_rx?lb_dout:wire_rx_data;chk_v<=lb_rx?lb_pop:wire_rx_valid;end
+ wire chk_clear=!rx_check_en||(pat_clr_s&&!pat_clr_d);
+ pt_pattern_check #(.W(40),.CW(16)) prbs_check(.clk(wire_rx_clk),.rst_n(rst_n),.ce(1'b1),.enable(rx_check_en),.valid(chk_v),
+  .data(chk_d),.cfg_mode(pat_rx_cfg[3:1]),.cfg_invert(pat_rx_cfg[0]),.clear(chk_clear),
   .locked(pattern_locked),.lost_lock(pattern_lost_lock),.errors(prbs_errors),.errors_gray(pattern_errors_gray));
+ // Checked-word counter (veteran audit 4): words taken while the checker is locked, in units of 4096 words, 28 bits,
+ // saturating, cleared with the error count. Two 14-bit halves, each Gray-coded at the source (status.pattern.words_lo,
+ // status.chip.pattern_words_hi); one count lasts >= 65 us at 62.5 MHz, far slower than the SCLK synchronizers.
+ reg[11:0]wc_pre;reg[13:0]wc_lo,wc_hi;reg wc_sat;reg[13:0]wc_lo_g,wc_hi_g;
+ always @(posedge wire_rx_clk or negedge rst_n)
+  if(!rst_n)begin wc_pre<=0;wc_lo<=0;wc_hi<=0;wc_sat<=0;wc_lo_g<=0;wc_hi_g<=0;end
+  else if(chk_clear)begin wc_pre<=0;wc_lo<=0;wc_hi<=0;wc_sat<=0;wc_lo_g<=0;wc_hi_g<=0;end
+  else begin
+   if(chk_v&&pattern_locked&&!wc_sat)begin
+    if((&wc_pre)&&(&wc_lo)&&(&wc_hi))wc_sat<=1'b1;   // stop at 2^28 - 1 (no wrap, so the Gray halves never jump)
+    else begin
+     wc_pre<=wc_pre+1'b1;
+     if(&wc_pre)begin wc_lo<=wc_lo+1'b1; if(&wc_lo)wc_hi<=wc_hi+1'b1; end
+    end
+   end
+   wc_lo_g<=wc_lo^(wc_lo>>1);wc_hi_g<=wc_hi^(wc_hi>>1);
+  end
+ assign pattern_words_lo_gray=wc_lo_g,pattern_words_hi_gray=wc_hi_g;
  // The pattern word shares the core's wire lane registers (falling-edge low half, rising-edge high
  // half), so wire_tx_data always leaves from the same launch flops (ff-corner hold, AC1_R4 -0.34 ns).
  assign wire_tx_data=stream_wire;

@@ -79,24 +79,34 @@ endmodule
 // the word qualification of pt_wrx_ctl discards them.
 module pt_wrx_gear(input wire wstb, run, input wire[19:0] dw, ew, output wire wclk, output reg[39:0] dx, ewx);
  reg[39:0] dx_s, ewx_s;   // WSTB-domain pair registers (loaded with te = 1)
- reg[1:0] grs;
- always @(posedge wstb or negedge run) if (!run) grs <= 2'd0; else grs <= {grs[0], 1'b1};
- wire g_rn = grs[1];
+ reg grs;   // first stage of the gear reset synchronizer
+ genvar gi;
+ always @(posedge wstb or negedge run) if (!run) grs <= 1'b0; else grs <= 1'b1;
+ // DIG-08c (macro batch 2026-11-28): the second synchronizer stage g_rn drove about 300 RN pins through one buffer tree,
+ // and its release recovery was -1.49 ns at ss 3.15 V with the droop. The second stage is now twelve kept replica flops
+ // gr[k] (D = the first stage grs, cleared by run), each the reset of one slice of at most 40 flops, so every recovery
+ // path is one flop and a small tree. All replicas sample the same first-stage flop one WSTB period after it captured
+ // run (the same resolution time as the single second stage had), so they release on the same edge as g_rn did and the
+ // pairing is unchanged.
+ wire[11:0] gr;
+ generate for (gi = 0; gi < 12; gi = gi + 1) begin : grs_rep
+  pt_dff_rep r(.clk(wstb), .rst_n(run), .d(grs), .q(gr[gi]));
+ end endgenerate
  reg[19:0] dw_q, ew_q, dw_q2, ew_q2, lo_d, lo_e;
  reg te;
 // te fans out to 120 enable bits (lo_d / lo_e / dx_s / ewx_s): 12 kept copies (pt_dff_rep, same next value ~te), one per
  // 10-bit slice, so each copy drives 10 flops (routed pt_wired wstb te -> dx_s was -2.9 ns at ss 3.15 V). Exact.
  wire[11:0] tc;
- genvar gi;
  generate for (gi = 0; gi < 12; gi = gi + 1) begin : tcopy
-  pt_dff_rep r(.clk(wstb), .rst_n(g_rn), .d(~te), .q(tc[gi]));
+  pt_dff_rep r(.clk(wstb), .rst_n(gr[10]), .d(~te), .q(tc[gi]));
  end endgenerate
- always @(posedge wstb or negedge g_rn)
-  if (!g_rn) begin dw_q <= 20'd0; ew_q <= 20'd0; dw_q2 <= 20'd0; ew_q2 <= 20'd0; te <= 1'b0; end
-  else begin dw_q <= dw; ew_q <= ew; dw_q2 <= dw_q; ew_q2 <= ew_q; te <= ~te; end
+ always @(posedge wstb or negedge gr[0])
+  if (!gr[0]) begin dw_q <= 20'd0; ew_q <= 20'd0; end else begin dw_q <= dw; ew_q <= ew; end
+ always @(posedge wstb or negedge gr[1])
+  if (!gr[1]) begin dw_q2 <= 20'd0; ew_q2 <= 20'd0; te <= 1'b0; end else begin dw_q2 <= dw_q; ew_q2 <= ew_q; te <= ~te; end
  generate for (gi = 0; gi < 2; gi = gi + 1) begin : lo_sl
-  always @(posedge wstb or negedge g_rn)
-   if (!g_rn) begin lo_d[gi*10 +: 10] <= 10'd0; lo_e[gi*10 +: 10] <= 10'd0; end
+  always @(posedge wstb or negedge gr[2+gi])
+   if (!gr[2+gi]) begin lo_d[gi*10 +: 10] <= 10'd0; lo_e[gi*10 +: 10] <= 10'd0; end
    else begin
     if (!tc[gi]) lo_d[gi*10 +: 10] <= dw_q2[gi*10 +: 10];
     if (!tc[2+gi]) lo_e[gi*10 +: 10] <= ew_q2[gi*10 +: 10];
@@ -106,25 +116,26 @@ module pt_wrx_gear(input wire wstb, run, input wire[19:0] dw, ew, output wire wc
   wire[9:0] src_d, src_e;
   if (gi < 2) begin : l assign src_d = lo_d[gi*10 +: 10]; assign src_e = lo_e[gi*10 +: 10]; end
   else begin : h assign src_d = dw_q2[(gi-2)*10 +: 10]; assign src_e = ew_q2[(gi-2)*10 +: 10]; end
-  always @(posedge wstb or negedge g_rn)
-   if (!g_rn) begin dx_s[gi*10 +: 10] <= 10'd0; ewx_s[gi*10 +: 10] <= 10'd0; end
+  always @(posedge wstb or negedge gr[4+gi])
+   if (!gr[4+gi]) begin dx_s[gi*10 +: 10] <= 10'd0; ewx_s[gi*10 +: 10] <= 10'd0; end
    else begin
     if (tc[4+gi]) dx_s[gi*10 +: 10] <= src_d;
     if (tc[8+gi]) ewx_s[gi*10 +: 10] <= src_e;
    end
  end endgenerate
 `ifndef SYNTHESIS
- always @(posedge wstb) if (g_rn && tc !== {12{te}}) $fatal(1, "pt_wrx_gear: te copies differ from te");
+ always @(posedge wstb) if (gr[10] && gr[1] && tc !== {12{te}}) $fatal(1, "pt_wrx_gear: te copies differ from te");
 `endif
  // clock copy of te: the toggle Q drives only its own inverter and the kept clock-root buffer (as fc_half2)
  wire t;
- pt_clock_dff t_ff(.clk(wstb), .rst_n(g_rn), .d(~t), .q(t));
+ pt_clock_dff t_ff(.clk(wstb), .rst_n(gr[11]), .d(~t), .q(t));
  pt_clock_buf t_buf(.I(t), .Z(wclk));
  // wrx-domain output register: the only wstb -> wrx paths are dx_s / ewx_s -> D here (one WSTB period of setup), and every
  // wrx consumer gets a full wrx period from these flops (the pt_wrx_ctl stage-0 cone does not fit in one WSTB period).
- // Reset with the gear (g_rn): a restart never shows the last pair of the previous epoch. g_rn rises at a WSTB rise and
+ // Reset with the gear (gr[8], gr[9]): a restart never shows the last pair of the previous epoch. gr rises at a WSTB rise and
  // wclk rises one WSTB period later at the earliest, so the release is one WSTB period of recovery (timed, wstb -> wrx).
- always @(posedge wclk or negedge g_rn) if (!g_rn) begin dx <= 40'd0; ewx <= 40'd0; end else begin dx <= dx_s; ewx <= ewx_s; end
+ always @(posedge wclk or negedge gr[8]) if (!gr[8]) dx <= 40'd0; else dx <= dx_s;
+ always @(posedge wclk or negedge gr[9]) if (!gr[9]) ewx <= 40'd0; else ewx <= ewx_s;
 endmodule
 
 // IX-12 raw lane select at the wired ingress (wrx domain, after the W7-GEAR gear): dx = the 40-bit data word,

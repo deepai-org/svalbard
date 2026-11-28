@@ -559,11 +559,19 @@ module pt_host_rate_clock(input wire clk,rst_n,input wire[1:0]rate,
  // after cur_n was updated at gap == 1, so the sequence is otherwise unchanged.
  // cur_n is the logic copy stored inverted so synthesis cannot merge it with cur.
  reg[1:0]cur_n;reg ne;
+ // DIG-08a (macro batch 2026-11-28): the FSM (rate_q, want, ne, gap, cur, cur_n, hold_n) runs on a 1-in-4 clock
+ // enable `ce` (registered decode of div == 2, so ce is high in the cycle where div == 3), and the SDC gives every
+ // path between these flops 4 hword cycles (set_multicycle_path -setup 4 -hold 3, HOST_RATE_FSM). Only div, ce and
+ // the 2-flop rate synchronizer remain single-cycle (one gate each). The sequence is the same, counted in ce
+ // ticks: a rate change asserts hold_n=0 within about 5 ticks (20 hword cycles), switches cur at gap == 1 and
+ // releases at gap == 3. Root cause of the miss: dffrnq_1 clk-q 2.5 ns at ss 3.15 V plus three gates and 0.9 ns
+ // setup did not fit 6.4 ns (ne -> gap[1] -0.13 ns, -1.42 ns with the E12 droop factor 1.24).
+ reg ce;reg[1:0]rate_q;
  always @(posedge clk or negedge rst_n)
-  if(!rst_n)div<=0;else div<=div+1'b1;
+  if(!rst_n)begin div<=0;ce<=0;end else begin div<=div+1'b1;ce<=div==2'd2;end
  always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin cur<=0;cur_n<=2'b11;ne<=0;hold_n<=0;gap<=0;want<=0;end
-  else begin want<=rate_s[1]?2'd2:rate_s;ne<=want!=~cur_n;
+  if(!rst_n)begin cur<=0;cur_n<=2'b11;ne<=0;hold_n<=0;gap<=0;want<=0;rate_q<=0;end
+  else if(ce)begin rate_q<=rate_s;want<=rate_q[1]?2'd2:rate_q;ne<=want!=~cur_n;
   if(hold_n)begin
    if(ne)begin hold_n<=0;gap<=0;end
   end else begin

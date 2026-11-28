@@ -604,6 +604,7 @@ module pt_chip(
  assign atb1_sw[6] = m_atb1_sw[6];
  assign atb1_sw[8] = m_atb1_sw[8];
  assign atb1_sw[9] = m_atb1_sw[9];
+ assign atb1_sw[10] = m_atb1_sw[10];
  assign atb1_sw[11] = m_atb1_sw[11];
  assign atb1_sw[12] = m_atb1_sw[12];
  assign atb1_sw[21] = m_atb1_sw[21];
@@ -757,7 +758,6 @@ module pt_chip(
  assign atb0_sw[41] = 1'b0;   // no macro driver in the conn
  assign atb0_sw[56] = 1'b0;   // no macro driver in the conn
  assign atb1_sw[7] = 1'b0;   // no macro driver in the conn
- assign atb1_sw[10] = 1'b0;   // no macro driver in the conn
  assign atb1_sw[13] = 1'b0;   // no macro driver in the conn
  assign atb1_sw[14] = 1'b0;   // no macro driver in the conn
  assign atb1_sw[15] = 1'b0;   // no macro driver in the conn

@@ -107,6 +107,11 @@ module pt_wtx_ctl #(
     wire w_idle8;
     // Ring enable and "serializer may run" as reset synchronizers (async clear, two REF edges to release): a low
     // pulse shorter than a REF period is still seen, restarts the lock timer and aborts the launch.
+    // DIG-08b (macro batch 2026-11-28): the release of these asynchronous clears (s_ron / s_ok chains, ser_q, de_q) is
+    // not timed (SDC "wtx reset synchronizers"): each released flop has D = 0 at the release (the chains' second
+    // stage takes the cleared first stage; ser_q / de_q take state_n = S_OFF because ok_s is still 0), so only the
+    // first stages can change, and they are two-flop synchronizers. The recovery path vreg_seq.rdy_tx -> c_pll_tx_en
+    // -> RN was -0.75 ns at ss 3.15 V (-1.5 ns with the E12 droop factor).
     wire ring_arst_n = rst_n & c_pll_tx_en;
     wire ser_arst_n  = rst_n & c_pll_tx_en & island_on_wired & ~cfg_wtx_ext & ~fault;
     pt_sync_bit s_ron(.clk(ref_clk), .rst_n(ring_arst_n), .d(1'b1), .q(ron_s));
@@ -200,7 +205,14 @@ module pt_wtx_ctl #(
         .traffic_ready(seq_traffic_ready), .buffer_request(seq_buffer_request), .fault(seq_fault));
     assign st_seq_fault = seq_fault;
     wire pad_live = seq_traffic_ready && seq_active[0] && committed[0] && !neq_q && !commit_q;
-    wire pad_down = seq_cmd_ready && !seq_active[0] && !committed[0] && !want_q[0] && !commit_q;
+    // DIG-08b: pad_down is registered (active_request -> pad_down -> timer -> off_hit was the worst REF setup path,
+    // -1.39 ns at ss 3.15 V). pad_down_q lags by one edge; ANDed with !commit_q (a flop) it cannot be stale in the
+    // edge where a new commit starts, which is the only event that turns pad_down off while in PADOFF.
+    reg pad_down_q;
+    always @(posedge ref_clk or negedge rst_n)
+        if (!rst_n) pad_down_q <= 1'b0;
+        else pad_down_q <= seq_cmd_ready && !seq_active[0] && !committed[0] && !want_q[0] && !commit_q;
+    wire pad_down = pad_down_q && !commit_q;
 
     // ------------------------------------------------------------------ launch state machine
     wire go    = f_act & ~f_ext & on_ok & ring_rdy;
@@ -242,8 +254,9 @@ module pt_wtx_ctl #(
             // acked: the wire_tx_clk domain has seen the data enable (its idle counter was cleared)
             if (state == S_RUN || state == S_DRAIN) begin if (!idle8_s) acked <= 1'b1; end else acked <= 1'b0;
             tmr <= tmr_n;
-            drain_hit <= tmr_n == DRAIN_TIMEOUT;
-            off_hit <= tmr_n == OFF_CYCLES - 1;
+            // DIG-08b: the compares read tmr (a flop), not the incremented tmr_n: same values as tmr_n == limit.
+            drain_hit <= (state == S_DRAIN || (state == S_PADOFF && pad_down)) ? tmr == DRAIN_TIMEOUT - 8'd1 : DRAIN_TIMEOUT == 0;
+            off_hit <= (state == S_PADOFF && pad_down) ? tmr == OFF_CYCLES - 2 : OFF_CYCLES == 1;
         end
     assign st_state = state;
 

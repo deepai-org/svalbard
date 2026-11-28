@@ -64,6 +64,13 @@ named `asm-<chip>-<pid>`: stop a run only by that name (`docker kill asm-...`) o
   shapes cut out, stock plates and 0.26 um via arrays put back) and no pad Via3 / Via4 lies in the provider-ring rail
   band (pad-local y 69.5-348.9 um, the same in every pad site; PAD-16). Rerun it whenever a pad generator rewrites a pad.
   `pad_cup.py check <repo root>` fails if any published pad has anything else under an opening or cuts in the band.
+- Results 2026-11-28 (shuttle deck; the full-chip main deck on fpw-14 took 8771 s). pt_wired fpw-14 (placed before the
+  pads were republished): 5084 context markers = PAD-16 V3.1 1280 / V3.2a 296 / V4.1 1280 / V4.2a 296, RAIL_wired_tx bar
+  on wiredtx V4.1 1208 / V4.2a 713, MT.2a 10, MSLOT5.1 1; with the fixed pads the PAD-16 classes go (1944); unfed 0.
+  Cold run 2171 s (keys 53 s, DRC 1610 s, supplies ~450 s). One change (pt_vthdac moved 2 um), rerun with the cache:
+  2 of 151 windows checked, 63 s without supplies; it finds the 3 MT.2b markers the move creates. pt_rf plan-rf13: 0,
+  unfed 0, PASS. Selftest PASS (1485 s, fresh cache).
+
 ## Results and resume point (2026-11-26)
 
 | | `pt_rf` | `pt_wired` |

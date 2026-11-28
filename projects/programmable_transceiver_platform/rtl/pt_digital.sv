@@ -7,8 +7,6 @@ module pt_digital #(parameter integer PT_CHIP = 3)(input wire rst_n,ref_clk,
  input wire core_rel_n,
  input wire host_sclk,host_cs_n,host_mosi,output wire host_miso,host_miso_oe,
  input wire host_tx_clk,host_rx_clk,wire_rx_clk,wire_tx_clk,rf_rx_clk,rf_tx_clk,
- // PDN-02 two-phase launch: inverted core clock (hcoreb) for the egress bank's write side
- input wire host_tx_clk_b,
  // Host transport quads (AC-1): four ten-bit words per host_tx_clk (= host_rx_clk = core clock,
  // host word clock / 4) from/to the pad-edge gearboxes in pt_host_link; word 0 (earliest) in [9:0].
  input wire[39:0]h2d_quad,output wire[39:0]d2h_quad,
@@ -163,7 +161,7 @@ module pt_digital #(parameter integer PT_CHIP = 3)(input wire rst_n,ref_clk,
  // MEMORY v3 (sharing S1): capture/playback in the transport banks; pt_memory is deleted.
  capture_enable,playback_enable,memory_loop,memory_last,host_sclk,memory_write,index,memory_wdata,capture_data,capture_done,
  prbs_select,prbs_word,tx_enabled&&prbs_ready,!tx_enabled,wire_req_int,vth_fast,vth_a,vth_b,core_release_n,
- hs_repeat,ta_mode,ta_go,ta_running,host_tx_clk_b);
+ hs_repeat,ta_mode,ta_go,ta_running);
  pt_sync_bit e(wire_tx_clk,rst_n,enable,tx_enabled);
  // Shared wired pattern generator/checker (rtl/pt_pattern.sv, consolidation P2-6): 40-bit cores directly
  // on the 40-bit quad clocks (AC-1 S3: no gearbox, no clock gate). CDC: the quasi-static

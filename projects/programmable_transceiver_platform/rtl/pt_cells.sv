@@ -109,16 +109,6 @@ module pt_clock_buf(input wire I,output wire Z);
 `endif
 endmodule
 
-// PDN-02 two-phase launch (macro batch 2026-11-28): kept clock inverter, the root of the opposite-phase copy of a
-// generated clock (hcoreb = inverted hcore at the divider flop, a sibling of the hcore root buffer).
-module pt_clock_inv(input wire I,output wire ZN);
-`ifdef SYNTHESIS
- (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__clkinv_8 cell(.I(I),.ZN(ZN));
-`else
- assign ZN=~I;
-`endif
-endmodule
-
 // Stopped-only clock select (S changes only while every destination is held
 // in reset), kept as one physical mux so STA can define clocks at its output.
 // Drive (timing 2026-11-11): a kept mux2_2 into a kept clkbuf_8 (the generated clock is defined at

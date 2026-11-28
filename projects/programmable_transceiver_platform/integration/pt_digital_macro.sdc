@@ -196,14 +196,7 @@ if {[llength $hr_fsm]} {
 set core_root [get_pins -quiet -hierarchical *host.divider.core_root.cell/Z]
 if {[llength $core_root] != 1} {error "Expected one hcore divider root"}
 create_generated_clock -name hcore -source $rate_mux -divide_by 2 $core_root
-# PDN-02 two-phase launch (macro batch 2026-11-28): hcoreb = the inverted divider output (kept clkinv_8 core_inv, a sibling
-# of core_root on the cdiv flop): it rises on the hddr edges between the hcore rising edges. It clocks only the egress
-# bank's write side and array (rtl/pt_core.sv), which talk to hcore only through flop-to-flop registers (collector
-# output into the bank, the bank's ready back), each a half-period (one hddr period) synchronous path, timed normally.
-set core_inv [get_pins -quiet -hierarchical *host.divider.core_inv.cell/ZN]
-if {[llength $core_inv] != 1} {error "Expected one hcoreb root (host.divider.core_inv)"}
-create_generated_clock -name hcoreb -source $rate_mux -divide_by 2 -invert $core_inv
-set host_clks {hddr hcore hcoreb}
+set host_clks {hddr hcore}
 if {[llength [get_clocks -quiet hsdr]]} { lappend host_clks hsdr }
 # D2H 4:1 gearbox and ping-pong hand-over (DG8-6): the hold register x (hddr) loads one of the two
 # hcore ping-pong entries (host.pingpong.pp0 / pp1) only on the hddr edges that coincide with hcore
@@ -365,7 +358,7 @@ if {[llength $mem_mux]} {
     # latency in multi-corner analysis (resizer hold repair: ss delays on the capture side at the ff
     # corners, false -5.1 ns hold on every memory write, 436 useless hold buffers in pC4).
     create_generated_clock -name egress_mem_sclk -master_clock sclk -source [get_ports spi_sclk] -divide_by 1 -invert -add $mem_mux
-    set_clock_groups -physically_exclusive -group {hcore hcoreb} -group egress_mem_sclk
+    set_clock_groups -physically_exclusive -group hcore -group egress_mem_sclk
     set mem_on 1
 }
 set all_clk_names [concat {sclk ref hword h2d h2d_cap h2d_pin wtx wstb wrx rftx rfrx ctw} $fc_clks $host_clks $ingress_clks $egress_clks $mem_clks $mon_clks]
@@ -517,7 +510,7 @@ foreach p $pt_ctl_ports {
     if {![regexp {^(c_wrx_cap_psel|c_wrx_cap_slip|c_cdr_fup|c_cdr_fdn)} [get_full_name $p]]} { lappend pt_ctl_static $p }
 }
 set_output_delay [expr {0.2 * $SCLK_PERIOD}] -clock sclk -clock_fall $pt_ctl_static
-foreach c {ref wtx wrx rftx rfrx hcore hcoreb ctw} {
+foreach c {ref wtx wrx rftx rfrx hcore ctw} {
     if {[llength [get_clocks -quiet $c]]} { set_false_path -from [get_clocks $c] -to $pt_ctl_static }
 }
 # en_eff[10]/[11] also carry the REF-domain regulator hold (rtl/pt_vreg_seq.sv): an asynchronous level
@@ -725,14 +718,14 @@ if {[llength $hold_src]} {
 set crs_src [concat [pt_cells *host.crs*] [pt_cells core_rst_n_*] [pt_cells *.core_rst_n_*] [pt_cells core_rel_n_*] [pt_cells *.core_rel_n_*]]
 if {[llength $crs_src]} {
     foreach c [all_clocks] {
-        if {[lsearch -exact {hcore hcoreb} [get_name $c]] < 0} { set_false_path -from $crs_src -to $c }
+        if {[lsearch -exact {hcore} [get_name $c]] < 0} { set_false_path -from $crs_src -to $c }
     }
 }
 # 2. Gray-coded async FIFO pointers (pt_async_fifo rg1 / wg1): bounded to the faster of the two
 #    clock periods, so the pointer bits arrive within one sampling period.
 #    Only data paths launched by the other side's clock are bounded (the reset-release recovery
 #    paths into the same flops stay single-cycle in their own domain).
-set clock_periods [dict create hword $HWORD_PERIOD hddr $HDDR_PERIOD hcore $HCORE_PERIOD hcoreb $HCORE_PERIOD \
+set clock_periods [dict create hword $HWORD_PERIOD hddr $HDDR_PERIOD hcore $HCORE_PERIOD \
                               h2d $H2D_PERIOD wtx $WTX_PERIOD wrx $WRX_PERIOD rftx $RFTX_PERIOD rfrx $RFRX_PERIOD \
                               ingress_wrx $WRX_PERIOD ingress_rfrx $RFRX_PERIOD egress_wtx $WTX_PERIOD egress_rftx $RFTX_PERIOD]
 # H2D quad FIFO (pin clock -> hcore): pointers, then storage read by hcore.
@@ -749,7 +742,7 @@ foreach {f wr rd} [list *host.h2d h2d hcore] {
 #    every Gray crossing and storage read, for each selected mode. A word is written at least
 #    two reader-domain cycles before its Gray pointer can be seen; storage reads are bounded to
 #    one reader period, pointers to the faster period.
-foreach {f wrs rds} [list *core.ingress $ingress_clks hcore *core.egress hcoreb $egress_clks] {
+foreach {f wrs rds} [list *core.ingress $ingress_clks hcore *core.egress hcore $egress_clks] {
     foreach wr $wrs {
         foreach rd $rds {
             set lim [expr {min([dict get $clock_periods $wr], [dict get $clock_periods $rd])}]
@@ -773,7 +766,7 @@ if {[llength $cb]} { pt_bound_xing $SCLK_XING -from $cb -to [get_clocks sclk] }
 set cd [pt_cells {*capture_done*}]
 if {[llength $cd]} { pt_bound_xing $SCLK_XING -from $cd -to [get_clocks sclk] }
 if {$mem_on} {
-    foreach c [concat $egress_clks hcore hcoreb] { set_false_path -from [get_clocks egress_mem_sclk] -to [get_clocks $c] }
+    foreach c [concat $egress_clks hcore] { set_false_path -from [get_clocks egress_mem_sclk] -to [get_clocks $c] }
 }
 # 4b. pt_freq_count (fca, fcb): Gray-coded source count into the reference domain (bounded like FIFO
 #     pointers); handshake-held {count, lost, locked, diff} into SCLK (held stable while req != ack).
@@ -889,7 +882,6 @@ foreach {a b} {rftx egress_wtx rfhalf egress_wtx wtx egress_rftx wrx ingress_rfr
 #     with play=0; play is stopped-only (ENABLE=0). sclk -> * is already false (static registers).
 if {$mem_on} {
     set_false_path -from [get_clocks hcore] -to [get_clocks egress_mem_sclk]
-    set_false_path -from [get_clocks hcoreb] -to [get_clocks egress_mem_sclk]
     # SPI playback writes: the array captures on the SCLK fall after the 32nd rising edge of a 0x22
     # write (memory_write). Every SCLK-domain input of that write (index, staged play_i/play_h,
     # playback_enable, ENABLE: falling-edge registers that change only at OTHER transactions' write

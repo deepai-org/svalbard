@@ -16,7 +16,7 @@
 // same clock discards the packing reservoir and then the next SETTLE samples (pt_gain_rx), restarts
 // packing at a quad boundary and reports the boundary to the D2H engine, which completes the older
 // samples and then sends the opcode4 gain-status frame with the discarded-pair count.
-module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=28,WIRE_START=8,RF_START=5,
+module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=24,WIRE_START=8,RF_START=5,
  GAIN_SETTLE=20,
  parameter INGRESS_MUX=1)(   // 0 on pt_wired (only the wired owner): ingress bank on the wired RX clock, no clock mux
  input wire rst_n,enable,mode8,
@@ -57,10 +57,7 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  //    one-clock pulse from the macro, a programmable delay after the end of a received HS packet), then sends what the
  //    egress bank holds (the response the FPGA staged ahead of time) and stops again when the bank is empty; an empty
  //    bank at the end of a response is not a starvation.
- input wire hs_repeat,ta_mode,ta_go,output wire ta_running,
- // PDN-02 two-phase launch (macro batch 2026-11-28): host_clk_b = inverted host_clk (hcoreb). The egress bank's write side
- // and array run on it, so about half of the hcore clock load launches 6.4 ns (one hddr period) after the other half.
- input wire host_clk_b);
+ input wire hs_repeat,ta_mode,ta_go,output wire ta_running);
  wire eh,ewr,ewt,err,ert;
  pt_enable_release e0(host_clk,rst_n,enable,eh);
  pt_sync_bit e2(wire_rx_clk,rst_n,enable,ewr);pt_sync_bit e3(wire_tx_clk,rst_n,enable,ewt);
@@ -213,22 +210,14 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
 `endif
  // Admission uses only the registered, conservative ready (no backpressure:
  // a refused word faults the receiver). SPARE=4 covers the collector's input and output registers.
- reg[39:0]rx_quad_b;reg rx_push_b,ready_a;
- pt_cdc_fifo #(.W(40),.A(EGRESS_A),.DEPTH(EGRESS_DEPTH),.SPARE(6),.MEMORY(2),.POPQ(1),.CNTPIPE(1)) egress(
-  .wr_clk(host_clk_b),.rd_clk(egress_clk),.rst_n(frst),
-  .din(rx_quad_b),.push(rx_push_b&&!mem_play),.pop(egress_pop),
+ pt_cdc_fifo #(.W(40),.A(EGRESS_A),.DEPTH(EGRESS_DEPTH),.SPARE(4),.MEMORY(2),.POPQ(1),.CNTPIPE(1)) egress(
+  .wr_clk(host_clk),.rd_clk(egress_clk),.rst_n(frst),
+  .din(rx_quad),.push(rx_push&&!mem_play),.pop(egress_pop),
   .dout(egress_head),.full(egress_full),.empty(egress_empty),.nonempty(egress_ne),.ready(egress_ready),.rd_count(egress_count),
   .overflow(egress_ov),.underflow(egress_un),.wr_active(),.rd_active(),.wr_ptr(),.rd_ptr(),
   .peek_idx(5'd0),.peek(),.play(mem_play),.play_loop(mem_loop),.play_last(mem_last),
   .spi_clk(spi_clk),.spi_we(mem_we),.spi_idx(mem_idx),.spi_d(mem_wdata));
- // Two-phase crossings (hcore <-> hcoreb, half an hcore period each way, flop to flop only): the collector's output
- // is registered on hcoreb in front of the bank, and the bank's ready is registered back on hcore. Each adds one word
- // in flight between the admission decision and the push, covered by SPARE (4 -> 6); EGRESS_DEPTH 24 -> 28 keeps the
- // ready threshold (DEPTH - SPARE = 22) above the 20-entry steady-state peak of a full-rate stream (tb_linecode_stream).
- always @(posedge host_clk_b or negedge crst_col)
-  if(!crst_col)begin rx_quad_b<=40'd0;rx_push_b<=1'b0;end else begin rx_quad_b<=rx_quad;rx_push_b<=rx_push;end
- always @(posedge host_clk or negedge crst_col)if(!crst_col)ready_a<=1'b0;else ready_a<=egress_ready;
- assign wire_ready=ready_a;assign iq_ready=ready_a;
+ assign wire_ready=egress_ready;assign iq_ready=egress_ready;
  // ---------------- wired output (wire_tx_clk = WORD_CLK40). The serializer
  // loads D0..D19 a fraction of a period after WORD_CLK40 rises and D20..D39
  // one 20-bit word later: the low half comes from falling-edge flops (launched

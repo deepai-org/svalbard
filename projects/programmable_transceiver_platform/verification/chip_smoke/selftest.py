@@ -5,7 +5,10 @@ exactly the broken wires:
      -> ctl_wire at that pin, pad_tie / pad_ie at that pad
   B  two trim bits swapped at their consumer (both still driven: only the register walk can see it)
      -> ctl_wire at both pins
-Exit 0 only if both are caught.     selftest.py --chip rf|wired [smoke.py options]"""
+Exit 0 only if both are caught.     selftest.py --chip rf|wired [smoke.py options]
+Layout mode:  selftest.py --chip rf|wired --layout-cut CUT.spice inst.pin[,inst.pin] [smoke.py options]
+  CUT.spice is extracted (layout.sh ... cut=inst.pin,...) from the chip GDS with the metal at those pins erased; the test on it
+  must FAIL naming each pin (pad_tie for a pad control pin, ctl_wire / rail for a block pin)."""
 import json, os, subprocess, sys
 H = os.path.dirname(os.path.abspath(__file__))
 args = sys.argv[1:]; chip = args[args.index('--chip')+1]
@@ -22,6 +25,23 @@ def run(tag, spec):
     if not summ or not os.path.isfile(summ):
         print(f'{tag}: smoke.py wrote no summary\n' + r.stdout[-1500:] + r.stderr[-1500:]); return None, r.returncode
     return json.load(open(summ)), r.returncode
+
+if '--layout-cut' in args:      # layout mode: the smoke test on a netlist extracted from a GDS copy with metal erased at these pins
+    i = args.index('--layout-cut'); cutnl, pins = args[i+1], args[i+2].split(','); del args[i:i+3]
+    if '--netlist' in args: j = args.index('--netlist'); del args[j:j+2]
+    cmd = [sys.executable, H+'/smoke.py', *args, '--netlist', cutnl] + (['--out', f'{out}-cut'] if out else [])
+    r = subprocess.run(cmd, capture_output=True, text=True)
+    summ = next((l.split('-> ')[-1] for l in r.stdout.split('\n') if l.startswith('CHIP_SMOKE')), None)
+    if not summ or not os.path.isfile(summ): print('smoke.py wrote no summary\n' + r.stdout[-1500:] + r.stderr[-1500:]); sys.exit(1)
+    S = json.load(open(summ)); F = S['faults']; ok = r.returncode != 0 and S['result'] == 'FAIL'
+    for ip in pins:
+        inst, pin = ip.split('.')
+        hit = [f for f in F if (f['check'] == 'pad_tie' and f'pad {inst} (' in f['detail'] and f').{pin} =' in f['detail'])
+               or (f['check'] in ('ctl_wire', 'rail') and f' {inst}.{pin}=' in f['detail'])]
+        print(f'  erased metal at {ip}: {"CAUGHT" if hit else "MISSED"} {hit[:1]}'); ok &= bool(hit)
+    print(f'  all faults by check: {dict(__import__("collections").Counter(f["check"] for f in F))}')
+    print(f'SELFTEST-LAYOUT {"PASS" if ok else "FAIL"} {chip}')
+    sys.exit(0 if ok else 1)
 
 ok = True
 S, rc = run('A', f'{CTL},pad:SPI_MOSI:IE')

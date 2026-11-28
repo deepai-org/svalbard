@@ -155,7 +155,8 @@ for name, nets, master in xs:
         for b, (d, w) in mports.items():
             if b not in bits and b not in MACRO_PWR:
                 if d == 'input': findings.append(f'macro input {b} not in the netlist (floats)')
-        cs += [f'.{p}({net(p)})' for p in MACRO_PWR]
+        # VDD / VSS: from the netlist when it has them (layout netlist: the macro's grid pins on their extracted nets), else top VDD / VSS
+        cs += [f'.{p}({net(p)})' for p in MACRO_PWR if p not in bits]
         T.append(f' pt_digital_macro {iv}('+', '.join(cs)+');')
         macro_conn = bits
     elif master in PADS:
@@ -197,6 +198,8 @@ for n, ins in conn.items():
     for p, (k, nt) in ins['pins'].items():
         if nt in ('VDD', 'VSS'):
             MON.append(dict(kind='rail', inst=n, pin=p, want=1 if nt == 'VDD' else 0, ref=stub_ref(n, p)))
+for p in MACRO_PWR:          # macro grid pins, when the netlist binds them (layout mode)
+    if p in macro_conn: MON.append(dict(kind='rail', inst='digital', pin=p, want=1 if p == 'VDD' else 0, ref=f'smoke_tb.dut.{inst_v["digital"]}.{p}'))
 for x in ('d2h_oe', 'd2h_clk_pin', 'spi_miso', 'spi_miso_oe', 'reset_n_pad', 'por_n', 'por_bypass', 'spi_sclk', 'spi_cs_n', 'spi_mosi', 'host_word_clk'):
     MON.append(dict(kind='macro_io', pin=x, ref=f'smoke_tb.dut.{inst_v.get("digital")}.{x}' if x in mports else None))
 for k in range(10):

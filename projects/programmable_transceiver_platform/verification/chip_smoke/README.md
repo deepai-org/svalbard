@@ -5,14 +5,17 @@ and a VDD / VSS short (KH-3). This test drives the chip only through its pads, o
 top-level reference netlist** (the LVS reference that `gen_netlist.py` writes from the chip conn), so a missing or
 misbound wire *in the conn / reference* makes it fail.
 
-**It validates the conn, not the layout.** A tie or wire that is right in the conn but floats or is cut in the GDS
-(e.g. the POR_BYPASS pull-down on `pt_wired` fpw-8) still passes here. Layout evidence comes from LVS by name,
-`check_conn.py` and `check_padsup.py` (extracted provider ties) in `integration/signoff`.
+**Default mode validates the conn, not the layout.** A tie or wire that is right in the conn but floats or is cut in the GDS
+(e.g. the POR_BYPASS pull-down on `pt_wired` fpw-8) passes the default mode. **`--layout` mode** wires the same bench from
+the netlist extracted from the chip GDS (below), so it fails on such a tie.
 
     run.sh <rf|wired> [--tree DIR] [--netlist F]     test + negative control, exit 0 only if both hold
     smoke.py --chip <rf|wired> [...]                 the test alone; summary scratch/chip_smoke/<chip>/summary.json
     selftest.py --chip <rf|wired> [...]              negative control alone
     signoff_hook.sh <rf|wired> <ASM_RUN> <out>       hook for integration/signoff/signoff.sh (<out>/summary.json)
+    run.sh <rf|wired> --layout <ASM_RUN> [--out D]   layout mode: test on the GDS-extracted netlist + layout negative control
+    signoff_hook.sh <rf|wired> <ASM_RUN> <out> --layout     the same as a hook (summary mode=layout)
+    layout.sh <rf|wired> <ASM_RUN> <work> [cut=i.p,..]      the extraction alone (KLayout, 1 cpu, ~4.5 min)
 
 `--tree` picks the worktree whose conn, ctl_ports, provider_io, register map and gen_netlist are used (default: this
 one). The netlist defaults to `KH_CONN=1 integration/signoff/lvs/gen_netlist.py` of that tree (the assembly's LVS
@@ -63,6 +66,35 @@ Two runs on mutated copies of the netlist, each must fail naming exactly the bro
 unbound (`c_lna_ct[2]` on pt_rf, `c_ctle_peak[1]` on pt_wired) plus the IE pin of the SPI_MOSI input pad unbound;
 (B) two bits of that trim bus swapped at the consumer (both still driven, only the register walk can see it).
 `smoke.py --mutate` takes `c_port[bit]`, `pad:<PAD net>:<pin>` and `swap:<inst>:<pinA>:<pinB>`, comma-separated.
+
+## Layout mode (layout.sh, layout_netlist.py)
+
+`layout_netlist.py` extracts the top level of `<run>/chip/pt_chip_top.gds` exactly as `integration/signoff/lvs/top_lvs.py`
+does (Metal1-5, Via1-4, MIM plate, labels; the run's flatten list; every direct child of the top cell a black box whose pins
+are its labels) and writes a netlist with the reference's instance names, masters and pin order but **every net extracted**
+(`L<id>`). From the reference it takes only names, pin order and which pad terminal is bonded to which package pin:
+- package pin P = the bond terminal of its pad cell (PAD / PAD_P / PAD_N / ASIG5V; VDD = DVDD of every `gf180mcu_fd_io__dvdd`,
+  VSS = DVSS of every `gf180mcu_fd_io__dvss`). The layout nets of those terminals are merged into P (bond wires / board); all
+  other nets stay as extracted. So a ring or grid piece that reaches no supply pad is its own undriven net (Z in the bench).
+- a reference pin no top-level metal touches gets its own floating net `NC_<inst>_<pin>`; a layout net on one pin only
+  (a dangling stub) is `NC_L<id>`. The bench then sees Z there: `pad_tie` on a pad control pin, `ctl_wire` at a c_* consumer,
+  `rail` at a block VDD / VSS pin.
+- the digital macro gets its VDD / VSS grid pins (block labels) on their extracted nets, monitored as `rail` (the
+  gate-level cell models ignore power, so this is what shows a macro on a dead grid piece).
+- `<work>/layout.spice.json`: instances not in the layout (stand-ins such as `char_rffet*`), pins floating, pins split over
+  several layout nets (the bench takes the port piece, else the first; listed), port shorts.
+
+Negative control (`selftest.py --layout-cut`): the extraction is repeated with the metal erased at two pins in the in-memory
+copy of the GDS (`cut=`: every top-level shape on the terminal's metal that touches the terminal, and every via landing on it):
+the POR_BYPASS pad pull-down tie `io_bidir_16.PD` and one c_* trim consumer pin (`lna.ct2` / `ctle.ctle_peak2`). The test on
+it must FAIL naming both pins. The run dir is only read (mounted read-only).
+
+What layout mode sees: opens and floating pieces of top-level wires, ties and supply (pad ring, PDN, direct lands, island
+bars) between black-box pins; a top-level short between two driven nets (X); a misbound top-level wire (pin on the wrong
+net), all through the same functional checks as the default mode. What it cannot see: anything inside a black box (block
+internals, the macro's own stripes: `place.log` "macro supply" check), shorts onto nets the stubs leave undriven (analog,
+island rails: VISL is not driven by the switch stub), resistance / IR drop / ESD, device-level LVS (`run_top_lvs_bb.sh`),
+and a block pin split into several layout pieces beyond the one the bench takes (listed in the json).
 
 ## Limits
 

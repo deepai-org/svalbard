@@ -41,6 +41,7 @@ axes over the mux (16 um, top edge; R0, x0 = 23.75 mod 70, VSS on block x 268.5 
 neck-zone VSS verticals (ties grid_tie_k); see s13/top/REPORT.md.
 """
 import json
+import os
 import re
 import shutil
 import sys
@@ -954,6 +955,29 @@ def add_rc(fixed, res):
     return t2, dict(mux_internal=dict(trunks_ohm=tm['trunks_ohm'], bus=tm['bus'], resistors_added=tm['resistors_added']), top=tt)
 
 
+# Density (coordinator 2026-11-28, precheck DCF.1a in the ser8d N/P row gaps): dummy COMP (22/4) where the deck allows it, and
+# NDMY (111/5) tiles over the COMP-free gate-line bands (DCF.1a excepts NDMY). Tiles on a fixed block-local grid: 100 um wide,
+# gaps exactly 20.000 um (DE.4 >= 20), 100 x 134.5 = 13450 um2 (DE.3 15000), asserted in dummy_comp.py. Rule-edge note in
+# README (DE.4 / DCF.1a both at 20 um); proven on the chip GDS with density.rb and dummy_exclude.rb, also shifted one grid step.
+DENSITY_ZONE = (0.0, 0.0, 744.5, 200.0)            # ser8d zone, block um
+NDMY_TILES = (0.0, 700.0, 100.0, 20.0, 5.0, 139.5)  # x0, x1, tile width, gap, y0, y1
+
+
+def add_density_fill(gds):
+    import subprocess
+    img = 'svalbard/librelane-gf180-guarded:2026.11'
+    d = Path(gds).parent
+    shutil.copy(Path(__file__).with_name('dummy_comp.py'), d / 'dummy_comp.py')
+    args = [f'/w/{Path(gds).name}', f'/w/{Path(gds).name}', NAME] + [str(v) for v in DENSITY_ZONE] + [':'.join(str(v) for v in NDMY_TILES)]
+    r = subprocess.run(['docker', 'run', '--rm', '--network', 'none', '--cpus', '1', '--user', f'{os.getuid()}:{os.getgid()}', '-e', 'HOME=/tmp',
+                        '-v', f'{d}:/w', '--entrypoint', '/bin/bash', img, '-c',
+                        'export PATH=/foss/tools/bin:/foss/tools/klayout:$PATH; python3 /w/dummy_comp.py ' + ' '.join(args)],
+                       capture_output=True, text=True, timeout=1800)
+    if r.returncode != 0:
+        raise RuntimeError('density fill failed: ' + r.stdout[-600:] + r.stderr[-600:])
+    return dict(log=r.stdout.strip().splitlines(), zone=DENSITY_ZONE, ndmy_tiles=NDMY_TILES)
+
+
 def run_all():
     res = build()
     if T.DECAP['n'] != res['decap']['fingers']:
@@ -962,6 +986,7 @@ def run_all():
     sch = reference()
     res['build_check'] = L.check(b, NAME, sch)
     gds = L.export_gds(b, NAME)
+    res['density_fill'] = add_density_fill(gds)
     v = L.verify(gds, WORK / 'verify', NAME, sch, negatives(sch))
     res['verify_from_disk'] = v
     f = WORK / 'verify' / f'{NAME}.ext.spice'

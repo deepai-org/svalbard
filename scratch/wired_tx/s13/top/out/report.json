@@ -2137,9 +2137,30 @@
    "report": "/home/ubuntu/svalbard-wired/scratch/wired_tx/s13/top/build/pt_wiredtx8-lvs.txt"
   }
  },
+ "density_fill": {
+  "log": [
+   "NDMY 6 tiles, 80700 um2",
+   "dummy COMP 1326 squares 2.0 um, zone COMP+dummy 12.1 %",
+   "residual 20x20 empty windows 0 []"
+  ],
+  "zone": [
+   0.0,
+   0.0,
+   744.5,
+   200.0
+  ],
+  "ndmy_tiles": [
+   0.0,
+   700.0,
+   100.0,
+   20.0,
+   5.0,
+   139.5
+  ]
+ },
  "verify_from_disk": {
   "gds": "/home/ubuntu/svalbard-wired/scratch/wired_tx/s13/top/build/pt_wiredtx8.gds",
-  "sha256": "sha256:44eae7f6e47a4fa7e661121e5145b91c8de5e5d027ff51e6563c6c226d858808",
+  "sha256": "sha256:49ecee0e5bde1a58cf1f7a7e543f6f66b786ad4e62c9175b5fea63231c0cd327",
   "magic_drc": 0,
   "lvs": {
    "unique_match": true,
@@ -2197,7 +2218,7 @@
  },
  "c_netlist": {
   "vsubs_lines_fixed": 1671,
-  "ports_ok": true,
+  "ports_ok": false,
   "devices": {
    "nfet_03v3": 3066,
    "pfet_03v3": 2299,
@@ -2243,8 +2264,8 @@
    "POST_P": 0.07,
    "MAIN_N": 0.01,
    "PS2": 0.0,
-   "MAIN_P": 0.0,
-   "F4": 0.0
+   "F4": 0.0,
+   "MAIN_P": 0.0
   },
   "PH3": {
    "total": 37.5,
@@ -2293,8 +2314,8 @@
    "MAIN_N": 0.04,
    "aux": 0.01,
    "PS6": 0.0,
-   "MAIN_P": 0.0,
-   "F0": 0.0
+   "F0": 0.0,
+   "MAIN_P": 0.0
   },
   "PH7": {
    "total": 36.6,
@@ -2455,11 +2476,11 @@
    "ser8d": 2.62,
    "PS0": 0.1,
    "PS1": 0.08,
-   "PS7": 0.06,
    "PS6": 0.06,
    "F3": 0.06,
    "F1": 0.06,
    "F2": 0.06,
+   "PS7": 0.06,
    "PH6": 0.0
   },
   "F1": {
@@ -2604,13 +2625,13 @@
    "VDD": 1.6,
    "aux": 0.88,
    "PH1": 0.03,
-   "PH2": 0.0,
-   "PH6": 0.0,
    "PH0": 0.0,
    "PH7": 0.0,
    "PH4": 0.0,
    "PH3": 0.0,
-   "PH5": 0.0
+   "PH5": 0.0,
+   "PH2": 0.0,
+   "PH6": 0.0
   },
   "MAIN_N": {
    "total": 114.8,
@@ -2625,10 +2646,10 @@
    "PH1": 0.02,
    "PH2": 0.01,
    "PH5": 0.01,
-   "PH4": 0.01,
-   "PH3": 0.01,
    "PH0": 0.01,
-   "PH7": 0.01
+   "PH7": 0.01,
+   "PH4": 0.01,
+   "PH3": 0.01
   },
   "POST_P": {
    "total": 135.1,
@@ -2738,8 +2759,8 @@
    "F5": 0.1,
    "PS4": 0.1,
    "PS2": 0.09,
-   "F2": 0.06,
    "F7": 0.06,
+   "F2": 0.06,
    "PS7": 0.05,
    "PS5": 0.05,
    "PS6": 0.05,
@@ -2820,10 +2841,10 @@
    "PS0": 0.1,
    "F3": 0.06,
    "PS6": 0.06,
-   "F2": 0.06,
    "PS1": 0.06,
-   "PS7": 0.06,
-   "F1": 0.06
+   "F2": 0.06,
+   "F1": 0.06,
+   "PS7": 0.06
   },
   "F1": {
    "total": 19.6,
@@ -2837,9 +2858,9 @@
    "F0": 0.06,
    "F2": 0.05,
    "PS1": 0.05,
-   "PS7": 0.05,
+   "PS3": 0.05,
    "PS2": 0.05,
-   "PS3": 0.05
+   "PS7": 0.05
   },
   "F2": {
    "total": 44.0,
@@ -2855,9 +2876,9 @@
    "F0": 0.06,
    "F4": 0.06,
    "F5": 0.06,
-   "PS1": 0.06,
    "PS2": 0.06,
    "PS3": 0.06,
+   "PS1": 0.06,
    "F1": 0.05
   },
   "F3": {
@@ -2873,9 +2894,9 @@
    "F0": 0.06,
    "PS6": 0.06,
    "F4": 0.05,
-   "PS2": 0.05,
    "PS3": 0.05,
    "PS5": 0.05,
+   "PS2": 0.05,
    "PS7": 0.05,
    "F7": 0.0
   },
@@ -3201,9 +3222,9 @@
   "note": "Rails, plate, bars, header strap and the children's supply metal: raster run s13/top/ir (2-D, drawn geometry)."
  },
  "sha256": {
-  "pt_wiredtx8.gds": "sha256:44eae7f6e47a4fa7e661121e5145b91c8de5e5d027ff51e6563c6c226d858808",
-  "pt_wiredtx8.ext.spice": "sha256:906b8f5aaa155b74a6afdf1e4a5b110ce41b77cf779c06a49cc697a37c1b704b",
-  "pt_wiredtx8.rc.spice": "sha256:58ba75d67b74bcb455c7d26d7eb4a6dc3aeab948b87237f9b23d04b2616ef814",
-  "pt_wiredtx8.lvs.spice": "sha256:768973dbf48e5704c10cd5059595d009e1bc75535a45ff46c4c0cf2061c127ad"
+  "pt_wiredtx8.gds": "sha256:49ecee0e5bde1a58cf1f7a7e543f6f66b786ad4e62c9175b5fea63231c0cd327",
+  "pt_wiredtx8.ext.spice": "sha256:28f6bf9e71c97ff2a283ba4a1d7847a5c18c965e81946eea0c50481cdcf8d55c",
+  "pt_wiredtx8.rc.spice": "sha256:7175d142a037fc0c525be77b28019a906b47b1137ae39c08a7b0908ac07208c5",
+  "pt_wiredtx8.lvs.spice": "sha256:38c22d1ac779f17cf259587e6837fa386a67d2be5f0e827368b6048944a5ba9c"
  }
 }

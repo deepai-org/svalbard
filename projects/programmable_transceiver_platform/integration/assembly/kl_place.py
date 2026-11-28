@@ -821,6 +821,7 @@ for hn, (ln, cb, net) in hook_pins.items():
 # exposed bars (ISLAND_BARS expose=True): the bar's Metal5 is a pin of its rail net; the switch VISL pins under it leave the
 # routed net (the bar joins them by Via4), so the router never digs into the switch for VISL (RAIL_rf_tx-VDD, 2026-11-24)
 bar_pins = {}
+BAR_NOHALO = os.environ.get('BAR_NOHALO', '1' if CHIP == 'wired' else '0') == '1'
 for k_, bd in enumerate(bars):
     if not bd.get('expose'): continue
     pn_ = f'BAR{k_}'; bar_pins[pn_] = bd
@@ -846,7 +847,9 @@ for ln in ('Metal2', 'Metal3', 'Metal4', 'Metal5'):
         if ln == 'Metal4':
             for r4_ in dual4.values(): reg -= r4_
         if ln == 'Metal5':
-            for bd in bar_pins.values(): reg -= bd['region']
+            # exposed bars are pins of their rail net: no wide-metal halo round them (the rail's own wires reached the bar across
+            # it: fpw-14 2 x RAIL_wired_cap / pdn Metal5 shorts at BAR1); other nets still see the bar pin itself (deck checks MT.2b)
+            for bd in bar_pins.values(): reg -= bd['region'].sized(um(0.6) if BAR_NOHALO else 0)
     Lp.append(f'    LAYER {ln} ;')
     for poly in reg.merged().each():
         for tz in poly.decompose_trapezoids(1):

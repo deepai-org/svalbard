@@ -26,6 +26,17 @@ import check_top as ct          # noqa: E402
 import power_budget as pb       # noqa: E402
 
 K85 = 1.2
+# EM limits per row (coordinator 2026-11-28): 'dc_avg' = unidirectional DC, rated on avg_ma (electromigration);
+# 'avg_and_rms' = clocked / RF loads where self-heating matters: rated on avg_ma for EM AND on rms_ma for Joule heating.
+# rms_ma: CMOS switching loads 1.5 x avg (bound: inverter supply current comes in pulses; the r1 lo_txbuf bench had
+# peak / avg 1.5 at tt, no transient RMS bench on the others); rfdriver 1.1 x avg (DC-biased differential tail, the RF
+# current circulates through the pads and load, the VSS pin sees the tail plus the class-AB swing); LC VCO core 1.05.
+RMS_FACTOR = {'pt_lo_txbuf': 1.5, 'pt_rfdriver': 1.1, 'pt_lc_qvco5': 1.05, 'pt_lo_mmd': 1.5, 'pt_lo_mmd_qdum': 1.5,
+              'pt_lo_ext': 1.5, 'pt_lo_obs': 1.5, 'pt_obs_pre4': 1.5, 'pt_prescale': 1.5, 'pt_clk_obs16': 1.5,
+              'pt_pll_ring_core': 1.5, 'pt_pll_ring': 1.5, 'pt_wordclk': 1.5, 'pt_clockmux': 1.5, 'pt_cdr': 1.5,
+              'pt_vco_replica': 1.5, 'pt_ring_osc': 1.5, 'pt_diff_clk_rx': 1.5, 'pt_txmix_i': 1.5, 'pt_txmix_q': 1.5,
+              'pt_wiredtx8': 1.5, 'pt_usb_txdrv': 1.5, 'pad_txpad': 1.1, 'pt_char_ro33': 1.5, 'pt_char_ro50': 1.5,
+              'pt_char_cmldiv': 1.1, 'pt_adc_i': 1.5, 'pt_adc_q': 1.5, 'pt_dac_i': 1.5, 'pt_dac_q': 1.5}
 SUPPLY_NETS = ('VDD', 'VSS')
 SUPPLY_PREFIX = ('RAIL_', 'VREG_', 'VDD_')
 SUPPLY_PINS = re.compile(r'^(VDD.*|VSS|VISL|VIN|VOUT.*|DVDD.*|DVSS|vdd3v3|vss|PAD|RAIL_.*)$')
@@ -58,8 +69,12 @@ def block_table(chip):
     for q in ('i', 'q'):
         two(f'pt_txmix_{q}', tx[0], 'bound: txsum row carries both txmix tails (' + tx[1][:60] + ')')
     rfd = m('rfdriver')[0]
-    T['pt_rfdriver'] = {'VDD': (rfd * pb.RFDRV_DIE_FRACTION, f'MEASURED rfdriver {rfd} mA total x die-rail share {pb.RFDRV_DIE_FRACTION}', True, None),
-                        'VSS': (rfd, 'MEASURED rfdriver total: the board feed through the RF_TX pads returns through die VSS', True, None)}
+    T['pt_rfdriver'] = {'VDD': (rfd * pb.RFDRV_DIE_FRACTION, f'MEASURED rfdriver {rfd} mA total (rf_tx-sim-ext.json chain_zero 58.4, '
+                                f'scratch/rf-tx-d3/imax.json 61.7 ff/22/3.35 overdriven) x die-rail share {pb.RFDRV_DIE_FRACTION} '
+                                '(pre-amps, followers, header on RAIL_rf_tx)', True, None),
+                        'VSS': (rfd, f'MEASURED rfdriver total {rfd} mA: the output-pair tail ({1 - pb.RFDRV_DIE_FRACTION:.3f} x total) is fed '
+                                'from the board through the RF_TX chokes into the cascode drains on the pads and leaves through the '
+                                'tail to the block VSS pin, together with the die-rail share', True, None)}
     two('pt_lo_txbuf', 59.3, 'LO-PWR-2 extracted r3, ff/22/3.5; 85 C not separately benched (r1 schematic ff/125 = ff/22 + 4 %)', k=True)
     qv, qp = MEAS['qvco'], MEAS['qvco_pre']
     T['pt_lc_qvco5'] = {'VDD': (qv, 'MEASURED qvco (VDD_LO core)', True, None), 'VDDB': (qp, 'MEASURED qvco_pre (est, VDDB pre-buffer)', True, None),
@@ -170,7 +185,7 @@ def main():
                 if not (net in SUPPLY_NETS or str(net).startswith(SUPPLY_PREFIX)):
                     continue
                 if not SUPPLY_PINS.match(pin):
-                    rows.append(dict(inst=n, pin=pin, net=net, master=mst, kind='tie', avg_ma=0.001,
+                    rows.append(dict(inst=n, pin=pin, net=net, master=mst, kind='tie', avg_ma=0.001, em_limit='dc_avg',
                                      source='logic / bias tie to a supply: gate or junction leakage only'))
                     continue
                 if mst.startswith('isw_'):
@@ -192,14 +207,21 @@ def main():
                          source=src + (f'; x{K85} for 85 C' if k else ''))
                 if pk:
                     r['peak_ma'] = pk
+                f = RMS_FACTOR.get(mst)
+                if f:
+                    r.update(em_limit='avg_and_rms', rms_ma=round(r['avg_ma'] * f, 3))
+                else:
+                    r['em_limit'] = 'dc_avg'
                 rows.append(r)
         rows.sort(key=lambda r: -r['avg_ma'])
         out = dict(chip=chip, generated_by='integration/chips/pin_currents.py', rule='plate or multi-cut landing above 0.5 mA',
                    k85=K85, rows=rows, missing=missing,
-                   above_0p5ma=sum(r['avg_ma'] > 0.5 or r.get('peak_ma', 0) > 0.5 for r in rows))
+                   above_0p5ma_avg=sum(r['avg_ma'] > 0.5 for r in rows),
+                   above_0p5ma_avg_or_rms=sum(max(r['avg_ma'], r.get('rms_ma', 0)) > 0.5 for r in rows),
+                   above_0p5ma_any_incl_peak=sum(max(r['avg_ma'], r.get('rms_ma', 0), r.get('peak_ma', 0)) > 0.5 for r in rows))
         with open(os.path.join(HERE, chip, 'pin_currents.json'), 'w') as f:
             json.dump(out, f, indent=1)
-        print(chip, 'pins', len(rows), 'missing', len(missing), 'above 0.5 mA', out['above_0p5ma'], missing[:10])
+        print(chip, 'pins', len(rows), 'missing', len(missing), {k: v for k, v in out.items() if k.startswith('above')})
 
 
 if __name__ == '__main__':

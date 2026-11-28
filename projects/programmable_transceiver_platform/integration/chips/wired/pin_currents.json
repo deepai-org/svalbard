@@ -11,7 +11,8 @@
    "master": "pt_host_physical",
    "kind": "supply",
    "avg_ma": 140.184,
-   "source": "HOST_MEAS worst evidence/host-power-allocation-screen.json / artix-load-powe; x1.2 for 85 C"
+   "source": "HOST_MEAS worst evidence/host-power-allocation-screen.json / artix-load-powe; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "host",
@@ -20,7 +21,8 @@
    "master": "pt_host_physical",
    "kind": "supply",
    "avg_ma": 140.184,
-   "source": "HOST_MEAS worst evidence/host-power-allocation-screen.json / artix-load-powe; x1.2 for 85 C"
+   "source": "HOST_MEAS worst evidence/host-power-allocation-screen.json / artix-load-powe; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "wiredtx",
@@ -29,7 +31,9 @@
    "master": "pt_wiredtx8",
    "kind": "supply",
    "avg_ma": 100.8,
-   "source": "MEASURED wiredtx8 + wtx_post (POST tap on); x1.2 for 85 C"
+   "source": "MEASURED wiredtx8 + wtx_post (POST tap on); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 151.2
   },
   {
    "inst": "wiredtx",
@@ -38,7 +42,9 @@
    "master": "pt_wiredtx8",
    "kind": "supply",
    "avg_ma": 100.8,
-   "source": "MEASURED wiredtx8 + wtx_post (POST tap on); x1.2 for 85 C"
+   "source": "MEASURED wiredtx8 + wtx_post (POST tap on); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 151.2
   },
   {
    "inst": "pad_dvdd_0",
@@ -47,7 +53,8 @@
    "master": "prov_supply",
    "kind": "supply",
    "avg_ma": 97.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (dvdd_pads[0])"
+   "source": "e7 static-drop bond current at the pessimistic bound (dvdd_pads[0])",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_xvdd_0",
@@ -56,7 +63,8 @@
    "master": "prov_supply_sig",
    "kind": "supply",
    "avg_ma": 97.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (worst pad of the net, signal-site supply)"
+   "source": "e7 static-drop bond current at the pessimistic bound (worst pad of the net, signal-site supply)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_xvdd_1",
@@ -65,7 +73,8 @@
    "master": "prov_supply_sig",
    "kind": "supply",
    "avg_ma": 97.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (worst pad of the net, signal-site supply)"
+   "source": "e7 static-drop bond current at the pessimistic bound (worst pad of the net, signal-site supply)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_xvdd_2",
@@ -74,7 +83,8 @@
    "master": "prov_supply_sig",
    "kind": "supply",
    "avg_ma": 97.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (worst pad of the net, signal-site supply)"
+   "source": "e7 static-drop bond current at the pessimistic bound (worst pad of the net, signal-site supply)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_dvdd_1",
@@ -83,7 +93,8 @@
    "master": "prov_supply",
    "kind": "supply",
    "avg_ma": 81.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (dvdd_pads[1])"
+   "source": "e7 static-drop bond current at the pessimistic bound (dvdd_pads[1])",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_dvss_0",
@@ -92,7 +103,8 @@
    "master": "prov_supply",
    "kind": "supply",
    "avg_ma": 78.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (dvss_pads[0])"
+   "source": "e7 static-drop bond current at the pessimistic bound (dvss_pads[0])",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_xvss_0",
@@ -101,7 +113,8 @@
    "master": "prov_supply_sig",
    "kind": "supply",
    "avg_ma": 78.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (worst pad of the net, signal-site supply)"
+   "source": "e7 static-drop bond current at the pessimistic bound (worst pad of the net, signal-site supply)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_xvss_1",
@@ -110,7 +123,8 @@
    "master": "prov_supply_sig",
    "kind": "supply",
    "avg_ma": 78.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (worst pad of the net, signal-site supply)"
+   "source": "e7 static-drop bond current at the pessimistic bound (worst pad of the net, signal-site supply)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_xvss_2",
@@ -119,7 +133,8 @@
    "master": "prov_supply_sig",
    "kind": "supply",
    "avg_ma": 78.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (worst pad of the net, signal-site supply)"
+   "source": "e7 static-drop bond current at the pessimistic bound (worst pad of the net, signal-site supply)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_xvss_3",
@@ -128,7 +143,8 @@
    "master": "prov_supply_sig",
    "kind": "supply",
    "avg_ma": 78.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (worst pad of the net, signal-site supply)"
+   "source": "e7 static-drop bond current at the pessimistic bound (worst pad of the net, signal-site supply)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_xvss_4",
@@ -137,7 +153,8 @@
    "master": "prov_supply_sig",
    "kind": "supply",
    "avg_ma": 78.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (worst pad of the net, signal-site supply)"
+   "source": "e7 static-drop bond current at the pessimistic bound (worst pad of the net, signal-site supply)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_xvss_5",
@@ -146,7 +163,8 @@
    "master": "prov_supply_sig",
    "kind": "supply",
    "avg_ma": 78.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (worst pad of the net, signal-site supply)"
+   "source": "e7 static-drop bond current at the pessimistic bound (worst pad of the net, signal-site supply)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "isw_wired_cap",
@@ -155,7 +173,8 @@
    "master": "isw_wired",
    "kind": "supply",
    "avg_ma": 72.89,
-   "source": "pd2 island wired_cap design 72.89 mA (x1.25 on estimates) / 1 switch(es), isw_wired"
+   "source": "pd2 island wired_cap design 72.89 mA (x1.25 on estimates) / 1 switch(es), isw_wired",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "isw_wired_cap",
@@ -164,7 +183,8 @@
    "master": "isw_wired",
    "kind": "supply",
    "avg_ma": 72.89,
-   "source": "pd2 island wired_cap design 72.89 mA (x1.25 on estimates) / 1 switch(es), isw_wired"
+   "source": "pd2 island wired_cap design 72.89 mA (x1.25 on estimates) / 1 switch(es), isw_wired",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "debug_pads",
@@ -173,7 +193,8 @@
    "master": "pt_debug_physical",
    "kind": "supply",
    "avg_ma": 70.092,
-   "source": "bound: half the host-link pad current (debug pads, same drivers, fewer active); x1.2 for 85 C"
+   "source": "bound: half the host-link pad current (debug pads, same drivers, fewer active); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "debug_pads",
@@ -182,7 +203,8 @@
    "master": "pt_debug_physical",
    "kind": "supply",
    "avg_ma": 70.092,
-   "source": "bound: half the host-link pad current (debug pads, same drivers, fewer active); x1.2 for 85 C"
+   "source": "bound: half the host-link pad current (debug pads, same drivers, fewer active); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "isw_wired_tx_a",
@@ -191,7 +213,8 @@
    "master": "isw_wired",
    "kind": "supply",
    "avg_ma": 65.625,
-   "source": "pd2 island wired_tx design 131.25 mA (x1.25 on estimates) / 2 switch(es), isw_wired"
+   "source": "pd2 island wired_tx design 131.25 mA (x1.25 on estimates) / 2 switch(es), isw_wired",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "isw_wired_tx_a",
@@ -200,7 +223,8 @@
    "master": "isw_wired",
    "kind": "supply",
    "avg_ma": 65.625,
-   "source": "pd2 island wired_tx design 131.25 mA (x1.25 on estimates) / 2 switch(es), isw_wired"
+   "source": "pd2 island wired_tx design 131.25 mA (x1.25 on estimates) / 2 switch(es), isw_wired",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "isw_wired_tx_b",
@@ -209,7 +233,8 @@
    "master": "isw_wired",
    "kind": "supply",
    "avg_ma": 65.625,
-   "source": "pd2 island wired_tx design 131.25 mA (x1.25 on estimates) / 2 switch(es), isw_wired"
+   "source": "pd2 island wired_tx design 131.25 mA (x1.25 on estimates) / 2 switch(es), isw_wired",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "isw_wired_tx_b",
@@ -218,7 +243,8 @@
    "master": "isw_wired",
    "kind": "supply",
    "avg_ma": 65.625,
-   "source": "pd2 island wired_tx design 131.25 mA (x1.25 on estimates) / 2 switch(es), isw_wired"
+   "source": "pd2 island wired_tx design 131.25 mA (x1.25 on estimates) / 2 switch(es), isw_wired",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_dvss_1",
@@ -227,7 +253,8 @@
    "master": "prov_supply",
    "kind": "supply",
    "avg_ma": 65.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (dvss_pads[1])"
+   "source": "e7 static-drop bond current at the pessimistic bound (dvss_pads[1])",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "wrx_cap",
@@ -236,7 +263,8 @@
    "master": "pt_wrx_cap",
    "kind": "supply",
    "avg_ma": 55.968,
-   "source": "power_budget.py MEASURED wrx_cap (ext: staged r7 scratch/wired_rx/r7cap/stage/results.json 44.78 at 625 MHz (45.15 ff), 34.87 at ); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED wrx_cap (ext: staged r7 scratch/wired_rx/r7cap/stage/results.json 44.78 at 625 MHz (45.15 ff), 34.87 at ); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "wrx_cap",
@@ -245,7 +273,8 @@
    "master": "pt_wrx_cap",
    "kind": "supply",
    "avg_ma": 55.968,
-   "source": "power_budget.py MEASURED wrx_cap (ext: staged r7 scratch/wired_rx/r7cap/stage/results.json 44.78 at 625 MHz (45.15 ff), 34.87 at ); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED wrx_cap (ext: staged r7 scratch/wired_rx/r7cap/stage/results.json 44.78 at 625 MHz (45.15 ff), 34.87 at ); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_dvss_2",
@@ -254,7 +283,8 @@
    "master": "prov_supply",
    "kind": "supply",
    "avg_ma": 47.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (dvss_pads[2])"
+   "source": "e7 static-drop bond current at the pessimistic bound (dvss_pads[2])",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_dvdd_5",
@@ -263,7 +293,8 @@
    "master": "prov_supply",
    "kind": "supply",
    "avg_ma": 45.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (dvdd_pads[5])"
+   "source": "e7 static-drop bond current at the pessimistic bound (dvdd_pads[5])",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "isw_debug",
@@ -272,7 +303,8 @@
    "master": "isw_debug",
    "kind": "supply",
    "avg_ma": 40.0,
-   "source": "pd2 island debug design 40.0 mA (x1.25 on estimates) / 1 switch(es), isw_debug"
+   "source": "pd2 island debug design 40.0 mA (x1.25 on estimates) / 1 switch(es), isw_debug",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "isw_debug",
@@ -281,7 +313,8 @@
    "master": "isw_debug",
    "kind": "supply",
    "avg_ma": 40.0,
-   "source": "pd2 island debug design 40.0 mA (x1.25 on estimates) / 1 switch(es), isw_debug"
+   "source": "pd2 island debug design 40.0 mA (x1.25 on estimates) / 1 switch(es), isw_debug",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_vdd_1",
@@ -290,7 +323,8 @@
    "master": "prov_supply",
    "kind": "supply",
    "avg_ma": 34.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (vdd_pads[1])"
+   "source": "e7 static-drop bond current at the pessimistic bound (vdd_pads[1])",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_vdd_0",
@@ -299,7 +333,8 @@
    "master": "prov_supply",
    "kind": "supply",
    "avg_ma": 32.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (vdd_pads[0])"
+   "source": "e7 static-drop bond current at the pessimistic bound (vdd_pads[0])",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "isw_wired_rx",
@@ -308,7 +343,8 @@
    "master": "isw_debug",
    "kind": "supply",
    "avg_ma": 30.91,
-   "source": "pd2 island wired_rx design 30.91 mA (x1.25 on estimates) / 1 switch(es), isw_debug"
+   "source": "pd2 island wired_rx design 30.91 mA (x1.25 on estimates) / 1 switch(es), isw_debug",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "isw_wired_rx",
@@ -317,7 +353,8 @@
    "master": "isw_debug",
    "kind": "supply",
    "avg_ma": 30.91,
-   "source": "pd2 island wired_rx design 30.91 mA (x1.25 on estimates) / 1 switch(es), isw_debug"
+   "source": "pd2 island wired_rx design 30.91 mA (x1.25 on estimates) / 1 switch(es), isw_debug",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_dvss_7",
@@ -326,7 +363,8 @@
    "master": "prov_supply",
    "kind": "supply",
    "avg_ma": 30.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (dvss_pads[7])"
+   "source": "e7 static-drop bond current at the pessimistic bound (dvss_pads[7])",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "isw_pll",
@@ -335,7 +373,8 @@
    "master": "isw_debug",
    "kind": "supply",
    "avg_ma": 29.42,
-   "source": "pd2 island pll design 29.42 mA (x1.25 on estimates) / 1 switch(es), isw_debug"
+   "source": "pd2 island pll design 29.42 mA (x1.25 on estimates) / 1 switch(es), isw_debug",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "isw_pll",
@@ -344,7 +383,8 @@
    "master": "isw_debug",
    "kind": "supply",
    "avg_ma": 29.42,
-   "source": "pd2 island pll design 29.42 mA (x1.25 on estimates) / 1 switch(es), isw_debug"
+   "source": "pd2 island pll design 29.42 mA (x1.25 on estimates) / 1 switch(es), isw_debug",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_dvdd_2",
@@ -353,7 +393,8 @@
    "master": "prov_supply",
    "kind": "supply",
    "avg_ma": 29.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (dvdd_pads[2])"
+   "source": "e7 static-drop bond current at the pessimistic bound (dvdd_pads[2])",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_dvss_4",
@@ -362,7 +403,8 @@
    "master": "prov_supply",
    "kind": "supply",
    "avg_ma": 28.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (dvss_pads[4])"
+   "source": "e7 static-drop bond current at the pessimistic bound (dvss_pads[4])",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_wire_tx",
@@ -371,7 +413,9 @@
    "master": "pad_txpad",
    "kind": "supply",
    "avg_ma": 25.2,
-   "source": "power_budget.py MEASURED wtx_padtail (lim: TX pad MAIN tail on the island rail (WT40): DAC reset code 109 = 9.05 mA, code 255 = 21 mA); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED wtx_padtail (lim: TX pad MAIN tail on the island rail (WT40): DAC reset code 109 = 9.05 mA, code 255 = 21 mA); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 27.72
   },
   {
    "inst": "pad_wire_tx",
@@ -380,7 +424,9 @@
    "master": "pad_txpad",
    "kind": "supply",
    "avg_ma": 25.2,
-   "source": "power_budget.py MEASURED wtx_padtail (lim: TX pad MAIN tail on the island rail (WT40): DAC reset code 109 = 9.05 mA, code 255 = 21 mA); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED wtx_padtail (lim: TX pad MAIN tail on the island rail (WT40): DAC reset code 109 = 9.05 mA, code 255 = 21 mA); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 27.72
   },
   {
    "inst": "ptrim",
@@ -389,7 +435,8 @@
    "master": "pt_ptrim",
    "kind": "supply",
    "avg_ma": 25.2,
-   "source": "power_budget.py MEASURED ptrim (est: MW-14-FIX (interface-changes.md): pt_ptrim redesign in progress, 18-21 mA for 8 channels a); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED ptrim (est: MW-14-FIX (interface-changes.md): pt_ptrim redesign in progress, 18-21 mA for 8 channels a); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "ptrim",
@@ -398,7 +445,8 @@
    "master": "pt_ptrim",
    "kind": "supply",
    "avg_ma": 25.2,
-   "source": "power_budget.py MEASURED ptrim (est: MW-14-FIX (interface-changes.md): pt_ptrim redesign in progress, 18-21 mA for 8 channels a); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED ptrim (est: MW-14-FIX (interface-changes.md): pt_ptrim redesign in progress, 18-21 mA for 8 channels a); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pll_vreg2",
@@ -407,7 +455,8 @@
    "master": "pt_pll_vreg2",
    "kind": "supply",
    "avg_ma": 25.08,
-   "source": "INSTANCE_WORST_MA pll_vreg2: 2 x 10.2 ring worst + 0.5; x1.2 for 85 C"
+   "source": "INSTANCE_WORST_MA pll_vreg2: 2 x 10.2 ring worst + 0.5; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_dvdd_4",
@@ -416,7 +465,8 @@
    "master": "prov_supply",
    "kind": "supply",
    "avg_ma": 24.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (dvdd_pads[4])"
+   "source": "e7 static-drop bond current at the pessimistic bound (dvdd_pads[4])",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "usb_txdrv",
@@ -425,7 +475,9 @@
    "master": "pt_usb_txdrv",
    "kind": "supply",
    "avg_ma": 24.0,
-   "source": "INSTANCE_WORST_MA wired_tx usb_txdrv (U mode only); x1.2 for 85 C"
+   "source": "INSTANCE_WORST_MA wired_tx usb_txdrv (U mode only); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 36.0
   },
   {
    "inst": "usb_txdrv",
@@ -434,7 +486,9 @@
    "master": "pt_usb_txdrv",
    "kind": "supply",
    "avg_ma": 24.0,
-   "source": "INSTANCE_WORST_MA wired_tx usb_txdrv (U mode only); x1.2 for 85 C"
+   "source": "INSTANCE_WORST_MA wired_tx usb_txdrv (U mode only); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 36.0
   },
   {
    "inst": "pad_vss_0",
@@ -443,7 +497,8 @@
    "master": "prov_supply",
    "kind": "supply",
    "avg_ma": 23.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (vss_pads[0])"
+   "source": "e7 static-drop bond current at the pessimistic bound (vss_pads[0])",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_dvdd_3",
@@ -452,7 +507,8 @@
    "master": "prov_supply",
    "kind": "supply",
    "avg_ma": 22.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (dvdd_pads[3])"
+   "source": "e7 static-drop bond current at the pessimistic bound (dvdd_pads[3])",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_dvss_3",
@@ -461,7 +517,8 @@
    "master": "prov_supply",
    "kind": "supply",
    "avg_ma": 20.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (dvss_pads[3])"
+   "source": "e7 static-drop bond current at the pessimistic bound (dvss_pads[3])",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_vss_1",
@@ -470,7 +527,8 @@
    "master": "prov_supply",
    "kind": "supply",
    "avg_ma": 16.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (vss_pads[1])"
+   "source": "e7 static-drop bond current at the pessimistic bound (vss_pads[1])",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "ctle",
@@ -479,7 +537,8 @@
    "master": "pt_ctle",
    "kind": "supply",
    "avg_ma": 14.652,
-   "source": "MEASURED ctle + ctle_follower (followers on the same rails); x1.2 for 85 C"
+   "source": "MEASURED ctle + ctle_follower (followers on the same rails); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "ctle",
@@ -488,7 +547,8 @@
    "master": "pt_ctle",
    "kind": "supply",
    "avg_ma": 14.652,
-   "source": "MEASURED ctle + ctle_follower (followers on the same rails); x1.2 for 85 C"
+   "source": "MEASURED ctle + ctle_follower (followers on the same rails); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "vco_replica",
@@ -497,7 +557,9 @@
    "master": "pt_vco_replica",
    "kind": "supply",
    "avg_ma": 14.136,
-   "source": "INSTANCE_WORST_MA debug vco_replica (VCTRL 3.3 V); x1.2 for 85 C"
+   "source": "INSTANCE_WORST_MA debug vco_replica (VCTRL 3.3 V); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 21.204
   },
   {
    "inst": "vco_replica",
@@ -506,7 +568,9 @@
    "master": "pt_vco_replica",
    "kind": "supply",
    "avg_ma": 14.136,
-   "source": "INSTANCE_WORST_MA debug vco_replica (VCTRL 3.3 V); x1.2 for 85 C"
+   "source": "INSTANCE_WORST_MA debug vco_replica (VCTRL 3.3 V); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 21.204
   },
   {
    "inst": "pad_dvss_5",
@@ -515,7 +579,8 @@
    "master": "prov_supply",
    "kind": "supply",
    "avg_ma": 13.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (dvss_pads[5])"
+   "source": "e7 static-drop bond current at the pessimistic bound (dvss_pads[5])",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pll_vreg2",
@@ -524,7 +589,8 @@
    "master": "pt_pll_vreg2",
    "kind": "supply",
    "avg_ma": 12.24,
-   "source": "pll_tx ring core worst (e7 static-drop tap pll_tx); x1.2 for 85 C"
+   "source": "pll_tx ring core worst (e7 static-drop tap pll_tx); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pll_vreg2",
@@ -533,7 +599,8 @@
    "master": "pt_pll_vreg2",
    "kind": "supply",
    "avg_ma": 12.24,
-   "source": "pll_cdr ring worst (e7 static-drop tap pll_cdr); x1.2 for 85 C"
+   "source": "pll_cdr ring worst (e7 static-drop tap pll_cdr); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pll_tx",
@@ -542,7 +609,9 @@
    "master": "pt_pll_ring_core",
    "kind": "supply",
    "avg_ma": 12.24,
-   "source": "e7 static-drop analysis tap pll_tx 10.2 mA (MEASURED pll_tx); x1.2 for 85 C"
+   "source": "e7 static-drop analysis tap pll_tx 10.2 mA (MEASURED pll_tx); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 18.36
   },
   {
    "inst": "pll_tx",
@@ -551,7 +620,9 @@
    "master": "pt_pll_ring_core",
    "kind": "supply",
    "avg_ma": 12.24,
-   "source": "e7 static-drop analysis tap pll_tx 10.2 mA (MEASURED pll_tx); x1.2 for 85 C"
+   "source": "e7 static-drop analysis tap pll_tx 10.2 mA (MEASURED pll_tx); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 18.36
   },
   {
    "inst": "pll_cdr",
@@ -560,7 +631,9 @@
    "master": "pt_pll_ring",
    "kind": "supply",
    "avg_ma": 12.24,
-   "source": "e7 static-drop analysis tap pll_cdr 10.2 mA (MEASURED pll_cdr); x1.2 for 85 C"
+   "source": "e7 static-drop analysis tap pll_cdr 10.2 mA (MEASURED pll_cdr); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 18.36
   },
   {
    "inst": "pll_cdr",
@@ -569,7 +642,9 @@
    "master": "pt_pll_ring",
    "kind": "supply",
    "avg_ma": 12.24,
-   "source": "e7 static-drop analysis tap pll_cdr 10.2 mA (MEASURED pll_cdr); x1.2 for 85 C"
+   "source": "e7 static-drop analysis tap pll_cdr 10.2 mA (MEASURED pll_cdr); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 18.36
   },
   {
    "inst": "slicer",
@@ -578,7 +653,8 @@
    "master": "pt_slicer",
    "kind": "supply",
    "avg_ma": 11.76,
-   "source": "power_budget.py MEASURED slicer (ext: slicer-evidence.json iavg 7.25 at 625 quarter, 6.33 USB HS; worst = 32.2 mW at 810 quarter); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED slicer (ext: slicer-evidence.json iavg 7.25 at 625 quarter, 6.33 USB HS; worst = 32.2 mW at 810 quarter); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "slicer",
@@ -587,7 +663,8 @@
    "master": "pt_slicer",
    "kind": "supply",
    "avg_ma": 11.76,
-   "source": "power_budget.py MEASURED slicer (ext: slicer-evidence.json iavg 7.25 at 625 quarter, 6.33 USB HS; worst = 32.2 mW at 810 quarter); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED slicer (ext: slicer-evidence.json iavg 7.25 at 625 quarter, 6.33 USB HS; worst = 32.2 mW at 810 quarter); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_dvss_6",
@@ -596,7 +673,8 @@
    "master": "prov_supply",
    "kind": "supply",
    "avg_ma": 10.0,
-   "source": "e7 static-drop bond current at the pessimistic bound (dvss_pads[6])"
+   "source": "e7 static-drop bond current at the pessimistic bound (dvss_pads[6])",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_usb",
@@ -605,7 +683,8 @@
    "master": "pad_wirepad",
    "kind": "supply",
    "avg_ma": 9.6,
-   "source": "power_budget.py MEASURED usbfs (est: allocation (provider pad drivers), no bench); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED usbfs (est: allocation (provider pad drivers), no bench); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_usb",
@@ -614,7 +693,8 @@
    "master": "pad_wirepad",
    "kind": "supply",
    "avg_ma": 9.6,
-   "source": "power_budget.py MEASURED usbfs (est: allocation (provider pad drivers), no bench); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED usbfs (est: allocation (provider pad drivers), no bench); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "clk_obs",
@@ -623,7 +703,9 @@
    "master": "pt_clk_obs16",
    "kind": "supply",
    "avg_ma": 6.168,
-   "source": "INSTANCE_WORST_MA clk_obs-evidence.json; x1.2 for 85 C"
+   "source": "INSTANCE_WORST_MA clk_obs-evidence.json; x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 9.252
   },
   {
    "inst": "clk_obs",
@@ -632,7 +714,9 @@
    "master": "pt_clk_obs16",
    "kind": "supply",
    "avg_ma": 6.168,
-   "source": "INSTANCE_WORST_MA clk_obs-evidence.json; x1.2 for 85 C"
+   "source": "INSTANCE_WORST_MA clk_obs-evidence.json; x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 9.252
   },
   {
    "inst": "rx_ref_in",
@@ -641,7 +725,9 @@
    "master": "pt_diff_clk_rx",
    "kind": "supply",
    "avg_ma": 5.52,
-   "source": "INSTANCE_WORST / plate table rx_ref_in 4.6 mA (diff_clk_rx-evidence.json 5.1 on the debug island copy); x1.2 for 85 C"
+   "source": "INSTANCE_WORST / plate table rx_ref_in 4.6 mA (diff_clk_rx-evidence.json 5.1 on the debug island copy); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 8.28
   },
   {
    "inst": "rx_ref_in",
@@ -650,7 +736,9 @@
    "master": "pt_diff_clk_rx",
    "kind": "supply",
    "avg_ma": 5.52,
-   "source": "INSTANCE_WORST / plate table rx_ref_in 4.6 mA (diff_clk_rx-evidence.json 5.1 on the debug island copy); x1.2 for 85 C"
+   "source": "INSTANCE_WORST / plate table rx_ref_in 4.6 mA (diff_clk_rx-evidence.json 5.1 on the debug island copy); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 8.28
   },
   {
    "inst": "rx_aux_clk",
@@ -659,7 +747,9 @@
    "master": "pt_diff_clk_rx",
    "kind": "supply",
    "avg_ma": 5.52,
-   "source": "INSTANCE_WORST / plate table rx_ref_in 4.6 mA (diff_clk_rx-evidence.json 5.1 on the debug island copy); x1.2 for 85 C"
+   "source": "INSTANCE_WORST / plate table rx_ref_in 4.6 mA (diff_clk_rx-evidence.json 5.1 on the debug island copy); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 8.28
   },
   {
    "inst": "rx_aux_clk",
@@ -668,7 +758,9 @@
    "master": "pt_diff_clk_rx",
    "kind": "supply",
    "avg_ma": 5.52,
-   "source": "INSTANCE_WORST / plate table rx_ref_in 4.6 mA (diff_clk_rx-evidence.json 5.1 on the debug island copy); x1.2 for 85 C"
+   "source": "INSTANCE_WORST / plate table rx_ref_in 4.6 mA (diff_clk_rx-evidence.json 5.1 on the debug island copy); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 8.28
   },
   {
    "inst": "rx_wtx_ext",
@@ -677,7 +769,9 @@
    "master": "pt_diff_clk_rx",
    "kind": "supply",
    "avg_ma": 5.52,
-   "source": "INSTANCE_WORST / plate table rx_ref_in 4.6 mA (diff_clk_rx-evidence.json 5.1 on the debug island copy); x1.2 for 85 C"
+   "source": "INSTANCE_WORST / plate table rx_ref_in 4.6 mA (diff_clk_rx-evidence.json 5.1 on the debug island copy); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 8.28
   },
   {
    "inst": "rx_wtx_ext",
@@ -686,7 +780,9 @@
    "master": "pt_diff_clk_rx",
    "kind": "supply",
    "avg_ma": 5.52,
-   "source": "INSTANCE_WORST / plate table rx_ref_in 4.6 mA (diff_clk_rx-evidence.json 5.1 on the debug island copy); x1.2 for 85 C"
+   "source": "INSTANCE_WORST / plate table rx_ref_in 4.6 mA (diff_clk_rx-evidence.json 5.1 on the debug island copy); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 8.28
   },
   {
    "inst": "char_cmldiv",
@@ -695,7 +791,9 @@
    "master": "pt_char_cmldiv",
    "kind": "supply",
    "avg_ma": 4.824,
-   "source": "characterization README: 4.02 mA; x1.2 for 85 C"
+   "source": "characterization README: 4.02 mA; x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 5.306
   },
   {
    "inst": "char_cmldiv",
@@ -704,7 +802,9 @@
    "master": "pt_char_cmldiv",
    "kind": "supply",
    "avg_ma": 4.824,
-   "source": "characterization README: 4.02 mA; x1.2 for 85 C"
+   "source": "characterization README: 4.02 mA; x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 5.306
   },
   {
    "inst": "obs_pre4_wire",
@@ -713,7 +813,9 @@
    "master": "pt_obs_pre4",
    "kind": "supply",
    "avg_ma": 3.6,
-   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C"
+   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 5.4
   },
   {
    "inst": "obs_pre4_wire",
@@ -722,7 +824,9 @@
    "master": "pt_obs_pre4",
    "kind": "supply",
    "avg_ma": 3.6,
-   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C"
+   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 5.4
   },
   {
    "inst": "obs_pre4_wsmp",
@@ -731,7 +835,9 @@
    "master": "pt_obs_pre4",
    "kind": "supply",
    "avg_ma": 3.6,
-   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C"
+   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 5.4
   },
   {
    "inst": "obs_pre4_wsmp",
@@ -740,7 +846,9 @@
    "master": "pt_obs_pre4",
    "kind": "supply",
    "avg_ma": 3.6,
-   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C"
+   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 5.4
   },
   {
    "inst": "obs_pre4_ref",
@@ -749,7 +857,9 @@
    "master": "pt_obs_pre4",
    "kind": "supply",
    "avg_ma": 3.6,
-   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C"
+   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 5.4
   },
   {
    "inst": "obs_pre4_ref",
@@ -758,7 +868,9 @@
    "master": "pt_obs_pre4",
    "kind": "supply",
    "avg_ma": 3.6,
-   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C"
+   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 5.4
   },
   {
    "inst": "obs_pre4_aux",
@@ -767,7 +879,9 @@
    "master": "pt_obs_pre4",
    "kind": "supply",
    "avg_ma": 3.6,
-   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C"
+   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 5.4
   },
   {
    "inst": "obs_pre4_aux",
@@ -776,7 +890,9 @@
    "master": "pt_obs_pre4",
    "kind": "supply",
    "avg_ma": 3.6,
-   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C"
+   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 5.4
   },
   {
    "inst": "obs_pre4_pll",
@@ -785,7 +901,9 @@
    "master": "pt_obs_pre4",
    "kind": "supply",
    "avg_ma": 3.6,
-   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C"
+   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 5.4
   },
   {
    "inst": "obs_pre4_pll",
@@ -794,7 +912,9 @@
    "master": "pt_obs_pre4",
    "kind": "supply",
    "avg_ma": 3.6,
-   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C"
+   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 5.4
   },
   {
    "inst": "obs_pre4_cdr",
@@ -803,7 +923,9 @@
    "master": "pt_obs_pre4",
    "kind": "supply",
    "avg_ma": 3.6,
-   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C"
+   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 5.4
   },
   {
    "inst": "obs_pre4_cdr",
@@ -812,7 +934,9 @@
    "master": "pt_obs_pre4",
    "kind": "supply",
    "avg_ma": 3.6,
-   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C"
+   "source": "bound: CMOS /4 at <= 1.6 GHz input, prescale (2.4 mA, /16 at 2.5 GHz, ev) x 1.25; no bench; x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 5.4
   },
   {
    "inst": "wordclk_rx",
@@ -821,7 +945,9 @@
    "master": "pt_wordclk",
    "kind": "supply",
    "avg_ma": 2.904,
-   "source": "power_budget.py MEASURED wordclk (ext: timing/generated/wordclk-evidence.json 1.18-2.30, 2.42 ff/32/3.35 (no clocktree evidence e); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED wordclk (ext: timing/generated/wordclk-evidence.json 1.18-2.30, 2.42 ff/32/3.35 (no clocktree evidence e); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 4.356
   },
   {
    "inst": "wordclk_rx",
@@ -830,7 +956,9 @@
    "master": "pt_wordclk",
    "kind": "supply",
    "avg_ma": 2.904,
-   "source": "power_budget.py MEASURED wordclk (ext: timing/generated/wordclk-evidence.json 1.18-2.30, 2.42 ff/32/3.35 (no clocktree evidence e); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED wordclk (ext: timing/generated/wordclk-evidence.json 1.18-2.30, 2.42 ff/32/3.35 (no clocktree evidence e); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 4.356
   },
   {
    "inst": "prescale",
@@ -839,7 +967,9 @@
    "master": "pt_prescale",
    "kind": "supply",
    "avg_ma": 2.88,
-   "source": "power_budget.py MEASURED prescale (ext: timing/generated/prescale-evidence.json 1.99 at 2.5 GHz /16, tt only: worst assumed 1.2 x); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED prescale (ext: timing/generated/prescale-evidence.json 1.99 at 2.5 GHz /16, tt only: worst assumed 1.2 x); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 4.32
   },
   {
    "inst": "prescale",
@@ -848,7 +978,9 @@
    "master": "pt_prescale",
    "kind": "supply",
    "avg_ma": 2.88,
-   "source": "power_budget.py MEASURED prescale (ext: timing/generated/prescale-evidence.json 1.99 at 2.5 GHz /16, tt only: worst assumed 1.2 x); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED prescale (ext: timing/generated/prescale-evidence.json 1.99 at 2.5 GHz /16, tt only: worst assumed 1.2 x); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 4.32
   },
   {
    "inst": "prescale_hf",
@@ -857,7 +989,9 @@
    "master": "pt_prescale",
    "kind": "supply",
    "avg_ma": 2.88,
-   "source": "power_budget.py MEASURED prescale (ext: timing/generated/prescale-evidence.json 1.99 at 2.5 GHz /16, tt only: worst assumed 1.2 x); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED prescale (ext: timing/generated/prescale-evidence.json 1.99 at 2.5 GHz /16, tt only: worst assumed 1.2 x); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 4.32
   },
   {
    "inst": "prescale_hf",
@@ -866,7 +1000,9 @@
    "master": "pt_prescale",
    "kind": "supply",
    "avg_ma": 2.88,
-   "source": "power_budget.py MEASURED prescale (ext: timing/generated/prescale-evidence.json 1.99 at 2.5 GHz /16, tt only: worst assumed 1.2 x); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED prescale (ext: timing/generated/prescale-evidence.json 1.99 at 2.5 GHz /16, tt only: worst assumed 1.2 x); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 4.32
   },
   {
    "inst": "detect",
@@ -875,7 +1011,8 @@
    "master": "pt_detect",
    "kind": "supply",
    "avg_ma": 2.856,
-   "source": "power_budget.py MEASURED detect (ext: detect-evidence.json); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED detect (ext: detect-evidence.json); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "detect",
@@ -884,7 +1021,8 @@
    "master": "pt_detect",
    "kind": "supply",
    "avg_ma": 2.856,
-   "source": "power_budget.py MEASURED detect (ext: detect-evidence.json); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED detect (ext: detect-evidence.json); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "cdr",
@@ -893,7 +1031,9 @@
    "master": "pt_cdr",
    "kind": "supply",
    "avg_ma": 2.4,
-   "source": "MEASURED pll_misc (est: pt_cdr analog + regulator); x1.2 for 85 C"
+   "source": "MEASURED pll_misc (est: pt_cdr analog + regulator); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 3.6
   },
   {
    "inst": "cdr",
@@ -902,7 +1042,9 @@
    "master": "pt_cdr",
    "kind": "supply",
    "avg_ma": 2.4,
-   "source": "MEASURED pll_misc (est: pt_cdr analog + regulator); x1.2 for 85 C"
+   "source": "MEASURED pll_misc (est: pt_cdr analog + regulator); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 3.6
   },
   {
    "inst": "rxselect",
@@ -911,7 +1053,8 @@
    "master": "pt_rxselect",
    "kind": "supply",
    "avg_ma": 2.4,
-   "source": "power_budget.py MEASURED rxselect (est: no active current in rxselect-evidence.json: the 2 mA allocation is kept); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED rxselect (est: no active current in rxselect-evidence.json: the 2 mA allocation is kept); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "rxselect",
@@ -920,7 +1063,8 @@
    "master": "pt_rxselect",
    "kind": "supply",
    "avg_ma": 2.4,
-   "source": "power_budget.py MEASURED rxselect (est: no active current in rxselect-evidence.json: the 2 mA allocation is kept); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED rxselect (est: no active current in rxselect-evidence.json: the 2 mA allocation is kept); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "cascode_pump",
@@ -929,7 +1073,8 @@
    "master": "wtx8_casbias",
    "kind": "supply",
    "avg_ma": 2.4,
-   "source": "bound: cascode charge pump (WT58), no bench current; wired TX owner to confirm; x1.2 for 85 C"
+   "source": "bound: cascode charge pump (WT58), no bench current; wired TX owner to confirm; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "cascode_pump",
@@ -938,7 +1083,8 @@
    "master": "wtx8_casbias",
    "kind": "supply",
    "avg_ma": 2.4,
-   "source": "bound: cascode charge pump (WT58), no bench current; wired TX owner to confirm; x1.2 for 85 C"
+   "source": "bound: cascode charge pump (WT58), no bench current; wired TX owner to confirm; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "term_buffer",
@@ -947,7 +1093,8 @@
    "master": "term_buffer",
    "kind": "supply",
    "avg_ma": 2.4,
-   "source": "INSTANCE_WORST_MA term_buffer (est); x1.2 for 85 C"
+   "source": "INSTANCE_WORST_MA term_buffer (est); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "term_buffer",
@@ -956,7 +1103,8 @@
    "master": "term_buffer",
    "kind": "supply",
    "avg_ma": 2.4,
-   "source": "INSTANCE_WORST_MA term_buffer (est); x1.2 for 85 C"
+   "source": "INSTANCE_WORST_MA term_buffer (est); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "char_ro33",
@@ -965,7 +1113,9 @@
    "master": "pt_char_ro33",
    "kind": "supply",
    "avg_ma": 1.992,
-   "source": "characterization README: 1.66 mA; x1.2 for 85 C"
+   "source": "characterization README: 1.66 mA; x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 2.988
   },
   {
    "inst": "char_ro33",
@@ -974,7 +1124,9 @@
    "master": "pt_char_ro33",
    "kind": "supply",
    "avg_ma": 1.992,
-   "source": "characterization README: 1.66 mA; x1.2 for 85 C"
+   "source": "characterization README: 1.66 mA; x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 2.988
   },
   {
    "inst": "core_bias",
@@ -983,7 +1135,8 @@
    "master": "pt_core_bias_wired",
    "kind": "supply",
    "avg_ma": 1.944,
-   "source": "VDD + rail draws (5 rails) return; x1.2 for 85 C"
+   "source": "VDD + rail draws (5 rails) return; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "termination",
@@ -992,7 +1145,8 @@
    "master": "pt_termination",
    "kind": "supply",
    "avg_ma": 1.872,
-   "source": "power_budget.py MEASURED termination (ext: termination-evidence.json idd_div); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED termination (ext: termination-evidence.json idd_div); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "termination",
@@ -1001,7 +1155,8 @@
    "master": "pt_termination",
    "kind": "supply",
    "avg_ma": 1.872,
-   "source": "power_budget.py MEASURED termination (ext: termination-evidence.json idd_div); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED termination (ext: termination-evidence.json idd_div); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "clockmux",
@@ -1010,7 +1165,9 @@
    "master": "pt_clockmux",
    "kind": "supply",
    "avg_ma": 1.86,
-   "source": "power_budget.py MEASURED clockmux (ext: timing/generated/clockmux-evidence.json (9.67 mA budget is not in the current file)); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED clockmux (ext: timing/generated/clockmux-evidence.json (9.67 mA budget is not in the current file)); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 2.79
   },
   {
    "inst": "clockmux",
@@ -1019,7 +1176,9 @@
    "master": "pt_clockmux",
    "kind": "supply",
    "avg_ma": 1.86,
-   "source": "power_budget.py MEASURED clockmux (ext: timing/generated/clockmux-evidence.json (9.67 mA budget is not in the current file)); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED clockmux (ext: timing/generated/clockmux-evidence.json (9.67 mA budget is not in the current file)); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 2.79
   },
   {
    "inst": "bb_tap_wmon",
@@ -1028,7 +1187,8 @@
    "master": "pt_bb_tap",
    "kind": "supply",
    "avg_ma": 1.236,
-   "source": "INSTANCE_WORST_MA bb_tap-evidence.json; x1.2 for 85 C"
+   "source": "INSTANCE_WORST_MA bb_tap-evidence.json; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "bb_tap_wmon",
@@ -1037,7 +1197,8 @@
    "master": "pt_bb_tap",
    "kind": "supply",
    "avg_ma": 1.236,
-   "source": "INSTANCE_WORST_MA bb_tap-evidence.json; x1.2 for 85 C"
+   "source": "INSTANCE_WORST_MA bb_tap-evidence.json; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pll_vreg2",
@@ -1046,7 +1207,8 @@
    "master": "pt_pll_vreg2",
    "kind": "supply",
    "avg_ma": 1.2,
-   "source": "bound: 2 x 0.5 mA regulator quiescent (rings return on their own VSS); x1.2 for 85 C"
+   "source": "bound: 2 x 0.5 mA regulator quiescent (rings return on their own VSS); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "char_ro50",
@@ -1055,7 +1217,9 @@
    "master": "pt_char_ro50",
    "kind": "supply",
    "avg_ma": 0.972,
-   "source": "characterization README: 0.81 mA; x1.2 for 85 C"
+   "source": "characterization README: 0.81 mA; x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 1.458
   },
   {
    "inst": "char_ro50",
@@ -1064,7 +1228,9 @@
    "master": "pt_char_ro50",
    "kind": "supply",
    "avg_ma": 0.972,
-   "source": "characterization README: 0.81 mA; x1.2 for 85 C"
+   "source": "characterization README: 0.81 mA; x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 1.458
   },
   {
    "inst": "vthdac",
@@ -1073,7 +1239,8 @@
    "master": "pt_vthdac",
    "kind": "supply",
    "avg_ma": 0.84,
-   "source": "power_budget.py MEASURED vthdac (ext: vthdac-evidence.json extracted i_uA); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED vthdac (ext: vthdac-evidence.json extracted i_uA); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "vthdac",
@@ -1082,7 +1249,8 @@
    "master": "pt_vthdac",
    "kind": "supply",
    "avg_ma": 0.84,
-   "source": "power_budget.py MEASURED vthdac (ext: vthdac-evidence.json extracted i_uA); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED vthdac (ext: vthdac-evidence.json extracted i_uA); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "ring_osc",
@@ -1091,7 +1259,9 @@
    "master": "pt_ring_osc",
    "kind": "supply",
    "avg_ma": 0.636,
-   "source": "INSTANCE_WORST_MA debug ring_osc (ring_osc-evidence.json); x1.2 for 85 C"
+   "source": "INSTANCE_WORST_MA debug ring_osc (ring_osc-evidence.json); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 0.954
   },
   {
    "inst": "ring_osc",
@@ -1100,7 +1270,9 @@
    "master": "pt_ring_osc",
    "kind": "supply",
    "avg_ma": 0.636,
-   "source": "INSTANCE_WORST_MA debug ring_osc (ring_osc-evidence.json); x1.2 for 85 C"
+   "source": "INSTANCE_WORST_MA debug ring_osc (ring_osc-evidence.json); x1.2 for 85 C",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 0.954
   },
   {
    "inst": "core_bias",
@@ -1109,7 +1281,8 @@
    "master": "pt_core_bias_wired",
    "kind": "supply",
    "avg_ma": 0.624,
-   "source": "MEASURED bias (core_support README 0.30-0.52); x1.2 for 85 C"
+   "source": "MEASURED bias (core_support README 0.30-0.52); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "steer_4",
@@ -1118,7 +1291,8 @@
    "master": "tx_steer",
    "kind": "supply",
    "avg_ma": 0.6,
-   "source": "bound: steering logic, CMOS switching at the TX word rate; x1.2 for 85 C"
+   "source": "bound: steering logic, CMOS switching at the TX word rate; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "steer_4",
@@ -1127,7 +1301,8 @@
    "master": "tx_steer",
    "kind": "supply",
    "avg_ma": 0.6,
-   "source": "bound: steering logic, CMOS switching at the TX word rate; x1.2 for 85 C"
+   "source": "bound: steering logic, CMOS switching at the TX word rate; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "steer_5",
@@ -1136,7 +1311,8 @@
    "master": "tx_steer",
    "kind": "supply",
    "avg_ma": 0.6,
-   "source": "bound: steering logic, CMOS switching at the TX word rate; x1.2 for 85 C"
+   "source": "bound: steering logic, CMOS switching at the TX word rate; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "steer_5",
@@ -1145,7 +1321,8 @@
    "master": "tx_steer",
    "kind": "supply",
    "avg_ma": 0.6,
-   "source": "bound: steering logic, CMOS switching at the TX word rate; x1.2 for 85 C"
+   "source": "bound: steering logic, CMOS switching at the TX word rate; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "hsbias",
@@ -1154,7 +1331,8 @@
    "master": "pt_wtx_hsbias",
    "kind": "supply",
    "avg_ma": 0.6,
-   "source": "bound: 10 uA reference, eight binary PMOS sources into a triode load (no bench current); x1.2 for 85 C"
+   "source": "bound: 10 uA reference, eight binary PMOS sources into a triode load (no bench current); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "hsbias",
@@ -1163,7 +1341,8 @@
    "master": "pt_wtx_hsbias",
    "kind": "supply",
    "avg_ma": 0.6,
-   "source": "bound: 10 uA reference, eight binary PMOS sources into a triode load (no bench current); x1.2 for 85 C"
+   "source": "bound: 10 uA reference, eight binary PMOS sources into a triode load (no bench current); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "aosc",
@@ -1172,7 +1351,8 @@
    "master": "pt_aosc",
    "kind": "supply",
    "avg_ma": 0.581,
-   "source": "power_budget.py MEASURED aosc (ext: timing/generated/aosc-evidence.json i_on_ma (register reset = enabled)); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED aosc (ext: timing/generated/aosc-evidence.json i_on_ma (register reset = enabled)); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "aosc",
@@ -1181,7 +1361,8 @@
    "master": "pt_aosc",
    "kind": "supply",
    "avg_ma": 0.581,
-   "source": "power_budget.py MEASURED aosc (ext: timing/generated/aosc-evidence.json i_on_ma (register reset = enabled)); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED aosc (ext: timing/generated/aosc-evidence.json i_on_ma (register reset = enabled)); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "wtx_fallback_control",
@@ -1190,7 +1371,8 @@
    "master": "pt_wtx_fallback_control",
    "kind": "supply",
    "avg_ma": 0.48,
-   "source": "bound: both sides return; x1.2 for 85 C"
+   "source": "bound: both sides return; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "txpad_bias",
@@ -1199,7 +1381,8 @@
    "master": "pt_txpad_bias",
    "kind": "supply",
    "avg_ma": 0.36,
-   "source": "wired_tx README: about 195 uA on + 2 x 51 uA detect legs; x1.2 for 85 C"
+   "source": "wired_tx README: about 195 uA on + 2 x 51 uA detect legs; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "txpad_bias",
@@ -1208,7 +1391,8 @@
    "master": "pt_txpad_bias",
    "kind": "supply",
    "avg_ma": 0.36,
-   "source": "wired_tx README: about 195 uA on + 2 x 51 uA detect legs; x1.2 for 85 C"
+   "source": "wired_tx README: about 195 uA on + 2 x 51 uA detect legs; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "core_bias",
@@ -1217,7 +1401,8 @@
    "master": "pt_core_bias_wired",
    "kind": "supply",
    "avg_ma": 0.264,
-   "source": "PDS-18: every core_bias rail draw <= 0.22 mA; x1.2 for 85 C"
+   "source": "PDS-18: every core_bias rail draw <= 0.22 mA; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "core_bias",
@@ -1226,7 +1411,8 @@
    "master": "pt_core_bias_wired",
    "kind": "supply",
    "avg_ma": 0.264,
-   "source": "PDS-18: every core_bias rail draw <= 0.22 mA; x1.2 for 85 C"
+   "source": "PDS-18: every core_bias rail draw <= 0.22 mA; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "core_bias",
@@ -1235,7 +1421,8 @@
    "master": "pt_core_bias_wired",
    "kind": "supply",
    "avg_ma": 0.264,
-   "source": "PDS-18: every core_bias rail draw <= 0.22 mA; x1.2 for 85 C"
+   "source": "PDS-18: every core_bias rail draw <= 0.22 mA; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "core_bias",
@@ -1244,7 +1431,8 @@
    "master": "pt_core_bias_wired",
    "kind": "supply",
    "avg_ma": 0.264,
-   "source": "PDS-18: every core_bias rail draw <= 0.22 mA; x1.2 for 85 C"
+   "source": "PDS-18: every core_bias rail draw <= 0.22 mA; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "wtx_fallback_control",
@@ -1253,7 +1441,8 @@
    "master": "pt_wtx_fallback_control",
    "kind": "supply",
    "avg_ma": 0.24,
-   "source": "bound: island-side level logic; x1.2 for 85 C"
+   "source": "bound: island-side level logic; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "wtx_fallback_control",
@@ -1262,7 +1451,8 @@
    "master": "pt_wtx_fallback_control",
    "kind": "supply",
    "avg_ma": 0.24,
-   "source": "bound: static CMOS fallback control; x1.2 for 85 C"
+   "source": "bound: static CMOS fallback control; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "wmon_sel",
@@ -1271,7 +1461,8 @@
    "master": "pt_wmon_sel",
    "kind": "supply",
    "avg_ma": 0.12,
-   "source": "bound: transmission-gate selector, no active current in wmon_sel-evidence.json; x1.2 for 85 C"
+   "source": "bound: transmission-gate selector, no active current in wmon_sel-evidence.json; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "wmon_sel",
@@ -1280,7 +1471,8 @@
    "master": "pt_wmon_sel",
    "kind": "supply",
    "avg_ma": 0.12,
-   "source": "bound: transmission-gate selector, no active current in wmon_sel-evidence.json; x1.2 for 85 C"
+   "source": "bound: transmission-gate selector, no active current in wmon_sel-evidence.json; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "attached_tx_interlock",
@@ -1289,7 +1481,8 @@
    "master": "tx_interlock",
    "kind": "supply",
    "avg_ma": 0.12,
-   "source": "bound: static CMOS interlock logic; x1.2 for 85 C"
+   "source": "bound: static CMOS interlock logic; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "attached_tx_interlock",
@@ -1298,7 +1491,8 @@
    "master": "tx_interlock",
    "kind": "supply",
    "avg_ma": 0.12,
-   "source": "bound: static CMOS interlock logic; x1.2 for 85 C"
+   "source": "bound: static CMOS interlock logic; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "por",
@@ -1307,7 +1501,8 @@
    "master": "por",
    "kind": "supply",
    "avg_ma": 0.06,
-   "source": "bound: comparator + RC power-on reset (no bench current); quiescent well below 0.05 mA; x1.2 for 85 C"
+   "source": "bound: comparator + RC power-on reset (no bench current); quiescent well below 0.05 mA; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "por",
@@ -1316,7 +1511,8 @@
    "master": "por",
    "kind": "supply",
    "avg_ma": 0.06,
-   "source": "bound: comparator + RC power-on reset (no bench current); quiescent well below 0.05 mA; x1.2 for 85 C"
+   "source": "bound: comparator + RC power-on reset (no bench current); quiescent well below 0.05 mA; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_host_clk",
@@ -1326,7 +1522,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "bound: 1-4 CMOS clamp gates; dynamic current at <= 1.6 GHz clock inputs <= 0.05 mA",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_host_clk",
@@ -1336,7 +1533,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_pll_tx_fbck",
@@ -1346,7 +1544,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "bound: 1-4 CMOS clamp gates; dynamic current at <= 1.6 GHz clock inputs <= 0.05 mA",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_pll_tx_fbck",
@@ -1356,7 +1555,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_aux_ck",
@@ -1366,7 +1566,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "bound: 1-4 CMOS clamp gates; dynamic current at <= 1.6 GHz clock inputs <= 0.05 mA",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_aux_ck",
@@ -1376,7 +1577,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pd_clk_obs",
@@ -1386,7 +1588,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_clk_obs",
@@ -1396,7 +1599,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "bound: 1-4 CMOS clamp gates; dynamic current at <= 1.6 GHz clock inputs <= 0.05 mA",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_clk_obs",
@@ -1406,7 +1610,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_wmon",
@@ -1416,7 +1621,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_cdr_up_0",
@@ -1426,7 +1632,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "bound: 1-4 CMOS clamp gates; dynamic current at <= 1.6 GHz clock inputs <= 0.05 mA",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_cdr_up_0",
@@ -1436,7 +1643,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_cdr_up_1",
@@ -1446,7 +1654,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "bound: 1-4 CMOS clamp gates; dynamic current at <= 1.6 GHz clock inputs <= 0.05 mA",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_cdr_up_1",
@@ -1456,7 +1665,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_cdr_up_2",
@@ -1466,7 +1676,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "bound: 1-4 CMOS clamp gates; dynamic current at <= 1.6 GHz clock inputs <= 0.05 mA",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_cdr_up_2",
@@ -1476,7 +1687,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_cdr_up_3",
@@ -1486,7 +1698,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "bound: 1-4 CMOS clamp gates; dynamic current at <= 1.6 GHz clock inputs <= 0.05 mA",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_cdr_up_3",
@@ -1496,7 +1709,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_cdr_dn_0",
@@ -1506,7 +1720,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "bound: 1-4 CMOS clamp gates; dynamic current at <= 1.6 GHz clock inputs <= 0.05 mA",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_cdr_dn_0",
@@ -1516,7 +1731,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_cdr_dn_1",
@@ -1526,7 +1742,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "bound: 1-4 CMOS clamp gates; dynamic current at <= 1.6 GHz clock inputs <= 0.05 mA",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_cdr_dn_1",
@@ -1536,7 +1753,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_cdr_dn_2",
@@ -1546,7 +1764,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "bound: 1-4 CMOS clamp gates; dynamic current at <= 1.6 GHz clock inputs <= 0.05 mA",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_cdr_dn_2",
@@ -1556,7 +1775,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_cdr_dn_3",
@@ -1566,7 +1786,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "bound: 1-4 CMOS clamp gates; dynamic current at <= 1.6 GHz clock inputs <= 0.05 mA",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_cdr_dn_3",
@@ -1576,7 +1797,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_wtx_dx",
@@ -1586,7 +1808,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "bound: 1-4 CMOS clamp gates; dynamic current at <= 1.6 GHz clock inputs <= 0.05 mA",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "iso_wtx_dx",
@@ -1596,7 +1819,8 @@
    "kind": "supply",
    "avg_ma": 0.05,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "rxlevel",
@@ -1605,7 +1829,8 @@
    "master": "pt_rxlevel",
    "kind": "supply",
    "avg_ma": 0.048,
-   "source": "power_budget.py MEASURED rxlevel (ext: rxlevel-evidence.json); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED rxlevel (ext: rxlevel-evidence.json); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "rxlevel",
@@ -1614,7 +1839,8 @@
    "master": "pt_rxlevel",
    "kind": "supply",
    "avg_ma": 0.048,
-   "source": "power_budget.py MEASURED rxlevel (ext: rxlevel-evidence.json); x1.2 for 85 C"
+   "source": "power_budget.py MEASURED rxlevel (ext: rxlevel-evidence.json); x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "refvcm",
@@ -1623,7 +1849,8 @@
    "master": "pt_refvcm",
    "kind": "supply",
    "avg_ma": 0.035,
-   "source": "analog/core_support README: 15-29 uA; x1.2 for 85 C"
+   "source": "analog/core_support README: 15-29 uA; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "refvcm",
@@ -1632,7 +1859,8 @@
    "master": "pt_refvcm",
    "kind": "supply",
    "avg_ma": 0.035,
-   "source": "analog/core_support README: 15-29 uA; x1.2 for 85 C"
+   "source": "analog/core_support README: 15-29 uA; x1.2 for 85 C",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_por_bypass",
@@ -1641,7 +1869,8 @@
    "master": "pad_strap",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_por_bypass",
@@ -1650,7 +1879,8 @@
    "master": "pad_strap",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_por_bypass",
@@ -1659,7 +1889,8 @@
    "master": "pad_strap",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_por_bypass",
@@ -1668,7 +1899,8 @@
    "master": "pad_strap",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "isw_pll",
@@ -1678,7 +1910,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: PG inverter + EN pull-down (uA); at turn-off the discharge NMOS sinks the island charge (<= 2 nF x 3.3 V in >= 1.2 us, README active discharge)",
-   "peak_ma": 5.5
+   "peak_ma": 5.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_ref",
@@ -1687,7 +1920,8 @@
    "master": "pad_refpad",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_ref",
@@ -1696,7 +1930,8 @@
    "master": "pad_refpad",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_aux_clk",
@@ -1705,7 +1940,8 @@
    "master": "pad_refpad",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_aux_clk",
@@ -1714,7 +1950,8 @@
    "master": "pad_refpad",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf1",
@@ -1724,7 +1961,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf1",
@@ -1734,7 +1972,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf29",
@@ -1744,7 +1983,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf29",
@@ -1754,7 +1994,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf55",
@@ -1764,7 +2005,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf55",
@@ -1774,7 +2016,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf56",
@@ -1784,7 +2027,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf56",
@@ -1794,7 +2038,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf58",
@@ -1804,7 +2049,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf58",
@@ -1814,7 +2060,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_grp0",
@@ -1824,7 +2071,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_grp0",
@@ -1834,7 +2082,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf43",
@@ -1844,7 +2093,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf43",
@@ -1854,7 +2104,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf44",
@@ -1864,7 +2115,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf44",
@@ -1874,7 +2126,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf45",
@@ -1884,7 +2137,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf45",
@@ -1894,7 +2148,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf46",
@@ -1904,7 +2159,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf46",
@@ -1914,7 +2170,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf47",
@@ -1924,7 +2181,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf47",
@@ -1934,7 +2192,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf48",
@@ -1944,7 +2203,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf48",
@@ -1954,7 +2214,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf49",
@@ -1964,7 +2225,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf49",
@@ -1974,7 +2236,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf50",
@@ -1984,7 +2247,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf50",
@@ -1994,7 +2258,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf51",
@@ -2004,7 +2269,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf51",
@@ -2014,7 +2280,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf52",
@@ -2024,7 +2291,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf52",
@@ -2034,7 +2302,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf53",
@@ -2044,7 +2313,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf53",
@@ -2054,7 +2324,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf54",
@@ -2064,7 +2335,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf54",
@@ -2074,7 +2346,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_grp1",
@@ -2084,7 +2357,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_grp1",
@@ -2094,7 +2368,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_pad",
@@ -2104,7 +2379,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_pad",
@@ -2114,7 +2390,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_io",
@@ -2123,7 +2400,8 @@
    "master": "atb_provider_pad",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_io",
@@ -2132,7 +2410,8 @@
    "master": "atb_provider_pad",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_io",
@@ -2141,7 +2420,8 @@
    "master": "atb_provider_pad",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_io",
@@ -2150,7 +2430,8 @@
    "master": "atb_provider_pad",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf1",
@@ -2160,7 +2441,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf1",
@@ -2170,7 +2452,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf2",
@@ -2180,7 +2463,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf2",
@@ -2190,7 +2474,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf3",
@@ -2200,7 +2485,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf3",
@@ -2210,7 +2496,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf4",
@@ -2220,7 +2507,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf4",
@@ -2230,7 +2518,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf5",
@@ -2240,7 +2529,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf5",
@@ -2250,7 +2540,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf6",
@@ -2260,7 +2551,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf6",
@@ -2270,7 +2562,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf9",
@@ -2280,7 +2573,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf9",
@@ -2290,7 +2584,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf12",
@@ -2300,7 +2595,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf12",
@@ -2310,7 +2606,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf13",
@@ -2320,7 +2617,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf13",
@@ -2330,7 +2628,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_grp0",
@@ -2340,7 +2639,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_grp0",
@@ -2350,7 +2650,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf43",
@@ -2360,7 +2661,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf43",
@@ -2370,7 +2672,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf44",
@@ -2380,7 +2683,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf44",
@@ -2390,7 +2694,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_grp1",
@@ -2400,7 +2705,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_grp1",
@@ -2410,7 +2716,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf25",
@@ -2420,7 +2727,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf25",
@@ -2430,7 +2738,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf41",
@@ -2440,7 +2749,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf41",
@@ -2450,7 +2760,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf58",
@@ -2460,7 +2771,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf58",
@@ -2470,7 +2782,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_grp2",
@@ -2480,7 +2793,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_grp2",
@@ -2490,7 +2804,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf29",
@@ -2500,7 +2815,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf29",
@@ -2510,7 +2826,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf30",
@@ -2520,7 +2837,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf30",
@@ -2530,7 +2848,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf31",
@@ -2540,7 +2859,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf31",
@@ -2550,7 +2870,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf32",
@@ -2560,7 +2881,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf32",
@@ -2570,7 +2892,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf34",
@@ -2580,7 +2903,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf34",
@@ -2590,7 +2914,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf37",
@@ -2600,7 +2925,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf37",
@@ -2610,7 +2936,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf47",
@@ -2620,7 +2947,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf47",
@@ -2630,7 +2958,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf48",
@@ -2640,7 +2969,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf48",
@@ -2650,7 +2980,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_grp3",
@@ -2660,7 +2991,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_grp3",
@@ -2670,7 +3002,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf42",
@@ -2680,7 +3013,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf42",
@@ -2690,7 +3024,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf45",
@@ -2700,7 +3035,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf45",
@@ -2710,7 +3046,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf46",
@@ -2720,7 +3057,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf46",
@@ -2730,7 +3068,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf49",
@@ -2740,7 +3079,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf49",
@@ -2750,7 +3090,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf50",
@@ -2760,7 +3101,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf50",
@@ -2770,7 +3112,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf51",
@@ -2780,7 +3123,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf51",
@@ -2790,7 +3134,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf52",
@@ -2800,7 +3145,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf52",
@@ -2810,7 +3156,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf53",
@@ -2820,7 +3167,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf53",
@@ -2830,7 +3178,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf54",
@@ -2840,7 +3189,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf54",
@@ -2850,7 +3200,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf55",
@@ -2860,7 +3211,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf55",
@@ -2870,7 +3222,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf56",
@@ -2880,7 +3233,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf56",
@@ -2890,7 +3244,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf57",
@@ -2900,7 +3255,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf57",
@@ -2910,7 +3266,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_grp4",
@@ -2920,7 +3277,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_grp4",
@@ -2930,7 +3288,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_pad",
@@ -2940,7 +3299,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_pad",
@@ -2950,7 +3310,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_io",
@@ -2959,7 +3320,8 @@
    "master": "atb_provider_pad",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_io",
@@ -2968,7 +3330,8 @@
    "master": "atb_provider_pad",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_io",
@@ -2977,7 +3340,8 @@
    "master": "atb_provider_pad",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_io",
@@ -2986,7 +3350,8 @@
    "master": "atb_provider_pad",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "isw_wired_rx",
@@ -2996,7 +3361,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: PG inverter + EN pull-down (uA); at turn-off the discharge NMOS sinks the island charge (<= 2 nF x 3.3 V in >= 1.2 us, README active discharge)",
-   "peak_ma": 5.5
+   "peak_ma": 5.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "isw_debug",
@@ -3006,7 +3372,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: PG inverter + EN pull-down (uA); at turn-off the discharge NMOS sinks the island charge (<= 2 nF x 3.3 V in >= 1.2 us, README active discharge)",
-   "peak_ma": 5.5
+   "peak_ma": 5.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "isw_wired_tx_a",
@@ -3016,7 +3383,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: PG inverter + EN pull-down (uA); at turn-off the discharge NMOS sinks the island charge (<= 2 nF x 3.3 V in >= 1.2 us, README active discharge)",
-   "peak_ma": 5.5
+   "peak_ma": 5.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "isw_wired_tx_b",
@@ -3026,7 +3394,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: PG inverter + EN pull-down (uA); at turn-off the discharge NMOS sinks the island charge (<= 2 nF x 3.3 V in >= 1.2 us, README active discharge)",
-   "peak_ma": 5.5
+   "peak_ma": 5.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "isw_wired_cap",
@@ -3036,7 +3405,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: PG inverter + EN pull-down (uA); at turn-off the discharge NMOS sinks the island charge (<= 2 nF x 3.3 V in >= 1.2 us, README active discharge)",
-   "peak_ma": 5.5
+   "peak_ma": 5.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_wtx_ext",
@@ -3045,7 +3415,8 @@
    "master": "pad_rf_pair",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_wtx_ext",
@@ -3054,7 +3425,8 @@
    "master": "pad_rf_pair",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_wmon",
@@ -3063,7 +3435,8 @@
    "master": "pad_single_leg",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_wmon",
@@ -3072,7 +3445,8 @@
    "master": "pad_single_leg",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_tlp",
@@ -3081,7 +3455,8 @@
    "master": "pad_tlp",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_tlp",
@@ -3090,7 +3465,8 @@
    "master": "pad_tlp",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_hs_rx",
@@ -3099,7 +3475,8 @@
    "master": "pad_hspad",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_hs_rx",
@@ -3108,7 +3485,8 @@
    "master": "pad_hspad",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_hs_rx",
@@ -3117,7 +3495,8 @@
    "master": "pad_hspad",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)"
+   "source": "bound: ESD diode / clamp ring connection, no DC path in operation (junction leakage)",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_usb",
@@ -3126,7 +3505,8 @@
    "master": "pad_wirepad",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "ESD ring connection, leakage only"
+   "source": "ESD ring connection, leakage only",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_wire_tx",
@@ -3135,7 +3515,9 @@
    "master": "pad_txpad",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "ESD ring connection (DVDD_P/N), leakage only"
+   "source": "ESD ring connection (DVDD_P/N), leakage only",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 0.011
   },
   {
    "inst": "pad_wire_tx",
@@ -3144,7 +3526,9 @@
    "master": "pad_txpad",
    "kind": "supply",
    "avg_ma": 0.01,
-   "source": "ESD ring connection (DVDD_P/N), leakage only"
+   "source": "ESD ring connection (DVDD_P/N), leakage only",
+   "em_limit": "avg_and_rms",
+   "rms_ma": 0.011
   },
   {
    "inst": "atb0_leaf22",
@@ -3154,7 +3538,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb0_leaf22",
@@ -3164,7 +3549,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf7",
@@ -3174,7 +3560,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf7",
@@ -3184,7 +3571,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf10",
@@ -3194,7 +3582,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf10",
@@ -3204,7 +3593,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf22",
@@ -3214,7 +3604,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf22",
@@ -3224,7 +3615,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf23",
@@ -3234,7 +3626,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf23",
@@ -3244,7 +3637,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf24",
@@ -3254,7 +3648,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf24",
@@ -3264,7 +3659,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf26",
@@ -3274,7 +3670,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf26",
@@ -3284,7 +3681,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf27",
@@ -3294,7 +3692,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf27",
@@ -3304,7 +3703,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf28",
@@ -3314,7 +3714,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf28",
@@ -3324,7 +3725,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf40",
@@ -3334,7 +3736,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf40",
@@ -3344,7 +3747,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf59",
@@ -3354,7 +3758,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf59",
@@ -3364,7 +3769,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf60",
@@ -3374,7 +3780,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "bound: static CMOS select logic, switched only at SPI rate; leakage nA (island_support README)",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf60",
@@ -3384,7 +3791,8 @@
    "kind": "supply",
    "avg_ma": 0.01,
    "source": "same",
-   "peak_ma": 0.5
+   "peak_ma": 0.5,
+   "em_limit": "dc_avg"
   },
   {
    "inst": "pad_por_bypass",
@@ -3393,6 +3801,7 @@
    "master": "pad_strap",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3402,6 +3811,7 @@
    "master": "pad_strap",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3411,6 +3821,7 @@
    "master": "por",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3420,6 +3831,7 @@
    "master": "pt_diff_clk_rx",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3429,6 +3841,7 @@
    "master": "pt_diff_clk_rx",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3438,7 +3851,8 @@
    "master": "pt_char_atb",
    "kind": "supply",
    "avg_ma": 0.001,
-   "source": "char_atb-evidence.json i_vdd 6e-8 mA"
+   "source": "char_atb-evidence.json i_vdd 6e-8 mA",
+   "em_limit": "dc_avg"
   },
   {
    "inst": "atb1_leaf4",
@@ -3447,6 +3861,7 @@
    "master": "atb_leaf_s",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3456,6 +3871,7 @@
    "master": "atb_leaf_s",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3465,6 +3881,7 @@
    "master": "atb_leaf_s",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3474,6 +3891,7 @@
    "master": "atb_leaf_s",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3483,6 +3901,7 @@
    "master": "atb_leaf_s",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3492,6 +3911,7 @@
    "master": "atb_leaf_s",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3501,6 +3921,7 @@
    "master": "atb_leaf_s",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3510,6 +3931,7 @@
    "master": "atb_leaf_s",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3519,6 +3941,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3528,6 +3951,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3537,6 +3961,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3546,6 +3971,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3555,6 +3981,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3564,6 +3991,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3573,6 +4001,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3582,6 +4011,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3591,6 +4021,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3600,6 +4031,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3609,6 +4041,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3618,6 +4051,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3627,6 +4061,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3636,6 +4071,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3645,6 +4081,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3654,6 +4091,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3663,6 +4101,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3672,6 +4111,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3681,6 +4121,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3690,6 +4131,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3699,6 +4141,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3708,6 +4151,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3717,6 +4161,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3726,6 +4171,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3735,6 +4181,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3744,6 +4191,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3753,6 +4201,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3762,6 +4211,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3771,6 +4221,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3780,6 +4231,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3789,6 +4241,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3798,6 +4251,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3807,6 +4261,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3816,6 +4271,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3825,6 +4281,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3834,6 +4291,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3843,6 +4301,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3852,6 +4311,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3861,6 +4321,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3870,6 +4331,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3879,6 +4341,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3888,6 +4351,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3897,6 +4361,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3906,6 +4371,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3915,6 +4381,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3924,6 +4391,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3933,6 +4401,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3942,6 +4411,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3951,6 +4421,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3960,6 +4431,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3969,6 +4441,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3978,6 +4451,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3987,6 +4461,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -3996,6 +4471,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4005,6 +4481,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4014,6 +4491,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4023,6 +4501,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4032,6 +4511,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4041,6 +4521,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4050,6 +4531,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4059,6 +4541,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4068,6 +4551,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4077,6 +4561,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4086,6 +4571,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4095,6 +4581,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4104,6 +4591,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4113,6 +4601,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4122,6 +4611,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4131,6 +4621,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4140,6 +4631,7 @@
    "master": "pt_digital_macro",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4149,6 +4641,7 @@
    "master": "pad_txpad",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4158,6 +4651,7 @@
    "master": "pad_txpad",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4167,6 +4661,7 @@
    "master": "pad_txpad",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4176,6 +4671,7 @@
    "master": "pt_bb_tap",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4185,6 +4681,7 @@
    "master": "pt_bb_tap",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4194,6 +4691,7 @@
    "master": "pt_clockmux",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4203,6 +4701,7 @@
    "master": "pt_clockmux",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4212,6 +4711,7 @@
    "master": "pt_clockmux",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4221,6 +4721,7 @@
    "master": "pt_clockmux",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4230,6 +4731,7 @@
    "master": "pt_clockmux",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4239,6 +4741,7 @@
    "master": "pt_pll_ring_core",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4248,6 +4751,7 @@
    "master": "pt_diff_clk_rx",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4257,6 +4761,7 @@
    "master": "pt_clk_obs16",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4266,6 +4771,7 @@
    "master": "pt_clk_obs16",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4275,6 +4781,7 @@
    "master": "pt_clk_obs16",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4284,6 +4791,7 @@
    "master": "pt_clk_obs16",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4293,6 +4801,7 @@
    "master": "tx_steer",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4302,6 +4811,7 @@
    "master": "tx_steer",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4311,6 +4821,7 @@
    "master": "tx_interlock",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4320,6 +4831,7 @@
    "master": "atb_leaf_s",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   },
   {
@@ -4329,9 +4841,12 @@
    "master": "atb_leaf_s",
    "kind": "tie",
    "avg_ma": 0.001,
+   "em_limit": "dc_avg",
    "source": "logic / bias tie to a supply: gate or junction leakage only"
   }
  ],
  "missing": [],
- "above_0p5ma": 137
+ "above_0p5ma_avg": 131,
+ "above_0p5ma_avg_or_rms": 131,
+ "above_0p5ma_any_incl_peak": 137
 }

@@ -507,7 +507,7 @@ def _plates(g, h):
             for k_, r_ in ((1, allowed['Metal5']), (2, allowed['Metal4']), (3, L['carve']['Metal5'] + L['carve']['Metal4']), (4, L['tgt']['Metal5'] + L['tgt']['Metal4']), (5, src['Metal5'])):
                 dc.shapes(dl.layer(k_, 0)).insert(r_)
             dl.write('/run/plate_debug.gds')
-        W0 = max(3.0, mA/2.0); W0 = W0 + 2.0 if W0 > 28.0 else W0; P = None      # a plate over 28 um carries one 2 um slot (MSLOT.1): width for the current plus the slot
+        W0 = max(3.0, mA/2.0); W0 = W0/(1-3/24) if W0 > 28.0 else W0; P = None      # a plate over 28 um carries the 3/24 hole loss (MSLOT.1)
         tgt = {ln: raster(L['tgt'][ln]) for ln in LAYERS}
         srcm = {ln: raster(src[ln]) & ~tgt[ln] for ln in LAYERS}
         # last rung: the drawn hook (coordinator ruling 2026-11-28 option 2), as narrow as EM allows (mA / 2 um, >= 1 um)
@@ -549,25 +549,19 @@ def _plates(g, h):
             rep[f'{n}.{net}'] = dict(mA=mA, error='landing clipped'); return
         own_v = g['ly'].cell(placed(n)[0]); vown = h['cell_m'](n, 'Via4')
         vr = ((pl['Metal4'] & (pl['Metal5'] + live[net]['Metal5'])) + (pl['Metal5'] & live[net]['Metal4']) + (pl['Metal5'] & L['vialand'])) - vown.sized(um(1.0))
-        # MSLOT (shuttle precheck deck mslot.rb): metal wider than 30 um needs slots: 2 um wide, 10-250 um long, >= 10 um from
-        # the metal edge and from each other, drawn as an opening with the slot mark (<layer>/3); vias >= 0.2 um from a slot
+        # MSLOT.1 (metal wider than 30 um must be slotted, shuttle precheck deck): the bars' / trunks' pattern, 3 x 3 um holes on a
+        # 24 um pitch wherever the plate (with the same-net grid it merges into) is wider than 28 um; the hole loss (3/24 of the
+        # width in a cross-section through a row) is counted in W_eff (audit 2026-11-28 item 9: lo_txbuf VSS 37.6 x 240 um)
         slots = {ln: db.Region() for ln in LAYERS}
         for ln in LAYERS:
-            for poly in pl[ln].each():
-                for tz in poly.decompose_trapezoids(1):
-                    b = tz.bbox()
-                    if min(b.width(), b.height()) <= um(30): continue
-                    horiz = b.width() >= b.height(); Lr = (b.width() if horiz else b.height()) - um(20)
-                    if Lr < um(10): continue
-                    c = (b.bottom+b.top)//2 if horiz else (b.left+b.right)//2; a0 = (b.left if horiz else b.bottom) + um(10)
-                    nseg = int(-(-Lr // um(250))); seg = (Lr - (nseg-1)*um(10))//nseg
-                    for k_ in range(nseg):
-                        a = a0 + k_*(seg+um(10))
-                        slots[ln].insert(db.Box(a, c-um(1), a+seg, c+um(1)) if horiz else db.Box(c-um(1), a, c+um(1), a+seg))
-            slots[ln] = db.Region([q for q in (slots[ln] - live[net][ln].sized(um(1))).each() if q.bbox().width() >= um(2) and q.bbox().height() >= um(10) or q.bbox().height() >= um(2) and q.bbox().width() >= um(10)])   # only where the opening is real (no grid metal fills it)
-            if not slots[ln].is_empty():
-                pl[ln] = (pl[ln] - slots[ln]).merged()
-                pdn.shapes(g['ly'].layer(46 if ln == 'Metal4' else 81, 3)).insert(slots[ln])
+            u_ = (pl[ln] + (live[net][ln] & pl[ln].sized(um(30)))).merged()
+            wide_ = u_.sized(-um(14)).sized(um(14)) & pl[ln]
+            if wide_.is_empty(): continue
+            bb_ = wide_.bbox(); hs = db.Region()
+            for xh in range(bb_.left - bb_.left % um(24) + um(12), bb_.right, um(24)):
+                for yh in range(bb_.bottom - bb_.bottom % um(24) + um(12), bb_.top, um(24)): hs.insert(db.Box(xh-um(1.5), yh-um(1.5), xh+um(1.5), yh+um(1.5)))
+            slots[ln] = hs & wide_.sized(-um(3))
+            pl[ln] = (pl[ln] - slots[ln]).merged()
         sl_all = (slots['Metal4'] + slots['Metal5']).sized(um(0.25))
         vr = vr - sl_all
         # neck check (current crowding): eroded by half the width the current needs, the plate must still join the grid to the pin
@@ -598,7 +592,7 @@ def _plates(g, h):
         nch = sum(1 for a_, b_ in zip(P, P[1:]) if a_[0] != b_[0]) + (1 if not (pl['Metal5'] & L['vialand']).is_empty() else 0)
         # Via4 only matters where the current changes layer (a Metal4-to-Metal4 plate carries none: isw_wired_tx 2026-11-28)
         drop = mA*(RS['Metal5']*L5/W + RS['Metal4']*L4/W) + (mA*4.5/max(1, nv/max(1, nch)) if nch else 0.0) + (mA*4.5/nv3 if nv3 else 0.0)
-        W_eff = W - 2.0 if not (slots['Metal4'] + slots['Metal5']).is_empty() else W
+        W_eff = W*(1-3/24) if not (slots['Metal4'] + slots['Metal5']).is_empty() else W
         em_ok = (nch == 0 or nv >= mA/V_LIM*nch) and (nv3 == 0 or nv3 >= mA/V_LIM) and mA/W_eff <= J_LIM and (neck_ok or neck_pin)
         if em_ok: done.add((n, L['pin'], net))      # an EM-short plate keeps its router hook in parallel
         rep[f'{n}.{net}'] = dict(mA=mA, pin=L['pin'], width_um=round(W, 1), len_m5_um=L5, len_m4_um=L4, via4=nv, via3=nv3, mA_per_um=round(mA/W, 2),

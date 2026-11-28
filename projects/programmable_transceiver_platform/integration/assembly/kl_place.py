@@ -657,14 +657,11 @@ PLATED = TRK.build(globals(), 'plates') if os.environ.get('PLATES', '1') == '1' 
 # live piece of its net is never used for a hook or a direct tie
 _m4f = db.Region(pdn.begin_shapes_rec(LI['Metal4'])).merged(); _m5f = db.Region(pdn.begin_shapes_rec(LI['Metal5'])).merged()
 _v4c = ly.cell('via_'+str(VIA['Via4']))
-_v4f = db.Region([i_.bbox() for i_ in pdn.each_inst() if _v4c and i_.cell_index == _v4c.cell_index()]).merged()      # Via4 array outlines (per array, not per cut: 2M cuts took 10+ min); arrays are same-net only
+import pdn_live as PL
+_v4f = PL.via4_region(ly, pdn, VIA['Via4'], _v4c)      # array outlines + plain cuts (pdn_live)
 man['dead_slots'] = []; _live_all = {}
 for net in [n_ for n_ in ('VDD', 'VSS') if n_ in slots and n_ in ring]:
-    k4_ = _m4f.interacting(stubs[net]); k5_ = _m5f.interacting(_v4f.interacting(k4_))
-    while True:
-        n5_ = (_m5f.interacting(_v4f.interacting(k4_)) + k5_).merged(); n4_ = (_m4f.interacting(_v4f.interacting(n5_)) + k4_).merged()
-        if n4_.count() == k4_.count() and n5_.count() == k5_.count(): break
-        k4_, k5_ = n4_, n5_
+    k4_, k5_ = PL.live(_m4f, _m5f, _v4f, stubs[net])
     lv_ = {'Metal4': k4_, 'Metal5': k5_}; _live_all.setdefault('Metal4', db.Region()).insert(k4_); _live_all.setdefault('Metal5', db.Region()).insert(k5_)
     for sl in slots[net]:
         if not sl[2] and (lv_[sl[0]] & db.Region(sl[1])).area() < sl[1].area() * 0.9:

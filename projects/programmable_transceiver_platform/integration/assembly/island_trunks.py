@@ -554,7 +554,7 @@ def _plates(g, h):
         # width in a cross-section through a row) is counted in W_eff (audit 2026-11-28 item 9: lo_txbuf VSS 37.6 x 240 um)
         slots = {ln: db.Region() for ln in LAYERS}
         for ln in LAYERS:
-            u_ = (pl[ln] + (live[net][ln] & pl[ln].sized(um(30)))).merged()
+            u_ = (pl[ln] + (metal[(net, ln)] & pl[ln].sized(um(30)))).merged()      # all drawn grid metal of the net (floating pieces too)
             wide_ = u_.sized(-um(14)).sized(um(14)) & pl[ln]
             if wide_.is_empty(): continue
             bb_ = wide_.bbox(); hs = db.Region()

@@ -52,6 +52,8 @@ ISLANDS = {
   'RAIL_pll':       dict(sw=['isw_pll'], loads={'pll_vreg2': 20.9, 'prescale': 2.4, 'prescale_hf': 2.4, 'cdr': 2.0, 'clockmux': 1.6}, design=29.4, allow=60.4)}}
 LP = dict(own=0.7, opin=1.0, all_sides=True)      # landing parameters; _plates retries a failed pin with LEGACY_LP
 LEGACY_LP = dict(own=2.5, opin=3.0, all_sides=False)   # before 2026-11-28: clk_obs / rx_aux_clk plated only with these
+PLATE_W_MAX = 160.0      # um, IR widening cap for plates (trunks keep W_MAX)
+_NOIR = [False]          # hookup.py IR widening off (retry after a widened plate lost its landing; nothing drawn then)
 _RES = [None]            # reserved plate landing area (reserve -> _plates)
 _BLK = []                # DEF blockage rectangles (name, (x0, y0, x1, y1), layers)
 
@@ -485,7 +487,7 @@ def _plates(g, h):
     db = h['db']; um = h['um']; fu = h['fu']; man = h['man']; pdn = h['pdn']; LI = h['LI']; avoid = h['avoid']
     rep = h['rep']; cur_net = h['cur_net']; landing = h['landing']; raster = h['raster']; route = h['route']; path_rects = h['path_rects']
     placed = h['placed']; core = h['core']; G_ = G; metal = g['metal']; live = g['live']; via_cells = h['via_cells']
-    done = set()
+    done = set(); widened = [False]
     def one(n, net, mA):
         if placed(n) is None or net not in live: return
         if mA < PLATE_MIN_MA: rep[f'{n}.{net}'] = dict(mA=mA, error=f'below {PLATE_MIN_MA} mA: router hook'); return
@@ -517,6 +519,23 @@ def _plates(g, h):
             P = route(free, srcm, tgt)
             if P is not None: break
         if P is None: rep[f'{n}.{net}'] = dict(mA=mA, error='no path'); return
+        # IR sizing (hookup.py, 2026-11-28): W above is set by EM only; a long path (pt_wired pll_tx 512 um Metal4 at 6.1 um,
+        # 114 mV) needs width for its drop. Wire drop of the found path at W (hole loss counted); if over 0.9 x PLATE_DROP_MV,
+        # widen in proportion (cap W_MAX) and re-route; keep the widest width that still routes.
+        def _wdrop(P_, W_):
+            We_ = W_/(1+(3/24)**2/(1-3/24)) if W_ > 28.0 else W_      # holes: 3/24 of the width over 3/24 of the length
+            return mA*G_*sum(RS[q[0]] for q in P_)/We_
+        for _ in range(3):
+            d_ = _wdrop(P, W)
+            if d_ <= 0.7*PLATE_DROP_MV or W >= PLATE_W_MAX or _NOIR[0]: break
+            tW = min(PLATE_W_MAX, W*d_/(0.6*PLATE_DROP_MV)); got = None
+            for W2 in sorted({min(PLATE_W_MAX, W + (tW-W)*f_) for f_ in (1.0, 0.75, 0.5, 0.3, 0.2, 0.12, 0.06)}, reverse=True):
+                near = {ln: ((L['carve'][ln] + L['tgt'][ln]).sized(um(W2/2+8)) & A[ln]) for ln in LAYERS}
+                free = {ln: raster((allowed[ln].sized(-um(W2/2)) + near[ln] + src[ln]).merged()) for ln in LAYERS}
+                P2 = route(free, srcm, tgt)
+                if P2 is not None and _wdrop(P2, W2) < d_: got = (P2, W2); break
+            if got is None: break
+            P, W = got; widened[0] = True
         rr = path_rects(P, W)
         sv = max(W, 2.0+math.sqrt(2.0*mA/2.6)); hv = um(sv/2)//10*10; cen = lambda q: (core.left+int((q[1]+0.5)*um(G_)), core.bottom+int((q[2]+0.5)*um(G_)))
         for a_, b_ in zip(P, P[1:]+[None]):
@@ -600,6 +619,12 @@ def _plates(g, h):
     for (n, net), mA in sorted(heavy(h['CHIP'], g['PADS']).items(), key=lambda kv: -kv[1]):
         one(n, net, mA)
         r_ = rep.get(f'{n}.{net}', {})
+        if widened[0] and 'error' in r_:      # a widened plate lost its landing (one() returns before drawing): retry at the EM width
+            _NOIR[0] = True
+            try: one(n, net, mA)
+            finally: _NOIR[0] = False
+            r_ = rep.get(f'{n}.{net}', {})
+        widened[0] = False
         if 'error' in r_ and not r_['error'].startswith('below'):      # never a hook where the earlier landing rules gave a plate
             first = r_['error']; saved = dict(LP); LP.update(LEGACY_LP)
             try: one(n, net, mA)

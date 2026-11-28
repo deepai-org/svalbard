@@ -48,6 +48,48 @@ def edge_gap(shapes, info):
     return max(0.0, g)
 
 
+GDSL = {'Metal3': 42, 'Metal4': 46, 'Metal5': 81}
+REPO = '/repo' if os.path.isdir('/repo/projects') else os.path.abspath(os.path.join(HERE, '../../../..'))
+CLEAR = 0.7                          # um: the landing rule's clearance to the block's other-net metal (island_trunks LP own)
+_GDS = {}
+
+
+def edge_blocked(info, shapes):
+    """Block's own metal in the landing corridor (read from the block GDS). For each pin shape: the corridor from the pin to
+    the nearest cell edge, pin wide. Candidate landing layers: the pin's layer and the one above (Metal4/5 only; a plate is
+    Metal4/5 with Via4/Via3). A layer is blocked when block metal not joined to the pin lies within CLEAR of the corridor.
+    Returns None (a layer is clear, or no klayout / GDS), else a text naming the blocking metal (cell coordinates)."""
+    try: import klayout.db as db
+    except ImportError: return None
+    g = os.path.join(REPO, info.get('gds', ''))
+    if not info.get('gds') or not os.path.exists(g): return None
+    if g not in _GDS:
+        ly = db.Layout(); ly.read(g); _GDS[g] = ly
+    ly = _GDS[g]; c = ly.cell(info.get('cell', '')) or ly.top_cell(); o = info.get('origin', [0, 0]); W, H = info['w'], info['h']
+    um = lambda v: int(round(v*1000)); out = []
+    for ln, r in sorted({(ln, tuple(r)) for ln, r in shapes}):
+        gap = {'W': r[0], 'S': r[1], 'E': W-r[2], 'N': H-r[3]}; e = min(gap, key=gap.get)
+        x0, y0, x1, y1 = r[0]+o[0], r[1]+o[1], r[2]+o[0], r[3]+o[1]; ox0, oy0, ox1, oy1 = o[0], o[1], o[0]+W, o[1]+H
+        cor = {'W': (ox0, y0, x1, y1), 'E': (x0, y0, ox1, y1), 'S': (x0, oy0, x1, y1), 'N': (x0, y0, x1, oy1)}[e]
+        cb = db.Box(*[um(v) for v in cor]); pin = db.Region(db.Box(um(x0), um(y0), um(x1), um(y1)))
+        cands = [l for l in (ln, {'Metal3': 'Metal4', 'Metal4': 'Metal5'}.get(ln)) if l in ('Metal4', 'Metal5')]
+        if not cands: out.append(f'{ln} pin: no Metal4/5 landing layer'); continue
+        why = []
+        for L in cands:
+            li = ly.find_layer(GDSL[L], 0)
+            if li is None: return None
+            win = cb.enlarged(um(CLEAR+1), um(CLEAR+1))
+            m = db.Region(c.begin_shapes_rec_touching(li, win)).merged() & db.Region(win)
+            own = m.interacting(pin) if L == ln else db.Region()
+            foreign = (m - own) & db.Region(cb).sized(um(CLEAR))
+            if foreign.is_empty(): return None
+            bl = [p.bbox() for p in foreign.each()][:3]
+            why.append(f'{L} block metal ' + ' '.join(f'({b.left/1000:.2f},{b.bottom/1000:.2f})-({b.right/1000:.2f},{b.top/1000:.2f})' for b in bl)
+                       + f' within {CLEAR} um of the pin-wide corridor')
+        out.append(f'{ln} pin edge {e}: ' + ', '.join(why))
+    return '; '.join(out) if out else None
+
+
 def check_conn(mA, rep):
     """rep: one grid_plates record. Returns (ok, [reasons], drop_mV recomputed)."""
     bad = []
@@ -59,7 +101,8 @@ def check_conn(mA, rep):
     per = v4/nch if nch else None
     if nch and per*V_CUT < mA: bad.append(f'Via4 {per:.0f} cuts per layer change carry {per*V_CUT:.1f} < {mA} mA (needs {math.ceil(mA/V_CUT)})')
     if v3 and v3*V_CUT < mA: bad.append(f'Via3 {v3} cuts carry {v3*V_CUT:.1f} < {mA} mA (needs {math.ceil(mA/V_CUT)})')
-    R = RS['Metal5']*L5/We + RS['Metal4']*L4/We + (R_CUT/per if nch else 0.0) + (R_CUT/v3 if v3 else 0.0)
+    Wi = W/(1+(3/24)**2/(1-3/24)) if rep.get('slots') else W     # IR: holes take 3/24 of the width over 3/24 of the length
+    R = RS['Metal5']*L5/Wi + RS['Metal4']*L4/Wi + (R_CUT/per if nch else 0.0) + (R_CUT/v3 if v3 else 0.0)
     drop = max(mA*R, rep.get('drop_mV', 0.0))
     if drop > DROP_MV: bad.append(f'IR {drop:.1f} mV > {DROP_MV} mV')
     if not rep.get('neck_ok', True) and not rep.get('neck_at_pin', False): bad.append('neck in the plate narrower than the current needs')
@@ -89,7 +132,7 @@ def verdict(mA, shapes, rep, direct_v4=None):
 
 
 def run(chip, rundir, out=None):
-    rows = json.load(open(os.path.join(HERE, f'../chips/{chip}/pin_currents.json')))['rows']
+    rows = json.load(open(os.path.join(REPO, f'projects/programmable_transceiver_platform/integration/chips/{chip}/pin_currents.json')))['rows']
     MJ = json.load(open(os.path.join(rundir, 'masters.json'))); P = json.load(open(os.path.join(rundir, 'place.json')))
     gp = P.get('grid_plates', {}); dl = {(d['inst'], d['net']): d['via4'] for d in P.get('direct_landings', [])}
     pads = set(json.load(open(os.path.join(rundir, 'pads.json'))).get('pads', [])) if os.path.exists(os.path.join(rundir, 'pads.json')) else set()
@@ -107,8 +150,10 @@ def run(chip, rundir, out=None):
         v, d = verdict(mA, shapes, rep, dl.get((inst, net)))
         if v == 'FAIL' and d.startswith('no landing') and shapes:
             info = MJ[m]; e = edge_gap(shapes, info)
+            eb = edge_blocked(info, shapes) if e <= 30.0 else None
             if e > 30.0: v, d = 'BLOCK EDIT', f'pin {e:.0f} um inside the cell edge (MANDATE 4a: supply pins on the cell edge); ' + d
-            else: d += ' (pin on the cell edge: floorplan / plate generator could not reach it; or the block edge metal blocks it)'
+            elif eb: v, d = 'BLOCK EDIT', f'landing corridor blocked by the block\'s own metal: {eb}; clear it or move the pin; ' + d
+            else: d += ' (pin on the edge, corridor clear of block metal' + ('' if _GDS else ', GDS NOT CHECKED: no klayout') + '): top-level landing work'
         res.append((inst, pin, net, mA, v, d))
     cnt = {k: sum(1 for x in res if x[4] == k) for k in ('FIXED', 'OK', 'BLOCK EDIT', 'FAIL', 'NOT IN RUN')}
     lines = [f'# Supply hookup, pt_{chip}', '',
@@ -146,6 +191,19 @@ def selftest():
         v, d = verdict(mA, sh, rep, dv)
         st = 'pass' if v in want else 'BROKEN'; nf += st != 'pass'
         print(f'{st:6s} {name}: {v} ({d})')
+    try:
+        import klayout.db as db, tempfile
+        for name, block, want in (('edge corridor crossed by block Metal5', True, True), ('edge corridor clear', False, False)):
+            ly = db.Layout(); ly.dbu = 0.001; c = ly.create_cell('t'); l5 = ly.layer(81, 0)
+            c.shapes(l5).insert(db.Box(8000, 15000, 12000, 20000))              # pin, top edge, Metal5
+            if block: c.shapes(l5).insert(db.Box(0, 19000, 7700, 19800))       # foreign Metal5 0.3 um from the corridor
+            fn = tempfile.mktemp(suffix='.gds'); ly.write(fn)
+            info = dict(gds=fn, cell='t', origin=[0, 0], w=20.0, h=20.0)
+            r = edge_blocked(info, [('Metal5', [8.0, 15.0, 12.0, 20.0])]); os.unlink(fn); _GDS.clear()
+            st = 'pass' if (r is not None) == want else 'BROKEN'; nf += st != 'pass'
+            print(f'{st:6s} {name}: {r}')
+    except ImportError:
+        print('SKIP   edge-corridor GDS tests (no klayout here; run through tool.sh)')
     print('selftest', 'OK' if nf == 0 else f'FAILED {nf}'); return nf == 0
 
 

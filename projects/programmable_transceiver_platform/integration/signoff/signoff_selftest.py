@@ -45,6 +45,11 @@ def drc_up(r, tag, rule, n):
     json.dump(d, open(p, 'w'))
 def gc_join(r):
     edit(r, 'grid_conn.txt', lambda t: t.replace('"stub_nets": ["VDD"]', '"stub_nets": ["VDD", "VSS"]', 1))
+def gc_json(r, fn):
+    p = r + '/grid_conn.txt'; L = open(p).read().split('\n'); i = L.index('JSON') + 1
+    d = json.loads(L[i]); fn(d); L[i] = json.dumps(d); open(p, 'w').write('\n'.join(L))
+def lvs_bb_fail(r):
+    p = f'{r}/signoff/lvs_bb/summary.json'; d = json.load(open(p)); d['pass'] = False; json.dump(d, open(p, 'w'))
 def stale(r):
     os.utime(r + '/lvs/chip/lvs.json', (1, 1))
 expect('clean', lambda r: None, {})
@@ -61,5 +66,19 @@ expect('chip_smoke conn-only', lambda r: edit(r, 'signoff/chip_smoke/summary.jso
 expect('antenna up', lambda r: drc_up(r, 'antenna', sorted(base['counts']['antenna'])[0], 1), {'antenna': 'regressed'})
 expect('drc new class', lambda r: drc_up(r, 'main', 'V1.1', 1), {'drc_main': 'fail'})
 expect('drc other gds', lambda r: edit(r, 'drc/chip_main/meta.txt', lambda t: t.replace('sha256=', 'sha256=0')), {'drc_main': 'fail'})
+expect('grid block unfed', lambda r: gc_json(r, lambda d: d['unfed'].append('selftest_block VDD')), {'grid_conn': 'fail'})
+expect('grid floating pin', lambda r: gc_json(r, lambda d: d['pieces'].append(dict(id=99999, stub_nets=[], n_stubs=0, pins=['selftest.VDD']))), {'grid_conn': 'fail'})
+if os.path.isfile(SO + '/lvs/run_top_lvs_bb.sh') and os.path.isfile(SRC + '/signoff/lvs_bb/summary.json'):
+    FILES.append('signoff/lvs_bb/summary.json'); expect('lvs_bb fail', lvs_bb_fail, {'lvs_bb': 'fail'})
+else: print('SKIP lvs_bb fail           (hook or summary not in this tree / run)')
+# every signoff check must have a must-fail case here, or a stated reason why not
+import re as _re
+EXEMPT = {'check_top': 'reruns from a HEAD export; its own --selftest is a gate of the check',
+          'density': 'report-only before fill, no gate',
+          'lvs_bb': 'covered when the hook is in the tree (case above)'}
+COVERED = set(_re.findall(r"expect\('[^']+', .*?\{'(\w+)': '(?:fail|regressed)'\}\)", open(__file__).read()))
+names = _re.findall(r"\('(\w+)', c_\w+\)", open(SO + '/signoff.py').read())
+miss = [n for n in names if n not in COVERED and n not in EXEMPT]
+print('COVERAGE', 'PASS' if not miss else f'FAIL: no must-fail case for {miss}'); ok &= not miss
 shutil.rmtree(TMP, ignore_errors=True)
 print('SIGNOFF SELFTEST', 'PASS' if ok else 'FAIL'); sys.exit(0 if ok else 1)

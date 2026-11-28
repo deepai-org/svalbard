@@ -618,6 +618,9 @@ for net in [n_ for n_ in GRID_NETS if n_ in ring]:
     man.setdefault('grid_floating', {})[net] = dict(m4=m4_.count()-keep4.count(), m5=m5_.count()-keep5.count(), m4_total=m4_.count(), m5_total=m5_.count(), m4_float_mm2=round((m4_-keep4).area()/1e12, 4), m5_float_mm2=round((m5_-keep5).area()/1e12, 4))
     man.setdefault('grid_floating_big', {})[net] = [[ln_, [fu(q.bbox().left), fu(q.bbox().bottom), fu(q.bbox().right), fu(q.bbox().top)], round(q.area()/1e6)] for ln_, r_ in (('Metal4', m4_-keep4), ('Metal5', m5_-keep5)) for q in r_.merged().each() if q.area() >= um(50)*um(50)]
 _blkreg = db.Region([db.Box(*[um(v) for v in b_['bbox']]) for n_, b_ in man['blocks'].items() if b_['master'] != 'decap']).merged()
+SLOT_CLEAN = os.environ.get('SLOT_CLEAN', '1' if CHIP == 'wired' else '0') == '1'
+_barreg = db.Region([p_ for bd_ in bars for p_ in bd_['region'].each()]).merged() if SLOT_CLEAN else db.Region()
+_oth4 = {n_: db.Region([p_ for o_ in GRID_NETS if o_ != n_ for p_ in metal.get((o_, 'Metal4'), db.Region()).each()]).merged() for n_ in GRID_NETS} if SLOT_CLEAN else {}
 slots = {}
 for net in GRID_NETS:
     lst = []
@@ -632,6 +635,12 @@ for net in GRID_NETS:
             cb = db.Box(a0, b.bottom, min(a0+um(20), b.right), b.top) if horiz else db.Box(b.left, a0, b.right, min(a0+um(20), b.top))
             if not _blkreg.interacting(db.Region(cb)).is_empty(): continue     # no slot over a block: the hook dropped into adc_q's own Metal4 (SEN_A), 2026-11-24
             if any(cb.contains(db.Point(um(ax), um(ay))) for ax, ay in C.HOOK_SLOT_AVOID.get(CHIP, [])): continue   # common.HOOK_SLOT_AVOID
+            if SLOT_CLEAN:
+                # SLOT_CLEAN (default on for pt_wired, fp-wired 2026-11-27): no slot within 3 um of an island bar (the hook's
+                # Via4 lands in the bar: fpw-3 VDD__HK56 / HK62 under the RAIL_wired_tx bar), and no Metal5 slot whose
+                # Metal4 below is mostly another grid net (no via access from below: fpw-3 VSS__HK278 over a VDD strap)
+                if not (_barreg & db.Region(cb).sized(um(3))).is_empty(): continue
+                if ln == 'Metal5' and (db.Region(cb) & _oth4[net]).area() > 0.3*cb.area(): continue
             lst.append([ln, cb, False])
     slots[net] = lst
 PLATED = TRK.build(globals(), 'plates') if os.environ.get('PLATES', '1') == '1' else set()     # heavy supply pins: drawn plates to the grid (island_trunks.py, PDS-25 / ASM-17)
@@ -865,6 +874,10 @@ for net, users in nets.items():
         if inst[i]['pins'].get(p, ('', ''))[1] == net and s in iomap and has_pin(iomap[s], iop): ends.append((iomap[s], iop))
     for pn_, bd in bar_pins.items():
         if bd['net'] == net: ends = [e for e in ends if e not in [tuple(v) for v in bd['vias']]] + [('pdn', pn_)]
+        # a block whose same-net Metal5 tie the bar is merged with (tie_merge, e.g. wiredtx east_island) is joined by drawn
+        # metal: its pins on this net leave the routed net too (fpw-3: the router bridged wiredtx VDD to the bar across the
+        # bar's 0.5 um wide-metal halo, 8 RAIL_wired_tx / pdn shorts). LVS by name still checks the join.
+        if bd['net'] == net and bd.get('merged') and bd.get('tie_merge'): ends = [e for e in ends if e[0] != bd['tie_merge'][0]]
     ends = sorted(set(ends))
     if len(ends) >= 2: NETS[net] = dict(ends=ends, cls=cls(net))
     elif users: man['single_pin_nets'].append(net)

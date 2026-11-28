@@ -106,6 +106,8 @@ imported = {}
 def import_cell(m):
     if m in imported: return imported[m]
     src = db.Layout(); src.read(R+MJ[m]['gds']); c = src.cell(MJ[m]['cell'])
+    if m.startswith('pad_') and os.environ.get('PAD_CUP', '1') != '0':      # a pad family placed as a core block
+        import pad_cup; pad_cup.finalize(src, c)
     t = ly.create_cell(m); t.copy_tree(c); imported[m] = t
     return t
 

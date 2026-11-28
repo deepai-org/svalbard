@@ -10,10 +10,10 @@ import json, os, sys, collections
 import klayout.db as db
 sys.path.insert(0, '/asm'); import common as C
 R = '/run/'; CH = os.environ.get('CHIP', 'rf')
-ly = db.Layout(); ly.read(R+'chip/pt_chip_top.gds'); top = ly.cell('pt_chip_top'); dbu = ly.dbu
-um = lambda v: int(round(v/dbu))
+ly = db.Layout(); ly.read(R+os.environ.get('GC_GDS', 'chip/pt_chip_top.gds')); top = ly.cell('pt_chip_top'); dbu = ly.dbu
+um = lambda v: int(round(v/dbu))     # GC_GDS / GC_MAN (run-dir relative): pre-route check on placed.gds (preroute.sh)
 LAY = dict(M1=(34, 0), V1=(35, 0), M2=(36, 0), V2=(38, 0), M3=(42, 0), V3=(40, 0), M4=(46, 0), V4=(41, 0), M5=(81, 0))
-man = json.load(open(R+'chip/manifest.json')); MJ = json.load(open(R+'masters.json')); nets = json.load(open(R+'nets.json'))
+man = json.load(open(R+os.environ.get('GC_MAN', 'chip/manifest.json'))); MJ = json.load(open(R+'masters.json')); nets = json.load(open(R+'nets.json'))
 pads = json.load(open(R+'pads.json')); place = json.load(open(R+'place.json'))
 TOPC = {'pt_pdn', 'pt_top_wiring', 'pt_direct_land', 'pt_island_bar', 'pt_antdiode'}
 kids = collections.Counter(i.cell.name for i in top.each_inst())

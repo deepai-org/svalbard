@@ -1,6 +1,6 @@
 #!/bin/bash
 # Chip assembly of one chip, stage by stage, one heavy job at a time:   run.sh <rf|wired> [stage ...]
-#   stages: abstract floorplan place lint route stream report drc lvs check fill precheck      (default: abstract .. report)
+#   stages: abstract floorplan place lint preroute route stream report drc lvs check fill precheck      (default: abstract .. report)
 # Run directory scratch/integration/assembly-<chip> (ASM_RUN overrides); only the latest run is kept (each stage
 # overwrites its outputs). The sign-off flows (integration/signoff, SIGNOFF_CHIP=<chip>) read chip/pt_chip_top.gds from it.
 set -e
@@ -15,6 +15,7 @@ for S in $STAGES; do
     abstract)  "$A/tool.sh" "$CHIP" -c 2 python3 /asm/kl_abstract.py > "$RUN/abstract.log" 2>&1; tail -1 "$RUN/abstract.log" | cut -c1-400 ;;
     floorplan) nice -n 10 python3 "$A/floorplan.py" "$CHIP" | grep -v '^pass2' | cut -c1-600 ;;
     place)     "$A/tool.sh" "$CHIP" -c 2 python3 /asm/kl_place.py > "$RUN/place.log" 2>&1; head -2 "$RUN/place.log" | cut -c1-600 ;;
+    preroute)  bash "$A/preroute.sh" "$CHIP" ;;      # pre-route in-context DRC windows + supply check (minutes; preroute.sh)
     lint)      bash "$A/tool.sh" $CHIP python3 /asm/pdn_live.py && python3 "$A/place_lint.py" "$RUN" ;;      # pre-route placement lint (also the first step of route)
     route)     python3 "$A/place_lint.py" "$RUN" > "$RUN/place_lint.log" 2>&1 || { tail -12 "$RUN/place_lint.log"; echo "place lint failed: no route (PLACE_LINT=0 overrides)"; [ "${PLACE_LINT:-1}" = 0 ] || exit 1; }
                rm -f "$RUN"/route/{routed.def,groute.def,drt.rpt,congestion.rpt,unreachable.txt}; touch "$RUN/route/unreachable.txt"

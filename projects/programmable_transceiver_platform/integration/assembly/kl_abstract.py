@@ -8,6 +8,7 @@ import json, os, re, sys, collections
 import klayout.db as db
 sys.path.insert(0, '/asm')
 import common as C
+import pad_cup      # custom pad finalizer (CUP.1a wedge-bond rule, PAD-16 ring-band vias)
 
 CHIP = os.environ['CHIP']; R = '/repo/'
 um = lambda v: int(round(v*1000))
@@ -47,6 +48,7 @@ def import_cell(key, path, cell):
     src = db.Layout(); src.read(path)
     c = src.cell(cell) if cell else None
     if c is None: c = sorted(src.top_cells(), key=lambda t: -t.bbox().area())[0]
+    if key.startswith('pad_') and os.environ.get('PAD_CUP', '1') != '0': print('pad_cup', key, pad_cup.finalize(src, c))
     t = ly.create_cell(key); t.copy_tree(c); imported[key] = t
     return t
 
@@ -198,6 +200,7 @@ def abstract(key, path, cellname, full_all, kind, want_pins):
     ly2 = db.Layout(); ly2.read(path)
     c = ly2.cell(cellname) if cellname else None
     if c is None: c = sorted(ly2.top_cells(), key=lambda t: -t.bbox().area())[0]
+    if key.startswith('pad_') and os.environ.get('PAD_CUP', '1') != '0': pad_cup.finalize(ly2, c)
     b = c.bbox(); org = b.p1
     pins = collections.defaultdict(list)
     for ln, d, l, v in C.METALS:

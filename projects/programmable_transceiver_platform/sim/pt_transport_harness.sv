@@ -10,7 +10,7 @@
 //   D2H: the pins are sampled on the hclk falling edge (mid-word) and handed
 //        to the FPGA receiver on the next hclk rising edge.
 // HOST_MODE 1 exercises the SDR capture path (forwarded H2D clock = hclk).
-module pt_transport_harness #(parameter HOST_MODE=0,LINECODE=0)(input wire rst_n,enable,mode8,
+module pt_transport_harness #(parameter HOST_MODE=0,LINECODE=0,HS_REPEAT=0,TA_MODE=0)(input wire rst_n,enable,mode8,
  input wire hclk,wire_rx_clk,wire_tx_clk,rf_rx_clk,rf_tx_clk,
  input wire[9:0]h2d_word,output reg[9:0]d2h_word,
  input wire[39:0]wire_rx_data,input wire wire_rx_valid,
@@ -20,6 +20,7 @@ module pt_transport_harness #(parameter HOST_MODE=0,LINECODE=0)(input wire rst_n
  output wire[15:0]status,output wire wire_idle,rf_mute,input wire payload_iq,
  output wire[6:0]rx_gain,output wire rx_gain_active);
  reg h2d_clk=0;
+ reg ta_go=0;wire ta_running;   // DIG-03 turnaround release (driven hierarchically by tb_usb_hs)
  always @(negedge hclk)h2d_clk<=HOST_MODE?1'b0:!h2d_clk;
  wire h2d_pin_clk=HOST_MODE?!hclk:h2d_clk;
  wire core_clk,core_rst_n,core_rel_n;wire[39:0]h2d_quad,d2h_quad;wire[9:0]d2h_pin;
@@ -38,7 +39,7 @@ module pt_transport_harness #(parameter HOST_MODE=0,LINECODE=0)(input wire rst_n
   .linecode(1'(LINECODE)),.rx_gain(rx_gain),.rx_gain_active(rx_gain_active),
   .mem_capture(1'b0),.mem_play(1'b0),.mem_loop(1'b0),.mem_last(5'd0),.spi_clk(1'b0),.mem_we(1'b0),.mem_idx(5'd0),
   .mem_wdata(40'd0),.mem_rdata(),.capture_done(),
-  .pat_sel(1'b0),.pat_word(40'd0),.pat_valid(1'b0),.pat_idle(1'b1),.wire_req_int(),.rel_n(core_rel_n));
+  .pat_sel(1'b0),.pat_word(40'd0),.pat_valid(1'b0),.pat_idle(1'b1),.wire_req_int(),.rel_n(core_rel_n),.hs_repeat(1'(HS_REPEAT)),.ta_mode(1'(TA_MODE)),.ta_go(ta_go),.ta_running(ta_running));
  // The host FIFO must never over/underflow once the link runs (mesochronous).
  always @(posedge core_clk)if(rst_n&&(h2d_overflow||h2d_underflow))
   $fatal(1,"H2D quad FIFO %s",h2d_overflow?"overflow":"underflow");

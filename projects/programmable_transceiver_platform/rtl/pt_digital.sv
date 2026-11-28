@@ -40,12 +40,15 @@ module pt_digital #(parameter integer PT_CHIP = 3)(input wire rst_n,ref_clk,
  // IX-2 8b/10b wired line-code offload (stopped-only level) and the RXR-D2 fast gain (opcode4) state:
  // rf_rx_clk-domain levels; rx_gain = {LNA index[6:5], PGA index[4:0]} as the opcode4 argument.
  input wire linecode,output wire[6:0]rx_gain,output wire rx_gain_active,
+ // USB HS (macro batch 2026-11-28; wire_tx_clk domain except the static levels): x4 bit repetition and the on-chip
+ // turnaround gate of the wired egress (pt_core).
+ input wire hs_repeat,ta_mode,ta_go,output wire ta_running,
  // IX-11 fast thresholds (host clock registers) and the read-only status of the macro's control blocks
  // (spec/debug-controls.json status_registers: status.monitor, status.wired, status.usb).
  output wire[1:0]vth_fast,output wire[7:0]vth_a,vth_b,
  input wire[9:0]mon_cause,mon_qualified,input wire mon_cause_clk,mon_ready,mon_dead,mon_ref_alive,mon_in_alive,mon_fault,
  input wire[2:0]wtx_state,wrx_state,input wire wtx_seq_fault,wtx_ring_ready,input wire[7:0]wrx_flags,wrx_fll_win,wrx_pick_acc,wrx_slip_cnt,
- input wire[13:0]wrx_fll_err,input wire[4:0]wrx_viol,input wire[1:0]usb_line,input wire[6:0]usb_flags,input wire[4:0]usb_stream,
+ input wire[13:0]wrx_fll_err,input wire[4:0]wrx_viol,input wire[1:0]usb_line,input wire[6:0]usb_flags,input wire[4:0]usb_stream,input wire[1:0]usb_ta,
  // status.health: raw island-switch power-good, sticky H2D FIFO overflow / underflow (OBS-3, OBS-IMPL)
  input wire[9:0]sw_pg,input wire h2d_ovf,h2d_unf,
  input wire wtx_run, // status.health.wtx_run: pt_wiredtx8 TX_RUN, wired-clamped in the macro (WT50)
@@ -86,7 +89,7 @@ module pt_digital #(parameter integer PT_CHIP = 3)(input wire rst_n,ref_clk,
   .mon_cause(mon_cause),.mon_cause_clk(mon_cause_clk),.mon_ready(mon_ready),.mon_dead(mon_dead),.mon_ref_alive(mon_ref_alive),
   .mon_in_alive(mon_in_alive),.mon_fault(mon_fault),.mon_qualified(mon_qualified),.wtx_state(wtx_state),.wtx_seq_fault(wtx_seq_fault),
   .wtx_ring_ready(wtx_ring_ready),.wrx_state(wrx_state),.wrx_flags(wrx_flags),.wrx_fll_err(wrx_fll_err),.wrx_viol(wrx_viol),
-  .wrx_fll_win(wrx_fll_win),.wrx_pick_acc(wrx_pick_acc),.wrx_slip_cnt(wrx_slip_cnt),.usb_line(usb_line),.usb_flags(usb_flags),.usb_stream(usb_stream),
+  .wrx_fll_win(wrx_fll_win),.wrx_pick_acc(wrx_pick_acc),.wrx_slip_cnt(wrx_slip_cnt),.usb_line(usb_line),.usb_flags(usb_flags),.usb_stream(usb_stream),.usb_ta(usb_ta),
   .chip_id(CHIP_ID),   // status.chip.id
   .sw_pg(sw_pg),.h2d_ovf(h2d_ovf),.h2d_unf(h2d_unf),.wtx_run(wtx_run),
   .lo_vt_high(lo_vt_high),.lo_vt_runaway(lo_vt_runaway),.lo_vt_runaway_clr(lo_vt_runaway_clr),
@@ -157,7 +160,8 @@ module pt_digital #(parameter integer PT_CHIP = 3)(input wire rst_n,ref_clk,
  analog_cfg[`PT_A_DIGITAL_TRANSPORT_CONFIG__PAYLOAD_IQ_LSB],linecode,rx_gain,rx_gain_active,
  // MEMORY v3 (sharing S1): capture/playback in the transport banks; pt_memory is deleted.
  capture_enable,playback_enable,memory_loop,memory_last,host_sclk,memory_write,index,memory_wdata,capture_data,capture_done,
- prbs_select,prbs_word,tx_enabled&&prbs_ready,!tx_enabled,wire_req_int,vth_fast,vth_a,vth_b,core_release_n);
+ prbs_select,prbs_word,tx_enabled&&prbs_ready,!tx_enabled,wire_req_int,vth_fast,vth_a,vth_b,core_release_n,
+ hs_repeat,ta_mode,ta_go,ta_running);
  pt_sync_bit e(wire_tx_clk,rst_n,enable,tx_enabled);
  // Shared wired pattern generator/checker (rtl/pt_pattern.sv, consolidation P2-6): 40-bit cores directly
  // on the 40-bit quad clocks (AC-1 S3: no gearbox, no clock gate). CDC: the quasi-static

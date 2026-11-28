@@ -3139,6 +3139,78 @@
           ]
         ]
       ]
+    },
+    {
+      "id": "hs_repeat_excludes_linecode",
+      "class": "legality",
+      "node": "wired egress transform slot (pt_core: 8b/10b offload or USB HS x4 repeater, one at a time)",
+      "if_any": [
+        [
+          "digital.transport_config.hs_repeat",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "digital.transport_config.linecode",
+          "eq",
+          0
+        ],
+        [
+          "digital.transport_config.payload_iq",
+          "eq",
+          0
+        ],
+        [
+          "digital.transport_config.direct_stream_enable",
+          "eq",
+          0
+        ]
+      ]
+    },
+    {
+      "id": "usb_turnaround_needs_hs",
+      "class": "legality",
+      "node": "DIG-03 on-chip turnaround (HS packet mode through the serializer)",
+      "if_any": [
+        [
+          "usb.config.hs_turnaround",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "usbdrive.select.branch",
+          "eq",
+          "hs"
+        ],
+        [
+          "digital.transport_config.hs_repeat",
+          "eq",
+          1
+        ]
+      ]
+    },
+    {
+      "id": "usb_ls_slow_needs_hs_bias",
+      "class": "legality",
+      "node": "USB-02: LS_SLOW (pad PD41/PD47) needs the HS bias source on (usbhs.bias.enable), no hardware interlock",
+      "if_any": [
+        [
+          "usbfs.config.ls_slow",
+          "eq",
+          1
+        ]
+      ],
+      "then_all": [
+        [
+          "usbhs.bias.enable",
+          "eq",
+          1
+        ]
+      ]
     }
   ],
   "break_before_make": [
@@ -3464,6 +3536,11 @@
             "bits": 5,
             "port": "usb_stream",
             "meaning": "{tx_armed, tx_blocked, tx_underrun, tx_busy, rx_active}"
+          },
+          "turnaround": {
+            "bits": 2,
+            "port": "usb_ta",
+            "meaning": "DIG-03 (macro batch 2026-11-28): {sent toggle, armed}: armed = 1 while hs_turnaround holds a staged response (egress not empty, not sending); the toggle flips at the end of each response sent (wire_tx_clk levels)"
           }
         }
       },

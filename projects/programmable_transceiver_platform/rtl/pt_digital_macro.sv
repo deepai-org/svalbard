@@ -420,6 +420,8 @@ module pt_digital_macro(
  wire[13:0] wrx_fll_err; wire[7:0] wrx_fll_win, wrx_pick_acc, wrx_slip_cnt; wire[4:0] wrx_viol;
  wire[1:0] usb_line; wire usb_j, usb_k, usb_se0, usb_se1, usb_diff, usb_squelch, usb_disconnect;
  wire usb_rx_active, usb_tx_busy, usb_tx_underrun, usb_tx_blocked, usb_tx_armed;
+ wire usb_eop_t, ta_running, ta_mode; wire[1:0] usb_ta;
+ reg[2:0] ta_es; reg ta_arm; reg[2:0] ta_cnt; reg ta_go, ta_run_d, ta_sent; reg[1:0] ta_ms;
  wire wire_rx_valid_q, wire_tx_request_q;
  // Observation vectors (spec/debug-controls.json obs_status / wire_status order; see pt_digital).
  wire[11:0] analog_status = {aosc_div, adc_q_ovl | adc_q_b_ovl, adc_i_ovl | adc_i_b_ovl, adc_q_done, adc_i_done,
@@ -459,7 +461,8 @@ module pt_digital_macro(
   .wrx_flags({wrx_slm_seen, wrx_slp_seen, wrx_idle, wrx_sig_ok, wrx_wclk_alive, wrx_freq_ok, wrx_fll_lost, wrx_fll_done}),
   .wrx_fll_win(wrx_fll_win), .wrx_pick_acc(wrx_pick_acc), .wrx_slip_cnt(wrx_slip_cnt), .wrx_fll_err(wrx_fll_err), .wrx_viol(wrx_viol),
   .usb_line(usb_line), .usb_flags({usb_disconnect, usb_squelch, usb_diff, usb_se1, usb_se0, usb_k, usb_j}),
-  .usb_stream({usb_tx_armed, usb_tx_blocked, usb_tx_underrun, usb_tx_busy, usb_rx_active}),
+  .usb_stream({usb_tx_armed, usb_tx_blocked, usb_tx_underrun, usb_tx_busy, usb_rx_active}), .usb_ta(usb_ta),
+  .hs_repeat(f_digital_transport_config__hs_repeat), .ta_mode(ta_mode), .ta_go(ta_go), .ta_running(ta_running),
   .sw_pg(sw_pg), .h2d_ovf(h2d_ovf), .h2d_unf(h2d_unf), .wtx_run(wtx_run),
   .lo_vt_high(lo_vt_high), .lo_vt_runaway(lo_vt_runaway), .lo_vt_runaway_clr(lo_vt_runaway_clr));
  assign rx_en_wclk = 1'b0;   // CP4-3: the forwarded wire clock uses the AUX_CLK pair (rx_en_aux); no WCLK_IN receiver
@@ -811,7 +814,23 @@ module pt_digital_macro(
   .cfg_ls(f_usbfs_config__slew), .cfg_thr_disc(f_detect_config__low_threshold_code == 2'd3), .cfg_rx_div(f_usb_config__rx_divider),
   .cfg_rx_quiet(f_usb_config__rx_quiet), .cfg_deb_se(f_usb_config__debounce_se), .cfg_deb_diff(f_usb_config__debounce_diff),
   .rx_data(usb_rx_quad), .rx_valid(usb_rx_valid), .st_rx_active(usb_rx_active), .st_line(usb_line), .st_j(usb_j), .st_k(usb_k),
-  .st_se0(usb_se0), .st_se1(usb_se1), .st_diff(usb_diff), .st_squelch(usb_squelch), .st_disconnect(usb_disconnect));
+  .st_se0(usb_se0), .st_se1(usb_se1), .st_diff(usb_diff), .st_squelch(usb_squelch), .st_disconnect(usb_disconnect), .st_eop_t(usb_eop_t));
+ // DIG-03 on-chip HS turnaround (wire_tx_clk domain): the end-of-packet toggle from the receive side is synchronized,
+ // delayed by usb.config.ta_delay word clocks and released to the wired egress as one ta_go pulse (pt_core holds the
+ // staged response until then). ta_mode: usb.config.hs_turnaround with the HS branch selected.
+ assign ta_mode = ta_ms[1];
+ always @(posedge wire_tx_clk_c or negedge rst_n)
+  if (!rst_n) begin ta_es <= 3'd0; ta_arm <= 1'b0; ta_cnt <= 3'd0; ta_go <= 1'b0; ta_run_d <= 1'b0; ta_sent <= 1'b0; ta_ms <= 2'd0; end
+  else begin
+   ta_ms <= {ta_ms[0], f_usb_config__hs_turnaround[0] & (f_usbdrive_select__branch == 2'd1)};
+   ta_es <= {ta_es[1:0], usb_eop_t};
+   ta_go <= 1'b0;
+   if (ta_es[2] != ta_es[1] && ta_mode) begin ta_arm <= 1'b1; ta_cnt <= f_usb_config__ta_delay; end
+   else if (ta_arm) begin if (ta_cnt == 3'd0) begin ta_arm <= 1'b0; ta_go <= 1'b1; end else ta_cnt <= ta_cnt - 3'd1; end
+   ta_run_d <= ta_running;
+   if (ta_run_d && !ta_running) ta_sent <= ~ta_sent;
+  end
+ assign usb_ta = {ta_sent, ta_mode & ~ta_running & ~ta_arm};
  assign core_rx_quad = usb_direct ? usb_rx_quad : wrx_quad;
  assign core_rx_valid = usb_direct ? usb_rx_valid : wrx_quad_valid;
  assign core_tx_request = usb_direct ? usb_tx_ready : wire_tx_request_q;

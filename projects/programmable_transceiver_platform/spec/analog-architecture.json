@@ -5752,6 +5752,14 @@
           "maximum": 1,
           "unit": "code",
           "description": "IX-2 8b/10b wired line-code offload (stopped-only)."
+        },
+        "hs_repeat": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "USB-02 (macro batch 2026-11-28): USB HS bit repetition in the macro (stopped-only). Each egress quad carries 40 USB bits and leaves as four line quads with every bit repeated 4 times (the serializer runs at 1.92 Gb/s for 480 Mb/s, pt_wiredtx MODE_F), so the host link carries each USB bit once. Exclusive with linecode; wired ownership only."
         }
       },
       "update": "stopped_only; requires trained100MHz SDR host_follow, warmed480MHz line clock, both FIFO epochs reset and initial credits acknowledged"
@@ -7206,6 +7214,22 @@
           "maximum": 15,
           "unit": "code",
           "description": "envelope debounce, samples - 1"
+        },
+        "hs_turnaround": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "description": "DIG-03 (macro batch 2026-11-28): on-chip HS bus turnaround. The wired egress is held (line idle, HS_DRV low) until the end of the next received HS packet (squelch after activity, not while this chip drives) plus ta_delay word clocks, then sends the response the FPGA staged in the egress bank ahead of time, and holds again once the bank is empty. The FPGA stages a complete response (handshake or data packet, NRZI-coded and bit-stuffed, with SYNC and EOP) before the host packet ends; status.usb.turnaround reports it."
+        },
+        "ta_delay": {
+          "bits": 3,
+          "default": 2,
+          "minimum": 0,
+          "maximum": 7,
+          "unit": "code",
+          "description": "DIG-03: extra word clocks (wire_tx_clk, 20.8 ns at 48 MHz) between the end-of-packet trigger and the response; the fixed path is about 6 word clocks plus the serializer, so code 2 starts the response about 170-200 ns after the host EOP (USB HS allows 8-192 bit times = 17-400 ns)"
         }
       }
     },

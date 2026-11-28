@@ -25,7 +25,7 @@ module tb_pt_usb;
     wire usb_hs_en, usb_hs_drv, usb_fs_en, usb_tx_dp, usb_tx_dn, usb_tx_oe;
     wire st_tx_busy, st_tx_underrun, st_tx_blocked, st_tx_armed;
     wire [39:0] rx_data;
-    wire rx_valid, st_rx_active, st_j, st_k, st_se0, st_se1, st_diff, st_squelch, st_disconnect;
+    wire rx_valid, st_rx_active, st_j, st_k, st_se0, st_se1, st_diff, st_squelch, st_disconnect, st_eop_t;
     wire [1:0] st_line;
 
     // line: either an external stimulus or the pad model driven by the gates (loopback)
@@ -65,7 +65,7 @@ module tb_pt_usb;
         .cfg_deb_se(cfg_deb_se), .cfg_deb_diff(cfg_deb_diff),
         .rx_data(rx_data), .rx_valid(rx_valid), .st_rx_active(st_rx_active), .st_line(st_line),
         .st_j(st_j), .st_k(st_k), .st_se0(st_se0), .st_se1(st_se1), .st_diff(st_diff),
-        .st_squelch(st_squelch), .st_disconnect(st_disconnect));
+        .st_squelch(st_squelch), .st_disconnect(st_disconnect), .st_eop_t(st_eop_t));
 
     integer errors = 0;
     task fail(input [8*64-1:0] msg);
@@ -395,6 +395,25 @@ module tb_pt_usb;
         cfg_rx_echo = 0; clks(8); rx_n = 0; run_tx(n, 4, 0); #(40 * 83333);
         chk(rx_n == 0, "7: own transmission is not recorded with echo off");
         cfg_off;
+
+        // ---- 8. DIG-03 end-of-packet trigger (macro batch 2026-11-28): one toggle per received HS packet (envelope then
+        //         squelch); none for this chip's own HS packet (negative), none for an idle line
+        loop = 0; diff_from_line = 0; ext_dpos = 0; ext_dneg = 0; cfg_thr_disc = 0; repeat (20) @(posedge rx_clk); #1;
+        begin : eop
+            reg t0;
+            t0 = st_eop_t; repeat (40) @(posedge rx_clk); #1; chk(st_eop_t === t0, "8: no trigger on an idle line");
+            repeat (20) begin ext_dpos = 1; ext_dneg = 0; #(3 * TCK); ext_dpos = 0; ext_dneg = 1; #(3 * TCK); end
+            ext_dneg = 0; repeat (20) @(posedge rx_clk); #1; chk(st_eop_t === ~t0, "8: one toggle at the end of a received packet");
+            t0 = st_eop_t;
+            repeat (20) begin ext_dpos = 1; ext_dneg = 0; #(3 * TCK); ext_dpos = 0; ext_dneg = 1; #(3 * TCK); end
+            ext_dneg = 0; repeat (20) @(posedge rx_clk); #1; chk(st_eop_t === ~t0, "8: second packet toggles again");
+            t0 = st_eop_t;
+            cfg_hs(0); hs_tx_active = 1; clks(10); chk(usb_hs_drv === 1'b1, "8: own HS packet driven");
+            repeat (20) begin ext_dpos = 1; ext_dneg = 0; #(3 * TCK); ext_dpos = 0; ext_dneg = 1; #(3 * TCK); end
+            hs_tx_active = 0; ext_dneg = 0; repeat (40) @(posedge rx_clk); #1;
+            chk(st_eop_t === t0, "8: own HS packet (echo) does not trigger");
+            cfg_off; diff_from_line = 1;
+        end
 
         if (errors == 0) $display("TB_PT_USB PASS");
         else $display("TB_PT_USB FAIL %0d", errors);

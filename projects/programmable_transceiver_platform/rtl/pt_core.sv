@@ -49,7 +49,15 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  output reg[1:0]vth_fast,output reg[7:0]vth_a,vth_b,
  // Low-fanout copy of rst_n (same value at every time; pt_digital core_release_n): reset of the four
  // release flops rr_* only, so their recovery path does not ride on rst_n's 1263-pin tree (r10).
- input wire rel_n);
+ input wire rel_n,
+ // USB HS (macro batch 2026-11-28, wire_tx_clk domain; stopped-only levels except ta_go):
+ //  hs_repeat (USB-02): every egress quad carries 40 USB bits, sent as four line quads of 10 bits x4 (the serializer
+ //    runs at 4 x 480 Mb/s, pt_wiredtx MODE_F / WT19), so the host link carries USB bits once.
+ //  ta_mode / ta_go (DIG-03): on-chip bus turnaround. The wired output is held (no pop, line idle) until ta_go (a
+ //    one-clock pulse from the macro, a programmable delay after the end of a received HS packet), then sends what the
+ //    egress bank holds (the response the FPGA staged ahead of time) and stops again when the bank is empty; an empty
+ //    bank at the end of a response is not a starvation.
+ input wire hs_repeat,ta_mode,ta_go,output wire ta_running);
  wire eh,ewr,ewt,err,ert;
  pt_enable_release e0(host_clk,rst_n,enable,eh);
  pt_sync_bit e2(wire_rx_clk,rst_n,enable,ewr);pt_sync_bit e3(wire_tx_clk,rst_n,enable,ewt);
@@ -173,7 +181,7 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  always @(posedge rf_tx_clk or negedge eg_rst_n)if(!eg_rst_n)eg_r<=1'b0;else eg_r<=payload_iq;
  always @(posedge wire_tx_clk or negedge eg_rst_n)
   if(!eg_rst_n)begin eg_l<=1'b0;eg_w<=1'b0;end
-  else begin eg_l<=!payload_iq&&linecode;eg_w<=!payload_iq&&!linecode&&!pat_sel&&wire_running_n;end
+  else begin eg_l<=!payload_iq&&(linecode||hs_repeat);eg_w<=!payload_iq&&!linecode&&!hs_repeat&&!pat_sel&&wire_running_n;end
  // The gates clear ASYNCHRONOUSLY on disable (rst_n && enable; owner / linecode / pat_sel change only while
  // disabled), so a gate whose TX clock has stopped cannot stay set across an owner change (independent
  // review: eg_r stale after rf_tx_clk stops and the owner switches to wired).
@@ -221,10 +229,18 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  pt_sync_bit f2(wire_tx_clk,rst_n,idle_command,idle_sync);
  pt_sync_bit f3(rf_tx_clk,rst_n,mute_command,mute_sync);
  // IX-2 8b/10b transmit offload (wire_tx_clk): a registered FWFT head in front of the serializer
- wire wire_out_empty=payload_iq||(linecode?!lc_qv:egress_empty);
+ wire wire_out_empty=payload_iq||((linecode||hs_repeat)?!lc_qv:egress_empty);
+ // The 8b/10b offload and the USB HS x4 repeater share the transform slot (exclusive, validator rule
+ // hs_repeat_excludes_linecode): one registered FWFT head (xq / xqv) and one pop gate (eg_l).
+ wire lc_pop1,lc_qv1,rp_pop,rp_qv;wire[39:0]lc_q1,rp_q;
+ wire xtake=wreq&&wire_running&&lc_qv;
  pt_lc_tx lc_tx(.clk(wire_tx_clk),.rst_n(rst_n),.en(linecode&&ewt&&!payload_iq),.head(egress_head),.head_valid(egress_ne),
-  .pop(lc_pop),.q(lc_q),.q_valid(lc_qv),.take(wreq&&wire_running&&lc_qv));   // = !wire_out_empty while linecode
- wire[39:0]wire_head=linecode?lc_q:egress_head;
+  .pop(lc_pop1),.q(lc_q1),.q_valid(lc_qv1),.take(xtake&&linecode));   // = !wire_out_empty while linecode
+ pt_rep4_tx rp_tx(.clk(wire_tx_clk),.rst_n(rst_n),.en(hs_repeat&&ewt&&!payload_iq),.head(egress_head),.head_valid(egress_ne),
+  .pop(rp_pop),.q(rp_q),.q_valid(rp_qv),.take(xtake&&hs_repeat));
+ assign lc_pop=hs_repeat?rp_pop:lc_pop1;assign lc_qv=hs_repeat?rp_qv:lc_qv1;assign lc_q=hs_repeat?rp_q:lc_q1;
+ wire xform=linecode||hs_repeat;
+ wire[39:0]wire_head=xform?lc_q:egress_head;
  wire[EGRESS_A:0]wire_out_count=payload_iq?0:egress_count;
  reg[19:0]wire_low,wire_high;
  wire[39:0]lane_out=pat_sel?pat_word:payload_iq?40'd0:wire_head;
@@ -257,13 +273,18 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  assign wire_tx_data={wire_high,wire_low};
  assign wire_tx_valid=wire_valid_q;
  assign wire_idle=wire_idle_q;
- assign wire_running_n=ewt&&(wire_running||wire_out_count>=WIRE_START);   // next wire_running
+ // DIG-03 turnaround: in ta_mode, wire_running is the response window (set by ta_go with a staged word, cleared by
+ // the first request that finds the bank empty); the start threshold and the starvation flag are not used.
+ wire ta_end=wire_running&&wreq&&wire_out_empty;
+ assign wire_running_n=ewt&&(ta_mode?((wire_running&&!ta_end)||(ta_go&&!wire_out_empty)):(wire_running||wire_out_count>=WIRE_START));
  always @(posedge wire_tx_clk or negedge rst_n)begin
   if(!rst_n)begin wire_running<=0;wire_starved<=0;end
   else if(!ewt)begin wire_running<=0;wire_starved<=0;end
+  else if(ta_mode)wire_running<=wire_running_n;
   else if(!wire_running&&wire_out_count>=WIRE_START)wire_running<=1;
   else if(wire_running&&wreq&&wire_out_empty)wire_starved<=1;
  end
+ assign ta_running=wire_running;
  // ---------------- RF output: quads unpacked into one sample per request in
  // the sample-clock domain (reservoir reset while the domain is disabled; it
  // prefetches before the start threshold so the first request finds a sample).
@@ -347,5 +368,24 @@ module pt_gain_rx #(parameter A=5,SETTLE=20)(input wire clk,rst_n,toggle,input w
     gap<=gap+1'b1;left<=left-1'b1;
     if(left==6'd1)begin settling<=0;mark_ptr<=wr_ptr;mark_toggle<=!mark_toggle;end
    end
+  end
+endmodule
+
+// USB-02 HS bit repetition (macro batch 2026-11-28), wire_tx_clk domain. head = 40 USB bits (bit 0 first on the line);
+// each is sent as four line quads, q[4i+j] = slice[i] for the 10-bit slice k of the head. FWFT like pt_lc_tx: q / q_valid
+// are registers, a word leaves on take; the head is popped when its first slice is loaded.
+module pt_rep4_tx(input wire clk,rst_n,en,input wire[39:0]head,input wire head_valid,
+ output wire pop,output reg[39:0]q,output reg q_valid,input wire take);
+ function automatic[39:0]x4(input[9:0]s);integer i;begin for(i=0;i<40;i=i+1)x4[i]=s[i/4];end endfunction
+ reg[29:0]h;reg[1:0]left;   // slices still in h
+ wire adv=!q_valid||take;
+ assign pop=en&&adv&&left==2'd0&&head_valid;
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)begin h<=30'd0;left<=2'd0;q<=40'd0;q_valid<=1'b0;end
+  else if(!en)begin h<=30'd0;left<=2'd0;q<=40'd0;q_valid<=1'b0;end
+  else if(adv)begin
+   if(left!=2'd0)begin q<=x4(h[9:0]);h<={10'd0,h[29:10]};left<=left-2'd1;q_valid<=1'b1;end
+   else if(head_valid)begin q<=x4(head[9:0]);h<=head[39:10];left<=2'd3;q_valid<=1'b1;end
+   else q_valid<=1'b0;
   end
 endmodule

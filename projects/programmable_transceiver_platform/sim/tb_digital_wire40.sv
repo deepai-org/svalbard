@@ -59,7 +59,7 @@ module tb_digital_wire40;
   .rx_en_wclk(rx_en_wclk),.rx_en_wtx_ext(rx_en_wtx_ext),.clk_obs_oe(clk_obs_oe),
   .dbg_obs0(dbg_obs0),.dbg_obs0_oe(dbg_obs0_oe),.dbg_obs1(dbg_obs1),.dbg_obs1_oe(dbg_obs1_oe),
   .commit_toggle(commit_toggle),
-  .linecode(1'b0),.rx_gain(),.rx_gain_active());
+  .linecode(1'b0),.rx_gain(),.rx_gain_active(),.hs_repeat(1'b0),.ta_mode(1'b0),.ta_go(1'b0),.ta_running());
  reg en=0;initial force dut.enable=en;
  // ---- wired consumer: one quad every other quad clock (50 Mword/s); check order
  integer ntx=0,nrx=0,errs=0;reg[9:0]exp_tx=0,exp_rx=0,rxw=0;

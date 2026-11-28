@@ -105,7 +105,10 @@ module pt_usb(
     output wire        st_j, st_k, st_se0, st_se1,
     output wire        st_diff,          // debounced DIFF_POS | DIFF_NEG
     output wire        st_squelch,       // 1 = no differential signal above the squelch threshold
-    output reg         st_disconnect     // sticky: envelope over the disconnect threshold during HS transmit
+    output reg         st_disconnect,    // sticky: envelope over the disconnect threshold during HS transmit
+    // DIG-03 (macro batch 2026-11-28): toggles at the end of each received HS packet: squelch rises after the
+    // envelope was present, outside this chip's own HS transmission and its 15-sample holdoff (rx_clk domain)
+    output reg         st_eop_t
 );
     // =====================================================================================
     // Transmit domain
@@ -270,6 +273,18 @@ module pt_usb(
     assign st_k    = line_db == (cfg_ls ? 2'b01 : 2'b10);
     assign st_diff = diff_db;
     assign st_squelch = !diff_db && !thr_disc_s;
+    // DIG-03 end-of-packet trigger. act: the HS envelope (diff_db) has been seen since the last trigger, while this chip
+    // was not driving; ho: holdoff after this chip's own packet (its echo and the line release are not a host packet).
+    reg sq_d, act; reg [3:0] ho;
+    always @(posedge rx_clk or negedge r_rst_n)
+        if (!r_rst_n) begin sq_d <= 1'b1; act <= 1'b0; ho <= 4'd0; st_eop_t <= 1'b0; end
+        else begin
+            sq_d <= st_squelch;
+            if (hsdrv_s) begin act <= 1'b0; ho <= 4'd15; end
+            else if (ho != 4'd0) begin act <= 1'b0; ho <= ho - 4'd1; end
+            else if (!st_squelch) act <= 1'b1;
+            else if (!sq_d && act) begin st_eop_t <= ~st_eop_t; act <= 1'b0; end
+        end
     always @(posedge rx_clk or negedge r_rst_n)
         if (!r_rst_n) st_disconnect <= 1'b0;
         else if (!thr_disc_s) st_disconnect <= 1'b0;

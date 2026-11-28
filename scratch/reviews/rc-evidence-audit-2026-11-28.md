@@ -27,8 +27,14 @@ Table 2 was **rerun**: seven blocks, extracted and benched here.
   - The pin strap is Metal5, 0.44 µm × 318 µm (read from the GDS with KLayout). At 40 mΩ/sq that is 29 Ω end to
     end. Extracted: 17–38 Ω along the trunk from the pin to the switch drains, plus ~18 Ω per drain tap
     (single-cut stack: contact 6.3 + vias 4.5 Ω each). This agrees.
-  - Second check (pll_vreg2 `VOUT_CDR`): the visible Metal4 strap (4 × 378 µm) gives 8.5 Ω, but the extracted path
-    has a 20.8 Ω segment. That disagreement is **not resolved**; see TIM-38.
+  - Second check (pll_vreg2 `VOUT_CDR`), resolved 16:30. My first estimate assumed the port at the bottom label; Magic's
+    port is the top pin (−13, 389.8 µm). The 20.8 Ω element R4 (`VOUT_CDR.n20` (−9.3, 242.4) µm to `VOUT_CDR.n140`
+    (302.2, 23.7) µm, coordinates from `pt_pll_vreg2_flat.res.ext`, re-extraction kept in `x/pll_vreg2k/r`) is a real path.
+    It runs from the Metal4 strap through **one Via3 cut** to a 4 µm Metal3 run (y 240.4, x −13..150.6), then **one
+    Via2 cut** and a 0.4 µm Metal2 stub (x 150.1), to the Metal2 bar (203.6..397.6, y 23.7..28.7).
+    The pieces identified by hand sum to 14 Ω; the rest of the path to the bar is not traced. In addition, each of the
+    20 pass-device drain taps is 21.2 Ω (single-cut stacks), 1.1 Ω in parallel.
+    Not an extraction artefact.
 
 ## Table 1: evidence view per block (read)
 

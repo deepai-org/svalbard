@@ -100,7 +100,7 @@ FIXED_PLACE = {'wired': {'isw_wired_tx_a': (2938.0, 2209.0), 'isw_wired_tx_b': (
 # x >= 598.7, y >= 266.36; island VDD ties T_main / T_post at y 423.1-430.8 (Metal5), east_island column; Metal4 band
 # y 410.9-430.8, x 340-744 is island VDD only
 ISLAND_BARS_OFF = False    # the VDD-VISL join (xy-overlap merge picked the VDD plate) is fixed: merge only Via4-joined Metal5
-ISLAND_BARS = {'wired': [dict(net='RAIL_wired_tx', rects=[(2658.5, 2265.0, 3400.0, 2640.0)], expose=True,
+ISLAND_BARS = {'wired': [dict(net='RAIL_wired_tx', rects=[(2658.0, 2265.0, 3400.0, 2640.0)], expose=True,      # x0 2658.0 (was 2658.5): overlaps the wiredtx free-corner part (ends 2658.45); the 0.05 um gap split RAIL_wired_tx in LVS (fpw-2..fpw-11)
                               rel=('wiredtx', [('Metal5', (598.9, 266.6, 744.5, 430.8)), ('Metal4', (340.0, 411.2, 744.5, 430.8))]),
                               tie_merge=('wiredtx', ['east_island']),
                               tie_vias=('wiredtx', ['T_main_2', 'T_main_3', 'T_post_0', 'T_post_1', 'T_post_2', 'T_post_3']),

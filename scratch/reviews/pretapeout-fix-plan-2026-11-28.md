@@ -353,3 +353,9 @@ Capacity = pin narrow dimension × layer EM limit at 85 °C (Metal1-4 2.09 mA/um
 - MODEL: circuit-under-pad with aluminium wedge bonding (run 1): CUP deck on every custom pad family (protection macro alone 174 CUP.3 hits; precheck skips CUP).
 - MODEL: supply clamp turn-off with a current-limited source (0.5/1/2 A, board caps, 50-100 us).
 - RTL rule: reject the CDR state where the loop filter floats (CDR off, ring on, line-PLL off).
+
+### Addendum 3 (power owner, E12 droop levers)
+- Macro batch: launch the digital macro's clock edges in two phases (E8: about 2x less macro ripple). Droop at the macro is 341 mV on pt_wired and 245 mV on pt_rf, and is mostly self-ripple. Extra decap that costs area (about 1 mm2 per 4 nF) is not chosen.
+- wiredtx block: +2 nF at the serializer (droop 450 to 302 mV, about 0.5 mm2), if area allows.
+- Block owners must supply supply-sensitivity figures for the burst droops: wired TX swing/timing, LO VCO pushing behind lo_vreg, rfdriver gain.
+- Boot (PDN-02) still closes with the E12 droop under the existing rule: SPI first, host_word_clk <= 125 MHz until trimmed.

@@ -1,0 +1,46 @@
+{
+ "block": "pt_txsum",
+ "gds": "rf_tx/generated/txsum.gds",
+ "sha256_before": "7b042faa47501686fc3ec999fcf5e0e9d376975ee01d321383a9fd36d21563f4",
+ "sha256": "7b042faa47501686fc3ec999fcf5e0e9d376975ee01d321383a9fd36d21563f4",
+ "edits": [
+  {
+   "net": "VDD",
+   "pin": [
+    20.0,
+    0.0,
+    30.0,
+    8.52
+   ],
+   "via": [
+    20.0,
+    7.52,
+    30.0,
+    8.52
+   ],
+   "why": "south VDD facing the RAIL_rf_tx bus, 2.4 mA"
+  }
+ ],
+ "drc": {
+  "main": {
+   "done": true,
+   "total": 0,
+   "rules": []
+  },
+  "antenna": {
+   "done": true,
+   "total": 0,
+   "rules": []
+  }
+ },
+ "lvs": {
+  "gds": "/tmp/blk_pt_txsum_wnbs8ikq/txsum.gds",
+  "top": "pt_txsum",
+  "gds_sha256": "7b042faa47501686fc3ec999fcf5e0e9d376975ee01d321383a9fd36d21563f4",
+  "reference": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/rf_tx/txsum.spice",
+  "deck": "gf180mcu.lvs (project PDK f6eeac7, KLayout 0.30.9 image), schematic_simplify, top_lvl_pins, implicit_connect; max_res 1e12, poly resistor L tolerance 5 % (PAD-17)",
+  "result": "match",
+  "layout_devices": 16,
+  "reference_devices": 16
+ }
+}

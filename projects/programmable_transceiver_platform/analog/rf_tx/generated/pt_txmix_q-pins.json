@@ -1,0 +1,46 @@
+{
+ "block": "pt_txmix_q",
+ "gds": "rf_tx/generated/txmix_q.gds",
+ "sha256_before": "98cf5a11d0489f3507f74c57b83ef9757af91f431a769191f1fbc5eeea09141f",
+ "sha256": "b6bd6ce4e15b58b28cc197f77751502d5de52b6e53511f0758c26b172084952a",
+ "edits": [
+  {
+   "net": "VDD",
+   "pin": [
+    231.9,
+    9.9,
+    234.9,
+    60.0
+   ],
+   "via": [
+    231.9,
+    9.9,
+    234.9,
+    10.9
+   ],
+   "why": "east VDD facing the trunk lane, 2.4 / 3.7 mA"
+  }
+ ],
+ "drc": {
+  "main": {
+   "done": true,
+   "total": 0,
+   "rules": []
+  },
+  "antenna": {
+   "done": true,
+   "total": 0,
+   "rules": []
+  }
+ },
+ "lvs": {
+  "gds": "/tmp/blk_pt_txmix_q_vg119yz4/txmix_q.gds",
+  "top": "pt_txmix_q",
+  "gds_sha256": "b6bd6ce4e15b58b28cc197f77751502d5de52b6e53511f0758c26b172084952a",
+  "reference": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/rf_tx/txmix_q.spice",
+  "deck": "gf180mcu.lvs (project PDK f6eeac7, KLayout 0.30.9 image), schematic_simplify, top_lvl_pins, implicit_connect; max_res 1e12, poly resistor L tolerance 5 % (PAD-17)",
+  "result": "match",
+  "layout_devices": 62,
+  "reference_devices": 62
+ }
+}

@@ -43,39 +43,48 @@ def kl(mounts, cmd):
                           capture_output=True, text=True)
 
 
-def lvs(fam):
-    gds, top, ref, rtop = FAM[fam]; gen = REPO / AN
+def lvs_file(gds, top, ref, rtop, keep_dir=None):
+    """KLayout read-back LVS of <gds> (absolute) cell <top> against <ref> (absolute; Magic or PDK form, top <rtop>)"""
+    gds = Path(gds); ref = Path(ref)
     sys.path.insert(0, str(HERE)); import pad_ref_pdk
-    w = Path(tempfile.mkdtemp(prefix=f'padlvs_{fam}_'))
-    src = open(gen / ref).read().replace('\n+', ' ').splitlines()
+    w = Path(tempfile.mkdtemp(prefix=f'kllvs_{top}_'))
+    src = open(ref).read().replace('\n+', ' ').splitlines()
     out = '\n'.join(pad_ref_pdk.conv(src))
-    out = re.sub(rf'(?im)^(\.subckt\s+){re.escape(rtop)}(\s)', rf'\g<1>{top}\g<2>', out)       # reference top = GDS top
-    out = re.sub(rf'(?im)^(\.ends\s+){re.escape(rtop)}\s*$', rf'\g<1>{top}', out)
+    if rtop != top:
+        out = re.sub(rf'(?im)^(\.subckt\s+){re.escape(rtop)}(\s)', rf'\g<1>{top}\g<2>', out)       # reference top = GDS top
+        out = re.sub(rf'(?im)^(\.ends\s+){re.escape(rtop)}\s*$', rf'\g<1>{top}', out)
     (w / 'ref.spice').write_text(out + '\n')
-    sw = SW + f' topcell={top} input=/g/{gds} schematic=/w/ref.spice report=/w/out.lvsdb target_netlist=/w/out.cir'
-    # deck copy with two comparison settings for the pads (PAD-17): resistors above 10 Mohm are not dropped (max_res 1e7
-    # dropped the 10 Mohm rail-shunt bleed on the layout side only: 10.03 M vs 9.99 M in the reference), and poly resistor
-    # L / R compare within 5 % (Magic and KLayout count serpentine corners differently: +4 um on 99, +19 on 475, +39 on 9989)
-    tol = ''.join(f'tolerance("{c}", "{q}", :relative => 0.05)\n' for c in ('ppolyf_u', 'ppolyf_u_1k', 'ppolyf_u_1k_6p0', 'ppolyf_u_2k', 'ppolyf_u_2k_6p0', 'ppolyf_s') for q in ('L',))
+    sw = SW + f' topcell={top} input=/g/{gds.name} schematic=/w/ref.spice report=/w/out.lvsdb target_netlist=/w/out.cir'
+    # deck copy with two comparison settings (PAD-17): resistors above 10 Mohm are not dropped (max_res 1e7 dropped the
+    # 10 Mohm rail-shunt bleed on the layout side only: 10.03 M vs 9.99 M in the reference), and poly resistor L compares
+    # within 5 % (Magic and KLayout count serpentine corners differently: +4 um on 99, +19 on 475, +39 on 9989)
+    tol = ''.join(f'tolerance("{c}", "L", :relative => 0.05)\n' for c in ('ppolyf_u', 'ppolyf_u_1k', 'ppolyf_u_1k_6p0', 'ppolyf_u_2k', 'ppolyf_u_2k_6p0', 'ppolyf_s'))
     (w / 'tol.lvs').write_text(tol)
     (w / 'patch.py').write_text("p = '/w/deck/gf180mcu.lvs'; s = open(p).read()\n"
                                 "s = s.replace('max_res(1e7)', 'max_res(1e12)', 1).replace('result = compare', open('/w/tol.lvs').read() + 'result = compare', 1)\n"
                                 "open(p, 'w').write(s)\n")
     patch = 'cp -r /foss/pdks/gf180mcuD/libs.tech/klayout/tech/lvs /w/deck && python3 /w/patch.py && '
-    r = kl([f'{gen}:/g:ro', f'{w}:/w'], patch + 'cd /w; klayout -b -r /w/deck/gf180mcu.lvs ' +
+    r = kl([f'{gds.parent}:/g:ro', f'{w}:/w'], patch + 'cd /w; klayout -b -r /w/deck/gf180mcu.lvs ' +
            ' '.join('-rd ' + x for x in sw.split()) + ' 2>&1 | tail -40')
     log = r.stdout + r.stderr
     ok = 'Congratulations! Netlists match' in log
     mism = 'Netlists don\'t match' in log
     cir = (w / 'out.cir').read_text() if (w / 'out.cir').exists() else ''
-    res = dict(family=fam, gds=gds, gds_sha256=hashlib.sha256(open(gen / gds, 'rb').read()).hexdigest(), reference=ref,
-               deck='gf180mcu.lvs (project PDK f6eeac7, KLayout 0.30.9 image), schematic_simplify, top_lvl_pins, implicit_connect; max_res 1e12, poly resistor L/R tolerance 5 % (PAD-17)',
+    res = dict(gds=str(gds), top=top, gds_sha256=hashlib.sha256(open(gds, 'rb').read()).hexdigest(), reference=str(ref),
+               deck='gf180mcu.lvs (project PDK f6eeac7, KLayout 0.30.9 image), schematic_simplify, top_lvl_pins, implicit_connect; max_res 1e12, poly resistor L tolerance 5 % (PAD-17)',
                result='match' if ok else ('mismatch' if mism else 'error'),
                layout_devices=len(re.findall(r'(?m)^[MRDCQ]\$', cir)), reference_devices=len(re.findall(r'(?m)^[MRD]', out)),
                log_tail=log[-1500:] if not ok else '')
-    if not ok: shutil.copy(w / 'out.lvsdb', gen / os.path.dirname(gds) / 'pad-lvs-kl.lvsdb') if (w / 'out.lvsdb').exists() else None
+    if not ok and keep_dir and (w / 'out.lvsdb').exists(): shutil.copy(w / 'out.lvsdb', Path(keep_dir) / f'{top}-lvs-kl.lvsdb')
     shutil.rmtree(w, ignore_errors=True)
     return res
+
+
+def lvs(fam):
+    gds, top, ref, rtop = FAM[fam]; gen = REPO / AN
+    r = lvs_file(gen / gds, top, gen / ref, rtop, keep_dir=gen / os.path.dirname(gds))
+    r['family'] = fam; r['gds'] = gds; r['reference'] = ref
+    return r
 
 
 def records(fam, new):

@@ -21,7 +21,7 @@ WIDTH = {'dffrnq_4': 22.40, 'clkbuf_8': 28.00, 'clkinv_8': 20.16}   # room kept:
 # (x um, y fraction, [(instance, cell), ...] stacked in consecutive rows, source cell first)
 CLOCK_ROOTS = [
     (501.0, 0.554, [('host.divider.cdiv.cell', 'dffrnq_4'), ('host.divider.core_root.cell', 'clkbuf_8'),
-                     ('host.divider.core_inv.cell', 'clkinv_8')]),        # hcore + hcoreb (PDN-02 two-phase)
+                     ('host.divider.core_inv.cell', 'clkinv_8'), ('host.divider.core_rootb.cell', 'clkbuf_8')]),        # hcore + hcoreb (PDN-02 two-phase)
     (1630.0, 0.938, [('digital.fca.fjc.cell', 'dffrnq_4'), ('digital.fca.blk_clock_buf.cell', 'clkbuf_8')]),      # counter a prescaler
     (1580.0, 0.871, [('digital.fcb.fjc.cell', 'dffrnq_4'), ('digital.fcb.blk_clock_buf.cell', 'clkbuf_8')]),      # counter b prescaler
 ]

@@ -200,8 +200,8 @@ create_generated_clock -name hcore -source $rate_mux -divide_by 2 $core_root
 # of core_root on the cdiv flop): it rises on the hddr edges between the hcore rising edges. It clocks only the egress
 # bank's write side and array (rtl/pt_core.sv), which talk to hcore only through flop-to-flop registers (collector
 # output into the bank, the bank's ready back), each a half-period (one hddr period) synchronous path, timed normally.
-set core_inv [get_pins -quiet -hierarchical *host.divider.core_inv.cell/ZN]
-if {[llength $core_inv] != 1} {error "Expected one hcoreb root (host.divider.core_inv)"}
+set core_inv [get_pins -quiet -hierarchical *host.divider.core_rootb.cell/Z]
+if {[llength $core_inv] != 1} {error "Expected one hcoreb root (host.divider.core_rootb)"}
 create_generated_clock -name hcoreb -source $rate_mux -divide_by 2 -invert $core_inv
 set host_clks {hddr hcore hcoreb}
 if {[llength [get_clocks -quiet hsdr]]} { lappend host_clks hsdr }

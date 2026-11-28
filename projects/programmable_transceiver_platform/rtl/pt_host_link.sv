@@ -150,7 +150,11 @@ module pt_host_divider(input wire clk, rst_n, output wire core_clk, core_clk_b);
     // PDN-02 two-phase launch: hcoreb rises on the hddr edges between the hcore rising edges (generated clock hcoreb,
     // -invert, at core_inv/ZN). It clocks the egress bank's write side (about half the hcore clock load), so the
     // 78.125 MHz launch current splits over two edges 6.4 ns apart.
-    pt_clock_inv core_inv(.I(c), .ZN(core_clk_b));
+    // The inverter feeds a kept root buffer (core_rootb): CTS starts the hcoreb tree at the buffer, so it does not clone
+    // the inverter (a bare inverter root was split into 195 copies by CTS in the first batch run).
+    wire cb;
+    pt_clock_inv core_inv(.I(c), .ZN(cb));
+    pt_clock_buf core_rootb(.I(cb), .Z(core_clk_b));
 endmodule
 
 // Local load-phase drivers: one flop per group of output bits, preserved across synthesis so the

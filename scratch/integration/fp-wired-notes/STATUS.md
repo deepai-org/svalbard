@@ -17,3 +17,5 @@ chanO_1 and chanE_4 are joined inside wiredtx. A KLayout netlist probe of pt_wir
 - wiredtx TR pins on the top edge (b9ade65d, coordinator ruling): DRC/LVS/antenna clean, DC op identical. Worktree runs need ASM_MOUNTS for the new GDS and report (tool.sh): see fpw-2's command in its run.out header / below.
   ASM_MOUNTS="$W/projects/programmable_transceiver_platform/analog/wired_tx/generated/fast:projects/programmable_transceiver_platform/analog/wired_tx/generated/fast $W/scratch/wired_tx/s13/top/out:scratch/wired_tx/s13/top/out"
 - fpw-2: shifted plan + new wiredtx, started.
+- 2026-11-28: committed f3166163 (check_padsup island feed + NEG + pad_tlp float), 2b4fd166 (top_lvs pad_tlp float, chip-gated; pieces_members), c147bfbe (tool.sh SLOT_CLEAN), e1caa16a (SLOT_CLEAN, bar-merged pins off routed net, RAIL_wired_rx bar). Uncommitted, pending fpw-11: RAIL_wired_tx bar bridge (block ties only, snapped), PAD_HOOK TMDS pin hooks. HOOK_W = 0.56 (branch default) on every fpw run.
+- Open: io_bidir_16 PD/PU direct ties (fix 1b8dc15b, floorplan agent); VSS also touches pad_wire_tx ?DNV/DPV.SUB and por.?unlabelled (signoff counts as real short) — not yet investigated.

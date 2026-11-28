@@ -28,7 +28,8 @@ The bring-up order that uses these paths is [bring-up.md](bring-up.md). Risk row
 |---|---|---|---|---|
 | 1 | master_ibias (ROOT_REF) | 0/1 | 0/1 | |
 | 2, 3 | VREF0, VCM master | 1 | 1 | |
-| 5, 6 | core / host VDD | 1 | 1 | **same net (VDD)**: one reading |
+| 5 | core VDD | 1 | 1 | |
+| 6 | vdd_lo_vreg_tx | VDD_LO via lo_vreg 1 k tap (INT-04 F2) | VREG_TX via pll_vreg2 20 k tap (INT-04 F5) | rebound 2026-11-28 |
 | 7 | wired_rx rail | . | 1 | |
 | 8 | rf_rx rail | 1 | . | |
 | 9 | pll rail | 1 | 1 | |
@@ -41,7 +42,7 @@ The bring-up order that uses these paths is [bring-up.md](bring-up.md). Risk row
 | 22 | TRK_WIRED_RX | . | 0/1 | ATB0 leaf selected by the fallback control, not atb0_sw |
 | 23 | HS_VBIAS (named wire_vcm) | . | 1 | name/net mismatch |
 | 24, 26 | ctle, wiredtx bias | . | 1 | |
-| 25 | slicer_bias | VSS | VSS | **dead** (tied VSS) |
+| 25 | wiredtx_trunk | VSS (wired-gated: dead) | TRK_WIRED_TX trunk (INT-04 F6) | rebound on pt_wired 2026-11-28 |
 | 27 | TERM_VCM (USB-pad termination VCM) | . | 1 | HS pad `HS_TERM_VCM` and TX `TX_TERM_VCM` have no leaf |
 | 28 | detect vref | . | 1 | |
 | 29 | TRK_PLL | 0/1 | 0/1 | |
@@ -51,10 +52,10 @@ The bring-up order that uses these paths is [bring-up.md](bring-up.md). Risk row
 | 33 | LO quadrature (lo_ext) bias | 1 | . | |
 | 34 | CDR bias | 1 | 1 | |
 | 35, 36 | TRK_CONV, VREF_CONV | 0/1 | . | |
-| 37 | conv_vcm | VCM_MASTER | VCM_MASTER | **duplicate of code 3** on both chips |
+| 37 | vreg_tx | VREG_TX via pll_vreg2 20 k tap (INT-04 F3; conv-island gated) | VCM_MASTER (unreachable: conv-gated) | rebound on pt_rf 2026-11-28 |
 | 38, 39 | ADC / DAC bias | 1 | . | I converter only |
 | 40 | HS bias (USB) | . | 1 | |
-| 41 | usbfs_vref | VSS | VSS | **dead** |
+| 41 | lo_vtune_cdr_vctrl | LO VTUNE via the QVCO gated 20 k + TG tap (INT-04 F1) | CDR_VCTRL, leaf beside cdr (INT-04 F4) | rebound 2026-11-28 |
 | 42 | debug buffer bias | 1 (bb_tap_i) | 1 (bb_tap_wmon) | |
 | 43-54 | characterization devices | 0/1 | 0/1 | |
 | 55, 56, 57 | VBG, TRK_DEBUG, IDAC1 | 0/1, 0/1, 1 | same | |
@@ -123,7 +124,7 @@ A = alive, B = biased, C = clocked, W = working. "island I" = board current step
 | LNA core current | rf | island current step is the reference; optional tail-replica tap | RF RX (OBS-9) | 1 leaf |
 | TX RF level | rf | spectrum analyser only (B17 board) | RF TX (OBS-10) | — |
 | HS RX / TX termination VCM and resistance | wired | leaves on HS_TERM_VCM, TX_TERM_VCM; board SMU method in bring-up.md | pads (OBS-11) | 2 leaves |
-| Slicer bias (code 25 dead), usbfs_vref (41 dead) | wired | bind or retire the codes | wired RX + digital (OBS-12) | 0-1 leaf |
+| Slicer bias | wired | no code: 25 now reads TRK_WIRED_TX, 41 CDR_VCTRL (INT-04); a new accepted code goes into the batch macro re-harden (INT-04 F7) | wired RX + digital (OBS-12) | 1 leaf |
 | Word clocks WRX/WTX_WCLK40 | wired | clk_obs IN4 and IN1 are VSS on pt_wired: bind them through a debug-island clamp | chip top (OBS-13) | 2 iso cells |
 | Duplicates 5=6, 3=37 | both | document; retire 37 on both | digital (OBS-6) | 0 |
 | Digital (5 V-cell) speed | both | **done**: `pt_dig_ring` (41 mcu7t5v0 inversions) on source 7, `debug.replica.dig_ring_enable` (OBS-IMPL-2) | digital | 0.00036 mm² |

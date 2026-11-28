@@ -165,7 +165,8 @@
    "force": "sense_only",
    "island": null,
    "kind": "supply_monitor",
-   "name": "host_vdd_sense"
+   "name": "vdd_lo_vreg_tx",
+   "note": "INT-04 (2026-11-28): pt_rf VDD_LO via the lo_vreg 1 k tap (F2); pt_wired VREG_TX via the pll_vreg2 20 k tap (F5)"
   },
   {
    "code": 7,
@@ -304,7 +305,8 @@
    "force": "sense_only",
    "island": "wired",
    "kind": "bias",
-   "name": "slicer_bias"
+   "name": "wiredtx_trunk",
+   "note": "INT-04 (2026-11-28): pt_wired TRK_WIRED_TX trunk via core_bias (F6); pt_rf dead (wired-gated)"
   },
   {
    "code": 26,
@@ -396,7 +398,8 @@
    "force": "sense_only",
    "island": "conv",
    "kind": "reference",
-   "name": "conv_vcm"
+   "name": "vreg_tx",
+   "note": "INT-04 (2026-11-28): pt_rf VREG_TX via the pll_vreg2 20 k tap (F3, conv-island gated); pt_wired VCM_MASTER, unreachable (conv-gated)"
   },
   {
    "code": 38,
@@ -425,8 +428,8 @@
    "force": "sense_only",
    "island": null,
    "kind": "reference",
-   "name": "usbfs_vref",
-   "note": "usbfs on the host domain, never switched (island_support README A3)"
+   "name": "lo_vtune_cdr_vctrl",
+   "note": "INT-04 (2026-11-28): pt_rf LO VTUNE via the QVCO gated 20 k + TG tap (F1, rfpll.config.atb_enable); pt_wired CDR_VCTRL (F4)"
   },
   {
    "code": 42,
@@ -17047,7 +17050,7 @@
  },
  "last_analog": 183,
  "last_debug": 93,
- "map_hash16": 64079,
+ "map_hash16": 42540,
  "obs_status": [
   "island_pgood_wired",
   "island_pgood_rf",

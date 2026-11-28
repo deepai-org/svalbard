@@ -744,12 +744,15 @@ for r_ in PSITES:
             if horiz_:
                 end_ = pb_.left if abs(pb_.left - tc_.x) < abs(pb_.right - tc_.x) else pb_.right; y_ = pb_.center().y
                 m2_ = db.Box(min(end_, tc_.x) - um(1.5), y_ - hw_, max(end_, tc_.x) + um(1.5), y_ + hw_)
-                land_ = db.Box(tc_.x - um(1.5), y_ - um(1.5), tc_.x + um(1.5), y_ + um(1.5))
+                # Metal2 jog along the slot to its centre when the pin row is outside it (fpw-9: stacks landed beside the slot)
+                dland.shapes(LI['Metal2']).insert(db.Box(tc_.x - hw_, min(y_, tc_.y) - hw_, tc_.x + hw_, max(y_, tc_.y) + hw_))
+                land_ = db.Box(tc_.x - um(1.5), tc_.y - um(1.5), tc_.x + um(1.5), tc_.y + um(1.5))
             else:
                 end_ = pb_.bottom if abs(pb_.bottom - tc_.y) < abs(pb_.top - tc_.y) else pb_.top; x_ = pb_.center().x
                 m2_ = db.Box(x_ - hw_, min(end_, tc_.y) - um(1.5), x_ + hw_, max(end_, tc_.y) + um(1.5))
-                land_ = db.Box(x_ - um(1.5), tc_.y - um(1.5), x_ + um(1.5), tc_.y + um(1.5))
-            land_ = land_ & cb if (land_ & cb).area() > 0 else land_
+                dland.shapes(LI['Metal2']).insert(db.Box(min(x_, tc_.x) - hw_, tc_.y - hw_, max(x_, tc_.x) + hw_, tc_.y + hw_))
+                land_ = db.Box(tc_.x - um(1.5), tc_.y - um(1.5), tc_.x + um(1.5), tc_.y + um(1.5))
+            land_ = land_ & cb      # the landing always sits inside the slot (centre), so the Via3 lands on the slot metal
             dland.shapes(LI['Metal2']).insert(m2_); dland.shapes(LI['Metal2']).insert(land_); dland.shapes(LI['Metal3']).insert(land_)
             nv_ = via_fill(dland, VIA['Via2'], db.Region(land_), inset=0.3) + via_fill(dland, VIA['Via3'], db.Region(land_), inset=0.3)
             if ln == 'Metal5': dland.shapes(LI['Metal4']).insert(land_); nv_ += via_fill(dland, VIA['Via4'], db.Region(land_), inset=0.3)

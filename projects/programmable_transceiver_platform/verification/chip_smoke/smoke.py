@@ -31,6 +31,7 @@ SC = os.environ.get('SMOKE_SC', MAIN+'/scratch/integration/signoff-run/pc/pdk/ci
 OUT = os.path.abspath(a.out or f'{ROOT}/scratch/chip_smoke/{a.chip}'+(f'-mut' if a.mutate else ''))
 os.makedirs(OUT, exist_ok=True)
 os.environ['OMP_NUM_THREADS'] = '1'
+FLOATX = []
 FAULTS, WARN, LOG = [], [], open(OUT+'/smoke.log', 'w')
 def log(*x):
     s = ' '.join(str(y) for y in x); print(s); LOG.write(s+'\n'); LOG.flush()
@@ -95,6 +96,8 @@ log(r.stdout.strip())
 if r.returncode: sys.exit('gen_bench failed: '+r.stderr[-800:])
 MONJ = json.load(open(B+'/monitor.json'))
 for f in MONJ['findings']: fault('structure', f)
+for f in MONJ.get('island_rail', []): fault('island_rail', f)
+log(f"island rails: {MONJ.get('island_rail_pins')} pins on island rails checked against their switch output, {len(MONJ.get('island_rail', []))} off it")
 MON = MONJ['monitors']; PORT = MONJ['ports']
 r = subprocess.run(['iverilog', '-g2012', '-DFUNCTIONAL', '-DUSE_POWER_PINS', '-s', 'smoke_tb', '-o', B+'/tb.vvp',
                     SC+'/primitives.v', SC+'/gf180mcu_fd_sc_mcu7t5v0.v', macro, HERE+'/smoke_pads.v',
@@ -183,6 +186,9 @@ def check_conn(v, where):
         m = MON[k]
         if v[k] != str(m['want']):
             key = ('rail', m['inst'], m['pin'])
+            if m.get('float_exception') and v[k] == 'z':      # named, isolated float (gen_bench FLOAT_PINS): listed, not a fault
+                if key not in conn_bad: conn_bad.add(key); FLOATX.append(f'{m["inst"]}.{m["pin"]}'); log('FLOAT-EXCEPTION', f'{m["inst"]}.{m["pin"]}=z (named exception, isolated)')
+                continue
             if key not in conn_bad: conn_bad.add(key); fault('rail', f'{where}: {m["inst"]}.{m["pin"]}={v[k]}, conn says {"VDD" if m["want"] else "VSS"}')
 
 def ctl_val(v, base, side='macro'):
@@ -468,7 +474,7 @@ for b in USED_BASES:
         for k in CTLS[p]:
             if len(seen[k]) < 2: bits.append(f'{i}@{MON[k]["inst"]}.{MON[k]["pin"]}:{"".join(sorted(seen[k])) or "-"}')
     untoggled[b] = bits
-summary = dict(chip=a.chip, tree=ROOT, netlist=os.path.abspath(nl), netlist_sha=sha(nl), macro=macro, macro_sha=sha(macro),
+summary = dict(chip=a.chip, float_exceptions=FLOATX, tree=ROOT, netlist=os.path.abspath(nl), netlist_sha=sha(nl), macro=macro, macro_sha=sha(macro),
                mutation=mutation, result='FAIL' if FAULTS else 'PASS', faults=FAULTS, warnings=WARN,
                coverage=dict(ctl_ports_on_chip=len(USED_BASES), ctl_bits_on_chip=len(CONSUMED),
                              consumer_pins=sum(len(CTLS[p]) for p in CONSUMED), ports_toggled_0_1=len(cov_ports),

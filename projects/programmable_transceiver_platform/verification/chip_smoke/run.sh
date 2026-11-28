@@ -7,8 +7,9 @@
 # tie and one c_* consumer pin (must FAIL naming both). Default out scratch/chip_smoke/<chip>-layout.
 # Summary: <out>/summary.json (+ <out>-mut/summary.json); default out scratch/chip_smoke/<chip>.
 set -u
-# layout negative control: metal erased at the POR_BYPASS pad pull-down tie and at one c_* trim consumer pin
-layout_cut() { case $1 in rf) echo io_bidir_16.PD,lna.ct2 ;; wired) echo io_bidir_16.PD,ctle.ctle_peak2 ;; esac; }
+# layout negative control: metal erased at the POR_BYPASS pad pull-down tie, one c_* trim consumer pin and one block VSS pin
+# (aosc.VSS: a floating rail pin that is not the named pad_tlp exception must still fail)
+layout_cut() { case $1 in rf) echo io_bidir_16.PD,lna.ct2,aosc.VSS ;; wired) echo io_bidir_16.PD,ctle.ctle_peak2,aosc.VSS ;; esac; }
 H=$(cd "$(dirname "$0")" && pwd); CHIP=${1:?rf|wired}; shift
 export OMP_NUM_THREADS=1
 if [ "${1:-}" = --layout ]; then      # layout mode: run.sh <chip> --layout <ASM_RUN dir> [--out DIR] [smoke.py options]

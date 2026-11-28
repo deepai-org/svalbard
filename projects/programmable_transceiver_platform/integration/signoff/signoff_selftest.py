@@ -57,6 +57,7 @@ expect('check_conn fail', lambda r: edit(r, 'check_conn.json', lambda t: t.repla
 expect('shortcheck join', lambda r: edit(r, 'shortcheck.json', lambda t: t.replace('"vdd_vss_one_net": false', '"vdd_vss_one_net": true')), {'shortcheck': 'fail'})
 expect('grid VDD/VSS join', gc_join, {'grid_conn': 'fail'})
 expect('chip_smoke fail', lambda r: edit(r, 'signoff/chip_smoke/summary.json', lambda t: t.replace('"pass": true', '"pass": false')), {'chip_smoke': 'fail'})
+expect('chip_smoke conn-only', lambda r: edit(r, 'signoff/chip_smoke/summary.json', lambda t: t.replace('"mode": "layout"', '"mode": "conn"')), {'chip_smoke': 'fail'})
 expect('antenna up', lambda r: drc_up(r, 'antenna', sorted(base['counts']['antenna'])[0], 1), {'antenna': 'regressed'})
 expect('drc new class', lambda r: drc_up(r, 'main', 'V1.1', 1), {'drc_main': 'fail'})
 expect('drc other gds', lambda r: edit(r, 'drc/chip_main/meta.txt', lambda t: t.replace('sha256=', 'sha256=0')), {'drc_main': 'fail'})

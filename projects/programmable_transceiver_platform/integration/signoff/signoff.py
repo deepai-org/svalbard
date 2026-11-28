@@ -224,22 +224,28 @@ def c_lvs_bb():
     return dict(gates={'pass': d.get('pass') is True}, counts={'lvs_bb': d.get('findings_by_kind') or {}}, src=src + ' signoff/lvs_bb/summary.json')
 
 def c_chip_smoke():
-    """chip power-up smoke test (verification/chip_smoke/signoff_hook.sh <chip> <run> <out>, summary.json {pass, faults_by_check}): a gate"""
+    """chip power-up smoke test (verification/chip_smoke/signoff_hook.sh <chip> <run> <out> --layout, summary.json {pass, faults_by_check}):
+    a gate. Default: layout mode (bench wired from the netlist extracted from chip/pt_chip_top.gds; current while the summary's
+    gds_sha256 is this GDS). SIGNOFF_SMOKE=conn: the quick conn mode (reference netlist; current while netlist_sha256 matches)."""
     s = ROOT + '/projects/programmable_transceiver_platform/verification/chip_smoke/signoff_hook.sh'
     if not os.path.isfile(s): raise Fail('chip_smoke: verification/chip_smoke/signoff_hook.sh not in this tree')
-    o = OUT + '/chip_smoke'; p = o + '/summary.json'; nl = RUN + '/lvs/pt_chip_top.ref.spice'
-    nsha = sha256(nl) if os.path.isfile(nl) else None
+    mode = os.environ.get('SIGNOFF_SMOKE', 'layout')
+    if mode not in ('layout', 'conn'): raise Fail(f'chip_smoke: SIGNOFF_SMOKE={mode} (layout | conn)')
+    o = OUT + '/chip_smoke'; p = o + '/summary.json'
+    key, f = ('gds_sha256', RUN + '/chip/pt_chip_top.gds') if mode == 'layout' else ('netlist_sha256', RUN + '/lvs/pt_chip_top.ref.spice')
+    want = sha256(f) if os.path.isfile(f) else None
     def cur():
-        try: d = json.load(open(p)); return nsha is not None and d.get('netlist_sha256') == nsha
+        try: d = json.load(open(p)); return want is not None and d.get(key) == want and d.get('mode', 'conn') == mode
         except (OSError, ValueError): return False
     src = 'collected'
     if not cur():
-        if COLLECT: raise Fail('chip_smoke: no summary.json of this run\'s netlist (--collect-only)')
-        sh([s, CHIP, RUN, o], OUT + '/chip_smoke.log'); src = 'rerun'
+        if COLLECT: raise Fail(f'chip_smoke: no {mode}-mode summary.json of this run (--collect-only)')
+        sh([s, CHIP, RUN, o] + (['--layout'] if mode == 'layout' else []), OUT + '/chip_smoke.log'); src = 'rerun'
         if not os.path.isfile(p): raise Fail('chip_smoke: hook wrote no summary.json (see signoff/chip_smoke.log)')
     d = json.load(open(p))
     return dict(gates={'pass': d.get('pass') is True, 'negative control detected': d.get('selftest') is True, 'no fault': not d.get('faults_by_check')},
-                info={'faults_by_check': d.get('faults_by_check') or {}}, src=src + ' signoff/chip_smoke/summary.json')
+                info={'mode': d.get('mode', 'conn'), 'faults_by_check': d.get('faults_by_check') or {}, 'float_exceptions': (d.get('test') or {}).get('float_exceptions', [])},
+                src=src + f' signoff/chip_smoke/summary.json ({mode})')
 
 CHECKS = [('check_top', c_check_top), ('drt', c_drt), ('macro_supply', c_macro_supply), ('check_conn', c_check_conn),
           ('lvs_name', c_lvs_name), ('padsup', c_padsup), ('shortcheck', c_shortcheck), ('grid_conn', c_grid_conn), ('chip_smoke', c_chip_smoke),

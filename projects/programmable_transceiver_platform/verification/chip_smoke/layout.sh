@@ -13,7 +13,8 @@ cp "$RUN/chip/manifest.json" "$W/manifest.json"
 if [ -s "$RUN/lvs/pt_chip_top.ref.spice" ]; then cp "$RUN/lvs/pt_chip_top.ref.spice" "$W/ref.spice"
 else KH_CONN=1 python3 "$P/integration/signoff/lvs/gen_netlist.py" "$W/ref.spice" --chip "$CHIP" || exit 2; fi
 REL=${H#"$(cd "$P/../.." && pwd)"/}          # this directory relative to the repository root (mounted at /repo)
-SIGNOFF_RUN=$W KL_EXTRA="-v $RUN/chip:/src:ro" "$P/integration/signoff/kl.sh" -c 1 "../repo/$REL/layout_netlist.py" \
-  -rd gds=../src/pt_chip_top.gds -rd ref=ref.spice -rd manifest=manifest.json -rd out=layout.spice ${CUT:+-rd "$CUT"} > "$W/layout.log" 2>&1
+GR=$(readlink -f "$RUN/chip/pt_chip_top.gds"); GD=$(dirname "$GR")      # the GDS may be a symlink (signoff selftest copies)
+SIGNOFF_RUN=$W KL_EXTRA="-v $GD:/src:ro" "$P/integration/signoff/kl.sh" -c 1 "../repo/$REL/layout_netlist.py" \
+  -rd gds="../src/$(basename "$GR")" -rd ref=ref.spice -rd manifest=manifest.json -rd out=layout.spice ${CUT:+-rd "$CUT"} > "$W/layout.log" 2>&1
 RC=$?; tail -1 "$W/layout.log"
 [ $RC -eq 0 ] && [ -s "$W/layout.spice" ]

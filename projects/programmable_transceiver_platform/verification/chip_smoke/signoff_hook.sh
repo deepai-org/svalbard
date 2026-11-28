@@ -15,7 +15,7 @@ mkdir -p "$OUT"
 MODE=conn
 if [ "${4:-}" = --layout ]; then     # layout mode: netlist extracted from <run>/chip/pt_chip_top.gds; negative control = metal erased
   MODE=layout
-  CUT=$(case $CHIP in rf) echo io_bidir_16.PD,lna.ct2 ;; wired) echo io_bidir_16.PD,ctle.ctle_peak2 ;; esac)
+  CUT=$(case $CHIP in rf) echo io_bidir_16.PD,lna.ct2,aosc.VSS ;; wired) echo io_bidir_16.PD,ctle.ctle_peak2,aosc.VSS ;; esac)
   "$H/layout.sh" "$CHIP" "$RUN" "$OUT/extract" > "$OUT/extract.log" 2>&1 && \
   "$H/layout.sh" "$CHIP" "$RUN" "$OUT/extract-cut" "cut=$CUT" > "$OUT/extract-cut.log" 2>&1
   EX=$?
@@ -29,9 +29,9 @@ NL=()
 python3 "$H/smoke.py" --chip "$CHIP" --tree "$TREE" "${NL[@]}" --out "$OUT/test" > "$OUT/test.log" 2>&1; RC=$?
 python3 "$H/selftest.py" --chip "$CHIP" --tree "$TREE" "${NL[@]}" --out "$OUT/test" > "$OUT/selftest.log" 2>&1; ST=$?
 fi
-python3 - "$OUT" "$RC" "$ST" "$MODE" <<'PY'
+python3 - "$OUT" "$RC" "$ST" "$MODE" "$RUN" <<'PY'
 import json, sys, hashlib, collections
-out, rc, st, mode = sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), sys.argv[4]
+out, rc, st, mode, run = sys.argv[1], int(sys.argv[2]), int(sys.argv[3]), sys.argv[4], sys.argv[5]
 try: t = json.load(open(out+'/test/summary.json'))
 except Exception as e: t = dict(result='NO SUMMARY', faults=[dict(check='harness', detail=str(e))], netlist='')
 by = collections.Counter(f['check'] for f in t.get('faults', []))
@@ -40,6 +40,7 @@ s = dict(mode=mode, chip=t.get('chip'), netlist=t.get('netlist'), netlist_sha256
          pass_=None, selftest=st == 0, faults_by_check=dict(by), test=t)
 s['pass'] = rc == 0 and st == 0 and t.get('result') == 'PASS'; del s['pass_']
 if mode == 'layout':
+    s['gds_sha256'] = hashlib.sha256(open(run+'/chip/pt_chip_top.gds', 'rb').read()).hexdigest()
     try: s['extract'] = {k: json.load(open(f'{out}/{k}/layout.spice.json')) for k in ('extract', 'extract-cut')}
     except Exception as e: s['extract'] = str(e)
 json.dump(s, open(out+'/summary.json', 'w'), indent=1)

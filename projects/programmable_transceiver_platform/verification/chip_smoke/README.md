@@ -58,7 +58,7 @@ overrides, as in the signoff harness); their sha256 prefixes are in the summary.
 
 Faults (exit 1): structure, pad_tie, pad_ie, pad_oe, pad_pull, pad_wire, ctl_wire, rail, por, reset_pad, por_bypass,
 spi_id, chip_id, island_pg, reset_value (stub != reset while the macro port has it), readback, d2h_*, host_link,
-reset_again. Warnings: map_hash, side_effect, direct_value, reset_value with the macro itself off the documented reset.
+reset_again, island_rail. Warnings: map_hash, side_effect, direct_value, reset_value with the macro itself off the documented reset.
 
 ## Negative control (selftest.py)
 
@@ -86,15 +86,23 @@ are its labels) and writes a netlist with the reference's instance names, master
 
 Negative control (`selftest.py --layout-cut`): the extraction is repeated with the metal erased at two pins in the in-memory
 copy of the GDS (`cut=`: every top-level shape on the terminal's metal that touches the terminal, and every via landing on it):
-the POR_BYPASS pad pull-down tie `io_bidir_16.PD` and one c_* trim consumer pin (`lna.ct2` / `ctle.ctle_peak2`). The test on
-it must FAIL naming both pins. The run dir is only read (mounted read-only).
+the POR_BYPASS pad pull-down tie `io_bidir_16.PD`, one c_* trim consumer pin (`lna.ct2` / `ctle.ctle_peak2`) and one block
+supply pin (`aosc.VSS`: a floating rail pin other than the named `pad_tlp` exception must still fail). The test on it must
+FAIL naming every pin. The run dir is only read (mounted read-only).
+
+Island rails (`island_rail`, both modes, structural): every pin the conn binds to an island rail (the VISL net of an `isw_*`
+switch) must be on the netlist net of that rail's switch VISL pin; a floating or misrouted island-rail pin fails (e.g.
+`wiredtx.VDD` off RAIL_wired_tx on pt_wired fpw-8 / fpw-11).
+
+Named float exception (pt_wired only, coordinator 2026-11-27, as LVS by name and check_padsup): `pad_tlp` VDD / VSS (TLP test
+site, reaches neither ring nor grid). A `rail` z there is listed in the summary (`float_exceptions`) instead of a fault, only
+while the pin is isolated (an `NC_` net); joined to anything else, or X, it is a fault as before.
 
 What layout mode sees: opens and floating pieces of top-level wires, ties and supply (pad ring, PDN, direct lands, island
 bars) between black-box pins; a top-level short between two driven nets (X); a misbound top-level wire (pin on the wrong
 net), all through the same functional checks as the default mode. What it cannot see: anything inside a black box (block
 internals, the macro's own stripes: `place.log` "macro supply" check), shorts onto nets the stubs leave undriven (analog,
-island rails: VISL is not driven by the switch stub, so a block's island-rail pin that floats, e.g. `wiredtx` RAIL_wired_tx on
-pt_wired fpw-8 / fpw-11, is visible only in the extraction diff, not as a fault), resistance / IR drop / ESD, device-level LVS (`run_top_lvs_bb.sh`),
+island rails: VISL is not driven by the switch stub, a floating island-rail pin is caught structurally by `island_rail` instead), resistance / IR drop / ESD, device-level LVS (`run_top_lvs_bb.sh`),
 and a block pin split into several layout pieces beyond the one the bench takes (listed in the json).
 
 ## Limits

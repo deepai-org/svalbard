@@ -5,6 +5,9 @@ def expect(F, D, O):
     """O: observed outputs used as inputs of the model where the contract refers to another macro output (rx_en_aux)."""
     f = lambda n: F[n]; E = {}; A = 2
     for n in ('ena', 'ref_sel_coarse', 'ref_sel_fine'): E['c_biasgen_' + n] = f('core.biasgen.' + n)
+    # the register file gates fine with coarse in hardware (rule biasgen_fine_needs_coarse, 'also gated in hardware');
+    # a forced vector with fine=1, coarse=0 first appeared with the macro-batch field set (2026-11-28)
+    E['c_biasgen_ref_sel_fine'] = f('core.biasgen.ref_sel_fine') & f('core.biasgen.ref_sel_coarse')
     E['c_biasgen_ref_sel_vbg'] = f('core.biasgen.ref_sel_vbg') & D['bg_ok']
     for n in ('idac2_source', 'idac1_source', 'bandgap_sink1', 'bandgap_sink2', 'voltgen_source', 'voltgen_sink1', 'voltgen_sink2'): E['c_biasgen_' + n] = f('core.biasgen.' + n)
     E['c_aosc_en'] = f('core.aosc.enable'); E['c_bgap_ena'] = f('core.refchain.bgap_ena'); E['c_bgap_trim'] = (1 << f('core.refchain.bgap_trim')) - 1

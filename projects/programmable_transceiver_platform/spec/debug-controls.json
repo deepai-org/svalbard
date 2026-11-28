@@ -275,10 +275,11 @@
     },
     {
       "code": 6,
-      "name": "host_vdd_sense",
+      "name": "vdd_lo_vreg_tx",
       "island": null,
       "kind": "supply_monitor",
-      "force": "sense_only"
+      "force": "sense_only",
+      "note": "INT-04 (2026-11-28): pt_rf VDD_LO via the lo_vreg 1 k tap (F2); pt_wired VREG_TX via the pll_vreg2 20 k tap (F5)"
     },
     {
       "code": 7,
@@ -414,10 +415,11 @@
     },
     {
       "code": 25,
-      "name": "slicer_bias",
+      "name": "wiredtx_trunk",
       "island": "wired",
       "kind": "bias",
-      "force": "sense_only"
+      "force": "sense_only",
+      "note": "INT-04 (2026-11-28): pt_wired TRK_WIRED_TX trunk via core_bias (F6); pt_rf dead (wired-gated)"
     },
     {
       "code": 26,
@@ -506,10 +508,11 @@
     },
     {
       "code": 37,
-      "name": "conv_vcm",
+      "name": "vreg_tx",
       "island": "conv",
       "kind": "reference",
-      "force": "sense_only"
+      "force": "sense_only",
+      "note": "INT-04 (2026-11-28): pt_rf VREG_TX via the pll_vreg2 20 k tap (F3, conv-island gated); pt_wired VCM_MASTER, unreachable (conv-gated)"
     },
     {
       "code": 38,
@@ -535,11 +538,11 @@
     },
     {
       "code": 41,
-      "name": "usbfs_vref",
+      "name": "lo_vtune_cdr_vctrl",
       "island": null,
       "kind": "reference",
       "force": "sense_only",
-      "note": "usbfs on the host domain, never switched (island_support README A3)"
+      "note": "INT-04 (2026-11-28): pt_rf LO VTUNE via the QVCO gated 20 k + TG tap (F1, rfpll.config.atb_enable); pt_wired CDR_VCTRL (F4)"
     },
     {
       "code": 42,
@@ -3705,11 +3708,11 @@
           ]
         },
         {
-          "signal": "host_vdd_sense",
+          "signal": "vdd_lo_vreg_tx",
           "port": "host_v",
           "path": "atb1",
-          "select": "host_vdd_sense",
-          "expected": "ATB1 = HOST_VDD",
+          "select": "vdd_lo_vreg_tx",
+          "expected": "ATB1 = VDD_LO (pt_rf) / VREG_TX (pt_wired)",
           "chips": [
             "rf",
             "wired"
@@ -4734,11 +4737,11 @@
           ]
         },
         {
-          "signal": "conv_vcm",
+          "signal": "vreg_tx",
           "port": null,
           "path": "atb1",
-          "select": "conv_vcm",
-          "expected": "ATB1 = converter VCM",
+          "select": "vreg_tx",
+          "expected": "ATB1 = VREG_TX (pt_rf)",
           "islands": [
             "conv"
           ],
@@ -5390,11 +5393,11 @@
           ]
         },
         {
-          "signal": "slicer_bias",
+          "signal": "wiredtx_trunk",
           "port": null,
           "path": "atb1",
-          "select": "slicer_bias",
-          "expected": "ATB1 = slicer bias",
+          "select": "wiredtx_trunk",
+          "expected": "ATB1 = TRK_WIRED_TX trunk",
           "islands": [
             "wired"
           ],
@@ -5607,12 +5610,13 @@
           ]
         },
         {
-          "signal": "usbfs_vref",
+          "signal": "lo_vtune_cdr_vctrl",
           "port": null,
           "path": "atb1",
-          "select": "usbfs_vref",
-          "expected": "ATB1 = FS receiver reference (core node)",
+          "select": "lo_vtune_cdr_vctrl",
+          "expected": "ATB1 = LO VTUNE (pt_rf) / CDR_VCTRL (pt_wired)",
           "chips": [
+            "rf",
             "wired"
           ]
         }

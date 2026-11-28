@@ -17,12 +17,18 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[3]
 
 
+import os
+RFD_DIODE_TAILS = os.environ.get('RFD_DIODE_TAILS', '0') == '1'
+
+
 def _rows_rfdriver(c):
     names = [d.name for d in c.devices]
     rf = ['A1_P', 'A1_N', 'R1_p', 'R1_n', 'A2_P', 'A2_N', 'R2_p', 'R2_n', 'A3_P', 'A3_N', 'R3_p', 'R3_n',
           'RATBP_p', 'RATBP_n',
           'SF_p', 'SF_n', 'O_P', 'O_N', 'CAS_P', 'CAS_N']
     tails = ['T1', 'T2', 'T3', 'TS_p', 'TS_n', 'TO0', 'TO1', 'TO2', 'TO3', 'BCAP']
+    if RFD_DIODE_TAILS:      # RFT-07: the bias reference sits in the tail row, on the tails' own VSS lane (mirror sees no IR offset)
+        tails = ['T1', 'T2', 'T3', 'TS_p', 'TS_n', 'TO0', 'TO1', 'DIODE', 'BSW', 'BPD', 'TO2', 'TO3', 'BCAP']
     load = ['HDR'] + [f'RO_{l}{i}' for l in 'pn' for i in range(circuits.DRV['ro_par'])] + ['CLP_p', 'CLP_n',
                                                                                           'RATBC_p', 'RATBC_n',
                                                                                           'DUM_P', 'DUM_N', 'CDC_P', 'CDC_N']
@@ -121,6 +127,7 @@ def generate(block, scratch, publish):
                   area_um2=rep['area_um2'],
                   area_ceiling_um2=circuits_area_ceiling(block),
                   rows=rep['rows'], trunked_nets=rep['trunked_nets'], circuit=c.summary(),
+                  supply_straps_um=rep.get('supply_straps_um'), supply_bars_um=rep.get('supply_bars_um'), supply_pins_um=rep.get('supply_pins_um'),
                   hashes={f'{block}.spice': sha(HERE / f'{block}.spice'), 'circuits.py': sha(HERE / 'circuits.py'),
                           'layoutlib.py': sha(HERE / 'layoutlib.py'), 'generate.py': sha(HERE / 'generate.py'),
                           f'{block}.gds': sha(pub / f'{block}.gds'), f'{block}.ext.spice': sha(pub / f'{block}.ext.spice')},

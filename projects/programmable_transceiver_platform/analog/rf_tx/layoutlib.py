@@ -450,13 +450,20 @@ def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=N
     width = max(r['right'] for r in rowinfo) + 1.0
     bars = {}
     if SUP:
-        g = supply.get('gap', 1.0); yb = cursor_y - g
-        for net in reversed(list(SUP)):           # last listed net sits highest
-            layer, bw = SUP[net]['bar']
-            bars[net] = (layer, yb - bw, yb); yb -= bw + g
-        top_bar = list(SUP)[0]
-        yb += g; bars[top_bar] = (bars[top_bar][0], yb, bars[top_bar][2])   # bottom-most bar is edge-flush
-        cursor_y = yb
+        g = supply.get('gap', 1.0)
+        if supply.get('stack', False):
+            # stacked mode: every bar starts at the bottom edge (different layers); the Metal4 bar is the tallest so a
+            # Metal5 strap of its net can land on it above the Metal5 bars of the other nets
+            hb = max(o['bar'][1] for o in SUP.values()); yb = cursor_y - g - hb
+            for net, o in SUP.items():
+                bars[net] = (o['bar'][0], yb, yb + o['bar'][1])
+            cursor_y = yb
+        else:
+            yb = cursor_y - g
+            for net in reversed(list(SUP)):           # last listed net sits highest
+                layer, bw = SUP[net]['bar']
+                bars[net] = (layer, yb - bw, yb); yb -= bw + g
+            cursor_y = yb + g
     height_bottom = cursor_y
     # --- paint ----------------------------------------------------------
     cmds = ['crashbackups stop', f'load {circuit.name}_hier', 'units microns']
@@ -548,14 +555,20 @@ def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=N
         layer, b0, b1 = bars[net]
         P.rect(layer, x_l, b0, width - 1.0, b1)
         ys = [y for (ri, n), y in lanes.items() if n == net]
+        m5top = max([bb[2] for nn, bb in bars.items() if nn != net and bb[0] == 'metal5'] + [b0])
         for x_ in strap_x[net]:
-            P.vwire('metal5', x_, (b0 if layer == 'metal5' else (b0 + b1) / 2), max(ys) + lw[net] / 2, o['w'])
-            if layer == 'metal4':
-                P.via(x_, (b0 + b1) / 2, 4, 5, w=o['w'], h=b1 - b0)
+            # straps as plain rectangles (vwire adds w/2 end caps, which reached the other net's bar)
+            top_ = max(ys) + lw[net] / 2
+            if layer == 'metal5':
+                P.rect('metal5', x_ - o['w'] / 2, b0, x_ + o['w'] / 2, top_)
+            else:
+                lo_ = m5top + 1.0 if supply.get('stack', False) else b0
+                P.rect('metal5', x_ - o['w'] / 2, lo_, x_ + o['w'] / 2, top_)
+                P.via(x_, (lo_ + b1) / 2, 4, 5, w=o['w'], h=b1 - lo_)
         pl, p0, p1 = o['pin']
         if pl != layer:
             raise ValueError('pin layer must be the bar layer')
-        if layer == 'metal4':
+        if layer == 'metal4' and not supply.get('stack', False):
             P.rect('metal4', x_l + p0, height_bottom, x_l + p1, b1)      # edge pin down through the bands below
         pin_rect[net] = (x_l + p0, height_bottom, x_l + p1, height_bottom + 3.0)
     P.net = None

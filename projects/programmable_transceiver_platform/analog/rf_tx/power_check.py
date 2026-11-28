@@ -38,15 +38,16 @@ def main(args):
         lab, f = a.split('=')
         os.environ['RFTX_VIEWFILES'] = json.dumps({} if f == 'ext' else {'rfdriver': f})
         decks, meta = {}, {}
-        for amp in (0.05, 0.15, 0.3, 0.6):
+        quick = os.environ.get('QUICK') == '1'
+        for amp in ((0.3,) if quick else (0.05, 0.15, 0.3, 0.6)):
             decks[f'drv_a{int(amp * 1000)}'] = B.driver_deck('ext', amp=amp, vdd=3.3 - droop, out=f'drv_a{int(amp * 1000)}.txt'); meta[f'drv_a{int(amp * 1000)}'] = amp
-        for code in (0, 7, 15):
+        for code in (() if quick else (0, 7, 15)):
             decks[f'drv_code{code}'] = B.driver_deck('ext', amp=0.3, gain=code, vdd=3.3 - droop, out=f'drv_code{code}.txt'); meta[f'drv_code{code}'] = 0.3
         nodes = supply_nodes(HERE / f) if f != 'ext' else []
-        if nodes: decks['ir'] = ir_deck('ext', nodes, vdd=3.3 - droop)
+        if nodes and not quick: decks['ir'] = ir_deck('ext', nodes, vdd=3.3 - droop)
         work = S.run_decks(decks, f'power_{lab}')
         r = {k: B.driver_metrics(work, k, meta[k]) for k in meta}
-        if nodes:
+        if nodes and not quick:
             y = np.loadtxt(work / 'ir.txt'); t = y[:, 0]; m = t >= 5e-9 - 8 * S.T_LO
             cols = y[:, 1::2]                      # wrdata: t, v pairs
             vd, vs = cols[m, 0].mean(), cols[m, 1].mean(); vn = cols[m, 2:].mean(axis=0)

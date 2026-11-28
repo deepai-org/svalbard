@@ -165,6 +165,17 @@ if G.get('manifest'):
     cnt = collections.Counter()
     full = {n for name, nets, master in ref[top]['x'] for n in nets}
     partial = {n for name, nets, master in ref[top]['x'] if name in unbound_inst for n in nets}
+    # name-specific floating-pin exception (coordinator 2026-11-27, pt_wired option (c)): pad_tlp VDD / VSS reach neither the
+    # ring rails nor the grid on this shuttle (test structure). They are taken off their reference net only while their
+    # layout net holds no other pin (a join to anything else stays a finding); listed in res['float_exceptions'].
+    FLOAT_PINS = {('pad_tlp', 'VDD'), ('pad_tlp', 'VSS')} if G.get('chip') == 'wired' else set()     # -rd chip=<chip> (run.sh lvs stage)
+    res['float_exceptions'] = []
+    for n in list(refnet):
+        for x in sorted(refnet[n] & FLOAT_PINS):
+            others = sorted(y for i in where.get(x, set()) for y in lay_net[i] if y != x and y[0] != x[0])     # anything outside pad_tlp itself
+            if not others:
+                refnet[n] = refnet[n] - {x}; res['float_exceptions'].append(dict(pin=f'{x[0]}.{x[1]}', ref_net=n, isolated=True))
+            else: res['float_exceptions'].append(dict(pin=f'{x[0]}.{x[1]}', ref_net=n, isolated=False, joined_to=[f'{a}.{b}' for a, b in others][:8]))
     for n in sorted(refnet):
         mem = refnet[n]
         ids = set().union(*[where.get(x, set()) for x in mem]) if mem else set()
@@ -182,9 +193,11 @@ if G.get('manifest'):
         else:
             cnt['+'.join(st)] += 1
             if len(F) < 400: F.append(dict(net=n, status='+'.join(st), pins=len(mem), pieces=len(ids), not_connected=[f'{a}.{b}' for a, b in missing][:12],
-                                           shorted_to=[f'{a}.{b}' for a, b in foreign][:12], internal=[f'{a}.{b}' for a, b in internal][:12]))
+                                           shorted_to=[f'{a}.{b}' for a, b in foreign][:12], internal=[f'{a}.{b}' for a, b in internal][:12],
+                                           pieces_members=sorted(([len(lay_net[i])] + sorted(f'{a}.{b}' for a, b in lay_net[i])[:6] for i in ids), key=lambda v: v[0])[:6] if len(ids) > 1 else []))
     stray = [sorted(f'{a}.{b}' for a, b in mem)[:8] for nid, mem in lay_net.items()
-             if not any(x in y for y in refnet.values() for x in mem) and any(not a.startswith('<') for a, b in mem)]
+             if not any(x in y for y in refnet.values() for x in mem) and any(not a.startswith('<') for a, b in mem)
+             and not all(x in FLOAT_PINS or x[0] in {p_[0] for p_ in FLOAT_PINS} for x in mem)]
     res.update(by_name=dict(cnt), ref_nets=len(full), nets_with_bound_pins=len(refnet), instances_bound=len(bound)-len(skip & set(bound)),
                instances_in_ref_not_bound=sorted(unbound_inst), layout_subcircuits_not_in_manifest=dict(unbound_sc),
                layout_nets_on_no_reference_net=stray[:40])

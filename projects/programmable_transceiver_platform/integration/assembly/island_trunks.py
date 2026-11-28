@@ -564,7 +564,8 @@ def face_inward(n, m, tr, MJ, C, db, um, bb):
 def reserve(g):
     """Before the grid is cut (kl_place, ahead of the straps): the landing corridor of every plated supply pin (nearest block
     edge, pin length wide, 20 um out) + 2.5 um joins `avoid` on Metal4 and Metal5, so neither grid net's strap runs across it
-    (pt_rf lo_mmd VSS: the VDD Metal5 row lay along the pin and no plate could reach it, 2026-11-28). place.json 'plate_reserve'."""
+    (pt_rf lo_mmd VSS: the VDD Metal5 row lay along the pin and no plate could reach it, 2026-11-28). Only the first pin of the
+    net per block is reserved (the one _plates lands on: landing() also takes the first). place.json 'plate_reserve'."""
     db = g['db']; um = g['um']; man = g['man']; MJ = g['MJ']; C = g['C']; avoid = g['avoid']; nets = g['nets']
     res = db.Region(); out = []
     for (n, net), mA in HEAVY.get(g['CHIP'], {}).items():

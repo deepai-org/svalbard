@@ -6,7 +6,7 @@
  "build_command": "python3 $P/analog/pads/stress_safe_compact_layout.py wired_receive_usb OUT $P/analog/pads/generated/stress-safe-families/network-gc-d2 usbfix6v2lsm 14 '--esd-a={\"term_poly\": [16, 1.16], \"trim_poly\": [4, 1.2], \"fs_pad_6v\": true, \"site\": {\"n_up_left\": 3}, \"tb\": {\"fs\": {\"bus_w2\": 4}, \"top_pins\": true, \"pad_trunk_fill\": true}}'; top tx_with_primary renamed to pad_wirepad (byte-level)",
  "rebuild_check": "2026-11-23 rebuild from the generators committed with this publish (layout.py ffe71882, wired_protection_layout_ss.py b2e89345, stress_safe_compact_layout.py 0c0f8b61, pad_site_primary.py 2bca0b81) into esdopt/usb/build/pub7: DRC 0, device LVS match, normalised GDS cea611c5 == candidate b7. Default paths at these shas: reference_clock and wired_receive_usb XOR 0.0 um2 vs their previous published cells (esdopt/ref STATUS L7). pad_hspad / rf-shell default paths through pad_site_primary.py NOT re-checked (rf-shell candidates rebuild with 17.4 um2/site XOR, PC-74 json).",
  "sha256": {
-  "combined.gds": "a111dca9676877b6059ee26febf96092764ebbdc15c47609a0d5a24f5af70028",
+  "combined.gds": "95f9bea40021f87c4ae8edfc6a33f001d787304db8a233a8de0c1281561e0854",
   "physical.spice": "fbaf1c32ad06180a71c838406229c5e27636e5092d7787490985cc01b8afe171",
   "physical-r-typ.spice": "73d0ef6da503b60df767b351a0d477ca82d0c3e07112d88c9f0c744491fc1b97",
   "physical-r-high.spice": "9a97caa72bfe1535037cd5e3edc579ab2b77cb94b52cb229e8d471098204c3a4",
@@ -132,5 +132,6 @@
   "bench": "scratch/pads-core/esdopt/usb/bench/b7*.json"
  },
  "pin_update_2026_11_24": "b7v = b7 + analog/pads/usb_vcm_pin.py: TERM_VCM top-edge pin widened (Metal4 x 195-310 on the edge, merging with the TERM_VCM plate; the old 0.44 um pin keeps its metal but is no longer a pin). EM (85 C ratings, HS-active termination current 9.7 mA): TERM_VCM pin -> termination 0.49 (was 1.97 through the 2.35 um neck), bond -> termination 0.80, trim feeds ~0.57 average with the actual split; scratch/pads-core/esdopt/usb/bench/b7v-hs-em.json. Checks on the published file: KLayout main / antenna 0 (live deck, sha-matched kldrc), rail_site PASS, read-back LVS unique vs lvs-reference.spice, TERM_VCM<->VSS label swap fails. Magic DRC 0 (live precheck config L): the 9 MIMTM.2 of b7 fixed by Metal4 landings at three Via4 cuts. No device / netlist change; models unchanged.",
- "pad_cup": "2026-11-28 pad_cup.py publish (integration/assembly, tool/preroute-pads): only the stock Bondpad_5LM stack under each opening (CUP.1a), no Via3/Via4 in the provider-ring rail band (PAD-16); pad_cup check CLEAN, precheck cup_audit clean, KLayout-extracted netlist identical to the pre-fix GDS, shuttle-deck DRC main 0 / antenna 0"
+ "pad_cup": "2026-11-28 pad_cup.py publish (integration/assembly, tool/preroute-pads): only the stock Bondpad_5LM stack under each opening (CUP.1a), no Via3/Via4 in the provider-ring rail band (PAD-16); pad_cup check CLEAN, precheck cup_audit clean, KLayout-extracted netlist identical to the pre-fix GDS, shuttle-deck DRC main 0 / antenna 0",
+ "publish_command": "python3 $P/analog/pads/pad_publish.py pad_wirepad OUT/combined.gds   (after build_command; pad_cup publish + check, KLayout read-back LVS, records; deterministic: same build -> same sha256)"
 }

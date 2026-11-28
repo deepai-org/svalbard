@@ -64,6 +64,10 @@ named `asm-<chip>-<pid>`: stop a run only by that name (`docker kill asm-...`) o
   shapes cut out, stock plates and 0.26 um via arrays put back) and no pad Via3 / Via4 lies in the provider-ring rail
   band (pad-local y 69.5-348.9 um, the same in every pad site; PAD-16). Rerun it whenever a pad generator rewrites a pad.
   `pad_cup.py check <repo root>` fails if any published pad has anything else under an opening or cuts in the band.
+  Publishing goes through `analog/pads/pad_publish.py <family> [<built gds>]` (pad_cup publish + check, KLayout
+  read-back LVS against the reference in PDK device form, record sha256); GDS is written without timestamps, so a
+  regeneration gives the recorded sha256 (proved on pad_tlp: `tlp_site.py --publish` twice -> 0dc009e3 both times,
+  generator output XOR the previously published cell = 0). Each pcNN record carries its `publish_command`.
 - Results 2026-11-28 (shuttle deck; the full-chip main deck on fpw-14 took 8771 s). pt_wired fpw-14 (placed before the
   pads were republished): 5084 context markers = PAD-16 V3.1 1280 / V3.2a 296 / V4.1 1280 / V4.2a 296, RAIL_wired_tx bar
   on wiredtx V4.1 1208 / V4.2a 713, MT.2a 10, MSLOT5.1 1; with the fixed pads the PAD-16 classes go (1944); unfed 0.

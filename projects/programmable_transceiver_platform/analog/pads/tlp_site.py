@@ -5,19 +5,24 @@ One native bond pad (Bondpad_5LM) + one leg's primary steering diodes from the s
 nothing else. Ports PAD (bond), VDD, VSS (M2 bars, strapped to the ring at assembly).
 Each diode terminal: a column of single via1 cuts at 1 um pitch (11 per PAD/VSS-down terminal, 6 VDD, 5 substrate tap).
 Measurement plan: see analog/pads/README.md PD48 (TLP 100 ns, VF-TLP 1-5 ns, It2 / leakage criterion).
-usage: python3 tlp_site.py --output-dir DIR   (Magic in the pinned layout image; DRC + extraction + netgen LVS)"""
-import argparse, shutil, subprocess, sys
+usage: python3 tlp_site.py --output-dir DIR [--publish]   (Magic in the pinned layout image; DRC + extraction + netgen LVS)
+  --publish: pad_publish.py pad_tlp <DIR>/pad_tlp_flat.gds (pad_cup publish + check, KLayout read-back LVS, records).
+  PAD_GEN_IMAGE=<image>: Magic / netgen from another image whose PDK is /foss/pdks (the pinned image is not on every
+  machine); the netgen LVS then runs on that image too."""
+import argparse, os, shutil, subprocess, sys
 from pathlib import Path
 HERE = Path(__file__).resolve().parent
-PRIM = HERE / 'generated/protection-primitives'
-IMAGE = 'svalbard/librelane-gf180-canary:2026.08'
+PRIM = Path(os.environ['SVALBARD_DATA']) / 'projects/programmable_transceiver_platform/analog/pads/generated/protection-primitives' if os.environ.get('SVALBARD_DATA') else HERE / 'generated/protection-primitives'
+IMAGE = os.environ.get('PAD_GEN_IMAGE', 'svalbard/librelane-gf180-canary:2026.08')
+SHIM = 'export PATH=$PATH:/foss/tools/bin PDK_ROOT=/foss/pdks; ' if 'PAD_GEN_IMAGE' in os.environ else ''
+PDKR = '/foss/pdks' if SHIM else '/pdk'      # PDK root inside the image
 
 
 def generate(W):
     W.mkdir(parents=True, exist_ok=False)
     for n in ('diode_nd2ps_06v0', 'diode_pd2nw_06v0'):
         shutil.copy(PRIM / f'{n}.gds', W / f'{n}.gds')
-    c = ['crashbackups stop', 'set ::env(PDKPATH) /pdk/gf180mcuD', 'path search +/pdk/gf180mcuD/libs.ref/gf180mcu_fd_io/mag',
+    c = ['crashbackups stop', f'set ::env(PDKPATH) {PDKR}/gf180mcuD', f'path search +{PDKR}/gf180mcuD/libs.ref/gf180mcu_fd_io/mag',
          'gds read diode_nd2ps_06v0.gds', 'gds read diode_pd2nw_06v0.gds', 'load pad_tlp', 'units microns']
     def r(l, x1, y1, x2, y2): c.extend([f'box values {x1:.3f} {y1:.3f} {x2:.3f} {y2:.3f}', f'paint {l}'])
     def via1(x, y): r('metal1', x - .19, y - .19, x + .19, y + .19); r('via1', x - .13, y - .13, x + .13, y + .13); r('metal2', x - .2, y - .2, x + .2, y + .2)
@@ -51,18 +56,28 @@ def generate(W):
           'extract all', 'ext2spice lvs', 'ext2spice', 'gds write pad_tlp_flat.gds', 'quit -noprompt']
     (W / 'gen.tcl').write_text('\n'.join(c) + '\n')
     out = subprocess.run(['docker', 'run', '--rm', '--network', 'none', '--entrypoint', '/bin/sh', '-v', f'{W}:/work', '-w', '/work', IMAGE,
-                          '-c', 'magic -dnull -noconsole -rcfile /pdk/gf180mcuD/libs.tech/magic/gf180mcuD.magicrc /work/gen.tcl'], capture_output=True, text=True)
+                          '-c', SHIM + f'magic -dnull -noconsole -rcfile {PDKR}/gf180mcuD/libs.tech/magic/gf180mcuD.magicrc /work/gen.tcl'], capture_output=True, text=True)
     (W / 'gen.log').write_text(out.stdout + out.stderr)
     drc = next(l for l in out.stdout.splitlines() if l.startswith('TLP_DRC'))
     ref = ['.subckt pad_tlp PAD VSS VDD'] + [f'DN{i} VSS PAD diode_nd2ps_06v0 area=22.5p pj=51.8u\nDP{i} PAD VDD diode_pd2nw_06v0 area=22.5p pj=51.8u' for i in range(4)] + ['.ends']
     (W / 'reference.spice').write_text('\n'.join(ref) + '\n')
     sys.path.insert(0, str(HERE))
-    from run_first_pass import lvs
-    ok = lvs(W, 'pad_tlp_flat.spice', 'pad_tlp_flat', 'reference.spice', 'pad_tlp', 'lvs.txt')
+    if SHIM:
+        out = subprocess.run(['docker', 'run', '--rm', '--network', 'none', '--entrypoint', '/bin/sh', '-v', f'{W}:/work', '-w', '/work', IMAGE, '-c',
+                              SHIM + 'netgen -batch lvs "pad_tlp_flat.spice pad_tlp_flat" "reference.spice pad_tlp" /foss/pdks/gf180mcuD/libs.tech/netgen/gf180mcuD_setup.tcl lvs.txt'],
+                             capture_output=True, text=True)
+        t = (W / 'lvs.txt').read_text() if (W / 'lvs.txt').exists() else ''
+        ok = 'Final result: Circuits match uniquely.' in t and 'Property errors were found' not in t
+    else:
+        from run_first_pass import lvs
+        ok = lvs(W, 'pad_tlp_flat.spice', 'pad_tlp_flat', 'reference.spice', 'pad_tlp', 'lvs.txt')
     print(drc, 'LVS', ok)
     if drc != 'TLP_DRC 0' or not ok: raise SystemExit('TLP site failed DRC/LVS')
 
 
 if __name__ == '__main__':
-    p = argparse.ArgumentParser(); p.add_argument('--output-dir', type=Path, required=True)
-    generate(p.parse_args().output_dir.resolve())
+    p = argparse.ArgumentParser(); p.add_argument('--output-dir', type=Path, required=True); p.add_argument('--publish', action='store_true')
+    a = p.parse_args(); generate(a.output_dir.resolve())
+    if a.publish:
+        r = subprocess.run([sys.executable, str(HERE / 'pad_publish.py'), 'pad_tlp', str(a.output_dir.resolve() / 'pad_tlp_flat.gds')])
+        if r.returncode: raise SystemExit('pad publish failed')

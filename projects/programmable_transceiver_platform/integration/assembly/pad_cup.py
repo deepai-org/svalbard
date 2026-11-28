@@ -157,9 +157,11 @@ def main(argv):
         root = argv[1]; names = argv[2:] or list(PUBLISHED); nbad = 0
         for n in names:
             f = os.path.join(root, PUBLISHED[n]); ly = db.Layout(); ly.read(f); c = _top(ly)
-            if argv[0] == 'publish':
+            if argv[0] == 'publish' and not check(ly, c):
+                print(f'{n}: already clean, left unchanged (publish is idempotent)')
+            elif argv[0] == 'publish':
                 old = hashlib.sha256(open(f, 'rb').read()).hexdigest()
-                rep = finalize(ly, c); opt = db.SaveLayoutOptions(); opt.write_context_info = False
+                rep = finalize(ly, c); opt = db.SaveLayoutOptions(); opt.write_context_info = False; opt.gds2_write_timestamps = False
                 ly.write(f + '.tmp', opt); os.replace(f + '.tmp', f); new = hashlib.sha256(open(f, 'rb').read()).hexdigest()
                 print(f'{n}: published {f} sha256 {old[:16]} -> {new[:16]} {rep}')
                 ly = db.Layout(); ly.read(f); c = _top(ly)

@@ -6,7 +6,7 @@
  "build_command": "python3 $P/analog/pads/stress_safe_compact_layout.py reference_clock OUT $P/analog/pads/generated/stress-safe-families/network-gc '--esd-a={\"site\": {\"n_up_left\": 3}, \"tb\": {\"top_pins\": true}}'  (= scratch/pads-core/esdopt/ref/build.sh a1 network-gc ...); top cell tx_with_primary renamed to pad_refpad on publish (byte-level STRNAME rename, nothing else changed)",
  "rebuild_check": "2026-11-22 rebuild from the working generators (layout.py ffe71882, wired_protection_layout_ss.py b2e89345, stress_safe_compact_layout.py 0c0f8b61, pad_site_primary.py 2bca0b81; uncommitted pads-agent edits, committed with the pad_wirepad publish) into esdopt/ref/build/pub1: generator DRC 0, 42 devices, device LVS match; GDS with BGNLIB/BGNSTR timestamps zeroed 80fb15cd == candidate a1 (a37db142) == published file (after the top rename). Default path (no --esd-a) XOR 0.0 um2 vs the previous published pad_refpad (STATUS L7).",
  "sha256": {
-  "combined.gds": "0f698bba734532234c24785d21d1a2c3c781357403e4ddd7d5e34f81e5713407",
+  "combined.gds": "70ef56559ec881780dec0384209d49584de73895c2406386ba8edf758294a7c5",
   "physical.spice": "787fa2cebe5a03a3c79673c5cd24535d456aa3162ac073d1b9570059272e6063",
   "physical-r-typ.spice": "4c29e7711a90d12cc949644ac27d269ff457ebcf8c75ec8498f3550043297818",
   "physical-r-high.spice": "3d0225796aba51ed6fda8cce3cf071952ed9f0d142cdc5d15a83c563a7ab6b46",
@@ -148,5 +148,6 @@
   "rpin": "scratch/pads-core/esdopt/ref/rpin/{a1,pub}-res.json",
   "scripts": "scratch/pads-core/esdopt/ref/{build.sh,checks.sh,q.sh,q_pub.sh,rflow.sh,mkspec.py,fixspec.py,mkmodel.py,mkrail.py,esd_ref.py,esdtab.py,padc_ref.py,xor.sh}"
  },
- "pad_cup": "2026-11-28 pad_cup.py publish (integration/assembly, tool/preroute-pads): only the stock Bondpad_5LM stack under each opening (CUP.1a), no Via3/Via4 in the provider-ring rail band (PAD-16); pad_cup check CLEAN, precheck cup_audit clean, KLayout-extracted netlist identical to the pre-fix GDS, shuttle-deck DRC main 0 / antenna 0"
+ "pad_cup": "2026-11-28 pad_cup.py publish (integration/assembly, tool/preroute-pads): only the stock Bondpad_5LM stack under each opening (CUP.1a), no Via3/Via4 in the provider-ring rail band (PAD-16); pad_cup check CLEAN, precheck cup_audit clean, KLayout-extracted netlist identical to the pre-fix GDS, shuttle-deck DRC main 0 / antenna 0",
+ "publish_command": "python3 $P/analog/pads/pad_publish.py pad_refpad OUT/combined.gds   (after build_command; pad_cup publish + check, KLayout read-back LVS, records; deterministic: same build -> same sha256)"
 }

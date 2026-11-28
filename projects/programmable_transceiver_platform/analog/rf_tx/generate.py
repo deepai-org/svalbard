@@ -65,7 +65,13 @@ LAYOUT = {
                   trunk_order=['i_p', 'i_n', 'q_p', 'q_n', '*', 'out_p', 'out_n']),
     'rfdriver': dict(wide={'VDD': 2.0, 'VSS': 2.0, 'pad_p': 2.0, 'pad_n': 2.0, 'hdrv': 2.0, 'to': 2.0, 'cp': 2.0, 'cn': 2.0,
                            't1': 0.8, 't2': 0.8, 'p3_p': 0.8, 'p3_n': 0.8, 'sfd': 1.0},
-                     rows=_rows_rfdriver, inline_trunks=True, gap=0.8),   # D2: gap 1.2 -> 0.8 (T bypass area)   # area pass 2026-11-12: 135.2k -> ~93k um2
+                     rows=_rows_rfdriver, inline_trunks=True, gap=0.8,
+                     # power rework 2026-11-28 (coordinator option 2, 74 mA VSS / 29 mA VDD at 32 C 20.9 mA/um): 3 Metal5 straps
+                     # per supply, 3 um Metal4 lanes, full-width bottom bars (VDD Metal5 edge-flush, VSS Metal4 above it) and
+                     # south edge pins where the floorplan's RAIL_rf_tx trunk and VSS plate land (LEF frame, unflipped)
+                     lane_width={'VDD': 3.0, 'VSS': 3.0},
+                     supply=dict(gap=1.0, nets={'VDD': dict(straps=[0.12, 0.47, 0.82], w=6.0, bar=('metal5', 8.0), pin=('metal5', 197.8, 257.8)),
+                                                'VSS': dict(straps=[0.155, 0.505, 0.855], w=6.0, bar=('metal4', 8.0), pin=('metal4', 167.8, 192.8))})),   # D2: gap 1.2 -> 0.8 (T bypass area)   # area pass 2026-11-12: 135.2k -> ~93k um2
 }
 
 

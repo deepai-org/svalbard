@@ -31,8 +31,12 @@ PORT_DIODE = 12.0      # um^2 antenna diode on every gate-only control port (ASM
 PORT_DIODE_SKIP = {'lo_p', 'lo_n'}   # txmix LO pins: driven ~0.1 mm from pt_lo_txbuf (LO-ASM-4); keep the GHz node light
 ANALOG_PREFIX = ('lo', 'in', 'out', 'pad', 'bb', 'dac', 'rf', 'atb', 'ib', 'sum', 'i_', 'q_')   # analog signal ports: no diode
 
-DIGITAL_IMAGE = 'svalbard/librelane-gf180-canary:2026.08'
-PDK = '/pdk/gf180mcuD'
+import os
+# RFTX_IMAGE: the pinned canary image is not on every machine; the project KLayout image carries Magic 8.3.678 / netgen
+# with the same PDK (open_pdks f6eeac7) under /foss/pdks (coordinator 2026-11-28: accepted, version recorded in the report)
+DIGITAL_IMAGE = os.environ.get('RFTX_IMAGE', 'svalbard/librelane-gf180-canary:2026.08')
+PDK = '/foss/pdks/gf180mcuD' if 'RFTX_IMAGE' in os.environ else '/pdk/gf180mcuD'
+_SH = 'export PATH=$PATH:/foss/tools/bin PDK_ROOT=/foss/pdks; ' if 'RFTX_IMAGE' in os.environ else ''
 GRID = 0.005
 
 
@@ -44,7 +48,7 @@ def docker_magic(work, script, timeout=1800):
     work = Path(work).resolve()
     cmd = ['docker', 'run', '--rm', '--network', 'none', '--cpus', '3', '--memory', '6g',
            '--entrypoint', '/bin/sh', '-v', f'{work}:/work', '-w', '/work', DIGITAL_IMAGE,
-           '-c', f'magic -dnull -noconsole -rcfile {PDK}/libs.tech/magic/gf180mcuD.magicrc /work/{script}']
+           '-c', _SH + f'magic -dnull -noconsole -rcfile {PDK}/libs.tech/magic/gf180mcuD.magicrc /work/{script}']
     r = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
     (Path(work) / (script + '.log')).write_text(r.stdout + r.stderr)
     r.check_returncode()
@@ -55,7 +59,7 @@ def docker_netgen(work, layout_spice, layout_cell, source_spice, source_cell, re
     work = Path(work).resolve()
     cmd = ['docker', 'run', '--rm', '--network', 'none', '--cpus', '3', '--memory', '6g',
            '--entrypoint', '/bin/sh', '-v', f'{work}:/work', '-w', '/work', DIGITAL_IMAGE,
-           '-c', f'netgen -batch lvs "{layout_spice} {layout_cell}" "{source_spice} {source_cell}" '
+           '-c', _SH + f'netgen -batch lvs "{layout_spice} {layout_cell}" "{source_spice} {source_cell}" '
                  f'{PDK}/libs.tech/netgen/gf180mcuD_setup.tcl {report}']
     r = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
     (Path(work) / (report + '.log')).write_text(r.stdout + r.stderr)
@@ -237,8 +241,14 @@ def pin_list(d):
 
 
 def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=None,
-          lane_width=None, gap=1.2, lane_order=None, trunk_order=None, inline_trunks=False):
-    """Generate layout for ``circuit`` in ``work`` (must be empty). Returns report dict."""
+          lane_width=None, gap=1.2, lane_order=None, trunk_order=None, inline_trunks=False, supply=None):
+    """Generate layout for ``circuit`` in ``work`` (must be empty). Returns report dict.
+
+    supply (inline mode only; rfdriver power rework 2026-11-28): {'nets': {net: dict(straps=[x fractions], w=strap width,
+    bar=(layer, width), pin=(layer, x0, x1))}, 'gap': um}. Each supply net gets vertical Metal5 straps at the given fractions
+    of the row width (instead of one trunk), a Via4 onto every row lane it crosses, and a full-width bar along the bottom
+    edge: the first listed net's bar is the bottom-most (Metal5, edge-flush), the next sits above it (Metal4); a net on a
+    Metal4 bar gets an edge pin of Metal4 down through the band below it. Ports of supply nets are labelled on their pins."""
     work = Path(work).resolve()
     work.mkdir(parents=True, exist_ok=True)
     if list(work.glob('*.mag')):
@@ -335,7 +345,8 @@ def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=N
         for name in row:
             for _, net, _ in pin_list(byname[name]):
                 row_of.setdefault(net, set()).add(ri)
-    trunked = [n for n in nets if n in ports or len(row_of[n]) > 1]
+    SUP = (supply or {}).get('nets', {})
+    trunked = [n for n in nets if (n in ports or len(row_of[n]) > 1) and n not in SUP]
     # trunk bank on the left (ports first, in port order)
     tx, x = {}, 0.0
     torder = list(trunk_order or [])
@@ -369,9 +380,15 @@ def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=N
     def esc_xs(ri, net):
         xpos = xposs[ri][0]
         return [xpos[n] + local[n]['esc'][t] for n in rows[ri] for t, nn, _ in pin_list(byname[n]) if nn == net]
+    strap_x = {}
+    if SUP:
+        assert inline_trunks, 'supply straps need inline_trunks'
+        x_lo = bank_right; x_hi = max(cx for _, cx in xposs)
+        for net, o in SUP.items():
+            strap_x[net] = [snap(x_lo + f * (x_hi - x_lo)) for f in o['straps']]
     if inline_trunks:
         tx = {}
-        placed_tr = []   # (x, w, rmin, rmax)
+        placed_tr = [(x, SUP[n]['w'], 0, len(rows) - 1) for n, xs in strap_x.items() for x in xs]   # (x, w, rmin, rmax)
         def span(net):
             rs = sorted(row_of[net]); return (0 if net in ports else rs[0]), rs[-1]
         for net in sorted(trunked, key=lambda n: (-(span(n)[1] - span(n)[0]), n)):
@@ -406,7 +423,7 @@ def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=N
         if inline_trunks:
             iv = {}
             for net in row_nets:
-                xs = esc_xs(ri, net) + ([tx[net]] if net in tx else [])
+                xs = esc_xs(ri, net) + ([tx[net]] if net in tx else []) + strap_x.get(net, [])
                 iv[net] = (min(xs), max(xs))
             tracks = []   # [nets, right_end, width]
             for net in sorted(row_nets, key=lambda n: (iv[n][0], n)):
@@ -431,6 +448,15 @@ def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=N
         cursor_y = ly - 0.4
 
     width = max(r['right'] for r in rowinfo) + 1.0
+    bars = {}
+    if SUP:
+        g = supply.get('gap', 1.0); yb = cursor_y - g
+        for net in reversed(list(SUP)):           # last listed net sits highest
+            layer, bw = SUP[net]['bar']
+            bars[net] = (layer, yb - bw, yb); yb -= bw + g
+        top_bar = list(SUP)[0]
+        yb += g; bars[top_bar] = (bars[top_bar][0], yb, bars[top_bar][2])   # bottom-most bar is edge-flush
+        cursor_y = yb
     height_bottom = cursor_y
     # --- paint ----------------------------------------------------------
     cmds = ['crashbackups stop', f'load {circuit.name}_hier', 'units microns']
@@ -495,7 +521,12 @@ def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=N
                 continue
             xs = [R['xpos'][n] + local[n]['esc'][t] for n in R['names']
                   for t, nn, _ in pin_list(byname[n]) if nn == net]
-            if net in tx:
+            if net in strap_x:
+                sx = strap_x[net]
+                P.hwire('metal4', min(xs + sx), max(xs + sx), ly, lw[net])
+                for x_ in sx:
+                    P.via(x_, ly, 4, 5, w=SUP[net]['w'], h=lw[net])
+            elif net in tx:
                 P.hwire('metal4', min(xs + [tx[net]]), max(xs + [tx[net]]), ly, lw[net])
                 P.via(tx[net], ly, 4, 5, w=min(tw[net], 2.0) if tw[net] > 0.44 else 0.4, h=lw[net])
             elif max(xs) > min(xs):
@@ -510,6 +541,23 @@ def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=N
             y_hi = y_lo + 1.5
         P.net = net
         P.vwire('metal5', tx[net], y_lo, y_hi, tw[net])
+    x_l = min(R['xpos'][n] + local[n]['bbox'][0] for R in rowinfo for n in R['names'])
+    pin_rect = {}
+    for net, o in SUP.items():
+        P.net = net
+        layer, b0, b1 = bars[net]
+        P.rect(layer, x_l, b0, width - 1.0, b1)
+        ys = [y for (ri, n), y in lanes.items() if n == net]
+        for x_ in strap_x[net]:
+            P.vwire('metal5', x_, (b0 if layer == 'metal5' else (b0 + b1) / 2), max(ys) + lw[net] / 2, o['w'])
+            if layer == 'metal4':
+                P.via(x_, (b0 + b1) / 2, 4, 5, w=o['w'], h=b1 - b0)
+        pl, p0, p1 = o['pin']
+        if pl != layer:
+            raise ValueError('pin layer must be the bar layer')
+        if layer == 'metal4':
+            P.rect('metal4', x_l + p0, height_bottom, x_l + p1, b1)      # edge pin down through the bands below
+        pin_rect[net] = (x_l + p0, height_bottom, x_l + p1, height_bottom + 3.0)
     P.net = None
     # antenna diodes (KLayout ANT.16): gate-only partial nets with long M2-M5 get an N+/Psub diode
     # (with its own substrate tap) under their own M3-M5 wire; returned as 'antenna_diodes'.
@@ -539,11 +587,16 @@ def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=N
     P.cmds += dcmds
     cmds += P.cmds
     for i, port in enumerate(ports, 1):
+        if port in pin_rect:
+            a0, a1, a2, a3 = pin_rect[port]; xm = (a0 + a2) / 2
+            cmds += [f'box values {snap(xm - 0.2)} {snap(a1)} {snap(xm + 0.2)} {snap(a1 + 0.6)}',
+                     f"label {port} FreeSans 0.3 0 0 0 c {SUP[port]['pin'][0]}", f'port make {i}']
+            continue
         x = tx[port]
         cmds += [f'box values {snap(x - 0.2)} {snap(top_edge - 0.6)} {snap(x + 0.2)} {snap(top_edge)}',
                  f'label {port} FreeSans 0.3 0 0 0 c metal5', f'port make {i}']
     for net in nets:
-        if net in ports:
+        if net in ports or net in SUP:
             continue
         (ri, y), = [min(((r, yy) for (r, n), yy in lanes.items() if n == net), key=lambda t: t[0])]
         if net in tx:
@@ -574,5 +627,5 @@ def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=N
                   for R in rowinfo for n in R['names']}
     (work / 'placements.json').write_text(json.dumps(placements, indent=1))
     return dict(cell=flat, rows=rows, bbox_um=bbox, area_um2=round(area, 1), drc_count=drc,
-                trunk_x_um=tx, trunked_nets=len(tx), primitives={cells[k]: list(k) for k in keys},
+                trunk_x_um=tx, trunked_nets=len(tx), supply_straps_um=strap_x, supply_bars_um=bars, supply_pins_um=pin_rect, primitives={cells[k]: list(k) for k in keys},
                 antenna_diodes=diodes)

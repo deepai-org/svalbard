@@ -29,8 +29,11 @@ PORTS = {
 def header(view, corner='tt', temp=27):
     mos, res = CORNER_LIBS[corner]
     inc = []
+    import os, json as _j
+    alt = _j.loads(os.environ.get('RFTX_VIEWFILES', '{}'))     # {block: path under analog/rf_tx}: candidate netlists (R+C views)
     for blk in ('txmix_i', 'txmix_q', 'txsum', 'rfdriver'):
         f = f'/rf_tx/generated/{blk}.ext.spice' if view == 'ext' else f'/rf_tx/{blk}.spice'
+        if blk in alt: f = f'/rf_tx/{alt[blk]}'
         inc.append(f'.include {f}')
     return '\n'.join([f'* rf_tx bench view={view} corner={corner} temp={temp}',
                       f'.include {MODELS}/design.ngspice', f'.lib {MODELS}/sm141064.ngspice {mos}',

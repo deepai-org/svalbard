@@ -196,8 +196,11 @@ Current work status is in `SESSION-STATE.md`, not here.
   antenna diodes per the plan's rules; fix flow/path bugs; delete your own scratch runs. Ask the coordinator
   for: any spec/performance trade-off or waiver, anything touching the host-link cluster or pad map, macro
   pin/outline changes, ESD or isolation-rule exceptions.
-- **Freeze (2026-11-27):** only fixes for known chip-killers and signoff-script failures. Block-level
-  improvements go to the post-tapeout list in the risk register.
+- **Freeze (2026-11-27, amended 2026-11-28):** no churn (no new features, no re-tuning of working blocks).
+  Every real deficiency (a known failure, miss or gap in function, observability or recovery) is fixed
+  **before tapeout** unless it is judged impossible or highly unlikely to solve; that judgement and its reason
+  go in the risk register row and need the coordinator. Batch fixes that share a costly step (one macro
+  re-harden for all digital fixes, pin plan unchanged). Nothing fixable is deferred as "post-tapeout".
 - The disk is nearly full: keep outputs small and delete intermediates.
 - Commit small reviewed steps with explicit paths (`git add -f` under `scratch/`), never `git add -A`; do not
   push; the coordinator pushes. No GDS uploads until a block is really finished.

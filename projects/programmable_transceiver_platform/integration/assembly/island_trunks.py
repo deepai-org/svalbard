@@ -505,7 +505,7 @@ def _plates(g, h):
             for k_, r_ in ((1, allowed['Metal5']), (2, allowed['Metal4']), (3, L['carve']['Metal5'] + L['carve']['Metal4']), (4, L['tgt']['Metal5'] + L['tgt']['Metal4']), (5, src['Metal5'])):
                 dc.shapes(dl.layer(k_, 0)).insert(r_)
             dl.write('/run/plate_debug.gds')
-        W0 = max(3.0, mA/2.0); P = None
+        W0 = max(3.0, mA/2.0); W0 = W0 + 2.0 if W0 > 28.0 else W0; P = None      # a plate over 28 um carries one 2 um slot (MSLOT.1): width for the current plus the slot
         tgt = {ln: raster(L['tgt'][ln]) for ln in LAYERS}
         srcm = {ln: raster(src[ln]) & ~tgt[ln] for ln in LAYERS}
         # last rung: the drawn hook (coordinator ruling 2026-11-28 option 2), as narrow as EM allows (mA / 2 um, >= 1 um)
@@ -547,6 +547,43 @@ def _plates(g, h):
             rep[f'{n}.{net}'] = dict(mA=mA, error='landing clipped'); return
         own_v = g['ly'].cell(placed(n)[0]); vown = h['cell_m'](n, 'Via4')
         vr = ((pl['Metal4'] & (pl['Metal5'] + live[net]['Metal5'])) + (pl['Metal5'] & live[net]['Metal4']) + (pl['Metal5'] & L['vialand'])) - vown.sized(um(1.0))
+        # MSLOT (shuttle precheck deck mslot.rb): metal wider than 30 um needs slots: 2 um wide, 10-250 um long, >= 10 um from
+        # the metal edge and from each other, drawn as an opening with the slot mark (<layer>/3); vias >= 0.2 um from a slot
+        slots = {ln: db.Region() for ln in LAYERS}
+        for ln in LAYERS:
+            for poly in pl[ln].each():
+                for tz in poly.decompose_trapezoids(1):
+                    b = tz.bbox()
+                    if min(b.width(), b.height()) <= um(30): continue
+                    horiz = b.width() >= b.height(); Lr = (b.width() if horiz else b.height()) - um(20)
+                    if Lr < um(10): continue
+                    c = (b.bottom+b.top)//2 if horiz else (b.left+b.right)//2; a0 = (b.left if horiz else b.bottom) + um(10)
+                    nseg = int(-(-Lr // um(250))); seg = (Lr - (nseg-1)*um(10))//nseg
+                    for k_ in range(nseg):
+                        a = a0 + k_*(seg+um(10))
+                        slots[ln].insert(db.Box(a, c-um(1), a+seg, c+um(1)) if horiz else db.Box(c-um(1), a, c+um(1), a+seg))
+            slots[ln] = db.Region([q for q in (slots[ln] - live[net][ln].sized(um(1))).each() if q.bbox().width() >= um(2) and q.bbox().height() >= um(10) or q.bbox().height() >= um(2) and q.bbox().width() >= um(10)])   # only where the opening is real (no grid metal fills it)
+            if not slots[ln].is_empty():
+                pl[ln] = (pl[ln] - slots[ln]).merged()
+                pdn.shapes(g['ly'].layer(46 if ln == 'Metal4' else 81, 3)).insert(slots[ln])
+        sl_all = (slots['Metal4'] + slots['Metal5']).sized(um(0.25))
+        vr = vr - sl_all
+        # neck check (current crowding): eroded by half the width the current needs, the plate must still join the grid to the pin
+        wr = mA/2.09
+        # eroded by half the width the current needs, the plate (both layers, joined through its own Via4 region and onto the
+        # grid of either layer) must still join the pad-fed grid to the pin end: otherwise a cross-section is narrower than wr
+        er = {ln: (pl[ln].sized(-um(wr/2)) if wr > 0.3 else pl[ln]).merged() for ln in LAYERS}
+        end_ = {ln: (L['pinreg'][ln] + L['same'][ln]).sized(um(max(3.0, wr))) for ln in LAYERS}
+        grid_ = {ln: (live[net]['Metal4'] + live[net]['Metal5']).sized(um(max(1.0, wr))) for ln in LAYERS}
+        k_ = {ln: er[ln].interacting(grid_[ln]) for ln in LAYERS}
+        for _ in range(6):
+            x_ = (k_['Metal4'] & er['Metal5']) + (k_['Metal5'] & er['Metal4'])
+            n5 = (k_['Metal5'] + er['Metal5'].interacting(x_)).merged(); n4 = (k_['Metal4'] + er['Metal4'].interacting(x_)).merged()
+            if n5.area() == k_['Metal5'].area() and n4.area() == k_['Metal4'].area(): break
+            k_ = {'Metal5': n5, 'Metal4': n4}
+        neck_ok = any(not (k_[ln] & end_[ln]).is_empty() for ln in LAYERS) or all(er[ln].is_empty() for ln in LAYERS)
+        # a neck inside the landing corridor (pin-wide, from the block edge) is the block pin's own limit (block list), not the plate's
+        neck_pin = (not neck_ok) and any(not (k_[ln] & (end_[ln] + L['carve'][ln].sized(um(1)))).is_empty() for ln in LAYERS)
         for ln in LAYERS: pdn.shapes(LI[ln]).insert(pl[ln])
         nv = via_cells(vr, pdn)
         v3 = L['via3land'] & pl['Metal4']
@@ -559,10 +596,11 @@ def _plates(g, h):
         nch = sum(1 for a_, b_ in zip(P, P[1:]) if a_[0] != b_[0]) + (1 if not (pl['Metal5'] & L['vialand']).is_empty() else 0)
         # Via4 only matters where the current changes layer (a Metal4-to-Metal4 plate carries none: isw_wired_tx 2026-11-28)
         drop = mA*(RS['Metal5']*L5/W + RS['Metal4']*L4/W) + (mA*4.5/max(1, nv/max(1, nch)) if nch else 0.0) + (mA*4.5/nv3 if nv3 else 0.0)
-        em_ok = (nch == 0 or nv >= 2*mA*nch) and (nv3 == 0 or nv3 >= 2*mA) and mA/W <= 2.09
+        W_eff = W - 2.0 if not (slots['Metal4'] + slots['Metal5']).is_empty() else W
+        em_ok = (nch == 0 or nv >= 2*mA*nch) and (nv3 == 0 or nv3 >= 2*mA) and mA/W_eff <= 2.09 and (neck_ok or neck_pin)
         if em_ok: done.add((n, L['pin'], net))      # an EM-short plate keeps its router hook in parallel
         rep[f'{n}.{net}'] = dict(mA=mA, pin=L['pin'], width_um=round(W, 1), len_m5_um=L5, len_m4_um=L4, via4=nv, via3=nv3, mA_per_um=round(mA/W, 2),
-                                 mA_per_cut=round(mA/max(1, nv), 3), drop_mV=round(drop, 2), layer_changes=nch, em_ok=em_ok, hook_kept=not em_ok, ok=drop <= PLATE_DROP_MV and em_ok)
+                                 mA_per_cut=round(mA/max(1, nv), 3), drop_mV=round(drop, 2), layer_changes=nch, slots=(slots['Metal4'] + slots['Metal5']).count(), width_eff_um=round(W_eff, 1), neck_ok=neck_ok, neck_at_pin=neck_pin, em_ok=em_ok, hook_kept=not em_ok, ok=drop <= PLATE_DROP_MV and em_ok)
     for (n, net), mA in sorted(heavy(h['CHIP'], g['PADS']).items(), key=lambda kv: -kv[1]):
         one(n, net, mA)
         r_ = rep.get(f'{n}.{net}', {})

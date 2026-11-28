@@ -7,8 +7,14 @@ and EM at 85 C. Pins with an EM-clean drawn plate (place.json grid_plates, em_ok
   * Vias: the router uses single-cut tech vias and a hook is a series path, so every via carries the whole hook current;
     the cut count of a transition is the number of vias of that via layer within 1 um of each other (parallel cuts).
   * R: Rs per square (Metal1-4 0.090, Metal5 0.060 ohm/sq, tech LEF) + 4.5 ohm per cut, cuts of a transition in parallel.
-  * Limits (tech LEF DCCURRENTDENSITY, scaled to 85 C by the 3.1 x the power spec uses): Metal 0.67 -> 2.09 mA/um,
-    Metal5 1.5 -> 4.5 mA/um (x 3.0), Via 0.18 -> 0.56 mA per cut.
+  * Limits (MANDATE 2, user 2026-11-28: no lifetime requirement; EM at the 32 C window junction, short life, gate on
+    function and prompt damage). Base: tech LEF DCCURRENTDENSITY scaled to 85 C / 100 kh by the 3.1 x the power spec uses
+    (Metal1-4 2.09, Metal5 4.5 mA/um, Via 0.56 mA per cut). To 32 C, 1 kh: Black n = 2, Ea = 0.9 eV (Al-Cu) gives
+    exp(Ea/2k (1/305 K - 1/358 K)) = 12.6 x for temperature and sqrt(100 kh / 1 kh) = 10 x for life, 126 x in all; that
+    is past self-heating / fusing, so the factor is CAPPED at K32 = 10 x (an engineering guard, not a DRM table):
+    Metal1-4 20.9, Metal5 45 mA/um, Via 5.6 mA per cut. A connection over these is gross overcurrent (prompt damage).
+  * IR: each pin's hook / plate drop must stay within DROP_MV (10 mV per connection, the per-pin share of the
+    spec/power-delivery.md 117 mV budget after grid, switch and ground; G5 allows 15 mV for the whole island strap).
   * Current per pin group split evenly over its hooks. Currents: island_trunks.HEAVY (switch VDD at the island design
     current, load VDD / VSS worst) for the chip.
 --gate: exit 1 if any hook is over a limit at 85 C. --selftest: a known-answer DEF (one hook, Metal4 100 um x 1 um +
@@ -16,7 +22,8 @@ one Via4) must give R 13.5 ohm, 1.0 mA/um, and fail on the via at 1 mA (single c
 import sys, re, json, collections, os, tempfile
 HERE = os.path.dirname(os.path.abspath(__file__))
 RS = {'Metal1': .09, 'Metal2': .09, 'Metal3': .09, 'Metal4': .09, 'Metal5': .06}
-J85 = {'Metal1': 2.09, 'Metal2': 2.09, 'Metal3': 2.09, 'Metal4': 2.09, 'Metal5': 4.5}; V85 = 0.56; RV = 4.5
+K32 = 10.0; DROP_MV = 10.0
+J85 = {k: v*K32 for k, v in {'Metal1': 2.09, 'Metal2': 2.09, 'Metal3': 2.09, 'Metal4': 2.09, 'Metal5': 4.5}.items()}; V85 = 0.56*K32; RV = 4.5
 DEFW = {'Metal1': .23, 'Metal2': .28, 'Metal3': .28, 'Metal4': .28, 'Metal5': .44}
 
 
@@ -99,21 +106,21 @@ def report(ch, R_):
         key = f'{inst}.{net}'
         lst = hooks.get((inst, net), [])
         if key in plates and not lst:
-            p = plates[key]; v_ = p.get('em_ok', None); bad = v_ is False or I/p['width_um'] > 2.09
+            p = plates[key]; v_ = p.get('em_ok', None); bad = I/p['width_um'] > 2.09*K32 or p.get('drop_mV', 0) > DROP_MV
             over += bad
             rows.append(f"{inst} | {net} | {I:.1f} | plate {p['width_um']} um | {p['drop_mV']} mV | {I/p['width_um']/2.09:.2f} x (plate) | {'-' if v_ is not False else 'plate vias short'} | {'OVER' if bad else 'ok' if v_ else 'ok (run predates em_ok)'}"); continue
         if not lst: rows.append(f'{inst} | {net} | {I:.1f} | no hook, no plate | - | - | - | CHECK'); continue
         ih = I/len(lst); ev = [hook_eval(nets.get(h, dict(segs=[], vias=[])), ih) for h in lst]
         rpar = 1/sum(1/max(e['R'], 1e-3) for e in ev)
         wr = max(ev, key=lambda e: e['wire_ratio']); vr = max(ev, key=lambda e: e['via_ratio'])
-        bad = wr['wire_ratio'] > 1 or vr['via_ratio'] > 1
+        bad = wr['wire_ratio'] > 1 or vr['via_ratio'] > 1 or I*rpar > DROP_MV
         over += bad
         rows.append(f"{inst} | {net} | {I:.1f} | {len(lst)} hook(s), {ih:.2f} mA each | {I*rpar:.0f} mV | {wr['wire_ratio']:.1f} x ({wr['wire_layer']} {wr['wire_w']} um) | "
                     f"{vr['via_ratio']:.1f} x ({vr['via_cuts']} cut) | {'OVER' if bad else 'ok'}")
-    print(f'{ch} {R_}: supply pins > 0.5 mA (85 C limits: metal 2.09 / Metal5 4.5 mA/um, via 0.56 mA/cut)')
+    print(f'{ch} {R_}: supply pins > 0.5 mA (32 C short-life limits: metal {J85["Metal4"]:.1f} / Metal5 {J85["Metal5"]:.0f} mA/um, via {V85:.1f} mA/cut; drop <= {DROP_MV} mV)')
     print('inst | net | mA | hook / plate | drop | wire: worst ratio to limit | via: worst ratio | verdict')
     for r in rows: print(r)
-    print(f'HOOK_EM {"FAIL" if over else "PASS"}: {over} over the 85 C limit')
+    print(f'HOOK_EM {"FAIL" if over else "PASS"}: {over} over the 32 C short-life limit or the {DROP_MV} mV drop')
     return over
 
 
@@ -126,17 +133,17 @@ def selftest():
             f'  + ROUTED Metal4 ( 0 0 ) ( 100000 0 )\n{vias} ;\nEND NETS\n')
     os.makedirs(d+'/route', exist_ok=True)
     ok = True
-    for cuts, want_via_over in ((1, True), (2, False)):
-        write(cuts); n = parse(d+'/route/routed.def')['VSS__HK0']; e = hook_eval(n, 1.0)
+    for cuts, want_via_over in ((1, True), (2, False)):   # at 10 mA: 10 / 5.6 over with one cut, 5 / 5.6 ok with two
+        write(cuts); n = parse(d+'/route/routed.def')['VSS__HK0']; e = hook_eval(n, 10.0)
         exp_R = 0.09*100/1.0 + RV/cuts
-        good = abs(e['R']-exp_R) < 1e-6 and abs(e['wire_ratio']-1.0/2.09) < 1e-6 and (e['via_ratio'] > 1) == want_via_over and e['via_cuts'] == cuts
-        print(f'selftest cuts={cuts}: R {e["R"]:.3f} (want {exp_R:.3f}), wire ratio {e["wire_ratio"]:.3f} (want {1/2.09:.3f}), '
+        good = abs(e['R']-exp_R) < 1e-6 and abs(e['wire_ratio']-10.0/J85['Metal4']) < 1e-6 and (e['via_ratio'] > 1) == want_via_over and e['via_cuts'] == cuts
+        print(f'selftest cuts={cuts}: R {e["R"]:.3f} (want {exp_R:.3f}), wire ratio {e["wire_ratio"]:.3f} (want {10/J85['Metal4']:.3f}), '
               f'via ratio {e["via_ratio"]:.2f} ({"over" if e["via_ratio"] > 1 else "ok"}, want {"over" if want_via_over else "ok"}): {"PASS" if good else "FAIL"}')
         ok &= good
     # taper: the same wire marked TAPER must take the 0.28 um default (negative control for the width parsing)
     open(d+'/route/routed.def', 'w').write('NONDEFAULTRULES 1 ;\n- HOOK\n+ LAYER Metal4 WIDTH 1000\n;\nEND NONDEFAULTRULES\nNETS 1 ;\n'
         '- VSS__HK0 ( blk VSS ) ( pdn HK0 ) + USE SIGNAL + NONDEFAULTRULE HOOK\n  + ROUTED Metal4 TAPER ( 0 0 ) ( 100000 0 ) ;\nEND NETS\n')
-    e = hook_eval(parse(d+'/route/routed.def')['VSS__HK0'], 1.0); good = abs(e['wire_w']-0.28) < 1e-9 and e['wire_ratio'] > 1
+    e = hook_eval(parse(d+'/route/routed.def')['VSS__HK0'], 10.0); good = abs(e['wire_w']-0.28) < 1e-9 and e['wire_ratio'] > 1      # 10 mA in 0.28 um: 1.7 x over 20.9 mA/um
     print(f'selftest taper: width {e["wire_w"]} um, ratio {e["wire_ratio"]:.2f} (want 0.28 um, over): {"PASS" if good else "FAIL"}')
     ok &= good
     print('HOOK_EM SELFTEST', 'PASS' if ok else 'FAIL'); return ok

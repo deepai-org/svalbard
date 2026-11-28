@@ -5,7 +5,7 @@
  "candidate": "t8 = published t2 + rftx_band.py {\"n_up\": 4, \"n_dn\": 2, \"strip\": false, \"pad_m4\": true, \"esd_y0\": 376} (replaces t7: user rule HBM 1 kV / CDM 1 A class, favour signal)",
  "build_command": "python3 analog/pads/rftx_band.py <t2 pad.gds> <out> '{\"n_up\": 4, \"n_dn\": 2, \"strip\": false, \"pad_m4\": true, \"esd_y0\": 376}' (pad image; t2 = scratch/pads-core/esdopt/rf/b/t2.gds, sha ce837617)",
  "sha256": {
-  "pad.gds": "51dcbe1fa1b6c6b6fa1d35b90168d685582429048925e95b738c0a370801c04c",
+  "pad.gds": "339e35c63e54798e1408b8c3cbd0ecb7aa03f4242b10e7c30d323eb269391ba6",
   "pad-extracted.spice": "f956f620760720a6d475b582d37938d03010854ae017f3c61ea19c546c916954",
   "reference.spice": "266c3fc008c55c8075b79eeb5303778973722a493865b0aeb986cc62aaf82a7d",
   "physical-r-typ.spice": "9e78b991d7e0ed4b521347ccf7e9f1c468270ed72ec399ec7bd3ea69d2c234de",
@@ -92,6 +92,6 @@
   "review": "scratch/pads-core/esdopt/rf/review-t7/REVIEW.md"
  },
  "ruling_2026_11_24": "Coordinator: keep t7 (6 up-diodes), not t3. CDM 2 A on RF_TX is an accepted known miss (COB, controlled handling). RF TX checks its match with +0.38 pF per leg; the 4-diode fallback only on their request. Independent review of t7 with a full re-extraction requested.",
- "pad_cup": "2026-11-28 pad_cup.py publish (integration/assembly, tool/preroute-pads): only the stock Bondpad_5LM stack under each opening (CUP.1a), no Via3/Via4 in the provider-ring rail band (PAD-16); pad_cup check CLEAN, precheck cup_audit clean, KLayout-extracted netlist identical to the pre-fix GDS, shuttle-deck DRC main 0 / antenna 0",
+ "pad_cup": "2026-11-28 pad_cup.py publish (integration/assembly, tool/preroute-pads): only the stock Bondpad_5LM stack under each opening (CUP.1a), no Via3/Via4 in the provider-ring rail band (PAD-16); pad_cup check CLEAN, precheck cup_audit clean, KLayout-extracted netlist identical to the pre-fix GDS, shuttle-deck DRC main 0 / antenna 0; 2026-11-28 PAD-17: LVPWELL (0.88 um over COMP, taps within 3 um, never over Nwell) drawn over the n+ diodes outside LVPWELL by pad_cup.diode_lvpwell in the publish step; shuttle-deck DRC main 0 / antenna 0 re-run; KLayout read-back LVS match (pad-lvs-kl.json); LU-01 geometry metric unchanged",
  "publish_command": "python3 $P/analog/pads/pad_publish.py pad_rftxpad OUT/pad.gds   (after build_command; pad_cup publish + check, KLayout read-back LVS, records; deterministic: same build -> same sha256)"
 }

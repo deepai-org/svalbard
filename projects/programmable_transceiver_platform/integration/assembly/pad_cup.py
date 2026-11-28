@@ -102,7 +102,31 @@ def finalize(ly, cell, ref=None):
         rep['band_vias'] += inb.count()
         sh.clear(); sh.insert(r - inb)
     for t in [t for t in ly.top_cells() if t.cell_index() not in tops0]: t.prune_cell()    # cells orphaned by flattening
+    rep['diode_lvpwell'] = diode_lvpwell(ly, cell)
     return rep
+
+
+LVPW_ENC = 0.88      # um, LVPWELL over COMP as the PDK diode PCells draw it (diode_nd2ps_06v0 / 03v3)
+TAP_REACH = 3.0      # um, p+ substrate taps of a diode within this distance are its anode contacts and go in its LVPWELL
+
+
+def diode_lvpwell(ly, cell):
+    """PAD-17: every n+ diode (COMP & Nplus & diode_mk 115/5) outside Nwell / DNWELL that is not in LVPWELL gets the PDK
+    device's LVPWELL: the diffusion plus its p+ taps within TAP_REACH, enclosed by LVPW_ENC, never over Nwell, joined into
+    one well per diode group. Drawn in the pad cell. Returns the number of diodes covered."""
+    um = lambda v: int(round(v / ly.dbu)); L = lambda a, b: ly.find_layer(a, b)
+    R = lambda a, b: db.Region(cell.begin_shapes_rec(L(a, b))).merged() if L(a, b) is not None else db.Region()
+    comp, np_, pp, mk, nw, dnw, lvp = R(22, 0), R(32, 0), R(31, 0), R(115, 5), R(21, 0), R(12, 0), R(204, 0)
+    nd = ((comp & np_ & mk) - nw - dnw).merged()
+    bare = nd.not_interacting(lvp)
+    if bare.is_empty(): return 0
+    taps = ((comp & pp) - nw - dnw).merged()
+    near = taps.interacting(bare.sized(um(TAP_REACH)))
+    well = (bare + near).merged().sized(um(LVPW_ENC)).merged()
+    well = (well - nw.sized(um(0.0))).merged()
+    well = well.interacting(bare)
+    cell.shapes(ly.layer(204, 0)).insert(well)
+    return bare.count()
 
 
 def check(ly, cell, ref=None):
@@ -133,6 +157,9 @@ def check(ly, cell, ref=None):
         if li is None: continue
         n = db.Region(cell.begin_shapes_rec(li)).interacting(band).count()
         if n: bad.append(('cuts in ring rail band', f'{L[0]}/{L[1]}', n))
+    um = lambda v: int(round(v / ly.dbu)); F = lambda a, b: db.Region(cell.begin_shapes_rec(ly.find_layer(a, b))).merged() if ly.find_layer(a, b) is not None else db.Region()
+    nd = ((F(22, 0) & F(32, 0) & F(115, 5)) - F(21, 0) - F(12, 0)).merged().not_interacting(F(204, 0))
+    if nd.count(): bad.append(('n+ diode without LVPWELL (not the PDK device)', '22/0', nd.count()))
     return bad
 
 

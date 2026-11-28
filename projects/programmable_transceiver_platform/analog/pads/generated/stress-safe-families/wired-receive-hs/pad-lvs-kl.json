@@ -1,11 +1,11 @@
 {
  "family": "pad_hspad",
  "gds": "stress-safe-families/wired-receive-hs/pad_hspad.gds",
- "gds_sha256": "6118d3cec90d3ecac43c5adffa73c9bdd3d562c638123e55867f398d43a42daa",
+ "gds_sha256": "65b4e2891751b87353726be23fd940350588569ceb330d21bd30805198d4bfc0",
  "reference": "stress-safe-families/wired-receive-hs/lvs-reference.spice",
- "deck": "gf180mcu.lvs (project PDK f6eeac7, KLayout 0.30.9 image), schematic_simplify, top_lvl_pins",
- "result": "mismatch",
- "layout_devices": 542,
+ "deck": "gf180mcu.lvs (project PDK f6eeac7, KLayout 0.30.9 image), schematic_simplify, top_lvl_pins, implicit_connect; max_res 1e12, poly resistor L/R tolerance 5 % (PAD-17)",
+ "result": "match",
+ "layout_devices": 546,
  "reference_devices": 546,
- "log_tail": "vice as regular, non dw device\n2026-11-28 12:43:24 +0100: Memory Usage (814352K) : Extracting 6V ESD PMOS transistor inside DNWELL device as regular, non dw device\n2026-11-28 12:43:24 +0100: Memory Usage (814352K) : Starting NMOS SAB EXTRACTION\n2026-11-28 12:43:24 +0100: Memory Usage (814352K) : Extracting 3.3V ESD NMOS transistor outside DNWELL device\n2026-11-28 12:43:24 +0100: Memory Usage (814352K) : Extracting 5V ESD NMOS transistor outside DNWELL device\n2026-11-28 12:43:24 +0100: Memory Usage (814352K) : Extracting 6V ESD NMOS transistor outside DNWELL device\n2026-11-28 12:43:24 +0100: Memory Usage (814352K) : Extracting 3.3V ESD NMOS transistor inside DNWELL device, as regular, non dw device\n2026-11-28 12:43:24 +0100: Memory Usage (814352K) : Extracting 5V ESD NMOS transistor inside DNWELL device as regular, non dw device\n2026-11-28 12:43:25 +0100: Memory Usage (814352K) : Extracting 6V ESD NMOS transistor inside DNWELL device as regular, non dw device\n2026-11-28 12:43:25 +0100: Memory Usage (814352K) : Starting EFUSE EXTRACTION\n2026-11-28 12:43:25 +0100: Memory Usage (814352K) : Starting GF180 LVS comparison section\n2026-11-28 12:43:27 +0100: Memory Usage (848828K) : LVS Total Run time 6.289605 seconds\n2026-11-28 12:43:27 +0100: Memory Usage (848828K) : xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n2026-11-28 12:43:27 +0100: Memory Usage (848828K) : ERROR : Netlists don't match\n2026-11-28 12:43:27 +0100: Memory Usage (848828K) : xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\n"
+ "log_tail": ""
 }

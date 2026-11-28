@@ -1,6 +1,6 @@
 {
  "block": "pad_rf_pair",
- "gds_sha256": "a4d59877d4e966dd4b74282439a2a1b77cf3971871e5276aa2b45ff5d6d90346",
+ "gds_sha256": "a17a446878f3d7fcc58494758644502ec98df0e2151e92cdc85920da5b09700f",
  "top": "pad_rf_pair",
  "klayout": "KLayout 0.30.9",
  "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
@@ -21,5 +21,5 @@
    "error": null
   }
  },
- "pad_cup": "2026-11-28 pad_cup.py publish (integration/assembly, tool/preroute-pads): only the stock Bondpad_5LM stack under each opening (CUP.1a), no Via3/Via4 in the provider-ring rail band (PAD-16); pad_cup check CLEAN, precheck cup_audit clean, KLayout-extracted netlist identical to the pre-fix GDS, shuttle-deck DRC main 0 / antenna 0"
+ "pad_cup": "2026-11-28 pad_cup.py publish (integration/assembly, tool/preroute-pads): only the stock Bondpad_5LM stack under each opening (CUP.1a), no Via3/Via4 in the provider-ring rail band (PAD-16); pad_cup check CLEAN, precheck cup_audit clean, KLayout-extracted netlist identical to the pre-fix GDS, shuttle-deck DRC main 0 / antenna 0; 2026-11-28 PAD-17: LVPWELL (0.88 um over COMP, taps within 3 um, never over Nwell) drawn over the n+ diodes outside LVPWELL by pad_cup.diode_lvpwell in the publish step; shuttle-deck DRC main 0 / antenna 0 re-run; KLayout read-back LVS match (pad-lvs-kl.json); LU-01 geometry metric unchanged"
 }

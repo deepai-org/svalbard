@@ -5,7 +5,7 @@
  "build_command": "scratch/pads-core/esdopt/hs/sec/q_s.sh a6 leg7 '{\"up\": [1, 1], \"dvdd_w\": 3.0, \"ring\": true}'  (leg: hs_leg_layout.py --lb=4.2 --sec=...; compose: hs_pad_compose.py ... --stacked --site-primary --no-core-array --esd-opt={\"neck_m1\": true} --sec)",
  "rebuild_check": "rebuilt 2026-11-20 from the committed generators: pad_hspad.gds and pt_hs_leg.gds identical to the candidate with GDS timestamps zeroed (normalised f16f9f05472ea423 / bcaa90e8c23a40c6); physical.spice identical up to Magic capacitor ordering; no-flag build XOR 0.0 um2 vs the previously published GDS 8c8e2533",
  "sha256": {
-  "pad_hspad.gds": "6118d3cec90d3ecac43c5adffa73c9bdd3d562c638123e55867f398d43a42daa",
+  "pad_hspad.gds": "65b4e2891751b87353726be23fd940350588569ceb330d21bd30805198d4bfc0",
   "physical.spice": "1399bc07291959d99ccf3f2aa4935b4b26c417ad8ad01257bcec1a97261a02a1",
   "physical-r-low.spice": "045547de7934b4286d5c3e4a8e5224b8d75f75030188167ece0124dae81648fe",
   "physical-r-typ.spice": "e8402507b9d6c747e3e254b7e0edc40af896da5b35cded72cbc3934887e6f836",
@@ -188,6 +188,6 @@
  },
  "magic_fix_2026_11_24": "a6m = a6 (top-edge pins, ddcaaf79) + analog/pads/hspad_magic_fix.py (PC-86): the shuttle precheck Magic script found 19 errors (18 MIMTM.2, 1 MIMTM.1) at the two riser landings beside the MIM caps; fixed by re-placing 15 Via4 cuts onto the Via3 grid (aligned stacks), removing 14 riser-landing Via4 at the edges of two new Metal4 enclosure boxes, and trimming one 1 um Metal4 strap to 0.8 um over 21 um. Checks on the published file: Magic 0 (block_drc L), KLayout main / antenna 0 (sha-matched kldrc), rail_site PASS, read-back LVS unique vs lvs-reference.spice, TERM_VCM<->VSS swap fails. No device change; models not re-extracted (via / strap edits only).",
  "gds_sha256_now": "074d5fb5b9c1cc695355f13e46fb8dcd287d44748ac41c22937a44aa87a04540",
- "pad_cup": "2026-11-28 pad_cup.py publish (integration/assembly, tool/preroute-pads): only the stock Bondpad_5LM stack under each opening (CUP.1a), no Via3/Via4 in the provider-ring rail band (PAD-16); pad_cup check CLEAN, precheck cup_audit clean, KLayout-extracted netlist identical to the pre-fix GDS, shuttle-deck DRC main 0 / antenna 0",
+ "pad_cup": "2026-11-28 pad_cup.py publish (integration/assembly, tool/preroute-pads): only the stock Bondpad_5LM stack under each opening (CUP.1a), no Via3/Via4 in the provider-ring rail band (PAD-16); pad_cup check CLEAN, precheck cup_audit clean, KLayout-extracted netlist identical to the pre-fix GDS, shuttle-deck DRC main 0 / antenna 0; 2026-11-28 PAD-17: LVPWELL (0.88 um over COMP, taps within 3 um, never over Nwell) drawn over the n+ diodes outside LVPWELL by pad_cup.diode_lvpwell in the publish step; shuttle-deck DRC main 0 / antenna 0 re-run; KLayout read-back LVS match (pad-lvs-kl.json); LU-01 geometry metric unchanged",
  "publish_command": "python3 $P/analog/pads/pad_publish.py pad_hspad OUT/pad_hspad.gds   (after build_command; pad_cup publish + check, KLayout read-back LVS, records; deterministic: same build -> same sha256)"
 }

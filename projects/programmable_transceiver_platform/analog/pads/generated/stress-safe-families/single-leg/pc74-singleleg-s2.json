@@ -6,7 +6,7 @@
  "build_command": "scratch/pads-core/esdopt/rf/build.sh <family> s2 '<opt of b/s2.json>' (rf_compose.py on ../pins/b/<cell>.gds)",
  "rebuild_check": "2026-11-23 rebuild with the same opt: XOR 17.4 um2 per site vs the candidate (not identical; see misses). Published = candidate GDS.",
  "sha256": {
-  "pad.gds": "1f8b83ca6abc7a20d4821fe23c3e947f905085bb4777a71c17c3029603cf6c56",
+  "pad.gds": "0e5acc0ff1f2f2eee8cc8ff0e902131ce046c4d17b29d932165a9ec6e3408cb3",
   "pad-extracted.spice": "15b649d1a7c0203183747fbfaffa472f8a23ae65fccdc3deb7235068d4d1b121",
   "reference.spice": "69e73ae070487d6c8d4ee8a5699df3d1d34c6b1c4d621558d02bc382e328dc7c",
   "physical-r-typ.spice": "9fca45650bd4bee7366e5ee82fee09e53e2a02ca76e1192b8e1dc3fc2a028389",
@@ -62,6 +62,6 @@
  },
  "pad_c_2026_11_24": "single_leg s2: 0.932 pF vs 0.653: +0.28 pF (limit +0.3 PASS) (cbench fixed; scratch/pads-core/esdopt/rf/esd/c_*_v0.json)",
  "esd_2026_11_24": "single-leg cases high metal: HBM 2 kV 7.49 V, HBM 1 kV 4.94, CDM 1 A 6.49, CDM 2 A 10.63 V worst junction reverse (bv 11); gates <= 1.49 V; typ 6.49 / 4.50 / 5.73 / 9.15 V: PASS (scratch/pads-core/esdopt/rf/esd/s2h.json, s2t.json)",
- "pad_cup": "2026-11-28 pad_cup.py publish (integration/assembly, tool/preroute-pads): only the stock Bondpad_5LM stack under each opening (CUP.1a), no Via3/Via4 in the provider-ring rail band (PAD-16); pad_cup check CLEAN, precheck cup_audit clean, KLayout-extracted netlist identical to the pre-fix GDS, shuttle-deck DRC main 0 / antenna 0",
+ "pad_cup": "2026-11-28 pad_cup.py publish (integration/assembly, tool/preroute-pads): only the stock Bondpad_5LM stack under each opening (CUP.1a), no Via3/Via4 in the provider-ring rail band (PAD-16); pad_cup check CLEAN, precheck cup_audit clean, KLayout-extracted netlist identical to the pre-fix GDS, shuttle-deck DRC main 0 / antenna 0; 2026-11-28 PAD-17: LVPWELL (0.88 um over COMP, taps within 3 um, never over Nwell) drawn over the n+ diodes outside LVPWELL by pad_cup.diode_lvpwell in the publish step; shuttle-deck DRC main 0 / antenna 0 re-run; KLayout read-back LVS match (pad-lvs-kl.json); LU-01 geometry metric unchanged",
  "publish_command": "python3 $P/analog/pads/pad_publish.py pad_single_leg OUT/pad.gds   (after build_command; pad_cup publish + check, KLayout read-back LVS, records; deterministic: same build -> same sha256)"
 }

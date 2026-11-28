@@ -27,6 +27,6 @@ if [ -n "$ASM_DATA" ]; then
 fi
 IMG=${ASM_IMAGE:-svalbard/librelane-gf180-guarded:2026.11}
 exec docker run --rm -e HALO="${HALO:-0.2}" --name "asm-$CHIP-$$" --label svalbard.assembly=1 --network none --cpus "$CPUS" --memory "${ASM_MEM:-24g}" --user "$(id -u):$(id -g)" \
-  -e HOME=/tmp -e OMP_NUM_THREADS=1 -e KH_CONN="${KH_CONN:-0}" -e GRID_SWAP="${GRID_SWAP:-1}" -e PLAN_FP="${PLAN_FP:-0}" ${MACRO_DIR:+-e MACRO_DIR=$MACRO_DIR} ${SLOT_HALO:+-e SLOT_HALO=$SLOT_HALO} ${PLATES:+-e PLATES=$PLATES} ${PAD_CUP:+-e PAD_CUP=$PAD_CUP} ${GC_GDS:+-e GC_GDS=$GC_GDS} ${GC_MAN:+-e GC_MAN=$GC_MAN} ${HOOK_DUAL:+-e HOOK_DUAL=$HOOK_DUAL} ${SLOT_CLEAN:+-e SLOT_CLEAN=$SLOT_CLEAN} -e GR_ADJ="${GR_ADJ:-0.15}" -e CHIP="$CHIP" -e THREADS="$CPUS" \
+  -e HOME=/tmp -e OMP_NUM_THREADS=1 -e KH_CONN="${KH_CONN:-0}" -e GRID_SWAP="${GRID_SWAP:-1}" -e PLAN_FP="${PLAN_FP:-0}" ${MACRO_DIR:+-e MACRO_DIR=$MACRO_DIR} ${SLOT_HALO:+-e SLOT_HALO=$SLOT_HALO} ${PLATES:+-e PLATES=$PLATES} ${GC_GDS:+-e GC_GDS=$GC_GDS} ${GC_MAN:+-e GC_MAN=$GC_MAN} ${NEG_LAND:+-e NEG_LAND=$NEG_LAND} ${HOOK_DUAL:+-e HOOK_DUAL=$HOOK_DUAL} ${SLOT_CLEAN:+-e SLOT_CLEAN=$SLOT_CLEAN} -e GR_ADJ="${GR_ADJ:-0.15}" -e CHIP="$CHIP" -e THREADS="$CPUS" \
   $MNT -v "$RUN":/run -v "$A":/asm:ro --entrypoint /bin/bash "$IMG" -c \
   'export PATH=/foss/tools/bin:/foss/tools/klayout:$PATH; cd /run; exec "$@"' tool "$@"

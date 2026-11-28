@@ -16,6 +16,9 @@ LAY = dict(M1=(34, 0), V1=(35, 0), M2=(36, 0), V2=(38, 0), M3=(42, 0), V3=(40, 0
 man = json.load(open(R+os.environ.get('GC_MAN', 'chip/manifest.json'))); MJ = json.load(open(R+'masters.json')); nets = json.load(open(R+'nets.json'))
 pads = json.load(open(R+'pads.json')); place = json.load(open(R+'place.json'))
 TOPC = {'pt_pdn', 'pt_top_wiring', 'pt_direct_land', 'pt_island_bar', 'pt_antdiode'}
+# NEG_LAND=<inst> (negative control, preroute.sh selftest): the pt_direct_land metal over that instance is dropped
+_nl = next((b for b in man['instances'] if b['name'] == os.environ.get('NEG_LAND')), None)
+NEG_LAND = db.Region(db.Box(*[int(round(v/dbu)) for v in _nl['bbox']]).enlarged(2000, 2000)) if _nl else None
 kids = collections.Counter(i.cell.name for i in top.each_inst())
 print('top children (non-block):', {k: v for k, v in kids.items() if not any(k == b['cell'] for b in man['instances'])})
 blkcells = {b['cell'] for b in man['instances']}
@@ -36,6 +39,7 @@ for i in top.each_inst():
         li = ly.find_layer(*LAY[k])
         if li is None: continue
         r = db.Region(i.cell.begin_shapes_rec(li)).transformed(i.trans) if not i.is_regular_array() else db.Region(i.cell.begin_shapes_rec(li)).transformed(i.trans)
+        if NEG_LAND is not None and nm == 'pt_direct_land': r -= NEG_LAND     # negative control: one block's direct landing removed
         c.shapes(L[k]).insert(r)
         if nm in ('pt_pdn', 'pt_island_bar') and k in grid: grid[k] += r
 for li_k in LAY:          # top cell's own shapes

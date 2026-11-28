@@ -43,7 +43,7 @@ named `asm-<chip>-<pid>`: stop a run only by that name (`docker kill asm-...`) o
 - **Net classes** (`kl_place.cls`): island rails / regulator outputs 3 um wide; hooks 1.2 um; clock, high-speed and RF
   nets twice the minimum spacing (no drawn shields). Booked ledger items without a conn instance are Metal1-3 blockages.
 
-## Pre-route check (`preroute.sh`) and custom pad finalizer (`pad_cup.py`)
+## Pre-route check (`preroute.sh`) and custom pad tool (`pad_cup.py`)
 
 - `preroute.sh <chip>` (after place / lint, before route): one window per block and custom pad of `placed.gds`
   (bbox + 15 um) with everything the top level drew before routing (provider ring, `pt_pdn`, island bars, plates, landings,
@@ -51,21 +51,19 @@ named `asm-<chip>-<pid>`: stop a run only by that name (`docker kill asm-...`) o
   `beol,-antenna,-density,-cup`) on the windows (`preroute_win.py build`), maps every marker back to chip coordinates and
   classes it (`preroute_win.py attr`): `context` (touches top-level metal or a second instance on the rule's layers; gated)
   or `internal` (the block alone; reported). Then `grid_conn.py` on `placed.gds` (`GC_GDS` / `GC_MAN`): every block / pad
-  VDD / VSS pin on a pad-fed grid piece unless a router hook feeds it. `PREROUTE PASS` / `FAIL`; `PREROUTE_ACCEPT=<rules>`
-  accepts classes; `only=<inst>` checks single windows in a few minutes. Output `$RUN/preroute/`.
-- `preroute.sh <chip> selftest`: a clean window passes; the same window with a drawn Via4 overlap, Via3 overlap or
-  Metal5 spacing fault fails; the published `pad_txpad` (PAD-16, `PAD_FIX=0`) fails.
-- `pad_cup.py` is applied to every custom pad family when it is imported (`kl_abstract`, `kl_place`; `PAD_CUP=0` turns it
-  off) and standalone (`python3 pad_cup.py in.gds out.gds`): under each Pad opening only the stock `Bondpad_5LM` stack
-  (generator shapes cut out, stock plates and 0.26 um via arrays put back, best of 8 orientations), and no pad Via3 / Via4
-  in the provider-ring rail band (pad-local y 69.5-348.9 um, the same in every pad site; PAD-16). Acceptance: precheck
-  `cup_audit.py` (precheck-1128) clean on all 14 openings, KLayout-extracted netlist of each pad identical before / after.
-- Results 2026-11-28 (context markers; full-chip signoff main deck on fpw-14 took 8771 s): pt_wired fpw-14 with the pads
-  as published 5096 (PAD-16 V3.1 1280 / V3.2a 296 / V4.1 1280 / V4.2a 296; RAIL_wired_tx bar on wiredtx V4.1 1208 /
-  V4.2a 725; MT.2a 10; MSLOT5.1 1), with `pad_cup` 1944 (PAD-16 gone; bar Via4 and MT.2a remain), unfed 0; run 2990 s
-  (DRC 2504 s). pt_rf plan-rf13: 0, unfed 0, PASS, 1604 s. Selftest PASS (755 s, single windows). The deck time is set by
-  the ring / grid via arrays inside the pad and edge windows; one window (`only=`) takes 1-5 min.
-
+  VDD / VSS pin on a pad-fed grid piece unless a router hook feeds it (`SUPPLIES=0` skips it). `PREROUTE PASS` / `FAIL`;
+  `PREROUTE_ACCEPT=<rules>` accepts classes; `only=<inst>` checks single windows. Output `$RUN/preroute/`.
+- Window cache: each window's result is stored under a hash of its content (every top-level instance's kept shapes in
+  the window, relative to its corner, plus deck and margin) in `PREROUTE_CACHE` (default
+  `scratch/integration/preroute-cache`); a rerun checks only the windows whose content changed.
+- `preroute.sh <chip> selftest` (fresh cache): a clean window passes; the same window with a drawn Via4 overlap, Via3
+  overlap or Metal5 spacing fault fails; the `pad_txpad` window with a PAD-16 replica (a cut 0.13 um off a provider-ring
+  Via4) fails; a block fed only by its direct landing turns up unfed when the landing is removed (`NEG_LAND`).
+- `pad_cup.py publish <repo root>` rewrites the published custom pad GDS (the one view every consumer reads: assembly,
+  lvs-bb, precheck, chip_smoke) so that under each Pad opening there is only the stock `Bondpad_5LM` stack (generator
+  shapes cut out, stock plates and 0.26 um via arrays put back) and no pad Via3 / Via4 lies in the provider-ring rail
+  band (pad-local y 69.5-348.9 um, the same in every pad site; PAD-16). Rerun it whenever a pad generator rewrites a pad.
+  `pad_cup.py check <repo root>` fails if any published pad has anything else under an opening or cuts in the band.
 ## Results and resume point (2026-11-26)
 
 | | `pt_rf` | `pt_wired` |

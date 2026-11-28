@@ -5,7 +5,7 @@
  "candidate": "r4: 2 down + 2 up site diodes per leg (r3 had 4 + 4)",
  "build_command": "scratch/pads-core/esdopt/rf/build.sh rf_pair r4 '{\"n_dn\": 2, \"n_up\": 2, \"n_up_left\": 0, \"n_dn_left\": 0, \"pin_vias\": true}' (rf_compose.py + pad_site_primary.py on the pin-move variant)",
  "sha256": {
-  "pad.gds": "b31297779cb2b78ad01857bb2e51c7c2d4d9190b4e6bbc9206a0d698076d810c",
+  "pad.gds": "2727957836f91f6f8f2e4b84ac27b3f06abe7077340aee6fbe576b050cb823fa",
   "pad-extracted.spice": "e028cd39541ea82f11b4cebd78a53ad33030b40ab4eeff58bcf624b83d14fbbc",
   "reference.spice": "e8a7acf17c817bf89bbe828af7b314858ff268b4a1f0ed649dd74a03b934012e",
   "physical-r-typ.spice": "75e757edecead38c59578521fd15e7773ba736eba90b670fce0502e00ac0a72b",
@@ -70,5 +70,6 @@
   "checks": "scratch/pads-core/esdopt/rf/chk/r4/summary.txt",
   "esd": "scratch/pads-core/esdopt/rf/esd/r4h.json, r4t.json",
   "cbench": "scratch/pads-core/esdopt/rf/esd/c_r4_v0.json"
- }
+ },
+ "pad_cup": "2026-11-28 pad_cup.py publish (integration/assembly, tool/preroute-pads): only the stock Bondpad_5LM stack under each opening (CUP.1a), no Via3/Via4 in the provider-ring rail band (PAD-16); pad_cup check CLEAN, precheck cup_audit clean, KLayout-extracted netlist identical to the pre-fix GDS, shuttle-deck DRC main 0 / antenna 0"
 }

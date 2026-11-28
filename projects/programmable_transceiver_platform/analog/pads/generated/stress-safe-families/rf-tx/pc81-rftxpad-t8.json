@@ -5,7 +5,7 @@
  "candidate": "t8 = published t2 + rftx_band.py {\"n_up\": 4, \"n_dn\": 2, \"strip\": false, \"pad_m4\": true, \"esd_y0\": 376} (replaces t7: user rule HBM 1 kV / CDM 1 A class, favour signal)",
  "build_command": "python3 analog/pads/rftx_band.py <t2 pad.gds> <out> '{\"n_up\": 4, \"n_dn\": 2, \"strip\": false, \"pad_m4\": true, \"esd_y0\": 376}' (pad image; t2 = scratch/pads-core/esdopt/rf/b/t2.gds, sha ce837617)",
  "sha256": {
-  "pad.gds": "3c1f0b36891bbd648cd03ed9efa264bb74208c2d3b4d5cd7d31affcec54743c0",
+  "pad.gds": "cf1eace14d5edc57a683e11a3b18ddbd7647cfe3da55a79e1c92c9a368b08db9",
   "pad-extracted.spice": "f956f620760720a6d475b582d37938d03010854ae017f3c61ea19c546c916954",
   "reference.spice": "266c3fc008c55c8075b79eeb5303778973722a493865b0aeb986cc62aaf82a7d",
   "physical-r-typ.spice": "9e78b991d7e0ed4b521347ccf7e9f1c468270ed72ec399ec7bd3ea69d2c234de",
@@ -91,5 +91,6 @@
   "cbench": "scratch/pads-core/esdopt/rf/esd/c_t8_v0.json, c_t2_typ.json, c_t2_ctest.json",
   "review": "scratch/pads-core/esdopt/rf/review-t7/REVIEW.md"
  },
- "ruling_2026_11_24": "Coordinator: keep t7 (6 up-diodes), not t3. CDM 2 A on RF_TX is an accepted known miss (COB, controlled handling). RF TX checks its match with +0.38 pF per leg; the 4-diode fallback only on their request. Independent review of t7 with a full re-extraction requested."
+ "ruling_2026_11_24": "Coordinator: keep t7 (6 up-diodes), not t3. CDM 2 A on RF_TX is an accepted known miss (COB, controlled handling). RF TX checks its match with +0.38 pF per leg; the 4-diode fallback only on their request. Independent review of t7 with a full re-extraction requested.",
+ "pad_cup": "2026-11-28 pad_cup.py publish (integration/assembly, tool/preroute-pads): only the stock Bondpad_5LM stack under each opening (CUP.1a), no Via3/Via4 in the provider-ring rail band (PAD-16); pad_cup check CLEAN, precheck cup_audit clean, KLayout-extracted netlist identical to the pre-fix GDS, shuttle-deck DRC main 0 / antenna 0"
 }

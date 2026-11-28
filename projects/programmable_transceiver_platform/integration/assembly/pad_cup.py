@@ -1,8 +1,11 @@
 """Custom pad finalizer: makes every custom pad cell correct by construction for wedge bonding (MANDATE 2, GF180 CUP.1a)
-and for the provider ring it sits in (risk PAD-16). Applied to every custom pad family when it is imported
-(kl_abstract.import_cell / abstract), and standalone to write the finalized pad GDS for pad DRC / LVS / the CUP gate:
+and for the provider ring it sits in (risk PAD-16). It rewrites the published custom pad GDS in place ('publish': the one
+view every consumer reads) and checks them ('check', fails on anything under an opening); rerun 'publish' whenever a pad
+generator rewrites a pad:
 
   python3 pad_cup.py <in.gds> <out.gds> [cell]          (KLayout python module klayout.db, or klayout -b -r with -rd)
+
+  python3 pad_cup.py check <repo root> | publish <repo root>      (see main)
 
 Rules applied to each pad opening (Pad 37/0):
   1. Under the opening only the stock Bondpad_5LM stack: every instance that reaches into the opening and is not
@@ -102,10 +105,74 @@ def finalize(ly, cell, ref=None):
     return rep
 
 
-if __name__ == '__main__' or 'inp' in globals():
-    g = globals()
-    a = [g['inp'], g['out'], g.get('cell')] if 'inp' in g else (sys.argv[1:] + [None])[:3]
-    ly = db.Layout(); ly.read(a[0])
-    c = ly.cell(a[2]) if a[2] else sorted(ly.top_cells(), key=lambda t: -t.bbox().area())[0]
-    print(c.name, finalize(ly, c))
-    ly.write(a[1])
+def check(ly, cell, ref=None):
+    """faults of a pad cell: [(kind, layer, um2)]; empty = clean. Under each opening every non-Pad layer must equal the
+    stock Bondpad_5LM stack (best of 8 orientations); no Via3 / Via4 in the ring band"""
+    R = ref_stack(ly.dbu, ref); um = lambda v: int(round(v / ly.dbu)); bad = []
+    pli = ly.find_layer(*PAD)
+    ops = db.Region(cell.begin_shapes_rec(pli)).merged() if pli is not None else db.Region()
+    if ops.is_empty(): bad.append(('no opening', '-', 0.0))
+    for p in ops.each():
+        pr = db.Region(p); c = pr.bbox().center()
+        if not (pr ^ R['op'].moved(c.x, c.y)).is_empty(): bad.append(('opening not 60 x 60 um', '37/0', round(pr.area() * ly.dbu ** 2, 1))); continue
+        best = None
+        for t in (db.ICplxTrans(1, a, m, c.x, c.y) for m in (False, True) for a in (0, 90, 180, 270)):
+            f = []
+            for li in ly.layer_indexes():
+                if li == pli: continue
+                info = ly.get_info(li); L = (info.layer, info.datatype)
+                act = db.Region(cell.begin_shapes_rec_overlapping(li, pr.bbox())).merged() & pr
+                x = (act ^ R[L].transformed(t)) if L in R else act
+                a2 = x.area() * ly.dbu ** 2
+                if a2 > 1e-4: f.append((f'under opening {pr.bbox().to_dtype(ly.dbu)}', f'{L[0]}/{L[1]}', round(a2, 3)))
+            if best is None or len(f) < len(best): best = f
+        bad += best
+    band = db.Region(db.Box(-um(1e5), um(RING_BAND[0]), um(1e5), um(RING_BAND[1])))
+    for L in BAND_VIAS:
+        li = ly.find_layer(*L)
+        if li is None: continue
+        n = db.Region(cell.begin_shapes_rec(li)).interacting(band).count()
+        if n: bad.append(('cuts in ring rail band', f'{L[0]}/{L[1]}', n))
+    return bad
+
+
+# published custom pad views (repository-relative): the GDS every consumer reads (assembly common.SPECIAL, lvs-bb, precheck,
+# chip_smoke). 'publish' rewrites them in place through finalize(); 'check' fails if any of them is not clean.
+AN = 'projects/programmable_transceiver_platform/analog/pads/generated/'
+PUBLISHED = {'pad_txpad': AN + 'stress-safe-families/wired-transmit/combined.gds', 'pad_refpad': AN + 'stress-safe-families/reference/combined.gds',
+             'pad_rf_pair': AN + 'stress-safe-families/rf-pair/pad.gds', 'pad_rftxpad': AN + 'stress-safe-families/rf-tx/pad.gds',
+             'pad_single_leg': AN + 'stress-safe-families/single-leg/pad.gds', 'pad_hspad': AN + 'stress-safe-families/wired-receive-hs/pad_hspad.gds',
+             'pad_wirepad': AN + 'stress-safe-families/wired-receive-usb/combined.gds', 'pad_tlp': AN + 'tlp-site/pad_tlp_flat.gds'}
+
+
+def _top(ly): return sorted(ly.top_cells(), key=lambda t: -t.bbox().area())[0]
+
+
+def main(argv):
+    """pad_cup.py check <root> [name ...]       exit 1 if a published pad has anything but the stock stack under an opening
+       pad_cup.py publish <root> [name ...]     finalize the published pad GDS in place (rerun after a pad generator changes)
+       pad_cup.py <in.gds> <out.gds> [cell]     finalize one file"""
+    import hashlib, os
+    if argv and argv[0] in ('check', 'publish'):
+        root = argv[1]; names = argv[2:] or list(PUBLISHED); nbad = 0
+        for n in names:
+            f = os.path.join(root, PUBLISHED[n]); ly = db.Layout(); ly.read(f); c = _top(ly)
+            if argv[0] == 'publish':
+                old = hashlib.sha256(open(f, 'rb').read()).hexdigest()
+                rep = finalize(ly, c); opt = db.SaveLayoutOptions(); opt.write_context_info = False
+                ly.write(f + '.tmp', opt); os.replace(f + '.tmp', f); new = hashlib.sha256(open(f, 'rb').read()).hexdigest()
+                print(f'{n}: published {f} sha256 {old[:16]} -> {new[:16]} {rep}')
+                ly = db.Layout(); ly.read(f); c = _top(ly)
+            b = check(ly, c); nbad += bool(b)
+            print(f'{n}: {"CLEAN" if not b else "FAIL"} {b[:6]}')
+        print('PAD CUP CHECK', 'PASS' if not nbad else f'FAIL ({nbad} pads)'); return 1 if nbad else 0
+    a = (argv + [None, None, None])[:3]
+    ly = db.Layout(); ly.read(a[0]); c = ly.cell(a[2]) if a[2] else _top(ly)
+    print(c.name, finalize(ly, c)); ly.write(a[1]); return 0
+
+
+if 'cmd' in globals():         # klayout -b -r pad_cup.py -rd cmd="check /root"
+    r = main(globals()['cmd'].split())
+    if r: raise SystemExit(r)
+elif __name__ == '__main__' and len(sys.argv) > 1:
+    sys.exit(main(sys.argv[1:]))

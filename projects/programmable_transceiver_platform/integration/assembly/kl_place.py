@@ -682,7 +682,7 @@ for net in GRID_NETS:
         if n == 'digital' and not C.KH_CONN: man['digital_ties_not_hooked'] += 1; continue      # pre-KH: tie-offs left to the macro
         if n == 'digital': man['digital_ties_not_hooked'] += 1      # KH_CONN: macro inputs the conn ties to VDD / VSS: hooked at the top level (coordinator ruling 2026-11-26; the macro pins stay as hardened)
         if (n, p, net) in PLATED: continue      # plated (island_trunks._plates)
-        if n in PADS['pads'] and n not in C.PAD_HOOK.get(CHIP, ()): continue      # pad-family supply pins land on the provider ring rails (DVDD / VSS bands), not on the grid; common.PAD_HOOK: pads whose supply pins do not reach the rails are hooked
+        if n in PADS['pads'] and n not in C.PAD_HOOK.get(CHIP, ()) and (n, p) not in C.PAD_HOOK.get(CHIP, ()): continue      # pad-family supply pins land on the provider ring rails (DVDD / VSS bands), not on the grid; common.PAD_HOOK: pads whose supply pins do not reach the rails are hooked
         sh = pin_shapes_die(n, p)
         if not sh:
             if n in man['blocks'] or n in PADS['pads']: man['unconnectable'].append(dict(inst=n, pin=p, net=net, why='no pin shape (label) in the abstract'))

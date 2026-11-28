@@ -193,7 +193,7 @@ if {[llength $hr_fsm]} {
 }
 # AC-1 core clock (rtl/pt_host_link.sv pt_host_divider): one hddr toggle flop behind a kept root
 # buffer; every hcore edge coincides with a rising hddr edge, as the generated-clock waveform states.
-set core_root [get_pins -quiet -hierarchical *host.divider.core_root*/Z]
+set core_root [get_pins -quiet -hierarchical *host.divider.core_root.cell/Z]
 if {[llength $core_root] != 1} {error "Expected one hcore divider root"}
 create_generated_clock -name hcore -source $rate_mux -divide_by 2 $core_root
 # PDN-02 two-phase launch (macro batch 2026-11-28): hcoreb = the inverted divider output (kept clkinv_8 core_inv, a sibling

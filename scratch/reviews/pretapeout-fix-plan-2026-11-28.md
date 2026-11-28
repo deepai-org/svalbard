@@ -200,7 +200,7 @@ RTL changes (all in the shared RTL; per-chip behaviour through `PT_CHIP`):
 1. DIG-08a `host_rate` divider retime (hword).
 2. DIG-08b REF_IN-domain island-sequencer reset synchronisers (`vreg_seq`, `wtx.pad_seq`, `wrx.frun`).
 3. DIG-08c `wgear.g_rn` reset release on WSTB.
-4. PDN-02 two-phase launch (clock-tree bank split), or clock gating of idle banks as the fallback.
+4. PDN-02 two-phase launch: **tried and dropped (coordinator, 2026-11-28)**. Run 1 regressed setup at ss 3.50 V K 1.19 (pt_wired hcore -2.33 -> -4.58, egress_wtx -0.86 -> -4.82, hcoreb -2.91; pt_rf hcore -2.10 -> -4.10, egress_rftx +0.62 -> -1.69) and raised pt_wired utilisation 79.3 -> 84.2 %. No clock-gating attempt.
 5. WTX-09 `wtx.run_force` field → spare pt_wired pin.
 6. INT-04 F7 ATB accept-set changes (pt_rf TRK_LO 22, pt_rf CDR VCTRL, pt_wired slicer bias); `chips.json`.
 7. HL-06 fc_half2 and h2d logic fixes (no clock-mux buffer).

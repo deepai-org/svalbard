@@ -39,10 +39,10 @@ sha = hashlib.sha256(open(t['netlist'], 'rb').read()).hexdigest() if t.get('netl
 s = dict(mode=mode, chip=t.get('chip'), netlist=t.get('netlist'), netlist_sha256=sha, macro_sha=t.get('macro_sha'),
          pass_=None, selftest=st == 0, faults_by_check=dict(by), test=t)
 s['pass'] = rc == 0 and st == 0 and t.get('result') == 'PASS'; del s['pass_']
-json.dump(s, open(out+'/summary.json', 'w'), indent=1)
 if mode == 'layout':
     try: s['extract'] = {k: json.load(open(f'{out}/{k}/layout.spice.json')) for k in ('extract', 'extract-cut')}
     except Exception as e: s['extract'] = str(e)
+json.dump(s, open(out+'/summary.json', 'w'), indent=1)
 print(f"chip_smoke {mode} {s['chip']}: {'PASS' if s['pass'] else 'FAIL'} (test {t.get('result')}, selftest {'PASS' if st == 0 else 'FAIL'}, faults {dict(by)})")
 sys.exit(0 if s['pass'] else 1)
 PY

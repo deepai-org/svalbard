@@ -93,7 +93,8 @@ What layout mode sees: opens and floating pieces of top-level wires, ties and su
 bars) between black-box pins; a top-level short between two driven nets (X); a misbound top-level wire (pin on the wrong
 net), all through the same functional checks as the default mode. What it cannot see: anything inside a black box (block
 internals, the macro's own stripes: `place.log` "macro supply" check), shorts onto nets the stubs leave undriven (analog,
-island rails: VISL is not driven by the switch stub), resistance / IR drop / ESD, device-level LVS (`run_top_lvs_bb.sh`),
+island rails: VISL is not driven by the switch stub, so a block's island-rail pin that floats, e.g. `wiredtx` RAIL_wired_tx on
+pt_wired fpw-8 / fpw-11, is visible only in the extraction diff, not as a fault), resistance / IR drop / ESD, device-level LVS (`run_top_lvs_bb.sh`),
 and a block pin split into several layout pieces beyond the one the bench takes (listed in the json).
 
 ## Limits

@@ -176,16 +176,16 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  // AND-OR of registers and the late requests: rf_unpack_ready (register), lc_pop, wire_load.
  // eg_w = the next value of (wired owner && !pat_sel && wire_running); the owner / pat_sel bits are seen
  // one clock later (they change only while stopped). Same pops as the former owner mux otherwise.
- wire egress_ne;reg eg_r,eg_l,eg_w;wire wire_running_n;
+ wire egress_ne;reg eg_r,eg_l,eg_w,eg_p;wire wire_running_n;
  wire eg_rst_n=rst_n&&enable;
  always @(posedge rf_tx_clk or negedge eg_rst_n)if(!eg_rst_n)eg_r<=1'b0;else eg_r<=payload_iq;
  always @(posedge wire_tx_clk or negedge eg_rst_n)
-  if(!eg_rst_n)begin eg_l<=1'b0;eg_w<=1'b0;end
-  else begin eg_l<=!payload_iq&&(linecode||hs_repeat);eg_w<=!payload_iq&&!linecode&&!hs_repeat&&!pat_sel&&wire_running_n;end
+  if(!eg_rst_n)begin eg_l<=1'b0;eg_w<=1'b0;eg_p<=1'b0;end
+  else begin eg_p<=!payload_iq&&hs_repeat;eg_l<=!payload_iq&&linecode&&!hs_repeat;eg_w<=!payload_iq&&!linecode&&!hs_repeat&&!pat_sel&&wire_running_n;end
  // The gates clear ASYNCHRONOUSLY on disable (rst_n && enable; owner / linecode / pat_sel change only while
  // disabled), so a gate whose TX clock has stopped cannot stay set across an owner change (independent
  // review: eg_r stale after rf_tx_clk stops and the owner switches to wired).
- wire egress_pop=(rf_unpack_ready&&eg_r&&egress_ne)||(lc_pop&&eg_l)||(wire_load&&eg_w&&egress_ne);
+ wire egress_pop=(rf_unpack_ready&&eg_r&&egress_ne)||(lc_pop&&eg_l)||(rp_pop&&eg_p)||(wire_load&&eg_w&&egress_ne);
  // Review TC12 assertion (simulation): the owner / linecode / pattern selects that the eg_* gates hold
  // may change only while the egress is disabled (eg_rst_n low). Checked in both TX clock domains: across
  // two consecutive edges with eg_rst_n high throughout, {payload_iq, linecode, pat_sel} must be equal.
@@ -233,12 +233,13 @@ module pt_core #(parameter WIRE_IN_A=5,WIRE_IN_DEPTH=28,EGRESS_A=5,EGRESS_DEPTH=
  // The 8b/10b offload and the USB HS x4 repeater share the transform slot (exclusive, validator rule
  // hs_repeat_excludes_linecode): one registered FWFT head (xq / xqv) and one pop gate (eg_l).
  wire lc_pop1,lc_qv1,rp_pop,rp_qv;wire[39:0]lc_q1,rp_q;
- wire xtake=wreq&&wire_running&&lc_qv;
+ // Timing (batch run 1, egress_wtx: request -> muxed take -> muxed pop was the worst path): each transform has its own
+ // take from its own valid, and its own pop gate register (eg_l / eg_p), so the pop path has no select mux.
  pt_lc_tx lc_tx(.clk(wire_tx_clk),.rst_n(rst_n),.en(linecode&&ewt&&!payload_iq),.head(egress_head),.head_valid(egress_ne),
-  .pop(lc_pop1),.q(lc_q1),.q_valid(lc_qv1),.take(xtake&&linecode));   // = !wire_out_empty while linecode
+  .pop(lc_pop1),.q(lc_q1),.q_valid(lc_qv1),.take(wreq&&wire_running&&lc_qv1));   // = !wire_out_empty while linecode
  pt_rep4_tx rp_tx(.clk(wire_tx_clk),.rst_n(rst_n),.en(hs_repeat&&ewt&&!payload_iq),.head(egress_head),.head_valid(egress_ne),
-  .pop(rp_pop),.q(rp_q),.q_valid(rp_qv),.take(xtake&&hs_repeat));
- assign lc_pop=hs_repeat?rp_pop:lc_pop1;assign lc_qv=hs_repeat?rp_qv:lc_qv1;assign lc_q=hs_repeat?rp_q:lc_q1;
+  .pop(rp_pop),.q(rp_q),.q_valid(rp_qv),.take(wreq&&wire_running&&rp_qv));
+ assign lc_pop=lc_pop1;assign lc_qv=hs_repeat?rp_qv:lc_qv1;assign lc_q=hs_repeat?rp_q:lc_q1;
  wire xform=linecode||hs_repeat;
  wire[39:0]wire_head=xform?lc_q:egress_head;
  wire[EGRESS_A:0]wire_out_count=payload_iq?0:egress_count;
@@ -379,7 +380,8 @@ module pt_rep4_tx(input wire clk,rst_n,en,input wire[39:0]head,input wire head_v
  function automatic[39:0]x4(input[9:0]s);integer i;begin for(i=0;i<40;i=i+1)x4[i]=s[i/4];end endfunction
  reg[29:0]h;reg[1:0]left;   // slices still in h
  wire adv=!q_valid||take;
- assign pop=en&&adv&&left==2'd0&&head_valid;
+ wire pre=en&&left==2'd0&&head_valid;   // registers and the FIFO's nonempty register only
+ assign pop=pre&&adv;
  always @(posedge clk or negedge rst_n)
   if(!rst_n)begin h<=30'd0;left<=2'd0;q<=40'd0;q_valid<=1'b0;end
   else if(!en)begin h<=30'd0;left<=2'd0;q<=40'd0;q_valid<=1'b0;end

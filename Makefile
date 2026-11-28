@@ -459,7 +459,7 @@ transceiver-digital-rtl-checks: transceiver-top-modes transceiver-dense-transpor
 	vvp -n /tmp/pt_rf_out_reg.vvp | grep -q RF_OUT_PASS && \
 	iverilog -g2012 -I rtl -s tb_memory_mode -o /tmp/pt_memory_mode.vvp sim/tb_memory_mode.sv rtl/pt_core.sv rtl/pt_fifo.sv rtl/pt_quad_link.sv rtl/pt_quad_gearbox.sv rtl/pt_linecode.sv rtl/pt_dense_header.sv rtl/pt_cells.sv && \
 	vvp -n /tmp/pt_memory_mode.vvp | grep -q MEMORY_MODE_PASS && \
-	iverilog -g2012 -s tb_host_rate_clock -o /tmp/pt_host_rate_clock.vvp rtl/pt_host_link.sv rtl/pt_pattern.sv sim/tb_host_rate_clock.sv && \
+	iverilog -g2012 -s tb_host_rate_clock -o /tmp/pt_host_rate_clock.vvp rtl/pt_host_link.sv rtl/pt_pattern.sv rtl/pt_fifo.sv sim/tb_host_rate_clock.sv && \
 	vvp -n /tmp/pt_host_rate_clock.vvp | grep -q HOST_RATE_CLOCK_PASS && \
 	iverilog -g2012 -s tb_pt_vreg_seq -o /tmp/pt_vreg_seq.vvp rtl/pt_vreg_seq.sv rtl/pt_fifo.sv sim/tb_pt_vreg_seq.sv && \
 	vvp -n /tmp/pt_vreg_seq.vvp | grep -q VREG_SEQ_PASS && \

@@ -729,6 +729,26 @@ set clock_periods [dict create hword $HWORD_PERIOD hddr $HDDR_PERIOD hcore $HCOR
                               h2d $H2D_PERIOD wtx $WTX_PERIOD wrx $WRX_PERIOD rftx $RFTX_PERIOD rfrx $RFRX_PERIOD \
                               ingress_wrx $WRX_PERIOD ingress_rfrx $RFRX_PERIOD egress_wtx $WTX_PERIOD egress_rftx $RFTX_PERIOD]
 # H2D quad FIFO (pin clock -> hcore): pointers, then storage read by hcore.
+# Macro batch 2026-11-28: the PRBS loopback FIFO (debug.pattern.loopback, wire_tx_clk -> wire_rx_clk), same bounds.
+foreach {f wr rd} [list *digital.lb_fifo wtx wrx] {
+    set lim [expr {min([dict get $clock_periods $wr], [dict get $clock_periods $rd])}]
+    set r1 [pt_cells "${f}.rg1*"]
+    if {[llength $r1]} { pt_bound_xing $lim -from [get_clocks $rd] -to $r1 }
+    set w1 [pt_cells "${f}.wg1*"]
+    if {[llength $w1]} { pt_bound_xing $lim -from [get_clocks $wr] -to $w1 }
+    set m [pt_cells "${f}.mem*"]
+    if {[llength $m]} { pt_bound_xing [dict get $clock_periods $rd] -from $m -to [get_clocks $rd] }
+}
+# DIG-03 turnaround: first stages of the end-of-packet toggle (wrx -> wtx) and mode (sclk -> wtx) synchronizers.
+set ta_first {}
+foreach x [concat [pt_cells *ta_es*] [pt_cells *ta_ms*]] {
+    if {[string match {*ta_es\[0\]*} [get_full_name $x]] || [string match {*ta_ms\[0\]*} [get_full_name $x]]} { lappend ta_first $x }
+}
+if {$PT_CHIP_NAME ne "rf" && [llength $ta_first] < 2} {
+    puts "pt_digital_macro.sdc: ERROR: DIG-03 synchronizer first stages found: [llength $ta_first] (expected >= 2)"
+    if {![info exists ::env(PT_SDC_LENIENT)]} { error "DIG-03 synchronizer first stages not found" }
+}
+if {[llength $ta_first]} { set_false_path -to $ta_first }
 foreach {f wr rd} [list *host.h2d h2d hcore] {
     set lim [expr {min([dict get $clock_periods $wr], [dict get $clock_periods $rd])}]
     set r1 [pt_cells "${f}.rg1*"]

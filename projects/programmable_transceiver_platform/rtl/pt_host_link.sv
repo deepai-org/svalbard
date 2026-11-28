@@ -569,18 +569,26 @@ module pt_host_rate_clock(input wire clk,rst_n,input wire[1:0]rate,
  reg ce;reg[1:0]rate_q;
  always @(posedge clk or negedge rst_n)
   if(!rst_n)begin div<=0;ce<=0;end else begin div<=div+1'b1;ce<=div==2'd2;end
- always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin cur<=0;cur_n<=2'b11;ne<=0;hold_n<=0;gap<=0;want<=0;rate_q<=0;end
-  else if(ce)begin rate_q<=rate_s;want<=rate_q[1]?2'd2:rate_q;ne<=want!=~cur_n;
-  if(hold_n)begin
-   if(ne)begin hold_n<=0;gap<=0;end
-  end else begin
-   gap<=gap+1'b1;
-   if(gap==1)begin cur<=want;cur_n<=~want;end
-   if(gap==3&&!ne)hold_n<=1;
-  end
+ // Next state without ce, then one kept 2:1 per flop selects it on ce (batch run 1: synthesis folded ce deep into the
+ // gap logic, ce -> gap[0] -3.2 ns at ss 3.50 V with the droop factor; now ce reaches only the final kept select).
+ reg[1:0]n_rate_q,n_want,n_gap,n_cur,n_cur_n;reg n_ne,n_hold_n;
+ always @*begin
+  n_rate_q=rate_s;n_want=rate_q[1]?2'd2:rate_q;n_ne=want!=~cur_n;
+  n_gap=gap;n_cur=cur;n_cur_n=cur_n;n_hold_n=hold_n;
+  if(hold_n)begin if(ne)begin n_hold_n=1'b0;n_gap=2'd0;end end
+  else begin
+   n_gap=gap+1'b1;
+   if(gap==1)begin n_cur=want;n_cur_n=~want;end
+   if(gap==3&&!ne)n_hold_n=1'b1;
   end
  end
+ wire[11:0]fsm_q,fsm_n,fsm_d;
+ assign fsm_q={rate_q,want,ne,gap,cur,cur_n,hold_n};
+ assign fsm_n={n_rate_q,n_want,n_ne,n_gap,n_cur,n_cur_n,n_hold_n};
+ pt_sel2 #(.W(12)) ce_sel(.s(ce),.a(fsm_q),.b(fsm_n),.z(fsm_d));
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)begin cur<=0;cur_n<=2'b11;ne<=0;hold_n<=0;gap<=0;want<=0;rate_q<=0;end
+  else {rate_q,want,ne,gap,cur,cur_n,hold_n}<=fsm_d;
  wire slow_clk;
 `ifdef SYNTHESIS
  (* keep=1,dont_touch=1 *) gf180mcu_fd_sc_mcu7t5v0__mux2_2 rate_slow_mux(

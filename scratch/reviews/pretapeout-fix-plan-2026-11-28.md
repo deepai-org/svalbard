@@ -245,6 +245,8 @@ allowed, and it needs the coordinator.
 | ADC (conditional) | rf | CNV-07 / MOD-04 acquisition / comparator speed | 3-5 | BP if relaid |
 | core_support bandgap | both | MOD-17 enable gating | 3 | BP possible |
 | `pad_txpad` | wired | PAD-15 VSS text (XOR 0) | 0.5 | none |
+| `pt_clockmux` | both | CM-1 (macro batch 72e2f07f): XMH spare inputs (tied VSS today) become IN2 = `REF` with new select pin `HS_REF`, IN3 = `H2D` with new select pin `HS_H2D` (one-hot, all 0 = stopped, switch only through stopped). Macro drives HS_REF / HS_H2D on pt_wired `c_clockmux_cs[0]` / `[1]`, on pt_rf `c_cdr_fup` / `c_cdr_fdn`; host_clk codes 2 ref_in / 6 h2d_direct | 1 | BP (+2 pins) |
+| `pt_wiredtx8` | wired | WTX-09 (macro batch 72e2f07f): new input `RUN_FORCE`, active high, ORed into TX_RUN at the `XMUX.RUNB` point the netlist-only `ilk_bypass` uses; macro drives it from `wtx.run_force` on pt_wired `c_adc_i_en` (wired-island gated, reset 0) | in the wiredtx8 lot | BP (+1 pin) |
 | `pt_vco_replica` | wired | DCF taps (tapped GDS exists) | 0.3 | none |
 
 Count: **14 block lots, 30 register items.** Effort about 60-75 agent-days in total, about 35 of it on wired blocks and

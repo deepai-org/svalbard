@@ -176,6 +176,7 @@ DRV = dict(
     casdc_w=10.0, casdc_l=4.0, casdc_nf=32,   # cascode-gate MOS decap per leg (~6 pF): gate ripple 3.56 -> 3.37 V peak
     se_w=20.0, se_nf=4,                       # D-TX-2: SE mode (se=1) turns the pad_n cascode off and steers that
                                               # leg's current into an on-chip PMOS dummy load (80/0.28, ~25 ohm)
+    kelvin_ref=True,                          # RFT-07: Kelvin-sensed reference diode (see rfdriver())
     pad_clamp=False,                          # off-state pad pull-downs removed: with the board DC feed they
                                               # sank ~0.28 mA from the rail in reset; pads now rest at the feed
 )
@@ -252,7 +253,15 @@ def rfdriver(name='pt_rfdriver'):
     c.inv('IBYP', 'bypass', 'byp_b')
     c.nor2('GOFF', 'en', 'bypass', 'off_all')
     # Bias line
-    c.n('DIODE', 'ibias', 'ibias', 'VSS', d['diode_w'], d['diode_l'])
+    if d.get('kelvin_ref'):
+        # RFT-07 (2026-11-28, coordinator (A)): the reference diode's source is Kelvin-sensed at the tail row. vss_k
+        # carries only the 10 uA reference current and joins VSS through RK, placed in the middle of the tail row, so
+        # the mirror reference sits at the tails' own ground: a VSS offset between the pin and the tails (tens of mV
+        # under R+C at 60 mA) no longer moves the tail currents.
+        c.n('DIODE', 'ibias', 'ibias', 'vss_k', d['diode_w'], d['diode_l'])
+        c.r('RK', 'vss_k', 'VSS', 2.0, 2.0, model='ppolyf_s')
+    else:
+        c.n('DIODE', 'ibias', 'ibias', 'VSS', d['diode_w'], d['diode_l'])
     c.n('BSW', 'vb', 'en', 'ibias', 2.0, 0.28)
     c.n('BPD', 'vb', 'enb', 'VSS', 1.0, 0.28)
     c.n('BCAP', 'VSS', 'vb', 'VSS', 10.0, 4.0, 2)

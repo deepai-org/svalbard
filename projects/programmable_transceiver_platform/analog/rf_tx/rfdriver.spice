@@ -24,7 +24,8 @@ XGOFF_NA off_all en VSS VSS nfet_03v3 w=1u l=0.28u ad=0.44p as=0.44p pd=2.88u ps
 XGOFF_NB off_all bypass VSS VSS nfet_03v3 w=1u l=0.28u ad=0.44p as=0.44p pd=2.88u ps=2.88u
 XGOFF_PA GOFF_x en VDD VDD pfet_03v3 w=2u l=0.28u ad=0.88p as=0.88p pd=4.88u ps=4.88u
 XGOFF_PB off_all bypass GOFF_x VDD pfet_03v3 w=2u l=0.28u ad=0.88p as=0.88p pd=4.88u ps=4.88u
-XDIODE ibias ibias VSS VSS nfet_03v3 w=1u l=0.5u ad=0.44p as=0.44p pd=2.88u ps=2.88u
+XDIODE ibias ibias vss_k VSS nfet_03v3 w=1u l=0.5u ad=0.44p as=0.44p pd=2.88u ps=2.88u
+XRK vss_k VSS VSS ppolyf_s r_width=2u r_length=2u
 XBSW vb en ibias VSS nfet_03v3 w=2u l=0.28u ad=0.88p as=0.88p pd=4.88u ps=4.88u
 XBPD vb enb VSS VSS nfet_03v3 w=1u l=0.28u ad=0.44p as=0.44p pd=2.88u ps=2.88u
 XBCAP_f0 VSS vb VSS VSS nfet_03v3 w=10u l=4u ad=4.4p as=4.4p pd=20.88u ps=20.88u

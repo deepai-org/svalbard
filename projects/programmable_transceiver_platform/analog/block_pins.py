@@ -25,9 +25,7 @@ EDITS = {
                      edits=[dict(net='VDD', pin=[20.0, 0.0, 30.0, 8.52], via=[20.0, 7.52, 30.0, 8.52], why='south VDD facing the RAIL_rf_tx bus, 2.4 mA')]),
     'pt_txmix_q': dict(gds='rf_tx/generated/txmix_q.gds', ref='rf_tx/txmix_q.spice', rtop='pt_txmix_q', rec='rf_tx/generated/txmix_q-kldrc.json',
                        edits=[dict(net='VDD', pin=[231.9, 9.9, 234.9, 60.0], via=[231.9, 9.9, 234.9, 10.9], why='east VDD facing the trunk lane, 2.4 / 3.7 mA')]),
-    'pt_rfdriver': dict(gds='rf_tx/generated/rfdriver.gds', ref='rf_tx/rfdriver.spice', rtop='pt_rfdriver', rec='rf_tx/generated/rfdriver-kldrc.json',
-                        edits=[dict(net='VDD', pin=[224.0, 0.0, 257.8, 8.82], via=[224.0, 6.82, 257.8, 8.82],
-                                    why='south VDD at the trunk end, 29.1 / 32.0 mA; spec x 197.8-257.8 narrowed to 224.0-257.8: three internal Metal5 signal stubs at local x 210-222.7 reach the south edge')]),
+    # pt_rfdriver: the south VDD / VSS pins are now drawn by its generator (rf_tx/generate.py, RFT-07 rework)
 }
 CUT, SP, IN = 0.26, 0.36, 0.2
 

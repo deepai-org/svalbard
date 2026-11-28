@@ -53,7 +53,14 @@ def magic(d, script):
 def run(tag, over):
     base = generate.REPO / 'scratch/rf_tx/iter' / tag
     if base.exists(): shutil.rmtree(base)
-    L = dict(generate.LAYOUT['rfdriver']); L.update(over)
+    L = dict(generate.LAYOUT['rfdriver']); over = dict(over)
+    wa = over.pop('wide_all', None); ma = over.pop('multi_all', None)
+    L.update(over)
+    if wa or ma:
+        import circuits
+        nets = circuits.rfdriver().nets()
+        if wa: L['wide'] = {**{n: wa for n in nets}, **L.get('wide', {})}
+        if ma: L['multi_escape'] = {**{n: ma for n in nets}, **L.get('multi_escape', {})}
     if 'supply_nets' in over: L['supply'] = dict(L['supply'], nets=over.pop('supply_nets')); L.pop('supply_nets', None)
     keep = generate.LAYOUT['rfdriver']; generate.LAYOUT['rfdriver'] = L
     try:

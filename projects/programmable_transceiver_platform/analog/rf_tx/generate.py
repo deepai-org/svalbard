@@ -18,7 +18,12 @@ REPO = HERE.parents[3]
 
 
 import os
-RFD_DIODE_TAILS = os.environ.get('RFD_DIODE_TAILS', '0') == '1'
+RFD_DIODE_TAILS = os.environ.get('RFD_DIODE_TAILS', '1') == '1'   # RFT-07: reference in the tail row (default)
+
+
+# rfdriver south pins, LEF frame (unflipped, origin at the drawn lower-left): placed FN with its die west edge at x 462, so
+# die x = 462 + W - local x; the floorplan's trunk lane needs VDD at die x ~680-740 and VSS at ~745-770 (i13: W = drawn width)
+RFD_PINS = {'VDD': (284.85, 344.85), 'VSS': (254.85, 279.85)}      # i13: W 562.85 -> die VDD 680-740, VSS 745-770
 
 
 def _rows_rfdriver(c):
@@ -28,7 +33,7 @@ def _rows_rfdriver(c):
           'SF_p', 'SF_n', 'O_P', 'O_N', 'CAS_P', 'CAS_N']
     tails = ['T1', 'T2', 'T3', 'TS_p', 'TS_n', 'TO0', 'TO1', 'TO2', 'TO3', 'BCAP']
     if RFD_DIODE_TAILS:      # RFT-07: the bias reference sits in the tail row, on the tails' own VSS lane (mirror sees no IR offset)
-        tails = ['T1', 'T2', 'T3', 'TS_p', 'TS_n', 'TO0', 'TO1', 'DIODE', 'BSW', 'BPD', 'TO2', 'TO3', 'BCAP']
+        tails = ['T1', 'T2', 'T3', 'TS_p', 'TS_n', 'TO0', 'TO1', 'DIODE', 'RK', 'BSW', 'BPD', 'TO2', 'TO3', 'BCAP']
     load = ['HDR'] + [f'RO_{l}{i}' for l in 'pn' for i in range(circuits.DRV['ro_par'])] + ['CLP_p', 'CLP_n',
                                                                                           'RATBC_p', 'RATBC_n',
                                                                                           'DUM_P', 'DUM_N', 'CDC_P', 'CDC_N']
@@ -43,6 +48,8 @@ def _rows_rfdriver(c):
     half = len(rest) // 2
     r3, r4 = [n for n in rest[:half] if n not in byp], [n for n in rest[half:] if n not in byp]
     rows = [rf, tails, ['BYPA_p'] + load + ['BYPA_n'], ['BSH_p', 'BYPB_p'] + r3, r4 + sfh + ['BYPB_n', 'BSH_n']]
+    if os.environ.get('RFD_TAILS_BOTTOM', '1') == '1':    # RFT-07: the tail row (60 mA of VSS) next to the bottom supply bars
+        rows = [rf, ['BYPA_p'] + load + ['BYPA_n'], ['BSH_p', 'BYPB_p'] + r3, r4 + sfh + ['BYPB_n', 'BSH_n'], tails]
     return [[n for n in r if n in names] for r in rows]
 
 
@@ -69,15 +76,23 @@ LAYOUT = {
     'txmix_q': dict(wide={'VDD': 1.0, 'VSS': 1.0, 'out_p': 0.6, 'out_n': 0.6}, rows=_rows_txmix, **MIX_ORDER),
     'txsum': dict(wide={'VDD': 1.0, 'VSS': 1.0, 'hsum': 1.0}, rows=_rows_txsum,
                   trunk_order=['i_p', 'i_n', 'q_p', 'q_n', '*', 'out_p', 'out_n']),
-    'rfdriver': dict(wide={'VDD': 2.0, 'VSS': 2.0, 'pad_p': 2.0, 'pad_n': 2.0, 'hdrv': 2.0, 'to': 2.0, 'cp': 2.0, 'cn': 2.0,
-                           't1': 0.8, 't2': 0.8, 'p3_p': 0.8, 'p3_n': 0.8, 'sfd': 1.0},
+    # rfdriver power / R rework (RFT-07, 2026-11-28; candidate i11 of rfdriver_iter.py): edge-fed supply mesh (5 x 6 um Metal5
+    # straps per supply, full-width bottom bars: VDD Metal5 4 um edge-flush, VSS Metal4 8 um under it), source/drain risers on
+    # every column of the high-current nets (multi_escape), 3 um escapes on the RF / supply nets, Kelvin-sensed bias reference
+    # in the tail row (circuits.DRV kelvin_ref) and the tail row next to the supply bars (_rows_rfdriver). Pins (LEF frame,
+    # unflipped): VDD label at x 197.8-257.8 on the Metal5 bar, VSS label at x 167.8-192.8 on the Metal4 bar (floorplan spec).
+    'rfdriver': dict(wide=dict({n: 0.8 for n in circuits.rfdriver().nets()},
+                               **{'VDD': 3.0, 'VSS': 4.0, 'pad_p': 3.0, 'pad_n': 3.0, 'hdrv': 2.0, 'to': 3.0, 'cp': 3.0, 'cn': 3.0,
+                                  't1': 1.0, 't2': 1.0, 't3': 1.0, 'p3_p': 2.0, 'p3_n': 2.0, 'vcp': 1.0, 'vcn': 1.0, 'sfd': 1.0}),
+                     lane_width={'VDD': 1.5, 'VSS': 4.0, 'pad_p': 2.0, 'pad_n': 2.0, 'to': 2.0, 'cp': 2.0, 'cn': 2.0, 'hdrv': 1.2,
+                                 'p3_p': 2.0, 'p3_n': 2.0},
+                     multi_escape=dict({n: 2 for n in circuits.rfdriver().nets()},
+                                       **{n: 1 for n in ('VSS', 'VDD', 'to', 'cp', 'cn', 'pad_p', 'pad_n', 'hdrv', 'p3_p', 'p3_n')}),
                      rows=_rows_rfdriver, inline_trunks=True, gap=0.8,
-                     # power rework 2026-11-28 (coordinator option 2, 74 mA VSS / 29 mA VDD at 32 C 20.9 mA/um): 3 Metal5 straps
-                     # per supply, 3 um Metal4 lanes, full-width bottom bars (VDD Metal5 edge-flush, VSS Metal4 above it) and
-                     # south edge pins where the floorplan's RAIL_rf_tx trunk and VSS plate land (LEF frame, unflipped)
-                     lane_width={'VDD': 3.0, 'VSS': 3.0},
-                     supply=dict(gap=1.0, nets={'VDD': dict(straps=[0.12, 0.47, 0.82], w=6.0, bar=('metal5', 8.0), pin=('metal5', 197.8, 257.8)),
-                                                'VSS': dict(straps=[0.155, 0.505, 0.855], w=6.0, bar=('metal4', 8.0), pin=('metal4', 167.8, 192.8))})),   # D2: gap 1.2 -> 0.8 (T bypass area)   # area pass 2026-11-12: 135.2k -> ~93k um2
+                     supply=dict(gap=1.0, stack=True,
+                                 nets={'VDD': dict(straps=[0.05, 0.27, 0.49, 0.71, 0.93], w=6.0, bar=('metal5', 6.0), pin=('metal5', *RFD_PINS['VDD'])),
+                                       'VSS': dict(straps=[0.085, 0.16, 0.305, 0.38, 0.525, 0.60, 0.745, 0.82, 0.965], w=6.0, bar=('metal4', 14.0),
+                                                   pin=('metal4', *RFD_PINS['VSS']))})),
 }
 
 

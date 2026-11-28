@@ -1,6 +1,6 @@
 {
  "block": "rfdriver",
- "gds_sha256": "9ecdd72d8b32c493c79d1301831817a3d8f0a6c25a871dd0ae31f77ed89f1e5c",
+ "gds_sha256": "ad082e3c12f5c6631b3664612bc849ae14b4e607d0644ade5c59cd535b005787",
  "top": "pt_rfdriver",
  "klayout": "KLayout 0.30.9",
  "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
@@ -21,5 +21,6 @@
    "error": null
   }
  },
- "pin_edit": "2026-11-28 block_pins.py: VDD south VDD at the trunk end, 29.1 / 32.0 mA; spec x 197.8-257.8 narrowed to 224.0-257.8: three internal Metal5 signal stubs at local x 210-222.7 reach the south edge; shuttle DRC main 0 / antenna 0, KLayout read-back LVS match"
+ "pin_edit": "2026-11-28 block_pins.py: VDD south VDD at the trunk end, 29.1 / 32.0 mA; spec x 197.8-257.8 narrowed to 224.0-257.8: three internal Metal5 signal stubs at local x 210-222.7 reach the south edge; shuttle DRC main 0 / antenna 0, KLayout read-back LVS match",
+ "note": "2026-11-28 RFT-07 interim i13 (power / R rework): shuttle-deck DRC main 0 / antenna 0, KLayout read-back LVS match 850/850 (vs rf_tx/rfdriver.spice, antenna diodes not extracted by KLayout); Magic DRC 0, netgen LVS unique"
 }

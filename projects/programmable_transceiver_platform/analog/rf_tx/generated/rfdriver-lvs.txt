@@ -44,6 +44,20 @@ Circuit 1: pfet_03v3                       |Circuit 2: pfet_03v3
 Cell pin lists are equivalent.
 Device classes pfet_03v3 and pfet_03v3 are equivalent.
 
+Circuit 1 cell ppolyf_u and Circuit 2 cell ppolyf_u are black boxes.
+Warning: Equate pins:  cell ppolyf_u is a placeholder, treated as a black box.
+Warning: Equate pins:  cell ppolyf_u is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: ppolyf_u                        |Circuit 2: ppolyf_u                        
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes ppolyf_u and ppolyf_u are equivalent.
+
 Circuit 1 cell pfet_06v0 and Circuit 2 cell pfet_06v0 are black boxes.
 Warning: Equate pins:  cell pfet_06v0 is a placeholder, treated as a black box.
 Warning: Equate pins:  cell pfet_06v0 is a placeholder, treated as a black box.
@@ -73,19 +87,19 @@ Circuit 1: ppolyf_u_1k                     |Circuit 2: ppolyf_u_1k
 Cell pin lists are equivalent.
 Device classes ppolyf_u_1k and ppolyf_u_1k are equivalent.
 
-Circuit 1 cell ppolyf_u and Circuit 2 cell ppolyf_u are black boxes.
-Warning: Equate pins:  cell ppolyf_u is a placeholder, treated as a black box.
-Warning: Equate pins:  cell ppolyf_u is a placeholder, treated as a black box.
+Circuit 1 cell ppolyf_s and Circuit 2 cell ppolyf_s are black boxes.
+Warning: Equate pins:  cell ppolyf_s is a placeholder, treated as a black box.
+Warning: Equate pins:  cell ppolyf_s is a placeholder, treated as a black box.
 
 Subcircuit pins:
-Circuit 1: ppolyf_u                        |Circuit 2: ppolyf_u                        
+Circuit 1: ppolyf_s                        |Circuit 2: ppolyf_s                        
 -------------------------------------------|-------------------------------------------
 1                                          |1                                          
 2                                          |2                                          
 3                                          |3                                          
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
-Device classes ppolyf_u and ppolyf_u are equivalent.
+Device classes ppolyf_s and ppolyf_s are equivalent.
 
 Class pt_rfdriver (0):  Merged 736 parallel devices.
 Class pt_rfdriver (1):  Merged 736 parallel devices.
@@ -95,12 +109,13 @@ Circuit 1: pt_rfdriver                     |Circuit 2: pt_rfdriver
 nfet_06v0 (165->9)                         |nfet_06v0 (165->9)                         
 nfet_03v3 (477->57)                        |nfet_03v3 (477->57)                        
 pfet_03v3 (142->26)                        |pfet_03v3 (142->26)                        
-diode_nd2ps_03v3 (9)                       |diode_nd2ps_03v3 (9)                       
-pfet_06v0 (51->7)                          |pfet_06v0 (51->7)                          
-ppolyf_u_1k (6)                            |ppolyf_u_1k (6)                            
 ppolyf_u (8)                               |ppolyf_u (8)                               
-Number of devices: 122                     |Number of devices: 122                     
-Number of nets: 68                         |Number of nets: 68                         
+pfet_06v0 (51->7)                          |pfet_06v0 (51->7)                          
+diode_nd2ps_03v3 (9)                       |diode_nd2ps_03v3 (9)                       
+ppolyf_u_1k (6)                            |ppolyf_u_1k (6)                            
+ppolyf_s (1)                               |ppolyf_s (1)                               
+Number of devices: 123                     |Number of devices: 123                     
+Number of nets: 69                         |Number of nets: 69                         
 ---------------------------------------------------------------------------------------
 Resolving symmetries by property value.
 Netlists match uniquely.
@@ -109,14 +124,16 @@ Subcircuit pins:
 Circuit 1: pt_rfdriver                     |Circuit 2: pt_rfdriver                     
 -------------------------------------------|-------------------------------------------
 atb_bias                                   |atb_bias                                   
-bypass                                     |bypass                                     
-VDD                                        |VDD                                        
 in_p                                       |in_p                                       
 in_n                                       |in_n                                       
 atb_cm                                     |atb_cm                                     
 atb_pre                                    |atb_pre                                    
+VDD                                        |VDD                                        
+bypass                                     |bypass                                     
 en                                         |en                                         
 VSS                                        |VSS                                        
+pad_p                                      |pad_p                                      
+pad_n                                      |pad_n                                      
 mute                                       |mute                                       
 ibias                                      |ibias                                      
 se                                         |se                                         
@@ -124,8 +141,6 @@ g0                                         |g0
 g1                                         |g1                                         
 g2                                         |g2                                         
 g3                                         |g3                                         
-pad_p                                      |pad_p                                      
-pad_n                                      |pad_n                                      
 ---------------------------------------------------------------------------------------
 Cell pin lists are equivalent.
 Device classes pt_rfdriver and pt_rfdriver are equivalent.

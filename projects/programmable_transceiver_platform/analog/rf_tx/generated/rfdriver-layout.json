@@ -1,22 +1,22 @@
 {
  "block": "rfdriver",
  "cell": "pt_rfdriver",
- "image": "svalbard/librelane-gf180-canary:2026.08",
- "image_id": "sha256:b60278092f08c0a42fa93ed640d15d84eec53d7799790962781157ec34ceff43",
- "pdk": "/pdk/gf180mcuD (open_pdks f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7)",
+ "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+ "image_id": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305",
+ "pdk": "/foss/pdks/gf180mcuD (open_pdks f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7)",
  "drc_errors": 0,
  "lvs_unique_match": true,
  "lvs_final": "Final result: Circuits match uniquely.",
  "lvs_name_equivalent": true,
  "bbox_um": {
   "x0": 0.0,
-  "y0": -202.35999999999964,
-  "x1": 479.9800000000001,
+  "y0": -248.16000000000025,
+  "x1": 565.7999999999997,
   "y1": 1.0
  },
- "width_um": 479.98,
- "height_um": 203.36,
- "area_um2": 97608.7,
+ "width_um": 565.8,
+ "height_um": 249.16,
+ "area_um2": 140974.7,
  "area_ceiling_um2": 98100,
  "rows": [
   [
@@ -40,18 +40,6 @@
    "O_N",
    "CAS_P",
    "CAS_N"
-  ],
-  [
-   "T1",
-   "T2",
-   "T3",
-   "TS_p",
-   "TS_n",
-   "TO0",
-   "TO1",
-   "TO2",
-   "TO3",
-   "BCAP"
   ],
   [
    "BYPA_p",
@@ -89,9 +77,6 @@
    "GOFF_NB",
    "GOFF_PA",
    "GOFF_PB",
-   "DIODE",
-   "BSW",
-   "BPD",
    "PSW",
    "PPD",
    "ISE_N",
@@ -104,11 +89,11 @@
    "GS0_PB",
    "IS0_N",
    "IS0_P",
-   "SON0"
+   "SON0",
+   "SOF0",
+   "GS1_NA"
   ],
   [
-   "SOF0",
-   "GS1_NA",
    "GS1_NB",
    "GS1_PA",
    "GS1_PB",
@@ -142,23 +127,85 @@
    "SFH_b",
    "BYPB_n",
    "BSH_n"
+  ],
+  [
+   "T1",
+   "T2",
+   "T3",
+   "TS_p",
+   "TS_n",
+   "TO0",
+   "TO1",
+   "DIODE",
+   "RK",
+   "BSW",
+   "BPD",
+   "TO2",
+   "TO3",
+   "BCAP"
   ]
  ],
  "trunked_nets": 42,
  "circuit": {
-  "devices": 114,
+  "devices": 115,
   "mos_instances": 100,
   "mos_fingers": 835,
-  "resistors": 14,
-  "nets": 68
+  "resistors": 15,
+  "nets": 69
+ },
+ "supply_straps_um": {
+  "VDD": [
+   29.665,
+   153.59,
+   277.515,
+   401.445,
+   525.37
+  ],
+  "VSS": [
+   49.38,
+   91.63,
+   173.305,
+   215.555,
+   297.23,
+   339.48,
+   421.16,
+   463.405,
+   545.085
+  ]
+ },
+ "supply_bars_um": {
+  "VDD": [
+   "metal5",
+   -248.16000000000025,
+   -242.16000000000025
+  ],
+  "VSS": [
+   "metal4",
+   -248.16000000000025,
+   -234.16000000000025
+  ]
+ },
+ "supply_pins_um": {
+  "VDD": [
+   288.1,
+   -248.16000000000025,
+   348.1,
+   -245.16000000000025
+  ],
+  "VSS": [
+   258.1,
+   -248.16000000000025,
+   283.1,
+   -245.16000000000025
+  ]
  },
  "hashes": {
-  "rfdriver.spice": "3103c4685f6d9847cf14d676f4471b6019ae44c08cdb4b54ee925d2b2027e089",
-  "circuits.py": "8a9706fa1e63bb7b34d7a7628d865f68321fb76567886c77d8fb4a873178e96b",
-  "layoutlib.py": "ccd41df38241257b3caa706e1ee3f75dfae6aaff605ffb0b2d2b9d4abc52a45f",
-  "generate.py": "cc95c9d584bb1e63c126d825421cbe16af35ba33dce053737359070250d1c632",
-  "rfdriver.gds": "7d46da6870d3550e4c1c6403bfe2215cc36f2c1dccab8933e0ec2edd4253d6ce",
-  "rfdriver.ext.spice": "f5ef1da567511db91dd24b7b094d6a57e002d3ac33b41773695573e778b10a1d"
+  "rfdriver.spice": "c8d8071368c4968e273c1979f5c330d589fce23c5306031861dc9d0f178d58b5",
+  "circuits.py": "edbb09da2f9e212165e2fa9475b3b52f5211cceda8468bee4536560246a91195",
+  "layoutlib.py": "10b7ac687a6cac82e2fa4bb1df9b49014043f38bb6941b0781d6fddd6cf6b5d5",
+  "generate.py": "fee43e016eefcf0f2e68e5459a0fd1ce480a91db6ca64ecb8bc2eb1c93358b3c",
+  "rfdriver.gds": "ad082e3c12f5c6631b3664612bc849ae14b4e607d0644ade5c59cd535b005787",
+  "rfdriver.ext.spice": "e6cd503f81c7adf43a3b62cc82a89965d47e6e3c00705f53fbedbb522c86397b"
  },
  "limitations": [
   "Extraction is capacitance-only (ext2spice cthresh 0); wire and via resistance are not extracted.",

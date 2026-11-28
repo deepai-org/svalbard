@@ -241,7 +241,7 @@ def pin_list(d):
 
 
 def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=None,
-          lane_width=None, gap=1.2, lane_order=None, trunk_order=None, inline_trunks=False, supply=None):
+          lane_width=None, gap=1.2, lane_order=None, trunk_order=None, inline_trunks=False, supply=None, multi_escape=None):
     """Generate layout for ``circuit`` in ``work`` (must be empty). Returns report dict.
 
     supply (inline mode only; rfdriver power rework 2026-11-28): {'nets': {net: dict(straps=[x fractions], w=strap width,
@@ -377,9 +377,34 @@ def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=N
             xpos[name] = ox
             cx = ox + L['right'] + gap
         xposs.append((xpos, cx))
+    MULTI = multi_escape or {}          # {net: every k-th S/D column}: extra Metal3 risers from the device strap to the lane
+
+    def risers(ri):
+        """[(x, net, device, term)] extra S/D risers in row ri (RFT-07: a 96-finger tail's source current no longer runs
+        along one Metal2 strap to a single escape); skipped where another net's escape is within 1.2 um"""
+        xpos = xposs[ri][0]; out = []
+        esc = [(xpos[n] + local[n]['esc'][t], nn) for n in rows[ri] for t, nn, _ in pin_list(byname[n])]
+        for n in rows[ri]:
+            for t, nn, _ in pin_list(byname[n]):
+                if nn not in MULTI or t not in ('S', 'D'):
+                    continue
+                cols = local[n]['pins'][t]['cols']
+                for i, c_ in enumerate(cols):
+                    if i % MULTI[nn]:
+                        continue
+                    x = xpos[n] + c_[0]; wr = min(rw(nn), 0.6)
+                    ok = all(abs(x - ex) >= (wr + rw(en)) / 2 + 0.5 for ex, en in esc if en != nn)
+                    ok = ok and all(abs(x - ox_) >= 0.6 + 0.5 for ox_, on_, _, _ in out if on_ != nn)
+                    if ok:
+                        out.append((x, nn, n, t))
+        return out
+    RIS = {}
+
     def esc_xs(ri, net):
         xpos = xposs[ri][0]
-        return [xpos[n] + local[n]['esc'][t] for n in rows[ri] for t, nn, _ in pin_list(byname[n]) if nn == net]
+        if ri not in RIS: RIS[ri] = risers(ri)
+        return [xpos[n] + local[n]['esc'][t] for n in rows[ri] for t, nn, _ in pin_list(byname[n]) if nn == net] + \
+               [x for x, nn, _, _ in RIS[ri] if nn == net]
     strap_x = {}
     if SUP:
         assert inline_trunks, 'supply straps need inline_trunks'
@@ -521,13 +546,21 @@ def build(circuit, work, *, wide=None, row_width=160.0, rows=None, trunk_width=N
                 P.via(ex, y, 2, 3, w=w, h=pin.get('w', 0.4) if term in ('S', 'D') else (min(w, 1.0) if term in ('A', 'B') and 'x0' in pin else 0.4))
                 P.vwire('metal3', ex, y, ly, w)
                 P.via(ex, ly, 3, 4, w=w, h=lw[net])
+        # extra S/D risers (multi_escape): via2 on the device strap, Metal3 down to the lane, via3 onto it
+        if ri not in RIS: RIS[ri] = risers(ri)
+        for x_, net, n_, t_ in RIS[ri]:
+            P.net = net
+            pin = local[n_]['pins'][t_]; y_ = R['oy'] + pin['y']; ly_ = lanes[(ri, net)]; w_ = min(rw(net), 0.6)
+            P.via(x_, y_, 2, 3, w=w_, h=pin['w'])
+            P.vwire('metal3', x_, y_, ly_, w_)
+            P.via(x_, ly_, 3, 4, w=w_, h=lw[net])
         # lanes for this row
         for (rj, net), ly in lanes.items():
             P.net = net
             if rj != ri:
                 continue
             xs = [R['xpos'][n] + local[n]['esc'][t] for n in R['names']
-                  for t, nn, _ in pin_list(byname[n]) if nn == net]
+                  for t, nn, _ in pin_list(byname[n]) if nn == net] + [x for x, nn, _, _ in RIS.get(ri, []) if nn == net]
             if net in strap_x:
                 sx = strap_x[net]
                 P.hwire('metal4', min(xs + sx), max(xs + sx), ly, lw[net])

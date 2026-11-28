@@ -101,6 +101,11 @@ def finalize(ly, cell, ref=None):
         if inb.is_empty(): continue
         rep['band_vias'] += inb.count()
         sh.clear(); sh.insert(r - inb)
+    # Metal4 / Metal5 islands the cut removal left inside the band (fpw-18 LVS by name: 'pad_wire_tx.?unlabelled' on
+    # VSS): a group of pad Metal4 / Metal5 (joined only by Via4) lying wholly in the band, with no Via3 down to the pad's
+    # Metal3 and no metal outside the band, only overlaps the ring's own rail metal; it is removed with its Via4 so that
+    # no unlabelled pad piece reaches a ring net
+    rep['band_islands'] = island_cleanup(ly, cell, band)
     for t in [t for t in ly.top_cells() if t.cell_index() not in tops0]: t.prune_cell()    # cells orphaned by flattening
     rep['diode_lvpwell'] = diode_lvpwell(ly, cell)
     return rep
@@ -110,23 +115,78 @@ LVPW_ENC = 0.88      # um, LVPWELL over COMP as the PDK diode PCells draw it (di
 TAP_REACH = 3.0      # um, p+ substrate taps of a diode within this distance are its anode contacts and go in its LVPWELL
 
 
+def _bare_diodes(ly, c):
+    L = lambda a, b: ly.find_layer(a, b)
+    R = lambda a, b: db.Region(c.begin_shapes_rec(L(a, b))).merged() if L(a, b) is not None else db.Region()
+    comp, np_, pp, mk, nw, dnw, lvp = R(22, 0), R(32, 0), R(31, 0), R(115, 5), R(21, 0), R(12, 0), R(204, 0)
+    nd = ((comp & np_ & mk) - nw - dnw).merged()
+    return nd.not_interacting(lvp), comp, pp, nw, dnw
+
+
 def diode_lvpwell(ly, cell):
     """PAD-17: every n+ diode (COMP & Nplus & diode_mk 115/5) outside Nwell / DNWELL that is not in LVPWELL gets the PDK
     device's LVPWELL: the diffusion plus its p+ taps within TAP_REACH, enclosed by LVPW_ENC, never over Nwell, joined into
-    one well per diode group. Drawn in the pad cell. Returns the number of diodes covered."""
-    um = lambda v: int(round(v / ly.dbu)); L = lambda a, b: ly.find_layer(a, b)
-    R = lambda a, b: db.Region(cell.begin_shapes_rec(L(a, b))).merged() if L(a, b) is not None else db.Region()
-    comp, np_, pp, mk, nw, dnw, lvp = R(22, 0), R(32, 0), R(31, 0), R(115, 5), R(21, 0), R(12, 0), R(204, 0)
-    nd = ((comp & np_ & mk) - nw - dnw).merged()
-    bare = nd.not_interacting(lvp)
-    if bare.is_empty(): return 0
-    taps = ((comp & pp) - nw - dnw).merged()
-    near = taps.interacting(bare.sized(um(TAP_REACH)))
-    well = (bare + near).merged().sized(um(LVPW_ENC)).merged()
-    well = (well - nw.sized(um(0.0))).merged()
-    well = well.interacting(bare)
-    cell.shapes(ly.layer(204, 0)).insert(well)
-    return bare.count()
+    one well per diode group. Drawn in the cell that holds the diode (bottom-up over the pad's hierarchy, INT-37: the
+    subcell is clean on its own). Returns the number of diodes covered."""
+    um = lambda v: int(round(v / ly.dbu)); n = 0
+    keep = set(cell.called_cells()) | {cell.cell_index()}
+    order = [ly.cell(ci) for ci in ly.each_cell_bottom_up() if ci in keep]
+    for c in order:                                  # bottom-up: children first
+        bare, comp, pp, nw, dnw = _bare_diodes(ly, c)
+        if bare.is_empty(): continue
+        taps = ((comp & pp) - nw - dnw).merged()
+        near = taps.interacting(bare.sized(um(TAP_REACH)))
+        well = (bare + near).merged().sized(um(LVPW_ENC)).merged()
+        well = (well - nw).merged().interacting(bare)
+        c.shapes(ly.layer(204, 0)).insert(well)
+        n += bare.count()
+    return n
+
+
+def _islands(ly, cell, band):
+    """[{layer: region}] of every pad metal group (Metal3-5 joined by Via3 / Via4) that lies wholly inside the band, has
+    no Via2 down to Metal2 and carries no label: it touches only the ring's own rail metal"""
+    L = lambda a, b: ly.find_layer(a, b)
+    R = lambda a, b: db.Region(cell.begin_shapes_rec(L(a, b))).merged() if L(a, b) is not None else db.Region()   # whole hierarchy
+    M = {3: R(42, 0), 4: R(46, 0), 5: R(81, 0)}; V = {3: R(40, 0), 4: R(41, 0)}; v2 = R(38, 0)
+    lab = db.Region()
+    for a_ in (42, 46, 81):
+        li = L(a_, 10)
+        if li is not None:
+            for x in cell.shapes(li).each():
+                if x.is_text(): lab.insert(db.Box(x.text.x - 1, x.text.y - 1, x.text.x + 1, x.text.y + 1))
+    seen = set(); out = []
+    for k in (3, 4, 5):
+        for p in M[k].each():
+            if (k, str(p)) in seen: continue
+            g = {3: db.Region(), 4: db.Region(), 5: db.Region()}; g[k] = db.Region(p)
+            while True:
+                n = {3: M[3].interacting(V[3].interacting(g[4])) + g[3],
+                     4: M[4].interacting(V[3].interacting(g[3])) + M[4].interacting(V[4].interacting(g[5])) + g[4],
+                     5: M[5].interacting(V[4].interacting(g[4])) + g[5]}
+                for q in n.values(): q.merge()
+                if all(n[i].count() == g[i].count() for i in g): break
+                g = n
+            for i in g:
+                for q in g[i].each(): seen.add((i, str(q)))
+            allm = g[3] + g[4] + g[5]
+            if allm.inside(band).count() != allm.count() or not g[3].interacting(v2).is_empty() or not allm.interacting(lab).is_empty():
+                continue
+            g['v3'] = V[3].interacting(g[3]); g['v4'] = V[4].interacting(g[4] + g[5]); out.append(g)
+    return out
+
+
+def island_cleanup(ly, cell, band):
+    n = 0
+    LAY = {3: (42, 0), 4: (46, 0), 5: (81, 0), 'v3': (40, 0), 'v4': (41, 0)}
+    for g in _islands(ly, cell, band):
+        for k, r in g.items():
+            if r.is_empty(): continue
+            sh = cell.shapes(ly.layer(*LAY[k])); texts = [x.text for x in sh.each() if x.is_text()]
+            keep = db.Region(sh) - r; sh.clear(); sh.insert(keep)
+            for t in texts: sh.insert(t)
+        n += 1
+    return n
 
 
 def check(ly, cell, ref=None):
@@ -157,9 +217,11 @@ def check(ly, cell, ref=None):
         if li is None: continue
         n = db.Region(cell.begin_shapes_rec(li)).interacting(band).count()
         if n: bad.append(('cuts in ring rail band', f'{L[0]}/{L[1]}', n))
-    um = lambda v: int(round(v / ly.dbu)); F = lambda a, b: db.Region(cell.begin_shapes_rec(ly.find_layer(a, b))).merged() if ly.find_layer(a, b) is not None else db.Region()
-    nd = ((F(22, 0) & F(32, 0) & F(115, 5)) - F(21, 0) - F(12, 0)).merged().not_interacting(F(204, 0))
-    if nd.count(): bad.append(('n+ diode without LVPWELL (not the PDK device)', '22/0', nd.count()))
+    isl = _islands(ly, cell, band)
+    if isl: bad.append(('pad Metal4 / Metal5 island in the ring rail band', '46/81', len(isl)))
+    for ci in [cell.cell_index()] + list(cell.called_cells()):      # per cell (INT-37): every cell clean on its own
+        nd = _bare_diodes(ly, ly.cell(ci))[0]
+        if nd.count(): bad.append((f'n+ diode without LVPWELL in cell {ly.cell(ci).name}', '22/0', nd.count()))
     return bad
 
 

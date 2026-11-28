@@ -50,6 +50,8 @@ ISLANDS = {
   'RAIL_debug':     dict(sw=['isw_debug'], loads={'vco_replica': 11.8, 'clk_obs': 5.1, 'rx_aux_clk': 5.1, 'rx_wtx_ext': 5.1}, design=40.0, allow=15.0),
   'RAIL_wired_rx':  dict(sw=['isw_wired_rx'], loads={'slicer': 9.8, 'ctle': 5.3, 'detect': 2.4, 'rxselect': 2.0, 'termination': 1.6}, design=30.9, allow=49.5),
   'RAIL_pll':       dict(sw=['isw_pll'], loads={'pll_vreg2': 20.9, 'prescale': 2.4, 'prescale_hf': 2.4, 'cdr': 2.0, 'clockmux': 1.6}, design=29.4, allow=60.4)}}
+LP = dict(own=0.7, opin=1.0, all_sides=True)      # landing parameters; _plates retries a failed pin with LEGACY_LP
+LEGACY_LP = dict(own=2.5, opin=3.0, all_sides=False)   # before 2026-11-28: clk_obs / rx_aux_clk plated only with these
 _RES = [None]            # reserved plate landing area (reserve -> _plates)
 _BLK = []                # DEF blockage rectangles (name, (x0, y0, x1, y1), layers)
 
@@ -194,15 +196,15 @@ def build(g, mode='trunks'):
             dl, dr, dbt, dtp = b.left-bb.left, bb.right-b.right, b.bottom-bb.bottom, bb.top-b.top
             e = min(dl, dr, dbt, dtp); o = um(16)
             # every side (the carve removes the blocked ones); a no-route-over (RF) block only on its nearest edge
-            sides = [e] if m in C.NO_OVER else [dl, dr, dbt, dtp]
+            sides = [e] if (m in C.NO_OVER or not LP['all_sides']) else [dl, dr, dbt, dtp]
             for e_ in sides:
                 if e_ == dl: cor.insert(db.Box(bb.left-o, b.bottom, b.right, b.top))
                 if e_ == dr: cor.insert(db.Box(b.left, b.bottom, bb.right+o, b.top))
                 if e_ == dbt: cor.insert(db.Box(b.left, bb.bottom-o, b.right, b.top))
                 if e_ == dtp: cor.insert(db.Box(b.left, b.bottom, b.right, bb.top+o))
-                if m in C.NO_OVER: break
+                if m in C.NO_OVER or not LP['all_sides']: break
         info_ = MJ.get(m, {}); o_ = info_.get('origin', [0, 0])
-        opins = db.Region([t*db.Box(um(r[0]+o_[0]), um(r[1]+o_[1]), um(r[2]+o_[0]), um(r[3]+o_[1])).enlarged(um(1), um(1))
+        opins = db.Region([t*db.Box(um(r[0]+o_[0]), um(r[1]+o_[1]), um(r[2]+o_[0]), um(r[3]+o_[1])).enlarged(um(LP['opin']), um(LP['opin']))
                            for q, lst in info_.get('pins', {}).items() if q != p for ln_, r in lst]) - db.Region([b for ln_, b in sh]).sized(um(0.5))   # 1 um round the cell's other pins
         L = dict(pin=p, same=same, carve={}, tgt={}, bbox=bb, vialand=db.Region(), via3land=db.Region(), pinreg={'Metal5': p5, 'Metal4': p4})
         for ln, b in sh:
@@ -210,7 +212,7 @@ def build(g, mode='trunks'):
                 L['via3land'].insert(b)
         for ln in LAYERS:
             other = (cell_m(n, ln) - same[ln]).merged()
-            cv = ((cor + same[ln].sized(um(3))) - other.sized(um(0.7)) - other_obstacles(n, bb, ln) - opins).merged()      # 0.7 um to the cell's own other metal (MT.2b 0.6): RF supply stubs sit 1 um apart
+            cv = ((cor + same[ln].sized(um(3))) - other.sized(um(LP['own'])) - other_obstacles(n, bb, ln) - opins).merged()      # 0.7 um to the cell's own other metal (MT.2b 0.6): RF supply stubs sit 1 um apart
             cv += same[ln] & cv.sized(um(5))
             L['carve'][ln] = cv.merged()
             pl = p5 if ln == 'Metal5' else (p4 + L['via3land'])
@@ -452,12 +454,12 @@ def _plates(g, h):
     rep = h['rep']; cur_net = h['cur_net']; landing = h['landing']; raster = h['raster']; route = h['route']; path_rects = h['path_rects']
     placed = h['placed']; core = h['core']; G_ = G; metal = g['metal']; live = g['live']; via_cells = h['via_cells']
     done = set()
-    for (n, net), mA in sorted(HEAVY.get(h['CHIP'], {}).items(), key=lambda kv: -kv[1]):
-        if placed(n) is None or net not in live: continue
-        if mA < PLATE_MIN_MA: rep[f'{n}.{net}'] = dict(mA=mA, error=f'below {PLATE_MIN_MA} mA: router hook'); continue
+    def one(n, net, mA):
+        if placed(n) is None or net not in live: return
+        if mA < PLATE_MIN_MA: rep[f'{n}.{net}'] = dict(mA=mA, error=f'below {PLATE_MIN_MA} mA: router hook'); return
         cur_net[0] = net
         L = landing(n, net)
-        if L is None: rep[f'{n}.{net}'] = dict(mA=mA, error='no pin'); continue
+        if L is None: rep[f'{n}.{net}'] = dict(mA=mA, error='no pin'); return
         other = 'VSS' if net == 'VDD' else 'VDD'
         obs = {ln: (avoid[ln] + metal[(other, ln)].sized(um(2.5)) + h['ringr'].sized(um(3)) + h['outside'] + h['digr'] + (h['mim'] if ln == 'Metal4' else db.Region())).merged() for ln in LAYERS}
         win = L['bbox'].enlarged(um(1000), um(1000))
@@ -481,7 +483,7 @@ def _plates(g, h):
             free = {ln: raster((allowed[ln].sized(-um(W/2)) + near[ln] + src[ln]).merged()) for ln in LAYERS}
             P = route(free, srcm, tgt)
             if P is not None: break
-        if P is None: rep[f'{n}.{net}'] = dict(mA=mA, error='no path'); continue
+        if P is None: rep[f'{n}.{net}'] = dict(mA=mA, error='no path'); return
         rr = path_rects(P, W)
         sv = max(W, 2.0+math.sqrt(2.0*mA/2.6)); hv = um(sv/2)//10*10; cen = lambda q: (core.left+int((q[1]+0.5)*um(G_)), core.bottom+int((q[2]+0.5)*um(G_)))
         for a_, b_ in zip(P, P[1:]+[None]):
@@ -511,7 +513,7 @@ def _plates(g, h):
         pl = {'Metal5': k5.merged(), 'Metal4': k4.merged()}
         touch = sum(((pl[ln] & L['pinreg'][ln]).sized(-um(0.3))).area() for ln in LAYERS)
         if touch < um(1)*um(1):
-            rep[f'{n}.{net}'] = dict(mA=mA, error='landing clipped'); continue
+            rep[f'{n}.{net}'] = dict(mA=mA, error='landing clipped'); return
         own_v = g['ly'].cell(placed(n)[0]); vown = h['cell_m'](n, 'Via4')
         vr = ((pl['Metal4'] & (pl['Metal5'] + live[net]['Metal5'])) + (pl['Metal5'] & live[net]['Metal4']) + (pl['Metal5'] & L['vialand'])) - vown.sized(um(1.0))
         for ln in LAYERS: pdn.shapes(LI[ln]).insert(pl[ln])
@@ -530,6 +532,15 @@ def _plates(g, h):
         if em_ok: done.add((n, L['pin'], net))      # an EM-short plate keeps its router hook in parallel
         rep[f'{n}.{net}'] = dict(mA=mA, pin=L['pin'], width_um=round(W, 1), len_m5_um=L5, len_m4_um=L4, via4=nv, via3=nv3, mA_per_um=round(mA/W, 2),
                                  mA_per_cut=round(mA/max(1, nv), 3), drop_mV=round(drop, 2), layer_changes=nch, em_ok=em_ok, hook_kept=not em_ok, ok=drop <= PLATE_DROP_MV and em_ok)
+    for (n, net), mA in sorted(HEAVY.get(h['CHIP'], {}).items(), key=lambda kv: -kv[1]):
+        one(n, net, mA)
+        r_ = rep.get(f'{n}.{net}', {})
+        if 'error' in r_ and not r_['error'].startswith('below'):      # never a hook where the earlier landing rules gave a plate
+            first = r_['error']; saved = dict(LP); LP.update(LEGACY_LP)
+            try: one(n, net, mA)
+            finally: LP.clear(); LP.update(saved)
+            r2 = rep.get(f'{n}.{net}', {})
+            if 'error' not in r2: r2['landing'] = f'legacy rules (first try: {first})'
     return done
 
 

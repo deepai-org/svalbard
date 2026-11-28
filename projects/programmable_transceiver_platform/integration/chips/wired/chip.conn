@@ -84,7 +84,7 @@ inst core_bias pt_core_bias_wired core
   EN_bb_tap_wmon=c_bb_tap_wmon_bias_en BIAS_bb_tap_wmon~BIAS_bb_tap_wmon
   ROOT_REF~ATBN_master_ibias VREF0~VREF0_MASTER VCM~VCM_MASTER VBG~ATBN_vbg IDAC1~ATBN_idac1
   TRK_WIRED_RX~ATBN_wire_ibias TRK_PLL~ATBN_pll_ibias TRK_DEBUG~ATBN_debug_ibias
-  TRK_WIRED_TX~-      # wired_tx trunk: no ATB leaf on pt_wired yet (interface row CB8-2)
+  TRK_WIRED_TX~ATBN_wiredtx_trunk      # INT-04 F6: wired_tx trunk -> atb1_leaf25 (wired-gated)
   VGEN_SOURCE~- VGEN_SINK1~- VGEN_SINK2~-
 
 # Islands and switches (spec/power-delivery.md section 2, PD2-2): ten islands on the five verified switch masters.
@@ -284,6 +284,15 @@ inst atb1_leaf28 atb_leaf_s core
   NODE~ATBN_detect_vref BUS~ATB1_LOCAL2 SEL=atb1_sw[27] VDD~VDD VSS~VSS
 inst atb1_leaf40 atb_leaf_s core
   NODE~BIAS_hsbias BUS~ATB1_LOCAL2 SEL=atb1_sw[39] VDD~VDD VSS~VSS
+# INT-04 (coordinator 2026-11-28): per-chip leaves (were NODE~VDD / VSS / VCM_MASTER in common.conn)
+inst atb1_leaf6 atb_leaf_s core
+  NODE~ATBN_vreg_tx BUS~ATB1_LOCAL0 SEL=atb1_sw[5] VDD~VDD VSS~VSS   # INT-04 F5: VREG_TX via pll_vreg2 ATB_OUT (20 k)
+inst atb1_leaf25 atb_leaf_s core
+  NODE~ATBN_wiredtx_trunk BUS~ATB1_LOCAL2 SEL=atb1_sw[24] VDD~VDD VSS~VSS   # INT-04 F6: TRK_WIRED_TX (wired-gated)
+inst atb1_leaf37 atb_leaf_s core
+  NODE~VCM_MASTER BUS~ATB1_LOCAL3 SEL=atb1_sw[36] VDD~VDD VSS~VSS   # unchanged (conv-gated: unreachable on pt_wired)
+inst atb1_leaf41 atb_leaf_s core
+  NODE~CDR_VCTRL BUS~ATB1_LOCAL2 SEL=atb1_sw[40] VDD~VDD VSS~VSS   # INT-04 F4: CDR loop node, leaf placed beside cdr (short stub)
 inst atb1_leaf59 atb_leaf_s core      # pt_wiredtx8 ATB_AVGP (100 kohm inside the block), WT50
   NODE~ATBN_wiredtx_avgp BUS~ATB1_LOCAL2 SEL=atb1_sw[58] VDD~VDD VSS~VSS
 inst atb1_leaf60 atb_leaf_s core      # pt_wiredtx8 ATB_AVGN; core_ref_supply local bus (the wired one is full), WT50

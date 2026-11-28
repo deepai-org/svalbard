@@ -401,6 +401,11 @@ a few fF and leaks at hot corners, and that matters on these nets:
 - **CDR phases and forwarded clocks:** `CDRPH[*]`, `CKP[*]`, `CKN[*]`, `TXPH[*]`, `PREF`, `WIRE_CK`, `WSMP_CK`,
   `*FWD*`, `fwd_*`, `rf_tx_clk_out`, `rf_rx_clk`.
 
+**Nets that are allowed diodes although they look sensitive** (an honest record of the exclusion list):
+- `CDR_VCTRL` (pt_wired, coordinator 2026-11-28): the length rule gives it two 36 um2 diodes (cdr.VCTRL, pll_cdr.ATB_VCTRL).
+  The node is driven by pt_cdr's OTA (pfd_mode 0) or the ring's charge pump (pfd_mode 1); 36 um2 junctions leak at the pA
+  level even hot, negligible against that drive, and removing them would cost antenna. Kept.
+
 **Minimum-size diodes on three excluded nets** (`common.ANT_SMALL`, coordinator 2026-11-28). These nets get
 `pt_antdiode_s`: 0.9 x 0.9 um n+ (0.81 um2), one contact, at every gate end (each receiver including the macro pin, never
 the driver). The estimated added capacitance is about 1.2 fF per diode (n+/psub junction, roughly 1 fF/um2 area plus
@@ -446,6 +451,11 @@ All other exclusions stay as listed.
    (W 324 / E 209), so the plan model routes with `REAL_MPINS=1`. The side channels chan_macro_w (946-1111) and
    chan_macro_e (2787-2986) carry no decap. Host-link per-bit routed lengths before / after are within the coordinator's
    100 um limit.
+10. **INT-04 F4, CDR_VCTRL on ATB1 code 41 (pt_wired, coordinator 2026-11-28):** pll_cdr.ATB_VCTRL is the loop node
+    itself (shared with pt_cdr's OTA output), not a gated tap; the only gate is the leaf's own switch, the same as code 30
+    on the TX ring. Off load from `atb_leaf_s` (extracted): 3.17 fF and 17 pA at 22-32 C (0.32 nA at 85 C), against an
+    OTA- or pump-driven node: accepted. atb1_leaf41 sits beside cdr so the stub on CDR_VCTRL stays short (aim < 100 um,
+    measured after placement); the long run is on the switched ATB1_LOCAL2 bus side.
 
 ## 9. Code (branch fp-plan-code)
 

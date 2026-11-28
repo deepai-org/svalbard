@@ -200,10 +200,10 @@ inst lo_ext pt_lo_ext lod
 inst lo_vreg pt_lo_vreg lo
   VIN~RAIL_lo VOUT~VDD_LO EN=c_lo_vreg_en VSS~VSS VREF~ATBN_vbg      # VREF: bandgap VBG (gate load only, own RC filter)
   BYP=VSS TRIM{0:2}=VSS      # baseline: regulated, trim code 0 (all divider segments in); register fields requested (CB8-13)
-  ATB_OUT~- ATB_G~-          # no free ATB leaf on pt_rf yet (OBS-4, CB8-12)
+  ATB_OUT~ATBN_vdd_lo ATB_G~-          # INT-04 F2: VDD_LO via the block's 1 k tap -> atb1_leaf6
 inst qvco pt_lc_qvco5 lo
   EN=c_qvco_en CMLSEL=c_lo_cmlsel VTUNE~LO_VTUNE IBIAS~BIAS_qvco BAND{0:3}=c_qvco_band[\1] PRE>-
-  IP~LOI_IP IN~LOI_IN QP~LOI_QP QN~LOI_QN VDD~VDD_LO VDDB~RAIL_lod VSS~VSS ATB_EN=c_qvco_atb_en ATB_VTUNE~- ATB_ITAIL~-
+  IP~LOI_IP IN~LOI_IN QP~LOI_QP QN~LOI_QN VDD~VDD_LO VDDB~RAIL_lod VSS~VSS ATB_EN=c_qvco_atb_en ATB_VTUNE~ATBN_lo_vtune ATB_ITAIL~-      # INT-04 F1: gated 20 k + TG tap (ATB_EN=c_qvco_atb_en) -> atb1_leaf41
 inst lo_mmd pt_lo_mmd lod
   LP~LOI_IP LN~LOI_IN EN=c_lo_mmd_en N{0:5}=c_lo_mmd_n[\1] FB>LO_FB VDD~RAIL_lod VSS~VSS
 inst lo_mmd_qdum pt_lo_mmd_qdum lod
@@ -299,3 +299,12 @@ inst pad_xvss_{0:8} prov_supply_sig chip
   PAD~VSS
 inst pad_xvdd_{0:1} prov_supply_sig chip
   PAD~VDD
+# INT-04 (coordinator 2026-11-28): per-chip leaves (were NODE~VDD / VSS / VCM_MASTER in common.conn)
+inst atb1_leaf6 atb_leaf_s core
+  NODE~ATBN_vdd_lo BUS~ATB1_LOCAL0 SEL=atb1_sw[5] VDD~VDD VSS~VSS   # INT-04 F2
+inst atb1_leaf25 atb_leaf_s core
+  NODE~VSS BUS~ATB1_LOCAL2 SEL=atb1_sw[24] VDD~VDD VSS~VSS   # DEAD on pt_rf (wired-gated)
+inst atb1_leaf37 atb_leaf_s core
+  NODE~ATBN_vreg_tx BUS~ATB1_LOCAL3 SEL=atb1_sw[36] VDD~VDD VSS~VSS   # INT-04 F3 (conv-island gated)
+inst atb1_leaf41 atb_leaf_s core
+  NODE~ATBN_lo_vtune BUS~ATB1_LOCAL2 SEL=atb1_sw[40] VDD~VDD VSS~VSS   # INT-04 F1

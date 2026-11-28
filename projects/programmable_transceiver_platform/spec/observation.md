@@ -28,7 +28,8 @@ The bring-up order that uses these paths is [bring-up.md](bring-up.md). Risk row
 |---|---|---|---|---|
 | 1 | master_ibias (ROOT_REF) | 0/1 | 0/1 | |
 | 2, 3 | VREF0, VCM master | 1 | 1 | |
-| 5, 6 | core / host VDD | 1 | 1 | **same net (VDD)**: one reading |
+| 5 | core VDD | 1 | 1 | |
+| 6 | (map name: host VDD) | VDD_LO via lo_vreg 1 k tap (INT-04 F2) | VREG_TX via pll_vreg2 20 k tap (INT-04 F5) | rebound 2026-11-28; map name unchanged (map hash; coordinator to rule) |
 | 7 | wired_rx rail | . | 1 | |
 | 8 | rf_rx rail | 1 | . | |
 | 9 | pll rail | 1 | 1 | |
@@ -41,7 +42,7 @@ The bring-up order that uses these paths is [bring-up.md](bring-up.md). Risk row
 | 22 | TRK_WIRED_RX | . | 0/1 | ATB0 leaf selected by the fallback control, not atb0_sw |
 | 23 | HS_VBIAS (named wire_vcm) | . | 1 | name/net mismatch |
 | 24, 26 | ctle, wiredtx bias | . | 1 | |
-| 25 | slicer_bias | VSS | VSS | **dead** (tied VSS) |
+| 25 | (map name: slicer_bias) | VSS (wired-gated: dead) | TRK_WIRED_TX trunk (INT-04 F6) | rebound on pt_wired 2026-11-28 |
 | 27 | TERM_VCM (USB-pad termination VCM) | . | 1 | HS pad `HS_TERM_VCM` and TX `TX_TERM_VCM` have no leaf |
 | 28 | detect vref | . | 1 | |
 | 29 | TRK_PLL | 0/1 | 0/1 | |
@@ -51,10 +52,10 @@ The bring-up order that uses these paths is [bring-up.md](bring-up.md). Risk row
 | 33 | LO quadrature (lo_ext) bias | 1 | . | |
 | 34 | CDR bias | 1 | 1 | |
 | 35, 36 | TRK_CONV, VREF_CONV | 0/1 | . | |
-| 37 | conv_vcm | VCM_MASTER | VCM_MASTER | **duplicate of code 3** on both chips |
+| 37 | (map name: conv_vcm) | VREG_TX via pll_vreg2 20 k tap (INT-04 F3; conv-island gated) | VCM_MASTER (unreachable: conv-gated) | rebound on pt_rf 2026-11-28 |
 | 38, 39 | ADC / DAC bias | 1 | . | I converter only |
 | 40 | HS bias (USB) | . | 1 | |
-| 41 | usbfs_vref | VSS | VSS | **dead** |
+| 41 | (map name: usbfs_vref) | LO VTUNE via the QVCO gated 20 k + TG tap (INT-04 F1) | CDR_VCTRL, leaf beside cdr (INT-04 F4) | rebound 2026-11-28 |
 | 42 | debug buffer bias | 1 (bb_tap_i) | 1 (bb_tap_wmon) | |
 | 43-54 | characterization devices | 0/1 | 0/1 | |
 | 55, 56, 57 | VBG, TRK_DEBUG, IDAC1 | 0/1, 0/1, 1 | same | |

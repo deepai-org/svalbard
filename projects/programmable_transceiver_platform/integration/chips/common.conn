@@ -99,7 +99,8 @@ inst prescale_hf pt_prescale pll
   CK_IN=CDRPH[0] EN=c_prescale_hf_en D2=c_prescale_hf_d[0] D4=c_prescale_hf_d[1] D8=c_prescale_hf_d[2] D16=c_prescale_hf_d[3] CK_OUT>PRE_HF_CK VDD~RAIL_pll VSS~VSS
 # regulated ring supplies (MW-31): one pt_pll_vreg2 for both rings
 inst pll_vreg2 pt_pll_vreg2 pll
-  VIN~RAIL_pll VOUT_TX~VREG_TX VOUT_CDR~VREG_CDR VSS~VSS BYP_TX=c_pllvreg_byp_tx BYP_CDR=c_pllvreg_byp_cdr ATB_OUT~- ATB_G~-
+  VIN~RAIL_pll VOUT_TX~VREG_TX VOUT_CDR~VREG_CDR VSS~VSS BYP_TX=c_pllvreg_byp_tx BYP_CDR=c_pllvreg_byp_cdr ATB_OUT~ATBN_vreg_tx ATB_G~-      # INT-04 F3 / F5: VOUT_TX through the block's 20 k tap -> atb1_leaf37 (rf) / atb1_leaf6 (wired)
+# atb1_leaf6 / 25 / 37 / 41 are per chip (INT-04, coordinator 2026-11-28): see <chip>/chip.conn
 inst iso_pll_tx_fbck iso_clamp_x4 core
   A=PLL_TX_FBCK ISO=island_off[2] Y>fc_src[0] VDD~VDD VSS~VSS
 
@@ -182,8 +183,6 @@ inst atb1_leaf4 atb_leaf_s core
   NODE~VSS BUS~ATB1_LOCAL0 SEL=atb1_sw[3] VDD~VDD VSS~VSS   # DEAD: monitor block never built; must never reach the POR vcap node
 inst atb1_leaf5 atb_leaf_s core
   NODE~VDD BUS~ATB1_LOCAL0 SEL=atb1_sw[4] VDD~VDD VSS~VSS
-inst atb1_leaf6 atb_leaf_s core
-  NODE~VDD BUS~ATB1_LOCAL0 SEL=atb1_sw[5] VDD~VDD VSS~VSS
 inst atb1_leaf9 atb_leaf_s core
   NODE~RAIL_pll BUS~ATB1_LOCAL0 SEL=atb1_sw[8] VDD~VDD VSS~VSS
 inst atb1_leaf12 atb_leaf_s core
@@ -198,10 +197,6 @@ inst atb1_leaf44 atb_leaf_s core
   NODE~CHAR_RP_LNA BUS~ATB1_LOCAL1 SEL=atb1_sw[43] VDD~VDD VSS~VSS
 inst atb1_grp1 atb_grp core
   NODE~ATB1_LOCAL1 BUS~ATB1_GLOBAL SEL=atb1_grp[1] VDD~VDD VSS~VSS
-inst atb1_leaf25 atb_leaf_s core
-  NODE~VSS BUS~ATB1_LOCAL2 SEL=atb1_sw[24] VDD~VDD VSS~VSS   # DEAD: no slicer bias node (old rule loaded SL_P)
-inst atb1_leaf41 atb_leaf_s core
-  NODE~VSS BUS~ATB1_LOCAL2 SEL=atb1_sw[40] VDD~VDD VSS~VSS   # DEAD: no usbfs block
 inst atb1_leaf58 atb_leaf_s core
   NODE~VCO_REPLICA_VCTRL BUS~ATB1_LOCAL2 SEL=atb1_sw[57] VDD~VDD VSS~VSS
 inst atb1_grp2 atb_grp core
@@ -216,8 +211,6 @@ inst atb1_leaf32 atb_leaf_s core
   NODE~REF_VCM BUS~ATB1_LOCAL3 SEL=atb1_sw[31] VDD~VDD VSS~VSS
 inst atb1_leaf34 atb_leaf_s core
   NODE~ATBN_cdr_bias BUS~ATB1_LOCAL3 SEL=atb1_sw[33] VDD~VDD VSS~VSS
-inst atb1_leaf37 atb_leaf_s core
-  NODE~VCM_MASTER BUS~ATB1_LOCAL3 SEL=atb1_sw[36] VDD~VDD VSS~VSS
 inst atb1_leaf47 atb_leaf_s core
   NODE~CHAR_RN_SMP BUS~ATB1_LOCAL3 SEL=atb1_sw[46] VDD~VDD VSS~VSS
 inst atb1_leaf48 atb_leaf_s core

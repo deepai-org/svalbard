@@ -36,11 +36,12 @@ def load(run):
         if m: lay = m[1]; continue
         m = re.match(r'\s*RECT (\S+) (\S+) (\S+) (\S+)', l)
         if m and lay in ('Metal4', 'Metal5'): obs[lay].append(tuple(map(float, m.groups())))
+    bars = {pn: [tuple(map(float, r.split())) for r in re.findall(r'RECT (\S+ \S+ \S+ \S+)', b)] for pn, b in re.findall(r'PIN (BAR\d+)(.*?)END \1', lef, re.S)}
     for hn, b in re.findall(r'PIN (HK\d+)(.*?)END \1', lef, re.S):
         for r in re.findall(r'RECT (\S+ \S+ \S+ \S+)', b): slots.append(tuple(map(float, r.split())))
     return dict(man=man, pads=[tuple(f) for v in pads.values() for f in v['footprint']], reserves=[tuple(r) for n, r in fp.get('reserves', {}).items() if n != 'd2h_strip' and not n.startswith(('chan_', 'corridor', 'pocket'))],
                 fp=fp,
-                obs=obs, slots=slots, log=log)
+                obs=obs, slots=slots, log=log, bars=bars)
 
 
 def ov(a, b, g=0.0):
@@ -62,6 +63,21 @@ def lint(D, cover_min):
     res['macro_supply'] = [] if 'macro supply OK' in D['log'] else ['place.log: no "macro supply OK"']
     res['unconnectable'] = [f"{u.get('inst')}.{u.get('pin')} ({u.get('why')})" for u in man.get('unconnectable', [])]
     res['grid_touch'] = [str(t) for t in man.get('grid_touch', [])]
+    # island bars (exposed BARk pins of pt_pdn): each must be one connected Metal5 polygon set (fp-wired 2026-11-28: a
+    # 0.05 um gap split RAIL_wired_tx's bar from fpw-2 to fpw-11, seen only in LVS by name)
+    res['bar_split'] = []
+    for pn, rs in D.get('bars', {}).items():
+        par = list(range(len(rs)))
+        def f_(i):
+            while par[i] != i: par[i] = par[par[i]]; i = par[i]
+            return i
+        for i in range(len(rs)):
+            for j in range(i + 1, len(rs)):
+                a, b = rs[i], rs[j]
+                if min(a[2], b[2]) - max(a[0], b[0]) >= 0 and min(a[3], b[3]) - max(a[1], b[1]) >= 0 and (min(a[2], b[2]) - max(a[0], b[0]) > 0 or min(a[3], b[3]) - max(a[1], b[1]) > 0):
+                    par[f_(i)] = f_(j)
+        groups = collections.Counter(f_(i) for i in range(len(rs)))
+        if len(groups) > 1: res['bar_split'].append(f'{pn}: {len(groups)} pieces ({sorted(groups.values(), reverse=True)[:4]} rects)')
     res['dead_piece_pins'] = [str(t) for t in man.get('dead_piece_pins', [])]
     res['fp_overlaps'] = [str(t) for t in D['fp'].get('overlaps', [])]
     nets = collections.defaultdict(bool)
@@ -101,6 +117,7 @@ def selftest(run):
         'grid_touch': lambda D: D['man'].setdefault('grid_touch', []).append(['Metal5', 'VDD', 'VSS', 0, 0, 1, 1]),
         'dead_piece_pins': lambda D: D['man'].setdefault('dead_piece_pins', []).append(['blk', 'VSS', 'VSS', 'Metal5', 0, 0]),
         'fp_overlaps': lambda D: D['fp'].setdefault('overlaps', []).append(['a', 'b']),
+        'bar_split': lambda D: D.setdefault('bars', {}).setdefault('BAR_TEST', []).extend([(0, 0, 10, 10), (10.05, 0, 20, 10)]),
     }
     if res_: cases['diode_in_reserve'] = lambda D: put(D, (res_[0] + 0.5, res_[1] + 0.5))
     for k, f in cases.items():

@@ -628,6 +628,7 @@ for net in [n_ for n_ in GRID_NETS if n_ in ring]:
 _blkreg = db.Region([db.Box(*[um(v) for v in b_['bbox']]) for n_, b_ in man['blocks'].items() if b_['master'] != 'decap']).merged()
 SLOT_CLEAN = os.environ.get('SLOT_CLEAN', '1' if CHIP == 'wired' else '0') == '1'
 _barreg = db.Region([p_ for bd_ in bars for p_ in bd_['region'].each()]).merged() if SLOT_CLEAN else db.Region()
+_rsvreg = db.Region([db.Box(*[um(v) for v in r_]) for n_, r_ in FP['reserves'].items() if n_ != 'd2h_strip' and not n_.startswith(('chan_', 'corridor', 'pocket'))]).merged() if SLOT_CLEAN else db.Region()      # blocking reserves (as place_lint)
 _oth4 = {n_: db.Region([p_ for o_ in GRID_NETS if o_ != n_ for p_ in metal.get((o_, 'Metal4'), db.Region()).each()]).merged() for n_ in GRID_NETS} if SLOT_CLEAN else {}
 slots = {}
 for net in GRID_NETS:
@@ -648,6 +649,7 @@ for net in GRID_NETS:
                 # Via4 lands in the bar: fpw-3 VDD__HK56 / HK62 under the RAIL_wired_tx bar), and no Metal5 slot whose
                 # Metal4 below is mostly another grid net (no via access from below: fpw-3 VSS__HK278 over a VDD strap)
                 if not (_barreg & db.Region(cb).sized(um(3))).is_empty(): continue
+                if not (_rsvreg & db.Region(cb)).is_empty(): continue      # fpw-12: TMDS_N hook slot over wtx_tcoil_rsv (Metal1-3 blockage) -> Metal3 shorts
                 if ln == 'Metal5' and (db.Region(cb) & _oth4[net]).area() > 0.3*cb.area(): continue
             lst.append([ln, cb, False])
     slots[net] = lst

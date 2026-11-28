@@ -19,7 +19,8 @@ set dly $::env(DLY)
 puts "PT_WS [sta::worst_slack_cmd $dly]"
 foreach c [all_clocks] {
   set ps [find_timing_paths -path_delay $dly -group_path_count 5000 -endpoint_path_count 1 -sort_by_slack -slack_max 0.0 -to $c]
-  set n [llength $ps]
+  set n [llength $ps]; set tns 0.0
+  foreach q $ps { set tns [expr {$tns + [get_property $q slack]}] }
   set all [find_timing_paths -path_delay $dly -group_path_count 1 -sort_by_slack -to $c]
-  if {[llength $all]} { set p [lindex $all 0]; puts "PT_CLK [get_name $c] [format %.3f [get_property $p slack]] nfail=$n [get_full_name [get_property $p startpoint]] -> [get_full_name [get_property $p endpoint]]" }
+  if {[llength $all]} { set p [lindex $all 0]; puts "PT_CLK [get_name $c] [format %.3f [get_property $p slack]] nfail=$n tns=[format %.2f $tns] [get_full_name [get_property $p startpoint]] -> [get_full_name [get_property $p endpoint]]" }
 }

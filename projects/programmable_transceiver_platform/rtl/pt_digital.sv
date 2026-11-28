@@ -178,7 +178,7 @@ module pt_digital #(parameter integer PT_CHIP = 3)(input wire rst_n,ref_clk,
  wire prbs_rst_n=rst_n&&tx_enabled;
  always @(posedge wire_tx_clk or negedge prbs_rst_n)if(!prbs_rst_n)prbs_ready<=0;else prbs_ready<=1;
  // Internal loopback (veteran audit 5, macro batch 2026-11-28; debug.pattern.loopback, stopped-only): the generator's
- // word goes through a 2-deep CDC FIFO (wire_tx_clk -> wire_rx_clk) to the checker instead of the received word. The
+ // word goes through a 4-deep CDC FIFO (wire_tx_clk -> wire_rx_clk) to the checker instead of the received word. The
  // generator then steps only when the FIFO takes its word, so the line carries a gapped pattern while loopback is on.
  wire lb_cfg=debug_cfg[`PT_D_DEBUG_PATTERN__LOOPBACK_LSB];
  wire lb_tx,lb_rx,lb_full,lb_empty;wire[39:0]lb_dout;
@@ -186,7 +186,7 @@ module pt_digital #(parameter integer PT_CHIP = 3)(input wire rst_n,ref_clk,
  pt_sync_bit lbr(wire_rx_clk,rst_n,lb_cfg,lb_rx);
  wire lb_push=lb_tx&&prbs_ready&&!lb_full;
  wire lb_pop=lb_rx&&!lb_empty;
- pt_async_fifo #(.W(40),.A(1),.REG_OUT(0)) lb_fifo(.wr_clk(wire_tx_clk),.rd_clk(wire_rx_clk),.rst_n(rst_n&&lb_cfg&&tx_enabled),
+ pt_async_fifo #(.W(40),.A(2),.REG_OUT(0)) lb_fifo(.wr_clk(wire_tx_clk),.rd_clk(wire_rx_clk),.rst_n(rst_n&&lb_cfg&&tx_enabled),
   .din(prbs_word),.push(lb_push),.pop(lb_pop),.dout(lb_dout),.full(lb_full),.empty(lb_empty),.wr_count(),.rd_count(),
   .overflow(),.underflow(),.wr_active(),.rd_active());
  pt_pattern_gen #(.W(40)) prbs(.clk(wire_tx_clk),.rst_n(prbs_rst_n),.ce(1'b1),.step(lb_tx?lb_push:(wire_req_int&&prbs_select&&prbs_ready)),

@@ -53,6 +53,11 @@ Current work status is in `SESSION-STATE.md`, not here.
 
 - **Performance window:** junction 22–32 °C, die supply 3.15–3.35 V, all process corners (ss/ff/sf/fs). Do not
   require performance at 0, 85 or 125 °C or at wide supply.
+- **No lifetime requirement (user, 2026-11-28):** the chips only prove viability; they need not last or
+  survive outside the window. Do not gate on long-life reliability: electromigration is checked at the
+  window's 32 °C junction plus self-heating with a short lifetime (not 85 °C / 100 kh), and the 3.63 V
+  thin-oxide figure is a lifetime target, not a gate. Still gate on what breaks function or causes prompt
+  damage: IR drop and supply bounce, fusing / gross overcurrent, oxide breakdown, latch-up, timing.
 - **Per-chip supply trim:** the board sets each die's supply (trimmer + regulator), chosen at bring-up from the
   die's measured speed (ring monitors need readout codes). Slow dies may run up to a 3.50 V setpoint, with
   setpoint + tolerance + ripple + overshoot ≤ 3.63 V; typical dies stay at 3.3 V; fast dies may be trimmed

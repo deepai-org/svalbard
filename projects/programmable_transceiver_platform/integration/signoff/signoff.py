@@ -110,6 +110,18 @@ def c_macro_supply():
     if not m: raise Fail('macro_supply: place.log has no "macro supply" verdict (rerun place)')
     return dict(gates={'macro supply OK': m.group(1) == 'OK'}, info={'verdict': m.group(0)}, src='collected place.log')
 
+# LVS-by-name short classification. Benign: the macro's own unlabelled supply stripe of the same net (digital.?VDD on VDD;
+# PDS-25, not a conn pin), and by name on VSS only the pad_txpad p+ substrate-tap nets drawn without the VSS text (global
+# substrate, no DNWELL; risk PAD-15, device-level LVS 2026-11-28). Anything else, or 12+ joins, is a real short.
+LVS_NAME_BENIGN = {('VSS', 'pad_wire_tx.?DNV0.SUB|DNV1.SUB'), ('VSS', 'pad_wire_tx.?DPV0.SUB|DPV1.SUB')}
+def lvs_real(f):
+    bad = [x for x in f['shorted_to'] if x.split('.', 1)[-1].lstrip('?') != f['net'] and (f['net'], x) not in LVS_NAME_BENIGN]
+    return bool(bad) or len(f['shorted_to']) >= 12
+# negative controls: the benign pins pass on VSS only; on VDD they stay a real short
+assert not lvs_real(dict(net='VSS', shorted_to=['digital.?VSS', 'pad_wire_tx.?DNV0.SUB|DNV1.SUB']))
+assert lvs_real(dict(net='VDD', shorted_to=['pad_wire_tx.?DNV0.SUB|DNV1.SUB']))
+assert lvs_real(dict(net='VSS', shorted_to=['por.?unlabelled']))
+
 def c_lvs_name():
     """LVS by name (top_lvs.py, the lvs stage of run.sh): zero real shorts; other non-match kinds baseline-counted"""
     p = RUN + '/lvs/chip/lvs.json'
@@ -119,9 +131,7 @@ def c_lvs_name():
     real = []
     for f in d.get('findings', []):
         if 'short' not in f['status']: continue
-        # benign: the macro's own unlabelled supply stripe of the same net (digital.?VDD on VDD; PDS-25, not a conn pin)
-        bad = [x for x in f['shorted_to'] if x.split('.', 1)[-1].lstrip('?') != f['net']]
-        if bad or len(f['shorted_to']) >= 12: real.append(f['net'])
+        if lvs_real(f): real.append(f['net'])
     kinds = {k: v for k, v in bn.items() if not k.startswith(('match', 'single-pin'))}
     kinds = {k: v for k, v in kinds.items() if 'short' not in k}      # shorts: gated on the real ones above
     kinds['stray layout nets'] = len(d.get('layout_nets_on_no_reference_net', []))

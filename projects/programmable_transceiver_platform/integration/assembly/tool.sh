@@ -12,6 +12,6 @@ MNT="-v $ROOT:/repo:ro"; [ -n "$ASM_DATA" ] && MNT="-v $ASM_DATA:/repo:ro -v $RO
 for m_ in $ASM_MOUNTS; do MNT="$MNT -v ${m_%%:*}:/repo/${m_#*:}:ro"; done
 IMG=${ASM_IMAGE:-svalbard/librelane-gf180-guarded:2026.11}
 exec docker run --rm -e HALO="${HALO:-0.2}" --name "asm-$CHIP-$$" --label svalbard.assembly=1 --network none --cpus "$CPUS" --memory "${ASM_MEM:-24g}" --user "$(id -u):$(id -g)" \
-  -e HOME=/tmp -e OMP_NUM_THREADS=1 -e KH_CONN="${KH_CONN:-0}" -e GRID_SWAP="${GRID_SWAP:-1}" -e PLAN_FP="${PLAN_FP:-0}" ${MACRO_DIR:+-e MACRO_DIR=$MACRO_DIR} ${SLOT_HALO:+-e SLOT_HALO=$SLOT_HALO} ${PLATES:+-e PLATES=$PLATES} ${HOOK_DUAL:+-e HOOK_DUAL=$HOOK_DUAL} -e GR_ADJ="${GR_ADJ:-0.15}" -e CHIP="$CHIP" -e THREADS="$CPUS" \
+  -e HOME=/tmp -e OMP_NUM_THREADS=1 -e KH_CONN="${KH_CONN:-0}" -e GRID_SWAP="${GRID_SWAP:-1}" -e PLAN_FP="${PLAN_FP:-0}" ${MACRO_DIR:+-e MACRO_DIR=$MACRO_DIR} ${SLOT_HALO:+-e SLOT_HALO=$SLOT_HALO} ${PLATES:+-e PLATES=$PLATES} ${HOOK_DUAL:+-e HOOK_DUAL=$HOOK_DUAL} ${SLOT_CLEAN:+-e SLOT_CLEAN=$SLOT_CLEAN} -e GR_ADJ="${GR_ADJ:-0.15}" -e CHIP="$CHIP" -e THREADS="$CPUS" \
   $MNT -v "$RUN":/run -v "$A":/asm:ro --entrypoint /bin/bash "$IMG" -c \
   'export PATH=/foss/tools/bin:/foss/tools/klayout:$PATH; cd /run; exec "$@"' tool "$@"

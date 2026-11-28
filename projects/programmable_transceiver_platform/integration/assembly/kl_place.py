@@ -208,7 +208,7 @@ for bd in ([] if getattr(C, 'ISLAND_BARS_OFF', False) else C.ISLAND_BARS.get(CHI
             else: m4 += db.Region(b_)
         reg = reg.merged()
     # same-net Metal5 of the listed cells (the polygons over their pin, e.g. the isw VISL plate) is joined, not cut
-    same = db.Region(); other = db.Region(); cells_ = db.Region()
+    same = db.Region(); other = db.Region(); cells_ = db.Region(); tie_ = db.Region()
     for i_, p_ in bd['vias']:
         b_ = man['blocks'][i_]; c_ = ly.cell(b_['master']); t_ = db.Trans.from_s(b_['trans'])
         m5 = db.Region(c_.begin_shapes_rec(LI['Metal5'])).merged().transformed(t_)
@@ -225,9 +225,17 @@ for bd in ([] if getattr(C, 'ISLAND_BARS_OFF', False) else C.ISLAND_BARS.get(CHI
         if os.path.isfile(rp_):
             ties_ = json.load(open(rp_)).get('ties', {}).get('VDD', {}); bx_, by_ = man['blocks'][bd['tie_merge'][0]]['bbox'][:2]
             for tn_ in bd['tie_merge'][1]:
-                if tn_ in ties_: t_ = ties_[tn_]; same += db.Region(db.Box(um(bx_+t_[0]), um(by_+t_[2]), um(bx_+t_[1]), um(by_+t_[3])))
+                if tn_ in ties_: t_ = ties_[tn_]; tb_ = db.Region(db.Box(um(bx_+t_[0]), um(by_+t_[2]), um(bx_+t_[1]), um(by_+t_[3]))); same += tb_; tie_ += tb_
     cut = ((blkmetal['Metal5'] - cells_.sized(um(2.5))) + other.sized(um(2.5))) - same.sized(um(2.5)) + (other.sized(um(2.5)))
     reg = (reg - cut - padreg.sized(um(3)) - (ring['VDD'] + ring['VSS']).sized(um(2.5))).merged() + (same & reg.sized(um(50)))   # never on the core ring
+    if bd.get('tie_merge') and not tie_.is_empty():
+        # bridge (fp-wired 2026-11-27): the cut above leaves the bar 2.5 um off the block's Metal5, so the merged tie strip
+        # (wiredtx east_island) did not touch the bar: LVS by name had RAIL_wired_tx in 2 pieces (wiredtx VDD alone). Grow the
+        # tie and the bar towards each other in x only (tie y range kept: nothing above / below the block) and add the overlap
+        # only the block ties (not the listed cells' VISL plates: growing those reached the isw VDD plate, fpw-9 RAIL_wired_tx
+        # joined VDD), and never within 2.5 um of other-net Metal5
+        br_ = (tie_.sized(um(3.0), 0) & reg.sized(um(3.0), 0)) - other.sized(um(2.5)) - (blkmetal['Metal5'] - tie_.sized(um(3.0), 0)).sized(um(2.5))
+        reg = (reg + br_.snapped(10, 10)).merged()      # manufacturing grid (fpw-10: DRT-0416 off-grid BAR0 shape)
     for i_, p_ in bd['vias']:       # the bar keeps 3 um off the listed cells' other pins (PG / EN joined RAIL_wired_cap, 2026-11-24)
         for pn_ in MJ.get(man['blocks'][i_]['master'], {}).get('pins', {}):
             if pn_ != p_ and pn_ not in ('VDD', 'VSS'):

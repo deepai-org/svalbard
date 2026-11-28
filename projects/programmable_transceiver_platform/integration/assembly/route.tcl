@@ -37,7 +37,12 @@ proc assign_classes {} {
       set net [get_nets -quiet $cur]
       if {$net == ""} { continue }
       if {$use_ndr && $cls == "supply"} { assign_ndr -ndr WIDE -net $cur; incr nwide }
-      if {$use_ndr && $cls == "hook"} { assign_ndr -ndr HOOK -net $cur; incr nwide }
+      if {$use_ndr && $cls == "hook"} {
+        assign_ndr -ndr HOOK -net $cur; incr nwide
+        # no taper to the 0.28 um default width at pin access: the hook keeps HOOK_W up to the pin (2213 tapered segments,
+        # hooks at 0.28 um on fpw-14, 2026-11-28); HOOK_TAPER=1 restores the router default
+        if {![info exists ::env(HOOK_TAPER)] || $::env(HOOK_TAPER) != "1"} { [[ord::get_db_block] findNet $cur] setAutoTaper 0 }
+      }
       if {$use_ndr && $cls == "lo"} { assign_ndr -ndr LOSH -net $cur; incr nspc }
       if {$use_ndr && [info exists ::env(SPC2)] && ($cls == "clock" || $cls == "hs" || $cls == "rf")} { assign_ndr -ndr SPC2 -net $cur; incr nspc }   ;# off by default: double spacing could not enter the pin windows (TXPH, WIRE_TX)
     }

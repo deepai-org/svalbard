@@ -23,14 +23,14 @@ precheck/run_precheck.sh <abs filled gds> pt_chip_top <new workdir> 4 && python3
 | Path | What |
 |---|---|
 | `env.sh`, `kl.sh` | tool image and PDK deck locations; KLayout 0.30.9 batch wrapper (mounts the run directory as `/run`) |
-| `fill/` | `run_fill.sh` (shuttle PDK `fill_all.rb`, unmodified), `keepout.py` + `keepouts.json` (marker boxes by master), `fill_in_blocks.py` |
+| `fill/` | `run_fill.sh` (shuttle PDK `fill_all.rb`, unmodified, plus a COMP seam pass in `fill_wrap.rb`), `keepout.py` + `keepouts.json` (marker boxes by master), `fill_in_blocks.py` |
 | `drc/` | `run_drc.sh` (one deck selection), `run_all.sh` (density, antenna, main), `locate.py`, `count_lyrdb.py` |
 | `lvs/` | `gen_netlist.py` (reference from the chip conn, black boxes), `top_lvs.py` (metal extraction, compare by topology and by name), `fixture.py` + `run_controls.sh` (routed-fixture proof with three broken variants) |
 | `precheck/` | `run_precheck.sh` (live shuttle precheck), `summarise.py`, block-level matrix scripts (`block_drc.py`, `block_lvs.py`, `deck_negctl.py`, `gds_cell_xor.py`, `lib_compare.py`, `model_compare.py`, `magic_drc.tcl`) |
 
 ## Fill and keep-outs
 
-Fill = the shuttle PDK's `fill_all.rb` (792ef67) on the whole die. Keep-outs are top-level marker boxes over instances,
+Fill = the shuttle PDK's `fill_all.rb` (792ef67) on the whole die, then a second COMP pass of the PDK `fill_comp.rb` on 330 um tiles (`fill_wrap.rb`, `-rd comp_seam=0` turns it off): the PDK pass drops cells that straddle its die-centred 400 um tile borders, which left a DCF.1a window on pt_rf plan-rf8b. Keep-outs are top-level marker boxes over instances,
 chosen by `keepouts.json`: PMNDMY (no dummy metal) on sensitive blocks, PMNDMY + IND_MK on inductors (no dummy COMP /
 Poly2, exempt from DCF.1a). Whole-block NDMY is not usable (main-deck DE.3: one NDMY shape <= 15 000 um2; DE.4: 20 um
 between them). Block owners should draw these markers in their own GDS (SO-2); the table is a stop-gap.

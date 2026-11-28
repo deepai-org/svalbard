@@ -476,6 +476,8 @@ def heavy(chip, PADS=None):
 
 
 PLATE_DROP_MV = 10.0
+K32 = 10.0                  # MANDATE 2 (no lifetime requirement): EM at 32 C, short life = 85 C DRM x 10 (capped; hook_em.py header)
+J_LIM = 2.09*K32; V_LIM = 0.56*K32   # Metal4 mA/um, Via mA/cut
 PLATE_MIN_MA = 0.5       # every supply pin above 0.5 mA at 85 C on a plate or a drawn landing (coordinator ruling 2026-11-28)
 
 
@@ -569,7 +571,7 @@ def _plates(g, h):
         sl_all = (slots['Metal4'] + slots['Metal5']).sized(um(0.25))
         vr = vr - sl_all
         # neck check (current crowding): eroded by half the width the current needs, the plate must still join the grid to the pin
-        wr = mA/2.09
+        wr = mA/J_LIM
         # eroded by half the width the current needs, the plate (both layers, joined through its own Via4 region and onto the
         # grid of either layer) must still join the pad-fed grid to the pin end: otherwise a cross-section is narrower than wr
         er = {ln: (pl[ln].sized(-um(wr/2)) if wr > 0.3 else pl[ln]).merged() for ln in LAYERS}
@@ -597,7 +599,7 @@ def _plates(g, h):
         # Via4 only matters where the current changes layer (a Metal4-to-Metal4 plate carries none: isw_wired_tx 2026-11-28)
         drop = mA*(RS['Metal5']*L5/W + RS['Metal4']*L4/W) + (mA*4.5/max(1, nv/max(1, nch)) if nch else 0.0) + (mA*4.5/nv3 if nv3 else 0.0)
         W_eff = W - 2.0 if not (slots['Metal4'] + slots['Metal5']).is_empty() else W
-        em_ok = (nch == 0 or nv >= 2*mA*nch) and (nv3 == 0 or nv3 >= 2*mA) and mA/W_eff <= 2.09 and (neck_ok or neck_pin)
+        em_ok = (nch == 0 or nv >= mA/V_LIM*nch) and (nv3 == 0 or nv3 >= mA/V_LIM) and mA/W_eff <= J_LIM and (neck_ok or neck_pin)
         if em_ok: done.add((n, L['pin'], net))      # an EM-short plate keeps its router hook in parallel
         rep[f'{n}.{net}'] = dict(mA=mA, pin=L['pin'], width_um=round(W, 1), len_m5_um=L5, len_m4_um=L4, via4=nv, via3=nv3, mA_per_um=round(mA/W, 2),
                                  mA_per_cut=round(mA/max(1, nv), 3), drop_mV=round(drop, 2), layer_changes=nch, slots=(slots['Metal4'] + slots['Metal5']).count(), width_eff_um=round(W_eff, 1), neck_ok=neck_ok, neck_at_pin=neck_pin, em_ok=em_ok, hook_kept=not em_ok, ok=drop <= PLATE_DROP_MV and em_ok)

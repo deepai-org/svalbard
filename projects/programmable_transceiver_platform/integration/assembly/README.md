@@ -60,6 +60,11 @@ named `asm-<chip>-<pid>`: stop a run only by that name (`docker kill asm-...`) o
   (generator shapes cut out, stock plates and 0.26 um via arrays put back, best of 8 orientations), and no pad Via3 / Via4
   in the provider-ring rail band (pad-local y 69.5-348.9 um, the same in every pad site; PAD-16). Acceptance: precheck
   `cup_audit.py` (precheck-1128) clean on all 14 openings, KLayout-extracted netlist of each pad identical before / after.
+- Results 2026-11-28 (context markers; full-chip signoff main deck on fpw-14 took 8771 s): pt_wired fpw-14 with the pads
+  as published 5096 (PAD-16 V3.1 1280 / V3.2a 296 / V4.1 1280 / V4.2a 296; RAIL_wired_tx bar on wiredtx V4.1 1208 /
+  V4.2a 725; MT.2a 10; MSLOT5.1 1), with `pad_cup` 1944 (PAD-16 gone; bar Via4 and MT.2a remain), unfed 0; run 2990 s
+  (DRC 2504 s). pt_rf plan-rf13: 0, unfed 0, PASS, 1604 s. Selftest PASS (755 s, single windows). The deck time is set by
+  the ring / grid via arrays inside the pad and edge windows; one window (`only=`) takes 1-5 min.
 
 ## Results and resume point (2026-11-26)
 

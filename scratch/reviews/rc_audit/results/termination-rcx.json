@@ -1,0 +1,109 @@
+{
+ "gds": "/home/ubuntu/svalbard/projects/programmable_transceiver_platform/analog/wired_rx/generated/termination.gds",
+ "gds_sha256": "7d85b71a934da78e2f3d424497785bebb22cf5adf25512ecd95cdf6e92070bb4",
+ "top": "pt_termination",
+ "tol": "0.001",
+ "image": "sha256:bd7a702bef0b85f5ebf67efca449f270fbeb185380ead204559fcd2457959305 (Magic 8.3.678)",
+ "supplies_resisted": true,
+ "fixcap": {
+  "ground_c_before_pf": 2.597,
+  "ground_c_after_pf": 1.034,
+  "ground_c_ref_pf": 1.034,
+  "coupling_pairs_added": 0,
+  "coupling_added_pf": 0.0,
+  "coupling_pairs_without_node": 0,
+  "nets_given_ground_cap": 0
+ },
+ "stats": {
+  "signal_nets": 64,
+  "nets_with_r": 50,
+  "resistors": 1482,
+  "r_total_ohm": 480551.0,
+  "coupling_pf": 0.789
+ },
+ "coverage_routed": {
+  "nets": 58,
+  "with_r": 45,
+  "without_r": [
+   [
+    3.3,
+    "TERM_VCM_vbl1_r2"
+   ],
+   [
+    3.1,
+    "TERM_VCM_vbl1_r1"
+   ],
+   [
+    3.1,
+    "TERM_VCM_vbl1_r0"
+   ],
+   [
+    3.0,
+    "HS_VBIAS_hbbot_r0"
+   ],
+   [
+    2.5,
+    "hbtop_HS_VBIAS_r0"
+   ],
+   [
+    2.4,
+    "vbl1_VSS_r2"
+   ],
+   [
+    2.4,
+    "vbl1"
+   ],
+   [
+    2.4,
+    "hbtop_HS_VBIAS_r1"
+   ],
+   [
+    2.3,
+    "vbl1_VSS_r1"
+   ],
+   [
+    2.3,
+    "vbl1_VSS_r0"
+   ],
+   [
+    2.3,
+    "hbtop_HS_VBIAS_r2"
+   ],
+   [
+    2.2,
+    "hvtop_HS_TERM_VCM_r0"
+   ],
+   [
+    2.0,
+    "hvtop_HS_TERM_VCM_r1"
+   ]
+  ]
+ },
+ "ground_c_check": {
+  "nets": 63,
+  "max_rel_err": 0.0,
+  "worst": [
+   [
+    "htt2_b_s0",
+    0.0
+   ],
+   [
+    "htt2_b",
+    0.0
+   ],
+   [
+    "m1b",
+    0.0
+   ],
+   [
+    "dv_b_s0",
+    0.0
+   ],
+   [
+    "hte_b_s0",
+    0.0
+   ]
+  ]
+ },
+ "ports_match_ref": true
+}

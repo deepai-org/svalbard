@@ -1,0 +1,197 @@
+{
+ "block": "detect",
+ "corner": [
+  "typical",
+  27,
+  3.3
+ ],
+ "rc_netlist": "/home/ubuntu/wt-rc-audit/scratch/reviews/rc_audit/x/detect/pt_detect.rc.spice",
+ "results": {
+  "conly": {
+   "usb_hs_squelch_cm-50": {
+    "iavg": -0.00225385,
+    "vref_v": 0.497176,
+    "hits_above_threshold_window": 1,
+    "fraction_hit_above": 1.0,
+    "fraction_hit_below": 0.0,
+    "pass": true,
+    "gating": true
+   },
+   "usb_hs_disconnect_cm-50": {
+    "iavg": -0.00224393,
+    "vref_v": 0.496553,
+    "hits_above_threshold_window": 1,
+    "fraction_hit_above": 1.0,
+    "fraction_hit_below": 0.0,
+    "pass": true,
+    "gating": true
+   },
+   "usb_hs_squelch": {
+    "iavg": -0.00222235,
+    "vref_v": 0.497295,
+    "hits_above_threshold_window": 1,
+    "fraction_hit_above": 1.0,
+    "fraction_hit_below": 0.0,
+    "pass": true,
+    "gating": true
+   },
+   "usb_hs_disconnect": {
+    "iavg": -0.00221554,
+    "vref_v": 0.49679,
+    "hits_above_threshold_window": 1,
+    "fraction_hit_above": 1.0,
+    "fraction_hit_below": 0.0,
+    "pass": true,
+    "gating": true
+   },
+   "usb_hs_disconnect_cm360": {
+    "iavg": -0.0021972,
+    "vref_v": 0.496951,
+    "hits_above_threshold_window": 1,
+    "fraction_hit_above": 1.0,
+    "fraction_hit_below": 0.0,
+    "pass": true,
+    "gating": true
+   },
+   "usb_hs_squelch_cm500": {
+    "iavg": -0.00218197,
+    "vref_v": 0.497454,
+    "hits_above_threshold_window": 1,
+    "fraction_hit_above": 1.0,
+    "fraction_hit_below": 0.0,
+    "pass": true,
+    "gating": true
+   },
+   "usb_hs_disconnect_cm500": {
+    "iavg": -0.00218058,
+    "vref_v": 0.497099,
+    "hits_above_threshold_window": 1,
+    "fraction_hit_above": 0.9968231556653724,
+    "fraction_hit_below": 0.0,
+    "pass": true,
+    "gating": true
+   },
+   "usb_fs_line_state": {
+    "sep_j": 3.29982,
+    "sen_j": 1.34577e-05,
+    "sep_k": -1.2134e-05,
+    "sen_k": 3.29989,
+    "sep_se0": 6.51552e-05,
+    "sen_se0": 8.44897e-05,
+    "pass": true
+   },
+   "rx_detect": {
+    "v_txp": 1.17661,
+    "v_txn_100n": 0.155471,
+    "t_sep": 6.61353e-08,
+    "iavg": -0.00230819,
+    "inject_current_uA_est": 117.661,
+    "present_leg_slower": true,
+    "pass": true,
+    "ngspice_errors": [
+     "Error: measure  t_sen  when(WHEN) : out of interval"
+    ]
+   },
+   "off": {
+    "iavg": -1.80811e-08,
+    "itxp": 1.94364e-07,
+    "dpos_max": 0.00306588,
+    "sep_max": 0.00110914,
+    "pass": true
+   }
+  },
+  "rc": {
+   "usb_hs_squelch_cm-50": {
+    "iavg": -0.00205525,
+    "vref_v": 0.540127,
+    "hits_above_threshold_window": 1,
+    "fraction_hit_above": 1.0,
+    "fraction_hit_below": 0.0,
+    "pass": true,
+    "gating": true
+   },
+   "usb_hs_disconnect_cm-50": {
+    "iavg": -0.002049,
+    "vref_v": 0.539755,
+    "hits_above_threshold_window": 1,
+    "fraction_hit_above": 1.0,
+    "fraction_hit_below": 0.0,
+    "pass": true,
+    "gating": true
+   },
+   "usb_hs_squelch": {
+    "iavg": -0.00202607,
+    "vref_v": 0.539927,
+    "hits_above_threshold_window": 1,
+    "fraction_hit_above": 1.0,
+    "fraction_hit_below": 0.0,
+    "pass": true,
+    "gating": true
+   },
+   "usb_hs_disconnect": {
+    "iavg": -0.00202336,
+    "vref_v": 0.539745,
+    "hits_above_threshold_window": 1,
+    "fraction_hit_above": 0.9975265017667845,
+    "fraction_hit_below": 0.0,
+    "pass": true,
+    "gating": true
+   },
+   "usb_hs_disconnect_cm360": {
+    "iavg": -0.00200899,
+    "vref_v": 0.539936,
+    "hits_above_threshold_window": 1,
+    "fraction_hit_above": 0.9879858657243816,
+    "fraction_hit_below": 0.0,
+    "pass": true,
+    "gating": true
+   },
+   "usb_hs_squelch_cm500": {
+    "iavg": -0.00198968,
+    "vref_v": 0.539722,
+    "hits_above_threshold_window": 1,
+    "fraction_hit_above": 1.0,
+    "fraction_hit_below": 0.0,
+    "pass": true,
+    "gating": true
+   },
+   "usb_hs_disconnect_cm500": {
+    "iavg": -0.00199423,
+    "vref_v": 0.539047,
+    "hits_above_threshold_window": 1,
+    "fraction_hit_above": 0.720437698552771,
+    "fraction_hit_below": 0.0,
+    "pass": true,
+    "gating": true
+   },
+   "usb_fs_line_state": {
+    "sep_j": 3.2864,
+    "sen_j": 0.00524833,
+    "sep_k": 0.0087391,
+    "sen_k": 3.28793,
+    "sep_se0": 0.0245299,
+    "sen_se0": 0.0238111,
+    "pass": true
+   },
+   "rx_detect": {
+    "v_txp": 1.15427,
+    "v_txn_100n": 0.151853,
+    "t_sep": 7.01749e-08,
+    "iavg": -0.002135,
+    "inject_current_uA_est": 115.42699999999999,
+    "present_leg_slower": true,
+    "pass": true,
+    "ngspice_errors": [
+     "Error: measure  t_sen  when(WHEN) : out of interval"
+    ]
+   },
+   "off": {
+    "iavg": 2.15505e-07,
+    "itxp": 2.51455e-07,
+    "dpos_max": 0.0147847,
+    "sep_max": 0.017013,
+    "pass": true
+   }
+  }
+ }
+}

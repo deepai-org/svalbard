@@ -51,7 +51,7 @@ def ov(a, b, g=0.0):
 def lint(D, cover_min):
     man = D['man']; res = {}
     dio = [d for d in man.get('antenna_diodes', []) if d.get('placed')]
-    box = {i: (d['at'][0], d['at'][1], d['at'][0] + DW, d['at'][1] + DH) for i, d in enumerate(dio)}
+    box = {i: (d['at'][0], d['at'][1], d['at'][0] + d.get('size', (DW, DH))[0], d['at'][1] + d.get('size', (DW, DH))[1]) for i, d in enumerate(dio)}
     def hits(rects, g=0.0):
         return [f"{dio[i]['net']}@{dio[i]['at']}" for i, b in box.items() if any(ov(b, r, g) for r in rects)]
     res['diode_in_pad'] = hits(D['pads'])

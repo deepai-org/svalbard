@@ -383,12 +383,12 @@ pt_wired 69 of 69 plus the 14 PAD-13 tiles. The channel peaks above already incl
 
 ### 7.5 Antenna diodes
 
-Top-level antenna diodes (`common.ANT_DIODE`, `kl_place`) are a 2 x 2 um n+/p-substrate diode next to every block
-receiver of a net. Two rules add them:
+Top-level antenna diodes (`common.ANT_DIODE`, `kl_place`) are a 6 x 6 um n+/p-substrate diode (`pt_antdiode`, 36 um2)
+next to every block receiver of a net. Two rules add them:
 - **Explicit list:** every net that has violated antenna in some run (coordinator list, patterns such as
   `ADCI_CODE[*]`, `atb0_sw[*]`, `island_en[*]`). It applies even to nets on the exclusion list below.
 - **Length rule:** every non-supply net whose pin bounding box (half perimeter) is longer than `ANT_DIODE_LEN`
-  (1500 um). On pt_rf this gives 378 nets and 464 diodes.
+  (600 um).
 
 The length rule never applies to analog-sensitive nets (`common.ANT_LEN_EXCLUDE`; coordinator 2026-11-27). A diode is
 a few fF and leaks at hot corners, and that matters on these nets:
@@ -400,6 +400,23 @@ a few fF and leaks at hot corners, and that matters on these nets:
 - **VCO / loop filter:** `*VTUNE*`, `LO_CP`, `VREG_*`, `LO_VTDET`.
 - **CDR phases and forwarded clocks:** `CDRPH[*]`, `CKP[*]`, `CKN[*]`, `TXPH[*]`, `PREF`, `WIRE_CK`, `WSMP_CK`,
   `*FWD*`, `fwd_*`, `rf_tx_clk_out`, `rf_rx_clk`.
+
+**Minimum-size diodes on three excluded nets** (`common.ANT_SMALL`, coordinator 2026-11-28). These nets get
+`pt_antdiode_s`: 0.9 x 0.9 um n+ (0.81 um2), one contact, at every gate end (each receiver including the macro pin, never
+the driver). The estimated added capacitance is about 1.2 fF per diode (n+/psub junction, roughly 1 fF/um2 area plus
+0.1 fF/um sidewall). That is small compared with the routed wire, which is mm-long and hundreds of fF.
+
+| Net | Driver (no diode) | Diodes at | Added cap |
+|---|---|---|---|
+| `LO_FB` | lo_mmd.FB | lo_pfdcp.FB, digital.fc_src[5] | ~2.4 fF |
+| `WIRE_CK` | clockmux.WIRE | prescale.CK_IN, prescale_conv.CK_IN, obs_pre4_wire.CK | ~3.6 fF |
+| `LO_VTDET` | lo_vtdet.DET | digital.s_lo_vtdet | ~1.2 fF |
+
+`LO_VTDET` is driven, so a diode is allowed. In `pt_lo_vtdet` (scratch/lo-ap4/vtdet/lo_vtdet.spice), DET is the output
+of the second `pt_t_inv1` after the 5T comparator: a CMOS logic output that is low impedance at both levels. With EN = 0
+it is held at 0. The high-impedance, nA-biased detector nodes (VREF divider, NB bias, comparator D1/D2) are internal to
+the block and never reach top-level routing. The detector's sensitive input is VTUNE (`LO_VTUNE`), which stays excluded.
+All other exclusions stay as listed.
 
 ## 8. Deviations and open items (owners)
 

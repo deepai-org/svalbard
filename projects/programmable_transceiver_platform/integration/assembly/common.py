@@ -185,6 +185,9 @@ ANT_DIODE = {'rf': ('c_bbfilter_i_en', 'BIAS_rfdriver', 'ADCI_CODEB[0]', 'ADCI_C
               'c_bgap_*', 'c_biasgen_*', 'c_refchain_*', 'c_refbuf_*', 'c_pll_cdr_*', 'RAIL_*', 'AUX_PRESENT', 'PLL_CDR_LOCK', 's_pg_*')}
 ANT_DIODE['wired'] = ANT_DIODE['rf']        # same names where they exist on pt_wired
 # plus every signal net whose pin bounding box (half perimeter) exceeds ANT_DIODE_LEN um: diodes do not depend on luck
+# minimum-size diode (pt_antdiode_s, 0.9 x 0.9 um n+, ~1.2 fF) on excluded clock / status nets, gate ends only: net -> driver
+# instance (coordinator 2026-11-28: LO_FB, WIRE_CK allowed; LO_VTDET allowed because DET is an inverter output, driven)
+ANT_SMALL = {'LO_FB': 'lo_mmd', 'WIRE_CK': 'clockmux', 'LO_VTDET': 'lo_vtdet'}
 ANT_DIODE_LEN = float(os.environ.get('ANT_DIODE_LEN', '600'))
 # never by the length rule (coordinator 2026-11-27: a diode is a few fF and leaks at hot corners): RF / LO / baseband signal
 # pairs, bias and reference nodes, ATB measurement nets, VCO / loop-filter nodes, CDR phases and forwarded clocks.

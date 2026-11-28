@@ -925,6 +925,19 @@ if AD_NETS:
         '  SIZE 8.200 BY 6.500 ;', '  SYMMETRY X Y ;', '  PIN A', '    DIRECTION INOUT ;', '    USE SIGNAL ;', '    ANTENNADIFFAREA 36.0 ;', '    PORT',
         '      LAYER Metal2 ; RECT 2.850 2.850 3.650 3.650 ;', '    END', '  END A', '  OBS', '    LAYER Metal1 ;', '      RECT 0.000 0.000 8.200 6.500 ;',
         '  END', 'END pt_antdiode', '']))
+    ds = ly.create_cell('pt_antdiode_s')      # minimum-size n+ diode: 0.9 x 0.9 COMP, one contact, p+ tap
+    ds.shapes(L_(22)).insert(db.Box(um(0.25), um(0.25), um(1.15), um(1.15)))
+    ds.shapes(L_(32)).insert(db.Box(0, 0, um(1.4), um(1.4)))
+    ds.shapes(L_(22)).insert(db.Box(um(2.2), um(0.25), um(2.8), um(1.15)))
+    ds.shapes(L_(31)).insert(db.Box(um(1.95), 0, um(3.05), um(1.4)))
+    ds.shapes(L_(33)).insert(db.Box(um(0.59), um(0.59), um(0.81), um(0.81)))
+    ds.shapes(LI['Metal1']).insert(db.Box(um(0.3), um(0.3), um(1.1), um(1.1)))
+    ds.shapes(L_(35)).insert(db.Box(um(0.57), um(0.57), um(0.83), um(0.83)))
+    ds.shapes(LI['Metal2']).insert(db.Box(um(0.3), um(0.3), um(1.1), um(1.1)))
+    open('/run/lef/pt_antdiode_s.lef', 'w').write('\n'.join(['MACRO pt_antdiode_s', '  CLASS BLOCK ;', '  ORIGIN 0 0 ;', '  FOREIGN pt_antdiode_s 0 0 ;',
+        '  SIZE 3.100 BY 1.400 ;', '  SYMMETRY X Y ;', '  PIN A', '    DIRECTION INOUT ;', '    USE SIGNAL ;', '    ANTENNADIFFAREA 0.81 ;', '    PORT',
+        '      LAYER Metal2 ; RECT 0.300 0.300 1.100 1.100 ;', '    END', '  END A', '  OBS', '    LAYER Metal1 ;', '      RECT 0.000 0.000 3.100 1.400 ;',
+        '  END', 'END pt_antdiode_s', '']))
     occ = db.Region([db.Box(*[um(v) for v in b_['bbox']]) for b_ in man['blocks'].values()]).merged().sized(um(3))
     occ += db.Region(db.Box(0, 0, um(C.DIE[2]), um(C.DIE[3]))) - db.Region(db.Box(*[um(v) for v in C.CORE]))
     # custom pad families reach into the core (pt_rf west pads to x 975): no diode in their footprint (plan-rf7: 25 diodes
@@ -937,12 +950,15 @@ if AD_NETS:
     # climbed from the diode's Metal2 pin through the strap (fpw-2: RAIL_wired_tx diode antd_113 under a VDD strap, VDD short)
     if os.environ.get('ANT_AVOID_GRID', '1') == '1':
         for k_ in [k_ for k_ in metal if k_[1] in ('Metal4', 'Metal5')]: occ += metal[k_].sized(um(0.5))      # 0.5 um: 22 um straps leave 13 um gaps (pt_wired MC/ME/SE)
-    for net_ in sorted(AD_NETS & set(NETS)):
+    for net_ in sorted((AD_NETS | set(C.ANT_SMALL)) & set(NETS)):
+        sm_ = net_ in C.ANT_SMALL
         ends_ = [e for e in NETS[net_]['ends'] if e[0] not in ('digital', 'pdn') and e[0] in man['blocks']]
         # fallback: where no receiver has room, the diode goes by the macro pin (plan-rf6: adc_q / bbfilter_q corners full)
         ends_ += [e for e in NETS[net_]['ends'] if e[0] == 'digital']
+        if sm_: ends_ = [e for e in ends_ if e[0] != C.ANT_SMALL[net_]]      # gate ends only, every receiver (macro pin included)
+        hw_, hh_ = (1.55, 0.7) if sm_ else (4.1, 3.25)
         for i_, p_ in ends_:
-            if i_ == 'digital' and any(x_['placed'] for x_ in man['antenna_diodes'] if x_['net'] == net_): continue
+            if not sm_ and i_ == 'digital' and any(x_['placed'] for x_ in man['antenna_diodes'] if x_['net'] == net_): continue
             # island rails: one diode per rail protects every gate on it; a diode at each load added rail branches into the
             # switch / iso cells (plan-rf5: 8 rail DRT at isw_rf_tx VDD and iso_conv_clk)
             if net_.startswith('RAIL_') and any(x_['placed'] for x_ in man['antenna_diodes'] if x_['net'] == net_): break
@@ -953,7 +969,7 @@ if AD_NETS:
             # vertices are legal diode centres (8-direction probing found too few spots between the grid straps)
             for rw_ in (40, 150, 400):
                 win_ = db.Region(db.Box(c_.x-um(rw_), c_.y-um(rw_), c_.x+um(rw_), c_.y+um(rw_)))
-                cand_ = (win_ - (occ & win_.sized(um(10)))).merged().sized(-um(4.1+1.0), -um(3.25+1.0))
+                cand_ = (win_ - (occ & win_.sized(um(10)))).merged().sized(-um(hw_+1.0), -um(hh_+1.0))
                 best_ = None
                 for poly_ in cand_.each():
                     for pt_ in poly_.each_point_hull():
@@ -961,14 +977,14 @@ if AD_NETS:
                         if best_ is None or d_ < best_[0]: best_ = (d_, pt_)
                 if best_:
                     q_ = best_[1]; q_ = db.Point(q_.x//10*10, q_.y//10*10)
-                    b_ = db.Box(q_.x-um(4.1), q_.y-um(3.25), q_.x+um(4.1), q_.y+um(3.25))
+                    b_ = db.Box(q_.x-um(hw_), q_.y-um(hh_), q_.x+um(hw_), q_.y+um(hh_))
                     if (occ & db.Region(b_.enlarged(um(1), um(1)))).is_empty(): spot = b_; break
             if spot is None: man['antenna_diodes'].append(dict(net=net_, pin=f'{i_}.{p_}', placed=False)); continue
             nm_ = f'antd_{len(man["antenna_diodes"])}'
-            top.insert(db.CellInstArray(dc.cell_index(), db.Trans(db.Vector(spot.left, spot.bottom))))
-            comps.append((nm_, 'pt_antdiode', fu(spot.left), fu(spot.bottom), 'N'))
+            top.insert(db.CellInstArray((ds if sm_ else dc).cell_index(), db.Trans(db.Vector(spot.left, spot.bottom))))
+            comps.append((nm_, 'pt_antdiode_s' if sm_ else 'pt_antdiode', fu(spot.left), fu(spot.bottom), 'N'))
             NETS[net_]['ends'].append((nm_, 'A')); occ += db.Region(spot.enlarged(um(1.5), um(1.5)))
-            man['antenna_diodes'].append(dict(net=net_, pin=f'{i_}.{p_}', placed=True, at=[fu(spot.left), fu(spot.bottom)]))
+            man['antenna_diodes'].append(dict(net=net_, pin=f'{i_}.{p_}', placed=True, at=[fu(spot.left), fu(spot.bottom)], size=[fu(spot.width()), fu(spot.height())]))
 
 # ------------------------------------------------------------------------------------------- DEF
 D = ['VERSION 5.8 ;', 'DIVIDERCHAR "/" ;', 'BUSBITCHARS "[]" ;', 'DESIGN pt_chip_top ;', 'UNITS DISTANCE MICRONS 1000 ;',

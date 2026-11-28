@@ -17,7 +17,7 @@
 #     ohm per 2 x 2 um of overlap), each switch a node behind its on-resistance, the design current of each load spread over
 #     its landing. Per load the drop from the reference switch node; per switch its current; peak mA/um per layer (body,
 #     and the landing necks within 20 um of a pin separately). Result: place.json 'island_trunks'.
-import math
+import math, json
 import numpy as np
 import scipy.sparse as sp, scipy.sparse.linalg as spl
 from scipy.sparse import csgraph
@@ -88,6 +88,7 @@ def build(g, mode='trunks'):
         return [(ln, t*db.Box(um(r[0]+o[0]), um(r[1]+o[1]), um(r[2]+o[0]), um(r[3]+o[1]))) for ln, r in info.get('pins', {}).get(p, [])]
     def pin_of(n, net):
         ps = [p for (i, p) in nets.get(net, []) if i == n]
+        if (n, net) in PIN_SEL and PIN_SEL[(n, net)] in ps: return PIN_SEL[(n, net)]
         if net in ('VDD', 'VSS'): ps = [p for p in ps if p.upper().startswith(net)] or []     # supply pins, not tie-offs (EN, SE tied low)
         return ps[0] if ps else None
     blk_boxes = {n: db.Box(*[um(v) for v in b['bbox']]) for n, b in man['blocks'].items()}
@@ -219,7 +220,7 @@ def build(g, mode='trunks'):
             if ln == 'Metal5':       # Metal5 over a Metal4 pin (Via4 landing) where the block has no Metal5 / Via4 there
                 for b in p4.each():
                     bb_ = b.bbox()
-                    if min(bb_.width(), bb_.height()) >= um(1.8) and (v4 & db.Region(bb_)).is_empty() and (m5 & db.Region(bb_)).is_empty():
+                    if min(bb_.width(), bb_.height()) >= um(0.6) and (v4 & db.Region(bb_)).is_empty() and (m5 & db.Region(bb_)).is_empty():      # thin strips get a single row of cuts
                         L['vialand'].insert(bb_)
                 pl = pl + L['vialand']
             L['tgt'][ln] = ((pl.sized(um(2)) & (L['carve'][ln] + same[ln])) - opins).merged()
@@ -228,12 +229,21 @@ def build(g, mode='trunks'):
 
     def via_cells(region, cell, lay=None):
         """Via4 cuts on the global 620 nm lattice (as kl_place.via_fill), 0.5 um inside region"""
-        n = 0
-        for poly in region.merged().sized(-um(0.5)).each():
+        n = 0; L_ = L_V4 if lay is None else lay
+        for poly in region.merged().each():
             for tz in poly.decompose_trapezoids(1):
-                b = tz.bbox(); ox = -(-b.left//620)*620; oy = -(-b.bottom//620)*620
-                for x in range(ox, b.right-260+1, 620):
-                    for y in range(oy, b.top-260+1, 620): cell.shapes(L_V4 if lay is None else lay).insert(db.Box(x, y, x+260, y+260)); n += 1
+                full = tz.bbox(); b = full.enlarged(-um(0.5), -um(0.5))
+                if b.width() >= 260 and b.height() >= 260:
+                    ox = -(-b.left//620)*620; oy = -(-b.bottom//620)*620
+                    for x in range(ox, b.right-260+1, 620):
+                        for y in range(oy, b.top-260+1, 620): cell.shapes(L_).insert(db.Box(x, y, x+260, y+260)); n += 1
+                elif min(full.width(), full.height()) >= 600:      # thin strip (0.6-1.3 um): one centred row, 0.17 um enclosure min
+                    horiz = full.width() >= full.height(); Lh = (full.width() if horiz else full.height()) - 1000
+                    k = max(0, Lh//620 + 1) if Lh >= 260 else 0
+                    s0 = (full.left if horiz else full.bottom) + 500; c0 = ((full.bottom+full.top)//2 if horiz else (full.left+full.right)//2) - 130
+                    for j in range(k):
+                        a = (s0 + j*620)//5*5; c = c0//5*5
+                        cell.shapes(L_).insert(db.Box(a, c, a+260, c+260) if horiz else db.Box(c, a, c+260, a+260)); n += 1
         return n
 
     taken = {ln: db.Region() for ln in LAYERS}
@@ -445,8 +455,28 @@ HEAVY = {
            ('usb_txdrv', 'VSS'): 20.0, ('pll_vreg2', 'VSS'): 20.9, ('vco_replica', 'VSS'): 11.8, ('slicer', 'VSS'): 9.8, ('ctle', 'VSS'): 5.3,
            ('clk_obs', 'VSS'): 5.1, ('rx_aux_clk', 'VSS'): 5.1, ('rx_wtx_ext', 'VSS'): 5.1, ('rx_ref_in', 'VDD'): 4.6, ('rx_ref_in', 'VSS'): 4.6,
            ('detect', 'VSS'): 2.4, ('prescale', 'VSS'): 2.4, ('prescale_hf', 'VSS'): 2.4, ('wordclk_rx', 'VSS'): 2.4}}
+PIN_TABLE = '/repo/projects/programmable_transceiver_platform/integration/chips/{chip}/pin_currents.json'
+PIN_SEL = {}                # (inst, net) -> the supply pin the table names (heaviest of the net on that block)
+
+
+def heavy(chip, PADS=None):
+    """(inst, net) -> mA for every block supply pin above PLATE_MIN_MA: the power owner's per-pin table (chips/<chip>/
+    pin_currents.json: worst DC at 85 C; isw_* VSS at their turn-off peak) when present, else the HEAVY table above.
+    Pad supply pins (provider ring) and the digital macro (its own straps) are not plated."""
+    import os as _os
+    f = PIN_TABLE.format(chip=chip)
+    if not _os.path.exists(f): return dict(HEAVY.get(chip, {}))
+    out = {}
+    for r in json.load(open(f))['rows']:
+        if r['kind'] != 'supply' or r['net'] not in ('VDD', 'VSS') or r['inst'] in ('digital', 'host') or (PADS and r['inst'] in PADS['pads']): continue
+        ma = max(r['avg_ma'], r.get('peak_ma') or 0) if r['master'].startswith('isw') and r['net'] == 'VSS' else r['avg_ma']
+        k = (r['inst'], r['net'])
+        if ma > out.get(k, 0): out[k] = ma; PIN_SEL[k] = r['pin']
+    return out
+
+
 PLATE_DROP_MV = 10.0
-PLATE_MIN_MA = 2.0       # every pin above ~2 mA on a plate (coordinator 2026-11-28; was 4: a 2.4 mA plate once blocked RAIL_lod)
+PLATE_MIN_MA = 0.5       # every supply pin above 0.5 mA at 85 C on a plate or a drawn landing (coordinator ruling 2026-11-28)
 
 
 def _plates(g, h):
@@ -478,7 +508,8 @@ def _plates(g, h):
         W0 = max(3.0, mA/2.0); P = None
         tgt = {ln: raster(L['tgt'][ln]) for ln in LAYERS}
         srcm = {ln: raster(src[ln]) & ~tgt[ln] for ln in LAYERS}
-        for W in (W0, max(3.0, W0/2), 3.0):
+        # last rung: the drawn hook (coordinator ruling 2026-11-28 option 2), as narrow as EM allows (mA / 2 um, >= 1 um)
+        for W in (W0, max(3.0, W0/2), 3.0, max(1.0, mA/2.0)):
             near = {ln: ((L['carve'][ln] + L['tgt'][ln]).sized(um(W/2+8)) & A[ln]) for ln in LAYERS}
             free = {ln: raster((allowed[ln].sized(-um(W/2)) + near[ln] + src[ln]).merged()) for ln in LAYERS}
             P = route(free, srcm, tgt)
@@ -532,7 +563,7 @@ def _plates(g, h):
         if em_ok: done.add((n, L['pin'], net))      # an EM-short plate keeps its router hook in parallel
         rep[f'{n}.{net}'] = dict(mA=mA, pin=L['pin'], width_um=round(W, 1), len_m5_um=L5, len_m4_um=L4, via4=nv, via3=nv3, mA_per_um=round(mA/W, 2),
                                  mA_per_cut=round(mA/max(1, nv), 3), drop_mV=round(drop, 2), layer_changes=nch, em_ok=em_ok, hook_kept=not em_ok, ok=drop <= PLATE_DROP_MV and em_ok)
-    for (n, net), mA in sorted(HEAVY.get(h['CHIP'], {}).items(), key=lambda kv: -kv[1]):
+    for (n, net), mA in sorted(heavy(h['CHIP'], g['PADS']).items(), key=lambda kv: -kv[1]):
         one(n, net, mA)
         r_ = rep.get(f'{n}.{net}', {})
         if 'error' in r_ and not r_['error'].startswith('below'):      # never a hook where the earlier landing rules gave a plate
@@ -568,11 +599,11 @@ def reserve(g):
     net per block is reserved (the one _plates lands on: landing() also takes the first). place.json 'plate_reserve'."""
     db = g['db']; um = g['um']; man = g['man']; MJ = g['MJ']; C = g['C']; avoid = g['avoid']; nets = g['nets']
     res = db.Region(); out = []
-    for (n, net), mA in HEAVY.get(g['CHIP'], {}).items():
+    for (n, net), mA in heavy(g['CHIP'], g['PADS']).items():
         if mA < PLATE_MIN_MA or n not in man['blocks'] or man['blocks'][n]['master'] not in C.NO_OVER: continue      # RF blocks only: elsewhere the grid stays (small cells lost their source)
         b_ = man['blocks'][n]; t = db.Trans.from_s(b_['trans']); bb = db.Box(*[um(v) for v in b_['bbox']])
         info = MJ.get(b_['master'], {}); o = info.get('origin', [0, 0])
-        ps = [p for (i, p) in nets.get(net, []) if i == n and p.upper().startswith(net)]
+        ps = [PIN_SEL[(n, net)]] if (n, net) in PIN_SEL else [p for (i, p) in nets.get(net, []) if i == n and p.upper().startswith(net)]
         for p in ps[:1]:
             for ln, r in info.get('pins', {}).get(p, []):
                 b = t*db.Box(um(r[0]+o[0]), um(r[1]+o[1]), um(r[2]+o[0]), um(r[3]+o[1]))

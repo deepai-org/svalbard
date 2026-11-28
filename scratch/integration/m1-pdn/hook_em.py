@@ -20,7 +20,17 @@ J85 = {'Metal1': 2.09, 'Metal2': 2.09, 'Metal3': 2.09, 'Metal4': 2.09, 'Metal5':
 DEFW = {'Metal1': .23, 'Metal2': .28, 'Metal3': .28, 'Metal4': .28, 'Metal5': .44}
 
 
-def heavy(ch):
+def heavy(ch, thr=0.5):
+    """(inst, net) -> mA above thr: the power owner's per-pin table (chips/<ch>/pin_currents.json, worst DC at 85 C, isw VSS
+    at their turn-off peak; pad supply pins and the macro excluded), else island_trunks.HEAVY"""
+    t = os.path.join(HERE, f'../../../projects/programmable_transceiver_platform/integration/chips/{ch}/pin_currents.json')
+    if os.path.exists(t):
+        out = {}
+        for r in json.load(open(t))['rows']:
+            if r['kind'] != 'supply' or r['net'] not in ('VDD', 'VSS') or r['inst'] in ('digital', 'host') or r['inst'].startswith('pad_'): continue
+            ma = max(r['avg_ma'], r.get('peak_ma') or 0) if r['master'].startswith('isw') and r['net'] == 'VSS' else r['avg_ma']
+            if ma > thr: out[(r['inst'], r['net'])] = max(ma, out.get((r['inst'], r['net']), 0))
+        return out
     p = os.path.join(HERE, '../../../projects/programmable_transceiver_platform/integration/assembly/island_trunks.py')
     src = open(p).read(); return eval(src[src.index('HEAVY = {')+8:src.index('\nPLATE_DROP_MV')])[ch]
 
@@ -100,7 +110,7 @@ def report(ch, R_):
         over += bad
         rows.append(f"{inst} | {net} | {I:.1f} | {len(lst)} hook(s), {ih:.2f} mA each | {I*rpar:.0f} mV | {wr['wire_ratio']:.1f} x ({wr['wire_layer']} {wr['wire_w']} um) | "
                     f"{vr['via_ratio']:.1f} x ({vr['via_cuts']} cut) | {'OVER' if bad else 'ok'}")
-    print(f'{ch} {R_}: supply pins > 2 mA (85 C limits: metal 2.09 / Metal5 4.5 mA/um, via 0.56 mA/cut)')
+    print(f'{ch} {R_}: supply pins > 0.5 mA (85 C limits: metal 2.09 / Metal5 4.5 mA/um, via 0.56 mA/cut)')
     print('inst | net | mA | hook / plate | drop | wire: worst ratio to limit | via: worst ratio | verdict')
     for r in rows: print(r)
     print(f'HOOK_EM {"FAIL" if over else "PASS"}: {over} over the 85 C limit')

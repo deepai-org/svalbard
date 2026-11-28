@@ -30,6 +30,8 @@ for i in top.each_inst():
     # (2026-11-27): all their metal is in the audit, else their DVDD / VSS pins were listed as unfed
     toplev = toplev or nm == 'retained_provider_ring' or nm in PADCELLS
     if not toplev and (nm not in blkcells or os.environ.get('NOBLK')): continue
+    iname = next((b['name'] for b in man['instances'] if b['cell'] == nm and db.Trans.from_s(b['trans']) == i.trans), None) if os.environ.get('NEG_BAR') or os.environ.get('NEG_PAD') else None
+    if iname and iname in (os.environ.get('NEG_BAR'), os.environ.get('NEG_PAD')): continue      # negative control: this instance's metal left out
     for k in (LAY if toplev else ('M4', 'V4', 'M5')):
         li = ly.find_layer(*LAY[k])
         if li is None: continue
@@ -100,7 +102,31 @@ pieces.sort(key=lambda d: -(d['m4_mm2']+d['m5_mm2']))
 fed = {d['id'] for d in pieces if d['n_stubs']}
 print('pieces with grid metal:', len(pieces), ' pad-fed:', len(fed))
 for d in pieces[:6]: print('  ', {k: (v if k != 'pins' else len(v)) for k, v in d.items()})
-fl = [d for d in pieces if not d['n_stubs']]
+# island bars (fp-wired 2026-11-28): a piece holding pt_island_bar Metal5 and no pad stub is its rail net, not VDD / VSS. It
+# is fed if it touches the VISL pins of its switches (common.ISLAND_BARS vias); a bar split off its switch is a FAULT
+barm5 = db.Region(ly.cell('pt_island_bar').begin_shapes_rec(ly.find_layer(81, 0))).merged() if ly.cell('pt_island_bar') else db.Region()
+bar_res = []
+for bd in C.ISLAND_BARS.get(CH, []):
+    sw = [i_ for i_, p_ in bd.get('vias', []) if p_ == 'VISL' and i_ in binst]
+    vis = set()
+    for s_ in sw:
+        b_ = binst[s_]; info = MJ.get(b_['master'], {}); o = info.get('origin', [0, 0]); t = db.Trans.from_s(b_['trans'])
+        for ln, r in info.get('pins', {}).get('VISL', []):
+            vis |= probe({'Metal1': 'M1', 'Metal2': 'M2', 'Metal3': 'M3', 'Metal4': 'M4', 'Metal5': 'M5'}[ln], t*db.Box(um(r[0]+o[0]), um(r[1]+o[1]), um(r[2]+o[0]), um(r[3]+o[1])))
+    bar_res.append(dict(net=bd['net'], switches=sw, visl_ids=sorted(vis)))
+barpiece = {}
+for d in pieces:
+    if d['n_stubs']: continue
+    nt = cir.net_by_cluster_id(d['id'])
+    if (l2n.shapes_of_net(nt, Rg['M5'], True) & barm5).is_empty(): continue
+    hit = [b for b in bar_res if d['id'] in b['visl_ids']]
+    barpiece[d['id']] = hit[0]['net'] if hit else None
+print('island bar pieces:', {k: (v or 'NOT FED (no switch VISL)') for k, v in barpiece.items()})
+for b in bar_res:
+    if not any(v == b['net'] for v in barpiece.values()): print('ISLAND BAR NOT FED:', b['net'], 'switches', b['switches'])
+bars_ok = all(v for v in barpiece.values()) and all(any(v == b['net'] for v in barpiece.values()) for b in bar_res)
+print('island bars fed through their switches:', bars_ok)
+fl = [d for d in pieces if not d['n_stubs'] and d['id'] not in barpiece]
 print('floating pieces:', len(fl), 'M4 %.4f mm2, M5 %.4f mm2' % (sum(d['m4_mm2'] for d in fl), sum(d['m5_mm2'] for d in fl)))
 print('floating pieces with block supply pins (FAULT):')
 for d in fl:
@@ -111,6 +137,15 @@ for n, p, net, kind, master, ids in pins_all: grp[(n, net)].append((p, ids))
 for (n, net), lst in sorted(grp.items()):
     ok = any(set(ids) & fed for p, ids in lst)
     if not ok: bad.append(dict(inst=n, net=net, master=binst[n]['master'], kind=binst[n]['kind'], pins=[(p, len(ids)) for p, ids in lst]))
+# named float exception (coordinator 2026-11-27, pt_wired): pad_tlp VDD / VSS reach neither the ring rails nor the grid; kept
+# out of 'unfed' and listed apart (LVS by name / padsup check that nothing else joins them)
+FLOATX = {('pad_tlp', 'VDD'), ('pad_tlp', 'VSS')} if CH == 'wired' else set()
+floatx = [b for b in bad if (b['inst'], b['net']) in FLOATX]; bad = [b for b in bad if (b['inst'], b['net']) not in FLOATX]
+print('named float exceptions (not counted as unfed):', [f"{b['inst']}.{b['net']}" for b in floatx])
+# an island bar not fed through its switch counts as an unfed supply (fails signoff's 'every block fed')
+if not bars_ok:
+    bad += [dict(inst='ISLAND_BAR', net=b['net'], master='pt_island_bar', kind='bar', pins=[]) for b in bar_res if not any(v == b['net'] for v in barpiece.values())]
+    bad += [dict(inst='ISLAND_BAR', net='?', master='pt_island_bar', kind='bar piece', pins=[cid]) for cid, v in barpiece.items() if not v]
 print('block/net with no pin on a pad-fed piece:', len(bad))
 for b in bad: print('  ', b)
 # shorts: a pad-fed piece with both VDD and VSS stubs
@@ -126,7 +161,7 @@ for i, cx in enumerate('WCE'):
         live[ry+cx] = {f'{nt}_{ {"M4": "Metal4", "M5": "Metal5"}[k]}': round(100*(fedshape[(cid, k)] & bx).area()*dbu*dbu/A_, 1) for cid, nt in fedcid.items() for k in ('M4', 'M5')}
 print('live coverage per region (pad-fed grid metal, %):', live)
 print('drawn coverage per region (place.json, %):', place['pdn_regions_pct'])
-print('JSON'); print(json.dumps(dict(pieces=pieces, unfed=bad, pdn_regions_pct=live)))
+print('JSON'); print(json.dumps(dict(pieces=pieces, unfed=bad, pdn_regions_pct=live, island_bars=dict(pieces={str(k): v for k, v in barpiece.items()}, ok=bars_ok), floating_nonbar=len(fl), float_exceptions=[f"{b['inst']}.{b['net']}" for b in floatx])))
 if os.environ.get('NOPINS'):     # which pin rectangles touch which pad-fed piece (pin-rectangle bridges and pins left off)
     fedn = {d['id']: d['stub_nets'] for d in pieces if d['n_stubs']}
     shp = {(cid, k): l2n.shapes_of_net(cir.net_by_cluster_id(cid), Rg[k], True).merged() for cid in fedn for k in ('M1', 'M2', 'M3', 'M4', 'M5')}

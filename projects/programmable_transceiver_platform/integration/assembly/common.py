@@ -112,7 +112,10 @@ ISLAND_BARS = {'wired': [dict(net='RAIL_wired_tx', rects=[(2658.0, 2265.0, 3400.
                           # wired_rx (fp-wired 2026-11-27): same VISL-strip bar, so RAIL_wired_rx (3 um WIDE) reaches the switch on
                           # the bar instead of beside its Metal5 (fpw-3: 2 x Metal5 spacing RAIL_wired_rx / isw_wired_rx)
                           dict(net='RAIL_wired_rx', rects=[], expose=True, rel=('isw_wired_rx', [('Metal5', 'pin:VISL')]),
-                               vias=[('isw_wired_rx', 'VISL')])],
+                               vias=[('isw_wired_rx', 'VISL')]),
+                          # pll (fp-wired 2026-11-28): same VISL-strip bar (fpw-8 / fpw-12: RAIL_pll Metal4 spacing at isw_pll)
+                          dict(net='RAIL_pll', rects=[], expose=True, rel=('isw_pll', [('Metal5', 'pin:VISL')]),
+                               vias=[('isw_pll', 'VISL')])],
                 # pt_rf rf_tx (PDS-20, 91.6 mA design): Metal5 bar over isw_rf_tx (joined to its VISL plate, Via4 onto VISL) and
                 # 465 um south of it towards lo_txbuf / the TX mixers, cut round other blocks' Metal5 and the RF blocks; the bar
                 # is a pin of RAIL_rf_tx (expose), so the router reaches the loads and isw_rf_tx_b from it, never VISL itself

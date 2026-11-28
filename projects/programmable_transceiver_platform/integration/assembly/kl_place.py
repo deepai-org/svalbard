@@ -251,6 +251,7 @@ for bd in ([] if getattr(C, 'ISLAND_BARS_OFF', False) else C.ISLAND_BARS.get(CHI
     bars.append(dict(bd, region=reg, m4=m4, merged=not same.is_empty()))
     avoid['Metal4'] = (avoid['Metal4'] + m4.sized(um(2.5))).merged()
     avoid['Metal5'] = (avoid['Metal5'] + reg.sized(um(2.5))).merged()
+if os.environ.get('PLATES', '1') == '1': TRK.reserve(globals())      # plate landing corridors kept free of grid straps (island_trunks.py)
 PITCH, SW = 70.0, float(os.environ.get('STRAP_W', '10.5'))   # G1 15 % nominal; wider per region from strap_widths.json
 core = C.CORE
 straps = {('VDD', 'Metal4'): db.Region(), ('VSS', 'Metal4'): db.Region(), ('VDD', 'Metal5'): db.Region(), ('VSS', 'Metal5'): db.Region()}

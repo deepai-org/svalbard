@@ -50,6 +50,7 @@ ISLANDS = {
   'RAIL_debug':     dict(sw=['isw_debug'], loads={'vco_replica': 11.8, 'clk_obs': 5.1, 'rx_aux_clk': 5.1, 'rx_wtx_ext': 5.1}, design=40.0, allow=15.0),
   'RAIL_wired_rx':  dict(sw=['isw_wired_rx'], loads={'slicer': 9.8, 'ctle': 5.3, 'detect': 2.4, 'rxselect': 2.0, 'termination': 1.6}, design=30.9, allow=49.5),
   'RAIL_pll':       dict(sw=['isw_pll'], loads={'pll_vreg2': 20.9, 'prescale': 2.4, 'prescale_hf': 2.4, 'cdr': 2.0, 'clockmux': 1.6}, design=29.4, allow=60.4)}}
+_RES = [None]            # reserved plate landing area (reserve -> _plates)
 _BLK = []                # DEF blockage rectangles (name, (x0, y0, x1, y1), layers)
 
 
@@ -192,20 +193,24 @@ def build(g, mode='trunks'):
         for ln, b in sh:
             dl, dr, dbt, dtp = b.left-bb.left, bb.right-b.right, b.bottom-bb.bottom, bb.top-b.top
             e = min(dl, dr, dbt, dtp); o = um(16)
-            if e == dl: cor.insert(db.Box(bb.left-o, b.bottom, b.right, b.top))
-            elif e == dr: cor.insert(db.Box(b.left, b.bottom, bb.right+o, b.top))
-            elif e == dbt: cor.insert(db.Box(b.left, bb.bottom-o, b.right, b.top))
-            else: cor.insert(db.Box(b.left, b.bottom, b.right, bb.top+o))
+            # every side (the carve removes the blocked ones); a no-route-over (RF) block only on its nearest edge
+            sides = [e] if m in C.NO_OVER else [dl, dr, dbt, dtp]
+            for e_ in sides:
+                if e_ == dl: cor.insert(db.Box(bb.left-o, b.bottom, b.right, b.top))
+                if e_ == dr: cor.insert(db.Box(b.left, b.bottom, bb.right+o, b.top))
+                if e_ == dbt: cor.insert(db.Box(b.left, bb.bottom-o, b.right, b.top))
+                if e_ == dtp: cor.insert(db.Box(b.left, b.bottom, b.right, bb.top+o))
+                if m in C.NO_OVER: break
         info_ = MJ.get(m, {}); o_ = info_.get('origin', [0, 0])
-        opins = db.Region([t*db.Box(um(r[0]+o_[0]), um(r[1]+o_[1]), um(r[2]+o_[0]), um(r[3]+o_[1])).enlarged(um(3), um(3))
-                           for q, lst in info_.get('pins', {}).items() if q != p for ln_, r in lst]) - db.Region([b for ln_, b in sh]).sized(um(0.5))
+        opins = db.Region([t*db.Box(um(r[0]+o_[0]), um(r[1]+o_[1]), um(r[2]+o_[0]), um(r[3]+o_[1])).enlarged(um(1), um(1))
+                           for q, lst in info_.get('pins', {}).items() if q != p for ln_, r in lst]) - db.Region([b for ln_, b in sh]).sized(um(0.5))   # 1 um round the cell's other pins
         L = dict(pin=p, same=same, carve={}, tgt={}, bbox=bb, vialand=db.Region(), via3land=db.Region(), pinreg={'Metal5': p5, 'Metal4': p4})
         for ln, b in sh:
             if ln == 'Metal3' and min(b.width(), b.height()) >= um(1.8) and (cell_m(n, 'Metal4') & db.Region(b)).is_empty() and (cell_m(n, 'Via3') & db.Region(b)).is_empty():
                 L['via3land'].insert(b)
         for ln in LAYERS:
             other = (cell_m(n, ln) - same[ln]).merged()
-            cv = ((cor + same[ln].sized(um(3))) - other.sized(um(2.5)) - other_obstacles(n, bb, ln) - opins).merged()
+            cv = ((cor + same[ln].sized(um(3))) - other.sized(um(0.7)) - other_obstacles(n, bb, ln) - opins).merged()      # 0.7 um to the cell's own other metal (MT.2b 0.6): RF supply stubs sit 1 um apart
             cv += same[ln] & cv.sized(um(5))
             L['carve'][ln] = cv.merged()
             pl = p5 if ln == 'Metal5' else (p4 + L['via3land'])
@@ -439,7 +444,7 @@ HEAVY = {
            ('clk_obs', 'VSS'): 5.1, ('rx_aux_clk', 'VSS'): 5.1, ('rx_wtx_ext', 'VSS'): 5.1, ('rx_ref_in', 'VDD'): 4.6, ('rx_ref_in', 'VSS'): 4.6,
            ('detect', 'VSS'): 2.4, ('prescale', 'VSS'): 2.4, ('prescale_hf', 'VSS'): 2.4, ('wordclk_rx', 'VSS'): 2.4}}
 PLATE_DROP_MV = 10.0
-PLATE_MIN_MA = 4.0       # 2-4 mA pins keep a router hook (the prescale VSS plate at 2.4 mA blocked RAIL_lod: router short, 2026-11-26)
+PLATE_MIN_MA = 2.0       # every pin above ~2 mA on a plate (coordinator 2026-11-28; was 4: a 2.4 mA plate once blocked RAIL_lod)
 
 
 def _plates(g, h):
@@ -455,12 +460,19 @@ def _plates(g, h):
         if L is None: rep[f'{n}.{net}'] = dict(mA=mA, error='no pin'); continue
         other = 'VSS' if net == 'VDD' else 'VDD'
         obs = {ln: (avoid[ln] + metal[(other, ln)].sized(um(2.5)) + h['ringr'].sized(um(3)) + h['outside'] + h['digr'] + (h['mim'] if ln == 'Metal4' else db.Region())).merged() for ln in LAYERS}
-        win = L['bbox'].enlarged(um(600), um(600))
+        win = L['bbox'].enlarged(um(1000), um(1000))
         allowed = {ln: (db.Region(win) & db.Region(core)) - obs[ln] for ln in LAYERS}
+        if _RES[0] is not None:       # reserved landing corridors are in avoid (the grid gave way): free for the plate
+            for ln in LAYERS: allowed[ln] = (allowed[ln] + ((_RES[0] & db.Region(win)) - h['other_obstacles'](n, L['bbox'], ln) - metal[(other, ln)].sized(um(2.5)))).merged()
         src = {ln: live[net][ln] & db.Region(win) for ln in LAYERS}
         og = {ln: metal[(other, ln)].sized(um(2.5)) for ln in LAYERS}
         for ln in LAYERS: L['carve'][ln] = L['carve'][ln] - og[ln]; L['tgt'][ln] = L['tgt'][ln] - og[ln]
         A = {ln: (allowed[ln] + L['carve'][ln] + src[ln]).merged() for ln in LAYERS}
+        if g['os'].environ.get('PLATE_DEBUG') == f'{n}.{net}':
+            dl = db.Layout(); dl.dbu = 0.001; dc = dl.create_cell('dbg')
+            for k_, r_ in ((1, allowed['Metal5']), (2, allowed['Metal4']), (3, L['carve']['Metal5'] + L['carve']['Metal4']), (4, L['tgt']['Metal5'] + L['tgt']['Metal4']), (5, src['Metal5'])):
+                dc.shapes(dl.layer(k_, 0)).insert(r_)
+            dl.write('/run/plate_debug.gds')
         W0 = max(3.0, mA/2.0); P = None
         tgt = {ln: raster(L['tgt'][ln]) for ln in LAYERS}
         srcm = {ln: raster(src[ln]) & ~tgt[ln] for ln in LAYERS}
@@ -511,10 +523,13 @@ def _plates(g, h):
             avoid[ln] = (avoid[ln] + pl[ln].sized(um(2.5))).merged()
             live[net][ln] = (live[net][ln] + pl[ln]).merged(); metal[(net, ln)] = (metal[(net, ln)] + pl[ln]).merged()
         L5 = G_*sum(1 for q in P if q[0] == 'Metal5'); L4 = G_*sum(1 for q in P if q[0] == 'Metal4'); nvc = max(1, int((vr.area()/1e6)*2.6))
-        drop = mA*(RS['Metal5']*L5/W + RS['Metal4']*L4/W) + (mA*4.5/max(1, nv/2) if nv else 0.0) + (mA*4.5/nv3 if nv3 else 0.0)      # 4.5 ohm per cut, half the Via4 cuts at each change
-        done.add((n, L['pin'], net))
+        nch = sum(1 for a_, b_ in zip(P, P[1:]) if a_[0] != b_[0]) + (1 if not (pl['Metal5'] & L['vialand']).is_empty() else 0)
+        # Via4 only matters where the current changes layer (a Metal4-to-Metal4 plate carries none: isw_wired_tx 2026-11-28)
+        drop = mA*(RS['Metal5']*L5/W + RS['Metal4']*L4/W) + (mA*4.5/max(1, nv/max(1, nch)) if nch else 0.0) + (mA*4.5/nv3 if nv3 else 0.0)
+        em_ok = (nch == 0 or nv >= 2*mA*nch) and (nv3 == 0 or nv3 >= 2*mA) and mA/W <= 2.09
+        if em_ok: done.add((n, L['pin'], net))      # an EM-short plate keeps its router hook in parallel
         rep[f'{n}.{net}'] = dict(mA=mA, pin=L['pin'], width_um=round(W, 1), len_m5_um=L5, len_m4_um=L4, via4=nv, via3=nv3, mA_per_um=round(mA/W, 2),
-                                 mA_per_cut=round(mA/max(1, nv), 3), drop_mV=round(drop, 2), ok=drop <= PLATE_DROP_MV and (nv == 0 or nv >= 2*mA) and (nv3 == 0 or nv3 >= 2*mA))
+                                 mA_per_cut=round(mA/max(1, nv), 3), drop_mV=round(drop, 2), layer_changes=nch, em_ok=em_ok, hook_kept=not em_ok, ok=drop <= PLATE_DROP_MV and em_ok)
     return done
 
 
@@ -533,3 +548,30 @@ def face_inward(n, m, tr, MJ, C, db, um, bb):
     if off < um(10): return tr
     if e in 'WE': return db.Trans(db.Trans.M90, db.Vector(bb.left+bb.right, 0))*tr
     return db.Trans(db.Trans.M0, db.Vector(0, bb.bottom+bb.top))*tr
+
+
+def reserve(g):
+    """Before the grid is cut (kl_place, ahead of the straps): the landing corridor of every plated supply pin (nearest block
+    edge, pin length wide, 20 um out) + 2.5 um joins `avoid` on Metal4 and Metal5, so neither grid net's strap runs across it
+    (pt_rf lo_mmd VSS: the VDD Metal5 row lay along the pin and no plate could reach it, 2026-11-28). place.json 'plate_reserve'."""
+    db = g['db']; um = g['um']; man = g['man']; MJ = g['MJ']; C = g['C']; avoid = g['avoid']; nets = g['nets']
+    res = db.Region(); out = []
+    for (n, net), mA in HEAVY.get(g['CHIP'], {}).items():
+        if mA < PLATE_MIN_MA or n not in man['blocks'] or man['blocks'][n]['master'] not in C.NO_OVER: continue      # RF blocks only: elsewhere the grid stays (small cells lost their source)
+        b_ = man['blocks'][n]; t = db.Trans.from_s(b_['trans']); bb = db.Box(*[um(v) for v in b_['bbox']])
+        info = MJ.get(b_['master'], {}); o = info.get('origin', [0, 0])
+        ps = [p for (i, p) in nets.get(net, []) if i == n and p.upper().startswith(net)]
+        for p in ps[:1]:
+            for ln, r in info.get('pins', {}).get(p, []):
+                b = t*db.Box(um(r[0]+o[0]), um(r[1]+o[1]), um(r[2]+o[0]), um(r[3]+o[1]))
+                d = {'W': b.left-bb.left, 'E': bb.right-b.right, 'S': b.bottom-bb.bottom, 'N': bb.top-b.top}; e = min(d, key=d.get)
+                if d[e] > um(30): continue          # pin not at an edge: nothing to reserve outside the block
+                ext = um(20)
+                cor = {'W': db.Box(bb.left-ext, b.bottom, b.right, b.top), 'E': db.Box(b.left, b.bottom, bb.right+ext, b.top),
+                       'S': db.Box(b.left, bb.bottom-ext, b.right, b.top), 'N': db.Box(b.left, b.bottom, b.right, bb.top+ext)}[e]
+                cor = db.Region(cor) - (db.Region(bb) - db.Region(b.enlarged(um(1), um(1))))      # outside the block, plus the pin itself
+                res += cor; out.append(dict(pin=f'{n}.{p}', net=net, edge=e))
+    res = res.merged().sized(um(2.5))
+    for ln in ('Metal4', 'Metal5'): avoid[ln] = (avoid[ln] + res).merged()
+    man['plate_reserve'] = dict(pins=out, mm2=round(res.area()/1e12, 4))
+    _RES[0] = res

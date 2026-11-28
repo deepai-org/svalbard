@@ -1,52 +1,138 @@
 #!/usr/bin/env python3
-"""Hook nets (block VDD / VSS pin -> grid slot, routed.def) of the heavy supply users: resistance, drop and EM.
-R: segment length / width x Rs (Metal2-4 0.090, Metal5 0.060 ohm/sq, tech LEF) + 4.5 ohm per via cut (single-cut router vias).
-EM: tech LEF DCCURRENTDENSITY (Metal1-4 0.67 mA/um, Metal5 1.5 mA/um, Via 0.18 mA/cut) and the same scaled to 85 C by the
-DRM ratio the power spec uses (Metal2 2.09 / 0.67 = 3.1x).   usage: hook_em.py rf|wired"""
-import sys, re, json, collections
-ch = sys.argv[1]; R = f'../assembly-{ch}/'
-RS = {'Metal1': .09, 'Metal2': .09, 'Metal3': .09, 'Metal4': .09, 'Metal5': .06}; JL = {'Metal5': 1.5}; JV = 0.18; K85 = 3.1
-NDR = {'Metal2': .56, 'Metal3': .56, 'Metal4': .56, 'Metal5': .56}; DEFW = {'Metal1': .23, 'Metal2': .28, 'Metal3': .28, 'Metal4': .28, 'Metal5': .44}
-# currents (mA): island switch VDD = island design current (README / PDS-19); loads > 5 mA on their VSS hooks (worst, README tables)
-ISL = {'rf': {'isw_lod': 74.1, 'isw_rf_tx': 28.3, 'isw_rf_tx_b': 28.3, 'isw_rf_rx': 43.6, 'isw_pll': 30.7, 'isw_lo': 28.1, 'isw_conv': 18.7, 'isw_debug': 40.0},
-       'wired': {'isw_wired_cap': 72.9, 'isw_wired_tx_a': 65.7, 'isw_wired_tx_b': 65.7, 'isw_wired_rx': 30.9, 'isw_pll': 29.4, 'isw_debug': 40.0}}[ch]
-LOADS = {'rf': {'lo_mmd': 34.8, 'lo_vreg': 27.5, 'rfdriver': 24.3, 'lna': 21.4, 'pll_vreg2': 20.9, 'lo_txbuf': 59.3, 'lo_ext': 13.7, 'vco_replica': 11.8,
-                'lo_mmd_qdum': 10.0, 'lo_obs': 8.0, 'lo_obs_q': 8.0, 'adc_i': 6.3, 'adc_q': 6.3, 'bbfilter_i': 5.3, 'bbfilter_q': 5.3, 'clk_obs': 5.1, 'rx_aux_clk': 5.1},
-         'wired': {'wrx_cap': 46.6, 'wiredtx': 60.0, 'ptrim': 21.0, 'pad_wire_tx': 21.0, 'usb_txdrv': 20.0, 'pll_vreg2': 20.9, 'vco_replica': 11.8, 'slicer': 9.8,
-                   'ctle': 5.3, 'clk_obs': 5.1, 'rx_aux_clk': 5.1, 'rx_wtx_ext': 5.1}}[ch]
-place = json.load(open(R+'place.json'))
-hooks = collections.defaultdict(list)
-for h in place['hooks']: hooks[(h['inst'], h['net'].split('__')[0])].append(h['net'])
-dl = collections.Counter((d['inst'], d['net']) for d in place.get('direct_landings', []))
-segs = collections.defaultdict(list); vias = collections.Counter(); cur = None
-for l in open(R+'route/routed.def'):
-    m = re.match(r'\s*- (\S+) ', l)
-    if m: cur = m.group(1) if '__HK' in m.group(1) else None
-    if not cur: continue
-    t = re.search(r'(?:ROUTED|NEW)\s+(Metal\d)\s+(TAPER\s+)?(.*)', l)
-    if not t: continue
-    ln, taper, rest = t.group(1), bool(t.group(2)), t.group(3)
-    pts = re.findall(r'\(\s*(\S+)\s+(\S+)(?:\s+\S+)?\s*\)', rest); P = []; px = py = None
-    for x, y in pts:
-        x = px if x == '*' else int(x); y = py if y == '*' else int(y); P.append((x, y)); px, py = x, y
-    for a, b in zip(P, P[1:]): segs[cur].append((ln, (abs(a[0]-b[0])+abs(a[1]-b[1]))/1000, DEFW[ln] if taper else NDR[ln]))
-    if re.search(r'\)\s+Via\S*\s*;?\s*$', rest) or re.search(r'Via\d_\S+', rest): vias[cur] += 1
-def hook_r(n):
-    return sum(RS[ln]*L/max(w, 1e-3) for ln, L, w in segs[n]) + 4.5*vias[n]
-def wmin(n):
-    return min(((w*JL.get(ln, .67)), ln, w) for ln, L, w in segs[n] if L > 0) if segs[n] else (float('inf'), '-', 0)
-rows = []
-for (inst, net), lst in sorted(hooks.items()):
-    I = ISL.get(inst) if net == 'VDD' else LOADS.get(inst)
-    if net == 'VSS' and inst in ISL: continue
-    if I is None: continue
-    n = len(lst) + dl.get((inst, net), 0)
-    rpar = 1/sum(1/max(hook_r(h), 1e-3) for h in lst) if lst else float('inf')
-    jw, jl, jwid = min(wmin(h) for h in lst)
-    nv = min(vias[h] for h in lst)
-    rows.append((inst, net, I, len(lst), dl.get((inst, net), 0), rpar, I*rpar, I/len(lst), jw, jl, jwid, nv))
-print(f'{ch}: hooks of the heavy supply users (current split evenly over the hooks of the pin group; direct landings counted separately)')
-print('inst | net | mA | hooks | direct | R_par ohm | drop mV | mA per hook | narrowest: limit mA (LEF) / 85C | layer, width um | min via cuts')
-for r in sorted(rows, key=lambda r: -r[6]):
-    inst, net, I, nh, nd, rp, dv, ih, jw, jl, jwid, nv = r
-    print(f'{inst} | {net} | {I:.1f} | {nh} | {nd} | {rp:.2f} | {dv:.0f} | {ih:.1f} | {jw:.2f} / {jw*K85:.2f} | {jl} {jwid} | {nv} (cut {JV:.2f} / {JV*K85:.2f} mA)')
+"""hook_em.py <rf|wired> <run dir> [--gate] | hook_em.py --selftest
+Hook nets (block supply pin -> grid slot, route/routed.def + place.json) of every supply user above 2 mA: resistance, drop
+and EM at 85 C. Pins with an EM-clean drawn plate (place.json grid_plates, em_ok) are reported as plates, not hooks.
+  * Widths from the DEF itself: a segment of a net with NONDEFAULTRULE <r> has the rule's width on its layer; a TAPER segment
+    (and any net without a rule) has the tech default width (Metal1 0.23, Metal2-4 0.28, Metal5 0.44 um). Metal1 included.
+  * Vias: the router uses single-cut tech vias and a hook is a series path, so every via carries the whole hook current;
+    the cut count of a transition is the number of vias of that via layer within 1 um of each other (parallel cuts).
+  * R: Rs per square (Metal1-4 0.090, Metal5 0.060 ohm/sq, tech LEF) + 4.5 ohm per cut, cuts of a transition in parallel.
+  * Limits (tech LEF DCCURRENTDENSITY, scaled to 85 C by the 3.1 x the power spec uses): Metal 0.67 -> 2.09 mA/um,
+    Metal5 1.5 -> 4.5 mA/um (x 3.0), Via 0.18 -> 0.56 mA per cut.
+  * Current per pin group split evenly over its hooks. Currents: island_trunks.HEAVY (switch VDD at the island design
+    current, load VDD / VSS worst) for the chip.
+--gate: exit 1 if any hook is over a limit at 85 C. --selftest: a known-answer DEF (one hook, Metal4 100 um x 1 um +
+one Via4) must give R 13.5 ohm, 1.0 mA/um, and fail on the via at 1 mA (single cut) and pass with two parallel cuts."""
+import sys, re, json, collections, os, tempfile
+HERE = os.path.dirname(os.path.abspath(__file__))
+RS = {'Metal1': .09, 'Metal2': .09, 'Metal3': .09, 'Metal4': .09, 'Metal5': .06}
+J85 = {'Metal1': 2.09, 'Metal2': 2.09, 'Metal3': 2.09, 'Metal4': 2.09, 'Metal5': 4.5}; V85 = 0.56; RV = 4.5
+DEFW = {'Metal1': .23, 'Metal2': .28, 'Metal3': .28, 'Metal4': .28, 'Metal5': .44}
+
+
+def heavy(ch):
+    p = os.path.join(HERE, '../../../projects/programmable_transceiver_platform/integration/assembly/island_trunks.py')
+    src = open(p).read(); return eval(src[src.index('HEAVY = {')+8:src.index('\nPLATE_DROP_MV')])[ch]
+
+
+def parse(deff):
+    """net -> dict(rule, segs [(layer, length um, width um)], vias [(vialayer, x, y)])"""
+    ndr = collections.defaultdict(dict); nets = {}; cur = None; rule = None; sect = None
+    for l in open(deff):
+        s = l.strip()
+        if s.startswith('NONDEFAULTRULES'): sect = 'ndr'; continue
+        if s.startswith('END NONDEFAULTRULES'): sect = None; continue
+        if sect == 'ndr':
+            m = re.match(r'- (\S+)', s)
+            if m: rule = m.group(1)
+            m = re.match(r'\+ LAYER (Metal\d) WIDTH (\d+)', s)
+            if m: ndr[rule][m.group(1)] = int(m.group(2))/1000
+            continue
+        if s.startswith('NETS ') or s.startswith('SPECIALNETS'): sect = 'nets'; continue
+        if s.startswith('END NETS'): sect = None; continue
+        if sect != 'nets': continue
+        m = re.match(r'- (\S+)', s)
+        if m:
+            cur = m.group(1); nets[cur] = dict(rule=None, segs=[], vias=[])
+        if cur is None: continue
+        m = re.search(r'NONDEFAULTRULE (\S+)', s)
+        if m: nets[cur]['rule'] = m.group(1)
+        t = re.search(r'(?:ROUTED|NEW)\s+(Metal\d)\s+(TAPER\s+)?(.*)', s)
+        if not t: continue
+        ln, taper, rest = t.group(1), bool(t.group(2)), t.group(3)
+        pts = re.findall(r'\(\s*(\S+)\s+(\S+)(?:\s+\S+)?\s*\)', rest); P = []; px = py = None
+        for x, y in pts:
+            x = px if x == '*' else int(x); y = py if y == '*' else int(y); P.append((x, y)); px, py = x, y
+        r_ = nets[cur]['rule']
+        w = DEFW[ln] if (taper or not r_) else ndr.get(r_, {}).get(ln, DEFW[ln])
+        for a, b in zip(P, P[1:]): nets[cur]['segs'].append((ln, (abs(a[0]-b[0])+abs(a[1]-b[1]))/1000, w))
+        v = re.search(r'\)\s+(Via(\d)\S*)', rest)
+        if v and P: nets[cur]['vias'].append(('Via'+v.group(2), P[-1][0]/1000, P[-1][1]/1000))
+    return nets
+
+
+def transitions(vias):
+    """parallel cut groups: vias of one via layer within 1 um of each other"""
+    groups = []
+    for vl, x, y in vias:
+        for g in groups:
+            if g[0] == vl and abs(g[1]-x) <= 1 and abs(g[2]-y) <= 1: g[3] += 1; break
+        else: groups.append([vl, x, y, 1])
+    return groups
+
+
+def hook_eval(net, I):
+    segs = net['segs']; tr = transitions(net['vias'])
+    R = sum(RS[ln]*L/max(w, 1e-3) for ln, L, w in segs) + sum(RV/g[3] for g in tr)
+    jw = max((I/w/J85[ln], ln, w) for ln, L, w in segs if L > 0) if segs else (0, '-', 0)       # worst ratio to the 85 C limit
+    jv = max((I/g[3]/V85, g[3]) for g in tr) if tr else (0, 0)
+    return dict(R=R, wire_ratio=jw[0], wire_layer=jw[1], wire_w=jw[2], via_ratio=jv[0], via_cuts=jv[1], transitions=len(tr))
+
+
+def report(ch, R_):
+    place = json.load(open(R_+'place.json')); nets = parse(R_+'route/routed.def')
+    plates = {k: v for k, v in place.get('grid_plates', {}).items() if 'error' not in v}      # drawn plates (em_ok from 2026-11-28 runs on)
+    hooks = collections.defaultdict(list)
+    for h in place['hooks']: hooks[(h['inst'], h['net'].split('__')[0])].append(h['net'])
+    rows = []; over = 0
+    for (inst, net), I in sorted(heavy(ch).items(), key=lambda kv: -kv[1]):
+        key = f'{inst}.{net}'
+        lst = hooks.get((inst, net), [])
+        if key in plates and not lst:
+            p = plates[key]; v_ = p.get('em_ok', None); bad = v_ is False or I/p['width_um'] > 2.09
+            over += bad
+            rows.append(f"{inst} | {net} | {I:.1f} | plate {p['width_um']} um | {p['drop_mV']} mV | {I/p['width_um']/2.09:.2f} x (plate) | {'-' if v_ is not False else 'plate vias short'} | {'OVER' if bad else 'ok' if v_ else 'ok (run predates em_ok)'}"); continue
+        if not lst: rows.append(f'{inst} | {net} | {I:.1f} | no hook, no plate | - | - | - | CHECK'); continue
+        ih = I/len(lst); ev = [hook_eval(nets.get(h, dict(segs=[], vias=[])), ih) for h in lst]
+        rpar = 1/sum(1/max(e['R'], 1e-3) for e in ev)
+        wr = max(ev, key=lambda e: e['wire_ratio']); vr = max(ev, key=lambda e: e['via_ratio'])
+        bad = wr['wire_ratio'] > 1 or vr['via_ratio'] > 1
+        over += bad
+        rows.append(f"{inst} | {net} | {I:.1f} | {len(lst)} hook(s), {ih:.2f} mA each | {I*rpar:.0f} mV | {wr['wire_ratio']:.1f} x ({wr['wire_layer']} {wr['wire_w']} um) | "
+                    f"{vr['via_ratio']:.1f} x ({vr['via_cuts']} cut) | {'OVER' if bad else 'ok'}")
+    print(f'{ch} {R_}: supply pins > 2 mA (85 C limits: metal 2.09 / Metal5 4.5 mA/um, via 0.56 mA/cut)')
+    print('inst | net | mA | hook / plate | drop | wire: worst ratio to limit | via: worst ratio | verdict')
+    for r in rows: print(r)
+    print(f'HOOK_EM {"FAIL" if over else "PASS"}: {over} over the 85 C limit')
+    return over
+
+
+def selftest():
+    d = tempfile.mkdtemp()
+    def write(cuts):
+        vias = ''.join(f' NEW Metal4 ( {100000+i*620} 0 ) Via4_VH\n' for i in range(cuts))
+        open(d+'/route/routed.def', 'w').write('NONDEFAULTRULES 1 ;\n- HOOK\n+ LAYER Metal4 WIDTH 1000\n;\nEND NONDEFAULTRULES\n'
+            'NETS 1 ;\n- VSS__HK0 ( blk VSS ) ( pdn HK0 ) + USE SIGNAL + NONDEFAULTRULE HOOK\n'
+            f'  + ROUTED Metal4 ( 0 0 ) ( 100000 0 )\n{vias} ;\nEND NETS\n')
+    os.makedirs(d+'/route', exist_ok=True)
+    ok = True
+    for cuts, want_via_over in ((1, True), (2, False)):
+        write(cuts); n = parse(d+'/route/routed.def')['VSS__HK0']; e = hook_eval(n, 1.0)
+        exp_R = 0.09*100/1.0 + RV/cuts
+        good = abs(e['R']-exp_R) < 1e-6 and abs(e['wire_ratio']-1.0/2.09) < 1e-6 and (e['via_ratio'] > 1) == want_via_over and e['via_cuts'] == cuts
+        print(f'selftest cuts={cuts}: R {e["R"]:.3f} (want {exp_R:.3f}), wire ratio {e["wire_ratio"]:.3f} (want {1/2.09:.3f}), '
+              f'via ratio {e["via_ratio"]:.2f} ({"over" if e["via_ratio"] > 1 else "ok"}, want {"over" if want_via_over else "ok"}): {"PASS" if good else "FAIL"}')
+        ok &= good
+    # taper: the same wire marked TAPER must take the 0.28 um default (negative control for the width parsing)
+    open(d+'/route/routed.def', 'w').write('NONDEFAULTRULES 1 ;\n- HOOK\n+ LAYER Metal4 WIDTH 1000\n;\nEND NONDEFAULTRULES\nNETS 1 ;\n'
+        '- VSS__HK0 ( blk VSS ) ( pdn HK0 ) + USE SIGNAL + NONDEFAULTRULE HOOK\n  + ROUTED Metal4 TAPER ( 0 0 ) ( 100000 0 ) ;\nEND NETS\n')
+    e = hook_eval(parse(d+'/route/routed.def')['VSS__HK0'], 1.0); good = abs(e['wire_w']-0.28) < 1e-9 and e['wire_ratio'] > 1
+    print(f'selftest taper: width {e["wire_w"]} um, ratio {e["wire_ratio"]:.2f} (want 0.28 um, over): {"PASS" if good else "FAIL"}')
+    ok &= good
+    print('HOOK_EM SELFTEST', 'PASS' if ok else 'FAIL'); return ok
+
+
+if __name__ == '__main__':
+    if '--selftest' in sys.argv: sys.exit(0 if selftest() else 1)
+    over = report(sys.argv[1], sys.argv[2].rstrip('/')+'/')
+    sys.exit(1 if ('--gate' in sys.argv and over) else 0)

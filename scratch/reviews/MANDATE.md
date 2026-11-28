@@ -53,6 +53,9 @@ Current work status is in `SESSION-STATE.md`, not here.
 
 - **Performance window:** junction 22–32 °C, die supply 3.15–3.35 V, all process corners (ss/ff/sf/fs). Do not
   require performance at 0, 85 or 125 °C or at wide supply.
+- **Bonding (user, 2026-11-28): design for aluminium wedge bonding** (AlSi 1 %, about 20-25 um). GF180 CUP.1a:
+  no circuit under the pad opening — no devices, resistors, capacitors, fine metal or vias under any bond pad
+  opening; only the pad's own metal stack. Applies to every custom pad cell; checked per pad opening.
 - **No lifetime requirement (user, 2026-11-28):** the chips only prove viability; they need not last or
   survive outside the window. Do not gate on long-life reliability: electromigration is checked at the
   window's 32 °C junction plus self-heating with a short lifetime (not 85 °C / 100 kh), and the 3.63 V

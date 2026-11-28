@@ -396,7 +396,7 @@ module pt_digital_macro(
  // transport core run from link_clk = host_word_clk / {1,2,4} (core clock = link_clk / 2). A rate
  // change holds both in reset (host_rst_n) while the clock select switches (pt_host_rate_clock).
  // The transport core's reset is released synchronously to its own clock (pt_host_link core_rst_n).
- wire ddr_clk, sdr_word_clk, core_clk, core_rst_n, core_rel_n, rate_hold_n;
+ wire ddr_clk, sdr_word_clk, core_clk, core_clk_b, core_rst_n, core_rel_n, rate_hold_n;
  pt_host_rate_clock host_rate(.clk(host_word_clk), .rst_n(rst_n), .rate(f_debug_host_link__rate),
   .out_clk(ddr_clk), .word_clk(sdr_word_clk), .hold_n(rate_hold_n));
  wire host_rst_n = rst_n & rate_hold_n;
@@ -438,7 +438,7 @@ module pt_digital_macro(
  wire[9:0] sw_pg = {s_pg_debug, s_pg_conv, s_pg_pll, s_pg_wired_tx & s_pg_wired_tx_b & ON_WIRED, s_pg_wired_cap & ON_WIRED, s_pg_wired_rx & ON_WIRED,
   s_pg_lo & ON_RF, s_pg_lod & ON_RF, s_pg_rf_tx & s_pg_rf_tx_b & ON_RF, s_pg_rf_rx & ON_RF};
  pt_digital #(.PT_CHIP(PT_CHIP)) digital(.rst_n(rst_n), .ref_clk(ref_clk), .host_sclk(spi_sclk), .host_cs_n(spi_cs_n), .host_mosi(spi_mosi),
-  .host_miso(spi_miso), .host_miso_oe(spi_miso_oe), .host_tx_clk(core_clk), .host_rx_clk(core_clk), .core_rst_n(core_rst_n), .core_rel_n(core_rel_n),
+  .host_miso(spi_miso), .host_miso_oe(spi_miso_oe), .host_tx_clk(core_clk), .host_tx_clk_b(core_clk_b), .host_rx_clk(core_clk), .core_rst_n(core_rst_n), .core_rel_n(core_rel_n),
   .wire_rx_clk(wire_rx_clk_c), .wire_tx_clk(wire_tx_clk_c), .rf_rx_clk(rf_rx_clk_i), .rf_tx_clk(rf_tx_clk_c),
   .h2d_quad(h2d_quad), .d2h_quad(d2h_quad), .wire_rx_data(core_rx_quad), .wire_rx_valid(core_rx_valid),
   .wire_tx_data(wire_tx_quad), .wire_tx_valid(wire_tx_valid), .wire_idle(wire_idle), .wire_tx_request(core_tx_request),
@@ -468,7 +468,7 @@ module pt_digital_macro(
  assign rx_en_wclk = 1'b0;   // CP4-3: the forwarded wire clock uses the AUX_CLK pair (rx_en_aux); no WCLK_IN receiver
  pt_toggle_div aosc_dv(fc[4], rst_n, aosc_div);
  pt_host_link host(.rst_n(host_rst_n), .mode(f_debug_host_link__mode), .d2h_enable(f_hostio_controls__d2h_enable),
-  .h2d_clk(h2d_clk), .h2d_pin(h2d_pin), .link_clk(ddr_clk), .word_clk(sdr_word_clk), .core_clk(core_clk), .core_rst_n(core_rst_n), .core_rel_n(core_rel_n), .h2d_quad(h2d_quad), .d2h_quad(d2h_quad),
+  .h2d_clk(h2d_clk), .h2d_pin(h2d_pin), .link_clk(ddr_clk), .word_clk(sdr_word_clk), .core_clk(core_clk), .core_clk_b(core_clk_b), .core_rst_n(core_rst_n), .core_rel_n(core_rel_n), .h2d_quad(h2d_quad), .d2h_quad(d2h_quad),
   .d2h_pin(d2h_pin), .d2h_clk_pin(d2h_clk_pin), .d2h_stagger(f_hostio_controls__d2h_stagger),
   .d2h_oe(d2h_oe), .h2d_overflow(h2d_ovf), .h2d_underflow(h2d_unf));
  assign d2h_pdrv = f_hostio_controls__drive;

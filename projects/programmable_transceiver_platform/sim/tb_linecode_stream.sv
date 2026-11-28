@@ -79,9 +79,9 @@ module tb_linecode_stream;
   #100;@(negedge hclk)begin source_on=1;peer_tx_reset=1;end
   #(RUN_NS);
   if(rx_syms<0.8*RUN_NS*0.3125)begin errors=errors+1;$display("ERROR only %0d symbols received",rx_syms);end
-  if(occ_peak>core.core.EGRESS_DEPTH-4)begin errors=errors+1;$display("ERROR egress peak %0d above DEPTH-SPARE: the bank applied backpressure (ready low)",occ_peak);end
+  if(occ_peak>core.core.EGRESS_DEPTH-6)begin errors=errors+1;$display("ERROR egress peak %0d above DEPTH-SPARE: the bank applied backpressure (ready low)",occ_peak);end
   if(!status[5])begin errors=errors+1;$display("ERROR 8b/10b receiver not aligned");end
-  if(errors==0)$display("LINECODE_STREAM_PASS symbols=%0d host_words=%0d status=%h egress_peak=%0d/%0d ready_low=%0d",rx_syms,taken,status,occ_peak,core.core.EGRESS_DEPTH-4,ready_low);
+  if(errors==0)$display("LINECODE_STREAM_PASS symbols=%0d host_words=%0d status=%h egress_peak=%0d/%0d ready_low=%0d",rx_syms,taken,status,occ_peak,core.core.EGRESS_DEPTH-6,ready_low);
   else $display("LINECODE_STREAM_FAIL %0d",errors);
   $finish;
  end

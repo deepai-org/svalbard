@@ -74,7 +74,7 @@ OCV_ALL = float(os.environ.get('PT_STA_OCV_ALL', '0.08'))
 # AC-1 host clocks (transport rework 2026-11-10): hword (pin, host DDR clock line/16), hddr (after the
 # reduced-rate select: pad-edge DDR and gearboxes), hcore (hddr/2: 40-bit transport core); shared
 # ingress/egress banks have mux clocks.
-CLOCKS = ['sclk', 'ref', 'hword', 'hddr', 'hsdr', 'hcore', 'h2d_pin', 'h2d', 'h2d_cap', 'd2h_oddr', 'd2h_osel', 'd2h_fwd', 'ingress_wrx', 'ingress_rfrx', 'egress_wtx',
+CLOCKS = ['sclk', 'ref', 'hword', 'hddr', 'hsdr', 'hcore', 'hcoreb', 'h2d_pin', 'h2d', 'h2d_cap', 'd2h_oddr', 'd2h_osel', 'd2h_fwd', 'ingress_wrx', 'ingress_rfrx', 'egress_wtx',
           'egress_rftx', 'egress_mem_sclk', 'wtx', 'wstb', 'wrx', 'rftx', 'rfhalf', 'rfrx', 'ctw', 'fc0', 'fc1', 'fc2', 'fc3', 'fc4', 'fc5', 'mon_host']
 # wstb has no own period entry: the SDC derives WSTB_PERIOD = WRX_PERIOD / 2 when only WRX_PERIOD is set (W7-GEAR).
 PERIOD_VAR = dict(sclk='SCLK_PERIOD', ref='REF_PERIOD', hword='HWORD_PERIOD', wtx='WTX_PERIOD', wrx='WRX_PERIOD',
@@ -83,7 +83,7 @@ PERIOD_VAR = dict(sclk='SCLK_PERIOD', ref='REF_PERIOD', hword='HWORD_PERIOD', wt
 FMAX_CLOCKS = ['hword', 'wtx', 'wrx', 'ctw', 'rftx', 'rfrx', 'sclk', 'ref', 'fc0']
 # Generated host clocks are swept through the host DDR clock period: the reported value is the host
 # DDR clock fmax that this domain allows (hddr runs at 1/HOST_RATE_DIV, hcore at half of that).
-FMAX_DERIVED = [('hddr', 'HWORD_PERIOD'), ('hcore', 'HWORD_PERIOD')]
+FMAX_DERIVED = [('hddr', 'HWORD_PERIOD'), ('hcore', 'HWORD_PERIOD'), ('hcoreb', 'HWORD_PERIOD')]
 
 TCL = r'''
 read_liberty {lib}
@@ -130,7 +130,7 @@ proc pt_default_periods {{}} {{
 }}
 pt_default_periods
 pt_load_sdc
-puts "PT_TARGETS [list sclk $SCLK_PERIOD ref $REF_PERIOD hword $HWORD_PERIOD h2d $H2D_PERIOD h2d_cap $H2D_PERIOD d2h_oddr $HDDR_PERIOD d2h_osel $HDDR_PERIOD d2h_fwd $HDDR_PERIOD hlink $HLINK_PERIOD hddr $HDDR_PERIOD hcore $HCORE_PERIOD ingress_wrx $WRX_PERIOD ingress_rfrx $RFRX_PERIOD egress_wtx $WTX_PERIOD egress_rftx $RFTX_PERIOD wtx $WTX_PERIOD wrx $WRX_PERIOD rftx $RFTX_PERIOD rfrx $RFRX_PERIOD ctw $CTW_PERIOD ctref $CTREF_PERIOD ctdet $CTDET_PERIOD]"
+puts "PT_TARGETS [list sclk $SCLK_PERIOD ref $REF_PERIOD hword $HWORD_PERIOD h2d $H2D_PERIOD h2d_cap $H2D_PERIOD d2h_oddr $HDDR_PERIOD d2h_osel $HDDR_PERIOD d2h_fwd $HDDR_PERIOD hlink $HLINK_PERIOD hddr $HDDR_PERIOD hcore $HCORE_PERIOD hcoreb $HCORE_PERIOD ingress_wrx $WRX_PERIOD ingress_rfrx $RFRX_PERIOD egress_wtx $WTX_PERIOD egress_rftx $RFTX_PERIOD wtx $WTX_PERIOD wrx $WRX_PERIOD rftx $RFTX_PERIOD rfrx $RFRX_PERIOD ctw $CTW_PERIOD ctref $CTREF_PERIOD ctdet $CTDET_PERIOD]"
 foreach c {{{clocks}}} {{
   puts "PT_SLACK $c [pt_slack $c max] [pt_slack $c min]"
   puts "PT_WORST_SETUP $c [list [pt_paths $c max 3]]"

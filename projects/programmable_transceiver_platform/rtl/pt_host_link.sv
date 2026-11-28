@@ -60,6 +60,7 @@ module pt_host_link(
     input  wire        link_clk,      // hddr: host DDR clock after the reduced-rate select
     input  wire        word_clk,      // 2 x hddr word clock (SDR forwarded clock; reduced rates only)
     output wire        core_clk,      // hcore = hddr/2
+    output wire        core_clk_b,    // hcoreb = inverted hcore (PDN-02 two-phase launch: the egress write side)
     output wire        core_rst_n,    // rst_n released synchronously to hcore
     output wire        core_rel_n,    // kept copy of core_rst_n (same value at every time), low fanout
     output wire [39:0] h2d_quad,      // core_clk domain register, one quad per clock (0 = idle/underflow)
@@ -84,7 +85,7 @@ module pt_host_link(
     wire drs_g, drs_ng;
     pt_rep_dff drs_gcopy(.clk(link_clk), .rst_n(rst_n), .d(drs[0]), .q(drs_g));
     pt_rep_dff drs_ngcopy(.clk(link_clk), .rst_n(rst_n), .d(drs[0]), .q(drs_ng));
-    pt_host_divider divider(.clk(link_clk), .rst_n(drs_c), .core_clk(core_clk));
+    pt_host_divider divider(.clk(link_clk), .rst_n(drs_c), .core_clk(core_clk), .core_clk_b(core_clk_b));
     (* async_reg = "true" *) reg [1:0] crs;
     always @(posedge core_clk or negedge rst_n) if (!rst_n) crs <= 2'b00; else crs <= {crs[0], 1'b1};
     assign core_rst_n = crs[1];
@@ -142,10 +143,14 @@ endmodule
 
 // hcore divider: one hddr toggle flop behind a kept root buffer (STA: generated clock hcore =
 // hddr/2 at the buffer output). The first hddr edge after reset is an hcore rising edge.
-module pt_host_divider(input wire clk, rst_n, output wire core_clk);
+module pt_host_divider(input wire clk, rst_n, output wire core_clk, core_clk_b);
     wire c;
     pt_clock_dff cdiv(.clk(clk), .rst_n(rst_n), .d(~c), .q(c));
     pt_clock_buf core_root(.I(c), .Z(core_clk));
+    // PDN-02 two-phase launch: hcoreb rises on the hddr edges between the hcore rising edges (generated clock hcoreb,
+    // -invert, at core_inv/ZN). It clocks the egress bank's write side (about half the hcore clock load), so the
+    // 78.125 MHz launch current splits over two edges 6.4 ns apart.
+    pt_clock_inv core_inv(.I(c), .ZN(core_clk_b));
 endmodule
 
 // Local load-phase drivers: one flop per group of output bits, preserved across synthesis so the

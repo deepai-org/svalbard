@@ -23,11 +23,11 @@ module pt_transport_harness #(parameter HOST_MODE=0,LINECODE=0,HS_REPEAT=0,TA_MO
  reg ta_go=0;wire ta_running;   // DIG-03 turnaround release (driven hierarchically by tb_usb_hs)
  always @(negedge hclk)h2d_clk<=HOST_MODE?1'b0:!h2d_clk;
  wire h2d_pin_clk=HOST_MODE?!hclk:h2d_clk;
- wire core_clk,core_rst_n,core_rel_n;wire[39:0]h2d_quad,d2h_quad;wire[9:0]d2h_pin;
+ wire core_clk,core_clk_b,core_rst_n,core_rel_n;wire[39:0]h2d_quad,d2h_quad;wire[9:0]d2h_pin;
  reg hddr=0;always @(posedge hclk)hddr<=!hddr;   // host DDR clock = word clock / 2
  wire d2h_clk_pin,d2h_oe,h2d_overflow,h2d_underflow;
  pt_host_link host(.rst_n(rst_n),.mode(2'(HOST_MODE)),.d2h_enable(1'b1),.h2d_clk(h2d_pin_clk),.h2d_pin(h2d_word),
-  .link_clk(hddr),.word_clk(hclk),.core_clk(core_clk),.core_rst_n(core_rst_n),.core_rel_n(core_rel_n),.h2d_quad(h2d_quad),.d2h_quad(d2h_quad),.d2h_pin(d2h_pin),
+  .link_clk(hddr),.word_clk(hclk),.core_clk(core_clk),.core_clk_b(core_clk_b),.core_rst_n(core_rst_n),.core_rel_n(core_rel_n),.h2d_quad(h2d_quad),.d2h_quad(d2h_quad),.d2h_pin(d2h_pin),
   .d2h_clk_pin(d2h_clk_pin),.d2h_stagger(1'b0),.d2h_oe(d2h_oe),.h2d_overflow(h2d_overflow),.h2d_underflow(h2d_underflow));
  always @(negedge hclk)d2h_word<=d2h_pin;
  pt_core core(.rst_n(core_rst_n),.enable(enable),.mode8(mode8),.host_clk(core_clk),
@@ -39,7 +39,7 @@ module pt_transport_harness #(parameter HOST_MODE=0,LINECODE=0,HS_REPEAT=0,TA_MO
   .linecode(1'(LINECODE)),.rx_gain(rx_gain),.rx_gain_active(rx_gain_active),
   .mem_capture(1'b0),.mem_play(1'b0),.mem_loop(1'b0),.mem_last(5'd0),.spi_clk(1'b0),.mem_we(1'b0),.mem_idx(5'd0),
   .mem_wdata(40'd0),.mem_rdata(),.capture_done(),
-  .pat_sel(1'b0),.pat_word(40'd0),.pat_valid(1'b0),.pat_idle(1'b1),.wire_req_int(),.rel_n(core_rel_n),.hs_repeat(1'(HS_REPEAT)),.ta_mode(1'(TA_MODE)),.ta_go(ta_go),.ta_running(ta_running));
+  .pat_sel(1'b0),.pat_word(40'd0),.pat_valid(1'b0),.pat_idle(1'b1),.wire_req_int(),.rel_n(core_rel_n),.hs_repeat(1'(HS_REPEAT)),.ta_mode(1'(TA_MODE)),.ta_go(ta_go),.ta_running(ta_running),.host_clk_b(core_clk_b));
  // The host FIFO must never over/underflow once the link runs (mesochronous).
  always @(posedge core_clk)if(rst_n&&(h2d_overflow||h2d_underflow))
   $fatal(1,"H2D quad FIFO %s",h2d_overflow?"overflow":"underflow");

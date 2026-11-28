@@ -41,10 +41,10 @@ module tb_digital_wire40;
  // Pad-edge host link (DDR mode): forwarded H2D clock = hclk/2 centred on the FPGA words; D2H pins
  // sampled on the hclk falling edge.
  reg h2d_clk=0;always @(negedge hclk)h2d_clk<=!h2d_clk;
- wire core_clk,core_rst_n,core_rel_n;wire[39:0]h2d_quad,d2h_quad;wire[9:0]d2h_pin;
+ wire core_clk,core_clk_b,core_rst_n,core_rel_n;wire[39:0]h2d_quad,d2h_quad;wire[9:0]d2h_pin;
  reg hddr=0;always @(posedge hclk)hddr<=!hddr;   // host DDR clock = word clock / 2
  pt_host_link link(.rst_n(rst_n),.mode(2'd0),.d2h_enable(1'b1),.h2d_clk(h2d_clk),.h2d_pin(h2d),.link_clk(hddr),.word_clk(hclk),
-  .core_clk(core_clk),.core_rst_n(core_rst_n),.core_rel_n(core_rel_n),.h2d_quad(h2d_quad),.d2h_quad(d2h_quad),.d2h_pin(d2h_pin),.d2h_clk_pin(),.d2h_stagger(1'b0),.d2h_oe(),
+  .core_clk(core_clk),.core_clk_b(core_clk_b),.core_rst_n(core_rst_n),.core_rel_n(core_rel_n),.h2d_quad(h2d_quad),.d2h_quad(d2h_quad),.d2h_pin(d2h_pin),.d2h_clk_pin(),.d2h_stagger(1'b0),.d2h_oe(),
   .h2d_overflow(),.h2d_underflow());
  always @(negedge hclk)d2h<=d2h_pin;
  pt_digital dut(.rst_n(rst_n),.core_rst_n(core_rst_n),.core_rel_n(core_rel_n),.ref_clk(1'b0),.host_sclk(sclk),.host_cs_n(1'b1),.host_mosi(1'b0),.host_miso(host_miso),
@@ -59,7 +59,7 @@ module tb_digital_wire40;
   .rx_en_wclk(rx_en_wclk),.rx_en_wtx_ext(rx_en_wtx_ext),.clk_obs_oe(clk_obs_oe),
   .dbg_obs0(dbg_obs0),.dbg_obs0_oe(dbg_obs0_oe),.dbg_obs1(dbg_obs1),.dbg_obs1_oe(dbg_obs1_oe),
   .commit_toggle(commit_toggle),
-  .linecode(1'b0),.rx_gain(),.rx_gain_active(),.hs_repeat(1'b0),.ta_mode(1'b0),.ta_go(1'b0),.ta_running());
+  .linecode(1'b0),.rx_gain(),.rx_gain_active(),.hs_repeat(1'b0),.ta_mode(1'b0),.ta_go(1'b0),.ta_running(),.host_tx_clk_b(core_clk_b));
  reg en=0;initial force dut.enable=en;
  // ---- wired consumer: one quad every other quad clock (50 Mword/s); check order
  integer ntx=0,nrx=0,errs=0;reg[9:0]exp_tx=0,exp_rx=0,rxw=0;

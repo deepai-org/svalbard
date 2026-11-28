@@ -6,7 +6,7 @@
 #define PT_SPI_CMD_READ 0x00u
 #define PT_ID_VALUE 0x5356u
 #define PT_ABI_VERSION 0x0003u
-#define PT_MAP_HASH 0x1FE4u
+#define PT_MAP_HASH 0xF5C6u
 #define PT_COMMIT_CMD 0x0001u
 #define PT_REVERT_CMD 0x0002u
 #define PT_REG_ID 0x00u
@@ -878,6 +878,14 @@
 #define PT_WTX_CASCODE_BOOST_IMPL_MASK 0x1u  /* implemented bits; 0 = no hardware, reads 0 */
 #define PT_WTX_CASCODE_BOOST_MIN 0u
 #define PT_WTX_CASCODE_BOOST_MAX 1u
+#define PT_WTX_RUN_FORCE_ADDR 0x5Du
+#define PT_WTX_RUN_FORCE_SHIFT 2u
+#define PT_WTX_RUN_FORCE_WIDTH 1u
+#define PT_WTX_RUN_FORCE_MASK 0x0004u
+#define PT_WTX_RUN_FORCE_DEFAULT 0u
+#define PT_WTX_RUN_FORCE_IMPL_MASK 0x1u  /* implemented bits; 0 = no hardware, reads 0 */
+#define PT_WTX_RUN_FORCE_MIN 0u
+#define PT_WTX_RUN_FORCE_MAX 1u
 #define PT_ADC_I_CONFIG_INPUT_TEST_ADDR 0x60u
 #define PT_ADC_I_CONFIG_INPUT_TEST_SHIFT 0u
 #define PT_ADC_I_CONFIG_INPUT_TEST_WIDTH 2u

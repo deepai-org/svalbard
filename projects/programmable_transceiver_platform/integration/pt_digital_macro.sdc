@@ -56,6 +56,12 @@ if {[lsearch -exact {rf wired both} $PT_CHIP_NAME] < 0} {error "PT_CHIP must be 
 if {[info exists ::env(PT_SCLK_PERIOD)]} { set SCLK_PERIOD $::env(PT_SCLK_PERIOD) }
 # W7-GEAR: a caller that sets only WRX_PERIOD (sta_signoff fmax sweep) sets the WSTB period to half of it.
 if {[info exists WRX_PERIOD] && ![info exists WSTB_PERIOD]} { set WSTB_PERIOD [expr {$WRX_PERIOD / 2.0}] }
+# HL-06 / OBS-2 (macro batch 2026-11-28): fc2 (ring_osc) period per timing corner. The ring and the toggle flop are on the
+# same die at the same corner: at ss the ring is at most ~200 MHz up to the 3.50 V trim (165 MHz at ss nominal,
+# analog/timing/README.md), so the ss checks use 5.0 ns; 3.6 ns (278 MHz, the ff ring + margin) stays for ff and tt.
+set pt_fc_corner ss_window
+if {[info exists PT_TIMING_CORNER]} { set pt_fc_corner $PT_TIMING_CORNER } elseif {[info exists ::env(PT_TIMING_CORNER)]} { set pt_fc_corner $::env(PT_TIMING_CORNER) }
+if {![info exists FC_FAST_PERIOD] && [string match ss* $pt_fc_corner]} { set FC_FAST_PERIOD 5.0 }
 foreach {v d} {SCLK_PERIOD 200.0 REF_PERIOD 10.0 HWORD_PERIOD 6.4 WTX_PERIOD 12.3 WSTB_PERIOD 6.0
                RFTX_PERIOD 20.0 RFRX_PERIOD 20.0 CTW_PERIOD 6.4 CTDET_PERIOD 6.4 FC_PERIOD 6.4
                FC_FAST_PERIOD 3.6 DRING_PERIOD 5.0} {

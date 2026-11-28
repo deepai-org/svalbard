@@ -511,6 +511,9 @@ module pt_digital_macro(
  // pt_wired: c_clockmux_cs[1:0] (the converter-clock select is pt_rf only); pt_rf: c_cdr_fup / c_cdr_fdn (the frequency
  // loop is pt_wired only, the cdr's FUP / FDN are tied low on pt_rf). PT_CHIP 3 (benches only) keeps the original pins.
  wire[3:0] cs_dec; wire[1:0] hs_ext;
+ // WTX-09 RUN_FORCE (wtx.run_force): pt_wired drives it on the unbound c_adc_i_en pin (converters are pt_rf only).
+ wire adc_i_en_dec;
+ assign c_adc_i_en = (PT_CHIP == 2) ? f_wtx__run_force[0] & island_on[0] : adc_i_en_dec;
  assign c_clockmux_cs = (PT_CHIP == 2) ? {2'b00, hs_ext & {2{ion[2]}}} : cs_dec;
  pt_ctl_decode decode(.analog_cfg(analog_cfg), .debug_cfg(debug_cfg), .island_on(ion), .vreg_rx_ok(vreg_rx_ok), .bg_ok(bg_ok),
   .reset_seen(reset_seen), .rx_gain(rx_gain), .rx_gain_active(rx_gain_active), .rf_mute(rf_mute),
@@ -572,7 +575,7 @@ module pt_digital_macro(
   .c_bb_tap_q_bias_en(c_bb_tap_q_bias_en),
   .c_bb_tap_wmon_bias_en(c_bb_tap_wmon_bias_en),
   .c_wmon_obs_en(c_wmon_obs_en),
-  .c_adc_i_en(c_adc_i_en),
+  .c_adc_i_en(adc_i_en_dec),
   .c_adc_q_en(c_adc_q_en),
   .c_adc_i_test(c_adc_i_test),
   .c_adc_q_test(c_adc_q_test),
@@ -839,7 +842,7 @@ module pt_digital_macro(
  assign wire_tx_data = wire_tx_quad & {40{island_on[0]}};
 
  // ---------------- RF RX sample register (rtl/pt_boundary.sv pt_adc_merge) and the detector clock
- pt_adc_merge adc_merge(.clk(rf_rx_clk_i), .rst_n(rst_n), .adc_en(c_adc_i_en | c_adc_q_en), .ilen(c_adc_ilen),
+ pt_adc_merge adc_merge(.clk(rf_rx_clk_i), .rst_n(rst_n), .adc_en(adc_i_en_dec | c_adc_q_en), .ilen(c_adc_ilen),
   .ph_i(rf_ph_i), .ph_q(rf_ph_q), .sample_a(rf_rx_a), .sample_b(rf_rx_b), .sample(rf_rx_merged), .valid(rf_rx_valid));
  wire det_clk_q;
  pt_det_clk det(.clk(ct_wclk_c), .rst_n(rst_n), .en(c_detect_en), .cfg_rate_khz(f_cdr_config__nominal_rate_khz), .det_clk(det_clk_q));

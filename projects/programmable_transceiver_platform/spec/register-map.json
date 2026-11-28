@@ -599,7 +599,7 @@
  "break_before_make_rule": "A commit may not change one of these fields directly from one non-zero code to a different non-zero code; it must commit the zero (stopped/off/open) code first. Two SPI transactions separate the commits, far exceeding the 4 ns switch dead time in control_semantics.switch_dead_time_s.",
  "bus_widths": {
   "analog": 627,
-  "debug": 257
+  "debug": 258
  },
  "cdc_semantics": "The register file is clocked only by SPI SCLK and asynchronously reset by RESET_N AND POR. Active fields are quasi-static: they change only on a successful commit, which also toggles commit_toggle. A consuming clock domain that must see a coherent multi-bit value synchronizes commit_toggle through two flops and reloads its local copy on a toggle edge; the next commit cannot occur for at least one more 32-clock SPI transaction. Purely analog consumers see each field change once per commit; stopped-only fields are changed only while their outputs are isolated.",
  "chip_atb_no_leaf": {
@@ -5590,6 +5590,56 @@
    ],
    "store_mask": 1,
    "sv": "wtx__cascode_boost",
+   "trim": null,
+   "unit": "code",
+   "update": "stopped",
+   "values": null
+  },
+  {
+   "address_slots": 1,
+   "allowed": null,
+   "atb_bus": null,
+   "bits": 1,
+   "bus": "debug",
+   "bus_bits": 1,
+   "bus_lsb": 257,
+   "chips": [
+    "wired"
+   ],
+   "chunks": [
+    {
+     "addr": 93,
+     "field_lsb": 0,
+     "reg_lsb": 2,
+     "width": 1
+    }
+   ],
+   "clear_when_running": null,
+   "decode": null,
+   "decoded_bits": null,
+   "default": 0,
+   "direct": false,
+   "field": "run_force",
+   "gate_and": null,
+   "group": "wtx",
+   "islands": [
+    "wired"
+   ],
+   "kind": "debug",
+   "live": false,
+   "mantissa_bits": null,
+   "maximum": 1,
+   "meaning": "WTX-09 (macro batch 2026-11-28): force pt_wiredtx8 TX_RUN (RUN_FORCE, ORed in at the XMUX.RUNB point the netlist-only bypass uses) so a run-detector failure on silicon does not leave the wired TX bank off. pt_wired drives it on the unbound c_adc_i_en pin (pt_rf: the converter enable as before), gated by the wired island; the block input and the top net are the wired TX and floorplan owners' items. Debug only: set only with wiredtx.state off, then raise the state.",
+   "minimum": 0,
+   "name": "wtx.run_force",
+   "range_text": null,
+   "split": false,
+   "store": [
+    0,
+    0
+   ],
+   "store_mask": 1,
+   "sv": "wtx__run_force",
    "trim": null,
    "unit": "code",
    "update": "stopped",
@@ -16224,7 +16274,8 @@
    "fields": [
     "wtx.phase_trim",
     "wtx.idle_mode",
-    "wtx.cascode_boost"
+    "wtx.cascode_boost",
+    "wtx.run_force"
    ],
    "kind": "debug",
    "name": "wtx",
@@ -17252,7 +17303,7 @@
  },
  "last_analog": 183,
  "last_debug": 93,
- "map_hash16": 8164,
+ "map_hash16": 62918,
  "obs_status": [
   "island_pgood_wired",
   "island_pgood_rf",
@@ -18167,12 +18218,18 @@
      0,
      1,
      1
+    ],
+    [
+     "wtx.run_force",
+     0,
+     1,
+     2
     ]
    ],
    "group": "wtx",
    "kind": "debug",
    "reset": 0,
-   "writable_mask": 3
+   "writable_mask": 7
   },
   {
    "addr": 96,
@@ -21895,6 +21952,38 @@
    "then_all": [
     [
      "usbhs.bias.enable",
+     "eq",
+     [
+      1
+     ]
+    ]
+   ]
+  },
+  {
+   "cls": "legality",
+   "id": "host_follow_needs_line_pll",
+   "if_all": [],
+   "if_any": [
+    [
+     "debug.clk_select.host_clk",
+     "eq",
+     [
+      5
+     ]
+    ],
+    [
+     "debug.clk_select.conv_sample",
+     "eq",
+     [
+      5
+     ]
+    ]
+   ],
+   "node": "TIM-04: the host_follow clock (CDR ring PLL locked to H2D_CLK) runs in line-PLL mode (pt_cdr PFD); the CDR-vote mode drives the ring's HOLD, which fails extracted",
+   "source": "spec/debug-controls.json",
+   "then_all": [
+    [
+     "ring_c.config.line_pll",
      "eq",
      [
       1

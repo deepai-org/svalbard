@@ -89,6 +89,7 @@ wire[0:0]f_rf_rx__tia_hib=debug_cfg[222:222]; // rf_rx.tia_hib, reset 1
 wire[31:0]f_wtx__phase_trim=debug_cfg[254:223]; // wtx.phase_trim, reset 0
 wire[0:0]f_wtx__idle_mode=debug_cfg[255:255]; // wtx.idle_mode, reset 0
 wire[0:0]f_wtx__cascode_boost=debug_cfg[256:256]; // wtx.cascode_boost, reset 0
+wire[0:0]f_wtx__run_force=debug_cfg[257:257]; // wtx.run_force, reset 0
 wire[1:0]f_adc_i_config__input_test=analog_cfg[1:0]; // adc_i.config.input_test, reset 0
 wire[1:0]f_adc_i_state__state=analog_cfg[3:2]; // adc_i.state.state, reset 0
 wire[1:0]f_adc_q_config__input_test=analog_cfg[5:4]; // adc_q.config.input_test, reset 0

@@ -1877,6 +1877,14 @@
           "minimum": 0,
           "maximum": 1,
           "unit": "code"
+        },
+        "run_force": {
+          "bits": 1,
+          "default": 0,
+          "minimum": 0,
+          "maximum": 1,
+          "unit": "code",
+          "meaning": "WTX-09 (macro batch 2026-11-28): force pt_wiredtx8 TX_RUN (RUN_FORCE, ORed in at the XMUX.RUNB point the netlist-only bypass uses) so a run-detector failure on silicon does not leave the wired TX bank off. pt_wired drives it on the unbound c_adc_i_en pin (pt_rf: the converter enable as before), gated by the wired island; the block input and the top net are the wired TX and floorplan owners' items. Debug only: set only with wiredtx.state off, then raise the state."
         }
       }
     }
@@ -3207,6 +3215,30 @@
       "then_all": [
         [
           "usbhs.bias.enable",
+          "eq",
+          1
+        ]
+      ]
+    },
+    {
+      "id": "host_follow_needs_line_pll",
+      "class": "legality",
+      "node": "TIM-04: the host_follow clock (CDR ring PLL locked to H2D_CLK) runs in line-PLL mode (pt_cdr PFD); the CDR-vote mode drives the ring's HOLD, which fails extracted",
+      "if_any": [
+        [
+          "debug.clk_select.host_clk",
+          "eq",
+          "host_follow"
+        ],
+        [
+          "debug.clk_select.conv_sample",
+          "eq",
+          "host_follow"
+        ]
+      ],
+      "then_all": [
+        [
+          "ring_c.config.line_pll",
           "eq",
           1
         ]

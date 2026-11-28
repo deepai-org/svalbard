@@ -1,0 +1,1911 @@
+{
+  "chip": "wired",
+  "status": "fail",
+  "scope": "assembled RTL of pt_wired (generated pt_chip + provider pad models + real macro) selection/status/clock paths to the black-box pt_analog_top boundary and the debug pads",
+  "mutation": null,
+  "negative": null,
+  "negative_controls": {
+    "status_source": {
+      "case": "NEG_status_source:monitor:2:dbg_obs:por_n",
+      "caught": true,
+      "failures": [
+        "NEG_status_source:monitor:2:dbg_obs:por_n: DBG_OBS0 not low (src6)"
+      ]
+    },
+    "wire_source": {
+      "case": "NEG_wire_source:wirepll:1:dbg_obs:pll_cdr_lock",
+      "caught": true,
+      "failures": [
+        "NEG_wire_source:wirepll:1:dbg_obs:pll_cdr_lock: DBG_OBS0 not high (src6)"
+      ]
+    },
+    "atb_code": {
+      "case": "NEG_atb_code:power:2:atb1:wire_vdd_sw_sense",
+      "caught": true,
+      "failures": [
+        "NEG_atb_code:power:2:atb1:wire_vdd_sw_sense: atb1_sw not one-hot code 7",
+        "NEG_atb_code:power:2:atb1:wire_vdd_sw_sense: leaf/group/pad switch not closed"
+      ]
+    },
+    "port_value": {
+      "case": "NEG_port_value:aosc:0:clk_obs:aosc",
+      "caught": true,
+      "failures": [
+        "NEG_port_value:aosc:0:clk_obs:aosc: debug.clk_obs.divider_log2 -> c_clk_obs_n"
+      ]
+    },
+    "island_gate": {
+      "case": "NEG_island_gate:wirepll:3:atb1:pll_vctrl",
+      "caught": true,
+      "failures": [
+        "NEG_island_gate:wirepll:3:atb1:pll_vctrl: atb1_sw not one-hot code 30",
+        "NEG_island_gate:wirepll:3:atb1:pll_vctrl: leaf/group/pad switch not closed"
+      ]
+    },
+    "clock_pad": {
+      "case": "NEG_clock_pad:aosc:0:clk_obs:aosc",
+      "caught": true,
+      "failures": [
+        "NEG_clock_pad:aosc:0:clk_obs:aosc: debug.clk_obs.divider_log2 -> c_clk_obs_n",
+        "NEG_clock_pad:aosc:0:clk_obs:aosc: debug.clk_obs.source -> c_clk_obs_en",
+        "NEG_clock_pad:aosc:0:clk_obs:aosc: debug.clk_obs.source -> c_clk_obs_s",
+        "NEG_clock_pad:aosc:0:clk_obs:aosc: CLK_OBS high"
+      ]
+    }
+  },
+  "cases": [
+    {
+      "id": "power:0:spi:0x0A[13:8]",
+      "block": "power",
+      "index": 0,
+      "islands": [],
+      "register_writes": {},
+      "checks": [
+        [
+          "spi_pgood"
+        ]
+      ],
+      "status": "fail",
+      "failures": [
+        "power:0:spi:0x0A[13:8]: pgood bits"
+      ]
+    },
+    {
+      "id": "power:2:atb1:wire_vdd_sw_sense",
+      "block": "power",
+      "index": 2,
+      "islands": [],
+      "register_writes": {
+        "0x4A": "0x01C0"
+      },
+      "checks": [
+        [
+          "atb",
+          7,
+          null
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "power:4:atb1:pll_vdd_sw_sense",
+      "block": "power",
+      "index": 4,
+      "islands": [],
+      "register_writes": {
+        "0x4A": "0x0240"
+      },
+      "checks": [
+        [
+          "atb",
+          9,
+          null
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "power:6:atb1:debug_vdd_sw_sense",
+      "block": "power",
+      "index": 6,
+      "islands": [],
+      "register_writes": {
+        "0x4A": "0x0300"
+      },
+      "checks": [
+        [
+          "atb",
+          12,
+          null
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "power:7:atb1:core_vdd_sense",
+      "block": "power",
+      "index": 7,
+      "islands": [],
+      "register_writes": {
+        "0x4A": "0x0140"
+      },
+      "checks": [
+        [
+          "atb",
+          5,
+          null
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "power:8:atb1:vdd_lo_vreg_tx",
+      "block": "power",
+      "index": 8,
+      "islands": [],
+      "register_writes": {
+        "0x4A": "0x0180"
+      },
+      "checks": [
+        [
+          "atb",
+          6,
+          null
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "power:9:atb1:vss_local_sense",
+      "block": "power",
+      "index": 9,
+      "islands": [],
+      "register_writes": {
+        "0x4A": "0x0340"
+      },
+      "checks": [
+        [
+          "atb",
+          13,
+          null
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "monitor:2:dbg_obs:por_n",
+      "block": "monitor",
+      "index": 2,
+      "islands": [],
+      "register_writes": {
+        "0x4D": "0x000F"
+      },
+      "checks": [
+        [
+          "status",
+          "or",
+          [
+            "por_n"
+          ]
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "monitor:3:spi:0x0D[0]",
+      "block": "monitor",
+      "index": 3,
+      "islands": [],
+      "register_writes": {},
+      "checks": [
+        [
+          "spi_por"
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "aosc:0:clk_obs:aosc",
+      "block": "aosc",
+      "index": 0,
+      "islands": [
+        "debug"
+      ],
+      "register_writes": {
+        "0x40": "0x0020",
+        "0x4C": "0x00EC"
+      },
+      "checks": [
+        [
+          "ports",
+          "debug.clk_obs.divider_log2"
+        ],
+        [
+          "ports",
+          "debug.clk_obs.source"
+        ],
+        [
+          "clock"
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "aosc:1:dbg_obs:aosc_div",
+      "block": "aosc",
+      "index": 1,
+      "islands": [],
+      "register_writes": {
+        "0x4D": "0x0023"
+      },
+      "checks": [
+        [
+          "status",
+          "div2",
+          [
+            "fc_src[4]"
+          ]
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "aosc:2:freq_count:aosc",
+      "block": "aosc",
+      "index": 2,
+      "islands": [],
+      "register_writes": {
+        "0xE8": "0x024D"
+      },
+      "checks": [
+        [
+          "ports",
+          "debug.freq_count_a.source"
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "bias:0:atb1:master_ibias",
+      "block": "bias",
+      "index": 0,
+      "islands": [],
+      "register_writes": {
+        "0x4A": "0x0040"
+      },
+      "checks": [
+        [
+          "atb",
+          1,
+          null
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "bias:1:atb1:vbg",
+      "block": "bias",
+      "index": 1,
+      "islands": [],
+      "register_writes": {
+        "0x4A": "0x0DC0"
+      },
+      "checks": [
+        [
+          "atb",
+          55,
+          null
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "bias:2:atb1:idac1_source_ibias",
+      "block": "bias",
+      "index": 2,
+      "islands": [],
+      "register_writes": {
+        "0x4A": "0x0E40"
+      },
+      "checks": [
+        [
+          "atb",
+          57,
+          null
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "bias:3:atb1:master_vref0",
+      "block": "bias",
+      "index": 3,
+      "islands": [],
+      "register_writes": {
+        "0x4A": "0x0080"
+      },
+      "checks": [
+        [
+          "atb",
+          2,
+          null
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "bias:4:atb1:master_vcm",
+      "block": "bias",
+      "index": 4,
+      "islands": [],
+      "register_writes": {
+        "0x4A": "0x00C0"
+      },
+      "checks": [
+        [
+          "atb",
+          3,
+          null
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "digital:0:spi:0x00",
+      "block": "digital",
+      "index": 0,
+      "islands": [],
+      "register_writes": {},
+      "checks": [
+        [
+          "spi_id"
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "digital:1:dbg_obs:commit_toggle",
+      "block": "digital",
+      "index": 1,
+      "islands": [],
+      "register_writes": {
+        "0x4D": "0x0003"
+      },
+      "checks": [
+        [
+          "commit_toggle"
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "digital:7:freq_count:dig_ring",
+      "block": "digital",
+      "index": 7,
+      "islands": [],
+      "register_writes": {
+        "0xE8": "0x024F"
+      },
+      "checks": [
+        [
+          "ports",
+          "debug.freq_count_a.source"
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "digital:8:freq_count:ring_osc",
+      "block": "digital",
+      "index": 8,
+      "islands": [
+        "debug"
+      ],
+      "register_writes": {
+        "0x40": "0x0020",
+        "0xE8": "0x024B"
+      },
+      "checks": [
+        [
+          "ports",
+          "debug.freq_count_a.source"
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "hostio:2:spi:0x00",
+      "block": "hostio",
+      "index": 2,
+      "islands": [],
+      "register_writes": {},
+      "checks": [
+        [
+          "spi_id"
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "refpad:0:dbg_obs:ref_present",
+      "block": "refpad",
+      "index": 0,
+      "islands": [],
+      "register_writes": {
+        "0x4D": "0x000B"
+      },
+      "checks": [
+        [
+          "status",
+          "or",
+          [
+            "s_ref_present"
+          ]
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "refpad:1:freq_count:tx_ring_fbck",
+      "block": "refpad",
+      "index": 1,
+      "islands": [
+        "pll"
+      ],
+      "register_writes": {
+        "0x40": "0x0004",
+        "0xE8": "0x0249"
+      },
+      "checks": [
+        [
+          "ports",
+          "debug.freq_count_a.source"
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "wirepad:0:wmon:rx_p",
+      "block": "wirepad",
+      "index": 0,
+      "islands": [
+        "debug",
+        "wired"
+      ],
+      "register_writes": {
+        "0x40": "0x0021",
+        "0x49": "0x0001"
+      },
+      "checks": [
+        [
+          "ports",
+          "debug.wmon_select.select"
+        ]
+      ],
+      "status": "fail",
+      "failures": [
+        "wirepad:0:wmon:rx_p: debug.wmon_select.select -> c_wmon_obs_en",
+        "wirepad:0:wmon:rx_p: debug.wmon_select.select -> c_wmon_sel"
+      ]
+    },
+    {
+      "id": "wirepad:1:wmon:rx_n",
+      "block": "wirepad",
+      "index": 1,
+      "islands": [
+        "debug",
+        "wired"
+      ],
+      "register_writes": {
+        "0x40": "0x0021",
+        "0x49": "0x0002"
+      },
+      "checks": [
+        [
+          "ports",
+          "debug.wmon_select.select"
+        ]
+      ],
+      "status": "fail",
+      "failures": [
+        "wirepad:1:wmon:rx_n: debug.wmon_select.select -> c_wmon_obs_en",
+        "wirepad:1:wmon:rx_n: debug.wmon_select.select -> c_wmon_sel"
+      ]
+    },
+    {
+      "id": "wirepll:0:clk_obs:pll_vco",
+      "block": "wirepll",
+      "index": 0,
+      "islands": [
+        "debug",
+        "pll"
+      ],
+      "register_writes": {
+        "0x40": "0x0024",
+        "0x4C": "0x00E8"
+      },
+      "checks": [
+        [
+          "ports",
+          "debug.clk_obs.divider_log2"
+        ],
+        [
+          "ports",
+          "debug.clk_obs.source"
+        ],
+        [
+          "clock"
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "wirepll:1:dbg_obs:pll_cdr_lock",
+      "block": "wirepll",
+      "index": 1,
+      "islands": [
+        "pll"
+      ],
+      "register_writes": {
+        "0x40": "0x0004",
+        "0x4D": "0x0030"
+      },
+      "checks": [
+        [
+          "status",
+          "or",
+          [
+            "s_pll_cdr_lock"
+          ]
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "wirepll:2:dbg_obs:pll_tx_lock",
+      "block": "wirepll",
+      "index": 2,
+      "islands": [
+        "pll"
+      ],
+      "register_writes": {
+        "0x40": "0x0004",
+        "0x4D": "0x000A"
+      },
+      "checks": [
+        [
+          "status",
+          "or",
+          [
+            "s_pll_tx_lock"
+          ]
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "wirepll:3:atb1:pll_vctrl",
+      "block": "wirepll",
+      "index": 3,
+      "islands": [
+        "pll"
+      ],
+      "register_writes": {
+        "0x40": "0x0004",
+        "0x4A": "0x0780"
+      },
+      "checks": [
+        [
+          "atb",
+          30,
+          "pll"
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "wirepll:4:freq_count:tx_ring_fbck",
+      "block": "wirepll",
+      "index": 4,
+      "islands": [
+        "pll"
+      ],
+      "register_writes": {
+        "0x40": "0x0004",
+        "0xE8": "0x0249"
+      },
+      "checks": [
+        [
+          "ports",
+          "debug.freq_count_a.source"
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "clockmux:0:clk_obs:rf_lo",
+      "block": "clockmux",
+      "index": 0,
+      "islands": [
+        "debug",
+        "pll"
+      ],
+      "register_writes": {
+        "0x40": "0x0024",
+        "0x4C": "0x00E1"
+      },
+      "checks": [
+        [
+          "ports",
+          "debug.clk_obs.divider_log2"
+        ],
+        [
+          "ports",
+          "debug.clk_obs.source"
+        ],
+        [
+          "clock"
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "clockmux:1:clk_obs:wire_line",
+      "block": "clockmux",
+      "index": 1,
+      "islands": [
+        "debug",
+        "pll",
+        "wired"
+      ],
+      "register_writes": {
+        "0x40": "0x0025",
+        "0x4C": "0x00E2"
+      },
+      "checks": [
+        [
+          "ports",
+          "debug.clk_obs.divider_log2"
+        ],
+        [
+          "ports",
+          "debug.clk_obs.source"
+        ],
+        [
+          "clock"
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "refinput:0:dbg_obs:ref_present",
+      "block": "refinput",
+      "index": 0,
+      "islands": [
+        "pll"
+      ],
+      "register_writes": {
+        "0x40": "0x0004",
+        "0x4D": "0x000B"
+      },
+      "checks": [
+        [
+          "status",
+          "or",
+          [
+            "s_ref_present"
+          ]
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "refinput:1:freq_count:tx_ring_fbck",
+      "block": "refinput",
+      "index": 1,
+      "islands": [
+        "pll"
+      ],
+      "register_writes": {
+        "0x40": "0x0004",
+        "0xE8": "0x0249"
+      },
+      "checks": [
+        [
+          "ports",
+          "debug.freq_count_a.source"
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "refinput:2:clk_obs:pll_feedback",
+      "block": "refinput",
+      "index": 2,
+      "islands": [
+        "debug",
+        "pll"
+      ],
+      "register_writes": {
+        "0x40": "0x0024",
+        "0x4C": "0x0009"
+      },
+      "checks": [
+        [
+          "ports",
+          "debug.clk_obs.source"
+        ],
+        [
+          "clock"
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "wiredtx:1:atb1:wiredtx_bias",
+      "block": "wiredtx",
+      "index": 1,
+      "islands": [
+        "wired"
+      ],
+      "register_writes": {
+        "0x40": "0x0001",
+        "0x4A": "0x0680",
+        "0x51": "0x0000"
+      },
+      "checks": [
+        [
+          "ports",
+          "consolidation.wiredtx_stage.stage"
+        ],
+        [
+          "atb",
+          26,
+          "wired"
+        ]
+      ],
+      "status": "fail",
+      "failures": [
+        "wiredtx:1:atb1:wiredtx_bias: atb1_sw not one-hot code 26",
+        "wiredtx:1:atb1:wiredtx_bias: leaf/group/pad switch not closed"
+      ]
+    },
+    {
+      "id": "wiredtx:2:atb1:wiredtx_avgp",
+      "block": "wiredtx",
+      "index": 2,
+      "islands": [
+        "wired"
+      ],
+      "register_writes": {
+        "0x40": "0x0001",
+        "0x4A": "0x0EC0"
+      },
+      "checks": [
+        [
+          "atb",
+          59,
+          "wired"
+        ]
+      ],
+      "status": "fail",
+      "failures": [
+        "wiredtx:2:atb1:wiredtx_avgp: atb1_sw not one-hot code 59",
+        "wiredtx:2:atb1:wiredtx_avgp: leaf/group/pad switch not closed"
+      ]
+    },
+    {
+      "id": "wiredtx:3:atb1:wiredtx_avgn",
+      "block": "wiredtx",
+      "index": 3,
+      "islands": [
+        "wired"
+      ],
+      "register_writes": {
+        "0x40": "0x0001",
+        "0x4A": "0x0F00"
+      },
+      "checks": [
+        [
+          "atb",
+          60,
+          "wired"
+        ]
+      ],
+      "status": "fail",
+      "failures": [
+        "wiredtx:3:atb1:wiredtx_avgn: atb1_sw not one-hot code 60",
+        "wiredtx:3:atb1:wiredtx_avgn: leaf/group/pad switch not closed"
+      ]
+    },
+    {
+      "id": "wiredtx:4:dbg_obs:wtx_ext_data",
+      "block": "wiredtx",
+      "index": 4,
+      "islands": [
+        "wired"
+      ],
+      "register_writes": {
+        "0x40": "0x0001",
+        "0x4D": "0x0034"
+      },
+      "checks": [
+        [
+          "status",
+          "or",
+          [
+            "s_wtx_ext_data"
+          ]
+        ]
+      ],
+      "status": "fail",
+      "failures": [
+        "wiredtx:4:dbg_obs:wtx_ext_data: DBG_OBS0 not high (src13)"
+      ]
+    },
+    {
+      "id": "tmds:1:atb1:wiredtx_bias",
+      "block": "tmds",
+      "index": 1,
+      "islands": [
+        "wired"
+      ],
+      "register_writes": {
+        "0x40": "0x0001",
+        "0x4A": "0x0680",
+        "0x51": "0x0001"
+      },
+      "checks": [
+        [
+          "ports",
+          "consolidation.wiredtx_stage.stage"
+        ],
+        [
+          "atb",
+          26,
+          "wired"
+        ]
+      ],
+      "status": "fail",
+      "failures": [
+        "tmds:1:atb1:wiredtx_bias: consolidation.wiredtx_stage.stage -> c_wtxfb_stage_tmds",
+        "tmds:1:atb1:wiredtx_bias: atb1_sw not one-hot code 26",
+        "tmds:1:atb1:wiredtx_bias: leaf/group/pad switch not closed"
+      ]
+    },
+    {
+      "id": "cdr:0:clk_obs:cdr_recovered",
+      "block": "cdr",
+      "index": 0,
+      "islands": [
+        "debug",
+        "pll",
+        "wired"
+      ],
+      "register_writes": {
+        "0x40": "0x0025",
+        "0x4C": "0x006E"
+      },
+      "checks": [
+        [
+          "ports",
+          "debug.clk_obs.divider_log2"
+        ],
+        [
+          "ports",
+          "debug.clk_obs.source"
+        ],
+        [
+          "clock"
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "cdr:8:atb1:cdr_bias",
+      "block": "cdr",
+      "index": 8,
+      "islands": [
+        "pll"
+      ],
+      "register_writes": {
+        "0x40": "0x0004",
+        "0x4A": "0x0880"
+      },
+      "checks": [
+        [
+          "atb",
+          34,
+          "pll"
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "cdr:9:freq_count:cdr_ring_fbck",
+      "block": "cdr",
+      "index": 9,
+      "islands": [
+        "pll"
+      ],
+      "register_writes": {
+        "0x40": "0x0004",
+        "0xEA": "0x024A"
+      },
+      "checks": [
+        [
+          "ports",
+          "debug.freq_count_b.source"
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    },
+    {
+      "id": "ctle:0:wmon:ctle_p",
+      "block": "ctle",
+      "index": 0,
+      "islands": [
+        "debug",
+        "wired"
+      ],
+      "register_writes": {
+        "0x40": "0x0021",
+        "0x49": "0x0003"
+      },
+      "checks": [
+        [
+          "ports",
+          "debug.wmon_select.select"
+        ]
+      ],
+      "status": "fail",
+      "failures": [
+        "ctle:0:wmon:ctle_p: debug.wmon_select.select -> c_wmon_obs_en",
+        "ctle:0:wmon:ctle_p: debug.wmon_select.select -> c_wmon_sel"
+      ]
+    },
+    {
+      "id": "ctle:1:wmon:ctle_n",
+      "block": "ctle",
+      "index": 1,
+      "islands": [
+        "debug",
+        "wired"
+      ],
+      "register_writes": {
+        "0x40": "0x0021",
+        "0x49": "0x0004"
+      },
+      "checks": [
+        [
+          "ports",
+          "debug.wmon_select.select"
+        ]
+      ],
+      "status": "fail",
+      "failures": [
+        "ctle:1:wmon:ctle_n: debug.wmon_select.select -> c_wmon_obs_en",
+        "ctle:1:wmon:ctle_n: debug.wmon_select.select -> c_wmon_sel"
+      ]
+    },
+    {
+      "id": "ctle:2:atb1:ctle_bias",
+      "block": "ctle",
+      "index": 2,
+      "islands": [
+        "wired"
+      ],
+      "register_writes": {
+        "0x40": "0x0001",
+        "0x4A": "0x0600"
+      },
+      "checks": [
+        [
+          "atb",
+          24,
+          "wired"
+        ]
+      ],
+      "status": "fail",
+      "failures": [
+        "ctle:2:atb1:ctle_bias: atb1_sw not one-hot code 24",
+        "ctle:2:atb1:ctle_bias: leaf/group/pad switch not closed"
+      ]
+    },
+    {
+      "id": "slicer:4:atb1:wiredtx_trunk",
+      "block": "slicer",
+      "index": 4,
+      "islands": [
+        "wired"
+      ],
+      "register_writes": {
+        "0x40": "0x0001",
+        "0x4A": "0x0640"
+      },
+      "checks": [
+        [
+          "atb",
+          25,
+          "wired"
+        ]
+      ],
+      "status": "fail",
+      "failures": [
+        "slicer:4:atb1:wiredtx_trunk: atb1_sw not one-hot code 25",
+        "slicer:4:atb1:wiredtx_trunk: leaf/group/pad switch not closed"
+      ]
+    },
+    {
+      "id": "termination:0:wmon:rx_p",
+      "block": "termination",
+      "index": 0,
+      "islands": [
+        "debug",
+        "wired"
+      ],
+      "register_writes": {
+        "0x40": "0x0021",
+        "0x49": "0x0001"
+      },
+      "checks": [
+        [
+          "ports",
+          "debug.wmon_select.select"
+        ]
+      ],
+      "status": "fail",
+      "failures": [
+        "termination:0:wmon:rx_p: debug.wmon_select.select -> c_wmon_obs_en",
+        "termination:0:wmon:rx_p: debug.wmon_select.select -> c_wmon_sel"
+      ]
+    },
+    {
+      "id": "termination:1:atb1:termination_vcm",
+      "block": "termination",
+      "index": 1,
+      "islands": [
+        "wired"
+      ],
+      "register_writes": {
+        "0x40": "0x0001",
+        "0x4A": "0x06C0"
+      },
+      "checks": [
+        [
+          "atb",
+          27,
+          "wired"
+        ]
+      ],
+      "status": "fail",
+      "failures": [
+        "termination:1:atb1:termination_vcm: atb1_sw not one-hot code 27",
+        "termination:1:atb1:termination_vcm: leaf/group/pad switch not closed"
+      ]
+    },
+    {
+      "id": "termination:2:atb1:wire_vcm",
+      "block": "termination",
+      "index": 2,
+      "islands": [
+        "wired"
+      ],
+      "register_writes": {
+        "0x40": "0x0001",
+        "0x4A": "0x05C0"
+      },
+      "checks": [
+        [
+          "atb",
+          23,
+          "wired"
+        ]
+      ],
+      "status": "fail",
+      "failures": [
+        "termination:2:atb1:wire_vcm: atb1_sw not one-hot code 23",
+        "termination:2:atb1:wire_vcm: leaf/group/pad switch not closed"
+      ]
+    },
+    {
+      "id": "detect:0:dbg_obs:detect_diff",
+      "block": "detect",
+      "index": 0,
+      "islands": [
+        "wired"
+      ],
+      "register_writes": {
+        "0x40": "0x0001",
+        "0x4D": "0x002E"
+      },
+      "checks": [
+        [
+          "status",
+          "or",
+          [
+            "s_detect_diff_pos",
+            "s_detect_diff_neg"
+          ]
+        ]
+      ],
+      "status": "fail",
+      "failures": [
+        "detect:0:dbg_obs:detect_diff: DBG_OBS0 not high (src11)",
+        "detect:0:dbg_obs:detect_diff: DBG_OBS0 not high (src12)"
+      ]
+    },
+    {
+      "id": "detect:1:dbg_obs:detect_diff",
+      "block": "detect",
+      "index": 1,
+      "islands": [
+        "wired"
+      ],
+      "register_writes": {
+        "0x40": "0x0001",
+        "0x4D": "0x002E"
+      },
+      "checks": [
+        [
+          "status",
+          "or",
+          [
+            "s_detect_diff_pos",
+            "s_detect_diff_neg"
+          ]
+        ]
+      ],
+      "status": "fail",
+      "failures": [
+        "detect:1:dbg_obs:detect_diff: DBG_OBS0 not high (src11)",
+        "detect:1:dbg_obs:detect_diff: DBG_OBS0 not high (src12)"
+      ]
+    },
+    {
+      "id": "detect:3:wmon:rx_p",
+      "block": "detect",
+      "index": 3,
+      "islands": [
+        "debug",
+        "wired"
+      ],
+      "register_writes": {
+        "0x40": "0x0021",
+        "0x49": "0x0001"
+      },
+      "checks": [
+        [
+          "ports",
+          "debug.wmon_select.select"
+        ]
+      ],
+      "status": "fail",
+      "failures": [
+        "detect:3:wmon:rx_p: debug.wmon_select.select -> c_wmon_obs_en",
+        "detect:3:wmon:rx_p: debug.wmon_select.select -> c_wmon_sel"
+      ]
+    },
+    {
+      "id": "detect:4:atb1:detect_ibias",
+      "block": "detect",
+      "index": 4,
+      "islands": [
+        "wired"
+      ],
+      "register_writes": {
+        "0x40": "0x0001",
+        "0x4A": "0x0700"
+      },
+      "checks": [
+        [
+          "atb",
+          28,
+          "wired"
+        ]
+      ],
+      "status": "fail",
+      "failures": [
+        "detect:4:atb1:detect_ibias: atb1_sw not one-hot code 28",
+        "detect:4:atb1:detect_ibias: leaf/group/pad switch not closed"
+      ]
+    },
+    {
+      "id": "usbhs:3:atb1:usbhs_ibias",
+      "block": "usbhs",
+      "index": 3,
+      "islands": [
+        "wired"
+      ],
+      "register_writes": {
+        "0x40": "0x0001",
+        "0x4A": "0x0A00"
+      },
+      "checks": [
+        [
+          "atb",
+          40,
+          "wired"
+        ]
+      ],
+      "status": "fail",
+      "failures": [
+        "usbhs:3:atb1:usbhs_ibias: atb1_sw not one-hot code 40",
+        "usbhs:3:atb1:usbhs_ibias: leaf/group/pad switch not closed"
+      ]
+    },
+    {
+      "id": "usbfs:2:atb1:lo_vtune_cdr_vctrl",
+      "block": "usbfs",
+      "index": 2,
+      "islands": [
+        "wired"
+      ],
+      "register_writes": {
+        "0x40": "0x0001",
+        "0x4A": "0x0A40"
+      },
+      "checks": [
+        [
+          "atb",
+          41,
+          null
+        ]
+      ],
+      "status": "pass",
+      "failures": []
+    }
+  ],
+  "not_simulated": [
+    {
+      "id": "power:1:spi:0xFF[9:0]",
+      "block": "power",
+      "index": 1,
+      "reason": "unsupported SPI selection"
+    },
+    {
+      "id": "power:3:atb1:rf_vdd_sw_sense",
+      "block": "power",
+      "index": 3,
+      "reason": "no atb1_leaf8 in pt_wired chip.conn"
+    },
+    {
+      "id": "power:5:atb1:conv_vdd_sw_sense",
+      "block": "power",
+      "index": 5,
+      "reason": "no atb1_leaf11 in pt_wired chip.conn"
+    },
+    {
+      "id": "monitor:0:spi:0x0B[0]",
+      "block": "monitor",
+      "index": 0,
+      "reason": "fault: macro pin tied to a constant in chip.conn (D-FAULT)"
+    },
+    {
+      "id": "monitor:1:dbg_obs:monitor_fault",
+      "block": "monitor",
+      "index": 1,
+      "reason": "monitor_fault: macro pin(s) ['fault'] tied to a constant in pt_wired chip.conn"
+    },
+    {
+      "id": "bias:5:dbg_obs:bandgap_ok",
+      "block": "bias",
+      "index": 5,
+      "reason": "bandgap_ok: digital-internal source (mux selection only)"
+    },
+    {
+      "id": "refbuf:0:atb1:conv_vref",
+      "block": "refbuf",
+      "index": 0,
+      "reason": "island group(s) ['conv'] not on pt_wired"
+    },
+    {
+      "id": "refbuf:1:dbg_obs:refbuf_ready",
+      "block": "refbuf",
+      "index": 1,
+      "reason": "island group(s) ['conv'] not on pt_wired"
+    },
+    {
+      "id": "digital:2:dbg_obs:capture_done",
+      "block": "digital",
+      "index": 2,
+      "reason": "capture_done: digital-internal source (mux selection only)"
+    },
+    {
+      "id": "digital:3:bb_tap:observe_tx",
+      "block": "digital",
+      "index": 3,
+      "reason": "island group(s) ['conv', 'rf'] not on pt_wired"
+    },
+    {
+      "id": "digital:4:pad:WIRE_TX_P/N",
+      "block": "digital",
+      "index": 4,
+      "reason": "pad: bench/payload observation, not an RTL selection"
+    },
+    {
+      "id": "digital:5:pad:USB_DP/DN",
+      "block": "digital",
+      "index": 5,
+      "reason": "pad: bench/payload observation, not an RTL selection"
+    },
+    {
+      "id": "digital:6:host_data:D2H",
+      "block": "digital",
+      "index": 6,
+      "reason": "host_data: bench/payload observation, not an RTL selection"
+    },
+    {
+      "id": "hostio:0:host_data:D2H",
+      "block": "hostio",
+      "index": 0,
+      "reason": "host_data: bench/payload observation, not an RTL selection"
+    },
+    {
+      "id": "hostio:1:dbg_obs:host_rx_clk_div",
+      "block": "hostio",
+      "index": 1,
+      "reason": "host_rx_clk_div: digital-internal source (mux selection only)"
+    },
+    {
+      "id": "hostio:3:host_data:H2D",
+      "block": "hostio",
+      "index": 3,
+      "reason": "host_data: bench/payload observation, not an RTL selection"
+    },
+    {
+      "id": "hostio:4:host_data:D2H",
+      "block": "hostio",
+      "index": 4,
+      "reason": "host_data: bench/payload observation, not an RTL selection"
+    },
+    {
+      "id": "hostio:5:spi:0xFF[11:10]",
+      "block": "hostio",
+      "index": 5,
+      "reason": "unsupported SPI selection"
+    },
+    {
+      "id": "rfpad:0:bb_tap:observe_rx_mixer",
+      "block": "rfpad",
+      "index": 0,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "rftxpad:0:pad:RF_TX_P/N",
+      "block": "rftxpad",
+      "index": 0,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "txpad:0:pad:WIRE_TX_P/N",
+      "block": "txpad",
+      "index": 0,
+      "reason": "pad: bench/payload observation, not an RTL selection"
+    },
+    {
+      "id": "rfpll:0:clk_obs:pll_vco",
+      "block": "rfpll",
+      "index": 0,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "rfpll:1:clk_obs:pll_feedback",
+      "block": "rfpll",
+      "index": 1,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "rfpll:2:dbg_obs:pll_tx_lock",
+      "block": "rfpll",
+      "index": 2,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "rfpll:3:atb1:pll_vctrl",
+      "block": "rfpll",
+      "index": 3,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "rfpll:4:atb1:pll_ibias",
+      "block": "rfpll",
+      "index": 4,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "rfpll:5:freq_count:tx_ring_fbck",
+      "block": "rfpll",
+      "index": 5,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "lna:0:bb_tap:observe_rx_mixer",
+      "block": "lna",
+      "index": 0,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "lna:1:atb1:lna_bias",
+      "block": "lna",
+      "index": 1,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "lna:2:atb1:rf_vcm",
+      "block": "lna",
+      "index": 2,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "rxmix_i:0:bb_tap:observe_rx_mixer",
+      "block": "rxmix_i",
+      "index": 0,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "rxmix_i:1:atb1:rxmix_bias",
+      "block": "rxmix_i",
+      "index": 1,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "rxmix_q:0:bb_tap:observe_rx_mixer",
+      "block": "rxmix_q",
+      "index": 0,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "rxmix_q:1:atb1:rxmix_bias",
+      "block": "rxmix_q",
+      "index": 1,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "pga_i:0:bb_tap:observe_rx_pga",
+      "block": "pga_i",
+      "index": 0,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "pga_i:1:atb1:pga_bias",
+      "block": "pga_i",
+      "index": 1,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "pga_q:0:bb_tap:observe_rx_pga",
+      "block": "pga_q",
+      "index": 0,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "pga_q:1:atb1:pga_bias",
+      "block": "pga_q",
+      "index": 1,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "rxfilter_i:0:bb_tap:observe_rx_filter",
+      "block": "rxfilter_i",
+      "index": 0,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "rxfilter_i:1:atb1:bbfilter_bias",
+      "block": "rxfilter_i",
+      "index": 1,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "rxfilter_q:0:bb_tap:observe_rx_filter",
+      "block": "rxfilter_q",
+      "index": 0,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "rxfilter_q:1:atb1:bbfilter_bias",
+      "block": "rxfilter_q",
+      "index": 1,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "adc_i:0:host_data:D2H",
+      "block": "adc_i",
+      "index": 0,
+      "reason": "island group(s) ['conv', 'rf'] not on pt_wired"
+    },
+    {
+      "id": "adc_i:1:dbg_obs:adc_i_done",
+      "block": "adc_i",
+      "index": 1,
+      "reason": "island group(s) ['conv'] not on pt_wired"
+    },
+    {
+      "id": "adc_i:2:dbg_obs:adc_i_overload",
+      "block": "adc_i",
+      "index": 2,
+      "reason": "island group(s) ['conv'] not on pt_wired"
+    },
+    {
+      "id": "adc_i:3:atb1:adc_comparator_bias",
+      "block": "adc_i",
+      "index": 3,
+      "reason": "island group(s) ['conv'] not on pt_wired"
+    },
+    {
+      "id": "adc_i:4:atb1:vreg_tx",
+      "block": "adc_i",
+      "index": 4,
+      "reason": "island group(s) ['conv'] not on pt_wired"
+    },
+    {
+      "id": "adc_q:0:host_data:D2H",
+      "block": "adc_q",
+      "index": 0,
+      "reason": "island group(s) ['conv', 'rf'] not on pt_wired"
+    },
+    {
+      "id": "adc_q:1:dbg_obs:adc_q_done",
+      "block": "adc_q",
+      "index": 1,
+      "reason": "island group(s) ['conv'] not on pt_wired"
+    },
+    {
+      "id": "adc_q:2:dbg_obs:adc_q_overload",
+      "block": "adc_q",
+      "index": 2,
+      "reason": "island group(s) ['conv'] not on pt_wired"
+    },
+    {
+      "id": "adc_q:3:atb1:adc_comparator_bias",
+      "block": "adc_q",
+      "index": 3,
+      "reason": "island group(s) ['conv'] not on pt_wired"
+    },
+    {
+      "id": "dac_i:0:bb_tap:observe_tx",
+      "block": "dac_i",
+      "index": 0,
+      "reason": "island group(s) ['conv', 'rf'] not on pt_wired"
+    },
+    {
+      "id": "dac_i:1:atb1:dac_bias",
+      "block": "dac_i",
+      "index": 1,
+      "reason": "island group(s) ['conv'] not on pt_wired"
+    },
+    {
+      "id": "dac_q:0:bb_tap:observe_tx",
+      "block": "dac_q",
+      "index": 0,
+      "reason": "island group(s) ['conv', 'rf'] not on pt_wired"
+    },
+    {
+      "id": "dac_q:1:atb1:dac_bias",
+      "block": "dac_q",
+      "index": 1,
+      "reason": "island group(s) ['conv'] not on pt_wired"
+    },
+    {
+      "id": "txfilter_i:0:bb_tap:observe_tx",
+      "block": "txfilter_i",
+      "index": 0,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "txfilter_i:1:atb1:bbfilter_bias",
+      "block": "txfilter_i",
+      "index": 1,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "txfilter_q:0:bb_tap:observe_tx",
+      "block": "txfilter_q",
+      "index": 0,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "txfilter_q:1:atb1:bbfilter_bias",
+      "block": "txfilter_q",
+      "index": 1,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "txmix_i:0:pad:RF_TX_P/N",
+      "block": "txmix_i",
+      "index": 0,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "txmix_i:1:atb1:txmix_bias",
+      "block": "txmix_i",
+      "index": 1,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "txmix_q:0:pad:RF_TX_P/N",
+      "block": "txmix_q",
+      "index": 0,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "txmix_q:1:atb1:txmix_bias",
+      "block": "txmix_q",
+      "index": 1,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "txsum:0:pad:RF_TX_P/N",
+      "block": "txsum",
+      "index": 0,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "rfdriver:0:pad:RF_TX_P/N",
+      "block": "rfdriver",
+      "index": 0,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "rfdriver:1:atb1:rfdriver_bias",
+      "block": "rfdriver",
+      "index": 1,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "rfdriver:2:dbg_obs:rf_mute",
+      "block": "rfdriver",
+      "index": 2,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "wiredtx:0:pad:WIRE_TX_P/N",
+      "block": "wiredtx",
+      "index": 0,
+      "reason": "pad: bench/payload observation, not an RTL selection"
+    },
+    {
+      "id": "wiredtx:5:dbg_obs:wire_tx_request",
+      "block": "wiredtx",
+      "index": 5,
+      "reason": "wire_tx_request: digital-internal source (mux selection only)"
+    },
+    {
+      "id": "tmds:0:pad:WIRE_TX_P/N",
+      "block": "tmds",
+      "index": 0,
+      "reason": "pad: bench/payload observation, not an RTL selection"
+    },
+    {
+      "id": "cdr:1:dbg_obs:cdr_freq_ok",
+      "block": "cdr",
+      "index": 1,
+      "reason": "cdr_freq_ok: digital-internal source (mux selection only)"
+    },
+    {
+      "id": "cdr:2:dbg_obs:cdr_freq_ok",
+      "block": "cdr",
+      "index": 2,
+      "reason": "cdr_freq_ok: digital-internal source (mux selection only)"
+    },
+    {
+      "id": "cdr:3:dbg_obs:cdr_fll_lost",
+      "block": "cdr",
+      "index": 3,
+      "reason": "cdr_fll_lost: digital-internal source (mux selection only)"
+    },
+    {
+      "id": "cdr:4:dbg_obs:wrx_sig_ok",
+      "block": "cdr",
+      "index": 4,
+      "reason": "wrx_sig_ok: digital-internal source (mux selection only)"
+    },
+    {
+      "id": "cdr:5:dbg_obs:wrx_idle",
+      "block": "cdr",
+      "index": 5,
+      "reason": "wrx_idle: digital-internal source (mux selection only)"
+    },
+    {
+      "id": "cdr:6:dbg_obs:wrx_sig_ok",
+      "block": "cdr",
+      "index": 6,
+      "reason": "wrx_sig_ok: digital-internal source (mux selection only)"
+    },
+    {
+      "id": "cdr:7:host_data:D2H",
+      "block": "cdr",
+      "index": 7,
+      "reason": "host_data: bench/payload observation, not an RTL selection"
+    },
+    {
+      "id": "slicer:0:dbg_obs:wrx_sig_ok",
+      "block": "slicer",
+      "index": 0,
+      "reason": "wrx_sig_ok: digital-internal source (mux selection only)"
+    },
+    {
+      "id": "slicer:1:dbg_obs:wrx_sig_ok",
+      "block": "slicer",
+      "index": 1,
+      "reason": "wrx_sig_ok: digital-internal source (mux selection only)"
+    },
+    {
+      "id": "slicer:2:dbg_obs:wrx_sig_ok",
+      "block": "slicer",
+      "index": 2,
+      "reason": "wrx_sig_ok: digital-internal source (mux selection only)"
+    },
+    {
+      "id": "slicer:3:host_data:D2H",
+      "block": "slicer",
+      "index": 3,
+      "reason": "host_data: bench/payload observation, not an RTL selection"
+    },
+    {
+      "id": "rxlevel:0:dbg_obs:wrx_sig_ok",
+      "block": "rxlevel",
+      "index": 0,
+      "reason": "wrx_sig_ok: digital-internal source (mux selection only)"
+    },
+    {
+      "id": "rxselect:0:dbg_obs:wrx_sig_ok",
+      "block": "rxselect",
+      "index": 0,
+      "reason": "wrx_sig_ok: digital-internal source (mux selection only)"
+    },
+    {
+      "id": "detect:2:dbg_obs:wrx_idle",
+      "block": "detect",
+      "index": 2,
+      "reason": "wrx_idle: digital-internal source (mux selection only)"
+    },
+    {
+      "id": "usbhs:0:dbg_obs:usb_squelch",
+      "block": "usbhs",
+      "index": 0,
+      "reason": "usb_squelch: digital-internal source (mux selection only)"
+    },
+    {
+      "id": "usbhs:1:pad:USB_DP/DN",
+      "block": "usbhs",
+      "index": 1,
+      "reason": "pad: bench/payload observation, not an RTL selection"
+    },
+    {
+      "id": "usbhs:2:dbg_obs:wrx_sig_ok",
+      "block": "usbhs",
+      "index": 2,
+      "reason": "wrx_sig_ok: digital-internal source (mux selection only)"
+    },
+    {
+      "id": "usbfs:0:dbg_obs:wrx_sig_ok",
+      "block": "usbfs",
+      "index": 0,
+      "reason": "wrx_sig_ok: digital-internal source (mux selection only)"
+    },
+    {
+      "id": "usbfs:1:pad:USB_DP/DN",
+      "block": "usbfs",
+      "index": 1,
+      "reason": "pad: bench/payload observation, not an RTL selection"
+    },
+    {
+      "id": "usbdrive:0:pad:USB_DP/DN",
+      "block": "usbdrive",
+      "index": 0,
+      "reason": "pad: bench/payload observation, not an RTL selection"
+    },
+    {
+      "id": "lo_synth:0:freq_count:lc_prescale",
+      "block": "lo_synth",
+      "index": 0,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "lo_synth:1:clk_obs:rf_lo",
+      "block": "lo_synth",
+      "index": 1,
+      "reason": "island group(s) ['rf'] not on pt_wired"
+    },
+    {
+      "id": "wired_word_clocks:0:spi:status.wired.rx_flags",
+      "block": "wired_word_clocks",
+      "index": 0,
+      "reason": "unsupported SPI selection"
+    },
+    {
+      "id": "wired_word_clocks:1:host_data:D2H",
+      "block": "wired_word_clocks",
+      "index": 1,
+      "reason": "host_data: bench/payload observation, not an RTL selection"
+    }
+  ],
+  "controls_sha256": "e79b6f72a788b1bfbbc0aff1f0302475f3560a7e1286915f1a892d6c67fa85d6",
+  "conn_sha256": "b4b75180515db2e9d02657f3f9ac8304ae08b12460589fd577320c467762c74f",
+  "source_hashes": {
+    "projects/programmable_transceiver_platform/integration/chips/wired/generated/pt_chip.sv": "9381683cf103a5b52f83fe59357a12daa49b6a03dfbc8aeb54ae1804efc2c654",
+    "projects/programmable_transceiver_platform/integration/pt_provider_io.sv": "7c03dbd8d32518da3ca1289f876d79dd85104f1abac49236950f0d84727769db",
+    "projects/programmable_transceiver_platform/rtl/pt_block_elastic.sv": "d8f85860178d7b124215c0b233aef633386b287c50b7d3f6b279192af6f2bd99",
+    "projects/programmable_transceiver_platform/rtl/pt_block_fifo.sv": "f13f801248743598db862040d47eac0144d6772ab153b2d0ed83cd42109615ae",
+    "projects/programmable_transceiver_platform/rtl/pt_block_header.sv": "c209a40f9bfb5e8391da2d84e8f4f26578ba60c0c39efa3d9ba3a328958e15fa",
+    "projects/programmable_transceiver_platform/rtl/pt_block_route.sv": "424a27b9c2a3f73d44309661412ab6434e28cbe470f1d0f11940f2bb61c66141",
+    "projects/programmable_transceiver_platform/rtl/pt_block_route_mask.sv": "cf639ba7137d8b091bc28a4aab196d0cb7c2711a4c5e471473cec483997e92d3",
+    "projects/programmable_transceiver_platform/rtl/pt_block_route_prefix.sv": "5a1cac1284536e2ee2c425c7d4fb55836b33f1eb01df4a4ad1fe39639b9a6e88",
+    "projects/programmable_transceiver_platform/rtl/pt_block_route_rank.sv": "f1e8f980abc11ea32d8d05978bfc8c97be4e6a48d61b53868b603d01fec50015",
+    "projects/programmable_transceiver_platform/rtl/pt_block_rx.sv": "10a9004b47f4c606ae4428813241bb055dccf6b6c66eaa7c4e801a958a44fea8",
+    "projects/programmable_transceiver_platform/rtl/pt_block_rx_commit.sv": "bb163909e561003d37949f1fc6d870518d5a49f96dbefab300074b96d83af457",
+    "projects/programmable_transceiver_platform/rtl/pt_block_rx_mask.sv": "c9f01d1b409dab04e921fae27dd848df047d160d196020354e36ae015783f8f1",
+    "projects/programmable_transceiver_platform/rtl/pt_block_rx_pipe.sv": "b16c2dd2001d324ef74526c5b0406eccf30d7585599400a504a6771d87764789",
+    "projects/programmable_transceiver_platform/rtl/pt_block_rx_prefix.sv": "c3cb4ada0fa108ba89aa26ddce4b136ce5e32de5f1e533284bfed1c177f76afa",
+    "projects/programmable_transceiver_platform/rtl/pt_block_rx_rank.sv": "1497dbd4abe891791616a8d9cfd464bfbed24673d8c942036106b4bb321bf7f5",
+    "projects/programmable_transceiver_platform/rtl/pt_block_staged.sv": "f5a165e0119d68828119551fd144cc4362cf1e6c3eb22a46b938d75c94b3ee7a",
+    "projects/programmable_transceiver_platform/rtl/pt_boundary.sv": "57bb7797baf3fc7a00c7f0049fa3a3412851beed61232f15f766f30e43600f52",
+    "projects/programmable_transceiver_platform/rtl/pt_cells.sv": "f8c8114de27002221be551586693ef8581c997d0d7c4ca60e301120f91921e95",
+    "projects/programmable_transceiver_platform/rtl/pt_clocktree_slow.sv": "af82639cbf40ad574178aa95863c62305d82b6af6e5339f3d2fb1ca4688c00db",
+    "projects/programmable_transceiver_platform/rtl/pt_core.sv": "a830bc20d6adf3d426113b69b8d50351b7638e44c79f8e1b2f7bf7511e89167e",
+    "projects/programmable_transceiver_platform/rtl/pt_ctl_decode.sv": "3c8afd0f88e09da7c29435399875add26162ebbdf7a6d380025ca79b9924db6c",
+    "projects/programmable_transceiver_platform/rtl/pt_dense_header.sv": "4d5de18110ef4496284c38285be70e01847775f1e70f59eefc2570eb3cae0e78",
+    "projects/programmable_transceiver_platform/rtl/pt_digital.sv": "210e052b5e03b0267dca93e50e23570edc2686cf6c7bc62c0e1f9068a57664e9",
+    "projects/programmable_transceiver_platform/rtl/pt_digital_macro.sv": "bc00e2ec6063fe2b572253b4326dc771b75b751bd088ab8c0710f81a666720ae",
+    "projects/programmable_transceiver_platform/rtl/pt_fifo.sv": "cbf2a79c9a42295a4e850dcbf0dfc39b251b5b8319027faa491eed8c76a155b1",
+    "projects/programmable_transceiver_platform/rtl/pt_freq_count.sv": "e1b655dadca713494cff8b155fd2c0d1dde55a6ac60de300c8641d65181d3530",
+    "projects/programmable_transceiver_platform/rtl/pt_helpers.sv": "2cf77deecb992c0a535bb69d45474b4592e11e142a29f4bf02573bed39e79831",
+    "projects/programmable_transceiver_platform/rtl/pt_host_link.sv": "8fbf17d4039171716ca365f1a58fe0ce2340b22b6420f208a1d803bd1e4d0f69",
+    "projects/programmable_transceiver_platform/rtl/pt_interp2x.sv": "186c95628249b72657a3abba5ecf5b31bc0507066eeba3e1face935e5f74f0fe",
+    "projects/programmable_transceiver_platform/rtl/pt_lane_compact.sv": "177039ea39062c139c08127af565743075e204954711e7ba04be00d280201e69",
+    "projects/programmable_transceiver_platform/rtl/pt_lane_compact_rank.sv": "66900019f931e55dd1560182315296897d16a3bf48a25861552a5f7785ad7136",
+    "projects/programmable_transceiver_platform/rtl/pt_linecode.sv": "e54d16f3d7085534a5ec845a4d758b9ac281c76153bf62fcb0d42035b2590acf",
+    "projects/programmable_transceiver_platform/rtl/pt_monitor.sv": "74bfe9ba2be0eb447f9a6b51253fd6091222f645d30afca7c55ad0302c2a39e9",
+    "projects/programmable_transceiver_platform/rtl/pt_pattern.sv": "db305e4a7b0dc5fe759ea1dfb196a1bb0a39a2fcfe29ae8897393a0020583c5b",
+    "projects/programmable_transceiver_platform/rtl/pt_por_path.sv": "f962434319aa7dd59cefe0fc0c8149a7699db468ae966aec58a32e0dd61644f8",
+    "projects/programmable_transceiver_platform/rtl/pt_quad_gearbox.sv": "d2ddd72b758026c8c4ae840dfbef35bcd89fc7a5376817de76df1a085e476236",
+    "projects/programmable_transceiver_platform/rtl/pt_quad_link.sv": "5d87aaa494fe8b21c03d23423608f735f8fd5c72800358f773473834268cce49",
+    "projects/programmable_transceiver_platform/rtl/pt_regfile.sv": "06b641062f433597cc943db9cc425766730e0130347d1de3f47ee990a0780fc4",
+    "projects/programmable_transceiver_platform/rtl/pt_spi.sv": "c37fc327a8d553f33754f2beb5854ea462bf24bf61cae172263381d4b385c9b5",
+    "projects/programmable_transceiver_platform/rtl/pt_tx_pad_sequence.sv": "8eb853e60f62bed8141439ab777d9efbfcc5b73925ae46288f49fda8ae15615f",
+    "projects/programmable_transceiver_platform/rtl/pt_usb.sv": "7dd0e57f701d96aecb1428de9826ec0ef39f6c76e7452a81a30c38eb7d44da59",
+    "projects/programmable_transceiver_platform/rtl/pt_vreg_seq.sv": "b3c45be2115d8c003dc166723305657d2867e31816e532db0faf0870947e82d0",
+    "projects/programmable_transceiver_platform/rtl/pt_wrx_ctl.sv": "ffa1a37fee96c37db4d63781148013d7029b64eae5507bcaab7d505644ff8de9",
+    "projects/programmable_transceiver_platform/rtl/pt_wtx_ctl.sv": "d824180a822a09e994a428a1d08e7565c9206c59d4c2e3491fbff6676f4a0407"
+  },
+  "script_sha256": "1d3571a56415c4352c47ad9441f75a6d4976a4794206fc9d4e3738c8ed528b79",
+  "io_model_sha256": "2ea756ea65febd7336caa23d2947e3cb0c2fc5dffd6bfa9a6584374ff1f43346"
+}
